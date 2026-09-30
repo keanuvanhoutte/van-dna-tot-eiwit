@@ -217,7 +217,7 @@ export default {
       how: [
         'Klasse I — dsDNA: wordt (meestal in de kern) door RNA-polymerase II van de gastheer afgeschreven. Voorbeelden: adenovirus, herpesvirussen, en het pokkenvirus, dat in het cytoplasma repliceert met zijn eigen RNA-polymerase.',
         'Klasse II — ssDNA: wordt eerst tot dubbelstrengig DNA aangevuld en daarna afgeschreven. Voorbeeld: parvovirus B19.',
-        'Klasse III — dsRNA: een cel kan geen RNA naar RNA kopiëren, dus het virus brengt zelf een RNA-afhankelijk RNA-polymerase (RdRp) mee. Voorbeelden: rotavirus, reovirus.',
+        'Klasse III — dsRNA: een cel heeft geen eigen enzym om virus-RNA naar RNA te kopiëren, dus het virus brengt zelf een RNA-afhankelijk RNA-polymerase (RdRp) mee. Voorbeelden: rotavirus, reovirus. (Uitzondering op die regel: het hepatitis-deltavirus laat zijn RNA-genoom kopiëren door het RNA-polymerase II van de gastheer.)',
         'Klasse IV — (+)ssRNA: het genoom heeft dezelfde polariteit als mRNA en kan meteen vertaald worden. Voorbeelden: poliovirus, SARS-CoV-2, hepatitis A.',
         'Klasse V — (−)ssRNA: het genoom is complementair aan mRNA; de RdRp moet in het virusdeeltje aanwezig zijn. Voorbeelden: influenza, rabiës, mazelen, ebola.',
         'Klasse VI — ssRNA-RT: reverse transcriptase maakt dsDNA van het RNA-genoom, dat daarna in het gastheergenoom integreert. Voorbeeld: HIV-1.',
@@ -232,7 +232,7 @@ export default {
       how: [
         'Class I — dsDNA: transcribed (usually in the nucleus) by the host RNA polymerase II. Examples: adenovirus, herpesviruses, and poxvirus, which replicates in the cytoplasm using its own RNA polymerase.',
         'Class II — ssDNA: first completed into double-stranded DNA and then transcribed. Example: parvovirus B19.',
-        'Class III — dsRNA: a cell cannot copy RNA into RNA, so the virus brings its own RNA-dependent RNA polymerase (RdRp). Examples: rotavirus, reovirus.',
+        'Class III — dsRNA: a cell has no enzyme of its own to copy viral RNA into RNA, so the virus brings its own RNA-dependent RNA polymerase (RdRp). Examples: rotavirus, reovirus. (Exception to that rule: hepatitis delta virus has its RNA genome copied by the host’s RNA polymerase II.)',
         'Class IV — (+)ssRNA: the genome has the same polarity as mRNA and can be translated immediately. Examples: poliovirus, SARS-CoV-2, hepatitis A.',
         'Class V — (−)ssRNA: the genome is complementary to mRNA; the RdRp must be present inside the virion. Examples: influenza, rabies, measles, Ebola.',
         'Class VI — ssRNA-RT: reverse transcriptase makes dsDNA from the RNA genome, which then integrates into the host genome. Example: HIV-1.',
@@ -243,6 +243,7 @@ export default {
       why: 'The classification is really the central dogma applied to viruses: it shows that every direction of information flow (DNA→RNA, RNA→RNA, RNA→DNA) exists somewhere in nature, but that everything converges on the same ribosome.',
     },
     sources: [
+      { t: 'Taylor (2015) Hepatitis D virus replication. Cold Spring Harb Perspect Med 5:a021568 (RNA-polymerase II kopieert het HDV-RNA)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4632862/' },
       { t: 'Koonin et al., The Baltimore Classification of Viruses 50 Years Later. Microbiol Mol Biol Rev 2021;85:e0005321', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8483701/' },
       { t: 'ICTV — International Committee on Taxonomy of Viruses (virustaxonomie)', url: 'https://ictv.global/' },
       { t: 'ViralZone (SIB Swiss Institute of Bioinformatics) — Baltimore-klassen met voorbeelden per familie', url: 'https://viralzone.expasy.org/' },
