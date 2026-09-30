@@ -28,7 +28,7 @@ const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }
 export default {
   id: 'ramachandran',
   title: { nl: 'Ramachandran-plot', en: 'Ramachandran plot' },
-  scale: '1 residu · 0,1–1 nm', time: { nl: 'geen tijdsas (structuuranalyse)', en: 'no time axis (structure analysis)' },
+  scale: { nl: '1 residu · 0,1–1 nm', en: '1 residue · 0.1–1 nm' }, time: { nl: 'geen tijdsas (structuuranalyse)', en: 'no time axis (structure analysis)' },
   org: { nl: 'mens (hemoglobine, PDB 1BBB)', en: 'human (haemoglobin, PDB 1BBB)' },
   legend: [['#2b5ea8', { nl: 'voorkeursgebied', en: 'favoured region' }], ['#173a6b', { nl: 'toegestaan gebied', en: 'allowed region' }], ['#ffc247', { nl: 'residu (φ,ψ)', en: 'residue (φ,ψ)' }], ['#ff8a3d', 'Gly'], ['#7fdc6a', 'Pro'], [C.danger, { nl: 'uitschieter', en: 'outlier' }]],
   extra: {

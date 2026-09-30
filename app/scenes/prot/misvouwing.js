@@ -35,7 +35,7 @@ export default {
       'Een kern vormen is traag (lag-fase); daarna groeien fibrillen snel door monomeren aan de uiteinden. Een toegevoegde "zaadkern" slaat de lag-fase over.',
       'Forming a nucleus is slow (lag phase); then fibrils grow fast by adding monomers at their ends. An added "seed" skips the lag phase.'),
     ST(9000, cam(4200, 470, 1500), 'De cross-β-structuur', 'The cross-β structure',
-      'In amyloïd staan β-strengen loodrecht op de fibrilas, ~4,7 Å uit elkaar, verbonden door H-bruggen langs de as. Twee bladen (~10 Å) grijpen in elkaar.',
+      'In amyloïd staan β-strengen loodrecht op de fibrilas, ~4,7 Å uit elkaar, verbonden door H-bruggen langs de as. Twee bladen (~10 Å uit elkaar) grijpen in elkaar.',
       'In amyloid, β-strands run perpendicular to the fibril axis, ~4.7 Å apart, linked by H-bonds along the axis. Two sheets (~10 Å apart) interlock.'),
     ST(8500, cam(5925, 470, 1650), 'Ziekten door amyloïd', 'Diseases caused by amyloid',
       'Aβ en tau bij Alzheimer, α-synucleïne bij Parkinson, IAPP bij type 2-diabetes, het prioneiwit bij Creutzfeldt-Jakob. Vooral kleine oligomeren lijken toxisch.',

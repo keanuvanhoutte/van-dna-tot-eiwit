@@ -25,7 +25,7 @@ const L3 = (nl, en) => ({ nl, en });
 export default structure3d({
   id: 'rnapol', pdb: '5FLM',
   title: L3('RNA-polymerase II', 'RNA polymerase II'),
-  scale: '≈ 15 nm · ≈ 0,5 MDa', time: L3('≈ 20–50 nt/s tijdens elongatie', '≈ 20–50 nt/s during elongation'),
+  scale: { nl: '≈ 15 nm · ≈ 0,5 MDa', en: '≈ 15 nm · ≈ 0.5 MDa' }, time: L3('≈ 20–50 nt/s tijdens elongatie', '≈ 20–50 nt/s during elongation'),
   org: L3('zoogdier (rund; ≈ identiek aan mens) · PDB 5FLM', 'mammal (bovine; ≈ identical to human) · PDB 5FLM'),
   legend: [[COL.A, 'Rpb1'], [COL.B, 'Rpb2'], [COL.D, 'Rpb4/Rpb7'], [DIM, L3('overige subeenheden', 'other subunits')], [C.dna2, L3('matrijsstreng', 'template strand')], [C.dna, L3('niet-matrijsstreng', 'non-template strand')], [C.rna, 'RNA'], ['#7fdc6a', 'Mg²⁺']],
   extra: {

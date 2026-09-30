@@ -535,5 +535,6 @@ if (startId) {
   render(); drawTicks();
   playStep(stepInfo(t).step);
   if (q.has('freeze')) setPlaying(false);
+  const boot = $('boot'); if (boot) { boot.classList.add('gone'); setTimeout(() => boot.remove(), 500); }
   requestAnimationFrame(placeLabels);
 }

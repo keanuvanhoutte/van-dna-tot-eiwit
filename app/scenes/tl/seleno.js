@@ -119,7 +119,7 @@ export default {
               if (bond < 1) { tr += trna(A - shift, yDock, 'ACU', secBead, 1); ov += chainAt(P + 26 + (A - P) * bond * .5, yDock - 222 - 0 * bond); }
               else { tr += trna(A - shift, yDock, 'ACU', null, 1); ov += chainAt(A - shift + 26 + 52, yDock - 222 + 26, secBead); }
               ov += `<g opacity="${f1(sub(p, .15, .35) * (1 - sub(p, .7, .8)))}">${txt(A + 140, yDock - 320, T2('peptidebinding', 'peptide bond'), '#fff', 22, 'start', 700)}</g>`;
-              ov += `<g opacity="${f1(sub(p, .8, .95))}">` + textBox(930, 180, 460, [T2('Zonder Se of SECIS: eRF1 wint', 'Without Se or SECIS: eRF1 wins'), T2('→ afgebroken eiwit', '→ truncated protein')], { col: C.danger, fs: 21 }) + '</g>';
+              ov += `<g opacity="${f1(sub(p, .8, .95))}">` + textBox(930, 180, 460, [T2('Zonder Se of SECIS: eRF1 wint', 'Without Se or SECIS: eRF1 wins'), T2('→ afgeknot eiwit', '→ truncated protein')], { col: C.danger, fs: 21 }) + '</g>';
             } else {
               tr += trna(x, y, 'ACU', ['Sec', SEC_COL], 1, k > .95);
               fac += `<g opacity="${f1(1 - sub(p, .7, .9))}">${pill(x + 110, y - 150, 150, 34, 'eEFSec·GTP', C.prot2, 1, 17)}</g>`;

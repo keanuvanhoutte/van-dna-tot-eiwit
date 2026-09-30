@@ -10,7 +10,7 @@ const ax = c => 470 + (Math.log10(c) + 2) * 180;
 export default {
   id: 'polymerasen',
   title: { nl: 'RNA-polymerase I, II en III', en: 'RNA polymerases I, II and III' },
-  scale: '≈ 15 nm (per enzym)', time: { nl: 'overzicht (geen echte tijd)', en: 'overview (no real time)' },
+  scale: { nl: '≈ 15 nm (per enzym)', en: '≈ 15 nm (per enzyme)' }, time: { nl: 'overzicht (geen echte tijd)', en: 'overview (no real time)' },
   org: { nl: 'mens (eukaryoot)', en: 'human (eukaryote)' },
   legend: [[PC[0], 'Pol I (13)'], [PC[1], 'Pol II (12)'], [PC[2], 'Pol III (17)'], [C.histone, { nl: 'gedeelde subeenheden', en: 'shared subunits' }], [C.rna, 'RNA'], [C.dna, 'DNA'], ['#ffc247', { nl: 'promoterelement', en: 'promoter element' }]],
   extra: {
@@ -63,7 +63,7 @@ export default {
     const PROD = [
       [],
       [T2('mRNA (alle eiwitgenen)', 'mRNA (all protein genes)'), T2('snRNA\'s U1, U2, U4, U5', 'snRNAs U1, U2, U4, U5'), T2('pri-miRNA\'s', 'pri-miRNAs'), T2('lncRNA\'s', 'lncRNAs')],
-      ['tRNA\'s', '5S rRNA', 'U6 snRNA', T2('7SL-RNA (SRP)', '7SL RNA (SRP)'), T2('7SK-RNA', '7SK RNA')],
+      [T2('tRNA\'s', 'tRNAs'), '5S rRNA', 'U6 snRNA', T2('7SL-RNA (SRP)', '7SL RNA (SRP)'), T2('7SK-RNA', '7SK RNA')],
     ];
     return {
       update(t, s) {

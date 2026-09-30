@@ -13,7 +13,7 @@ const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
 export default molScene({
   id: 'quaternair', pdb: '1BBB',
   title: { nl: 'Quaternaire structuur', en: 'Quaternary structure' },
-  scale: '≈ 6,5 nm', time: { nl: 'assemblage na (of tijdens) de vouwing', en: 'assembly after (or during) folding' },
+  scale: { nl: '≈ 6,5 nm', en: '≈ 6.5 nm' }, time: { nl: 'assemblage na (of tijdens) de vouwing', en: 'assembly after (or during) folding' },
   org: { nl: 'mens (hemoglobine A, PDB 1BBB)', en: 'human (haemoglobin A, PDB 1BBB)' },
   legend: [[CH.A[1], 'α1 (A)'], [CH.B[1], 'β1 (B)'], [CH.C[1], 'α2 (C)'], [CH.D[1], 'β2 (D)'], ['#ff8a3d', { nl: 'heem', en: 'haem' }], [CLASSCOL['+'], { nl: 'positief', en: 'positive' }], [CLASSCOL['-'], { nl: 'negatief', en: 'negative' }]],
   extra: {
@@ -129,7 +129,7 @@ export default molScene({
         [T2(`${c.data.sb?.length ?? '…'} zoutbruggen tussen ketens`, `${c.data.sb?.length ?? '…'} salt bridges between chains`), '#ffc247', 23, 700],
         [T2(`${c.data.hb ?? '…'} polaire N/O-contacten ≤ 3,5 Å`, `${c.data.hb ?? '…'} polar N/O contacts ≤ 3.5 Å`), '#ffc247', 23, 700],
         T2('+ vele hydrofobe contacten', '+ many hydrophobic contacts'), '',
-        [T2('alles niet-covalent', 'all non-covalent'), C.muted, 22]]),
+        [T2('in Hb: alles niet-covalent', 'in Hb: all non-covalent'), C.muted, 22]]),
     }),
     ST(8500, 'Vier hemen, samenwerkend', 'Four haems, working together', 'Elke subeenheid bindt één O₂. De eerste bindt moeilijk, de volgende steeds makkelijker: coöperatieve binding, alleen mogelijk dankzij de quaternaire structuur. (In 1BBB is CO gebonden.)', 'Each subunit binds one O₂. The first binds with difficulty, the next ones more and more easily: cooperative binding, only possible thanks to the quaternary structure. (1BBB has CO bound.)', {
       show(c) {

@@ -148,7 +148,7 @@ function initProcessing(svg) {
     const ds = cut ? X.cut + 6 + chew * (X.down[1] - X.cut) : X.cut;
     if (!cut) dn += seg(X.cut, X.down[1], Y, '#c07a4a', 5);
     else if (ds < X.down[1] - 2) dn += seg(ds, X.down[1], Y, '#c07a4a', 5) + `<g opacity="${polOp.toFixed(2)}">${pill(ds - 4, Y - 26, 52, 22, 'Xrn2', '#5a4bb8')}</g>`;
-    dn += txt((X.dse[0] + X.dse[1]) / 2, Y + 20, ph < 9 ? 'GU-rich' : '', '#c07a4a', 10);
+    dn += txt((X.dse[0] + X.dse[1]) / 2, Y + 20, ph < 9 ? L({ nl: 'GU-rijk', en: 'GU-rich' }) : '', '#c07a4a', 10);
     $('pr-down').innerHTML = dn;
     $('pr-pol').innerHTML = polOp > 0 ? `<g opacity="${polOp.toFixed(2)}" transform="translate(${X.pol} ${Y})"><path d="M-40,-10 C-40,-60 10,-70 40,-50 C70,-30 70,30 40,50 C10,70 -40,60 -40,-10Z" fill="rgba(155,123,255,.22)" stroke="${C.prot}" stroke-width="3"/><text x="0" y="5" font-size="12" text-anchor="middle" fill="${C.text}" font-family="Inter">Pol II</text></g>
       <line x1="${X.pol + 10}" y1="${Y + 58}" x2="1650" y2="${Y + 58}" stroke="${C.dna}" stroke-width="5" opacity="${polOp.toFixed(2)}"/>` : '';

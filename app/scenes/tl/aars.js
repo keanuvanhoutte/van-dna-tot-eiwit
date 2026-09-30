@@ -135,8 +135,8 @@ export default {
         if (i === 4) {
           tr = trna(0, 0, tipSyn, { a: 'I', dx: 30, dy: -26 }, 1);     // IleRS + Ile-tRNA blijven in beeld als voorbeeld van klasse I
           const f = 1;
-          ov += `<g opacity="${f1(f)}">` + textBox(420, 200, 540, [T2('Rossmann-vouwing', 'Rossmann fold'), T2('motieven HIGH, KMSKS', 'motifs HIGH, KMSKS'), T2("meestal 2'-OH van A76", "usually 2'-OH of A76"), T2('bv. IleRS, MetRS, TyrRS', 'e.g. IleRS, MetRS, TyrRS')], { title: T2('Klasse I', 'Class I'), col: '#9b7bff', fs: 26 }) + '</g>';
-          ov += `<g opacity="${f1(sub(p, .15, .3))}">` + textBox(1000, 200, 540, [T2('antiparallel β-blad', 'antiparallel β-sheet'), T2('motieven 1, 2, 3', 'motifs 1, 2, 3'), T2("meestal 3'-OH van A76", "usually 3'-OH of A76"), T2('bv. SerRS, AlaRS, PheRS', 'e.g. SerRS, AlaRS, PheRS')], { title: T2('Klasse II', 'Class II'), col: '#5fd3e6', fs: 26 }) + '</g>';
+          ov += `<g opacity="${f1(f)}">` + textBox(420, 200, 540, [T2('Rossmann-vouwing', 'Rossmann fold'), T2('motieven HIGH, KMSKS', 'motifs HIGH, KMSKS'), T2("meestal 2'-OH van A76", "usually 2'-OH of A76"), T2('bv. IleRS, MetRS, ValRS', 'e.g. IleRS, MetRS, ValRS')], { title: T2('Klasse I', 'Class I'), col: '#9b7bff', fs: 26 }) + '</g>';
+          ov += `<g opacity="${f1(sub(p, .15, .3))}">` + textBox(1000, 200, 540, [T2('antiparallel β-blad', 'antiparallel β-sheet'), T2('motieven 1, 2, 3', 'motifs 1, 2, 3'), T2("meestal 3'-OH van A76", "usually 3'-OH of A76"), T2('bv. SerRS, AlaRS, ThrRS', 'e.g. SerRS, AlaRS, ThrRS')], { title: T2('Klasse II', 'Class II'), col: '#5fd3e6', fs: 26 }) + '</g>';
         }
         if (i === 5) {
           // Leu en Phe botsen af; Val past

@@ -43,8 +43,8 @@ export default {
       'Exportine-5–RanGTP herkent de stam met de 2-nt-overhang en brengt het pre-miRNA door de kernporie. In het cytoplasma wordt GTP gehydrolyseerd en komt het vrij.',
       'Exportin-5–RanGTP recognises the stem with its 2-nt overhang and carries the pre-miRNA through the nuclear pore. In the cytoplasm GTP is hydrolysed and it is released.'),
     ST(7500, cam(930, 450, 720), 'Dicer knipt de lus eraf', 'Dicer cuts off the loop',
-      'Dicer (met TRBP) meet vanaf het uiteinde en knipt de lus weg → een duplex van ≈ 22 bp met aan elke kant een 2-nt-overhang.',
-      'Dicer (with TRBP) measures from the end and cuts off the loop → a duplex of ≈ 22 bp with a 2-nt overhang at each end.'),
+      'Dicer (met TRBP) meet vanaf het uiteinde en knipt de lus weg → een duplex van ≈ 22 nt met aan elke kant een 2-nt-overhang.',
+      'Dicer (with TRBP) measures from the end and cuts off the loop → a duplex of ≈ 22 nt with a 2-nt overhang at each end.'),
     ST(8000, cam(1180, 560, 1000), 'Laden in AGO2 (RISC)', 'Loading into AGO2 (RISC)',
       'Het duplex gaat in Argonaute (AGO2). De streng met het minst stabiel gepaarde 5\'-uiteinde blijft als gids; de passagiersstreng wordt verwijderd.',
       'The duplex enters Argonaute (AGO2). The strand with the less stably paired 5\' end stays as the guide; the passenger strand is removed.'),
@@ -157,7 +157,7 @@ export default {
           enz += `<g opacity="${f1(ko)}"><path d="M${DB[0] + 60},${DB[1] - 70} h170 q50,0 50,50 v80 q0,40 -40,40 h-180 z" fill="rgba(155,123,255,.2)" stroke="${C.prot}" stroke-width="3"/></g>`;
           enz += note(DB[0] + 150, DB[1] - 84, 'Dicer', '#c9b8ff', 20, 'middle', ko) + prot(DB[0] + 150, DB[1] + 110, 70, 30, 'TRBP', '#5a4bb8', ko, 15);
           enz += snip(DB[0] + NB * BP + 2, DB[1], sub(p, .4, .5) * (1 - sub(p, .6, .7)));
-          enz += `<g opacity="${f1(sub(p, .6, .8))}"><path d="M${DB[0] - 12},${DB[1] + 44} v10 H${DB[0] + NB * BP} v-10" stroke="#ffd36b" stroke-width="2.5" fill="none"/></g>` + note(DB[0] + NB * BP / 2, DB[1] + 80, T2('≈ 22 bp', '≈ 22 bp'), '#ffd36b', 18, 'middle', sub(p, .6, .8));
+          enz += `<g opacity="${f1(sub(p, .6, .8))}"><path d="M${DB[0] - 12},${DB[1] + 44} v10 H${DB[0] + NB * BP} v-10" stroke="#ffd36b" stroke-width="2.5" fill="none"/></g>` + note(DB[0] + NB * BP / 2, DB[1] + 80, T2('≈ 22 nt', '≈ 22 nt'), '#ffd36b', 18, 'middle', sub(p, .6, .8));
         }
         // ---------- stap 4: laden in AGO2 ----------
         let ago = '';

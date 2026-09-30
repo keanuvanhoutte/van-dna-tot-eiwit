@@ -47,7 +47,7 @@ const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }
 export default {
   id: 'aminozuren',
   title: { nl: 'De 20 aminozuren', en: 'The 20 amino acids' },
-  scale: '≈ 0,5–1 nm', time: { nl: 'geen tijdsas', en: 'no time axis' },
+  scale: { nl: '≈ 0,5–1 nm', en: '≈ 0.5–1 nm' }, time: { nl: 'geen tijdsas', en: 'no time axis' },
   org: { nl: 'alle organismen (standaardset)', en: 'all organisms (standard set)' },
   legend: [[CLASSCOL.h, { nl: 'hydrofoob', en: 'hydrophobic' }], [CLASSCOL.s, { nl: 'hydrofoob, speciaal (Gly, Pro)', en: 'hydrophobic, special (Gly, Pro)' }], [CLASSCOL.p, { nl: 'polair', en: 'polar' }], [CLASSCOL['+'], { nl: 'positief geladen', en: 'positively charged' }], [CLASSCOL['-'], { nl: 'negatief geladen', en: 'negatively charged' }]],
   extra: {

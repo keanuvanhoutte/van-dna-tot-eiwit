@@ -4,7 +4,7 @@ import { seg, pth, endl, prot, tag, arrow } from './_draw.js';
 /*
  * Mutaties in het begin van het menselijke β-globinegen (HBB), coderende streng 5'→3'.
  * Sequentie: Ensembl ENST00000335295 (CDS). Codonnummering traditioneel: start-Met = 0, Val = 1 …
- *  - stil (fictief voorbeeld): codon 2 CAT → CAC (His → His)
+ *  - stil (echte benigne variant rs713040): codon 2 CAT → CAC (His → His)
  *  - missense (HbS, sikkelcelziekte): codon 6 GAG → GTG (Glu → Val)
  *  - nonsense (β⁰-thalassemie): codon 17 AAG → TAG (Lys → stop)
  *  - frameshift (β⁰-thalassemie): codons 8/9 +G (c.27_28insG, p.Ser10Valfs*14)
@@ -41,8 +41,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">De aminozuren worden niet getekend maar berekend met de standaard genetische code. De sequentie is het echte begin van het humane HBB-gen (β-globine, een keten van hemoglobine).</p>',
     en: '<p style="font-size:13px;color:#93a0bb">The amino acids are not drawn by hand but computed with the standard genetic code. The sequence is the real start of the human HBB gene (β-globin, one chain of haemoglobin).</p>' },
   simplified: {
-    nl: 'Alleen de coderende streng en de eerste 22 codons worden getoond. Codonnummers volgen de traditionele hemoglobinenummering (start-Met niet meegeteld; in HGVS-notatie is HbS p.Glu7Val). De stille mutatie in codon 2 is een fictief voorbeeld; HbS (codon 6), codon 17 A>T en codons 8/9 +G zijn bekende ziektemutaties. NMD is sterk vereenvoudigd (EJC\'s, UPF1-activatie en afbraakroutes niet in detail).',
-    en: 'Only the coding strand and the first 22 codons are shown. Codon numbers follow the traditional haemoglobin numbering (start Met not counted; in HGVS notation HbS is p.Glu7Val). The silent mutation in codon 2 is a made-up example; HbS (codon 6), codon 17 A>T and codons 8/9 +G are known disease mutations. NMD is strongly simplified (EJCs, UPF1 activation and decay routes not in detail).' },
+    nl: 'Alleen de coderende streng en de eerste 22 codons worden getoond. Codonnummers volgen de traditionele hemoglobinenummering (start-Met niet meegeteld; in HGVS-notatie is HbS p.Glu7Val). De stille mutatie in codon 2 (CAT→CAC) is een echte, onschadelijke variant (rs713040); HbS (codon 6), codon 17 A>T en codons 8/9 +G zijn bekende ziektemutaties. NMD is sterk vereenvoudigd (EJC\'s, UPF1-activatie en afbraakroutes niet in detail).',
+    en: 'Only the coding strand and the first 22 codons are shown. Codon numbers follow the traditional haemoglobin numbering (start Met not counted; in HGVS notation HbS is p.Glu7Val). The silent mutation in codon 2 (CAT→CAC) is a real, harmless variant (rs713040); HbS (codon 6), codon 17 A>T and codons 8/9 +G are known disease mutations. NMD is strongly simplified (EJCs, UPF1 activation and decay routes not in detail).' },
   steps: [
     S(8000, cam(480, 400, 1150), 'Gen → mRNA → eiwit', 'Gene → mRNA → protein',
       'Het begin van het β-globinegen (HBB). Elk codon van drie basen codeert voor één aminozuur; een mutatie verandert de DNA-sequentie.',

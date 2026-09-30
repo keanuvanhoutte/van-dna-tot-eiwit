@@ -55,7 +55,7 @@ export default {
       'Het primaire transcript bevat exonen én intronen. Na capping, splicing en polyadenylatie blijft een rijp mRNA over: 5\'-cap · 5\'-UTR · CDS · 3\'-UTR · poly(A).',
       'The primary transcript contains exons and introns. After capping, splicing and polyadenylation a mature mRNA remains: 5\' cap · 5\' UTR · CDS · 3\' UTR · poly(A).'),
     ST(7000, FULL, 'Klaar om af te lezen', 'Ready to be read',
-      'Zo ziet de eenheid eruit die RNA-polymerase II afleest. Volgende stap: de gen wordt aangezet en getranscribeerd.',
+      'Zo ziet de eenheid eruit die RNA-polymerase II afleest. Volgende stap: het gen wordt aangezet en getranscribeerd.',
       'This is the unit that RNA polymerase II reads. Next: the gene is switched on and transcribed.'),
   ],
   svg() {

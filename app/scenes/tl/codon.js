@@ -97,7 +97,7 @@ export default {
         let hl = '', ov = '', tr = '', mut = '', sec = '';
         if (i === 0) {
           ov += `<g opacity="${f1(sub(p, .1, .3))}">` + txt(CX, CY - R[1] - 6, T2('1e', '1st'), '#fff', 16) + txt(CX, CY - (R[1] + R[2]) / 2 - 22, T2('2e', '2nd'), '#fff', 16) + txt(CX, CY - (R[2] + R[3]) / 2 - 22, T2('3e', '3rd'), '#fff', 16) + '</g>';
-          ov += `<g opacity="${f1(sub(p, .7, .9))}">` + txt(1130, 400, '4 × 4 × 4 = 64', C.text, 44, 'middle', 800) + txt(1130, 460, T2('61 aminozuren + 3 stop', '61 amino acid + 3 stop'), C.muted, 26) + '</g>';
+          ov += `<g opacity="${f1(sub(p, .7, .9))}">` + txt(1130, 400, '4 × 4 × 4 = 64', C.text, 44, 'middle', 800) + txt(1130, 460, T2('61 voor aminozuren + 3 stop', '61 for amino acids + 3 stop'), C.muted, 26) + '</g>';
         }
         if (i === 1) {
           const nC = SEQ.length / 3, k = Math.min(nC - 1, Math.floor(sub(p, .05, .95) * nC)), cod = SEQ.slice(k * 3, k * 3 + 3);

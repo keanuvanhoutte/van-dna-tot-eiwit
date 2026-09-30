@@ -201,7 +201,7 @@ function plasmid(L) {
   s += T(cx, cy + 52, '~5 kb', { size: 20, col: C.muted, mono: true, w: 500 });
   return out(600, 450, s, {
     legend: [
-      { c: RED, t: L({ nl: 'promotor', en: 'promoter' }), d: L({ nl: 'bv. CMV of T7; voor expressie in menselijke cellen een eukaryote promotor (bv. CMV)', en: 'e.g. CMV or T7; for expression in human cells a eukaryotic promoter (e.g. CMV)' }) },
+      { c: RED, t: L({ nl: 'promotor', en: 'promoter' }), d: L({ nl: 'bv. CMV of T7; voor expressie in menselijke cellen een promotor voor RNA-polymerase II (bv. de virale CMV-promotor)', en: 'e.g. CMV or T7; for expression in human cells a promoter for RNA polymerase II (e.g. the viral CMV promoter)' }) },
       { c: C.trna, t: L({ nl: 'MCS (multiple cloning site)', en: 'MCS (multiple cloning site)' }), d: L({ nl: 'knipplaatsen: plaats om een gen in te knippen', en: 'restriction sites: site to insert a gene' }) },
       { c: C.rna, t: L({ nl: 'ingevoegd gen', en: 'insert (gene)' }), d: L({ nl: 'bv. cDNA', en: 'e.g. cDNA' }) },
       { c: C.cap, t: 'pA', d: L({ nl: 'polyadenyleringssignaal na het gen', en: 'polyadenylation signal after the gene' }) },
@@ -316,10 +316,12 @@ function tdna(L) {
   s += arrow(282, 206, 330, 206) + badge(306, 180, 1);
   const y = 206;
   s += Ln(354, y, 580, y, C.tdna, 7);
-  for (let x = 376; x < 580; x += 25) s += Ci(x, y - 14, 9, '#c3b1ff', ' fill-opacity=".85"');
   s += Ci(352, y, 16, C.prot);
   s += T(466, y - 40, L({ nl: 'T-streng', en: 'T-strand' }), { col: C.tdna, w: 700 });
-  s += T(352, y + 44, 'VirD2', { col: C.prot, w: 700 }) + T(476, y + 44, 'VirE2', { col: '#c3b1ff', w: 700 });
+  s += T(352, y + 44, 'VirD2', { col: C.prot, w: 700 });
+  // VirE2 wordt apart (niet op de T-streng) uitgescheiden en bedekt de T-streng pas in de plantencel
+  for (const x of [384, 406, 428]) s += Ci(x, 300, 9, '#c3b1ff', ' fill-opacity=".85"');
+  s += T(366, 307, 'VirE2', { col: '#c3b1ff', w: 700, anchor: 'end' });
   // 2: naar de plantencel
   s += arrow(466, 268, 466, 330) + badge(492, 298, 2);
   // plantencel
@@ -338,7 +340,7 @@ function tdna(L) {
     ],
     steps: [
       L({ nl: 'VirD1/D2 knippen; VirD2 blijft aan het 5\'-uiteinde van de T-streng.', en: 'VirD1/D2 nick; VirD2 stays attached to the 5\' end of the T-strand.' }),
-      L({ nl: 'De enkelstrengige T-streng, bedekt met VirE2, gaat via type IV-secretie naar de plantencel → kern.', en: 'The single-stranded T-strand, coated with VirE2, goes by type IV secretion to the plant cell → nucleus.' }),
+      L({ nl: 'De enkelstrengige T-streng (met VirD2) en, apart, VirE2 gaan via type IV-secretie naar de plantencel; daar bedekt VirE2 de T-streng → kern.', en: 'The single-stranded T-strand (with VirD2) and, separately, VirE2 go by type IV secretion to the plant cell; there VirE2 coats the T-strand → nucleus.' }),
       L({ nl: 'Geïntegreerd in een plantenchromosoom (dubbelstrengig).', en: 'Integrated into a plant chromosome (double-stranded).' }),
     ],
     notes: [L({ nl: 'Plant & biotechnologie — dit gebeurt niet in de menselijke cel.', en: 'Plant & biotechnology — this does not happen in the human cell.' })],

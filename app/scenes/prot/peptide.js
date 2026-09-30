@@ -72,7 +72,7 @@ const PX = 1010, CX = 480, CY = 450;
 export default {
   id: 'peptide',
   title: { nl: 'Peptidebinding & φ/ψ', en: 'Peptide bond & φ/ψ' },
-  scale: '≈ 0,1–1 nm', time: { nl: 'in het ribosoom ≈ 5–6 bindingen/s (mens)', en: 'in the ribosome ≈ 5–6 bonds/s (human)' },
+  scale: { nl: '≈ 0,1–1 nm', en: '≈ 0.1–1 nm' }, time: { nl: 'in het ribosoom ≈ 5–6 bindingen/s (mens)', en: 'in the ribosome ≈ 5–6 bonds/s (human)' },
   org: { nl: 'alle organismen', en: 'all organisms' },
   legend: [[ACOL.N, 'N'], [ACOL.O, 'O'], [ACOL.C, 'C, Cα'], [EL.H, 'H'], [EL.CB, { nl: 'Cβ (zijketen)', en: 'Cβ (side chain)' }], ['#5fd3e6', { nl: 'peptidevlak', en: 'peptide plane' }], [C.chain, 'φ (N–Cα)'], [C.trna, 'ψ (Cα–C)']],
   extra: {

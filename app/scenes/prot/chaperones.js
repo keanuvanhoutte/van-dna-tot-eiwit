@@ -18,8 +18,8 @@ export default {
   org: { nl: 'mens (Hsp70, Hsp90, TRiC); GroEL–GroES als bacterieel model', en: 'human (Hsp70, Hsp90, TRiC); GroEL–GroES as bacterial model' },
   legend: [[C.chain, { nl: 'nieuwe polypeptideketen', en: 'new polypeptide chain' }], [HYD, { nl: 'hydrofoob segment', en: 'hydrophobic segment' }], [C.prot, 'Hsp70 · GroEL'], [C.prot2, { nl: 'co-chaperones (Hsp40, NEF) · GroES', en: 'co-chaperones (Hsp40, NEF) · GroES' }], [ATPC, 'ATP / ADP'], [C.rrna, { nl: 'ribosoom', en: 'ribosome' }]],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">3D: GroEL–GroES–(ADP)7, PDB <a href="https://www.rcsb.org/structure/1AON" target="_blank" rel="noopener">1AON</a> (E. coli).</p><p style="font-size:13px;color:#93a0bb">Netwerk: Hsp70 + Hsp40 helpen de meeste nieuwe ketens; chaperoninen (mens: TRiC/CCT) een deel; Hsp90 rijpt o.a. kinasen en steroïdreceptoren. Wat blijvend misvouwt, wordt via een E3 (bv. CHIP) gemerkt voor afbraak; faalt alles, dan aggregeert het.</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">3D: GroEL–GroES–(ADP)7, PDB <a href="https://www.rcsb.org/structure/1AON" target="_blank" rel="noopener">1AON</a> (E. coli).</p><p style="font-size:13px;color:#93a0bb">Network: Hsp70 + Hsp40 help most new chains; chaperonins (human: TRiC/CCT) a subset; Hsp90 matures e.g. kinases and steroid receptors. What stays misfolded is tagged for degradation via an E3 (e.g. CHIP); if everything fails, it aggregates.</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">3D: GroEL–GroES–(ADP)7, PDB <a href="https://www.rcsb.org/structure/1AON" target="_blank" rel="noopener">1AON</a> (E. coli).</p><p style="font-size:13px;color:#93a0bb">Netwerk: Hsp70 + Hsp40 helpen veel nieuwe ketens; chaperoninen (mens: TRiC/CCT) een deel; Hsp90 rijpt o.a. kinasen en steroïdreceptoren. Wat blijvend misvouwt, wordt via een E3 (bv. CHIP) gemerkt voor afbraak; faalt alles, dan aggregeert het.</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">3D: GroEL–GroES–(ADP)7, PDB <a href="https://www.rcsb.org/structure/1AON" target="_blank" rel="noopener">1AON</a> (E. coli).</p><p style="font-size:13px;color:#93a0bb">Network: Hsp70 + Hsp40 help many new chains; chaperonins (human: TRiC/CCT) a subset; Hsp90 matures e.g. kinases and steroid receptors. What stays misfolded is tagged for degradation via an E3 (e.g. CHIP); if everything fails, it aggregates.</p>' },
   simplified: {
     nl: 'Hsp70 is getekend als nucleotide-bindend domein (NBD) plus substraatbindend domein met een helixdeksel; de echte vorm is complexer. Het chaperonine is in doorsnede getekend met 2 van de 7 subeenheden per ring. In menselijke cellen vervult TRiC/CCT (8 verschillende subeenheden per ring, ingebouwd deksel) die rol in het cytosol; GroEL–GroES (E. coli) is het best bestudeerde model en wordt hier getoond. Hsp90 wordt enkel in het netwerk vermeld.',
     en: 'Hsp70 is drawn as a nucleotide-binding domain (NBD) plus a substrate-binding domain with a helical lid; the real shape is more complex. The chaperonin is drawn in cross-section showing 2 of the 7 subunits per ring. In human cells TRiC/CCT (8 different subunits per ring, built-in lid) plays this role in the cytosol; GroEL–GroES (E. coli) is the best-studied model and is shown here. Hsp90 is only mentioned in the network.' },
@@ -49,8 +49,8 @@ export default {
       'De 7 ATP worden gehydrolyseerd (~10 s). ATP-binding aan de andere ring stoot GroES en het eiwit uit. Nog niet gevouwen? Dan opnieuw.',
       'The 7 ATP are hydrolysed (~10 s). ATP binding to the opposite ring ejects GroES and the protein. Not folded yet? Then again.'),
     ST(8500, cam(4200, 460, 1650), 'Een netwerk van chaperones', 'A network of chaperones',
-      'Hsp70 helpt de meeste ketens, chaperoninen een deel; Hsp90 rijpt o.a. kinasen en steroïdreceptoren. Wie faalt, wordt afgebroken.',
-      'Hsp70 helps most chains, chaperonins a subset; Hsp90 matures e.g. kinases and steroid receptors. Whatever fails is degraded.'),
+      'Hsp70 helpt veel ketens, chaperoninen een kleiner deel; Hsp90 rijpt o.a. kinasen en steroïdreceptoren. Wie faalt, wordt afgebroken.',
+      'Hsp70 helps many chains, chaperonins a smaller subset; Hsp90 matures e.g. kinases and steroid receptors. Whatever fails is degraded.'),
   ],
   svg() {
     const r = rng(7);

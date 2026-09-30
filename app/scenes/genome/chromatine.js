@@ -136,7 +136,7 @@ export default {
     <path d="M440,410 L560,110 M440,490 L560,480" stroke="#fff" stroke-width="1.5" stroke-dasharray="6 5" opacity=".45"/>
     <!-- paneel B -->
     <g id="cr-pB">
-      ${panel(560, 110, 560, 370, T2('② Lussen (TADs)', '② Loops (TADs)'), '#2a3a60', 21)}
+      ${panel(560, 110, 560, 370, T2('② Lussen & TADs', '② Loops & TADs'), '#2a3a60', 21)}
       <g data-node="genregulatie" data-color="#ff8a3d" data-label="${T2('Lussen: enhancer ↔ promoter', 'Loops: enhancer ↔ promoter')}" data-nolabel>
         <g id="cr-fibre"></g>
       </g>

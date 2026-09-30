@@ -157,7 +157,7 @@ export default {
         if (step === 4) no += `<g opacity="${f1(ease(sub(p, .1, .5)))}">${txt(800, 420, T2('uncoating', 'uncoating'), C.text, 24)}</g>`;
         if (step === 5) {
           const k = ease(sub(p, .15, .6));
-          no += `<g opacity="${f1(k)}">${txt(RX, 778, T2('blijft meestal in het cytosol', 'usually stays in the cytosol'), C.rna, 22)}</g>`;
+          no += `<g opacity="${f1(k)}">${txt(RX, 778, T2('vaak cytosol · retrovirus: eerst DNA', 'often cytosol · retrovirus: DNA first'), C.rna, 22)}</g>`;
         }
         if (step === 6) {
           const k = ease(sub(p, .15, .6));
