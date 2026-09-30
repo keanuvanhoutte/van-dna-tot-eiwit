@@ -130,7 +130,7 @@ export default {
             });
             return s;
           })() : head(T2('Drie soorten lussen', 'Three kinds of loops')) +
-            T(225, T2('haarspeld: ± 2–5 res., vaak Gly/Pro', 'hairpin: ± 2–5 res., often Gly/Pro')) +
+            T(225, T2('haarspeld: min. 4–5 res., vaak Gly/Pro', 'hairpin: min. 4–5 res., often Gly/Pro')) +
             T(275, T2('omega-lus: ± 6–16 res. (Ω-vorm)', 'omega loop: ± 6–16 res. (Ω shape)')) +
             T(325, T2('random coil: > 16 res., ongeordend', 'random coil: > 16 res., disordered')) +
             T(400, T2('Ubiquitine: enkel korte lussen', 'Ubiquitin: only short loops'), C.muted, 22));

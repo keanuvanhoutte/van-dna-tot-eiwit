@@ -1,0 +1,4 @@
+# Fixlijst
+- [x] Haarspeldlussen (β-hairpin) staan als "2–5 residuen"; de cursus zegt minimaal 4–5 | pagina: /app/index.html?scene=secundair (en uitleg secundair) | verwacht: overal "minimaal 4–5 residuen", NL en EN
+- [ ] Bij "een cel kopieert geen RNA naar RNA" ontbreekt de uitzondering hepatitis-deltavirus | pagina: /app/index.html?scene=baltimore (klasse III/IV/V-stappen en uitleg) | verwacht: vermelding dat HDV-RNA door het RNA-polymerase II van de gastheer gekopieerd wordt, NL en EN, met bron
+- [ ] Er is alleen een verhaallijn vanuit viraal DNA | pagina: / (start) en /app/index.html | verwacht: een tweede verhaallijn "een eiwit maken vanuit een signaalmolecule" (signaal → receptor → signaalcascade → transcriptiefactor → gen aan → eiwit), kiesbaar bij de start, met eigen hoofdstukken en overgangen, die aansluit op de bestaande scènes vanaf transcriptie
