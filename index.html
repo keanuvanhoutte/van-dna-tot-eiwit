@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Van DNA tot eiwit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/theme.css">
+<style>
+  body { min-height: 100vh; display: grid; place-items: center; padding: 40px 16px;
+    background: radial-gradient(900px 500px at 20% 0%, rgba(79,143,247,.16), transparent 60%), radial-gradient(700px 400px at 90% 100%, rgba(255,138,61,.1), transparent 60%), var(--bg); }
+  main { max-width: 980px; width: 100%; }
+  .eyebrow { font: 500 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(32px, 5vw, 52px); margin: 12px 0 10px; letter-spacing: -.02em; }
+  p.lead { color: var(--muted); font-size: 17px; max-width: 700px; margin: 0 0 34px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  a.card { display: block; text-decoration: none; color: var(--text); background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: 22px; transition: .2s; }
+  a.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .tag { font: 500 11px var(--mono); color: var(--c); letter-spacing: .08em; text-transform: uppercase; }
+  a.card h2 { font-size: 20px; margin: 8px 0 6px; }
+  a.card p { color: var(--muted); font-size: 14px; line-height: 1.55; margin: 0; }
+  .arch { margin-top: 16px; font-size: 13px; color: var(--muted); }
+  .arch a { color: var(--muted); }
+  .topline { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .topline #langBox { display: flex; gap: 6px; }
+  .foot { margin-top: 26px; color: var(--muted); font-size: 13px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .btn { all: unset; cursor: pointer; font-size: 12.5px; padding: 6px 11px; border-radius: 8px; border: 1px solid var(--line); color: var(--muted); }
+  .btn[aria-pressed=true] { color: var(--text); border-color: rgba(124,196,255,.5); background: rgba(124,196,255,.1); }
+  .btn:focus-visible { outline: 2px solid var(--accent); }
+
+  /* taalkeuze bij de eerste start */
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+
+  <section id="home" hidden>
+    <div class="topline"><div class="eyebrow" id="eyebrow"></div><span id="langBox"></span></div>
+    <h1 id="h"></h1>
+    <p class="lead" id="lead"></p>
+    <div class="grid">
+      <a class="card" href="app/index.html" style="--c:var(--rna)"><span class="tag" id="c0tag"></span><h2 id="c0t"></h2><p id="c0p"></p></a>
+      <a class="card" href="atlas/index.html" style="--c:var(--dna)"><span class="tag">Atlas</span><h2 id="c2t"></h2><p id="c2p"></p></a>
+      <a class="card" href="docs/blueprint.html" style="--c:var(--chain)"><span class="tag" id="c3tag"></span><h2>Blueprint</h2><p id="c3p"></p></a>
+    </div>
+    <p class="arch"><span id="archT"></span> <a href="poc/01-zoomreis/index.html">POC 1</a> · <a href="poc/02-dna-vormen/index.html">POC 2</a></p>
+    <div class="foot"><span id="foot"></span></div>
+  </section>
+</main>
+<script type="module">
+import { L, langSwitch } from './shared/i18n.js';
+
+/* geen aparte taalkeuze bij het openen: de taal wissel je met de knoppen NL/EN onderaan (en in de app) */
+{
+  const T = {
+    eyebrow: { nl: 'Fase 2 · volledig verhaal in opbouw', en: 'Phase 2 · full story in progress' },
+    h: { nl: 'Van DNA tot eiwit', en: 'From DNA to protein' },
+    lead: { nl: 'Interactieve moleculaire reis door een menselijke cel. Klik op onderdelen om in te zoomen op het volgende proces, tot op het niveau van echte atoomstructuren.',
+            en: 'An interactive molecular journey through a human cell. Click on parts to zoom into the next process, all the way down to real atomic structures.' },
+    c0tag: { nl: 'Start', en: 'Start' },
+    c0t: { nl: 'Het verhaal: van DNA tot eiwit', en: 'The story: from DNA to protein' },
+    c0p: { nl: 'Volg de rode draad in 21 hoofdstukken, van een virus dat DNA binnenbrengt tot een gevouwen en afgebroken eiwit. Elke scène heeft stappen, zoom en uitleg; klik op elk onderdeel voor een zijpad.',
+           en: 'Follow the thread through 21 chapters, from a virus bringing in DNA to a folded and degraded protein. Every scene has steps, zoom and explanations; click any part for a side path.' },
+    c2t: { nl: 'DNA/RNA-atlas', en: 'DNA/RNA atlas' },
+    c2p: { nl: 'Alle soorten DNA en RNA in 3D uit echte PDB-structuren: A/B/Z-DNA, quadruplexen, tRNA, ribozymen, drug–DNA-complexen … met filters en vergelijkmodus.',
+           en: 'All kinds of DNA and RNA in 3D from real PDB structures: A/B/Z-DNA, quadruplexes, tRNA, ribozymes, drug–DNA complexes … with filters and compare mode.' },
+    archT: { nl: 'Archief (goedgekeurde proofs of concept):', en: 'Archive (approved proofs of concept):' },
+    c3tag: { nl: 'Schema', en: 'Design' },
+    c3p: { nl: 'Navigatiemodel, inhoudskaart met alle geplande processen, visuele taal, bronnen en borgingsprotocol, roadmap.',
+           en: 'Navigation model, content map of all planned processes, visual language, sources and quality protocol, roadmap (document in Dutch).' },
+    foot: { nl: 'Inhoud met status "concept" is nog niet tegen de bronnen nagekeken.', en: 'Content marked "draft" has not yet been checked against the sources.' },
+  };
+  for (const [id, v] of Object.entries(T)) document.getElementById(id).textContent = L(v);
+  document.title = L(T.h);
+  document.getElementById('langBox').append(langSwitch('btn'));
+  document.getElementById('home').hidden = false;
+}
+</script>
+</body>
+</html>

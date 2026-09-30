@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blueprint DNA→eiwit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+  body { line-height: 1.55; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+  header { padding: 56px 0 28px; border-bottom: 1px solid var(--line);
+    background: radial-gradient(900px 400px at 15% -10%, rgba(79,143,247,.18), transparent 60%),
+                radial-gradient(700px 380px at 90% 0%, rgba(240,107,192,.12), transparent 60%); }
+  .eyebrow { font: 500 12px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-size: clamp(30px, 4.4vw, 48px); line-height: 1.1; margin: 14px 0 12px; letter-spacing: -.02em; }
+  h2 { font-size: 24px; margin: 0 0 6px; letter-spacing: -.01em; }
+  h3 { font-size: 16px; margin: 18px 0 6px; }
+  .lead { color: var(--muted); max-width: 760px; font-size: 17px; }
+  section { padding: 44px 0; border-bottom: 1px solid var(--line); }
+  .sub { color: var(--muted); margin: 0 0 22px; max-width: 780px; }
+  nav.toc { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+  nav.toc a { font-size: 13px; text-decoration: none; color: var(--text); border: 1px solid var(--line);
+    padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.03); }
+  nav.toc a:hover { border-color: var(--accent); }
+  .grid3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .card { background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .card p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+  .card b { color: var(--text); }
+  .pill { display: inline-block; font: 500 11px/1 var(--mono); padding: 4px 8px; border-radius: 6px;
+    background: rgba(124,196,255,.12); color: var(--accent); margin-right: 4px; }
+
+  /* navigatiediagram */
+  .navdiag { width: 100%; height: auto; display: block; }
+
+  /* kaart */
+  .maptools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+  .maptools input[type=search] { background: var(--bg-2); border: 1px solid var(--line); color: var(--text);
+    border-radius: 10px; padding: 9px 12px; min-width: 240px; font: inherit; font-size: 14px; }
+  .maptools label { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; cursor: pointer; }
+  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); margin-left: auto; flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+  .mapshell { display: grid; grid-template-columns: 1fr 340px; gap: 16px; align-items: start; }
+  @media (max-width: 980px) { .mapshell { grid-template-columns: 1fr; } }
+  .mapscroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--bg-2); }
+  .map { display: grid; grid-template-columns: 118px repeat(7, minmax(132px, 1fr)); min-width: 1060px; }
+  .map .hd { position: sticky; top: 0; background: #0f1830; font-size: 12px; font-weight: 600; padding: 10px 8px;
+    border-bottom: 1px solid var(--line); border-left: 1px solid var(--line); z-index: 1; }
+  .map .hd small { display: block; font-weight: 400; color: var(--muted); font-size: 10.5px; }
+  .map .rowhd { font-size: 12px; font-weight: 600; padding: 10px 8px; border-top: 1px solid var(--line); }
+  .map .rowhd small { display: block; font: 400 10.5px/1.3 var(--mono); color: var(--muted); margin-top: 3px; }
+  .map .cell { border-top: 1px solid var(--line); border-left: 1px solid var(--line); padding: 6px; display: flex;
+    flex-direction: column; gap: 5px; min-height: 64px; }
+  .node { all: unset; cursor: pointer; font-size: 12px; line-height: 1.25; padding: 6px 7px 6px 9px; border-radius: 7px;
+    background: rgba(255,255,255,.04); border: 1px solid transparent; position: relative; transition: .15s; }
+  .node::before { content: ""; position: absolute; left: 0; top: 5px; bottom: 5px; width: 3px; border-radius: 3px; background: var(--c); }
+  .node:hover { background: rgba(255,255,255,.09); }
+  .node:focus-visible { outline: 2px solid var(--accent); }
+  .node.course::after { content: "cursus"; font: 500 9px/1 var(--mono); color: #ffc247; margin-left: 5px; }
+  .map.focus .node { opacity: .22; }
+  .map.focus .node.hit { opacity: 1; }
+  .map .node.sel { opacity: 1; border-color: var(--accent); background: rgba(124,196,255,.14); }
+  .map .node.k-in { border-color: #7fdc6a; }
+  .map .node.k-next { border-color: #ff8a3d; }
+  .map .node.k-rel { border-color: #9b7bff; border-style: dashed; }
+  .map .node.k-parent { border-color: #7fdc6a; border-style: dotted; }
+  .map.dim .node:not(.match) { opacity: .15; }
+
+  .detail { position: sticky; top: 14px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; padding: 18px; min-height: 240px; }
+  .detail h3 { margin: 4px 0 2px; font-size: 19px; }
+  .detail .en { color: var(--muted); font-size: 13px; font-style: italic; }
+  .detail p { font-size: 14px; }
+  .detail .row { margin-top: 12px; }
+  .detail .row > span { display: block; font: 500 10.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .chip { all: unset; cursor: pointer; font-size: 12px; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--line); margin: 0 4px 5px 0; display: inline-block; }
+  .chip:hover { border-color: var(--accent); }
+  .badge { font: 500 10.5px/1 var(--mono); padding: 4px 7px; border-radius: 5px; background: rgba(255,194,71,.13); color: #ffc247; }
+  .badge.st { background: rgba(255,138,61,.13); color: #ff8a3d; }
+  .empty { color: var(--muted); font-size: 14px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  .sw { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .sw div { border: 1px solid var(--line); border-radius: 10px; padding: 10px; font-size: 13px; }
+  .sw div i { display: block; height: 26px; border-radius: 6px; margin-bottom: 8px; }
+  .steps { counter-reset: s; list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .steps li { counter-increment: s; background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px 14px 54px; position: relative; font-size: 14px; color: var(--muted); }
+  .steps li b { color: var(--text); }
+  .steps li::before { content: counter(s); position: absolute; left: 16px; top: 13px; width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(124,196,255,.14); color: var(--accent); display: grid; place-items: center; font: 600 13px var(--mono); }
+  .phase { border-left: 3px solid var(--line); padding: 4px 0 4px 16px; margin: 0 0 18px; }
+  .phase.now { border-color: var(--accent); }
+  .phase h3 { margin: 0 0 4px; }
+  .phase p { margin: 0; color: var(--muted); font-size: 14px; }
+  footer { padding: 30px 0 60px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Blueprint · v0.1 · concept</div>
+    <h1>Van DNA tot eiwit</h1>
+    <p class="lead">Een app die werkt als één doorlopende moleculaire animatie. Elk deel van het beeld is klikbaar en opent een
+      nieuwe animatie die dat deel verdiept: van een virus dat zijn DNA in een menselijke cel brengt, tot één waterstofbrug in een α-helix.</p>
+    <nav class="toc">
+      <a href="#navigatie">Navigatiemodel</a><a href="#kaart">Inhoudskaart</a><a href="#startpunten">Startpunten</a>
+      <a href="#taal">Visuele taal</a><a href="#borging">Wetenschappelijke borging</a><a href="#bronnen">Bronnen</a><a href="#techniek">Techniek</a>
+      <a href="#roadmap">Roadmap</a><a href="#vragen">Open vragen</a><a href="../index.html">← POC's</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="navigatie">
+  <h2>Navigatiemodel: drie bewegingen</h2>
+  <p class="sub">De inhoud is geen boom maar een netwerk: het ribosoom hoort zowel bij translatie als bij ribosoombiogenese.
+    Daarom heeft elke scène drie soorten uitgangen, plus de weg terug via een broodkruimelpad.</p>
+  <svg class="navdiag" viewBox="0 0 1000 300" role="img" aria-label="Navigatiemodel met inzoomen, volgende stap en zijsprong">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="currentColor"/></marker>
+    </defs>
+    <g font-family="Inter, sans-serif" font-size="13">
+      <rect x="360" y="30" width="280" height="84" rx="14" fill="#0f1830" stroke="#7cc4ff"/>
+      <text x="500" y="62" text-anchor="middle" fill="#e8edf7" font-weight="600" font-size="15">Scène: Transcriptie</text>
+      <text x="500" y="86" text-anchor="middle" fill="#93a0bb">animatie + klikbare hotspots</text>
+
+      <g color="#7fdc6a"><line x1="500" y1="116" x2="500" y2="196" stroke="currentColor" stroke-width="2" marker-end="url(#ah)"/></g>
+      <rect x="380" y="200" width="240" height="64" rx="12" fill="#0d1426" stroke="#7fdc6a"/>
+      <text x="500" y="228" text-anchor="middle" fill="#e8edf7" font-weight="600">RNA-polymerase II</text>
+      <text x="500" y="248" text-anchor="middle" fill="#93a0bb" font-size="12">① inzoomen — kleiner, dieper</text>
+
+      <g color="#ff8a3d"><line x1="642" y1="72" x2="752" y2="72" stroke="currentColor" stroke-width="2" marker-end="url(#ah)"/></g>
+      <rect x="756" y="40" width="220" height="64" rx="12" fill="#0d1426" stroke="#ff8a3d"/>
+      <text x="866" y="68" text-anchor="middle" fill="#e8edf7" font-weight="600">5'-capping</text>
+      <text x="866" y="88" text-anchor="middle" fill="#93a0bb" font-size="12">② volgende stap in de tijd</text>
+
+      <g color="#9b7bff"><path d="M640 100 C 700 150, 720 190, 770 200" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#ah)"/></g>
+      <rect x="774" y="176" width="202" height="64" rx="12" fill="#0d1426" stroke="#9b7bff" stroke-dasharray="5 5"/>
+      <text x="875" y="204" text-anchor="middle" fill="#e8edf7" font-weight="600">Supercoiling</text>
+      <text x="875" y="224" text-anchor="middle" fill="#93a0bb" font-size="12">③ zijsprong / verband</text>
+
+      <g color="#93a0bb"><line x1="358" y1="72" x2="250" y2="72" stroke="currentColor" stroke-width="2" marker-end="url(#ah)"/></g>
+      <rect x="24" y="40" width="222" height="64" rx="12" fill="#0d1426" stroke="#93a0bb"/>
+      <text x="135" y="68" text-anchor="middle" fill="#e8edf7" font-weight="600">Kern › Chromatine</text>
+      <text x="135" y="88" text-anchor="middle" fill="#93a0bb" font-size="12">↩ uitzoomen (broodkruimels)</text>
+
+      <text x="135" y="170" text-anchor="middle" fill="#93a0bb" font-size="12">Knoop zonder scène?</text>
+      <text x="135" y="190" text-anchor="middle" fill="#93a0bb" font-size="12">→ conceptkaart met tekst, 3D-model</text>
+      <text x="135" y="210" text-anchor="middle" fill="#93a0bb" font-size="12">en dezelfde uitgangen.</text>
+      <text x="135" y="230" text-anchor="middle" fill="#93a0bb" font-size="12">Zo kan de app stap voor stap groeien.</text>
+    </g>
+  </svg>
+  <div class="grid3" style="margin-top:18px">
+    <div class="card"><b>Semantisch zoomen</b><p>Klikken = de camera vliegt in op het aangeklikte onderdeel, waarna de detailscène
+      naadloos overneemt. Het onderdeel staat in beide scènes op dezelfde plek en in dezelfde kleur.</p></div>
+    <div class="card"><b>Twee soorten beeld</b><p><b>2D-scènes</b> voor processen (schematisch, geanimeerd, klikbaar).
+      <b>3D-structuren</b> uit echte PDB-coördinaten zodra je tot op molecuulniveau zoomt: vanaf daar niets meer tekenen, alleen echte data.</p></div>
+    <div class="card"><b>Schaalbalk & tijdsbalk</b><p>Elke scène toont op welke schaal (µm → Å) en welke tijdsduur (uren → µs) je kijkt,
+      zodat je niet vergeet hoe groot of snel iets echt is.</p></div>
+  </div>
+</section>
+
+<section id="kaart">
+  <h2>Inhoudskaart</h2>
+  <p class="sub">Alle geplande knopen: processtappen van links naar rechts, zoomniveau van boven naar onder. Klik een knoop om
+    te zien waar je vanuit die scène naartoe kan. Alle tekst is nog <b>concept</b> en wordt eerst nagekeken.</p>
+  <div class="maptools">
+    <input type="search" id="q" placeholder="Zoek (bv. ribosoom, splicing, VirD2)…" aria-label="Zoek knoop">
+    <label><input type="checkbox" id="onlyCourse"> Toon enkel cursusinhoud</label>
+    <div class="legend">
+      <span><i style="background:#7fdc6a"></i>inzoomen</span>
+      <span><i style="background:#ff8a3d"></i>volgende stap</span>
+      <span><i style="background:#9b7bff"></i>zijsprong</span>
+      <span id="count"></span>
+    </div>
+  </div>
+  <div class="mapshell">
+    <div class="mapscroll"><div class="map" id="map"></div></div>
+    <aside class="detail" id="detail"><p class="empty">Klik een knoop in de kaart.</p></aside>
+  </div>
+</section>
+
+<section id="startpunten">
+  <h2>Startpunten: hoe komt genetische informatie de cel binnen?</h2>
+  <p class="sub">De app opent op een <b>menselijke cel</b> met verschillende routes. Elke route komt uiteindelijk uit bij dezelfde
+    centrale machinerie (transcriptie → translatie → vouwing), maar via een ander pad.</p>
+  <table>
+    <thead><tr><th>Route</th><th>Wat komt binnen</th><th>Hoe bereikt het de machinerie</th><th>Bijzonder</th></tr></thead>
+    <tbody>
+      <tr><td><b>Adenovirus (dsDNA)</b> · in POC</td><td>dsDNA-genoom in een capside</td><td>endocytose → endosoom → microtubuli → kernporie → transcriptie door Pol II van de cel</td><td>genoom blijft episomaal; volgt het volledige kernpad</td></tr>
+      <tr><td><b>mRNA-vaccin (lipidenanodeeltje)</b> · in POC</td><td>gemodificeerd mRNA</td><td>endocytose → endosomale ontsnapping → ribosomen</td><td>slaat de kern over: zijsprong recht naar translatie</td></tr>
+      <tr><td><b>(+)RNA-virus</b> (bv. SARS-CoV-2)</td><td>ssRNA dat al als mRNA werkt</td><td>direct naar ribosomen, zonder kern</td><td>slaat transcriptie over</td></tr>
+      <tr><td><b>Retrovirus</b> (HIV-1)</td><td>ssRNA + reverse transcriptase</td><td>RNA → DNA → integratie als provirus</td><td>keert de "centrale dogma"-richting om</td></tr>
+      <tr><td><b>Eigen genoom</b></td><td>(niets: het zit er al)</td><td>chromatine openen → transcriptie</td><td>de "standaardroute" voor genexpressie</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="taal">
+  <h2>Visuele taal</h2>
+  <p class="sub">Vaste kleur per moleculesoort in álle scènes en 3D-modellen, zodat je een molecuul herkent over zoomniveaus heen.
+    Donkere achtergrond, zoals in wetenschappelijke animaties: de moleculen springen eruit.</p>
+  <div class="sw">
+    <div><i style="background:var(--dna)"></i>Gastheer-DNA</div>
+    <div><i style="background:var(--tdna)"></i>Vreemd DNA (viraal)</div>
+    <div><i style="background:var(--rna)"></i>mRNA / pre-mRNA</div>
+    <div><i style="background:var(--trna)"></i>tRNA</div>
+    <div><i style="background:var(--rrna)"></i>Ribosoom</div>
+    <div><i style="background:var(--prot)"></i>Enzymen & complexen</div>
+    <div><i style="background:var(--chain)"></i>Nieuwe polypeptideketen</div>
+    <div><i style="background:var(--histone)"></i>Histonen</div>
+    <div><i style="background:var(--membrane)"></i>Membranen & celwand</div>
+    <div><i style="background:var(--bact)"></i>Bacterie</div>
+  </div>
+</section>
+
+<section id="borging">
+  <h2>Wetenschappelijke borging</h2>
+  <p class="sub">Uitgangspunt: geen enkel feit in de app zonder bron, en elke vereenvoudiging wordt benoemd.</p>
+  <ol class="steps">
+    <li><b>Status per knoop:</b> <span class="pill">concept</span> → <span class="pill">nagekeken</span> → <span class="pill">gevalideerd</span>.
+      In de app is de status zichtbaar; conceptinhoud wordt gemarkeerd.</li>
+    <li><b>Bron per bewering:</b> elk getal (bp per winding, aantal subeenheden, snelheid…) krijgt een referentie: handboek (bv. Alberts
+      <i>Molecular Biology of the Cell</i>, Branden & Tooze voor eiwitstructuur), review of oorspronkelijk artikel, met DOI.</li>
+    <li><b>3D = echte data:</b> moleculaire structuren komen rechtstreeks uit de PDB (met ID, methode en resolutie erbij), nooit nagetekend.</li>
+    <li><b>2D-scènes = schematisch maar correct in orde en richting:</b> 5'→3', antiparallelle strengen, volgorde van stappen, welke
+      eiwitten waar binden. Elke scène heeft een vakje "Wat is hier vereenvoudigd?" (grootte, snelheid, aantal moleculen).</li>
+    <li><b>Controle op twee niveaus:</b> eerst een inhoudelijke controle tegen de bronnen, daarna jouw/docent-review voor de
+      status op <i>gevalideerd</i> gaat. Twijfelpunten (bv. het exacte mechanisme waarmee adenovirus-DNA de kernporie passeert) worden als "omstreden" getoond.</li>
+    <li><b>Organisme-bewust:</b> veel details verschillen tussen bacterie, gist, plant en mens. Elke scène vermeldt voor welk organisme ze geldt.</li>
+  </ol>
+</section>
+
+<section id="bronnen">
+  <h2>Bronnen</h2>
+  <p class="sub">Jouw cursus (slides + video's van BIT 03) bepaalt het <b>detailniveau</b>. De inhoud zelf komt uit betrouwbare wetenschappelijke bronnen; elke bewering krijgt een verwijzing.</p>
+  <div class="grid3">
+    <div class="card"><b>Handboeken (gratis, NCBI Bookshelf)</b><p>Alberts <i>Molecular Biology of the Cell</i>, Lodish <i>Molecular Cell Biology</i>, Berg <i>Biochemistry</i>: basis voor processen en getallen.</p></div>
+    <div class="card"><b>Primaire literatuur & reviews</b><p>PubMed / PubMed Central (bv. structuurartikels, reviews over transcriptie, splicing, virale binnenkomst), met DOI.</p></div>
+    <div class="card"><b>Structuurdata</b><p>RCSB PDB en PDB-101 (<i>Molecule of the Month</i>), UniProt voor eiwitten, Rfam voor RNA-families.</p></div>
+  </div>
+  <p class="sub" style="margin-top:14px">Niet als bron: Wikipedia, blogs, AI-samenvattingen (hoogstens om de primaire bron te vinden). Verificatierondes worden bewaard in <code>docs/verificatie-ronde-*.md</code>.</p>
+</section>
+
+<section id="techniek">
+  <h2>Techniek</h2>
+  <div class="grid3">
+    <div class="card"><b>Webapp</b><p>HTML/JS in de browser, later met Vite + TypeScript en als installeerbare app (PWA). Werkt op laptop en tablet.</p></div>
+    <div class="card"><b>Inhoud = data</b><p>Eén kennisgraaf (<code>shared/graph.js</code>) voedt de kaart, de navigatie en de infopanelen.
+      Een nieuwe knoop toevoegen = één object erbij.</p></div>
+    <div class="card"><b>Scènemodules</b><p>Per knoop een optionele scène (SVG + tijdlijn-animatie) met hotspots die naar knoop-ID's
+      verwijzen. Zonder scène: automatische conceptkaart.</p></div>
+    <div class="card"><b>3D-viewer</b><p>3Dmol.js voor lichte weergave (POC), Mol* later voor grote complexen zoals het ribosoom en de nucleosoom.</p></div>
+    <div class="card"><b>Structuurdata</b><p>RCSB PDB (mmCIF) rechtstreeks geladen; later lokaal gecachet voor offline gebruik.</p></div>
+    <div class="card"><b>Animaties</b><p>POC: eigen SVG/CSS-animaties. Voor complexe tijdlijnen kan GSAP; voor 3D-animaties (bv. vouwing) trajecten uit moleculaire dynamica.</p></div>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>Roadmap</h2>
+  <div class="phase"><h3>Fase 0 · Blueprint ✓</h3><p>Inhoudskaart, navigatiemodel, visuele taal, borgingsprotocol.</p></div>
+  <div class="phase"><h3>Fase 1 · Proofs of concept ✓ (goedgekeurd)</h3><p>Zoomreis cel → kern → transcriptie → processing → translatie; A/B/Z-DNA in 3D met live berekende parameters; NL/EN.</p></div>
+  <div class="phase now"><h3>Fase 2 · Volledig verhaal ✓ (eerste versie, 29-09-2026)</h3><p>Engine v2 (stappen, ondertiteling, camera-zoom per stap, tijdlijn met snelheid, verhaallijn van 21 hoofdstukken, "Waar ben ik?"-kaart, uitzoomen/start), elke knoop van de inhoudskaart een scène, uitgebreide uitlegpanelen met bronnen, nucleïnezuren-atlas.</p></div>
+  <div class="phase"><h3>Fase 3 · Breedte</h3><p>Zijtakken: chromatine en epigenetica, replicatie en herstel, virale routes, RNA-lot, eiwittargeting en afbraak.</p></div>
+  <div class="phase"><h3>Fase 4 · Diepte</h3><p>3D-modus voor elke structuurknoop, atoomniveau (waterstofbruggen, φ/ψ), prokaryoot-vs-eukaryootschakelaar.</p></div>
+  <div class="phase"><h3>Fase 5 · Leren</h3><p>Koppeling aan de cursus (bv. aminozurentrainer, Ramachandran-oefeningen, PyMOL-opdrachten), zoekfunctie, "leg-uit"-modus.</p></div>
+</section>
+
+<section id="vragen">
+  <h2>Open vragen voor jou</h2>
+  <div class="grid3">
+    <div class="card"><b>Taal</b><p>Nederlandse interface met Engelse vaktermen erbij (zoals nu), of volledig Engels zoals de cursus?</p></div>
+    <div class="card"><b>Celtype</b><p>Beslist: menselijke cel (epitheelcel). Later eventueel een schakelaar naar bacterie om verschillen te tonen (operon, gekoppelde transcriptie–translatie).</p></div>
+    <div class="card"><b>De video uit de les</b><p>Beantwoord: het translatiefilmpje uit "Fundamentals of DNA and RNA structure" (video 5). De translatiescène volgt dezelfde stappen: cap → 43S scant naar AUG → 60S bindt → elongatie → poly(A)-staart.</p></div>
+    <div class="card"><b>Diepgang</b><p>Doelpubliek: bachelor bio-informatica (jijzelf), of ook breder te gebruiken voor anderen?</p></div>
+  </div>
+</section>
+</main>
+
+<footer class="wrap">Blueprint v0.1 · alle inhoud op status "concept" · kennisgraaf: <code>shared/graph.js</code></footer>
+
+<script type="module">
+import { NODES, STAGES, SCALES } from '../shared/graph.js';
+
+const COL = { entry: 'var(--tdna)', genome: 'var(--dna)', repl: 'var(--dna-2)', txn: 'var(--prot)', rna: 'var(--rna)', tl: 'var(--rrna)', prot: 'var(--chain)' };
+const map = document.getElementById('map');
+const detail = document.getElementById('detail');
+const els = {};
+
+map.append(Object.assign(document.createElement('div'), { className: 'hd', innerHTML: 'Zoomniveau ↓<small>Proces →</small>' }));
+for (const st of STAGES) map.append(Object.assign(document.createElement('div'), { className: 'hd', innerHTML: `${st.t}<small>${st.en}</small>` }));
+for (const sc of SCALES) {
+  map.append(Object.assign(document.createElement('div'), { className: 'rowhd', innerHTML: `${sc.id}. ${sc.t}<small>${sc.range}</small>` }));
+  for (const st of STAGES) {
+    const cell = document.createElement('div'); cell.className = 'cell';
+    for (const n of Object.values(NODES).filter(n => n.stage === st.id && n.scale === sc.id)) {
+      const b = document.createElement('button');
+      b.className = 'node' + (n.course ? ' course' : '');
+      b.style.setProperty('--c', COL[n.stage]);
+      b.textContent = n.t;
+      b.title = n.en;
+      b.onclick = () => select(n.id);
+      els[n.id] = b; cell.append(b);
+    }
+    map.append(cell);
+  }
+}
+document.getElementById('count').textContent = Object.keys(NODES).length + ' knopen';
+
+function chips(label, ids) {
+  if (!ids.length) return '';
+  return `<div class="row"><span>${label}</span>${ids.map(id => `<button class="chip" data-id="${id}">${NODES[id]?.t ?? id}</button>`).join('')}</div>`;
+}
+function select(id) {
+  const n = NODES[id];
+  for (const e of Object.values(els)) e.className = e.className.replace(/\s?(sel|hit|k-\w+)/g, '');
+  map.classList.add('focus');
+  const mark = (ids, cls) => ids.forEach(i => els[i]?.classList.add('hit', cls));
+  mark(n.parents, 'k-parent'); mark(n.prev, 'k-parent'); mark(n.rel, 'k-rel'); mark(n.next, 'k-next'); mark(n.in, 'k-in');
+  els[id].classList.add('sel', 'hit');
+  const st = STAGES.find(s => s.id === n.stage), sc = SCALES.find(s => s.id === n.scale);
+  detail.innerHTML = `
+    <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="badge st">${n.status}</span>${n.course ? '<span class="badge">BIT 03</span>' : ''}
+      <span class="badge" style="background:rgba(255,255,255,.06);color:var(--muted)">${n.kind === 'process' ? 'proces' : 'structuur'}</span></div>
+    <h3>${n.t}</h3><div class="en">${n.en}</div>
+    <p>${n.s}</p>
+    <div style="font-size:12px;color:var(--muted)">${st.t} · niveau ${sc.id} (${sc.range})</div>
+    ${chips('① Inzoomen', n.in)}${chips('② Volgende stap', n.next)}${chips('③ Zijsprong', n.rel)}
+    ${chips('↩ Komt van', [...new Set([...n.parents, ...n.prev])])}
+    ${n.pdb.length ? `<div class="row"><span>3D-structuren (PDB)</span>${n.pdb.map(p => `<a class="chip" href="https://www.rcsb.org/structure/${p}" target="_blank" rel="noopener">${p} ↗</a>`).join('')}</div>` : ''}`;
+  detail.querySelectorAll('[data-id]').forEach(c => c.onclick = () => { select(c.dataset.id); els[c.dataset.id].scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); });
+}
+
+const q = document.getElementById('q'), oc = document.getElementById('onlyCourse');
+function filter() {
+  const v = q.value.trim().toLowerCase();
+  const on = v || oc.checked;
+  map.classList.toggle('dim', !!on);
+  for (const [id, e] of Object.entries(els)) {
+    const n = NODES[id];
+    const txt = (n.t + ' ' + n.en + ' ' + n.s).toLowerCase();
+    e.classList.toggle('match', (!v || txt.includes(v)) && (!oc.checked || n.course));
+  }
+}
+q.oninput = filter; oc.onchange = filter;
+select('transcriptie');
+</script>
+</body>
+</html>

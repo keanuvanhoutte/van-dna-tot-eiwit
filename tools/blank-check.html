@@ -1,0 +1,55 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>blank-check</title>
+<body style="background:#0a1224"><pre id="out">running…</pre>
+<script type="module">
+/* Zoekt "zwarte schermen": rastert elke SVG-scène per stap (begin p≈0,02 en eind p≈0,98) binnen de camera van die stap
+ * en meet welk deel van het beeld inhoud bevat. Meldt stappen die (bijna) leeg beginnen of die bij de overgang
+ * sterk donkerder worden dan het einde van de vorige stap. Gebruik: headless Chrome --dump-dom tools/blank-check.html */
+const out = document.getElementById('out');
+const { SCENES } = await import('../app/scenes/index.js');
+const W = 320, H = 180;
+const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+const ctx = cv.getContext('2d', { willReadFrequently: true });
+const only = new URLSearchParams(location.search).get('ids')?.split(',');
+
+async function fill(svg, box) {
+  svg.setAttribute('viewBox', box.join(' '));
+  svg.setAttribute('width', W); svg.setAttribute('height', H);
+  const src = new XMLSerializer().serializeToString(svg);
+  const img = new Image();
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(src);
+  await img.decode().catch(() => {});
+  ctx.fillStyle = '#0a1224'; ctx.fillRect(0, 0, W, H);
+  try { ctx.drawImage(img, 0, 0, W, H); } catch { return -1; }
+  const d = ctx.getImageData(0, 0, W, H).data;
+  let n = 0;
+  for (let i = 0; i < d.length; i += 4) if (Math.abs(d[i] - 10) + Math.abs(d[i + 1] - 18) + Math.abs(d[i + 2] - 36) > 60) n++;
+  return n / (W * H);
+}
+
+const rows = [], flags = [];
+for (const [id, sc] of Object.entries(SCENES)) {
+  if (sc.alias || sc.kind === '3d' || !sc.svg) continue;
+  if (only && !only.includes(id)) continue;
+  const host = document.createElement('div'); host.style.cssText = 'position:absolute;left:-5000px;top:0;width:1600px;height:900px';
+  host.innerHTML = sc.svg(); document.body.append(host);
+  const svg = host.querySelector('svg');
+  let api = null; try { api = sc.init?.(svg, { lang: 'nl' }); } catch (e) { flags.push(`${id}: init ${e.message}`); host.remove(); continue; }
+  await new Promise(r => setTimeout(r, 900));          // scènes die PDB-gegevens ophalen (secundair, dnahelix…) eerst laten laden
+  let t0 = 0, prevEnd = null;
+  for (const [k, st] of sc.steps.entries()) {
+    const box = st.cam ?? [0, 0, 1600, 900];
+    const at = async p => { try { api?.update?.(t0 + st.dur * p, { step: k, p, t: t0 + st.dur * p, total: 0 }); } catch (e) { return -1; } return fill(svg, box); };
+    const a = await at(.02), b = await at(.98);
+    rows.push(`${id} s${k} start ${(a * 100).toFixed(1)}% end ${(b * 100).toFixed(1)}%`);
+    if (a >= 0 && a < .015) flags.push(`${id} stap ${k}: begint bijna leeg (${(a * 100).toFixed(1)}%)`);
+    if (prevEnd !== null && a >= 0 && prevEnd > .03 && a < prevEnd * .35) flags.push(`${id} stap ${k}: overgang wordt donker (${(prevEnd * 100).toFixed(1)}% → ${(a * 100).toFixed(1)}%)`);
+    if (b >= 0 && b < .015) flags.push(`${id} stap ${k}: eindbeeld bijna leeg (${(b * 100).toFixed(1)}%)`);
+    prevEnd = b; t0 += st.dur;
+  }
+  try { api?.destroy?.(); } catch {}
+  host.remove();
+}
+out.textContent = `FLAGS (${flags.length})\n` + flags.join('\n') + '\n\nALL\n' + rows.join('\n');
+</script>

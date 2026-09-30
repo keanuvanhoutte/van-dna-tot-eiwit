@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nucleïnezuren-atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/theme.css">
+<link rel="stylesheet" href="atlas.css">
+<script src="https://cdn.jsdelivr.net/npm/3dmol@2.5.5/build/3Dmol-min.js"></script>
+</head>
+<body>
+<header class="top">
+  <a class="back" id="back" hidden></a>
+  <a class="home" id="home" href="../index.html"></a>
+  <div class="ttl"><b id="ttl"></b><span id="ttlSub"></span></div>
+  <div class="sp"></div>
+  <a class="story" id="storyLink" href="../app/index.html"></a>
+  <span id="langBox"></span>
+</header>
+
+<div class="layout">
+  <aside class="side">
+    <div class="search"><input id="q" type="search" autocomplete="off"></div>
+    <div id="filters"></div>
+    <div class="count"><span id="count"></span><button class="link" id="reset"></button></div>
+    <ul class="list" id="list"></ul>
+  </aside>
+
+  <main class="main">
+    <div class="head">
+      <div class="htxt"><h1 id="eName"></h1><div class="badges" id="eBadges"></div></div>
+      <button class="cmpBtn" id="cmpBtn" aria-pressed="false"></button>
+    </div>
+    <div class="presets" id="presets" hidden></div>
+    <div class="cmpHint" id="cmpHint" hidden></div>
+    <div class="toolbar" id="toolbar">
+      <div class="grp"><span data-t="view"></span>
+        <div class="seg" id="style">
+          <button data-v="cartoon" aria-pressed="true">Cartoon</button>
+          <button data-v="stick" data-t="stick"></button>
+          <button data-v="sphere" data-t="sphere"></button>
+          <button data-v="trace" data-t="trace"></button>
+        </div>
+      </div>
+      <div class="grp"><span data-t="colour"></span>
+        <div class="seg" id="color">
+          <button data-v="strand" aria-pressed="true" data-t="byStrand"></button>
+          <button data-v="type" data-t="byType"></button>
+          <button data-v="base" data-t="byBase"></button>
+          <button data-v="elem" data-t="byElem"></button>
+        </div>
+      </div>
+      <div class="togs">
+        <label class="tog"><input type="checkbox" id="hb"> <span data-t="hb"></span></label>
+        <label class="tog"><input type="checkbox" id="syn"> <span data-t="synMark"></span></label>
+        <label class="tog"><input type="checkbox" id="ions" checked> <span data-t="ions"></span></label>
+        <label class="tog"><input type="checkbox" id="ligs" checked> <span data-t="ligs"></span></label>
+        <label class="tog"><input type="checkbox" id="water"> <span data-t="water"></span></label>
+        <label class="tog"><input type="checkbox" id="spin"> <span data-t="spin"></span></label>
+        <label class="tog" id="linkTog" hidden><input type="checkbox" id="link" checked> <span data-t="link"></span></label>
+      </div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="slots" id="slots"></div>
+  </main>
+
+  <section class="info" id="info"></section>
+</div>
+
+<script type="module" src="atlas.js"></script>
+</body>
+</html>

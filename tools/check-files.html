@@ -1,0 +1,13 @@
+<!doctype html>
+<meta charset="utf-8">
+<body><pre id="out">running…</pre>
+<script type="module">
+/* Laadt elk scène- en uitlegbestand apart om te zien welk bestand faalt. */
+const files = FILES_PLACEHOLDER;
+const res = [];
+for (const f of files) {
+  try { await import('../' + f); res.push('ok   ' + f); }
+  catch (e) { res.push('FAIL ' + f + ' :: ' + e.message); }
+}
+document.getElementById('out').textContent = res.filter(r => r.startsWith('FAIL')).join('\n') || 'all ok (' + res.length + ')';
+</script>

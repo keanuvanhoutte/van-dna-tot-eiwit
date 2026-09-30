@@ -1,0 +1,9 @@
+# cursusmateriaal (niet van ons om te verspreiden)
+transcripten/
+🎥*
+# lokale/afgeleide bestanden
+.claude/
+dist/
+dist-files.json
+__pycache__/
+*.orig.js

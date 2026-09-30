@@ -1,0 +1,27 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>engine-test</title>
+<body><pre id="out">running…</pre>
+<iframe id="f" src="../app/index.html?scene=rt&rafpoly" style="width:1600px;height:900px"></iframe>
+<script>
+/* Test van het stap-voor-stapgedrag: stap 1 speelt en wacht; 'volgende' vloeit over (ghost) naar stap 2;
+ * midden in een stap 'volgende' spoelt eerst door. Gebruik: headless Chrome --dump-dom tools/engine-test.html */
+const out = document.getElementById('out'), log = [];
+const wait = ms => new Promise(r => setTimeout(r, ms));
+(async () => {
+  await wait(1500);
+  const d = document.getElementById('f').contentDocument, g = id => d.getElementById(id);
+  const st = tag => log.push(`${tag}: ${g('stepNo').textContent} · fill ${g('fill').style.width} · wacht=${g('capNext').classList.contains('show')} · ghost=${!!d.querySelector('svg.ghost')} · play=${g('tPlay').textContent}`);
+  st('start');
+  await wait(9500); st('na 9,5 s: stap 1 klaar → knop "volgende" zichtbaar, stap blijft 1');
+  await wait(4000); st('na 13,5 s: stap 1 herhaalt zich (fill weer lager), nog steeds stap 1');
+  await wait(9000); st('na 22,5 s: nog steeds stap 1 (nooit vanzelf verder)');
+  g('capNext').click(); await wait(150); st('150 ms na volgende: stap 2 + ghost');
+  await wait(1600); st('1,75 s later: ghost weg');
+  g('tNext').click(); await wait(300); st('volgende midden in stap 2 (spoelen)');
+  await wait(1200); st('1,5 s later: stap 3');
+  g('tPrev').click(); await wait(1000); st('vorige');
+  g('tPlay').click(); await wait(100); const f1 = g('fill').style.width; await wait(1500); log.push('pauze: fill ' + f1 + ' → ' + g('fill').style.width + ' (moet gelijk blijven) · knop ' + g('tPlay').textContent);
+  out.textContent = log.join('\n');
+})();
+</script>

@@ -1,0 +1,80 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>text-check</title>
+<body style="background:#0a1224;color:#ddd"><pre id="out">running…</pre>
+<script type="module">
+/* Leesbaarheidscontrole: berekent voor elke SVG-scène en elke stap (eindbeeld, p = 0,97) hoe groot elke zichtbare tekst
+ * werkelijk op het scherm staat, voor een referentie-figuurbreedte (standaard 1000 px = laptop met uitlegpaneel),
+ * en hoeveel tekst er tegelijk in beeld is.
+ *  - klein  : tekst die kleiner dan MIN px op het scherm staat
+ *  - labels : aantal zichtbare tekstelementen in beeld (≥ 4 tekens; kortere symbolen tellen niet mee voor drukte)
+ *  - tekens : totaal aantal tekens in beeld
+ * Gebruik: headless Chrome --dump-dom "tools/text-check.html?w=1000&min=13[&ids=a,b]"  */
+const out = document.getElementById('out');
+const q = new URLSearchParams(location.search);
+const W = +(q.get('w') ?? 1000), MIN = +(q.get('min') ?? 13), only = q.get('ids')?.split(',');
+const { SCENES } = await import('../app/scenes/index.js');
+const FULL = [0, 0, 1600, 900];
+
+function opacityOK(el, root) {
+  let o = 1;
+  for (let e = el; e && e !== root.parentNode; e = e.parentNode) {
+    if (!e.getAttribute) break;
+    const a = e.getAttribute('opacity'); if (a !== null) o *= +a;
+    const st = e.style?.opacity; if (st) o *= +st;
+    if (e.getAttribute('display') === 'none' || e.style?.display === 'none' || e.getAttribute('visibility') === 'hidden') return 0;
+  }
+  const fo = el.getAttribute('fill-opacity'); if (fo !== null) o *= +fo;
+  return o;
+}
+function measure(svg, box) {
+  const scale = W / box[2];
+  const res = { small: [], n: 0, chars: 0 };
+  for (const el of svg.querySelectorAll('text')) {
+    if (el.closest('defs')) continue;
+    const s = (el.textContent || '').trim(); if (!s) continue;
+    if (el.parentNode.closest && el.parentNode.closest('text')) continue;
+    if (opacityOK(el, svg) < .25) continue;
+    let bb; try { bb = el.getBBox(); } catch { continue; }
+    const m = el.getCTM(); if (!m) continue;
+    const pts = [[bb.x, bb.y], [bb.x + bb.width, bb.y + bb.height]].map(([x, y]) => [m.a * x + m.c * y + m.e, m.b * x + m.d * y + m.f]);
+    const x0 = Math.min(pts[0][0], pts[1][0]), x1 = Math.max(pts[0][0], pts[1][0]), y0 = Math.min(pts[0][1], pts[1][1]), y1 = Math.max(pts[0][1], pts[1][1]);
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    if (cx < box[0] || cx > box[0] + box[2] || cy < box[1] || cy > box[1] + box[3]) continue;
+    const fs = parseFloat(getComputedStyle(el).fontSize) || 16;
+    const px = fs * Math.sqrt(Math.abs(m.a * m.d - m.b * m.c)) * scale;
+    const sym = s.length <= 3;                                   // nucleotide-/aminozuursymbolen mogen iets kleiner
+    if (!sym) { res.n++; res.chars += s.length; }
+    if (px < (sym ? MIN - 3 : MIN)) res.small.push(`${px.toFixed(1)}px "${s.slice(0, 40)}"`);
+  }
+  return res;
+}
+
+const rows = [], worst = [];
+for (const [id, sc] of Object.entries(SCENES)) {
+  if (sc.alias || sc.kind === '3d' || !sc.svg) continue;
+  if (only && !only.includes(id)) continue;
+  const host = document.createElement('div'); host.style.cssText = 'position:absolute;left:-5000px;top:0;width:1600px;height:900px';
+  host.innerHTML = sc.svg(); document.body.append(host);
+  const svg = host.querySelector('svg'); svg.setAttribute('viewBox', FULL.join(' ')); svg.setAttribute('width', 1600); svg.setAttribute('height', 900);
+  let api = null; try { api = sc.init?.(svg, { lang: 'nl' }); } catch (e) { rows.push(`${id}: init error ${e.message}`); host.remove(); continue; }
+  let t0 = 0;
+  for (const [k, st] of sc.steps.entries()) {
+    const p = .97;
+    try { api?.update?.(t0 + st.dur * p, { step: k, p, t: t0 + st.dur * p, total: 0 }); } catch (e) { rows.push(`${id} s${k}: update error`); }
+    const box = st.cam ?? FULL;
+    const r = measure(svg, box);
+    const score = r.small.length * 3 + Math.max(0, r.n - 18) + Math.max(0, (r.chars - 350) / 25);
+    worst.push({ id, k, score, ...r });
+    rows.push(`${id} s${k}: labels ${r.n} · tekens ${r.chars} · klein ${r.small.length}` + (r.small.length ? `  → ${r.small.slice(0, 6).join(' | ')}` : ''));
+    t0 += st.dur;
+  }
+  try { api?.destroy?.(); } catch {}
+  host.remove();
+}
+const byScene = {};
+worst.forEach(w => { (byScene[w.id] ??= { id: w.id, small: 0, over: 0, steps: 0 }); byScene[w.id].small += w.small.length; byScene[w.id].over += (w.n > 18 || w.chars > 350) ? 1 : 0; byScene[w.id].steps++; });
+const summ = Object.values(byScene).sort((a, b) => (b.small + 5 * b.over) - (a.small + 5 * a.over));
+out.textContent = `referentiebreedte ${W}px, minimum ${MIN}px\n\nPER SCÈNE (klein = # te kleine teksten over alle stappen; druk = # stappen met > 18 labels of > 350 tekens)\n` +
+  summ.map(s => `${s.id.padEnd(14)} klein ${String(s.small).padStart(4)} · drukke stappen ${s.over}/${s.steps}`).join('\n') + '\n\nDETAIL\n' + rows.join('\n');
+</script>

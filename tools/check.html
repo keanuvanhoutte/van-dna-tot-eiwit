@@ -1,0 +1,48 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>check</title>
+<body><pre id="out">running…</pre>
+<script type="module">
+/* Integratiecontrole: laadt alle scènes + uitleg en test elke stap van elke scène (update-aanroepen). */
+const out = document.getElementById('out');
+const log = [];
+try {
+  const { NODES } = await import('../shared/graph.js');
+  const { SCENES } = await import('../app/scenes/index.js');
+  const { DETAILS } = await import('../shared/details/index.js');
+  const ids = Object.keys(NODES);
+  log.push(`nodes ${ids.length} · scenes ${Object.keys(SCENES).length} · details ${Object.keys(DETAILS).length}`);
+  log.push('MISSING SCENE: ' + ids.filter(i => !SCENES[i]).join(', '));
+  log.push('MISSING DETAILS: ' + ids.filter(i => !DETAILS[i]).join(', '));
+  log.push('EXTRA SCENES (no node): ' + Object.keys(SCENES).filter(i => !NODES[i]).join(', '));
+  const bad = [];
+  for (const [id, sc] of Object.entries(SCENES)) {
+    const base = sc.alias ? SCENES[sc.alias] : sc;
+    if (!base) { bad.push(`${id}: alias target missing`); continue; }
+    if (!base.steps?.length) { bad.push(`${id}: no steps`); continue; }
+    for (const [k, s] of base.steps.entries()) {
+      if (!s.title?.nl || !s.title?.en || !s.text?.nl || !s.text?.en) bad.push(`${id}: step ${k} missing nl/en text`);
+      if (!(s.dur >= 3000)) bad.push(`${id}: step ${k} dur ${s.dur}`);
+    }
+    if (sc.alias || base.kind === '3d') continue;
+    try {
+      const host = document.createElement('div'); host.style.cssText = 'position:absolute;left:-5000px;width:1600px;height:900px';
+      host.innerHTML = base.svg(); document.body.append(host);
+      const svg = host.querySelector('svg');
+      for (const el of svg.querySelectorAll('[data-node]')) if (!NODES[el.dataset.node]) bad.push(`${id}: hotspot to unknown node ${el.dataset.node}`);
+      const api = base.init?.(svg, { lang: 'nl' });
+      let t = 0;
+      for (const [k, s] of base.steps.entries()) for (const p of [0, .25, .5, .75, .99]) {
+        try { api?.update?.(t + s.dur * p, { step: k, p, t: t + s.dur * p, total: 0 }); }
+        catch (e) { bad.push(`${id}: step ${k} p ${p}: ${e.message}`); break; }
+        if (/NaN|undefined/.test(svg.innerHTML.slice(0, 400000))) { bad.push(`${id}: step ${k} p ${p}: NaN/undefined in SVG`); break; }
+      }
+      api?.destroy?.(); host.remove();
+      if (t === 0) t = 0;
+    } catch (e) { bad.push(`${id}: ${e.message}`); }
+  }
+  log.push('PROBLEMS (' + bad.length + '):\n  ' + bad.join('\n  '));
+} catch (e) { log.push('LOAD ERROR: ' + e.message + '\n' + e.stack); }
+out.textContent = log.join('\n');
+document.title = 'done';
+</script>

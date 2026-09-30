@@ -1,0 +1,301 @@
+/* Uitleg prot deel 2 (agent prot-b): ptm, ubiquitine, chaperones, glyco, disulfide, golgi, misvouwing, idp — zie app/SCENES.md */
+const ALB = id => `https://www.ncbi.nlm.nih.gov/books/${id}/`;
+
+export default {
+  ptm: {
+    nl: {
+      what: 'Post-translationele modificaties (PTM\'s) zijn chemische veranderingen aan een eiwit na (of tijdens) de translatie: enzymen hangen groepen aan zijketens (fosfaat, acetyl, methyl, suikers, lipiden, ubiquitine), vormen disulfidebruggen of knippen de keten. Zo breiden cellen de chemie van de 20 standaardaminozuren uit en kunnen ze eiwitten snel aan- of uitzetten, sturen of markeren.',
+      how: [
+        'Fosforylatie: een eiwitkinase zet het γ-fosfaat van ATP op de OH-groep van Ser, Thr of Tyr; ATP wordt ADP.',
+        'Het fosfaat brengt ~2 negatieve ladingen mee; dat kan de vorm (conformatie) of de bindingspartners van het eiwit veranderen.',
+        'Eiwitfosfatasen hydrolyseren het fosfaat weer weg: fosforylatie is een omkeerbare schakelaar.',
+        'In kinasecascades (bv. Raf → MEK → ERK) activeren kinasen andere kinasen; zo wordt een signaal versterkt.',
+        'Acetylatie (op Lys) en methylatie (op Lys en Arg) regelen o.a. chromatine; acetylatie neutraliseert de positieve lading van Lys.',
+        'Glycosylatie (ER en Golgi) en lipidering (membraananker) veranderen vouwing, stabiliteit en lokalisatie.',
+        'In collageen zet prolyl-4-hydroxylase Pro om in hydroxyproline; het enzym heeft Fe²⁺, O₂, 2-oxoglutaraat en vitamine C nodig.',
+        'Ubiquitinering (op Lys) markeert eiwitten o.a. voor afbraak door het proteasoom.',
+      ],
+      facts: [['Eiwitkinasen in het menselijk genoom', '518 (Manning et al., 2002)'], ['Gefosforyleerde residuen', 'Ser, Thr, Tyr (in eukaryoten)'], ['Lading fosfoserine bij pH 7', '≈ 2−'], ['Collageen-herhaling', 'Gly–X–Y (X vaak Pro, Y vaak Hyp)'], ['Tekort aan vitamine C', 'scheurbuik (onstabiel collageen)']],
+      why: 'Eén gen kan zo vele functionele varianten van een eiwit opleveren. PTM\'s zijn de snelle schakelaars van celsignalering, bepalen waar een eiwit naartoe gaat en hoe lang het leeft. In de cursus worden ze genoemd als manier om de chemische eigenschappen van aminozuren uit te breiden (bv. hydroxyproline in collageen).',
+    },
+    en: {
+      what: 'Post-translational modifications (PTMs) are chemical changes made to a protein after (or during) translation: enzymes attach groups to side chains (phosphate, acetyl, methyl, sugars, lipids, ubiquitin), form disulfide bonds or cut the chain. Cells thus extend the chemistry of the 20 standard amino acids and can quickly switch proteins on or off, direct or label them.',
+      how: [
+        'Phosphorylation: a protein kinase transfers the γ-phosphate of ATP to the OH group of Ser, Thr or Tyr; ATP becomes ADP.',
+        'The phosphate adds ~2 negative charges; this can change the conformation or the binding partners of the protein.',
+        'Protein phosphatases hydrolyse the phosphate off again: phosphorylation is a reversible switch.',
+        'In kinase cascades (e.g. Raf → MEK → ERK) kinases activate other kinases; this amplifies a signal.',
+        'Acetylation (on Lys) and methylation (on Lys and Arg) regulate e.g. chromatin; acetylation neutralises the positive charge of Lys.',
+        'Glycosylation (ER and Golgi) and lipidation (membrane anchor) change folding, stability and localisation.',
+        'In collagen, prolyl 4-hydroxylase converts Pro into hydroxyproline; the enzyme needs Fe²⁺, O₂, 2-oxoglutarate and vitamin C.',
+        'Ubiquitination (on Lys) tags proteins, among other things, for degradation by the proteasome.',
+      ],
+      facts: [['Protein kinases in the human genome', '518 (Manning et al., 2002)'], ['Phosphorylated residues', 'Ser, Thr, Tyr (in eukaryotes)'], ['Charge of phosphoserine at pH 7', '≈ 2−'], ['Collagen repeat', 'Gly–X–Y (X often Pro, Y often Hyp)'], ['Vitamin C deficiency', 'scurvy (unstable collagen)']],
+      why: 'One gene can thus give rise to many functional variants of a protein. PTMs are the fast switches of cell signalling and decide where a protein goes and how long it lives. The course mentions them as a way to extend the chemical properties of amino acids (e.g. hydroxyproline in collagen).',
+    },
+    sources: [
+      { t: 'Alberts et al., Molecular Biology of the Cell 4e — Protein Function (NCBI Bookshelf)', url: ALB('NBK26911') },
+      { t: 'Manning et al. (2002) The protein kinase complement of the human genome. Science 298:1912 (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/12471243/' },
+      { t: 'Rahimi & Launico, Biochemistry, Collagen Synthesis — StatPearls (NCBI Bookshelf)', url: ALB('NBK507709') },
+      { t: 'Olsen et al. (2006) Global, in vivo, and site-specific phosphorylation dynamics in signaling networks. Cell (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/17081983/' },
+    ],
+  },
+
+  ubiquitine: {
+    nl: {
+      what: 'Het ubiquitine–proteasoomsysteem breekt de meeste kortlevende, beschadigde en misgevouwen eiwitten in cytosol en kern af. Ubiquitine (76 aminozuren) wordt via een cascade van drie enzymen (E1–E2–E3) aan Lys-residuen van het doeleiwit gekoppeld; een K48-gekoppelde keten van minstens ~4 ubiquitines stuurt het eiwit naar het 26S-proteasoom, dat het ontvouwt en tot korte peptiden knipt.',
+      how: [
+        'E1 activeert ubiquitine met ATP (ubiquitine-adenylaat, AMP + PPᵢ) en bindt het via een thio-esterbinding aan zijn actieve Cys.',
+        'Ubiquitine wordt overgedragen op de Cys van een E2 (conjugerend enzym).',
+        'Een E3-ligase herkent het substraat (bv. een degron) en laat E2 het ubiquitine via een isopeptidebinding aan een Lys hangen; RING-E3\'s doen dat rechtstreeks, HECT-E3\'s via een eigen Cys.',
+        'Herhaling bouwt een keten: elk volgend ubiquitine op Lys48 van het vorige (K48-keten). K63-ketens of mono-ubiquitine hebben andere, niet-afbrekende functies.',
+        'Het 19S-deeltje van het 26S-proteasoom bindt de keten (receptoren Rpn1, Rpn10, Rpn13); Rpn11 knipt de keten eraf zodat ubiquitine hergebruikt wordt.',
+        'Zes AAA+-ATPasen (Rpt1–6) ontvouwen het substraat met ATP en duwen het door een nauwe poort in de 20S-kern.',
+        'In de 20S-kern (α7β7β7α7) knippen β1 (caspase-achtig), β2 (trypsine-achtig) en β5 (chymotrypsine-achtig); de peptiden komen vrij en worden door peptidasen verder afgebroken.',
+      ],
+      facts: [['Ubiquitine', '76 aa, ≈ 8,5 kDa'], ['Enzymen bij de mens', '2 E1 · ~40 E2 · > 600 E3'], ['Minimaal afbraaksignaal', 'tetra-ubiquitine (K48)'], ['26S-proteasoom', '20S-kern + 1 of 2 × 19S; ≈ 2,5 MDa en ≈ 45 nm lang met twee kappen'], ['Peptiden uit het proteasoom', '≈ 3–22 aa'], ['Structuren', 'PDB 1UBQ (ubiquitine), 5GJR (humaan 26S)']],
+      why: 'Afbraak is even belangrijk als synthese: zo regelt de cel hoeveel van elk eiwit er is (bv. cyclines in de celcyclus), ruimt ze foute eiwitten op en levert ze peptiden voor antigeenpresentatie (MHC I). Het is het eindpunt van het hoofdverhaal: van gen tot eiwit tot afbraak en hergebruik van aminozuren.',
+    },
+    en: {
+      what: 'The ubiquitin–proteasome system degrades most short-lived, damaged and misfolded proteins in the cytosol and nucleus. Ubiquitin (76 amino acids) is attached to Lys residues of the target protein by a cascade of three enzymes (E1–E2–E3); a K48-linked chain of at least ~4 ubiquitins sends the protein to the 26S proteasome, which unfolds it and cuts it into short peptides.',
+      how: [
+        'E1 activates ubiquitin using ATP (ubiquitin adenylate, AMP + PPᵢ) and binds it via a thioester bond to its active-site Cys.',
+        'Ubiquitin is transferred to the Cys of an E2 (conjugating enzyme).',
+        'An E3 ligase recognises the substrate (e.g. a degron) and lets E2 attach ubiquitin to a Lys via an isopeptide bond; RING E3s do this directly, HECT E3s via their own Cys.',
+        'Repetition builds a chain: each next ubiquitin on Lys48 of the previous one (K48 chain). K63 chains or mono-ubiquitin have other, non-degradative roles.',
+        'The 19S particle of the 26S proteasome binds the chain (receptors Rpn1, Rpn10, Rpn13); Rpn11 removes the chain so ubiquitin is recycled.',
+        'Six AAA+ ATPases (Rpt1–6) unfold the substrate using ATP and thread it through a narrow gate into the 20S core.',
+        'In the 20S core (α7β7β7α7) β1 (caspase-like), β2 (trypsin-like) and β5 (chymotrypsin-like) cut; the peptides are released and further degraded by peptidases.',
+      ],
+      facts: [['Ubiquitin', '76 aa, ≈ 8.5 kDa'], ['Enzymes in humans', '2 E1 · ~40 E2 · > 600 E3'], ['Minimal degradation signal', 'tetra-ubiquitin (K48)'], ['26S proteasome', '20S core + 1 or 2 × 19S; ≈ 2.5 MDa and ≈ 45 nm long with two caps'], ['Peptides from the proteasome', '≈ 3–22 aa'], ['Structures', 'PDB 1UBQ (ubiquitin), 5GJR (human 26S)']],
+      why: 'Degradation is as important as synthesis: it lets the cell control how much of each protein there is (e.g. cyclins in the cell cycle), clear faulty proteins and supply peptides for antigen presentation (MHC I). It is the end point of the main story: from gene to protein to degradation and reuse of amino acids.',
+    },
+    sources: [
+      { t: 'Komander & Rape (2012) The ubiquitin code. Annu Rev Biochem 81:203 (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/22524316/' },
+      { t: 'Bard et al. (2018) Structure and function of the 26S proteasome. Annu Rev Biochem 87:697 (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/29652515/' },
+      { t: 'Structural features of the 26S proteasome complex isolated from rat testis and sperm tail (2000): 26S ≈ 45 nm long (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/10984418/' },
+      { t: 'Thrower et al. (2000) Recognition of the polyubiquitin proteolytic signal. EMBO J (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC1171781/' },
+      { t: 'Kisselev et al. (1999) The sizes of peptides generated from protein by mammalian 26 and 20 S proteasomes. J Biol Chem 274:3363 (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/9920878/' },
+      { t: 'PDB-101 Molecule of the Month: Proteasome', url: 'https://pdb101.rcsb.org/motm/166' },
+    ],
+  },
+
+  chaperones: {
+    nl: {
+      what: 'Moleculaire chaperones zijn eiwitten die andere eiwitten helpen vouwen zonder deel uit te maken van de eindstructuur. Ze binden blootgestelde hydrofobe stukken van ongevouwen of misgevouwen ketens, voorkomen zo aggregatie in het drukke cytosol en verbruiken daarbij meestal ATP. De informatie voor de vouwing blijft in de sequentie zitten (Anfinsen); chaperones verhogen alleen het rendement.',
+      how: [
+        'Hsp70 bindt korte hydrofobe segmenten van ontstaande of ontvouwen ketens via zijn substraatbindend domein.',
+        'In de ATP-toestand staat het helixdeksel open (snelle binding, lage affiniteit); Hsp40 (J-eiwit) levert het substraat aan en stimuleert de ATP-hydrolyse.',
+        'In de ADP-toestand sluit het deksel: het substraat zit stevig vast (hoge affiniteit) en kan niet aggregeren.',
+        'Een nucleotide-uitwisselingsfactor (NEF) vervangt ADP door ATP; het substraat komt vrij en kan vouwen of opnieuw binden.',
+        'Chaperonines zijn dubbele ringen met een holte: GroEL (bacteriën, 2 × 7 subeenheden) met deksel GroES; in het menselijk cytosol TRiC/CCT (2 × 8 verschillende subeenheden).',
+        'Na binding van 7 ATP en GroES wordt de GroEL-holte groter en hydrofiel; één substraat (tot ~60 kDa) vouwt ~10 s alleen in deze "Anfinsen-kooi".',
+        'Hydrolyse van de 7 ATP en ATP-binding aan de andere ring openen de kooi; niet-gevouwen eiwit kan een nieuwe ronde doen.',
+        'Hsp90 helpt vooral bij de laatste rijping van signaaleiwitten (kinasen, steroïdreceptoren); eiwitten die blijvend falen, worden afgebroken.',
+      ],
+      facts: [['GroEL', '14 subeenheden van ~57 kDa (2 ringen × 7)'], ['GroES', '7 subeenheden van ~10 kDa'], ['Kooi', 'één substraat van ~20–60 kDa, ~10 s'], ['ATP per GroEL-ring', '7'], ['Structuur', 'PDB 1AON (GroEL–GroES–(ADP)7)']],
+      why: 'Zonder chaperones zouden veel eiwitten klonteren voor ze gevouwen zijn. Het chaperonenetwerk is de kern van proteostase; als het met de leeftijd verzwakt, kunnen aggregatieziekten zoals Alzheimer en Parkinson ontstaan.',
+    },
+    en: {
+      what: 'Molecular chaperones are proteins that help other proteins fold without becoming part of the final structure. They bind exposed hydrophobic stretches of unfolded or misfolded chains, thereby preventing aggregation in the crowded cytosol, and usually consume ATP. The information for folding stays in the sequence (Anfinsen); chaperones only improve the yield.',
+      how: [
+        'Hsp70 binds short hydrophobic segments of nascent or unfolded chains via its substrate-binding domain.',
+        'In the ATP state the helical lid is open (fast binding, low affinity); Hsp40 (J protein) delivers the substrate and stimulates ATP hydrolysis.',
+        'In the ADP state the lid closes: the substrate is held tightly (high affinity) and cannot aggregate.',
+        'A nucleotide exchange factor (NEF) replaces ADP with ATP; the substrate is released and can fold or bind again.',
+        'Chaperonins are double rings with a cavity: GroEL (bacteria, 2 × 7 subunits) with the lid GroES; in the human cytosol TRiC/CCT (2 × 8 different subunits).',
+        'After binding 7 ATP and GroES the GroEL cavity enlarges and becomes hydrophilic; one substrate (up to ~60 kDa) folds alone for ~10 s in this "Anfinsen cage".',
+        'Hydrolysis of the 7 ATP and ATP binding to the opposite ring open the cage; a protein that has not folded can go another round.',
+        'Hsp90 mainly helps the final maturation of signalling proteins (kinases, steroid receptors); proteins that keep failing are degraded.',
+      ],
+      facts: [['GroEL', '14 subunits of ~57 kDa (2 rings × 7)'], ['GroES', '7 subunits of ~10 kDa'], ['Cage', 'one substrate of ~20–60 kDa, ~10 s'], ['ATP per GroEL ring', '7'], ['Structure', 'PDB 1AON (GroEL–GroES–(ADP)7)']],
+      why: 'Without chaperones many proteins would clump before they are folded. The chaperone network is the core of proteostasis; when it weakens with age, aggregation diseases such as Alzheimer\'s and Parkinson\'s can arise.',
+    },
+    sources: [
+      { t: 'Hartl, Bracher & Hayer-Hartl (2011) Molecular chaperones in protein folding and proteostasis. Nature 475:324 (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/21776078/' },
+      { t: 'Alberts et al., Molecular Biology of the Cell 4e — The Shape and Structure of Proteins (NCBI Bookshelf)', url: ALB('NBK26830') },
+      { t: 'Horwich, Apetri & Fenton (2009) The GroEL/GroES cis cavity as a passive anti-aggregation device (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC2759771/' },
+      { t: 'RCSB PDB 1AON — Asymmetric chaperonin complex GroEL/GroES/(ADP)7', url: 'https://www.rcsb.org/structure/1AON' },
+      { t: 'PDB-101 Molecule of the Month: Hsp90', url: 'https://pdb101.rcsb.org/motm/108' },
+    ],
+  },
+
+  glyco: {
+    nl: {
+      what: 'Bij N-glycosylatie wordt een voorgebouwde suikerboom van 14 suikers (Glc3Man9GlcNAc2) in één blok op de amide-stikstof van een asparagine gezet, in het lumen van het ruw ER en meestal al tijdens de translatie. Alleen Asn in het motief N-X-S/T (X ≠ Pro) komt in aanmerking. De glucoses op de boom dienen daarna als "vouwlabel" in de kwaliteitscontrole van het ER; in het Golgi wordt de boom verder bewerkt.',
+      how: [
+        'De suikerboom wordt stap voor stap opgebouwd op het lipide dolichol-pyrofosfaat in het ER-membraan.',
+        'Het oligosaccharyltransferase (OST; katalytische subeenheid STT3A co-translationeel, STT3B ook later) zet de boom op Asn in N-X-S/T.',
+        'Glucosidase I en II verwijderen twee van de drie glucoses: Glc1Man9GlcNAc2.',
+        'De lectine-chaperones calnexine (membraan) en calreticuline (oplosbaar) binden deze monoglucosyl-vorm en houden het eiwit in het ER zolang het vouwt.',
+        'Glucosidase II verwijdert de laatste glucose: het eiwit komt vrij. Is het nog niet goed gevouwen, dan zet UGGT er opnieuw één glucose op en begint de cyclus opnieuw.',
+        'Correct gevouwen eiwitten verlaten het ER richting Golgi; blijvend misgevouwen eiwitten gaan via ERAD naar het proteasoom.',
+        'In het Golgi worden mannoses verwijderd en GlcNAc, galactose, siaalzuur en fucose toegevoegd (complexe N-glycanen). O-glycosylatie (GalNAc op Ser/Thr) begint in het Golgi.',
+      ],
+      facts: [['Voorloper', 'Glc3Man9GlcNAc2 (14 suikers) op dolichol-PP'], ['Sequon', 'Asn–X–Ser/Thr, X ≠ Pro'], ['Plaats', 'ER-lumen (N-); Golgi (verdere bewerking, O-)'], ['Kwaliteitscontrole', 'calnexine/calreticuline-cyclus met UGGT']],
+      why: 'Glycanen helpen vouwen, beschermen tegen proteasen, bepalen de bestemming van eiwitten (bv. mannose-6-fosfaat voor lysosomen) en vormen herkenningssignalen aan het celoppervlak (bv. bloedgroepen). Fouten in N-glycosylatie veroorzaken aangeboren glycosyleringsziekten (CDG).',
+    },
+    en: {
+      what: 'In N-glycosylation a pre-assembled tree of 14 sugars (Glc3Man9GlcNAc2) is transferred en bloc onto the amide nitrogen of an asparagine, in the lumen of the rough ER and usually during translation. Only Asn in the motif N-X-S/T (X ≠ Pro) qualifies. The glucoses on the tree then serve as a "folding tag" in ER quality control; in the Golgi the tree is processed further.',
+      how: [
+        'The sugar tree is built step by step on the lipid dolichol pyrophosphate in the ER membrane.',
+        'Oligosaccharyltransferase (OST; catalytic subunit STT3A co-translationally, STT3B also later) transfers the tree to Asn in N-X-S/T.',
+        'Glucosidases I and II remove two of the three glucoses: Glc1Man9GlcNAc2.',
+        'The lectin chaperones calnexin (membrane) and calreticulin (soluble) bind this monoglucosylated form and retain the protein in the ER while it folds.',
+        'Glucosidase II removes the last glucose: the protein is released. If it is not yet correctly folded, UGGT adds one glucose back and the cycle restarts.',
+        'Correctly folded proteins leave the ER for the Golgi; permanently misfolded proteins go via ERAD to the proteasome.',
+        'In the Golgi mannoses are removed and GlcNAc, galactose, sialic acid and fucose are added (complex N-glycans). O-glycosylation (GalNAc on Ser/Thr) starts in the Golgi.',
+      ],
+      facts: [['Precursor', 'Glc3Man9GlcNAc2 (14 sugars) on dolichol-PP'], ['Sequon', 'Asn–X–Ser/Thr, X ≠ Pro'], ['Location', 'ER lumen (N-); Golgi (further processing, O-)'], ['Quality control', 'calnexin/calreticulin cycle with UGGT']],
+      why: 'Glycans help folding, protect against proteases, determine protein destinations (e.g. mannose 6-phosphate for lysosomes) and form recognition signals at the cell surface (e.g. blood groups). Defects in N-glycosylation cause congenital disorders of glycosylation (CDG).',
+    },
+    sources: [
+      { t: 'Essentials of Glycobiology (4e, 2022) — N-Glycans (NCBI Bookshelf)', url: ALB('NBK579964') },
+      { t: 'Essentials of Glycobiology — Glycans in Glycoprotein Quality Control (NCBI Bookshelf)', url: ALB('NBK453081') },
+      { t: 'Alberts et al., Molecular Biology of the Cell 4e — The Endoplasmic Reticulum (NCBI Bookshelf)', url: ALB('NBK26841') },
+      { t: 'Proteome and glycoproteome analyses reveal the N-glycosylation specificity of STT3A and STT3B (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC9496733/' },
+    ],
+  },
+
+  disulfide: {
+    nl: {
+      what: 'Een disulfidebrug is een covalente S–S-binding tussen de thiolgroepen (–SH) van twee cysteïnes, die ver uit elkaar kunnen liggen in de sequentie maar door de vouwing naast elkaar komen. Het vormen ervan is een oxidatie. Bij de mens gebeurt dat vooral in het oxiderende lumen van het ER, met hulp van proteïne-disulfide-isomerase (PDI); in het reducerende cytosol blijven cysteïnes meestal vrij.',
+      how: [
+        'Door de vouwing komen twee Cys-zijketens dicht bij elkaar.',
+        'Oxidatie: 2 Cys–SH → Cys–S–S–Cys + 2 H⁺ + 2 e⁻; de elektronen moeten naar een acceptor.',
+        'Geoxideerde PDI (disulfide in de CGHC-actieve plaats van een thioredoxine-domein) geeft zijn S–S door aan het substraat en wordt zelf gereduceerd.',
+        'Ero1 heroxideert PDI; de elektronen gaan via zijn FAD naar O₂, waarbij H₂O₂ ontstaat.',
+        'Verkeerde bruggen worden door gereduceerde PDI verbroken en opnieuw gevormd (isomerisatie), tot de juiste combinatie gevonden is.',
+        'Het ER-lumen is oxiderend (GSH:GSSG ongeveer 1:1 tot 3:1), het cytosol sterk reducerend (voor de hele cel ~30:1 tot 100:1).',
+      ],
+      facts: [['Lengte S–S-binding', '≈ 2,05 Å'], ['PDI', '4 thioredoxinedomeinen a–b–b′–a′, 2 × CGHC'], ['GSH:GSSG in het ER', '≈ 1:1 – 3:1'], ['GSH:GSSG in de cel', '≈ 30:1 – 100:1'], ['Insuline', '3 bruggen: A6–A11, A7–B7, A20–B19']],
+      why: 'Disulfidebruggen stabiliseren vooral eiwitten die de cel verlaten (hormonen, antilichamen, verteringsenzymen). De cursus vermeldt ze als de enige veelvoorkomende covalente interactie tussen zijketens in de tertiaire en quaternaire structuur; niet elke Cys vormt echter een brug.',
+    },
+    en: {
+      what: 'A disulfide bond is a covalent S–S bond between the thiol groups (–SH) of two cysteines, which may be far apart in the sequence but come together through folding. Forming it is an oxidation. In humans this happens mainly in the oxidising lumen of the ER, helped by protein disulfide isomerase (PDI); in the reducing cytosol cysteines mostly stay free.',
+      how: [
+        'Folding brings two Cys side chains close together.',
+        'Oxidation: 2 Cys–SH → Cys–S–S–Cys + 2 H⁺ + 2 e⁻; the electrons have to go to an acceptor.',
+        'Oxidised PDI (a disulfide in the CGHC active site of a thioredoxin domain) passes its S–S on to the substrate and is itself reduced.',
+        'Ero1 reoxidises PDI; the electrons go via its FAD to O₂, producing H₂O₂.',
+        'Wrong bonds are broken and re-formed by reduced PDI (isomerisation) until the correct pairing is found.',
+        'The ER lumen is oxidising (GSH:GSSG roughly 1:1 to 3:1), the cytosol strongly reducing (whole cell ~30:1 to 100:1).',
+      ],
+      facts: [['S–S bond length', '≈ 2.05 Å'], ['PDI', '4 thioredoxin domains a–b–b′–a′, 2 × CGHC'], ['GSH:GSSG in the ER', '≈ 1:1 – 3:1'], ['GSH:GSSG in the cell', '≈ 30:1 – 100:1'], ['Insulin', '3 bonds: A6–A11, A7–B7, A20–B19']],
+      why: 'Disulfide bonds mainly stabilise proteins that leave the cell (hormones, antibodies, digestive enzymes). The course mentions them as the only common covalent interaction between side chains in tertiary and quaternary structure; not every Cys forms a bond, however.',
+    },
+    sources: [
+      { t: 'Alberts et al., Molecular Biology of the Cell 4e — The Endoplasmic Reticulum (NCBI Bookshelf)', url: ALB('NBK26841') },
+      { t: 'Hwang, Sinskey & Lodish (1992) Oxidized redox state of glutathione in the endoplasmic reticulum. Science 257:1496 (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/1523409/' },
+      { t: 'Role of the ERO1–PDI interaction in oxidative protein folding and disease (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7316501/' },
+      { t: 'PDB-101 Molecule of the Month: Insulin', url: 'https://pdb101.rcsb.org/motm/14' },
+    ],
+  },
+
+  golgi: {
+    nl: {
+      what: 'De secretieroute brengt eiwitten die in het ruw ER gemaakt zijn via het Golgi-apparaat naar het plasmamembraan, naar buiten de cel of naar lysosomen. Het Golgi is een stapel afgeplatte cisternen (cis → medial → trans) plus het trans-Golginetwerk (TGN), waar eiwitten verder bewerkt en gesorteerd worden.',
+      how: [
+        'Correct gevouwen eiwitten verlaten het ER bij ER-uitgangsplaatsen in COPII-omhulde blaasjes.',
+        'Die blaasjes versmelten tot het ERGIC (ER–Golgi-intermediair compartiment), dat naar de cis-kant van het Golgi beweegt.',
+        'Meegeglipte ER-eiwitten met een C-terminaal KDEL-signaal worden door de KDEL-receptor gebonden en in COPI-blaasjes naar het ER teruggebracht.',
+        'Volgens het cisternale-rijpingsmodel rijpt een cisterne zelf van cis naar trans, terwijl Golgi-enzymen met COPI naar jongere cisternen terugkeren.',
+        'Onderweg worden N-glycanen bewerkt, O-glycanen toegevoegd en lysosomale enzymen gemerkt met mannose-6-fosfaat (M6P).',
+        'In het TGN wordt gesorteerd: constitutieve secretie (continu), gereguleerde secretie (granules die op een signaal zoals Ca²⁺ wachten) of transport naar endosomen/lysosomen.',
+        'M6P-receptoren brengen lysosomale enzymen in clathrineblaasjes naar endosomen; in het zure milieu laten de enzymen los en keert de receptor terug.',
+      ],
+      facts: [['Mantels', 'COPII (ER → Golgi), COPI (retrograad), clathrine (TGN → endosoom)'], ['ER-retentiesignaal', 'KDEL (C-terminaal, oplosbare ER-eiwitten)'], ['Lysosomaal adres', 'mannose-6-fosfaat'], ['pH', 'endosoom ≈ 6, lysosoom ≈ 4,5–5']],
+      why: 'Ongeveer een derde van alle eiwitten gaat door de secretieroute: hormonen, antilichamen, receptoren, membraaneiwitten en lysosomale enzymen. Fouten in sortering of glycosylering veroorzaken ziekten, bv. I-cell disease wanneer het M6P-merk ontbreekt.',
+    },
+    en: {
+      what: 'The secretory pathway carries proteins made in the rough ER via the Golgi apparatus to the plasma membrane, out of the cell or to lysosomes. The Golgi is a stack of flattened cisternae (cis → medial → trans) plus the trans-Golgi network (TGN), where proteins are further processed and sorted.',
+      how: [
+        'Correctly folded proteins leave the ER at ER exit sites in COPII-coated vesicles.',
+        'These vesicles fuse into the ERGIC (ER–Golgi intermediate compartment), which moves to the cis side of the Golgi.',
+        'ER proteins that slipped along, carrying a C-terminal KDEL signal, are bound by the KDEL receptor and returned to the ER in COPI vesicles.',
+        'According to the cisternal maturation model a cisterna itself matures from cis to trans, while Golgi enzymes return to younger cisternae via COPI.',
+        'Along the way N-glycans are processed, O-glycans added and lysosomal enzymes tagged with mannose 6-phosphate (M6P).',
+        'The TGN sorts: constitutive secretion (continuous), regulated secretion (granules waiting for a signal such as Ca²⁺) or transport to endosomes/lysosomes.',
+        'M6P receptors carry lysosomal enzymes in clathrin vesicles to endosomes; in the acidic lumen the enzymes are released and the receptor returns.',
+      ],
+      facts: [['Coats', 'COPII (ER → Golgi), COPI (retrograde), clathrin (TGN → endosome)'], ['ER retention signal', 'KDEL (C-terminal, soluble ER proteins)'], ['Lysosomal address', 'mannose 6-phosphate'], ['pH', 'endosome ≈ 6, lysosome ≈ 4.5–5']],
+      why: 'Roughly a third of all proteins pass through the secretory pathway: hormones, antibodies, receptors, membrane proteins and lysosomal enzymes. Errors in sorting or glycosylation cause disease, e.g. I-cell disease when the M6P tag is missing.',
+    },
+    sources: [
+      { t: 'Alberts et al., Molecular Biology of the Cell 4e — Transport from the ER through the Golgi Apparatus (NCBI Bookshelf)', url: ALB('NBK26941') },
+      { t: 'Alberts et al., Molecular Biology of the Cell 4e — Transport from the Trans Golgi Network to Lysosomes (NCBI Bookshelf)', url: ALB('NBK26844') },
+      { t: 'Glick & Luini (2011) Models for Golgi traffic: a critical assessment. Cold Spring Harb Perspect Biol (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/21875986/' },
+    ],
+  },
+
+  misvouwing: {
+    nl: {
+      what: 'Eiwitten kunnen verkeerd vouwen door mutaties, stress of ouderdom. Misgevouwen ketens tonen hydrofobe stukken en kunnen aggregeren: tot amorfe klonten of tot geordende amyloïdfibrillen met een cross-β-structuur. Zulke aggregaten (en vooral kleinere oligomeren) worden in verband gebracht met o.a. Alzheimer, Parkinson, type 2-diabetes en prionziekten.',
+      how: [
+        'Chaperones proberen misgevouwen eiwitten opnieuw te vouwen; lukt dat niet, dan worden ze via ubiquitine naar het proteasoom gestuurd (of via autofagie afgebroken).',
+        'Als die kwaliteitscontrole overbelast raakt, plakken hydrofobe stukken van verschillende ketens aan elkaar.',
+        'Amyloïdvorming is nucleatie-afhankelijk: een kern vormen is traag (lag-fase), daarna groeien fibrillen snel (groei) tot een plateau; een toegevoegde "seed" verkort de lag-fase.',
+        'In de cross-β-structuur staan β-strengen loodrecht op de fibrilas, ~4,7 Å uit elkaar, met H-bruggen langs de as; bladen liggen ~10 Å uit elkaar met ineengrijpende zijketens.',
+        'Bij prionen dient de β-rijke vorm PrPSc als mal die normaal PrPC omzet: de vouwing vermenigvuldigt zich.',
+        'Stapelen ongevouwen eiwitten zich op in het ER, dan activeren IRE1, PERK en ATF6 de unfolded protein response (UPR): minder translatie, meer chaperones en ERAD, of bij aanhoudende stress apoptose.',
+      ],
+      facts: [['Afstand tussen strengen', '≈ 4,7 Å (langs de fibrilas)'], ['Afstand tussen bladen', '≈ 10 Å'], ['Fibril', 'ongeveer 10 nm breed, tot µm lang'], ['UPR-sensoren', 'IRE1, PERK, ATF6'], ['Structuur', 'PDB 2BEG (Aβ(1–42)-fibril)']],
+      why: 'Misvouwing laat zien dat de sequentie niet de enige factor is: dezelfde keten kan een functionele en een ziekmakende vorm aannemen. Begrip van nucleatie en de cross-β-structuur is de basis voor onderzoek naar geneesmiddelen tegen neurodegeneratieve ziekten.',
+    },
+    en: {
+      what: 'Proteins can misfold because of mutations, stress or ageing. Misfolded chains expose hydrophobic stretches and can aggregate: into amorphous clumps or into ordered amyloid fibrils with a cross-β structure. Such aggregates (and especially smaller oligomers) are linked to e.g. Alzheimer\'s, Parkinson\'s, type 2 diabetes and prion diseases.',
+      how: [
+        'Chaperones try to refold misfolded proteins; if that fails they are sent via ubiquitin to the proteasome (or degraded by autophagy).',
+        'When this quality control is overloaded, hydrophobic stretches of different chains stick together.',
+        'Amyloid formation is nucleation-dependent: forming a nucleus is slow (lag phase), then fibrils grow fast (growth) up to a plateau; an added "seed" shortens the lag phase.',
+        'In the cross-β structure β-strands run perpendicular to the fibril axis, ~4.7 Å apart, with H-bonds along the axis; sheets lie ~10 Å apart with interdigitating side chains.',
+        'In prions the β-rich form PrPSc acts as a template that converts normal PrPC: the fold multiplies.',
+        'When unfolded proteins pile up in the ER, IRE1, PERK and ATF6 activate the unfolded protein response (UPR): less translation, more chaperones and ERAD, or apoptosis if stress persists.',
+      ],
+      facts: [['Distance between strands', '≈ 4.7 Å (along the fibril axis)'], ['Distance between sheets', '≈ 10 Å'], ['Fibril', 'about 10 nm wide, up to µm long'], ['UPR sensors', 'IRE1, PERK, ATF6'], ['Structure', 'PDB 2BEG (Aβ(1–42) fibril)']],
+      why: 'Misfolding shows that the sequence is not the only factor: the same chain can adopt a functional and a disease-causing form. Understanding nucleation and the cross-β structure underlies research into drugs against neurodegenerative diseases.',
+    },
+    sources: [
+      { t: 'Chiti & Dobson (2017) Protein misfolding, amyloid formation, and human disease: a summary of progress over the last decade. Annu Rev Biochem 86:27 (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/28498720/' },
+      { t: 'Walter & Ron (2011) The unfolded protein response: from stress pathway to homeostatic regulation. Science 334:1081 (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/22116877/' },
+      { t: 'Hartl, Bracher & Hayer-Hartl (2011) Molecular chaperones in protein folding and proteostasis. Nature (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/21776078/' },
+      { t: 'RCSB PDB 2BEG — 3D structure of Alzheimer\'s Aβ(1–42) fibrils', url: 'https://www.rcsb.org/structure/2BEG' },
+    ],
+  },
+
+  idp: {
+    nl: {
+      what: 'Intrinsiek ongeordende eiwitten (IDP\'s) of regio\'s (IDR\'s) hebben in oplossing geen vaste 3D-structuur maar vormen een snel wisselend ensemble van conformaties. Ze krijgen pas (gedeeltelijk) structuur bij binding aan een partner of onder bepaalde condities. De cursus behandelt ze in het laatste hoofdstuk: orde en wanorde zijn geen twee strikt gescheiden werelden.',
+      how: [
+        'IDR\'s zijn arm aan grote hydrofobe residuen en rijk aan geladen en polaire residuen, Pro, Gly en Ser; er is geen hydrofobe kern om rond te vouwen.',
+        'Zet je gemiddelde netto lading uit tegen gemiddelde hydropathie, dan liggen veel IDP\'s boven de grenslijn van Uversky (lage hydrofobiciteit, hoge netto lading).',
+        'Experimenteel en in voorspellingen herken je ze aan ontbrekende elektronendichtheid, weinig verspreide NMR-pieken of een lage AlphaFold-pLDDT.',
+        'Voorbeeld: het KID-domein van CREB wordt na een cAMP-signaal door PKA gefosforyleerd op Ser133 (pKID).',
+        'pKID vormt eerst een los, niet-specifiek ontmoetingscomplex met het KIX-domein van CBP en vouwt dan op het oppervlak tot twee helices: gekoppelde vouwing en binding.',
+        'Zo\'n binding is specifiek maar omkeerbaar; één IDR kan verschillende partners binden en is makkelijk bereikbaar voor PTM\'s.',
+      ],
+      facts: [['Eukaryote eiwitten met lange IDR (> 30 aa)', '≈ 33 % (voorspeld; bacteriën ≈ 4 %)'], ['Voorbeeld gekoppelde vouwing', 'pKID (CREB) + KIX (CBP), PDB 1KDX'], ['Ander voorbeeld', 'p53-transactivatiedomein + MDM2, PDB 1YCR'], ['Typische functies', 'signalering, transcriptieregulatie, hubs']],
+      why: 'IDP\'s tonen dat functie niet altijd één vaste structuur vereist. Ze zijn cruciaal in signaalnetwerken en genregulatie, maar sommige (Aβ, α-synucleïne) kunnen aggregeren tot amyloïd. Voor structuurbioinformatica is het belangrijk om wanorde te herkennen en niet als "slecht model" te interpreteren.',
+    },
+    en: {
+      what: 'Intrinsically disordered proteins (IDPs) or regions (IDRs) have no fixed 3D structure in solution but form a rapidly changing ensemble of conformations. They only gain (partial) structure upon binding a partner or under certain conditions. The course covers them in its last chapter: order and disorder are not two strictly separate worlds.',
+      how: [
+        'IDRs are poor in large hydrophobic residues and rich in charged and polar residues, Pro, Gly and Ser; there is no hydrophobic core to fold around.',
+        'When mean net charge is plotted against mean hydropathy, many IDPs lie above Uversky\'s boundary line (low hydrophobicity, high net charge).',
+        'Experimentally and in predictions they are recognised by missing electron density, poorly dispersed NMR peaks or a low AlphaFold pLDDT.',
+        'Example: after a cAMP signal the KID domain of CREB is phosphorylated by PKA on Ser133 (pKID).',
+        'pKID first forms a loose, non-specific encounter complex with the KIX domain of CBP and then folds on its surface into two helices: coupled folding and binding.',
+        'Such binding is specific yet reversible; one IDR can bind different partners and is easily accessible to PTMs.',
+      ],
+      facts: [['Eukaryotic proteins with a long IDR (> 30 aa)', '≈ 33 % (predicted; bacteria ≈ 4 %)'], ['Example of coupled folding', 'pKID (CREB) + KIX (CBP), PDB 1KDX'], ['Another example', 'p53 transactivation domain + MDM2, PDB 1YCR'], ['Typical functions', 'signalling, transcription regulation, hubs']],
+      why: 'IDPs show that function does not always require one fixed structure. They are crucial in signalling networks and gene regulation, but some (Aβ, α-synuclein) can aggregate into amyloid. In structural bioinformatics it is important to recognise disorder and not to interpret it as a "bad model".',
+    },
+    sources: [
+      { t: 'Wright & Dyson (2015) Intrinsically disordered proteins in cellular signalling and regulation. Nat Rev Mol Cell Biol 16:18 (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/25531225/' },
+      { t: 'Sugase, Dyson & Wright (2007) Mechanism of coupled folding and binding of an intrinsically disordered protein. Nature 447:1021 (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/17522630/' },
+      { t: 'Ward et al. (2004) Prediction and functional analysis of native disorder in proteins from the three kingdoms of life. J Mol Biol (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/15019783/' },
+      { t: 'Uversky, Gillespie & Fink (2000) Why are "natively unfolded" proteins unstructured under physiologic conditions? Proteins 41:415 (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/11025552/' },
+      { t: 'RCSB PDB 1KDX — KIX domain of CBP (mouse) in complex with pKID of CREB (rat)', url: 'https://www.rcsb.org/structure/1KDX' },
+    ],
+  },
+};

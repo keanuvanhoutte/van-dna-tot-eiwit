@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zoomreis DNA→eiwit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/theme.css">
+<style>
+  html, body { height: 100%; overflow: hidden; }
+  .app { position: fixed; inset: 0; display: grid; grid-template-columns: 1fr 340px; }
+  @media (max-width: 900px) { .app { grid-template-columns: 1fr; grid-template-rows: 1fr auto; } .side { max-height: 40vh; } }
+
+  .stage { position: relative; overflow: hidden; background: radial-gradient(1200px 800px at 50% 45%, #0e1730 0%, var(--bg) 70%); }
+  .layer { position: absolute; inset: 0; }
+  .layer svg { width: 100%; height: 100%; display: block; }
+  [data-node] { cursor: pointer; transition: filter .2s; }
+  [data-node]:hover, [data-node].hl { filter: drop-shadow(0 0 6px rgba(124,196,255,.95)) drop-shadow(0 0 16px rgba(124,196,255,.5)); }
+
+  .labels { position: absolute; inset: 0; pointer-events: none; transition: opacity .25s; }
+  .labels.hide { opacity: 0; }
+  .lbl { position: absolute; transform: translate(-50%, -100%); pointer-events: auto; cursor: pointer; white-space: nowrap;
+    font-size: 12px; font-weight: 500; padding: 4px 9px 4px 8px; border-radius: 999px; background: rgba(9,14,28,.82);
+    border: 1px solid rgba(124,196,255,.35); color: var(--text); display: flex; gap: 6px; align-items: center; backdrop-filter: blur(4px); }
+  .lbl::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dot, #7cc4ff); }
+  .lbl.leaf { border-style: dashed; border-color: rgba(147,160,187,.4); }
+  .lbl.ext::after { content: "↗"; color: var(--accent); font-size: 11px; }
+  .lbl:hover { border-color: var(--accent); background: rgba(20,32,60,.95); }
+
+  .hud-top { position: absolute; left: 16px; top: 14px; right: 16px; display: flex; gap: 10px; align-items: center; pointer-events: none; }
+  .crumbs { pointer-events: auto; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; font-size: 13px;
+    background: rgba(9,14,28,.7); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; backdrop-filter: blur(6px); }
+  .crumbs button { all: unset; cursor: pointer; color: var(--muted); }
+  .crumbs button:hover { color: var(--text); }
+  .crumbs b { font-weight: 600; }
+  .crumbs span { color: #4a5570; }
+  .tools { margin-left: auto; display: flex; gap: 8px; pointer-events: auto; }
+  .btn { all: unset; cursor: pointer; font-size: 12.5px; padding: 7px 11px; border-radius: 9px; background: rgba(9,14,28,.7);
+    border: 1px solid var(--line); color: var(--muted); backdrop-filter: blur(6px); }
+  .btn:hover, .btn[aria-pressed=true] { color: var(--text); border-color: rgba(124,196,255,.5); }
+  .btn:focus-visible { outline: 2px solid var(--accent); }
+
+  .hud-bot { position: absolute; left: 16px; bottom: 14px; display: flex; gap: 10px; align-items: flex-end; pointer-events: none; }
+  .scalebox { background: rgba(9,14,28,.7); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font: 500 11.5px var(--mono); color: var(--muted); backdrop-filter: blur(6px); }
+  .scalebox b { color: var(--accent); font-weight: 500; }
+  .zoomlvl { display: flex; gap: 3px; margin-top: 6px; }
+  .zoomlvl i { width: 22px; height: 4px; border-radius: 2px; background: #243049; }
+  .zoomlvl i.on { background: var(--accent); }
+
+  .side { background: var(--bg-2); border-left: 1px solid var(--line); overflow-y: auto; padding: 20px 18px 30px; }
+  .side .kind { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+  .side h1 { font-size: 22px; margin: 6px 0 2px; letter-spacing: -.01em; }
+  .side .en { color: var(--muted); font-style: italic; font-size: 13px; }
+  .side p { font-size: 14px; line-height: 1.55; color: #c9d2e4; }
+  .side h4 { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 18px 0 8px; }
+  .chip { all: unset; cursor: pointer; display: inline-block; font-size: 12.5px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); margin: 0 5px 6px 0; }
+  .chip:hover { border-color: var(--accent); }
+  .chip.next { border-color: rgba(255,138,61,.45); }
+  .chip.rel { border-style: dashed; }
+  .chip.has::after { content: " ▸"; color: var(--accent); }
+  .simp { margin-top: 18px; padding: 12px; border-radius: 10px; border: 1px dashed rgba(255,194,71,.35); font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .simp b { color: #ffc247; }
+  .status.ok { background: rgba(127,220,106,.13); color: #7fdc6a; }
+  .status { display: inline-block; font: 500 10px var(--mono); padding: 3px 6px; border-radius: 5px; background: rgba(255,138,61,.13); color: #ff8a3d; margin-left: 6px; vertical-align: 2px; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; font-size: 12px; color: var(--muted); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+  /* conceptkaart voor knopen zonder eigen scène */
+  .card { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(4,7,15,.55); backdrop-filter: blur(3px); opacity: 0; pointer-events: none; transition: opacity .25s; }
+  .card.show { opacity: 1; pointer-events: auto; }
+  .card > div { width: min(520px, 90%); background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: 22px; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+  .card h2 { margin: 6px 0 2px; }
+  .card p { color: #c9d2e4; font-size: 14px; line-height: 1.55; }
+  .card .todo { font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; margin-top: 14px; }
+  .intro-tip { position: absolute; left: 50%; top: 64px; transform: translateX(-50%); font-size: 13px; color: var(--muted); background: rgba(9,14,28,.75);
+    border: 1px solid var(--line); padding: 8px 14px; border-radius: 999px; transition: opacity .6s; pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="stage" id="stage">
+    <div class="labels" id="labels"></div>
+    <div class="hud-top">
+      <nav class="crumbs" id="crumbs" aria-label="Broodkruimelpad"></nav>
+      <div class="tools">
+        <button class="btn" id="tLabels" aria-pressed="true">Labels</button>
+        <button class="btn" id="tPause" aria-pressed="false">Pauze</button>
+        <a class="btn" id="tMap" href="../../docs/blueprint.html#kaart">Inhoudskaart</a>
+        <span id="langBox"></span>
+      </div>
+    </div>
+    <div class="hud-bot"><div class="scalebox" id="scalebox"></div></div>
+    <div class="card" id="card"><div id="cardbody"></div></div>
+    <div class="intro-tip" id="tip">Klik op een onderdeel om in te zoomen · Esc of broodkruimels om terug te gaan</div>
+  </div>
+  <aside class="side" id="side"></aside>
+</div>
+
+<script type="module">
+import { NODES, SCALES, title, sub, summary, scaleTitle } from '../../shared/content.js';
+import { L, U, statusText, langSwitch } from '../../shared/i18n.js';
+import { SCENES } from './scenes.js';
+
+// vaste interfaceteksten in de gekozen taal
+document.getElementById('tLabels').textContent = U('labels');
+document.getElementById('tPause').textContent = U('pause');
+document.getElementById('tMap').textContent = U('map');
+document.getElementById('tip').textContent = U('tip');
+document.getElementById('langBox').append(langSwitch('btn'));
+
+const stage = document.getElementById('stage');
+const labelsEl = document.getElementById('labels');
+const side = document.getElementById('side');
+const card = document.getElementById('card');
+let current = null;          // { id, layer, svg, cleanup }
+let trail = [];              // broodkruimelpad (scène-id's)
+let busy = false, paused = false, showLabels = true;
+
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const tween = (ms, fn) => new Promise(res => {
+  const t0 = performance.now();
+  const step = now => { const t = Math.min(1, (now - t0) / ms); fn(ease(t)); t < 1 ? requestAnimationFrame(step) : res(); };
+  requestAnimationFrame(step);
+});
+const VB = [0, 0, 1600, 900];
+const setVB = (svg, b) => svg.setAttribute('viewBox', b.map(n => n.toFixed(2)).join(' '));
+const lerpVB = (a, b, t) => a.map((x, i) => x + (b[i] - x) * t);
+
+/* ---------- scène opbouwen ---------- */
+function build(id) {
+  const sc = SCENES[id];
+  const layer = document.createElement('div'); layer.className = 'layer';
+  layer.innerHTML = sc.svg();
+  stage.insertBefore(layer, labelsEl);
+  const svg = layer.querySelector('svg');
+  setVB(svg, VB);
+  svg.querySelectorAll('[data-node]').forEach(el => {
+    el.addEventListener('click', e => { e.stopPropagation(); activate(el); });
+    el.addEventListener('mouseenter', () => hoverNode(el.dataset.node, true));
+    el.addEventListener('mouseleave', () => hoverNode(el.dataset.node, false));
+  });
+  const q = new URLSearchParams(location.search);
+  const cleanup = sc.init?.(svg, { isPaused: () => paused, startAt: +(q.get('t') ?? 0) }) ?? (() => {});
+  return { id, layer, svg, cleanup };
+}
+
+function hoverNode(node, on) {
+  current?.svg.querySelectorAll(`[data-node="${node}"]`).forEach(e => e.classList.toggle('hl', on));
+}
+
+/* labels: één keer aanmaken, daarna elke frame herpositioneren (onderdelen bewegen mee met de animatie) */
+let labelItems = [];
+function placeLabels() {
+  labelsEl.innerHTML = ''; labelItems = [];
+  if (!current) return;
+  const seen = new Set();
+  for (const el of current.svg.querySelectorAll('[data-node]')) {
+    const node = el.dataset.node;
+    if (seen.has(node) || el.dataset.nolabel !== undefined) continue;
+    seen.add(node);
+    const anchor = current.svg.querySelector(`[data-anchor="${node}"]`) ?? el;
+    const lb = document.createElement('div');
+    const kind = target(el);
+    lb.className = 'lbl' + (kind.type === 'card' ? ' leaf' : '') + (kind.type === 'url' ? ' ext' : '');
+    lb.style.setProperty('--dot', el.dataset.color ?? '#7cc4ff');
+    lb.textContent = el.dataset.label ?? (NODES[node] ? title(NODES[node]) : node);
+    if (anchor.dataset.pos === 'below') lb.style.transform = 'translate(-50%, 0)';
+    lb.onclick = () => activate(el);
+    lb.onmouseenter = () => hoverNode(node, true);
+    lb.onmouseleave = () => hoverNode(node, false);
+    labelsEl.append(lb);
+    labelItems.push({ lb, anchor });
+  }
+  updateLabels();
+  labelsEl.classList.toggle('hide', !showLabels);
+}
+function updateLabels() {
+  const s = stage.getBoundingClientRect();
+  for (const { lb, anchor } of labelItems) {
+    const r = anchor.getBoundingClientRect();
+    lb.style.display = r.width === 0 && r.height === 0 ? 'none' : '';
+    const below = anchor.dataset.pos === 'below';
+    lb.style.left = (r.left - s.left + r.width / 2) + 'px';
+    lb.style.top = (below ? r.bottom - s.top + 6 : r.top - s.top - 6) + 'px';
+  }
+}
+(function loop() { if (!busy && current && SCENES[current.id].init && showLabels) updateLabels(); requestAnimationFrame(loop); })();
+
+function target(el) {
+  const node = el.dataset.node;
+  if (el.dataset.href) return { type: 'url', href: el.dataset.href };
+  if (SCENES[node]) return { type: 'scene', id: node };
+  return { type: 'card', id: node };
+}
+
+/* ---------- navigatie ---------- */
+async function activate(el) {
+  if (busy) return;
+  const t = target(el);
+  if (t.type === 'card') return showCard(t.id);
+  // zoombox = omsluitende rechthoek van het aangeklikte element (in scènecoördinaten)
+  const bb = el.getBBox();
+  const pad = Math.max(bb.width, bb.height) * .35 + 20;
+  let box = [bb.x - pad, bb.y - pad, bb.width + 2 * pad, bb.height + 2 * pad];
+  const ar = 1600 / 900;
+  if (box[2] / box[3] > ar) { const h = box[2] / ar; box[1] -= (h - box[3]) / 2; box[3] = h; }
+  else { const w = box[3] * ar; box[0] -= (w - box[2]) / 2; box[2] = w; }
+  if (t.type === 'url') { await zoomOut(box, null); location.href = t.href; return; }
+  await go(t.id, box, 'in');
+}
+
+async function go(id, box, dir) {
+  busy = true; hideCard(); labelsEl.classList.add('hide');
+  const old = current;
+  const nxt = build(id);
+  const start = dir === 'in' ? [-1600 * 1.2, -900 * 1.2, 1600 * 3.4, 900 * 3.4] : [400, 225, 800, 450];
+  nxt.layer.style.opacity = 0;
+  setVB(nxt.svg, start);
+  // oude scène: vlieg in op het doel (of uit, bij teruggaan); nieuwe: van ver/dichtbij naar normaal
+  const oldTo = dir === 'in' ? box : [-1600, -900, 4800, 2700];
+  await tween(1100, t => {
+    setVB(old.svg, lerpVB(VB, oldTo, Math.min(1, t * 1.25)));
+    old.layer.style.opacity = 1 - Math.max(0, (t - .35) / .5);
+    const tt = Math.max(0, (t - .3) / .7);
+    nxt.layer.style.opacity = Math.min(1, tt * 1.6);
+    setVB(nxt.svg, lerpVB(dir === 'in' ? [800 - 1600 * .08, 450 - 900 * .08, 1600 * .16, 900 * .16] : start, VB, tt));
+  });
+  old.cleanup(); old.layer.remove();
+  current = nxt;
+  if (dir === 'in') trail.push(id); else trail = trail.slice(0, trail.indexOf(id) + 1);
+  render(); busy = false;
+}
+
+async function zoomOut(box) {
+  busy = true; labelsEl.classList.add('hide');
+  await tween(700, t => { setVB(current.svg, lerpVB(VB, box, t)); current.layer.style.opacity = 1 - t * .9; });
+}
+
+function back(toIndex) {
+  if (busy || toIndex >= trail.length - 1 || toIndex < 0) return;
+  go(trail[toIndex], null, 'out');
+}
+
+/* ---------- panelen ---------- */
+function render() {
+  const sc = SCENES[current.id], n = NODES[sc.node];
+  const crumbs = document.getElementById('crumbs');
+  crumbs.innerHTML = trail.map((id, i) => i === trail.length - 1
+    ? `<b>${L(SCENES[id].title)}</b>` : `<button data-i="${i}">${L(SCENES[id].title)}</button><span>›</span>`).join('');
+  crumbs.querySelectorAll('button').forEach(b => b.onclick = () => back(+b.dataset.i));
+
+  const lvl = n.scale;
+  document.getElementById('scalebox').innerHTML =
+    `${U('scale')} <b>${L(sc.scale)}</b> · ${U('time')} <b>${L(sc.time)}</b><div class="zoomlvl">${SCALES.map(s => `<i class="${s.id <= lvl ? 'on' : ''}" title="${scaleTitle(s)}"></i>`).join('')}</div>`;
+
+  side.innerHTML = `
+    <div class="kind">${U(n.kind === 'process' ? 'process' : 'structure')} · ${L(sc.org)}</div>
+    <h1>${title(n)}<span class="status ${n.status === 'nagekeken' ? 'ok' : ''}">${statusText(n.status)}</span></h1>
+    <div class="en">${sub(n)}</div>
+    <p>${summary(n)}</p>
+    ${L(sc.extra) ?? ''}
+    ${n.in.length ? `<h4>${U('zoomIn')}</h4>${chips(n.in, '')}` : ''}
+    ${n.next.length ? `<h4>${U('next')}</h4>${chips(n.next, 'next')}` : ''}
+    ${n.rel.length ? `<h4>${U('side')}</h4>${chips(n.rel, 'rel')}` : ''}
+    ${sc.legend ? `<h4>${U('legend')}</h4><div class="legend">${sc.legend.map(([c, t]) => `<span><i style="background:${c}"></i>${L(t)}</span>`).join('')}</div>` : ''}
+    <div class="simp"><b>${U('simplified')}</b><br>${L(sc.simplified)}</div>`;
+  side.querySelectorAll('.chip').forEach(c => c.onclick = () => chipGo(c.dataset.id));
+  requestAnimationFrame(placeLabels);
+}
+
+function chipGo(id) {
+  const el = current.svg.querySelector(`[data-node="${id}"]`);
+  if (el) return activate(el);
+  if (SCENES[id]) return go(id, [700, 400, 200, 112.5], 'in');
+  showCard(id);
+}
+
+const chips = (ids, cls) => ids.map(i => `<button class="chip ${cls} ${SCENES[i] ? 'has' : ''}" data-id="${i}">${NODES[i] ? title(NODES[i]) : i}</button>`).join('');
+
+function showCard(id) {
+  const n = NODES[id];
+  document.getElementById('cardbody').innerHTML = `
+    <div class="kind" style="font:500 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)">${U(n.kind === 'process' ? 'process' : 'structure')} · ${U('conceptCard')}<span class="status ${n.status === 'nagekeken' ? 'ok' : ''}">${statusText(n.status)}</span></div>
+    <h2>${title(n)}</h2><div class="en" style="color:var(--muted);font-style:italic;font-size:13px">${sub(n)}</div>
+    <p>${summary(n)}</p>
+    ${[...n.in, ...n.next, ...n.rel].length ? `<div>${chips(n.in, '')}${chips(n.next, 'next')}${chips(n.rel, 'rel')}</div>` : ''}
+    ${n.pdb.length ? `<div style="margin-top:8px;font-size:13px">3D: ${n.pdb.map(p => `<a href="https://www.rcsb.org/structure/${p}" target="_blank" rel="noopener">PDB ${p}</a>`).join(' · ')}</div>` : ''}
+    <div class="todo">${U('noScene')}</div>
+    <div style="margin-top:12px;text-align:right"><button class="btn" id="cardClose">${U('close')}</button></div>`;
+  card.classList.add('show');
+  document.getElementById('cardClose').onclick = hideCard;
+  card.querySelectorAll('.chip').forEach(c => c.onclick = () => { hideCard(); chipGo(c.dataset.id); });
+}
+function hideCard() { card.classList.remove('show'); }
+card.addEventListener('click', e => { if (e.target === card) hideCard(); });
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (card.classList.contains('show')) hideCard(); else back(trail.length - 2);
+});
+document.getElementById('tLabels').onclick = e => { showLabels = !showLabels; e.currentTarget.setAttribute('aria-pressed', showLabels); labelsEl.classList.toggle('hide', !showLabels); };
+document.getElementById('tPause').onclick = e => {
+  paused = !paused; e.currentTarget.setAttribute('aria-pressed', paused); e.currentTarget.textContent = paused ? U('play') : U('pause');
+  current.svg[paused ? 'pauseAnimations' : 'unpauseAnimations']();
+};
+addEventListener('resize', () => requestAnimationFrame(placeLabels));
+setTimeout(() => document.getElementById('tip').style.opacity = 0, 6000);
+
+/* start: optioneel ?scene=… voor directe links */
+const startId = new URLSearchParams(location.search).get('scene') ?? 'cel';
+// ontwikkelaarsoptie: ?t=<ms>&freeze=1 bevriest een scène op een bepaald moment (voor controlebeelden)
+if (new URLSearchParams(location.search).has('freeze')) { paused = true; document.getElementById('tip').remove(); }
+current = build(SCENES[startId] ? startId : 'cel');
+trail = [current.id];
+render();
+</script>
+</body>
+</html>
