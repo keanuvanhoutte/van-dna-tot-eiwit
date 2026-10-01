@@ -60,7 +60,7 @@ export default {
   steps: STEPS,
   svg() {
     const btn = (x, y, node, href, nl, en, col) => `<g data-node="${node}" ${href ? `data-href="${href}"` : ''} data-nolabel><rect x="${x - 170}" y="${y - 28}" width="340" height="56" rx="28" fill="#0d1426" stroke="${col}" stroke-width="3"/><text x="${x}" y="${y + 8}" font-size="22" text-anchor="middle" fill="${col}" font-family="Inter" font-weight="700">${T2(nl, en)}</text></g>`;
-    return svgOpen() + `<g id="nc-main"></g><g id="nc-ann"></g>
+    return svgOpen() + `<g id="nc-main"></g><g id="nc-chr" data-node="chromosoom" data-color="${C.dna}" data-nolabel></g><g id="nc-ann"></g>
       <g id="nc-hs-tel" data-node="telomeren" data-color="${C.dna}" data-label="${T2('Telomeren & telomerase', 'Telomeres & telomerase')}"><circle data-anchor="telomeren" cx="1080" cy="262" r="20" fill="transparent"/></g>
       <g id="nc-hs-bp" data-node="basenparing" data-color="${BASE.G}" data-label="${T2('Hoogsteen-paring (basenparing)', 'Hoogsteen pairing (base pairing)')}"><circle data-anchor="basenparing" cx="1170" cy="330" r="20" fill="transparent"/></g>
       <g id="nc-hs-sc" data-node="supercoiling" data-color="${C.dna}" data-label="${T2('Aangedreven door negatieve supercoiling', 'Driven by negative supercoiling')}"><circle data-anchor="supercoiling" cx="800" cy="840" r="20" fill="transparent"/></g>
@@ -122,7 +122,7 @@ export default {
     return {
       update(t, s) {
         const { step, p } = s;
-        let m = '', ann = '';
+        let m = '', ann = '', chr = '';
         if (step === 0) {
           const tiles = [[420, 300, 'G-quadruplex', T2('G-rijke streng', 'G-rich strand'), BASE.G], [1180, 300, 'triplex (H-DNA)', T2('spiegelherhaling purine/pyrimidine', 'purine/pyrimidine mirror repeat'), C.dna2], [420, 620, T2('kruisvorm', 'cruciform'), T2('omgekeerde herhaling (palindroom)', 'inverted repeat (palindrome)'), BASE.A], [1180, 620, T2('i-motief', 'i-motif'), T2('C-rijke streng, zure pH', 'C-rich strand, acidic pH'), BASE.C]];
           tiles.forEach(([x, y, a, b, col], i) => {
@@ -167,7 +167,7 @@ export default {
           m += `<g opacity="${f1(1 - k)}"><path d="M900,440 H1300" stroke="${C.dna}" stroke-width="8" stroke-dasharray="14 8"/>${txt(1100, 530, T2("3′-overhang (TTAGGG)n", "3′ overhang (TTAGGG)n"), C.dna, 22)}</g>`;
           m += `<g opacity="${f1(lerp(.3, 1, k))}">${g4schema(1080, 420, 190, 'par', lerp(.35, 1, k))}</g>`;   // doelstructuur al vaag zichtbaar
           // context vanaf p = 0: het chromosoom met zijn twee telomeren, en de sequentie van de overhang
-          m += `<g><rect x="190" y="232" width="200" height="36" rx="18" fill="${C.dna}" fill-opacity=".3" stroke="${C.dna}" stroke-width="2.5"/><rect x="410" y="232" width="330" height="36" rx="18" fill="${C.dna}" fill-opacity=".3" stroke="${C.dna}" stroke-width="2.5"/><circle cx="400" cy="250" r="9" fill="${C.histone}"/><path d="M190,250 a18,18 0 0 1 18,-18 h14 v36 h-14 a18,18 0 0 1 -18,-18 Z M740,250 a18,18 0 0 0 -18,-18 h-14 v36 h14 a18,18 0 0 0 18,-18 Z" fill="#ffc247"/><path d="M708,272 L150,405 M740,262 L900,405" stroke="#ffc247" stroke-width="1.5" stroke-dasharray="6 6" opacity=".55"/>${txt(465, 212, T2('chromosoom: telomeer aan elk uiteinde', 'chromosome: a telomere at each end'), '#ffc247', 22)}</g>`;
+          chr = `<g><rect x="190" y="232" width="200" height="36" rx="18" fill="${C.dna}" fill-opacity=".3" stroke="${C.dna}" stroke-width="2.5"/><rect x="410" y="232" width="330" height="36" rx="18" fill="${C.dna}" fill-opacity=".3" stroke="${C.dna}" stroke-width="2.5"/><circle cx="400" cy="250" r="9" fill="${C.histone}"/><path d="M190,250 a18,18 0 0 1 18,-18 h14 v36 h-14 a18,18 0 0 1 -18,-18 Z M740,250 a18,18 0 0 0 -18,-18 h-14 v36 h14 a18,18 0 0 0 18,-18 Z" fill="#ffc247"/><path d="M708,272 L150,405 M740,262 L900,405" stroke="#ffc247" stroke-width="1.5" stroke-dasharray="6 6" opacity=".55"/>${txt(465, 212, T2('chromosoom: telomeer aan elk uiteinde', 'chromosome: a telomere at each end'), '#ffc247', 22)}</g>`;
           m += txt(1080, 585, 'TTAGGG TTAGGG TTAGGG TTAGGG', C.dna, 22, 'middle', 700, 'JetBrains Mono');
           ann += `<rect x="150" y="530" width="610" height="16" rx="8" fill="${C.histone}" opacity=".3"/>` + txt(455, 580, T2('dubbelstrengig telomeer-DNA: ≈ 5–15 kb TTAGGG', 'double-stranded telomeric DNA: ≈ 5–15 kb TTAGGG'), C.muted, 22);
           ann += `<g opacity="${f1(k2)}">${txt(1080, 640, T2('overhang ≈ 50–300 nt', 'overhang ≈ 50–300 nt'), '#fff', 22)}</g>`;
@@ -224,7 +224,7 @@ export default {
           ann += `<g opacity="${f1(hk)}">${txt(X(v, h), Y(v, h) - 26, '+', '#ffc247', 34, 'middle', 800)}</g>`;
           ann += `<g opacity="${f1(ease(sub(p, .45, .65)))}">${txt(800, 672, T2('C·C⁺: extra H⁺ op N3 → 3 H-bruggen', 'C·C⁺: extra H⁺ on N3 → 3 H-bonds'), '#fff', 26)}</g>`;
         }
-        $('nc-main').innerHTML = m; $('nc-ann').innerHTML = ann;
+        $('nc-main').innerHTML = m; $('nc-chr').innerHTML = chr; $('nc-ann').innerHTML = ann;
         vis('nc-hs-tel', step === 4 ? sub(p, .8, .9) : 0);
         vis('nc-hs-bp', step === 5 ? sub(p, .8, .9) : 0);
         vis('nc-hs-sc', step === 7 ? sub(p, .8, .9) : 0);

@@ -125,11 +125,11 @@ export default {
     <!-- paneel A -->
     <g id="cr-pA">
       ${panel(40, 150, 500, 600, T2('① Territoria', '① Territories'), '#2a3a60', 21)}
-      <circle cx="290" cy="450" r="215" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="4"/>
-      <circle cx="290" cy="450" r="221" fill="none" stroke="#7aa0d8" stroke-width="3" opacity=".6"/>
+      <g data-node="kern" data-color="#9cc0ff" data-nolabel><circle cx="290" cy="450" r="215" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="4"/>
+      <circle cx="290" cy="450" r="221" fill="none" stroke="#7aa0d8" stroke-width="3" opacity=".6"/></g>
       ${het}
-      <path d="M232,420 C236,392 285,388 297,412 C310,438 282,462 255,458 C235,455 229,440 232,420Z" fill="#2a3d63" stroke="#4d6aa0" stroke-width="2"/>
-      <text x="266" y="400" font-size="13" text-anchor="middle" fill="#cfdcf5" font-family="Inter" font-weight="700" stroke="#0a1224" stroke-width="3" paint-order="stroke">${T2('nucleolus', 'nucleolus')}</text>
+      <g data-node="nucleolus" data-color="${C.rrna}" data-nolabel><path d="M232,420 C236,392 285,388 297,412 C310,438 282,462 255,458 C235,455 229,440 232,420Z" fill="#2a3d63" stroke="#4d6aa0" stroke-width="2"/>
+      <text x="266" y="400" font-size="13" text-anchor="middle" fill="#cfdcf5" font-family="Inter" font-weight="700" stroke="#0a1224" stroke-width="3" paint-order="stroke">${T2('nucleolus', 'nucleolus')}</text></g>
       <g data-node="chromosoom" data-color="${C.dna}" data-label="${T2('Chromosoom', 'Chromosome')}">${terr}<circle data-anchor="chromosoom" cx="335" cy="265" r="1" fill="none"/></g>
       <rect x="360" y="410" width="80" height="80" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="6 4"/>
     </g>
@@ -146,7 +146,7 @@ export default {
     <g id="cr-pC">
       ${panel(560, 520, 560, 290, T2('③ Eu- en heterochromatine', '③ Eu- and heterochromatin'), '#2a3a60', 21)}
       <g data-node="histonmod" data-color="${C.chain}" data-label="${T2('Histonmodificaties', 'Histone modifications')}">${eu}<circle data-anchor="histonmod" cx="640" cy="600" r="1" fill="none"/></g>
-      <g data-node="genregulatie" data-color="${C.prot}" data-label="${T2('Actief gen', 'Active gene')}" data-nolabel>
+      <g data-node="rnapol" data-color="${C.prot}" data-label="${T2('RNA-polymerase II', 'RNA polymerase II')}" data-nolabel>
         <ellipse cx="735" cy="742" rx="26" ry="18" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="2"/>
         <text x="735" y="746" font-size="10" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">Pol II</text>
       </g>
@@ -169,7 +169,7 @@ export default {
     </g>
     <g id="cr-pD2">
       ${panel(1140, 370, 450, 230, T2('⑤ Hogere vouwing', '⑤ Higher-order folding'), '#2a3a60', 21)}
-      ${z30}${vivo}
+      <g data-node="nucleosoom" data-color="${C.histone}" data-nolabel>${z30}${vivo}</g>
       ${txt(1260, 540, T2('in vitro: "30 nm-vezel"', 'in vitro: "30 nm fibre"'), C.muted, 12)}
       ${txt(1260, 556, T2('(regelmatig, zigzag)', '(regular, zigzag)'), C.muted, 11)}
       ${txt(1490, 572, T2('in de cel: onregelmatige', 'in the cell: irregular'), C.text, 12)}

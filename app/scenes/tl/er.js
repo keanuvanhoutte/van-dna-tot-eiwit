@@ -69,8 +69,9 @@ export default {
     <g id="er-lab"></g>
     <g id="er-sec61"></g>
     <g data-node="ribosoom" data-color="${C.rrna}" data-label="${T2('Ribosoom', 'Ribosome')}"><g id="er-ribo"></g><circle id="er-rA" data-anchor="ribosoom" r="1" fill="none"/></g>
-    <g id="er-chain"></g>
+    <g data-node="vouwing" data-color="${C.chain}" data-nolabel><g id="er-chain"></g></g>
     <g data-node="rnastructuur" data-color="${C.rna}" data-label="${T2('SRP (7SL-RNA + eiwitten)', 'SRP (7SL RNA + proteins)')}"><g id="er-srp"></g><circle id="er-sA" data-anchor="rnastructuur" r="1" fill="none"/></g>
+    <g data-node="ptm" data-color="${C.prot3}" data-nolabel><g id="er-spc"></g></g>
     <g data-node="glyco" data-color="#4f8ff7" data-label="${T2('Glycosylering', 'Glycosylation')}"><g id="er-ost"></g><circle id="er-gA" data-anchor="glyco" data-pos="below" r="1" fill="none"/></g>
     <g id="er-ov"></g>
     ${hud('er-hud', [
@@ -126,7 +127,7 @@ export default {
         const { step: i, p } = s;
         const gA = i === 7 ? [420, 850] : i === 8 ? [700, 800] : [330, MB + 130];
         $('er-golgiA').setAttribute('cx', gA[0]); $('er-golgiA').setAttribute('cy', gA[1]);
-        let rb = '', ch = '', srp = '', ost = '', ov = '', lab = '';
+        let rb = '', ch = '', srp = '', ost = '', spc = '', ov = '', lab = '';
         // positie van het ribosoom
         let exit = FREE;
         if (i === 3) exit = E2(FREE, DOCK, ease(sub(p, .1, .75)));
@@ -190,8 +191,8 @@ export default {
         // signaalpeptidase, OST
         if (i === 6) {
           const k = sub(p, .05, .25), flash = sub(p, .35, .5);
-          ost += `<g opacity="${f1(k)}"><ellipse cx="${GATE + 110}" cy="${MB + 60}" rx="62" ry="28" fill="${C.prot3}"/>${txt(GATE + 110, MB + 66, 'SPC', '#fff', 18, 'middle', 800)}${txt(GATE + 185, MB + 66, T2('signaalpeptidase', 'signal peptidase'), C.prot, 18, 'start', 700)}</g>`;
-          if (flash > 0 && flash < 1) ost += `<circle cx="${GATE + 28}" cy="${MT + 100}" r="${f1(16 + 30 * flash)}" fill="none" stroke="#fff" stroke-width="3" opacity="${f1(1 - flash)}"/>`;
+          spc += `<g opacity="${f1(k)}"><ellipse cx="${GATE + 110}" cy="${MB + 60}" rx="62" ry="28" fill="${C.prot3}"/>${txt(GATE + 110, MB + 66, 'SPC', '#fff', 18, 'middle', 800)}${txt(GATE + 185, MB + 66, T2('signaalpeptidase', 'signal peptidase'), C.prot, 18, 'start', 700)}</g>`;
+          if (flash > 0 && flash < 1) spc += `<circle cx="${GATE + 28}" cy="${MT + 100}" r="${f1(16 + 30 * flash)}" fill="none" stroke="#fff" stroke-width="3" opacity="${f1(1 - flash)}"/>`;
           ov += `<g opacity="${f1(sub(p, .45, .6))}">${txt(GATE + 60, MT + 104, '✂', '#fff', 30, 'middle', 800)}</g>`;
           ov += `<g opacity="${f1(sub(p, .75, .9))}">${txt(420, 860, T2('N-terminus van pro-albumine: RGVFRR-DAHK…', 'N terminus of pro-albumin: RGVFRR-DAHK…'), '#fff', 20, 'start', 700)}</g>`;
         }
@@ -220,7 +221,7 @@ export default {
           ov += `<g opacity="${f1(k)}"><path d="M${PORE + 70},${MT + 25} h180" stroke="#fff" stroke-width="3" marker-end="url(#arrow)"/>${txt(PORE + 160, MT - 20, T2('laterale poort', 'lateral gate'), '#fff', 18, 'middle', 700)}</g>`;
           ov += `<g opacity="${f1(sub(p, .75, .9))}">${txt(1260, 320, T2('meerdere TM-segmenten → multi-pass eiwit', 'several TM segments → multi-pass protein'), C.muted, 21, 'middle', 700)}</g>`;
         }
-        $('er-ribo').innerHTML = rb; $('er-ost').innerHTML = ost; $('er-ov').innerHTML = ov;
+        $('er-ribo').innerHTML = rb; $('er-spc').innerHTML = spc; $('er-ost').innerHTML = ost; $('er-ov').innerHTML = ov;
       },
     };
   },

@@ -68,7 +68,7 @@ export default {
       <rect x="${MEM - 34}" y="${PORE_Y + 54}" width="68" height="34" rx="12" fill="#3b4a72" stroke="#8a9bc4" stroke-width="3"/>
     </g>
     ${note(MEM - 40, 220, T2('kern', 'nucleus'), C.muted, 20, 'end')}${note(MEM + 40, 220, T2('cytoplasma', 'cytoplasm'), C.muted, 20, 'start')}
-    <g id="ri-pol"></g><g id="ri-hp"></g><g id="ri-enz"></g><g id="ri-ago"></g><g id="ri-tgt"></g>
+    <g data-node="dnahelix" data-color="${C.dna}" data-nolabel><g id="ri-dna"></g></g><g data-node="gen" data-color="${C.dna}" data-nolabel><g id="ri-gen"></g></g><g data-node="rnapol" data-color="${C.prot}" data-nolabel><g id="ri-pol"></g></g><g data-node="rnastructuur" data-color="${C.rna}" data-nolabel><g id="ri-hp"></g></g><g id="ri-enz"></g><g id="ri-ago"></g><g data-node="translatie" data-color="${C.rna}" data-nolabel><g id="ri-tgt"></g></g><g data-node="ribosoom" data-color="${C.rrna}" data-nolabel><g id="ri-rib"></g></g><g data-node="mrnaafbraak" data-color="#8a5a3a" data-nolabel><g id="ri-dec"></g></g>
     ${hot('rnapol', T2('RNA-polymerase II', 'RNA polymerase II'), C.prot, 'ri-hP')}
     ${hot('rnastructuur', T2('dsRNA-stam (atlas)', 'dsRNA stem (atlas)'), C.rna, 'ri-hA', '../atlas/index.html?id=dsrna')}
     ${hot('mrnaafbraak', T2('→ mRNA-afbraak', '→ mRNA decay'), '#8a5a3a', 'ri-tA')}
@@ -103,14 +103,14 @@ export default {
       update(t, s) {
         const { step, p } = s;
         // ---------- stap 0–1: transcriptie + Microprocessor ----------
-        let pol = '';
+        let pol = '', dna = '', gen = '';
         if (step === 0) {
           const k = ease(sub(p, 0, .5));
-          pol += `<line x1="-200" y1="560" x2="${MEM - 30}" y2="560" stroke="${C.dna}" stroke-width="7"/><line x1="-200" y1="576" x2="${MEM - 30}" y2="576" stroke="${C.dna2}" stroke-width="5"/>`;
-          pol += `<rect x="130" y="542" width="240" height="52" fill="none" stroke="${C.dna}" stroke-width="2" stroke-dasharray="5 4" opacity=".7"/>` + note(250, 614, T2('MIR-gen', 'MIR gene'), C.dna, 18);
+          dna += `<line x1="-200" y1="560" x2="${MEM - 30}" y2="560" stroke="${C.dna}" stroke-width="7"/><line x1="-200" y1="576" x2="${MEM - 30}" y2="576" stroke="${C.dna2}" stroke-width="5"/>`;
+          gen += `<rect x="130" y="542" width="240" height="52" fill="none" stroke="${C.dna}" stroke-width="2" stroke-dasharray="5 4" opacity=".7"/>` + note(250, 614, T2('MIR-gen', 'MIR gene'), C.dna, 18);
           pol += `<g transform="translate(${f1(lerp(140, 420, k))} 546)"><ellipse cx="0" cy="0" rx="46" ry="38" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/><text x="0" y="6" font-size="16" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">Pol II</text></g>`;
         }
-        $('ri-pol').innerHTML = pol;
+        $('ri-dna').innerHTML = dna; $('ri-gen').innerHTML = gen; $('ri-pol').innerHTML = pol;
 
         let hp = '', enz = '';
         const base0 = [250, 410];
@@ -192,7 +192,7 @@ export default {
         setHot(svg, 'ri-gA', agoOp > .5 && step !== 6 ? [gx(18), YG - 44, 120, 16] : null);
 
         // ---------- stap 5–7: doel-mRNA ----------
-        let tg = '';
+        let tg = '', rib = '', dec = '';
         if (step >= 5) {
           const si = step === 7;
           const k = step === 5 ? ease(sub(p, 0, .4)) : step === 7 ? ease(sub(p, 0, .3)) : 1;
@@ -219,20 +219,20 @@ export default {
           // ribosomen op het ORF (links) — remming bij miRNA
           const rOp = step === 6 ? 1 - ease(sub(p, .45, .9)) : 1;
           if (step === 6) {
-            for (const rx of [680, 820]) tg += ribo(rx, YT + 17, .8, rOp);
+            for (const rx of [680, 820]) rib += ribo(rx, YT + 17, .8, rOp);
             tg += note(750, YT - 90, T2('translatie geremd', 'translation repressed'), '#ffd36b', 20, 'middle', sub(p, .5, .7));
             const g = ease(sub(p, 0, .3));
-            tg += prot(gx(NB) + 60, YG - 96, 116, 36, 'GW182', '#b44f7c', g, 20);
-            tg += prot(gx(NB) + 60, YG - 150, 146, 36, 'CCR4–NOT', '#8a5a3a', ease(sub(p, .2, .4)), 20);
-            tg += `<path d="M${gx(NB) + 120},${YG - 146} C${gx(3)},${YG - 230} ${Rx + 60},${YG - 140} ${Rx + 60},${YT - 10}" stroke="#e0b089" stroke-width="3" fill="none" stroke-dasharray="8 6" opacity="${f1(sub(p, .25, .4))}"/>`;
-            tg += note(Rx + 70, YT - 70, T2('deadenylatie', 'deadenylation'), '#e0b089', 17, 'start', sub(p, .3, .45));
+            dec += prot(gx(NB) + 60, YG - 96, 116, 36, 'GW182', '#b44f7c', g, 20);
+            dec += prot(gx(NB) + 60, YG - 150, 146, 36, 'CCR4–NOT', '#8a5a3a', ease(sub(p, .2, .4)), 20);
+            dec += `<path d="M${gx(NB) + 120},${YG - 146} C${gx(3)},${YG - 230} ${Rx + 60},${YG - 140} ${Rx + 60},${YT - 10}" stroke="#e0b089" stroke-width="3" fill="none" stroke-dasharray="8 6" opacity="${f1(sub(p, .25, .4))}"/>`;
+            dec += note(Rx + 70, YT - 70, T2('deadenylatie', 'deadenylation'), '#e0b089', 17, 'start', sub(p, .3, .45));
           }
           if (si) {
             tg += snip(cx, YT + 15, sub(p, .45, .55) * (1 - sub(p, .65, .75)));
             tg += note(cx, YT + 110, T2('AGO2 knipt (tegenover nt 10–11)', 'AGO2 slices (opposite nt 10–11)'), '#ffd36b', 18, 'middle', sub(p, .5, .65));
           }
         }
-        $('ri-tgt').innerHTML = tg;
+        $('ri-tgt').innerHTML = tg; $('ri-rib').innerHTML = rib; $('ri-dec').innerHTML = dec;
         setHot(svg, 'ri-tA', step === 6 && p > .3 ? [gx(NB) + 60, YG - 150, 146, 36] : null);
 
         $('ri-hp').innerHTML = hp;

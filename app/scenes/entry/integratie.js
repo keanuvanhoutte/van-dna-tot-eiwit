@@ -52,7 +52,7 @@ export default {
   svg() {
     return svgOpen() + `
     <rect x="-400" y="-400" width="2400" height="1800" fill="url(#gNuc)"/>
-    ${CHROM}
+    <g data-node="chromatine" data-color="${C.dna}" data-nolabel>${CHROM}</g>
     ${txt(1250, 190, T2('celkern', 'nucleus'), C.muted, 21, 'middle', 500)}
     <g data-node="chromatine" data-color="${C.dna}" data-label="${T2('Gastheerchromosoom', 'Host chromosome')}">
       <circle data-anchor="chromatine" data-pos="below" cx="300" cy="${HOST + 40}" r="1" fill="none"/>
@@ -61,7 +61,7 @@ export default {
     <g data-node="rt" data-color="${PINK}" data-label="${T2('Komt van de reverse transcriptie', 'Comes from reverse transcription')}" id="in-rt">
       <circle id="in-rt-a" data-anchor="rt" cx="800" cy="${Y0 - H - 50}" r="1" fill="none"/>
     </g>
-    <g id="in-viral"></g>
+    <g id="in-viralH" data-node="rt" data-color="${PINK}" data-nolabel><g id="in-viral"></g></g>
     <g id="in-intasome"></g>
     <g data-node="herstel" data-color="${C.chain}" data-label="${T2('DNA-herstel van de gastheer', 'Host DNA repair')}" id="in-repair" opacity="0">
       <circle data-anchor="herstel" data-pos="below" cx="800" cy="${HOST + 70}" r="1" fill="none"/>
@@ -69,6 +69,7 @@ export default {
     </g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Transcriptie van het provirus', 'Transcription of the provirus')}" id="in-txn" opacity="0">
       <circle data-anchor="transcriptie" cx="560" cy="${HOST - 214}" r="1" fill="none"/>
+      <g data-node="rnapol" data-color="${C.prot}" data-nolabel><g id="in-pol"></g></g>
       <g id="in-txn-body"></g>
     </g>
     <g id="in-notes"></g>
@@ -108,6 +109,8 @@ export default {
         $('in-viral').innerHTML = viral(y, step >= 2);
         $('in-rt-a').setAttribute('cy', f1(y - H - 50));
         $('in-rt').setAttribute('opacity', step <= 2 ? '1' : '0');
+        /* het losse virale DNA linkt naar de reverse transcriptie; eenmaal ingebouwd (stap 3+) is het het provirus van deze scène */
+        $('in-viralH').setAttribute('pointer-events', step <= 2 ? 'auto' : 'none');
 
         /* intasoom */
         const iOn = step === 0 ? 0 : step === 1 ? ease(sub(p, .15, .6)) : step <= 3 ? 1 : step === 4 ? 1 - ease(clamp(p / .3)) : 0;
@@ -123,9 +126,10 @@ export default {
         /* transcriptie */
         const txnOn = step === 6 ? ease(sub(p, .15, .55)) : 0;
         $('in-txn').setAttribute('opacity', f1(txnOn));
+        $('in-pol').innerHTML = txnOn > .01
+          ? `<g transform="translate(520 ${HOST - 150})"><ellipse rx="54" ry="40" fill="rgba(155,123,255,.3)" stroke="${C.prot}" stroke-width="3"/>${txt(0, 7, 'Pol II', '#e8edf7', 20)}</g>` : '';
         $('in-txn-body').innerHTML = txnOn > .01
-          ? `<g transform="translate(520 ${HOST - 150})"><ellipse rx="54" ry="40" fill="rgba(155,123,255,.3)" stroke="${C.prot}" stroke-width="3"/>${txt(0, 7, 'Pol II', '#e8edf7', 20)}
-             <path d="M-40,-30 q-60,-60 -140,-50" stroke="${C.rna}" stroke-width="6" fill="none"/>${txt(-230, -96, T2('viraal mRNA', 'viral mRNA'), C.rna, 20)}</g>
+          ? `<g transform="translate(520 ${HOST - 150})"><path d="M-40,-30 q-60,-60 -140,-50" stroke="${C.rna}" stroke-width="6" fill="none"/>${txt(-230, -96, T2('viraal mRNA', 'viral mRNA'), C.rna, 20)}</g>
              ${txt(520, HOST + 60, T2('linker-LTR = promoter', 'left LTR = promoter'), PINK, 19)}` : '';
 
         /* notities */

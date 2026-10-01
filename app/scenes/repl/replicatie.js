@@ -83,12 +83,13 @@ export default {
   svg() {
     return svgOpen() + `
     <g id="rp-ms"></g>
-    <g id="rp-dna"></g>
+    <g data-node="dnahelix" data-nolabel data-color="${C.dna}"><g id="rp-dna"></g></g>
     <g data-node="replisoom" data-color="${C.prot}" data-label="${T2('Replicatievork → replisoom', 'Replication fork → replisome')}">
       <g id="rp-forks"></g><circle id="rp-fanchor" data-anchor="replisoom" cx="-99" cy="-99" r="1" fill="none"/>
     </g>
     <g id="rp-prot"></g>
     <g data-node="nucleosoom" data-color="${C.histone}" data-label="${T2('Nucleosomen', 'Nucleosomes')}"><g id="rp-nuc"></g><circle id="rp-nanchor" data-anchor="nucleosoom" cx="-99" cy="-99" r="1" fill="none"/></g>
+    <g data-node="chromosoom" data-nolabel data-color="#ffc247"><g id="rp-coh"></g></g>
     <g id="rp-lbl"></g>
     <g data-node="chromosoom" data-nolabel data-color="${C.dna}" data-label="${T2('↑ Chromosoom', '↑ Chromosome')}">
       <rect x="60" y="786" width="340" height="52" rx="26" fill="rgba(79,143,247,.15)" stroke="${C.dna}" stroke-width="2"/>
@@ -261,7 +262,7 @@ export default {
         $('rp-prot').innerHTML = pr;
 
         /* ---------- stap 6: nucleosomen en cohesine ---------- */
-        let nu = '';
+        let nu = '', coh = '';
         const an2 = $('rp-nanchor');
         if (step === 6) {
           const kn = ease(sub(p, .15, .6));
@@ -272,12 +273,12 @@ export default {
           }
           an2.setAttribute('cx', 690); an2.setAttribute('cy', CY - G / 2 - H - 40);
           const kc = ease(sub(p, .55, .8));
-          for (const x of [450, 1110]) nu += `<g opacity="${f1(kc)}"><ellipse cx="${x}" cy="${CY}" rx="26" ry="${G / 2 + H + 30}" fill="none" stroke="#ffc247" stroke-width="5"/></g>`;
-          nu += tag(1110, CY + G / 2 + H + 66, T2('cohesine', 'cohesin'), '#ffc247', 22, 'middle', kc);
+          for (const x of [450, 1110]) coh += `<g opacity="${f1(kc)}"><ellipse cx="${x}" cy="${CY}" rx="26" ry="${G / 2 + H + 30}" fill="none" stroke="#ffc247" stroke-width="5"/></g>`;
+          coh += tag(1110, CY + G / 2 + H + 66, T2('cohesine', 'cohesin'), '#ffc247', 22, 'middle', kc);
           nu += tag(800, CY - 150, T2('zusterchromatide 1: oud + nieuw', 'sister chromatid 1: old + new'), C.text, 23, 'middle', ease(sub(p, 0, .15)));
           nu += tag(800, CY + 178, T2('zusterchromatide 2: nieuw + oud', 'sister chromatid 2: new + old'), C.text, 23, 'middle', ease(sub(p, 0, .15)));
         } else { an2.setAttribute('cx', -99); an2.setAttribute('cy', -99); }
-        $('rp-nuc').innerHTML = nu;
+        $('rp-nuc').innerHTML = nu; $('rp-coh').innerHTML = coh;
       },
     };
   },

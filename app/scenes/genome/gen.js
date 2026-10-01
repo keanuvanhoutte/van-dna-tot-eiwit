@@ -133,8 +133,8 @@ export default {
       </g>
     </g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Transcriptie →', 'Transcription →')}" id="gn-pre">${pre}<circle data-anchor="transcriptie" cx="${CUT - 60}" cy="${YP + 30}" r="1" fill="none" data-pos="below"/></g>
-    <g id="gn-arrow"><path d="M800,${YP + 40} L800,${YM - 60}" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>${D(txt(815, (YP + YM) / 2 - 6, T2('capping · splicing · polyadenylatie', 'capping · splicing · polyadenylation'), C.muted, 18, 'start'))}</g>
-    <g id="gn-mat">${mat}</g>
+    <g id="gn-arrow" data-node="rnaprocessing" data-color="${C.muted}" data-nolabel><path d="M800,${YP + 40} L800,${YM - 60}" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>${D(txt(815, (YP + YM) / 2 - 6, T2('capping · splicing · polyadenylatie', 'capping · splicing · polyadenylation'), C.muted, 18, 'start'))}</g>
+    <g id="gn-mat" data-node="translatie" data-color="${C.rna}" data-nolabel>${mat}</g>
     <g id="gn-dnalab">${txt(800, 190, T2("DNA (coderende streng 5'→3')", "DNA (coding strand 5'→3')"), C.dna2, 21)}</g>
     </svg>`;
   },

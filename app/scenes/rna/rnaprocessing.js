@@ -5,15 +5,15 @@ function sceneProcessing() {
   const T = (nl, en) => L({ nl, en });
   return svgOpen() + `
     <!-- kernenvelop met porie bovenaan -->
-    <path d="M-50,95 Q800,40 1650,95" stroke="#7aa0d8" stroke-width="5" fill="none" opacity=".7"/>
-    <path d="M-50,112 Q800,57 1650,112" stroke="#9cc0ff" stroke-width="3" fill="none" opacity=".8"/>
+    <g data-node="kern" data-color="#7aa0d8" data-nolabel><path d="M-50,95 Q800,40 1650,95" stroke="#7aa0d8" stroke-width="5" fill="none" opacity=".7"/>
+    <path d="M-50,112 Q800,57 1650,112" stroke="#9cc0ff" stroke-width="3" fill="none" opacity=".8"/></g>
     <g data-node="export" data-color="${C.prot}" data-label="${T('Kernporie · export', 'Nuclear pore · export')}">
       <g transform="translate(900 74)"><rect x="-26" y="-22" width="52" height="44" rx="10" fill="#0b1427" stroke="${C.prot}" stroke-width="3"/><rect x="-14" y="-6" width="28" height="12" rx="4" fill="${C.prot}" opacity=".5"/></g>
     </g>
     <text x="1440" y="40" fill="${C.muted}" font-size="20" font-family="Inter" opacity=".7">${T('cytoplasma', 'cytoplasm')}</text>
     <text x="1440" y="150" fill="${C.muted}" font-size="20" font-family="Inter" opacity=".7">${T('nucleoplasma', 'nucleoplasm')}</text>
 
-    <g data-node="rnapol" data-color="${C.prot}" data-label="${T('RNA-polymerase II', 'RNA polymerase II')}"><g id="pr-pol"></g></g>
+    <g data-node="rnapol" data-color="${C.prot}" data-label="${T('RNA-polymerase II', 'RNA polymerase II')}"><g id="pr-pol"></g></g><g data-node="dnahelix" data-color="${C.dna}" data-nolabel><g id="pr-dna"></g></g>
     <g id="pr-down"></g>
     <g data-node="splicing" data-color="${C.prot}" data-label="${T('Spliceosoom', 'Spliceosome')}"><g id="pr-intron"></g><g id="pr-snrnp"></g></g>
     <g data-node="rnaprocessing" data-nolabel><g id="pr-mrna"></g></g>
@@ -154,8 +154,8 @@ function initProcessing(svg) {
     else if (ds < X.down[1] - 2) dn += seg(ds, X.down[1], Y, '#c07a4a', 5) + `<g opacity="${polOp.toFixed(2)}">${pill(ds - 4, Y - 26, 52, 22, 'Xrn2', '#5a4bb8')}</g>`;
     dn += txt((X.dse[0] + X.dse[1]) / 2, Y + 20, ph < 9 ? L({ nl: 'GU-rijk', en: 'GU-rich' }) : '', '#c07a4a', 10);
     $('pr-down').innerHTML = dn;
-    $('pr-pol').innerHTML = polOp > 0 ? `<g opacity="${polOp.toFixed(2)}" transform="translate(${X.pol} ${Y})"><path d="M-40,-10 C-40,-60 10,-70 40,-50 C70,-30 70,30 40,50 C10,70 -40,60 -40,-10Z" fill="rgba(155,123,255,.22)" stroke="${C.prot}" stroke-width="3"/><text x="0" y="5" font-size="12" text-anchor="middle" fill="${C.text}" font-family="Inter">Pol II</text></g>
-      <line x1="${X.pol + 10}" y1="${Y + 58}" x2="1650" y2="${Y + 58}" stroke="${C.dna}" stroke-width="5" opacity="${polOp.toFixed(2)}"/>` : '';
+    $('pr-pol').innerHTML = polOp > 0 ? `<g opacity="${polOp.toFixed(2)}" transform="translate(${X.pol} ${Y})"><path d="M-40,-10 C-40,-60 10,-70 40,-50 C70,-30 70,30 40,50 C10,70 -40,60 -40,-10Z" fill="rgba(155,123,255,.22)" stroke="${C.prot}" stroke-width="3"/><text x="0" y="5" font-size="12" text-anchor="middle" fill="${C.text}" font-family="Inter">Pol II</text></g>` : '';
+    $('pr-dna').innerHTML = polOp > 0 ? `<line x1="${X.pol + 10}" y1="${Y + 58}" x2="1650" y2="${Y + 58}" stroke="${C.dna}" stroke-width="5" opacity="${polOp.toFixed(2)}"/>` : '';
   }
   return { update(t, s) { ph = s.step; P = s.p; draw(); } };
 }

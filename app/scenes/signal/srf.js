@@ -75,8 +75,8 @@ const SCENE = {
     return svgOpen(arrowDefs('sf', { m: C.muted, w: '#fff', r: C.rna })) + `
     <rect x="-600" y="-600" width="2800" height="2100" fill="url(#gNuc)"/>
     <g id="sf-sites">${box(ETS[0], ETS[1], ELK)}${box(CARG[0], CARG[1], SRF)}${box(TATA[0], TATA[1], '#ffc247')}
-      <rect id="sf-gene" x="${TSS}" y="${DY - 26}" width="660" height="52" rx="8" fill="${C.dna}" fill-opacity=".14" stroke="${C.dna}" stroke-width="2" stroke-dasharray="8 6"/></g>
-    ${dna(-300, 1900, DY)}
+      <rect id="sf-gene" data-node="gen" data-color="${C.dna}" data-nolabel x="${TSS}" y="${DY - 26}" width="660" height="52" rx="8" fill="${C.dna}" fill-opacity=".14" stroke="${C.dna}" stroke-width="2" stroke-dasharray="8 6"/></g>
+    <g data-node="dnahelix" data-color="${C.dna}" data-nolabel>${dna(-300, 1900, DY)}</g>
     <g><rect x="${BRK - 16}" y="${DY - 40}" width="32" height="80" fill="#12203f"/><path d="M${BRK - 22},${DY + 34} L${BRK - 4},${DY - 34} M${BRK + 4},${DY + 34} L${BRK + 22},${DY - 34}" stroke="#dfe6f5" stroke-width="4"/></g>
     <path d="M${TSS},${DY - 30} L${TSS},${DY - 64} L${TSS + 26},${DY - 64}" stroke="#fff" stroke-width="5" fill="none" marker-end="url(#sf-w)"/>
     <g data-node="promoter" data-color="#ffc247" data-label="${T2('Promoter & PIC →', 'Promoter & PIC →')}"><rect x="${TATA[0] - 10}" y="${DY - 30}" width="${TATA[1] - TATA[0] + 20}" height="60" fill="transparent"/><g id="sf-prA"><circle data-anchor="promoter" data-pos="below" cx="${(TATA[0] + TATA[1]) / 2}" cy="${DY + 40}" r="1" fill="none"/></g></g>

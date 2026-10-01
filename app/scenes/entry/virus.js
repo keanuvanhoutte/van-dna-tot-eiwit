@@ -71,7 +71,7 @@ export default {
     <g data-node="rt" data-color="${C.rna}" data-label="${T2('HIV-1 (omhuld, ssRNA-RT)', 'HIV-1 (enveloped, ssRNA-RT)')}">
       <g id="vi-right"></g><circle id="vi-right-a" data-anchor="rt" cx="${RX}" cy="120" r="1" fill="none"/>
     </g>
-    <g id="vi-fusion"></g>
+    <g data-node="rt" data-color="${C.rna}" data-nolabel><g id="vi-fusion"></g></g>
     <g data-node="baltimore" data-color="${C.trna}" data-label="${T2('Baltimore-klassen', 'Baltimore classes')}" id="vi-balt" opacity="0">
       <circle data-anchor="baltimore" data-pos="below" cx="800" cy="884" r="1" fill="none"/>
       <rect x="560" y="820" width="480" height="60" rx="16" fill="rgba(255,194,71,.10)" stroke="${C.trna}" stroke-dasharray="7 6"/>

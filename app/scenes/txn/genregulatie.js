@@ -68,10 +68,11 @@ export default {
       <g id="gr-hat"></g><circle id="gr-hatA" data-anchor="histonmod" r="1" fill="none"/>
     </g>
     <g id="gr-prot"></g>
+    <g data-node="promoter" data-nolabel data-color="${C.prot}"><g id="gr-gtf"></g></g>
     <g data-node="rnapol" data-color="${M.pol}" data-label="${T2('RNA-polymerase II', 'RNA polymerase II')}"><g id="gr-pic"></g><circle id="gr-polA" data-anchor="rnapol" r="1" fill="none"/></g>
     <g id="gr-ins"></g>
-    <g id="gr-dbd"></g>
-    <g id="gr-sil"></g>
+    <g data-node="tertiair" data-nolabel data-color="${C.danger}"><g id="gr-dbd"></g></g>
+    <g data-node="histonmod" data-nolabel data-color="${C.ok}"><g id="gr-sil"></g></g>
     <g data-node="operon" data-nolabel data-color="${C.bact}" data-label="${T2('Zijpad: bacteriën (lac-operon)', 'Side path: bacteria (lac operon)')}">
       <g id="gr-opbtn"></g><circle id="gr-opA" data-anchor="operon" r="1" fill="none"/>
     </g>
@@ -225,17 +226,17 @@ export default {
         $('gr-dbd').innerHTML = dbdInset(step === 2 ? sub(p, .05, .2) : 0);
 
         // PIC (stap 7)
-        let pic = '';
+        let pic = '', gtf = '';
         const P = pt(TATA);
         const f = (a, b) => step === 7 ? ease(sub(p, a, b)) : 0;
-        pic += prot(P[0], P[1] - 34, 34, 20, '#8e6cf0', f(.05, .2), 51, 'TFIID', 15);
-        pic += pill(P[0] - 62, P[1] + 32, 70, 26, 'TFIIA', '#6f5bd6', f(.18, .3), 15);
-        pic += pill(P[0] + 56, P[1] + 32, 70, 26, 'TFIIB', '#6f5bd6', f(.25, .38), 15);
+        gtf += prot(P[0], P[1] - 34, 34, 20, '#8e6cf0', f(.05, .2), 51, 'TFIID', 15);
+        gtf += pill(P[0] - 62, P[1] + 32, 70, 26, 'TFIIA', '#6f5bd6', f(.18, .3), 15);
+        gtf += pill(P[0] + 56, P[1] + 32, 70, 26, 'TFIIB', '#6f5bd6', f(.25, .38), 15);
         pic += prot(P[0] + 95, P[1] - 80, 70, 52, M.pol, f(.4, .58), 52, 'Pol II', 17);
-        pic += pill(P[0] + 214, P[1] - 92, 70, 26, 'TFIIF', '#5a4bb8', f(.45, .6), 15);
-        pic += pill(P[0] + 204, P[1] - 36, 70, 26, 'TFIIE', '#5a4bb8', f(.6, .72), 15);
-        pic += pill(P[0] + 222, P[1] - 150, 74, 28, 'TFIIH', '#8e6cf0', f(.7, .85), 15);
-        $('gr-pic').innerHTML = pic;
+        gtf += pill(P[0] + 214, P[1] - 92, 70, 26, 'TFIIF', '#5a4bb8', f(.45, .6), 15);
+        gtf += pill(P[0] + 204, P[1] - 36, 70, 26, 'TFIIE', '#5a4bb8', f(.6, .72), 15);
+        gtf += pill(P[0] + 222, P[1] - 150, 74, 28, 'TFIIH', '#8e6cf0', f(.7, .85), 15);
+        $('gr-pic').innerHTML = pic; $('gr-gtf').innerHTML = gtf;
         setA('gr-polA', P[0] + 80, P[1] - 134, step === 7 && p > .5);
 
         // zijpad-knop

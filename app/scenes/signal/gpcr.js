@@ -1,5 +1,5 @@
 import { C, T2, svgOpen, cam, FULL, f1 } from '../../kit.js';
-import { T, K, track, tag, phos, bilayer, nucEnv, dna, mrna, adr, gpcr7, cAMP, anchor, ADRC, GTPC, GAC, GBC } from './_sig1.js';
+import { T, K, track, hot, tag, phos, bilayer, nucEnv, dna, mrna, adr, gpcr7, cAMP, anchor, ADRC, GTPC, GAC, GBC } from './_sig1.js';
 
 /* Zijpad: adrenaline → β2-adrenerge receptor → Gs → adenylylcyclase → cAMP → PKA → CREB (CRE).
  * Membraan y 260–324, cytosol tot 646, kernenvelop y 660, DNA y 800. Alles volgt g = stap + p. */
@@ -67,7 +67,7 @@ export default {
       ${bilayer(-600, 2200, MY, { h: MH, skip: [[RX - 75, RX + 75], [745, 857]] })}
       ${nucEnv(-600, 2200, NY, [640, PORE, 1500])}
       <g id="gp-gene"></g>
-      ${dna(-600, 2200, DY)}
+      ${hot('dnahelix', C.dna, dna(-600, 2200, DY))}
       ${T(40, 72, T2('buiten de cel', 'outside the cell'), { size: 24, col: C.muted, anchor: 'start', w: 500 })}
       ${T(40, 420, 'cytosol', { size: 24, col: C.muted, anchor: 'start', w: 500 })}
       ${T(700, 752, T2('celkern', 'nucleus'), { size: 24, col: '#9cc0ff', anchor: 'start', w: 500 })}

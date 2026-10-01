@@ -51,7 +51,8 @@ export default {
   ],
   svg() {
     // kern + ER
-    let er = `<circle cx="-60" cy="450" r="230" fill="url(#gNuc)" stroke="${C.dna}" stroke-width="3" opacity=".9"/>` + T(-40, 460, T2('kern', 'nucleus'), { size: 24, col: C.dna2 });
+    const nuc = `<circle cx="-60" cy="450" r="230" fill="url(#gNuc)" stroke="${C.dna}" stroke-width="3" opacity=".9"/>` + T(-40, 460, T2('kern', 'nucleus'), { size: 24, col: C.dna2 });
+    let er = '';
     [0, 1, 2].forEach(i => { const r = 265 + i * 42; er += `<path d="M${f1(-60 + r * Math.cos(-1.1))},${f1(450 + r * Math.sin(-1.1))} A${r},${r} 0 0 1 ${f1(-60 + r * Math.cos(1.1))},${f1(450 + r * Math.sin(1.1))}" stroke="${C.mem}" stroke-width="20" fill="none" opacity=".45" stroke-linecap="round"/>`;
       for (let a = -1; a <= 1; a += .16) er += `<circle cx="${f1(-60 + (r + 14) * Math.cos(a))}" cy="${f1(450 + (r + 14) * Math.sin(a))}" r="5" fill="${C.rrna}"/>`; });
     // plasmamembraan
@@ -60,6 +61,7 @@ export default {
     const el = `<circle cx="${ENDO[0]}" cy="${ENDO[1]}" r="46" fill="rgba(255,138,61,.12)" stroke="#ff8a3d" stroke-width="3"/>` + `<g id="go-ell1">` + TL(ENDO[0], ENDO[1] + 78, [T2('endosoom', 'endosome'), 'pH ≈ 6'], { size: 22, col: '#ff8a3d' }) + '</g>' +
       `<circle cx="${LYSO[0]}" cy="${LYSO[1]}" r="56" fill="rgba(214,90,90,.15)" stroke="${C.bact}" stroke-width="3"/>` + `<g id="go-ell2">` + TL(LYSO[0], LYSO[1] + 88, [T2('lysosoom', 'lysosome'), T2('pH ≈ 4,5–5', 'pH ≈ 4.5–5')], { size: 22, col: C.danger }) + '</g>';
     return svgOpen(arrowDefs('go', { m: C.muted, o: COPII, b: COPI, g: C.ok })) + `
+    <g data-node="kern" data-color="${C.dna}" data-nolabel>${nuc}</g>
     <g data-node="er" data-color="${C.mem}" data-label="${T2('Ruw ER', 'Rough ER')}">${er}<circle data-anchor="er" cx="240" cy="200" r="1" fill="none"/></g>
     ${pm}
     <g data-node="endocytose" data-color="#ff8a3d" data-label="${T2('Endocytose (endosoom)', 'Endocytosis (endosome)')}">${el}<circle data-anchor="endocytose" cx="${ENDO[0] + 100}" cy="${ENDO[1] - 70}" r="1" fill="none"/></g>

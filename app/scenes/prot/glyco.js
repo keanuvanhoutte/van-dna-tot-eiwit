@@ -94,7 +94,7 @@ export default {
     golgi += T(2180, 200, 'cis', { size: 18, col: C.muted, anchor: 'start' }) + T(2160, 330, 'trans', { size: 18, col: C.muted, anchor: 'start' });
     return svgOpen(arrowDefs('gl', { m: C.muted, g: C.ok, r: C.danger })) + `
     <rect x="-200" y="${MEM + MEMH}" width="1880" height="700" fill="rgba(201,165,116,.05)"/>
-    ${mem}
+    <g data-node="er" data-color="${C.mem}" data-nolabel>${mem}</g>
     ${T(-150, MEM - 30, 'cytosol', { size: 22, col: C.muted, anchor: 'start' })}${T(-150, MEM + MEMH + 44, T2('ER-lumen', 'ER lumen'), { size: 22, col: C.mem, anchor: 'start' })}
     <g data-node="er" data-color="${C.rrna}" data-label="${T2('Ribosoom op het ER (SRP-route)', 'Ribosome on the ER (SRP route)')}">
       <ellipse cx="330" cy="250" rx="160" ry="85" fill="rgba(44,198,168,.18)" stroke="${C.rrna}" stroke-width="3"/>
@@ -102,18 +102,20 @@ export default {
       ${T(330, 250, T2('ribosoom', 'ribosome'), { size: 22, col: C.rrna })}
       <circle data-anchor="er" cx="330" cy="160" r="1" fill="none"/>
     </g>
+    <g data-node="er" data-color="${C.prot}" data-nolabel>
     <rect x="302" y="${MEM - 4}" width="56" height="${MEMH + 8}" rx="10" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>
     ${T(250, MEM + MEMH + 44, 'Sec61', { size: 18, col: C.prot, anchor: 'end' })}
+    </g>
     <g id="gl-ost"></g>
     <g id="gl-dol"></g>
     <g id="gl-chain"></g>
     <g id="gl-prot"></g>
-    <g id="gl-cnx"></g>
+    <g data-node="chaperones" data-color="${C.prot}" data-nolabel><g id="gl-cnx"></g></g>
     <g id="gl-enz"></g>
     <g id="gl-tree"></g>
     <g id="gl-lbl"></g>
     <g data-node="golgi" data-color="${C.mem}" data-label="${T2('Golgi & secretie', 'Golgi & secretion')}">${golgi}<circle data-anchor="golgi" cx="1970" cy="165" r="1" fill="none"/></g>
-    <g id="gl-golgi"></g>
+    <g data-node="golgi" data-color="${C.mem}" data-nolabel><g id="gl-golgi"></g></g>
     <g data-node="ubiquitine" data-color="#ffd166" data-label="${T2('ERAD → proteasoom', 'ERAD → proteasome')}"><g id="gl-erad"></g><circle id="gl-eradA" data-anchor="ubiquitine" r="1" fill="none"/></g>
     </svg>`;
   },

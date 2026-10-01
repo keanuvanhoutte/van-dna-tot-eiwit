@@ -1,6 +1,6 @@
 # Fixlijst
 - [x] Niet alles is mooi in beeld: delen van figuren en tekst vallen buiten het scherm (bv. nucleolus) | pagina: alle scènes | verwacht: in elke stap valt alle tekst en elke relevante figuur volledig binnen het beeld, op pc en gsm
-- [ ] Een structuur licht op als je erover gaat, maar is niet altijd klikbaar | pagina: alle scènes | verwacht: alles wat oplicht is klikbaar en opent die structuur in detail (scène of uitlegkaart)
+- [x] Een structuur licht op als je erover gaat, maar is niet altijd klikbaar | pagina: alle scènes | verwacht: alles wat oplicht is klikbaar en opent die structuur in detail (scène of uitlegkaart)
 - [x] Overzichtsscènes (bv. de cel) spelen een verhaal met inzoomen; dat stoort | pagina: /app/index.html?scene=cel (en andere overzichten) | verwacht: een overzicht toont het hele beeld met een korte uitleg, zonder inzoomen tijdens de animatie; verhaalanimaties enkel in de detailscènes
 - [x] De startpagina maakt onderscheid tussen verhaal 1 en verhaal 2, terwijl beide in hetzelfde hoofdmenu (de cel) uitkomen | pagina: / | verwacht: één ingang; de keuze (virus, signaalmolecule, …) maak je in de cel zelf
 - [x] Het signaalverhaal brengt je naar een andere, "verse" cel | pagina: /app/index.html?scene=signaal | verwacht: vanuit de cel zoom je in op het membraan van diezelfde cel, zonder een nieuwe cel te tekenen

@@ -105,6 +105,7 @@ export default {
       <circle data-anchor="peptide" cx="1260" cy="740" r="1" fill="none"/>
     </g>
     <g id="az-ov"></g>
+    <g data-node="disulfide" data-color="#ffd84a" data-nolabel><g id="az-ov6"></g></g>
     <g id="az-ss" data-node="disulfide" data-color="#ffd84a" data-label="${T2('Disulfidebruggen', 'Disulfide bridges')}">
       <rect x="540" y="560" width="520" height="56" rx="28" fill="rgba(255,216,74,.12)" stroke="#ffd84a"/>
       ${txt(800, 597, T2('meer over disulfidebruggen', 'more about disulfide bridges'), '#ffd84a', 24)}
@@ -163,7 +164,8 @@ export default {
         // quiz: de namen verschijnen één voor één; er staan er nooit meer dan QWIN tegelijk (oudere vervagen weer tot hun 3-lettercode)
         const QWIN = 11, qz = step === 9 ? clamp(p / .9) * (CARDS.length + 1) : 99, quiz = Math.floor(qz);
         const key = `${step}|${f1(cardsOp)}|${step === 9 ? qz.toFixed(2) : ''}|${f1(ease(sub(p, 0, .3)))}`;
-        $('az-ov').innerHTML = OV[step] ?? '';
+        $('az-ov').innerHTML = step === 6 ? '' : OV[step] ?? '';
+        $('az-ov6').innerHTML = step === 6 ? OV[6] : '';
         $('az-ov').setAttribute('opacity', f1(step === 5 ? ease(sub(p, 0, .25)) : 1));
         $('az-ss').setAttribute('opacity', step === 6 ? 1 : 0);
         $('az-extra').setAttribute('opacity', step === 8 ? 1 : 0);

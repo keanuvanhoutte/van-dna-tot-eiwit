@@ -74,18 +74,20 @@ export function sceneCel() {
     <circle cx="${mtoc[0]}" cy="${mtoc[1]}" r="9" fill="#9aa6c2" opacity=".8"/>
     <text x="${mtoc[0] - 16}" y="${mtoc[1] + 34}" fill="${C.muted}" font-size="22" text-anchor="end" font-family="Inter" opacity=".85">${L({ nl: 'centrosoom', en: 'centrosome' })}</text>
     ${mito}${lyso}
+    <g data-node="golgi" data-color="#d7b46a" data-nolabel>
     <g transform="translate(600 610)" opacity=".85">${[0, 10, 20, 30].map(o => `<path d="M${-46 + o / 2},${o} Q0,${o - 18} ${46 - o / 2},${o}" stroke="#d7b46a" stroke-width="5.5" fill="none" stroke-linecap="round"/>`).join('')}</g>
     <text x="590" y="676" fill="${C.muted}" font-size="22" text-anchor="middle" font-family="Inter" opacity=".85">Golgi</text>
+    </g>
 
-    <g data-node="er" data-color="${C.rrna}" data-label="${L({ nl: 'Ruw ER', en: 'Rough ER' })}">${er}${erRibo}<circle data-anchor="er" cx="${P(60, nr + 110)[0]}" cy="${P(60, nr + 110)[1]}" r="1" fill="none"/></g>
+    <g data-node="er" data-color="${C.rrna}" data-label="${L({ nl: 'Ruw ER', en: 'Rough ER' })}">${er}<g data-node="ribosoom" data-color="${C.rrna}" data-nolabel>${erRibo}</g><circle data-anchor="er" cx="${P(60, nr + 110)[0]}" cy="${P(60, nr + 110)[1]}" r="1" fill="none"/></g>
     <g data-node="translatie" data-color="${C.rrna}" data-label="${L({ nl: 'Ribosomen · translatie', en: 'Ribosomes · translation' })}">
       <rect x="1090" y="350" width="150" height="130" fill="transparent"/>${poly}
     </g>
     <g data-node="kern" data-color="${C.dna}">
       <circle cx="${nx}" cy="${ny}" r="${nr + 5}" fill="none" stroke="#7aa0d8" stroke-width="2.5" opacity=".7"/>
       <circle cx="${nx}" cy="${ny}" r="${nr}" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="2"/>
-      <ellipse cx="${nx + 35}" cy="${ny - 20}" rx="46" ry="38" fill="#2b3e66" opacity=".9"/>
-      ${chrom}${pores}
+      <g data-node="nucleolus" data-color="#9cc0ff" data-nolabel><ellipse cx="${nx + 35}" cy="${ny - 20}" rx="46" ry="38" fill="#2b3e66" opacity=".9"/></g>
+      <g data-node="chromatine" data-color="${C.dna}" data-nolabel>${chrom}</g><g data-node="kernimport" data-color="${C.prot}" data-nolabel>${pores}</g>
     </g>
     <g data-node="export" data-color="${C.rna}" data-label="${L({ nl: 'mRNA-export', en: 'mRNA export' })}">
       <circle data-anchor="export" cx="1010" cy="380" r="1" fill="none"/>

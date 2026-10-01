@@ -103,11 +103,11 @@ export default {
       return s + note(cx, y0 - 40, lab, col, 22) + note(cx, y0 + n * rise + 44, sub1, C.muted, 17);
     };
     // schaal ≈ 7 px/Å: B: diameter 20 Å, stijging 3,4 Å; A: diameter ≈ 23 Å, stijging ≈ 2,6 Å, gekantelde basenparen
-    const r4 = helix(1760, 1150, 70, 10.5, 24, 16, 0, 2.4, C.dna, 'B-DNA', T2('≈ 10,5 bp/winding · C2\'-endo', '≈ 10.5 bp/turn · C2\'-endo')) +
-      helix(2240, 1150, 82, 11, 18.2, 21, 12, 2.0, C.rna, T2('A-RNA (dsRNA)', 'A-RNA (dsRNA)'), T2('≈ 11 bp/winding · C3\'-endo', '≈ 11 bp/turn · C3\'-endo'));
+    const r4b = helix(1760, 1150, 70, 10.5, 24, 16, 0, 2.4, C.dna, 'B-DNA', T2('≈ 10,5 bp/winding · C2\'-endo', '≈ 10.5 bp/turn · C2\'-endo')),
+      r4a = helix(2240, 1150, 82, 11, 18.2, 21, 12, 2.0, C.rna, T2('A-RNA (dsRNA)', 'A-RNA (dsRNA)'), T2('≈ 11 bp/winding · C3\'-endo', '≈ 11 bp/turn · C3\'-endo'));
 
     return svgOpen() + `
-    <g id="rs-hp"></g><g id="rs-tar"></g><g id="rs-r2">${r2}</g><g id="rs-pk"></g><g>${r4}</g><g id="rs-trna"></g><g id="rs-hh"></g><g id="rs-ribo"></g><g id="rs-spl"></g>
+    <g id="rs-hp"></g><g id="rs-tar"></g><g id="rs-r2">${r2}</g><g id="rs-pk"></g><g><g data-node="dnavormen" data-color="${C.dna}" data-nolabel>${r4b}</g><g data-node="dnavormen" data-color="${C.rna}" data-nolabel>${r4a}</g></g><g data-node="trna" data-color="${C.trna}" data-nolabel><g id="rs-trna"></g></g><g id="rs-hh"></g><g id="rs-oth"></g><g data-node="ribosoom" data-color="${C.rrna}" data-nolabel><g id="rs-ribo"></g></g><g data-node="splicing" data-color="${C.prot}" data-nolabel><g id="rs-spl"></g></g>
     ${hot('nucleotide', T2('Nucleotide: ribose met 2\'-OH', 'Nucleotide: ribose with 2\'-OH'), C.rna, 'rs-nA')}
     ${hot('rt', T2('Pseudoknoop (atlas)', 'Pseudoknot (atlas)'), '#ffd36b', 'rs-pA', '../atlas/index.html?id=pseudoknot')}
     ${hot('dnavormen', T2('DNA-vormen A, B, Z', 'A-, B-, Z-DNA'), C.dna, 'rs-bA')}
@@ -284,7 +284,7 @@ export default {
       return s;
     }
     function drawOthers(step, p) {
-      if (step !== 8) return ['', ''];
+      if (step !== 8) return ['', '', ''];
       const k = sub(p, .5, .7);
       const box = (y, t1, col, op) => `<g opacity="${f1(op)}"><rect x="2060" y="${y - 28}" width="540" height="56" rx="14" fill="rgba(13,20,38,.9)" stroke="${col}" stroke-width="2.5"/>` +
         note(2080, y + 7, t1, col, 20, 'start') + '</g>';
@@ -292,7 +292,7 @@ export default {
         box(2080, T2("RNase P: knipt 5'-leader van pre-tRNA", "RNase P: cuts 5' leader off pre-tRNA"), '#ffd36b', sub(p, .58, .75));
       const b = box(2160, T2('ribosoom: rRNA vormt peptidebinding', 'ribosome: rRNA forms peptide bond'), C.rrna, sub(p, .66, .82));
       const c = box(2320, T2('spliceosoom: U2/U6-snRNA katalyseert', 'spliceosome: U2/U6 snRNA catalyses'), C.prot, sub(p, .74, .9));
-      return [a + b, c];
+      return [a, b, c];
     }
 
     return {
@@ -310,8 +310,8 @@ export default {
         setHot(svg, 'rs-t2', step === 7 && p > .85 ? [CX + 120, CY + 150, 20, 20] : null);
         $('rs-hh').innerHTML = drawHH(step, p);
         setHot(svg, 'rs-hA', step === 8 ? [1500, 2120, 30, 30] : null);
-        const [ot, sp] = drawOthers(step, p);
-        $('rs-ribo').innerHTML = ot; $('rs-spl').innerHTML = sp;
+        const [oth, ot, sp] = drawOthers(step, p);
+        $('rs-oth').innerHTML = oth; $('rs-ribo').innerHTML = ot; $('rs-spl').innerHTML = sp;
         setHot(svg, 'rs-rA', step === 8 && p > .72 ? [2470, 2160, 200, 60] : null); setHot(svg, 'rs-sA', step === 8 && p > .85 ? [2470, 2320, 200, 60] : null);
       },
     };

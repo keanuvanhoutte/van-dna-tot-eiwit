@@ -47,13 +47,17 @@ export function nucEnv(x0, x1, y, pores, s = .6) {
   let segs = [], x = x0;
   for (const p of [...pores].sort((a, b) => a - b)) { segs.push([x, p - gap]); x = p + gap; }
   segs.push([x, x1]);
-  let out = '';
+  /* klikbaar zonder label: envelop → celkern, poriën → kernporie & import */
+  let out = `<g data-node="kern" data-color="#9cc0ff" data-nolabel>`;
   for (const [a, b] of segs) {
     out += `<path d="M${f1(a)},${y - 14}L${f1(b)},${y - 14}" stroke="#7aa0d8" stroke-width="8"/><path d="M${f1(a)},${y + 14}L${f1(b)},${y + 14}" stroke="#9cc0ff" stroke-width="8"/>`;
   }
+  out += `</g><g data-node="kernimport" data-color="${C.prot}" data-nolabel>`;
   for (const p of pores) out += `<g transform="translate(${p} ${y})">${npc(0, 0, s, { fg: .6 })}</g>`;
-  return out;
+  return out + '</g>';
 }
+/* klikbaar zonder label (hotspot naar knoop `node`), voor onderdelen die al een eigen scène hebben */
+export const hot = (node, col, s) => `<g data-node="${node}" data-color="${col}" data-nolabel>${s}</g>`;
 /* dubbelstrengig DNA als ladder-helix */
 export function dna(x0, x1, y, o = {}) {
   const { amp = 13, per = 72, op = 1, hl = null } = o;

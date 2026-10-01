@@ -91,9 +91,11 @@ export default {
   svg() {
     return svgOpen() + `
     <g id="vo-bg"></g>
+    <g data-node="disulfide" data-color="#ffd84a" data-nolabel><g id="vo-ss"></g></g>
     <g id="vo-water"></g>
     <g id="vo-chain"></g>
     <g id="vo-over"></g>
+    <g data-node="chaperones" data-color="${C.prot}" data-nolabel><g id="vo-tric"></g></g>
     <g id="vo-panel"></g>
     <g id="vo-hs-tl" data-node="translatie" data-color="${C.rrna}" data-label="${T2('Terug: translatie', 'Back: translation')}">
       <path d="M140,300 C120,190 190,110 330,100 C470,92 560,160 560,250 C560,300 530,330 480,330 L200,330 C170,330 146,320 140,300Z" fill="rgba(44,198,168,.15)" stroke="${C.rrna}" stroke-width="3"/>
@@ -175,7 +177,7 @@ export default {
     return {
       update(t, s) {
         const { step, p } = s;
-        let bg = '', water = '', ch = '', over = '', pan = '', hsp = '', agg = '';
+        let bg = '', water = '', ch = '', over = '', pan = '', hsp = '', agg = '', ssg = '', tric = '';
         $('vo-hs-tl').setAttribute('opacity', step === 0 ? 1 : 0);
         $('vo-hs-ch').setAttribute('opacity', step === 0 || step === 7 ? 1 : 0);
         $('vo-hs-mis').setAttribute('opacity', step === 7 ? 1 : 0);
@@ -225,6 +227,7 @@ export default {
             coil(cols[1], 1) + txt(cols[1], y - 170, T2('ontvouwen · inactief', 'unfolded · inactive'), C.danger, 26) + lab(cols[1], y + 170, T2('S–S verbroken → 8 × SH', 'S–S broken → 8 × SH'), '#ffd84a') + '</g>';
           bg += `<g opacity="${f1(k2)}"><path d="M${cols[1] + 225},${y} H${cols[2] - 165}" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/>` + lab((cols[1] + cols[2]) / 2 + 10, y - 104, T2('stoffen weg (dialyse)', 'remove them (dialysis)')) + lab((cols[1] + cols[2]) / 2 + 10, y - 74, T2('+ O₂ (lucht)', '+ O₂ (air)')) +
             blobN(cols[2], 1) + txt(cols[2], y - 170, T2('opnieuw natief · actief', 'native again · active'), C.ok, 26) + lab(cols[2], y + 170, T2('zelfde 4 S–S-bruggen', 'same 4 S–S bridges'), '#ffd84a') + '</g>';
+          ssg = bg; bg = '';
           over += txt(800, 140, T2('Ribonuclease A (124 residuen) · Anfinsen', 'Ribonuclease A (124 residues) · Anfinsen'), C.text, 26);
         } else if (step === 5) {
           // links: enkele van de vele mogelijke vormen (echte toestanden uit de simulatie), van bij het begin zichtbaar;
@@ -272,7 +275,7 @@ export default {
           hsp = `<g opacity="${ho}"><ellipse cx="${f1(hx)}" cy="${f1(hy)}" rx="64" ry="44" fill="${C.prot}" fill-opacity=".45" stroke="${C.prot}" stroke-width="3"/>` + txt(hx, hy + 8, 'Hsp70', '#fff', 24) + '</g>';
           $('vo-hspA').setAttribute('cx', f1(hx)); $('vo-hspA').setAttribute('cy', f1(hy + 50));
           // chaperonine-kooi (TRiC/CCT)
-          over += `<g opacity="${f1(ease(sub(p, .3, .6)))}"><rect x="760" y="310" width="170" height="220" rx="30" fill="${C.prot}" fill-opacity=".12" stroke="${C.prot}" stroke-width="4"/><line x1="760" y1="420" x2="930" y2="420" stroke="${C.prot}" stroke-width="3" stroke-dasharray="6 6"/>` +
+          tric += `<g opacity="${f1(ease(sub(p, .3, .6)))}"><rect x="760" y="310" width="170" height="220" rx="30" fill="${C.prot}" fill-opacity=".12" stroke="${C.prot}" stroke-width="4"/><line x1="760" y1="420" x2="930" y2="420" stroke="${C.prot}" stroke-width="3" stroke-dasharray="6 6"/>` +
             txt(845, 285, T2('chaperonine (TRiC)', 'chaperonin (TRiC)'), C.prot, 25) + '</g>';
           // aggregaat
           const ar = rng(3);
@@ -285,6 +288,7 @@ export default {
         }
         $('vo-bg').innerHTML = bg; $('vo-water').innerHTML = water; $('vo-chain').innerHTML = ch; $('vo-over').innerHTML = over; $('vo-panel').innerHTML = pan;
         $('vo-hsp').innerHTML = hsp; $('vo-agg').innerHTML = agg;
+        $('vo-ss').innerHTML = ssg; $('vo-tric').innerHTML = tric;
       },
     };
   },

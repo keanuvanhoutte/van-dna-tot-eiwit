@@ -66,7 +66,9 @@ export default {
     <g data-node="trna" data-color="${C.trna}" data-label="${T2('tRNA · anticodon', 'tRNA · anticodon')}"><g id="cd-trna"></g><circle id="cd-tA" data-anchor="trna" r="1" fill="none"/></g>
     <g data-node="mutaties" data-color="${C.danger}" data-label="${T2('Mutaties', 'Mutations')}"><g id="cd-mut"></g><circle id="cd-mA" data-anchor="mutaties" r="1" fill="none"/></g>
     <g data-node="seleno" data-color="${C.danger}" data-label="${T2('Selenocysteïne & pyrrolysine', 'Selenocysteine & pyrrolysine')}"><g id="cd-sec"></g><circle id="cd-sA" data-anchor="seleno" r="1" fill="none"/></g>
+    <g data-node="translatie" data-color="${C.rna}" data-nolabel><g id="cd-mr"></g></g>
     <g id="cd-ov"></g>
+    <g data-node="primair" data-color="${C.chain}" data-nolabel><g id="cd-pep"></g></g>
     ${hud('cd-hud', [
       { node: 'translatie', label: { nl: '↩ Translatie (hoofdverhaal)', en: '↩ Translation (main story)' }, color: C.rrna },
       { node: 'trna', label: { nl: 'tRNA-structuur', en: 'tRNA structure' }, color: C.trna },
@@ -95,7 +97,7 @@ export default {
         const rings = ['cd-r1', 'cd-r2', 'cd-r3', 'cd-r4'];
         rings.forEach((id, j) => $(id).setAttribute('opacity', f1(i === 0 ? Math.max(.18, sub(p, .05 + j * .15, .2 + j * .15)) : 1)));   // vaag zichtbaar vanaf het begin
         $('cd-wheel').setAttribute('opacity', i >= 4 && i <= 6 ? '.38' : '1');
-        let hl = '', ov = '', tr = '', mut = '', sec = '';
+        let hl = '', ov = '', tr = '', mut = '', sec = '', mr = '', pep = '';
         if (i === 0) {
           ov += `<g opacity="${f1(sub(p, .1, .3))}">` + txt(CX, CY - R[1] - 6, T2('1e', '1st'), '#fff', 16) + txt(CX, CY - (R[1] + R[2]) / 2 - 22, T2('2e', '2nd'), '#fff', 16) + txt(CX, CY - (R[2] + R[3]) / 2 - 22, T2('3e', '3rd'), '#fff', 16) + '</g>';
           ov += `<g opacity="${f1(sub(p, .7, .9))}">` + txt(1130, 400, '4 × 4 × 4 = 64', C.text, 44, 'middle', 800) + txt(1130, 460, T2('61 voor aminozuren + 3 stop', '61 for amino acids + 3 stop'), C.muted, 26) + '</g>';
@@ -103,10 +105,10 @@ export default {
         if (i === 1) {
           const nC = SEQ.length / 3, k = Math.min(nC - 1, Math.floor(sub(p, .05, .95) * nC)), cod = SEQ.slice(k * 3, k * 3 + 3);
           const x0 = 960, dx = 32, y = 250;
-          ov += txt(x0 - 30, y + 26, "5'", C.text, 22, 'end', 700) + strip(x0, y, SEQ, dx) + txt(x0 + SEQ.length * dx - 6, y + 26, "3'", C.text, 22, 'start', 700);
+          ov += txt(x0 - 30, y + 26, "5'", C.text, 22, 'end', 700) + txt(x0 + SEQ.length * dx - 6, y + 26, "3'", C.text, 22, 'start', 700); mr += strip(x0, y, SEQ, dx);
           const wx = x0 + k * 3 * dx - dx / 2 - 2;
           ov += `<rect x="${f1(wx)}" y="${y - 8}" width="${3 * dx}" height="${dx + 16}" rx="8" fill="none" stroke="#fff" stroke-width="3.5"/>`;
-          for (let j = 0; j <= k; j++) { const a = translate(SEQ.slice(j * 3, j * 3 + 3)); ov += aa(x0 + j * 3 * dx + dx - 2, y + 110, a, 30); if (j) ov += `<line x1="${x0 + (j - 1) * 3 * dx + dx + 28}" y1="${y + 110}" x2="${x0 + j * 3 * dx + dx - 32}" y2="${y + 110}" stroke="${C.chain}" stroke-width="5"/>`; }
+          for (let j = 0; j <= k; j++) { const a = translate(SEQ.slice(j * 3, j * 3 + 3)); pep += aa(x0 + j * 3 * dx + dx - 2, y + 110, a, 30); if (j) pep += `<line x1="${x0 + (j - 1) * 3 * dx + dx + 28}" y1="${y + 110}" x2="${x0 + j * 3 * dx + dx - 32}" y2="${y + 110}" stroke="${C.chain}" stroke-width="5"/>`; }
           ov += txt(x0 + k * 3 * dx + dx - 2, y + 175, cod, '#fff', 22, 'middle', 800);
           hl += hlCodon(cod, '#fff', 5);
         }
@@ -146,23 +148,24 @@ export default {
         } else $('cd-tA').setAttribute('cx', '-9999');
         if (i === 5) {
           const x0 = 1050, dx = 34, y = 330, frames = [0, 1, 2];
-          ov += txt(x0 - 26, y + 26, "5'", C.text, 22, 'end', 700) + strip(x0, y, SEQ, dx) + txt(x0 + SEQ.length * dx - 8, y + 26, "3'", C.text, 22, 'start', 700);
+          ov += txt(x0 - 26, y + 26, "5'", C.text, 22, 'end', 700) + txt(x0 + SEQ.length * dx - 8, y + 26, "3'", C.text, 22, 'start', 700); mr += strip(x0, y, SEQ, dx);
           frames.forEach((f, r) => {
             const op = sub(p, .1 + r * .25, .25 + r * .25), yy = y + 100 + r * 90;
-            let row = txt(x0 - 30, yy + 8, T2(`raam ${f + 1}`, `frame ${f + 1}`), f === 0 ? C.ok : C.muted, 20, 'end', 700);
-            for (let j = f; j + 3 <= SEQ.length; j += 3) { const a = translate(SEQ.slice(j, j + 3)); row += `<rect x="${x0 + j * dx - dx / 2 + 1}" y="${yy - 36}" width="${3 * dx - 4}" height="8" rx="3" fill="${f === 0 ? C.ok : C.muted}"/>` + aa(x0 + j * dx + dx - 2, yy + 6, a, 24); }
-            ov += `<g opacity="${f1(op)}">${row}</g>`;
+            let row = txt(x0 - 30, yy + 8, T2(`raam ${f + 1}`, `frame ${f + 1}`), f === 0 ? C.ok : C.muted, 20, 'end', 700), beads = '';
+            for (let j = f; j + 3 <= SEQ.length; j += 3) { const a = translate(SEQ.slice(j, j + 3)); row += `<rect x="${x0 + j * dx - dx / 2 + 1}" y="${yy - 36}" width="${3 * dx - 4}" height="8" rx="3" fill="${f === 0 ? C.ok : C.muted}"/>`; beads += aa(x0 + j * dx + dx - 2, yy + 6, a, 24); }
+            ov += `<g opacity="${f1(op)}">${row}</g>`; pep += `<g opacity="${f1(op)}">${beads}</g>`;
           });
           ov += `<g opacity="${f1(sub(p, .85, 1))}">${txt(x0 + 290, y - 50, T2('AUG → raam 1 is het juiste', 'AUG → frame 1 is the correct one'), C.ok, 24, 'middle', 800)}</g>`;
         }
         if (i === 6) {
           const x0 = 1050, dx = 34, y1 = 300, y2 = 500, k = sub(p, .3, .5);
-          const row = (seq, y, ins) => {
-            let s = txt(x0 - 26, y + 26, "5'", C.text, 22, 'end', 700) + strip(x0, y, seq, dx, { mark: ins });
+          const head = (seq, y, ins) => txt(x0 - 26, y + 26, "5'", C.text, 22, 'end', 700) + strip(x0, y, seq, dx, { mark: ins });
+          const row = (seq, y, ins, aaOnly = false) => {
+            let s = aaOnly ? '' : head(seq, y, ins);
             for (let j = 0; j + 3 <= seq.length; j += 3) { const a = translate(seq.slice(j, j + 3)); s += a === '*' ? `<rect x="${x0 + j * dx - dx / 2 + 2}" y="${y + 60}" width="${3 * dx - 6}" height="40" rx="10" fill="${C.danger}"/>` + txt(x0 + j * dx + dx - 2, y + 88, 'STOP', '#fff', 20, 'middle', 800) : aa(x0 + j * dx + dx - 2, y + 80, a, 22); if (a === '*') break; }
             return s;
           };
-          ov += txt(x0 + 300, y1 - 26, T2('normaal', 'normal'), C.ok, 24, 'middle', 800) + row(SEQ, y1);
+          ov += txt(x0 + 300, y1 - 26, T2('normaal', 'normal'), C.ok, 24, 'middle', 800) + txt(x0 - 26, y1 + 26, "5'", C.text, 22, 'end', 700); mr += strip(x0, y1, SEQ, dx); pep += row(SEQ, y1, undefined, true);
           mut += `<g opacity="${f1(k)}">` + txt(x0 + 200, y2 - 26, T2('insertie van 1 U', 'insertion of 1 U'), C.danger, 24, 'end', 800) + row(MUT, y2, 12) +
             `<path d="M${x0 + 12 * dx},${y2 - 16} v-18" stroke="#fff" stroke-width="3" marker-end="url(#arrow)"/></g>`;
           $('cd-mA').setAttribute('cx', f1(x0 + 12 * dx)); $('cd-mA').setAttribute('cy', f1(y2 - 60));
@@ -175,7 +178,7 @@ export default {
           ov += textBox(880, 440, 440, ['UGA → Trp', 'AUA → Met', T2('AGA, AGG → geen Arg', 'AGA, AGG → not Arg')], { title: T2('Mitochondriën (mens)', 'Mitochondria (human)'), col: C.muted, fs: 24, op: sub(p, .5, .65) });
           $('cd-sA').setAttribute('cx', '1100'); $('cd-sA').setAttribute('cy', '180');
         } else $('cd-sA').setAttribute('cx', '-9999');
-        $('cd-hl').innerHTML = hl; $('cd-ov').innerHTML = ov; $('cd-trna').innerHTML = tr; $('cd-mut').innerHTML = mut; $('cd-sec').innerHTML = sec;
+        $('cd-hl').innerHTML = hl; $('cd-mr').innerHTML = mr; $('cd-pep').innerHTML = pep; $('cd-ov').innerHTML = ov; $('cd-trna').innerHTML = tr; $('cd-mut').innerHTML = mut; $('cd-sec').innerHTML = sec;
       },
     };
   },

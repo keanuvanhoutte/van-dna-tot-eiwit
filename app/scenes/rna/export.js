@@ -91,10 +91,11 @@ export default {
     <g id="ex-nplab"></g>
     <g id="ex-static"></g>
     <g data-node="rnaprocessing" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-label="${T2('mRNA (atlas)', 'mRNA (atlas)')}"><g id="ex-mrna"></g><circle id="ex-mA" data-anchor="rnaprocessing" r="1" fill="none"/></g>
+    <g data-node="capping" data-color="${C.cap}" data-nolabel><g id="ex-cap"></g></g>
     <g id="ex-prot"></g>
     <g id="ex-ejc"></g>
     <g data-node="nmd" data-color="#7a62e0" data-label="${T2('EJC → NMD-controle', 'EJC → NMD check')}"><circle id="ex-eA" data-anchor="nmd" r="16" fill="transparent"/></g>
-    <g id="ex-pa"></g>
+    <g data-node="polya" data-color="${C.cap}" data-nolabel><g id="ex-pa"></g></g>
     <g data-node="mrnaafbraak" data-color="${C.cap}" data-label="${T2('poly(A) → later afbraak', 'poly(A) → later decay')}"><circle id="ex-pA" data-anchor="mrnaafbraak" r="14" fill="transparent"/></g>
     <g data-node="initiatie" data-color="${C.rrna}" data-label="${T2('→ Translatie-initiatie', '→ Translation initiation')}"><g id="ex-ribo"></g><circle id="ex-rA" data-anchor="initiatie" r="1" fill="none"/></g>
     <g data-node="rnai" data-color="#e0679a" data-label="${T2('miRNA’s remmen mRNA’s', 'miRNAs repress mRNAs')}"><g id="ex-risc"></g></g>
@@ -171,6 +172,7 @@ export default {
         const cbcP = side(head + 14, 36);
         pr += prot(cbcP[0], cbcP[1], 70, 34, 'CBC', '#7a62e0', 1 - exch, 18);
         pr += prot(cbcP[0], cbcP[1], 83, 34, 'eIF4E', '#3fb6c9', exch, 18);
+        $('ex-cap').innerHTML = pr; pr = '';
         // TREX: stap 1 bindt, stap 2 wordt NXF1 geladen, UAP56/THO gaan weg, ALYREF blijft tot aan de porie
         const trexIn = step === 1 ? ease(sub(p, 0, .45)) : step === 2 ? 1 - ease(sub(p, .55, 1)) : 0;
         const alyOp = step === 1 ? ease(sub(p, 0, .45)) : step === 2 ? 1 : step === 3 ? 1 - ease(sub(p, .3, .8)) : 0;

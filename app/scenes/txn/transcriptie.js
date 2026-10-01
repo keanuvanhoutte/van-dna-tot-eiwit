@@ -53,15 +53,15 @@ export default {
       <rect x="112" y="432" width="150" height="76" rx="10" fill="rgba(155,123,255,.10)" stroke="${C.prot}" stroke-dasharray="5 4"/>
       <circle data-anchor="promoter" cx="187" cy="600" r="1" fill="none"/>
     </g>
-    <text id="tx-tata" x="187" y="592" text-anchor="middle" font-family="JetBrains Mono" font-size="18" fill="#c9b8ff">TATAAAA</text>
-    <g id="tx-gtf"></g>
+    <g data-node="promoter" data-nolabel data-color="${C.prot}"><text id="tx-tata" x="187" y="592" text-anchor="middle" font-family="JetBrains Mono" font-size="18" fill="#c9b8ff">TATAAAA</text>
+    <g id="tx-gtf"></g></g>
     <g data-node="rnaprocessing" data-color="${C.rna}" data-label="${T2('pre-mRNA → processing', 'pre-mRNA → processing')}">
       <path id="tx-rna-hit" stroke="transparent" stroke-width="26" fill="none"/>
       <g id="tx-rna-bases"></g>
       <path id="tx-rna" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round"/>
     </g>
     <g data-node="capping" data-color="${C.rna}" data-label="${T2("5'-cap (m⁷G)", "5' cap (m⁷G)")}"><g id="tx-cap"></g></g>
-    <g id="tx-capenz"></g>
+    <g data-node="capping" data-nolabel data-color="${C.prot2}"><g id="tx-capenz"></g></g>
     <g data-node="rnapol" data-color="${C.prot}" data-label="${T2('RNA-polymerase II', 'RNA polymerase II')}">
       <g id="tx-pol">
         <path d="M-150,-40 C-150,-120 -60,-150 20,-140 C110,-130 160,-80 150,-10 C145,60 110,110 20,115 C-70,120 -150,80 -150,-40Z" fill="rgba(155,123,255,.20)" stroke="${C.prot}" stroke-width="3"/>

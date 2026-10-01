@@ -79,7 +79,7 @@ export default {
       <ellipse cx="170" cy="300" rx="120" ry="50" fill="rgba(44,198,168,.25)" stroke="${C.rrna}" stroke-width="3"/>
       ${T(185, 205, T2('ribosoom', 'ribosome'), { size: 22, col: C.rrna })}
     </g>
-    <g id="ch-agg"></g>
+    <g data-node="misvouwing" data-color="${C.danger}" data-nolabel><g id="ch-agg"></g></g>
     <g id="ch-hsp"></g>
     <g data-node="vouwing" data-color="${C.chain}" data-label="${T2('Nieuwe keten → vouwing', 'New chain → folding')}"><g id="ch-chain"></g><circle id="ch-chainA" data-anchor="vouwing" r="1" fill="none"/></g>
     <g id="ch-lid"></g>

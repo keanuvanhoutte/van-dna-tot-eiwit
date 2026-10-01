@@ -42,6 +42,7 @@ export default {
       <g id="rs-lab"></g>
     </g>
     <g data-node="trna" data-color="${C.trna}" data-label="tRNA-Ile"><g id="rs-trna"></g><circle id="rs-tA" data-anchor="trna" r="1" fill="none"/></g>
+    <g data-node="aminozuren" data-color="#7fdc6a" data-nolabel><g id="rs-aa"></g></g>
     <g id="rs-mol"></g>
     <g data-node="elongatie" data-color="${C.prot}" data-label="${T2('eEF1A → ribosoom (elongatie)', 'eEF1A → ribosome (elongation)')}"><g id="rs-eef"></g><circle id="rs-eA" data-anchor="elongatie" r="1" fill="none"/></g>
     <g id="rs-ov"></g>
@@ -83,7 +84,7 @@ export default {
       update(t, s) {
         placeHud(svg, 'rs-hud', .015, .105, STEPS[s.step]?.cam);
         const { step: i, p } = s;
-        let tr = '', mol = '', ov = '', eef = '';
+        let tr = '', mol = '', amino = '', ov = '', eef = '';
         const dockOff = i < 2 ? [-620, 0] : i === 2 ? E2([-620, 0], [0, 0], ease(sub(p, .05, .5))) : [0, 0];
         const tipSyn = [SYN[0] + 6, SYN[1] + 30], tipOut = [520 + dockOff[0] + 250, 330 + dockOff[1] + 60];
         // enzymlabels alleen in de stap waar ze ertoe doen (vloeiend in/uit aan het begin van de stap)
@@ -100,13 +101,13 @@ export default {
           tr = trna(-400, 0, [520 - 400 + 250, 390], { a: 'I', dx: 28, dy: -24 }, sub(p, .05, .3));
           $('rs-tA').setAttribute('cx', '180'); $('rs-tA').setAttribute('cy', '520');   // label rechts van de stam, niet tegen de linkerrand
           const list = 'A R N D C Q E G H I L K M F P S T W Y V'.split(' ');
-          list.forEach((a, j) => { const x = 1270 + (j % 4) * 62, y = 250 + Math.floor(j / 4) * 62; mol += `<g opacity="${f1(sub(p, .25 + j * .02, .35 + j * .02))}">${aa(x, y, a, 25)}</g>`; });
+          list.forEach((a, j) => { const x = 1270 + (j % 4) * 62, y = 250 + Math.floor(j / 4) * 62; amino += `<g opacity="${f1(sub(p, .25 + j * .02, .35 + j * .02))}">${aa(x, y, a, 25)}</g>`; });
           ov += txt(1363, 205, T2('20 aminozuren → ≈ 20 synthetasen', '20 amino acids → ≈ 20 synthetases'), C.text, 21, 'middle', 700);
         }
         if (i === 1) {
           const k1 = ease(sub(p, .05, .4)), k2 = ease(sub(p, .15, .5)), react = sub(p, .55, .7), leave = ease(sub(p, .7, 1));
           const ile = E2([1350, 330], [SYN[0] - 14, SYN[1] + 10], k1), a = E2([1350, 640], [SYN[0] + 48, SYN[1] + 20], k2);
-          mol += aa(ile[0], ile[1], 'I', 26);
+          amino += aa(ile[0], ile[1], 'I', 26);
           mol += atp(a[0] + 10 * react, a[1], react > .5 ? 1 : 3);
           if (react > 0) mol += `<circle cx="${SYN[0] + 20}" cy="${SYN[1] + 14}" r="${f1(30 + 40 * react)}" fill="none" stroke="#fff" stroke-width="3" opacity="${f1(1 - react)}"/>`;
           mol += ppi(lerp(SYN[0] + 90, 1380, leave), lerp(SYN[1] + 40, 700, leave), sub(p, .6, .7));
@@ -121,7 +122,7 @@ export default {
           const tip = i === 2 ? E2(tipOut, tipSyn, ease(sub(p, .3, .6))) : tipSyn;
           const charge = i === 3 && tr3 > .98 ? { a: 'I', dx: 30, dy: -26 } : null;
           tr = trna(dockOff[0], dockOff[1], tip, charge, 1, hi);
-          if (!charge) { const ile = E2([SYN[0] - 14, SYN[1] + 10], [tip[0] + 30, tip[1] - 26], tr3); mol += aa(ile[0], ile[1], 'I', 26); }
+          if (!charge) { const ile = E2([SYN[0] - 14, SYN[1] + 10], [tip[0] + 30, tip[1] - 26], tr3); amino += aa(ile[0], ile[1], 'I', 26); }
           const ampL = i === 3 ? ease(sub(p, .6, 1)) : 0;
           mol += atp(lerp(SYN[0] + 58, 1380, ampL), lerp(SYN[1] + 20, 640, ampL), 1);
           if (i === 2) {
@@ -142,7 +143,7 @@ export default {
         if (i === 5) {
           // Leu en Phe botsen af; Val past
           const bounce = (a, x0, y0, t0) => { const k = sub(p, t0, t0 + .3), d = Math.sin(Math.PI * k); return aa(lerp(x0, SYN[0] + 60, d), lerp(y0, SYN[1] - 10, d), a, 30); };
-          mol += bounce('L', 1400, 250, .02) + bounce('F', 1400, 420, .18);
+          amino += bounce('L', 1400, 250, .02) + bounce('F', 1400, 420, .18);
           if (sub(p, .02, .5) > 0 && sub(p, .02, .5) < 1) {
             const k = sub(p, .02, .5), bx = lerp(1400, SYN[0] + 60, Math.sin(Math.PI * k)), by = lerp(250, SYN[1] - 10, Math.sin(Math.PI * k));
             if (Math.sin(Math.PI * k) > .8) ov += txt(bx + 50, by - 40, T2('past niet', 'does not fit'), C.danger, 22, 'start', 800);
@@ -150,7 +151,7 @@ export default {
           const kv = ease(sub(p, .45, .75));
           const val = E2([1400, 620], [tipSyn[0] + 30, tipSyn[1] - 26], kv);
           tr = trna(0, 0, tipSyn, kv > .98 ? { a: 'V', dx: 30, dy: -26 } : null, 1);
-          if (kv <= .98) mol += aa(val[0], val[1], 'V', 24);
+          if (kv <= .98) amino += aa(val[0], val[1], 'V', 24);
           ov += `<g opacity="${f1(sub(p, .75, .9))}">` + txt(tipSyn[0] + 40, tipSyn[1] + 100, T2('Val-tRNA-Ile: fout!', 'Val-tRNA-Ile: wrong!'), C.danger, 24, 'start', 800) + '</g>';
           ov += `<g opacity="${f1(sub(p, .05, .2))}">` + textBox(1180, 540, 360, [T2('Ile  C₆: past', 'Ile  C₆: fits'), T2('Val  C₅: past ook', 'Val  C₅: also fits'), T2('Leu, Phe: passen niet', 'Leu, Phe: do not fit')], { title: T2('1e zeef: synthese-plaats', '1st sieve: synthetic site'), col: C.prot, fs: 20 }) + '</g>';
         }
@@ -158,7 +159,7 @@ export default {
           const sw = ease(sub(p, .08, .4)), hyd = sub(p, .45, .6), out = ease(sub(p, .6, .95));
           const tip = E2(tipSyn, [EDIT[0] - 10, EDIT[1] + 16], sw);
           tr = trna(0, 0, tip, hyd < .5 ? { a: 'V', dx: 30 * (1 - sw) + 16 * sw, dy: -26 * (1 - sw) - 10 * sw } : null, 1);
-          if (hyd >= .5) mol += aa(lerp(EDIT[0] + 10, 1400, out), lerp(EDIT[1] - 20, 180, out), 'V', 24);
+          if (hyd >= .5) amino += aa(lerp(EDIT[0] + 10, 1400, out), lerp(EDIT[1] - 20, 180, out), 'V', 24);
           if (hyd > 0 && hyd < 1) mol += `<circle cx="${EDIT[0]}" cy="${EDIT[1]}" r="${f1(30 + 40 * hyd)}" fill="none" stroke="#ff6b6b" stroke-width="3" opacity="${f1(1 - hyd)}"/>`;
           mol += `<g opacity="${f1(sub(p, .4, .5) * (1 - sub(p, .6, .7)))}">${pill(EDIT[0] + 105, EDIT[1] + 34, 60, 28, 'H₂O', '#4fb0ff', 1, 15)}</g>`;
           ov += `<g opacity="${f1(sub(p, .1, .3))}">` + textBox(1180, 470, 360, [T2('Val: past → gehydrolyseerd', 'Val: fits → hydrolysed'), T2('Ile: te groot → blijft', 'Ile: too big → stays')], { title: T2('2e zeef: editeerplaats', '2nd sieve: editing site'), col: '#ff6b6b', fs: 20 }) + '</g>';
@@ -172,7 +173,7 @@ export default {
             `<g opacity="${f1(sub(p, .75, .9))}"><path d="M${ex + 90},${ey} h160" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>${txt(ex + 170, ey + 40, T2('naar de A-plaats', 'to the A site'), C.rrna, 22, 'middle', 700)}</g>`;
           $('rs-eA').setAttribute('cx', f1(ex)); $('rs-eA').setAttribute('cy', f1(ey - 24));
         } else { $('rs-eA').setAttribute('cx', '-9999'); }
-        $('rs-trna').innerHTML = tr; $('rs-mol').innerHTML = mol; $('rs-ov').innerHTML = ov; $('rs-eef').innerHTML = eef;
+        $('rs-trna').innerHTML = tr; $('rs-aa').innerHTML = amino; $('rs-mol').innerHTML = mol; $('rs-ov').innerHTML = ov; $('rs-eef').innerHTML = eef;
       },
     };
   },

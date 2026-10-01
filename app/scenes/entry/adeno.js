@@ -55,13 +55,13 @@ export default {
     <text id="ad-reg1" x="1300" y="200" font-size="22" fill="${C.muted}" font-family="Inter" opacity="0">${T2('extracellulair', 'extracellular')}</text>
     <text id="ad-reg2" x="1400" y="${MEM + 70}" font-size="22" fill="${C.muted}" font-family="Inter" opacity="0">cytosol</text>
 
-    <g id="ad-nuc" opacity="0">
+    <g id="ad-nuc" data-node="kern" data-color="${C.dna}" data-nolabel opacity="0">
       <circle cx="${NUC[0]}" cy="${NUC[1]}" r="${NUC[2] + 14}" fill="none" stroke="#7aa0d8" stroke-width="6" opacity=".7"/>
       <circle cx="${NUC[0]}" cy="${NUC[1]}" r="${NUC[2]}" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="4"/>
     </g>
     <g id="ad-mt" opacity="0"></g>
     <g id="ad-membrane"></g>
-    <g id="ad-clath"></g>
+    <g data-node="endocytose" data-color="#8fa8ff" data-nolabel><g id="ad-clath"></g></g>
     <g id="ad-recept"></g>
 
     <g data-node="endocytose" data-color="${C.mem}" data-label="${T2('Endocytose → endosoom', 'Endocytosis → endosome')}">

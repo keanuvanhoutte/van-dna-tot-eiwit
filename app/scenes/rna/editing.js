@@ -51,7 +51,7 @@ export default {
     return svgOpen() + `
     <line x1="800" y1="170" x2="800" y2="760" stroke="#1d2946" stroke-width="3" stroke-dasharray="8 8"/>
     ${note(420, 200, T2('A → I (ADAR)', 'A → I (ADAR)'), '#e7e7e7', 26)}${note(1200, 200, T2('C → U (APOBEC1)', 'C → U (APOBEC1)'), BASE.U, 26)}
-    <g id="ed-ds"></g><g id="ed-adar"></g><g id="ed-code"></g><g id="ed-apo"></g><g id="ed-apob"></g>
+    <g data-node="rnastructuur" data-color="${C.rna}" data-nolabel><g id="ed-ds"></g></g><g id="ed-adar"></g><g data-node="codon" data-color="${C.trna}" data-nolabel><g id="ed-code"></g></g><g data-node="editing" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-nolabel><g id="ed-apo"></g></g><g id="ed-apob"></g>
     ${hot('rnastructuur', T2('dsRNA-substraat (atlas)', 'dsRNA substrate (atlas)'), C.rna, 'ed-hD', '../atlas/index.html?id=dsrna', true)}
     ${hot('codon', T2('Genetische code', 'Genetic code'), C.trna, 'ed-cA')}
     ${hot('editing', T2('apoB-mRNA (atlas)', 'apoB mRNA (atlas)'), C.rna, 'ed-hM', '../atlas/index.html?id=mrna', true)}

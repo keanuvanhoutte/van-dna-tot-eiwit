@@ -38,7 +38,7 @@ export default {
   steps: STEPS,
   svg() {
     const btn = (x, y, id, nl, en, col) => `<g data-node="dnavormen" data-href="../atlas/index.html?id=${id}" data-nolabel class="vf-at"><rect x="${x - 125}" y="${y - 25}" width="250" height="50" rx="25" fill="#0d1426" stroke="${col}" stroke-width="3"/><text x="${x}" y="${y + 8}" font-size="21" text-anchor="middle" fill="${col}" font-family="Inter" font-weight="700">${T2(nl, en)}</text></g>`;
-    return svgOpen() + `<g id="vf-main"></g><g id="vf-ann"></g>
+    return svgOpen() + `<g id="vf-main"><g id="vf-mA"></g><g id="vf-mB" data-node="dnahelix" data-color="${C.dna}" data-nolabel></g><g id="vf-mZ"></g></g><g id="vf-ann"></g>
       <g id="vf-hs-rna" data-node="rnastructuur" data-color="${C.rna}" data-label="${T2('dsRNA is A-vorm → RNA-structuur', 'dsRNA is A-form → RNA structure')}"><circle data-anchor="rnastructuur" cx="330" cy="150" r="20" fill="transparent"/></g>
       <g id="vf-hs-sc" data-node="supercoiling" data-color="${C.dna}" data-label="${T2('Z-DNA ← negatieve supercoiling', 'Z-DNA ← negative supercoiling')}"><circle data-anchor="supercoiling" cx="1270" cy="150" r="20" fill="transparent"/></g>
       <g id="vf-hs-nt" data-node="nucleotide" data-color="#c9a574" data-label="${T2('Suikerpuckering (nucleotide)', 'Sugar pucker (nucleotide)')}"><circle data-anchor="nucleotide" cx="800" cy="100" r="20" fill="transparent"/></g>
@@ -59,13 +59,14 @@ export default {
         const { step, p } = s;
         const spin = t * .012 * SPIN;
         const tilt = step === 5 ? 90 * ease(sub(p, .05, .35)) : step === 6 ? 90 * (1 - ease(sub(p, 0, .3))) : 0;
-        let m = '', ann = '';
+        const m = {};
+        let ann = '', mainOp = 1;
         const focus = { 1: 'B', 2: 'A', 3: 'Z' }[step];
         for (const [k, h] of Object.entries(HX)) {
           const op = focus && focus !== k ? .25 : 1;
           const v = { cx: h.x, cy: CY, S, spin: spin * (k === 'Z' ? .7 : 1), tilt, rot: 0 };
           const hx = drawHelix(h.H, v, { bw: 1.1, bbw: 1.5 });
-          m += `<g opacity="${f1(op)}">${hx.svg}</g>`;
+          m[k] = `<g opacity="${f1(op)}">${hx.svg}</g>`;
           h.pr = hx.pr; h.v = v;
         }
         // koppen
@@ -136,7 +137,7 @@ export default {
             r.forEach((c, j) => { tb += txt(xs[j], y, dec(c), i === 0 ? ['#fff', '#ffb27a', C.dna, '#f06bc0'][j] : j === 0 ? C.muted : '#e8edf7', i === 0 ? 34 : 28, 'start', i === 0 || j === 0 ? 700 : 500); });
           });
           ann += `<g opacity="${f1(k)}">${tb}</g>`;
-          m = `<g opacity="${f1(1 - .8 * k)}">${m}</g>`;
+          mainOp = 1 - .8 * k;
         }
         if (step === 7) {
           const k = ease(sub(p, .1, .3));
@@ -144,7 +145,10 @@ export default {
           ann += panel(615, 640, T2('B-vorm', 'B form'), C.dna, [T2('bijna al het DNA', 'almost all DNA'), T2('in de cel', 'in the cell')], ease(sub(p, .25, .45)), 370);
           ann += panel(1085, 640, T2('Z-vorm', 'Z form'), '#f06bc0', [T2('(CG)n, hoog zout', '(CG)n, high salt'), T2('negatieve supercoiling', 'negative supercoiling')], ease(sub(p, .4, .6)), 370);
         }
-        $('vf-main').innerHTML = m; $('vf-ann').innerHTML = ann;
+        for (const k of Object.keys(HX)) $('vf-m' + k).innerHTML = m[k];
+        // stap 6: helices gedimd onder de tabel (attribuut alleen als het nodig is, zoals voorheen een omhullende groep)
+        if (mainOp < 1) $('vf-main').setAttribute('opacity', f1(mainOp)); else $('vf-main').removeAttribute('opacity');
+        $('vf-ann').innerHTML = ann;
         vis('vf-atlas', step === 0 ? ease(sub(p, .7, .85)) : step === 8 ? ease(sub(p, .1, .3)) : 0);
         vis('vf-hs-rna', step === 2 || step === 7 ? 1 : 0);
         vis('vf-hs-sc', step === 3 || step === 7 ? 1 : 0);

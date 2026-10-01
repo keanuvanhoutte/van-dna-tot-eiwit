@@ -38,11 +38,16 @@ export default {
       <g data-node="codon" data-color="${C.rna}" data-label="${T2('Genetische code: UGA', 'Genetic code: UGA')}"><g id="se-mrna"></g><circle id="se-cA" data-anchor="codon" data-pos="below" r="1" fill="none"/></g>
       <g data-node="trna" data-color="${C.trna}" data-label="tRNA-Sec"><g id="se-trna"></g><circle id="se-tA" data-anchor="trna" r="1" fill="none"/></g>
       <g id="se-fac"></g>
+      <g data-node="trna" data-color="${C.trna}" data-nolabel><g id="se-ftr"></g></g>
     </g>
     <g data-node="aars" data-color="${C.prot}" data-label="${T2('Aminoacyl-tRNA-synthetasen', 'Aminoacyl-tRNA synthetases')}"><g id="se-bio"></g><circle id="se-bA" data-anchor="aars" r="1" fill="none"/></g>
     <g data-node="aminozuren" data-color="${SEC_COL}" data-label="${T2('Aminozuren (21 + 1)', 'Amino acids (21 + 1)')}"><g id="se-aa"></g><circle id="se-aA" data-anchor="aminozuren" r="1" fill="none"/></g>
+    <g data-node="codon" data-color="${C.rna}" data-nolabel><g id="se-pylm"></g></g>
+    <g data-node="trna" data-color="${C.trna}" data-nolabel><g id="se-pylt"></g></g>
     <g id="se-pyl"></g>
+    <g data-node="vouwing" data-color="${C.chain}" data-nolabel><g id="se-chain"></g></g>
     <g id="se-ov"></g>
+    <g data-node="aminozuren" data-color="${SEC_COL}" data-nolabel><g id="se-tab"></g></g>
     ${hud('se-hud', [
       { node: 'translatie', label: { nl: '↩ Translatie (hoofdverhaal)', en: '↩ Translation (main story)' }, color: C.rrna },
       { node: 'codon', label: { nl: 'Genetische code', en: 'Genetic code' }, color: C.rna },
@@ -92,7 +97,7 @@ export default {
       update(t, s) {
         placeHud(svg, 'se-hud', .015, .105, STEPS[s.step]?.cam);
         const { step: i, p } = s;
-        let rb = '', mr = '', tr = '', fac = '', bio = '', aaS = '', pyl = '', ov = '';
+        let rb = '', mr = '', tr = '', fac = '', ftr = '', bio = '', aaS = '', pyl = '', pylm = '', pylt = '', chn = '', tab = '', ov = '';
         const P = cx(2), A = cx(3);                       // P-plaats boven codon 2 (UGU), A-plaats boven UGA
         const mainOp = i === 5 ? 1 - sub(p, 0, .2) : i === 6 ? 0 : 1;
         $('se-main').setAttribute('opacity', f1(i === 1 ? 0 : mainOp));
@@ -107,7 +112,7 @@ export default {
           const yDock = YM - 32;
           if (i < 4) {
             tr += trna(P, yDock, 'ACA', null);
-            ov += chainAt(P + 26, yDock - 222);
+            chn += chainAt(P + 26, yDock - 222);
           }
           if (i === 3 || i === 4) {
             const k = i === 3 ? ease(sub(p, .15, .55)) : 1;
@@ -117,8 +122,8 @@ export default {
               // na peptidebinding: keten op Sec-tRNA, oude tRNA → E en weg
               tr += trna(P - shift - 160 * sub(p, .75, 1), yDock - 200 * sub(p, .75, 1), 'ACA', null, 1 - sub(p, .75, 1));
               const secBead = ['Sec', SEC_COL];
-              if (bond < 1) { tr += trna(A - shift, yDock, 'ACU', secBead, 1); ov += chainAt(P + 26 + (A - P) * bond * .5, yDock - 222 - 0 * bond); }
-              else { tr += trna(A - shift, yDock, 'ACU', null, 1); ov += chainAt(A - shift + 26 + 52, yDock - 222 + 26, secBead); }
+              if (bond < 1) { tr += trna(A - shift, yDock, 'ACU', secBead, 1); chn += chainAt(P + 26 + (A - P) * bond * .5, yDock - 222 - 0 * bond); }
+              else { tr += trna(A - shift, yDock, 'ACU', null, 1); chn += chainAt(A - shift + 26 + 52, yDock - 222 + 26, secBead); }
               ov += `<g opacity="${f1(sub(p, .15, .35) * (1 - sub(p, .7, .8)))}">${txt(A + 140, yDock - 320, T2('peptidebinding', 'peptide bond'), '#fff', 22, 'start', 700)}</g>`;
               ov += `<g opacity="${f1(sub(p, .8, .95))}">` + textBox(755, 180, 460, [T2('Zonder Se of SECIS: eRF1 wint', 'Without Se or SECIS: eRF1 wins'), T2('→ afgeknot eiwit', '→ truncated protein')], { col: C.danger, fs: 21 }) + '</g>';
             } else {
@@ -139,7 +144,7 @@ export default {
             if (i === 2) {
               const k2 = ease(sub(p, .4, .75));
               const [x, y] = E2([1450, 200], [1140, YM - 120], k2);
-              fac += trna(x - 40, y, 'ACU', ['Sec', SEC_COL], sub(p, .35, .45)) + `<g opacity="${f1(sub(p, .35, .45))}">${pill(x + 90, y - 150, 150, 34, 'eEFSec·GTP', C.prot2, 1, 17)}</g>`;
+              ftr += trna(x - 40, y, 'ACU', ['Sec', SEC_COL], sub(p, .35, .45)); fac += `<g opacity="${f1(sub(p, .35, .45))}">${pill(x + 90, y - 150, 150, 34, 'eEFSec·GTP', C.prot2, 1, 17)}</g>`;
               ov += `<g opacity="${f1(sub(p, .8, .95))}">${textBox(745, 250, 310, [T2('eEFSec vervangt eEF1A', 'eEFSec replaces eEF1A'), T2('alleen voor Sec-tRNA-Sec', 'only for Sec-tRNA-Sec')], { col: C.prot, fs: 19 })}</g>`;
             }
           }
@@ -164,13 +169,13 @@ export default {
         // pyrrolysine
         if (i === 5) {
           const k = 1, y0 = 640;                                        // mRNA en uitlegkader meteen in beeld
-          let s0 = `<g opacity="${f1(k)}"><line x1="200" y1="${y0 + 16}" x2="1400" y2="${y0 + 16}" stroke="${C.rna}" stroke-width="6"/>`;
-          ['AUG', 'AAA', 'UAG', 'GCA', 'UUC', 'GGA'].forEach((c, q) => { const x = 420 + q * 110; c.split('').forEach((b, j) => { s0 += ntb(x - 32 + j * 32, y0, b, 30, q === 2 ? 'stroke="#fff" stroke-width="3"' : ''); }); });
-          s0 += txt(190, y0 + 24, "5'", C.text, 20, 'end') + txt(1410, y0 + 24, "3'", C.text, 20, 'start') + txt(640, y0 + 80, T2('UAG = Pyl', 'UAG = Pyl'), PYL_COL, 24, 'middle', 800) + '</g>';
+          let m0 = `<g opacity="${f1(k)}"><line x1="200" y1="${y0 + 16}" x2="1400" y2="${y0 + 16}" stroke="${C.rna}" stroke-width="6"/>`;
+          ['AUG', 'AAA', 'UAG', 'GCA', 'UUC', 'GGA'].forEach((c, q) => { const x = 420 + q * 110; c.split('').forEach((b, j) => { m0 += ntb(x - 32 + j * 32, y0, b, 30, q === 2 ? 'stroke="#fff" stroke-width="3"' : ''); }); });
+          m0 += txt(190, y0 + 24, "5'", C.text, 20, 'end') + txt(1410, y0 + 24, "3'", C.text, 20, 'start') + txt(640, y0 + 80, T2('UAG = Pyl', 'UAG = Pyl'), PYL_COL, 24, 'middle', 800) + '</g>';
           const k2 = ease(sub(p, .35, .7));
           const [x, y] = E2([1150, 330], [640, y0 - 30], k2);
-          s0 += trna(x, y, 'AUC', ['Pyl', PYL_COL], 1);
-          s0 += `<g>` + textBox(150, 330, 430, [T2('2 × Lys → Pyl (PylB, C, D)', '2 × Lys → Pyl (PylB, C, D)'), T2('PylRS laadt tRNA-Pyl direct', 'PylRS charges tRNA-Pyl directly'), T2('bv. methylamine-methyltransferasen', 'e.g. methylamine methyltransferases')], { title: T2('Pyrrolysine (Pyl, O)', 'Pyrrolysine (Pyl, O)'), col: PYL_COL, fs: 19 }) + '</g>';
+          pylm = m0; pylt = trna(x, y, 'AUC', ['Pyl', PYL_COL], 1);
+          let s0 = `<g>` + textBox(150, 330, 430, [T2('2 × Lys → Pyl (PylB, C, D)', '2 × Lys → Pyl (PylB, C, D)'), T2('PylRS laadt tRNA-Pyl direct', 'PylRS charges tRNA-Pyl directly'), T2('bv. methylamine-methyltransferasen', 'e.g. methylamine methyltransferases')], { title: T2('Pyrrolysine (Pyl, O)', 'Pyrrolysine (Pyl, O)'), col: PYL_COL, fs: 19 }) + '</g>';
           s0 += `<g opacity="${f1(sub(p, .75, .9))}">${txt(x + 60, y - 110, T2('CUA · UAG', 'CUA · UAG'), '#fff', 22, 'start', 700)}</g>`;
           pyl = s0;
         }
@@ -179,16 +184,16 @@ export default {
           const lit = r => .5 + .5 * sub(p, .04 + r * .1, .12 + r * .1);   // tabel staat er meteen; rijen lichten één voor één op
           const row = (y, a, b, c, bold, r = 0) => `<g opacity="${f1(bold ? 1 : lit(r))}">` + txt(X, y, a, C.muted, 26, 'start', 600) + txt(X + 330, y, b, bold ? SEC_COL : C.text, 26, 'start', bold ? 800 : 500) + txt(X + 700, y, c, bold ? PYL_COL : C.text, 26, 'start', bold ? 800 : 500) + '</g>';
           ov += `<g><rect x="${X - 40}" y="${Y - 70}" width="1080" height="500" rx="16" fill="rgba(9,14,28,.86)" stroke="${SEC_COL}" stroke-opacity=".5" stroke-width="2"/>` +
-            bead(X + 288, Y - 9, 'Sec', SEC_COL, 34) + bead(X + 658, Y - 9, 'Pyl', PYL_COL, 34) +
             row(Y, '', T2('selenocysteïne', 'selenocysteine'), T2('pyrrolysine', 'pyrrolysine'), true) +
             row(Y + 80, T2('codon', 'codon'), 'UGA', 'UAG', 0, 0) +
             row(Y + 150, T2('signaal', 'signal'), T2("SECIS (euk.: 3'-UTR)", "SECIS (euk.: 3' UTR)"), T2('geen vereist', 'none required'), 0, 1) +
             row(Y + 220, T2('gemaakt', 'made'), T2('op het tRNA (uit Ser)', 'on the tRNA (from Ser)'), T2('als vrij aminozuur', 'as a free amino acid'), 0, 2) +
             row(Y + 290, T2('aflevering', 'delivery'), T2('eEFSec (bact.: SelB)', 'eEFSec (bact.: SelB)'), 'EF-Tu', 0, 3) +
             row(Y + 360, T2('mens', 'human'), T2('25 selenoproteïnen', '25 selenoproteins'), T2('nee', 'no'), 0, 4) + '</g>';
+          tab = bead(X + 288, Y - 9, 'Sec', SEC_COL, 34) + bead(X + 658, Y - 9, 'Pyl', PYL_COL, 34);
         }
         $('se-ribo').innerHTML = rb; $('se-mrna').innerHTML = mr; $('se-trna').innerHTML = tr; $('se-fac').innerHTML = fac;
-        $('se-bio').innerHTML = bio; $('se-aa').innerHTML = aaS; $('se-pyl').innerHTML = pyl; $('se-ov').innerHTML = ov;
+        $('se-bio').innerHTML = bio; $('se-aa').innerHTML = aaS; $('se-pyl').innerHTML = pyl; $('se-ov').innerHTML = ov; $('se-ftr').innerHTML = ftr; $('se-pylm').innerHTML = pylm; $('se-pylt').innerHTML = pylt; $('se-chain').innerHTML = chn; $('se-tab').innerHTML = tab;
       },
     };
   },

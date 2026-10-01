@@ -1,5 +1,5 @@
 import { C, T2, svgOpen, cam, FULL, f1, lerp, rng, squiggle } from '../../kit.js';
-import { T, K, track, bilayer, nucEnv, dna, mrna, egf, adr, cort, gpcr7, egfr, gr, grBound, hsp90, bead, cAMP, anchor,
+import { T, K, track, hot, bilayer, nucEnv, dna, mrna, egf, adr, cort, gpcr7, egfr, gr, grBound, hsp90, bead, cAMP, anchor,
   EGFC, ADRC, CORTC, GTPC, HSPC, GAC, GBC } from './_sig1.js';
 
 /* Verhaallijn 2, hoofdstuk 1: overzicht. Eerst de cel uit het hoofdstuk 'cel', dan inzoomen op het plasmamembraan.
@@ -44,11 +44,11 @@ function miniCell() {
     recs += `<circle cx="${f1(x)}" cy="${f1(y)}" r="3" fill="${C.prot}"/>`;
   }
   return `<path d="${mem}" fill="url(#gCyto)" stroke="${C.mem}" stroke-width="9" stroke-linejoin="round"/>
-    ${er}${mito}${lyso}
-    <g transform="translate(600 610)" opacity=".85">${[0, 10, 20, 30].map(o => `<path d="M${-46 + o / 2},${o} Q0,${o - 18} ${46 - o / 2},${o}" stroke="#d7b46a" stroke-width="5.5" fill="none" stroke-linecap="round"/>`).join('')}</g>
-    <circle cx="${nx}" cy="${ny}" r="${nr + 5}" fill="none" stroke="#7aa0d8" stroke-width="2.5" opacity=".7"/>
+    ${hot('er', C.rrna, er)}${mito}${lyso}
+    ${hot('golgi', '#d7b46a', `<g transform="translate(600 610)" opacity=".85">${[0, 10, 20, 30].map(o => `<path d="M${-46 + o / 2},${o} Q0,${o - 18} ${46 - o / 2},${o}" stroke="#d7b46a" stroke-width="5.5" fill="none" stroke-linecap="round"/>`).join('')}</g>`)}
+    ${hot('kern', C.dna, `<circle cx="${nx}" cy="${ny}" r="${nr + 5}" fill="none" stroke="#7aa0d8" stroke-width="2.5" opacity=".7"/>
     <circle cx="${nx}" cy="${ny}" r="${nr}" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="2"/>
-    <ellipse cx="${nx + 35}" cy="${ny - 20}" rx="46" ry="38" fill="#2b3e66" opacity=".9"/>${chrom}${pores}${recs}`;
+    ${hot('nucleolus', '#9cc0ff', `<ellipse cx="${nx + 35}" cy="${ny - 20}" rx="46" ry="38" fill="#2b3e66" opacity=".9"/>`)}${hot('chromatine', C.dna, chrom)}${hot('kernimport', C.prot, pores)}`)}${recs}`;
 }
 /* bovenkant van het celmembraan (a = 270°) — hierop zoomen we in */
 const CELL_TOP = 460 - 360 * (1 + .06 * Math.sin(810 * Math.PI / 180) + .03 * Math.sin(1890 * Math.PI / 180));
@@ -104,12 +104,12 @@ export default {
       <rect x="-600" y="${NY + 14}" width="2800" height="900" fill="url(#gNuc)"/>
       ${bilayer(-600, 2200, MY, { h: MH, skip: [[XB - 75, XB + 75], [960, 1010]] })}
       ${nucEnv(-600, 2200, NY, [-80, XA, XB, XC, 1700])}
-      ${dna(-600, 2200, DY)}
+      ${hot('dnahelix', C.dna, dna(-600, 2200, DY))}
       ${T(1585, 60, T2('buiten de cel', 'outside the cell'), { size: 24, col: C.muted, anchor: 'end', w: 500 })}
       ${T(1585, 700, 'cytosol', { size: 24, col: C.muted, anchor: 'end', w: 500 })}
       ${T(180, 1005, T2('celkern', 'nucleus'), { size: 26, col: '#9cc0ff', anchor: 'start', w: 600 })}
-      <g id="sg-genes"></g>
-      <g id="sg-A"></g><g id="sg-B"></g><g id="sg-C"></g>
+      ${hot('transcriptie', C.rna, '<g id="sg-genes"></g>')}
+      ${hot('rtk', C.prot, '<g id="sg-A"></g>')}${hot('mapk', C.prot, '<g id="sg-Am"></g>')}${hot('gpcr', ADRC, '<g id="sg-B"></g>')}${hot('chaperones', HSPC, '<g id="sg-Ch"></g>')}${hot('steroid', CORTC, '<g id="sg-C"></g>')}
       <g id="sg-lab"></g>
       <g id="sg-hot" opacity="0">
         <g data-node="rtk" data-color="${EGFC}" data-label="${T2('Receptortyrosinekinase (EGF) →', 'Receptor tyrosine kinase (EGF) →')}">
@@ -121,7 +121,7 @@ export default {
       </g>
     </g>
     <g id="sg-cell"><g id="sg-cellz">${miniCell()}</g></g>
-    <g id="sg-sig"></g>
+    ${hot('rtk', EGFC, '<g id="sg-sigE"></g>')}${hot('gpcr', ADRC, '<g id="sg-sigA"></g>')}${hot('steroid', CORTC, '<g id="sg-sigC"></g>')}
     <g id="sg-lab0"></g>
     </svg>`;
   },
@@ -151,14 +151,11 @@ export default {
         const a1 = track(g, [[0, 560, 30, 1], [.9, 500, 105, 1], [1.1, 500, 105, 1], [1.8, 800, 165, 1.3], [2.1, 800, 165, 1.3], [2.6, 800, 283, 1.05]]);
         const a2 = track(g, [[0, 300, 90, 1], [.9, 390, 160, 1], [1.1, 390, 160, 1], [1.8, 575, 180, 1.3], [2.12, 575, 180, 1.3], [2.4, 575, 262, 1.3], [2.8, 545, 185, 1.3]]);
         const c1 = track(g, [[0, 1500, 110, 1], [.9, 1400, 190, 1], [1.1, 1400, 190, 1], [1.8, 1270, 170, 1.3], [3.05, 1270, 170, 1.3], [3.35, 1270, 332, 1.2], [3.62, 1236, 470, 1.1], [3.82, 1270, 562, .84]]);
-        let sg = '';
-        sg += egf(e1[0], e1[1] + (g < 2.1 ? wob(1) : 0), e1[2]);
-        sg += egf(e2[0], e2[1] + (g < 2.15 ? wob(2) : 0), e2[2]);
-        sg += adr(a1[0], a1[1] + (g < 2.1 ? wob(3) : 0), a1[2]);
-        sg += adr(a2[0], a2[1] + wob(4, g > 2.8 || g < 2.1 ? 4 : 0), a2[2], 1 - K(g, 3.0, 3.3));
+        /* per molecule een eigen groep: EGF → rtk, adrenaline → gpcr, cortisol → steroid (zelfde tekenvolgorde) */
+        $('sg-sigE').innerHTML = egf(e1[0], e1[1] + (g < 2.1 ? wob(1) : 0), e1[2]) + egf(e2[0], e2[1] + (g < 2.15 ? wob(2) : 0), e2[2]);
+        $('sg-sigA').innerHTML = adr(a1[0], a1[1] + (g < 2.1 ? wob(3) : 0), a1[2]) + adr(a2[0], a2[1] + wob(4, g > 2.8 || g < 2.1 ? 4 : 0), a2[2], 1 - K(g, 3.0, 3.3));
         const cFree = 1 - K(g, 3.8, 3.84);
-        sg += cort(c1[0], c1[1] + (g < 3.05 ? wob(5) : 0), c1[2], cFree);
-        $('sg-sig').innerHTML = sg;
+        $('sg-sigC').innerHTML = cort(c1[0], c1[1] + (g < 3.05 ? wob(5) : 0), c1[2], cFree);
 
         /* stap 0: namen bij de moleculen (in beeld van de hele cel) */
         const l0 = K(g, .35, .8) * (1 - K(g, 1.05, 1.3));
@@ -172,6 +169,8 @@ export default {
         let A = '';
         if (g >= 7.05) A += `<ellipse cx="${XA}" cy="${MY + 30}" rx="${f1(150)}" ry="210" fill="${EGFC}" opacity="${f1(.07 * K(g, 7.05, 7.4))}"/>`;
         A += egfr(rx1, MY, MH, dimA, pA) + egfr(rx2, MY, MH, dimA, pA);
+        $('sg-A').innerHTML = A;
+        A = '';                                                  // Ras → ERK: aparte groep (klikbaar naar de MAPK-cascade)
         const beads = [['Ras', 500, 5.15], ['Raf', 550, 5.3], ['MEK', 600, 5.45], ['ERK', 650, 5.6]];
         beads.forEach(([lab, y, g0], i) => {
           const op = K(g, g0, g0 + .15);
@@ -181,7 +180,7 @@ export default {
           if (i) A += `<path d="M${XA},${beads[i - 1][1] + 23}L${XA},${y - 23}" stroke="${C.prot}" stroke-width="3" opacity="${f1(op * (lab === 'ERK' && g > 6.05 ? 1 - K(g, 6.05, 6.2) : 1))}"/>`;
           A += bead(x, yy, 23, lab === 'Ras' ? '#8fa8ff' : C.prot, lab, op, 17);
         });
-        $('sg-A').innerHTML = A;
+        $('sg-Am').innerHTML = A;
 
         /* ---------- kolom B: β2-adrenerge receptor ---------- */
         const dimB = 1 - .78 * K(g, 7.05, 7.4);
@@ -210,7 +209,9 @@ export default {
         const lig = K(g, 3.8, 3.84), conf = K(g, 3.82, 4);
         const grp = track(g, [[5.3, 1240, 562], [5.8, XC, 640], [6.05, XC, 640], [6.3, XC, NY], [6.45, XC + 40, DY - 70]]);
         const hs = track(g, [[3.82, 1270, 552, 1], [3.98, 1410, 612, .45], [5.0, 1410, 612, .45], [5.3, 1440, 640, 0]]);
-        let Cc = hsp90(hs[0], hs[1], hs[2], conf);
+        const Hs = hsp90(hs[0], hs[1], hs[2], conf);
+        $('sg-Ch').innerHTML = Hs ? `<g opacity="${f1(dimC)}">${Hs}</g>` : '';
+        let Cc = '';
         const bnd = K(g, 6.42, 6.6);
         Cc += gr(grp[0], grp[1], { lig: lig * (.4 + .6 * conf), sc: 1.4 - .5 * K(g, 6.3, 6.45), op: 1 - bnd });
         Cc += grBound(XC + 40, -1, DY, bnd, .7) + grBound(XC + 82, 1, DY, K(g, 6.5, 6.7), .7);

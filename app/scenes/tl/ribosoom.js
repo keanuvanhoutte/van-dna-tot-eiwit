@@ -64,6 +64,9 @@ export default {
     <g id="rb-mg" data-node="codon" data-color="${C.rna}" data-label="${T2('mRNA · codons', 'mRNA · codons')}"><path id="rb-mrna" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle id="rb-mA" data-anchor="codon" data-pos="below" r="1" fill="none"/></g>
     <g id="rb-tg" data-node="trna" data-color="${C.trna}" data-label="tRNA"><path id="rb-tPL" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path id="rb-tP" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path id="rb-tAL" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path id="rb-tA" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle id="rb-tAnc" data-anchor="trna" r="1" fill="none"/></g>
     <g id="rb-ov"></g>
+    <g data-node="codon" data-color="${C.rna}" data-nolabel><g id="rb-dc"></g></g>
+    <g data-node="peptide" data-color="${C.chain}" data-nolabel><g id="rb-ptc"></g></g>
+    <g data-node="vouwing" data-color="${C.chain}" data-nolabel><g id="rb-tun"></g></g>
     ${hud('rb-hud', [
       { node: 'translatie', label: { nl: '↩ Translatie (hoofdverhaal)', en: '↩ Translation (main story)' }, color: C.rrna },
       { node: 'ribogenese', label: { nl: 'Ribosoombiogenese', en: 'Ribosome biogenesis' }, color: C.rrna },
@@ -125,7 +128,7 @@ export default {
         $('rb-bgA').setAttribute('cx', f1(cx + 60)); $('rb-bgA').setAttribute('cy', f1(cy + 360 * sc));
 
         // overlays per stap
-        let o = '';
+        let o = '', dcS = '', ptcS = '', tunS = '';
         const fade = sub(s.p, .15, .35);
         const i = s.step;
         if (i === 0) {
@@ -142,7 +145,7 @@ export default {
         }
         if (i === 3) {
           const dc = proj(LM.dc, -sep);
-          o += `<circle cx="${f1(dc[0])}" cy="${f1(dc[1])}" r="${f1(26 + 6 * Math.sin(t / 300))}" fill="none" stroke="#fff" stroke-width="3" opacity="${f1(fade)}"/>` +
+          dcS += `<circle cx="${f1(dc[0])}" cy="${f1(dc[1])}" r="${f1(26 + 6 * Math.sin(t / 300))}" fill="none" stroke="#fff" stroke-width="3" opacity="${f1(fade)}"/>` +
             `<path d="M${f1(dc[0] - 26)},${f1(dc[1] - 20)} L${f1(dc[0] - 170)},${f1(dc[1] - 130)}" stroke="#fff" stroke-width="2" opacity="${f1(fade)}"/>` +
             txt(dc[0] - 175, dc[1] - 140, T2('decodeercentrum', 'decoding centre'), '#fff', 24, 'end').replace('<text', `<text opacity="${f1(fade)}"`);
           o += textBox(1000, 600, 480, [T2('18S rRNA ≈ 1870 nt', '18S rRNA ≈ 1870 nt'), T2('33 eiwitten', '33 proteins'), T2('bacterie: 30S = 16S + 21 eiwitten', 'bacteria: 30S = 16S + 21 proteins')], { title: '40S', col: '#8df0dc', op: fade, fs: 22 });
@@ -161,16 +164,16 @@ export default {
         }
         if (i === 6) {
           const pc = proj(LM.ptc);
-          o += `<circle cx="${f1(pc[0])}" cy="${f1(pc[1])}" r="${f1(30 + 8 * Math.sin(t / 260))}" fill="rgba(255,255,255,.12)" stroke="#fff" stroke-width="3" opacity="${f1(fade)}"/>` +
+          ptcS += `<circle cx="${f1(pc[0])}" cy="${f1(pc[1])}" r="${f1(30 + 8 * Math.sin(t / 260))}" fill="rgba(255,255,255,.12)" stroke="#fff" stroke-width="3" opacity="${f1(fade)}"/>` +
             `<g opacity="${f1(fade)}">` + txt(pc[0] + 60, pc[1] - 70, T2('PTC: peptidebinding', 'PTC: peptide bond'), '#fff', 26, 'start', 700) + txt(pc[0] + 60, pc[1] - 40, T2('actief centrum = rRNA (28S)', 'active site = rRNA (28S)'), C.rrna, 22, 'start') + '</g>';
         }
         if (i === 7) {
           const pc = proj(LM.ptc), ex = proj(LM.exit), k = sub(s.p, .2, .7);
           const mx = lerp(pc[0], ex[0], k), my = lerp(pc[1], ex[1], k);
-          o += `<path d="M${f1(pc[0])},${f1(pc[1])} L${f1(mx)},${f1(my)}" stroke="${C.chain}" stroke-width="16" stroke-linecap="round" opacity=".45"/>` +
+          tunS += `<path d="M${f1(pc[0])},${f1(pc[1])} L${f1(mx)},${f1(my)}" stroke="${C.chain}" stroke-width="16" stroke-linecap="round" opacity=".45"/>` +
             `<path d="M${f1(pc[0])},${f1(pc[1])} L${f1(mx)},${f1(my)}" stroke="#fff" stroke-width="3" stroke-dasharray="8 7"/>` +
             `<circle cx="${f1(pc[0])}" cy="${f1(pc[1])}" r="12" fill="#fff"/>` + txt(pc[0] + 24, pc[1] + 40, 'PTC', '#fff', 24, 'start', 700);
-          o += `<g opacity="${f1(sub(s.p, .6, .8))}"><circle cx="${f1(ex[0])}" cy="${f1(ex[1])}" r="16" fill="none" stroke="${C.chain}" stroke-width="4"/>` +
+          tunS += `<g opacity="${f1(sub(s.p, .6, .8))}"><circle cx="${f1(ex[0])}" cy="${f1(ex[1])}" r="16" fill="none" stroke="${C.chain}" stroke-width="4"/>` +
             txt(ex[0] - 26, ex[1] - 26, T2('tunneluitgang', 'tunnel exit'), C.chain, 24, 'end', 700) +
             txt((pc[0] + ex[0]) / 2 + 150, (pc[1] + ex[1]) / 2 - 20, T2('≈ 90 Å in dit model', '≈ 90 Å in this model'), '#fff', 22, 'start') + '</g>';
         }
@@ -185,7 +188,7 @@ export default {
             row(Y + 255, T2('grote subeenheid', 'large subunit'), '50S · 23S + 5S', T2('60S · 28S + 5,8S + 5S', '60S · 28S + 5.8S + 5S')) +
             row(Y + 300, T2('   eiwitten', '   proteins'), '≈ 33', '47') + '</g>';
         }
-        $('rb-ov').innerHTML = o;
+        $('rb-ov').innerHTML = o; $('rb-dc').innerHTML = dcS; $('rb-ptc').innerHTML = ptcS; $('rb-tun').innerHTML = tunS;
       },
     };
   },

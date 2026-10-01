@@ -99,12 +99,12 @@ const SCENE = {
     return svgOpen(arrowDefs('mk', { m: C.muted, w: '#fff', e: K.erk })) + `
     <rect x="-600" y="${MB}" width="2800" height="${NO - MB}" fill="url(#gCyto)" opacity=".85"/>
     <rect x="-600" y="${NI}" width="2800" height="900" fill="url(#gNuc)"/>
-    ${CHROM}
+    <g data-node="chromatine" data-color="${C.dna}" data-nolabel>${CHROM}</g>
     ${membrane('mk', MT, MB)}
-    ${env(NO, '#7aa0d8')}${env(NI, '#9cc0ff')}
+    <g data-node="kern" data-color="#9cc0ff" data-nolabel>${env(NO, '#7aa0d8')}${env(NI, '#9cc0ff')}</g>
     <g data-node="kernimport" data-color="${C.prot2}" data-label="${T2('Kernporie', 'Nuclear pore')}">${PORES.map(npc).join('')}<g id="mk-kiA"><circle data-anchor="kernimport" cx="${PORES[2]}" cy="${NO - 18}" r="1" fill="none"/></g></g>
     <g data-node="rtk" data-color="${K.rec}" data-label="${T2('← EGF-receptor', '← EGF receptor')}"><g id="mk-rec"></g><g id="mk-rtkA"><circle data-anchor="rtk" cx="135" cy="60" r="1" fill="none"/></g></g>
-    <g id="mk-sos"></g>
+    <g data-node="rtk" data-color="${K.grb}" data-nolabel><g id="mk-sos"></g></g>
     <g id="mk-ras"></g>
     <g id="mk-kin"></g>
     <g data-node="srf" data-color="${K.erk}" data-label="${T2('Elk-1 & FOS-gen →', 'Elk-1 & FOS gene →')}"><g id="mk-nuc"></g><g id="mk-srfA"><circle data-anchor="srf" cx="${E0_DEST[0]}" cy="${E0_DEST[1] - 30}" r="1" fill="none"/></g></g>

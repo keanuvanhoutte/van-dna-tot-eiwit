@@ -48,7 +48,7 @@ export function sceneKern() {
 
   return `<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">${defs}
     <rect x="-800" y="-500" width="3200" height="1900" fill="#0c1530" opacity=".6"/>
-    ${cyto}
+    <g data-node="er" data-color="#8fb3e8" data-nolabel>${cyto}</g>
     <g data-node="translatie" data-color="${C.rrna}" data-label="${L({ nl: 'Polysomen · translatie', en: 'Polysomes · translation' })}">
       <rect x="1230" y="250" width="330" height="480" fill="transparent"/>${poly}
     </g>
@@ -56,7 +56,7 @@ export function sceneKern() {
     <circle cx="${cx}" cy="${cy}" r="${R + 12}" fill="none" stroke="#7aa0d8" stroke-width="5" opacity=".75"/>
     <circle cx="${cx}" cy="${cy}" r="${R + 5}" fill="none" stroke="#12203f" stroke-width="8"/>
     <circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="4"/>
-    ${hetero}
+    <g data-node="chromatine" data-color="#27457e" data-nolabel>${hetero}</g>
     <g data-node="chromatine" data-color="${C.dna}">${chrom}<circle data-anchor="chromatine" cx="560" cy="300" r="1" fill="none"/></g>
     <g data-node="nucleolus" data-color="${C.rrna}">
       <path d="M640,420 C650,350 760,340 790,400 C830,470 770,540 700,520 C650,505 635,470 640,420Z" fill="#2a3d63" stroke="#4d6aa0" stroke-width="2"/>

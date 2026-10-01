@@ -81,13 +81,13 @@ export default {
     });
 
     return svgOpen() + `
-    <g id="hm-nuc">
+    <g id="hm-nuc" data-node="nucleosoom" data-color="${HC.H3}" data-nolabel>
       ${tl}${nu.svg}
       <path id="hm-h3link" stroke="${HC.H3}" stroke-width="7" fill="none" stroke-linecap="round"/>
       <g id="hm-nuclab">${txt(NX[0], NX[1] + NR + 66, T2('nucleosoom met 8 staarten', 'nucleosome with 8 tails'), '#c9d2e4', 20).replace('<text', '<text stroke="#0a1224" stroke-width="6" paint-order="stroke"')}</g>
     </g>
     <g data-node="nucleosoom" data-color="${HC.H3}" data-label="${T2('← Nucleosoom', '← Nucleosome')}" data-nolabel><circle cx="${NX[0]}" cy="${NX[1]}" r="${NR * .8}" fill="transparent"/></g>
-    <g id="hm-dna">${dna}</g>
+    <g id="hm-dna" data-node="dnahelix" data-color="${C.dna}" data-nolabel>${dna}</g>
     <g data-node="ptm" data-color="${CLASSCOL['+']}" data-label="${T2('Post-translationele modificaties', 'Post-translational modifications')}">
       <g id="hm-tail"></g><circle data-anchor="ptm" cx="660" cy="${TY + 60}" r="1" fill="none" data-pos="below"/>
     </g>

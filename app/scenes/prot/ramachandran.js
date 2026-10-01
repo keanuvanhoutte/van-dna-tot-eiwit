@@ -67,7 +67,10 @@ export default {
     <text x="${X0 - 88}" y="${Y0 + S / 2}" font-size="26" text-anchor="middle" fill="${C.trna}" font-family="Inter" font-weight="600" transform="rotate(-90 ${X0 - 88} ${Y0 + S / 2})">ψ (°)</text>
     <g id="ra-pts"></g>
     <g>
-      ${reg('ra-lb', X(-115), Y(160), T2('β-streng', 'β-strand'))}
+      <g data-node="secundair" data-color="${C.trna}" data-nolabel>
+        <rect x="${X(-180)}" y="${Math.min(Y(180), Y(90))}" width="${X(-45) - X(-180)}" height="${Math.abs(Y(90) - Y(180))}" fill="transparent"/>
+        ${reg('ra-lb', X(-115), Y(160), T2('β-streng', 'β-strand'))}
+      </g>
       <g data-node="secundair" data-color="${C.prot}" data-label="${T2('α-helix → secundaire structuur', 'α-helix → secondary structure')}">
         <rect x="${X(-100)}" y="${Y(10)}" width="${X(-30) - X(-100)}" height="${Y(-80) - Y(10)}" fill="transparent"/>
         ${reg('ra-la', X(-20), Y(-72), T2('α (rechts)', 'α (right)'), 'start')}

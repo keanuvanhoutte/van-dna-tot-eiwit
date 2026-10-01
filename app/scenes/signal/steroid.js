@@ -1,5 +1,5 @@
 import { C, T2, svgOpen, cam, FULL, f1 } from '../../kit.js';
-import { T, K, track, bilayer, nucEnv, dna, mrna, cort, gr, grBound as grB, hsp90, anchor, CORTC, HSPC, NLSC } from './_sig1.js';
+import { T, K, track, hot, bilayer, nucEnv, dna, mrna, cort, gr, grBound as grB, hsp90, anchor, CORTC, HSPC, NLSC } from './_sig1.js';
 const grBound = (x, side, op) => grB(x, side, DY, op);
 
 /* Zijpad: cortisol → glucocorticoïdreceptor (GR, NR3C1) → kern → GRE.
@@ -68,7 +68,7 @@ export default {
       ${bilayer(-600, 2200, MY, { h: MH })}
       ${nucEnv(-600, 2200, NY, [300, PORE, 1420])}
       <g id="st-gene"></g>
-      ${dna(-600, 2200, DY)}
+      ${hot('dnahelix', C.dna, dna(-600, 2200, DY))}
       ${T(122, 60, T2('buiten de cel', 'outside the cell'), { size: 24, col: C.muted, anchor: 'start', w: 500 })}
       ${T(122, 340, 'cytosol', { size: 24, col: C.muted, anchor: 'start', w: 500 })}
       ${T(40, 690, T2('celkern', 'nucleus'), { size: 24, col: '#9cc0ff', anchor: 'start', w: 500 })}
@@ -76,9 +76,9 @@ export default {
       <g data-node="chaperones" data-color="${HSPC}" data-label="${T2('Hsp90 · chaperones', 'Hsp90 · chaperones')}" id="st-chapG">
         <g id="st-chap"></g><circle id="st-chapA" data-anchor="chaperones" data-pos="below" r="1.5" fill="none"/></g>
       <g id="st-gr"></g>
-      <g id="st-imp"></g>
+      ${hot('kernimport', C.prot, '<g id="st-imp"></g>')}
       <g id="st-cort"></g>
-      <g id="st-nuc"></g>
+      <g id="st-nuc"></g>${hot('rnapol', C.prot, '<g id="st-pol"></g>')}<g id="st-nuc2"></g>
       <g id="st-lab"></g>
       <g id="st-hotK" opacity="0" data-node="kernimport" data-color="${C.prot}" data-label="${T2('Kernporie & import', 'Nuclear pore & import')}">
         <rect x="${PORE - 70}" y="${NY - 50}" width="140" height="100" fill="transparent"/>${anchor('kernimport', PORE + 140, NY - 40)}</g>
@@ -141,10 +141,12 @@ export default {
         if (co[2] > .01) N += `<g opacity="${f1(co[2])}"><ellipse cx="${f1(co[0])}" cy="${f1(co[1])}" rx="108" ry="32" fill="${COAC}" fill-opacity=".3" stroke="${COAC}" stroke-width="3"/>` +
           `<text x="${f1(co[0])}" y="${f1(co[1] + 8)}" font-size="22" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">CBP/p300 · SRC</text></g>`;
         const pol = K(g, 6.3, 6.5);
-        if (pol > .01) N += `<g opacity="${f1(pol)}"><ellipse cx="1200" cy="${DY - 24}" rx="52" ry="36" fill="${C.prot3}" fill-opacity=".45" stroke="${C.prot}" stroke-width="3"/>` +
+        $('st-nuc').innerHTML = N;
+        N = '';                                                 // Pol II apart (klikbaar naar RNA-polymerase II), mRNA erna
+        $('st-pol').innerHTML = pol <= .01 ? '' : `<g opacity="${f1(pol)}"><ellipse cx="1200" cy="${DY - 24}" rx="52" ry="36" fill="${C.prot3}" fill-opacity=".45" stroke="${C.prot}" stroke-width="3"/>` +
           `<text x="1200" y="${DY - 16}" font-size="21" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">Pol II</text></g>`;
         N += mrna(1240, DY - 46, K(g, 6.5, 6.95), 190);
-        $('st-nuc').innerHTML = N;
+        $('st-nuc2').innerHTML = N;
         const hl = K(g, 6.4, 6.7);
         $('st-gene').innerHTML = hl > .01 ? `<rect x="1150" y="${DY - 26}" width="330" height="52" rx="12" fill="#fff" opacity="${f1(.1 * hl)}"/>` : '';
 

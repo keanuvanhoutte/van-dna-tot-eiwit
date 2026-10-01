@@ -72,7 +72,7 @@ export default {
       <rect x="1180" y="380" width="400" height="140" fill="transparent"/><circle data-anchor="supercoiling" cx="1430" cy="370" r="1" fill="none"/>
       <g id="rs-dup"></g><g id="rs-topo"></g>
     </g>
-    <g id="rs-arms"></g>
+    <g data-node="dnahelix" data-nolabel data-color="${C.dna}"><g id="rs-arms"></g></g>
     <g data-node="ssdna" data-color="${RPA}" data-label="${T2('Enkelstrengig DNA + RPA', 'Single-stranded DNA + RPA')}">
       <circle id="rs-ssa" data-anchor="ssdna" cx="720" cy="300" r="1" fill="none" data-pos="below"/>
       <g id="rs-rpa"></g>

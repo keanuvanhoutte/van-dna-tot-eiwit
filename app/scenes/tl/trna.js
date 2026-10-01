@@ -74,7 +74,7 @@ export default {
   ],
   svg() {
     return svgOpen() + `
-    <g id="tr-halo"></g><g id="tr-pairs"></g>
+    <g data-node="rnastructuur" data-color="${C.trna}" data-nolabel><g id="tr-halo"></g></g><g data-node="basenparing" data-color="${C.trna}" data-nolabel><g id="tr-pairs"></g></g>
     <g data-node="rnastructuur" data-color="${C.trna}" data-label="${T2('RNA-vouwing', 'RNA folding')}" data-nolabel><g id="tr-nts"></g></g>
     <g data-node="aars" data-color="${C.trna}" data-label="${T2('Wie laadt het tRNA? → aaRS', 'Who charges the tRNA? → aaRS')}"><g id="tr-aa"></g><circle id="tr-aaA" data-anchor="aars" r="1" fill="none"/></g>
     <g data-node="codon" data-color="${C.rna}" data-label="${T2('Codon · genetische code', 'Codon · genetic code')}"><g id="tr-codon"></g><circle id="tr-cA" data-anchor="codon" data-pos="below" r="1" fill="none"/></g>

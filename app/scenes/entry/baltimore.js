@@ -40,6 +40,11 @@ function nuc(x, y, w, kind) {
   }
   return s;
 }
+/* klikbaar zonder label (hotspot naar een knoop); node leeg = niet klikbaar */
+const hot = (node, col, s) => node ? `<g data-node="${node}" data-color="${col}" data-nolabel>${s}</g>` : s;
+/* knoop per genoomtype en per tussenstap */
+const GENOME_NODE = { dsDNA: 'dnahelix', ssDNA: 'ssdna', '(+)ssRNA': 'translatie', 'ssRNA-RT': 'rt' };
+const MID_NODE = { dsDNA: 'dnahelix', RT: 'rt' };
 const arrow = (x0, x1, y) =>
   `<line x1="${f1(x0)}" y1="${f1(y)}" x2="${f1(x1)}" y2="${f1(y)}" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)" opacity=".8"/>`;
 
@@ -85,8 +90,8 @@ export default {
       const y = rowY(i);
       let mid = arrow(XG + WG + 15, c.mid.length ? XM - 10 : XR - 15, y), det = '', x = XM;
       c.mid.forEach((m, k) => {
-        mid += `<rect x="${f1(x)}" y="${f1(y - 22)}" width="120" height="44" rx="12" fill="rgba(255,255,255,.05)" stroke="${m.c}" stroke-width="2.5"/>` +
-          txt(x + 60, y + 8, m.t, m.c, 22);
+        mid += hot(MID_NODE[m.t], m.c, `<rect x="${f1(x)}" y="${f1(y - 22)}" width="120" height="44" rx="12" fill="rgba(255,255,255,.05)" stroke="${m.c}" stroke-width="2.5"/>` +
+          txt(x + 60, y + 8, m.t, m.c, 22));
         if (m.lab) det += txt(x + 60, y + 46, L(m.lab), C.muted, 19);
         x += 120;
         mid += arrow(x + 5, k < c.mid.length - 1 ? x + 50 : XR - 15, y);
@@ -94,10 +99,10 @@ export default {
       });
       rows += `<g id="bal-row-${i}">
         <circle cx="${XN}" cy="${f1(y)}" r="28" fill="rgba(255,255,255,.06)" stroke="${C.text}" stroke-width="2"/>${txt(XN, y + 9, c.n, C.text, 25)}
-        ${nuc(XG, y, WG, c.g)}
+        ${hot(GENOME_NODE[c.g], c.g.includes('RNA') ? C.rna : C.dna, nuc(XG, y, WG, c.g))}
         ${txt(XG + WG / 2, y - 24, c.g, c.g.includes('RNA') ? C.rna : C.dna, 24)}
         ${mid}
-        ${nuc(XR, y, WR, '(+)ssRNA')}
+        ${hot('translatie', C.rna, nuc(XR, y, WR, '(+)ssRNA'))}
         <g id="bal-det-${i}" opacity="0">
           ${txt(XG + WG / 2, y + 44, L(c.gl), C.muted, 20)}
           ${det}

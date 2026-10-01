@@ -123,7 +123,7 @@ export default {
         <rect x="${X1}" y="${Y0 - 50}" width="46" height="100" rx="10" fill="${C.histone}" opacity=".85"/>
         <g id="sc-clamplbl">${txt(X0 - 23, Y0 + 88, T2('vast', 'fixed'), C.muted, 24)}${txt(X1 + 23, Y0 + 88, T2('vast', 'fixed'), C.muted, 24)}</g>
       </g>
-      <g id="sc-rib"></g><g id="sc-enz"></g><g id="sc-ann"></g>
+      <g id="sc-rib"></g><g id="sc-enz"></g><g id="sc-pol" data-node="transcriptie" data-color="${C.prot}" data-nolabel></g><g id="sc-ann"></g><g id="sc-nucpic" data-node="nucleosoom" data-color="${C.histone}" data-nolabel></g>
       <g id="sc-cnt"></g>
       <g id="sc-hs-tx" data-node="transcriptie" data-color="${C.prot}" data-label="${T2('Transcriptie (Pol II)', 'Transcription (Pol II)')}"><circle id="sc-a-tx" data-anchor="transcriptie" cx="800" cy="400" r="30" fill="transparent"/></g>
       <g id="sc-hs-rep" data-node="replicatie" data-color="${C.dna2}" data-label="${T2('Replicatie: ontwarren', 'Replication: untangling')}"><circle data-anchor="replicatie" cx="560" cy="640" r="20" fill="transparent"/></g>
@@ -148,7 +148,7 @@ export default {
         const st = state(step, p);
         const rb = ribbon(st);
         $('sc-rib').innerHTML = `<g opacity="${f1(st.fade)}">${rb.svg}</g>`;
-        let ann = '', enz = '', cnt = '';
+        let ann = '', enz = '', cnt = '', pol = '', nucpic = '', nucOp = 0;
         // tellers
         const showCnt = step >= 1 && step <= 7;
         if (showCnt) {
@@ -179,13 +179,14 @@ export default {
           ann += `<g opacity="${f1(ease(sub(p, .05, .25)))}">${box(130, 580, 560, 130)}${txt(410, 628, 'σ = ΔLk / Lk₀', '#fff', 32, 'middle', 800, 'JetBrains Mono')}${txt(410, 675, T2('hier −2/12 ≈ −0,17 · cel ≈ −0,06', 'here −2/12 ≈ −0.17 · cell ≈ −0.06'), C.muted, 24)}</g>`;
           // nucleosoom als toroïdale (linkshandige) supercoil
           const k = ease(sub(p, .35, .6));
-          ann += `<g opacity="${f1(k)}">${box(960, 580, 480, 130)}<ellipse cx="1060" cy="645" rx="55" ry="45" fill="${C.histone}" opacity=".6"/>
+          nucOp = k;   // opacity op de hotspotgroep zelf, zodat de engine hem pas klikbaar maakt als hij zichtbaar is
+          nucpic += `<g>${box(960, 580, 480, 130)}<ellipse cx="1060" cy="645" rx="55" ry="45" fill="${C.histone}" opacity=".6"/>
             <path d="M985,630 C1000,580 1120,580 1125,630 C1130,680 1000,695 995,655 C990,615 1100,600 1135,615" stroke="${C.dna}" stroke-width="7" fill="none"/>
             ${txt(1150, 632, T2('nucleosoom', 'nucleosome'), '#fff', 26, 'start', 700)}${txt(1150, 672, T2('linkshandig · ΔLk ≈ −1', 'left-handed · ΔLk ≈ −1'), C.muted, 24, 'start')}</g>`;
         }
         if (step === 5) {
           const xs = X0 + (X1 - X0) * st.sp;
-          enz += `<g><ellipse cx="${f1(xs)}" cy="${Y0}" rx="70" ry="58" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>${txt(xs, Y0 + 7, 'Pol II', '#fff', 22)}
+          pol += `<g><ellipse cx="${f1(xs)}" cy="${Y0}" rx="70" ry="58" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>${txt(xs, Y0 + 7, 'Pol II', '#fff', 22)}
             <path d="M${f1(xs + 30)},${Y0 - 70} h70" stroke="${C.prot}" stroke-width="4" marker-end="url(#arrow)"/>
             <path d="M${f1(xs - 20)},${Y0 - 55} C${f1(xs - 60)},${Y0 - 140} ${f1(xs - 140)},${Y0 - 150} ${f1(xs - 200)},${Y0 - 200}" stroke="${C.rna}" stroke-width="6" fill="none"/>${txt(xs - 210, Y0 - 212, 'RNA', C.rna, 20)}</g>`;
           const k = ease(sub(p, .3, .5));
@@ -219,7 +220,7 @@ export default {
             ${box(850, 170, 520, 215, C.prot2)}${txt(1110, 215, T2('Topo-isomerase II (TOP2A/B)', 'Topoisomerase II (TOP2A/B)'), '#b3a4ff', 26, 'middle', 800)}
             ${[T2('knipt beide strengen', 'cuts both strands'), T2('ATP-afhankelijk', 'ATP-dependent'), T2('Lk verandert met 2', 'Lk changes by 2')].map((l, i) => txt(890, 262 + i * 44, '• ' + l, '#e8edf7', 26, 'start', 500)).join('')}`;
         }
-        $('sc-ann').innerHTML = ann; $('sc-enz').innerHTML = enz; $('sc-cnt').innerHTML = cnt;
+        $('sc-ann').innerHTML = ann; $('sc-enz').innerHTML = enz; $('sc-cnt').innerHTML = cnt; $('sc-pol').innerHTML = pol; $('sc-nucpic').innerHTML = nucpic; $('sc-nucpic').setAttribute('opacity', f1(nucOp));
         vis('sc-clamps', step === 8 ? .3 : 1);
         $('sc-clamplbl').setAttribute('opacity', f1(step === 4 ? 1 - sub(p, .05, .25) : step === 5 ? sub(p, 0, .2) : 1));   // 'vast' wijkt voor de kaders in stap 4
         $('sc-rib').setAttribute('opacity', step === 8 ? '.3' : '1');

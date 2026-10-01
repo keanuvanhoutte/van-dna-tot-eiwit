@@ -45,7 +45,7 @@ export default {
   ],
   svg() {
     return svgOpen() + `
-    <g id="md-mrna"></g><g id="md-fac"></g><g id="md-mi"></g><g id="md-nmd"></g>
+    <g data-node="mrnaafbraak" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-nolabel><g id="md-mrna"></g></g><g data-node="initiatie" data-color="#3fb6c9" data-nolabel><g id="md-tli"></g></g><g data-node="ribosoom" data-color="${C.rrna}" data-nolabel><g id="md-rib"></g></g><g id="md-fac"></g><g data-node="rnai" data-color="#e0679a" data-nolabel><g id="md-mi"></g></g><g data-node="nmd" data-color="#e0679a" data-nolabel><g id="md-nmd"></g></g>
     ${hot('mrnaafbraak', T2('mRNA (atlas)', 'mRNA (atlas)'), C.rna, 'md-mA', '../atlas/index.html?id=mrna', true)}
     ${hot('rnai', T2('miRNA → CCR4–NOT', 'miRNA → CCR4–NOT'), '#e0679a', 'md-iA')}
     ${hot('nmd', T2('NMD: snelle route', 'NMD: fast route'), '#e0679a', 'md-nA')}
@@ -83,7 +83,7 @@ export default {
     return {
       update(t, s) {
         const { step, p } = s;
-        let m = '', fa = '';
+        let m = '', fa = '', tli = '', rib = '';
         // staartlengte en PABPC1-aantal
         const dead = step < 2 ? 0 : step === 2 ? ease(sub(p, .15, .9)) : 1;
         const tail = lerp(X.pa[1], X.pa[0] + 26, dead);
@@ -131,12 +131,12 @@ export default {
 
         // translatiemachine: eIF4E/4G, ribosomen, gesloten lus
         if (step <= 3) {
-          fa += prot(X.cap + 4, Y - 44, 84, 34, 'eIF4E', '#3fb6c9', step < 3 ? 1 : 0, 19);
-          fa += prot(X.cap + 90, Y - 84, 89, 34, 'eIF4G', '#3fb6c9', loopOp, 19);
-          fa += `<path d="M${X.cap + 125},${Y - 84} C${X.cap + 400},${Y - 300} ${PAB[2]},${Y - 280} ${PAB[2]},${Y - 40}" stroke="#7fe0ef" stroke-width="3" fill="none" stroke-dasharray="7 6" opacity="${f1(loopOp)}"/>`;
-          fa += note(800, Y - 250, T2('gesloten lus (eIF4G–PABPC1)', 'closed loop (eIF4G–PABPC1)'), '#7fe0ef', 19, 'middle', step === 0 ? 1 : loopOp * (step === 1 ? 0 : 1));
-          fa += note(PAB[2] + 20, Y - 58, 'PABPC1', '#7fe0ef', 19, 'start', step === 0 ? sub(p, .2, .4) : 0);
-          for (const rx of [400, 580, 760]) fa += ribo(rx, Y + 2, .85, riboOp);
+          tli += prot(X.cap + 4, Y - 44, 84, 34, 'eIF4E', '#3fb6c9', step < 3 ? 1 : 0, 19);
+          tli += prot(X.cap + 90, Y - 84, 89, 34, 'eIF4G', '#3fb6c9', loopOp, 19);
+          tli += `<path d="M${X.cap + 125},${Y - 84} C${X.cap + 400},${Y - 300} ${PAB[2]},${Y - 280} ${PAB[2]},${Y - 40}" stroke="#7fe0ef" stroke-width="3" fill="none" stroke-dasharray="7 6" opacity="${f1(loopOp)}"/>`;
+          tli += note(800, Y - 250, T2('gesloten lus (eIF4G–PABPC1)', 'closed loop (eIF4G–PABPC1)'), '#7fe0ef', 19, 'middle', step === 0 ? 1 : loopOp * (step === 1 ? 0 : 1));
+          tli += note(PAB[2] + 20, Y - 58, 'PABPC1', '#7fe0ef', 19, 'start', step === 0 ? sub(p, .2, .4) : 0);
+          for (const rx of [400, 580, 760]) rib += ribo(rx, Y + 2, .85, riboOp);
         }
         if (step === 1) {
           const k = ease(sub(p, .1, .4));
@@ -159,7 +159,7 @@ export default {
           fa += prot(X.cap + 70, Y + 48, 81, 36, 'DCP2', '#8a5a3a', sub(p, .3, .45), 19) + prot(X.cap + 150, Y + 80, 87, 34, 'DCP1', '#6b4a33', sub(p, .3, .45), 19);
         }
         $('md-mrna').innerHTML = m;
-        $('md-fac').innerHTML = fa;
+        $('md-tli').innerHTML = tli; $('md-rib').innerHTML = rib; $('md-fac').innerHTML = fa;
         setHot(svg, 'md-mA', step === 0 ? [575, Y + 70, 200, 26] : null);
         // hotspots naar miRNA en NMD
         $('md-mi').innerHTML = step === 2 ? prot(1260, Y + 110, 160, 36, 'miRNA·AGO2', '#e0679a', sub(p, .5, .7), 19) : '';

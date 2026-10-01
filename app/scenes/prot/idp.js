@@ -101,10 +101,11 @@ export default {
     </g>
     <g id="id-tail"></g>
     <g id="id-a"></g>
-    <g id="id-seqB">${seqB}</g>
+    <g id="id-seqB" data-node="primair" data-color="${C.chain}" data-nolabel>${seqB}</g>
     <g id="id-seq"></g>
     <g id="id-plot">${plot}</g>
     <g id="id-c"></g>
+    <g data-node="gpcr" data-color="${C.prot}" data-nolabel><g id="id-pka"></g></g>
     ${cards}
     </svg>`;
   },
@@ -148,7 +149,7 @@ export default {
         $('id-seqB').setAttribute('opacity', step <= 2 ? '1' : step === 3 ? f1(1 - sub(p, 0, .06)) : '0');
 
         /* ---------- paneel C: CREB-KID + KIX ---------- */
-        let c = '';
+        let c = '', pka = '';
         if (step >= 4 && step <= 5) {
           c += enz(KIX[0], KIX[1] + 20, 150, 125, '', { col: C.prot, fillOp: .25 }) + T(KIX[0], KIX[1] + 60, T2('KIX-domein (CBP)', 'KIX domain (CBP)'), { size: 24, col: '#c9b8ff', w: 700 });
           const phK = step === 4 ? sub(p, .45, .7) : 1;
@@ -166,9 +167,9 @@ export default {
           c += `<circle cx="${f1(sp[0])}" cy="${f1(sp[1])}" r="16" fill="${CLASSCOL.p}" stroke="#0a1224" stroke-width="2"/>` + T(sp[0], sp[1] + 5, 'S', { size: 14, col: '#0a1224', halo: false, w: 800 });
           c += phos(sp[0] + 20, sp[1] - 28, 15, phK);
           if (step === 4) {
-            c += enz(3780, 180, 90, 40, 'PKA', { fs: 22, op: sub(p, .15, .3) * (1 - sub(p, .8, 1)), fillOp: .5 }) + tag(3920, 150, 'ATP → ADP', '#5fd3e6', { fs: 19, op: sub(p, .35, .5) * (1 - sub(p, .8, 1)) });
+            pka += enz(3780, 180, 90, 40, 'PKA', { fs: 22, op: sub(p, .15, .3) * (1 - sub(p, .8, 1)), fillOp: .5 }) + tag(3920, 150, 'ATP → ADP', '#5fd3e6', { fs: 19, op: sub(p, .35, .5) * (1 - sub(p, .8, 1)) });
             c += T(3620, 650, T2('KID van CREB: ongeordend', 'KID of CREB: disordered'), { size: 22, col: IDC });
-            c += T(sp[0] + 60, sp[1] - 60, 'Ser133-P', { size: 20, col: '#ff6b6b', op: phK, anchor: 'start' });
+            pka += T(sp[0] + 60, sp[1] - 60, 'Ser133-P', { size: 20, col: '#ff6b6b', op: phK, anchor: 'start' });
           }
           if (step === 5) {
             c += T(4300, 180, fold < .5 ? T2('1. ontmoetingscomplex: los, niet-specifiek', '1. encounter complex: loose, non-specific') : T2('2. gevouwen: twee helices (αA, αB)', '2. folded: two helices (αA, αB)'), { size: 22, col: fold < .5 ? '#c9d2e4' : IDC, op: sub(p, .2, .35) });
@@ -176,7 +177,7 @@ export default {
             c += T(4300, 760, T2('→ CBP wordt gerekruteerd: CREB-doelgenen aan', '→ CBP is recruited: CREB target genes on'), { size: 20, col: C.text, op: sub(p, .85, .97) });
           }
         }
-        $('id-c').innerHTML = c;
+        $('id-c').innerHTML = c; $('id-pka').innerHTML = pka;   // PKA (cAMP-route) is klikbaar
         /* ---------- paneel D ---------- */
         $('id-row2').setAttribute('opacity', f1(step === 7 ? ease(sub(p, .1, .5)) : step > 7 ? 1 : 0));
       },

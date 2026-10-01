@@ -37,10 +37,11 @@ export default {
   ],
   svg() {
     return svgOpen() + `
-    <g id="pr-cod"></g>
+    <g data-node="codon" data-color="${C.rna}" data-nolabel><g id="pr-cod"></g></g>
     <g id="pr-grid"></g>
     <g id="pr-fasta"></g>
     <g id="pr-extra"></g>
+    <g data-node="mutaties" data-color="${CLASSCOL.h}" data-nolabel><g id="pr-mut"></g></g>
     <g id="pr-hs-aa" data-node="aminozuren" data-color="${CLASSCOL.h}" data-label="${T2('De 20 aminozuren', 'The 20 amino acids')}">
       <rect x="170" y="760" width="400" height="52" rx="26" fill="rgba(127,220,106,.12)" stroke="${CLASSCOL.h}"/>
       ${txt(370, 795, T2('Wat betekent elke letter?', 'What does each letter mean?'), CLASSCOL.h, 24)}
@@ -161,7 +162,7 @@ export default {
           const ann = [['sp', 'Swiss-Prot'], ['P68871', T2('accessie', 'accession')], ['OS', T2('organisme', 'organism')], ['GN', T2('gen', 'gene')]];
           fa += `<text x="800" y="160" text-anchor="middle" font-size="24" font-family="Inter" font-weight="600" opacity="${f1(k)}">` + ann.map(([a, b], i) => `<tspan fill="#ffc247" font-family="JetBrains Mono" font-weight="700">${a}</tspan><tspan fill="#c3cde2"> = ${b}${i < ann.length - 1 ? '  ·  ' : ''}</tspan>`).join('') + '</text>';
         }
-        $('pr-cod').innerHTML = cod; $('pr-grid').innerHTML = grid; $('pr-fasta').innerHTML = fa; $('pr-extra').innerHTML = ex;
+        $('pr-cod').innerHTML = cod; $('pr-grid').innerHTML = grid; $('pr-fasta').innerHTML = fa; $('pr-extra').innerHTML = step === 5 ? '' : ex; $('pr-mut').innerHTML = step === 5 ? ex : '';
       },
     };
   },

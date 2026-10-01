@@ -69,7 +69,7 @@ export default {
       <path id="pr-s2" stroke="${C.dna2}" stroke-width="6" fill="none" stroke-linecap="round"/>
     </g>
     <g id="pr-elem"></g>
-    <g id="pr-rna"></g>
+    <g data-node="rnaprocessing" data-nolabel data-color="${C.rna}"><g id="pr-rna"></g></g>
     <g id="pr-gtf"></g>
     <g data-node="rnapol" data-color="${G.pol}" data-label="${T2('RNA-polymerase II (3D)', 'RNA polymerase II (3D)')}"><g id="pr-pol"></g><circle id="pr-polA" data-anchor="rnapol" r="1" fill="none"/></g>
     <g data-node="genregulatie" data-color="${G.med}" data-label="${T2('Mediator ← activatoren', 'Mediator ← activators')}"><g id="pr-med"></g><circle id="pr-medA" data-anchor="genregulatie" r="1" fill="none"/></g>

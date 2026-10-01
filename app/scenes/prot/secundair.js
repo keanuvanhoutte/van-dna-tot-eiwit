@@ -42,6 +42,7 @@ export default {
     return svgOpen() + `
     <g id="se-under"></g>
     <g id="se-mol"></g>
+    <g data-node="ubiquitine" data-color="#ffd166" data-nolabel><g id="se-ub"></g></g>
     <g id="se-lab"></g>
     <rect x="${PX}" y="110" width="${PW}" height="610" rx="18" fill="#0d1426" stroke="#2a3550" stroke-width="2"/>
     <g id="se-panel"></g>
@@ -290,7 +291,8 @@ export default {
             return s;
           });
         }
-        $('se-mol').innerHTML = mol; $('se-lab').innerHTML = lab; $('se-under').innerHTML = under; $('se-under').setAttribute('opacity', f1(fade));
+        const whole = step === 0 || step === 9;   // het volledige ubiquitine-molecuul is klikbaar
+        $('se-mol').innerHTML = whole ? '' : mol; $('se-ub').innerHTML = whole ? mol : ''; $('se-lab').innerHTML = lab; $('se-under').innerHTML = under; $('se-under').setAttribute('opacity', f1(fade));
         $('se-mol').setAttribute('opacity', f1(fade)); $('se-lab').setAttribute('opacity', f1(fade));
       },
     };

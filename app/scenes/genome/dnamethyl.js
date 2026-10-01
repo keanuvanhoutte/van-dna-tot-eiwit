@@ -104,7 +104,7 @@ export default {
       }
       return g;
     };
-    prom += gene(750, false, T2('gen A', 'gene A')) + gene(840, true, T2('gen B', 'gene B'));
+    prom += `<g data-node="gen" data-color="${C.dna}" data-nolabel>` + gene(750, false, T2('gen A', 'gene A')) + gene(840, true, T2('gen B', 'gene B')) + `</g>`;
     prom += txt(540, 718, T2('CpG-eiland (promoter)', 'CpG island (promoter)'), C.trna, 19);
     prom += `<g data-node="genregulatie" data-color="${C.ok}" data-label="${T2('Actief gen → genregulatie', 'Active gene → gene regulation')}"><ellipse cx="760" cy="738" rx="50" ry="26" fill="rgba(155,123,255,.4)" stroke="${C.prot}" stroke-width="2"/>${txt(760, 745, 'Pol II', '#fff', 19, 'middle', 700)}` +
       `<path d="M800,735 q30,-30 60,-8" stroke="${C.rna}" stroke-width="4" fill="none" marker-end="url(#arrow)"/>${txt(1440, 712, T2('AAN', 'ON'), C.ok, 22, 'end', 800)}<circle data-anchor="genregulatie" cx="760" cy="712" r="1" fill="none"/></g>`;
@@ -113,7 +113,7 @@ export default {
       `<path d="M780,815 l30,30 M810,815 l-30,30" stroke="${C.danger}" stroke-width="5"/>${txt(1440, 876, T2('UIT', 'OFF'), C.danger, 22, 'end', 800)}</g>`;
 
     return svgOpen() + `
-    <g id="dm-dna"></g>
+    <g id="dm-dna" data-node="dnahelix" data-color="${C.dna}" data-nolabel></g>
     <g id="dm-enz"></g>
     <g id="dm-cpg"></g>
     <g data-node="nucleotide" data-color="${BASE.C}" data-label="${T2('Nucleotide (cytosine)', 'Nucleotide (cytosine)')}" id="dm-chem">${chem}<circle data-anchor="nucleotide" cx="1180" cy="300" r="1" fill="none"/></g>
@@ -181,6 +181,8 @@ export default {
         $('dm-prom').setAttribute('opacity', f1(step === 5 ? ease(sub(p, 0, .25)) : step === 6 ? 1 - ease(sub(p, 0, .05)) : 0));
         $('dm-rep').setAttribute('opacity', step === 3 || step === 4 ? 1 : 0);
         $('dm-sum').setAttribute('opacity', step === 7 ? ease(sub(p, .1, .4)) : 0);
+        // onzichtbare panelen (opacity < 0,1) mogen geen klikken opvangen van wat eronder ligt
+        for (const id of ['dm-tet', 'dm-prom', 'dm-sum']) $(id).style.pointerEvents = +$(id).getAttribute('opacity') < .1 ? 'none' : '';
       },
     };
   },

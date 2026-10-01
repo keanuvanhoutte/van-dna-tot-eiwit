@@ -111,13 +111,13 @@ export default {
       <path d="M${FCS[1][0] + 60},${FCS[1][1] - 60} L720,90 M${FCS[1][0] + 60},${FCS[1][1] + 60} L720,420" stroke="#fff" stroke-width="1.5" stroke-dasharray="6 5" opacity=".4"/>
     </g>
     <g id="nl-envelope">
-      <path d="M40,830 Q420,760 820,830" stroke="#7aa0d8" stroke-width="5" fill="none"/><path d="M40,846 Q420,776 820,846" stroke="#7aa0d8" stroke-width="5" fill="none"/>
-      <rect x="395" y="770" width="46" height="70" rx="12" fill="#0b1427" stroke="${C.prot}" stroke-width="3"/>
+      <g data-node="kernimport" data-color="${C.prot}" data-nolabel><path d="M40,830 Q420,760 820,830" stroke="#7aa0d8" stroke-width="5" fill="none"/><path d="M40,846 Q420,776 820,846" stroke="#7aa0d8" stroke-width="5" fill="none"/>
+      <rect x="395" y="770" width="46" height="70" rx="12" fill="#0b1427" stroke="${C.prot}" stroke-width="3"/></g>
       ${txt(560, 770, T2('kernenvelop · kernporie', 'nuclear envelope · pore'), C.muted, 15, 'start')}
       ${txt(140, 862, T2('cytoplasma ↓', 'cytoplasm ↓'), C.muted, 15)}
     </g>
     <g data-node="ribogenese" data-color="${C.rrna}" data-label="${T2('Ribosoombiogenese', 'Ribosome biogenesis')}"><g id="nl-exp"></g><circle data-anchor="ribogenese" cx="560" cy="640" r="1" fill="none"/></g>
-    <g data-node="transcriptie" data-color="${C.prot}" data-label="${T2('Transcriptie (vgl. Pol II)', 'Transcription (cf. Pol II)')}" data-nolabel id="nl-mil">${mil}<g id="nl-tree"></g></g>
+    <g data-node="polymerasen" data-color="${C.prot}" data-label="${T2('RNA-polymerase I', 'RNA polymerase I')}" data-nolabel id="nl-mil">${mil}<g id="nl-tree"></g></g>
     <g data-node="ribosoom" data-color="${C.rrna}" data-label="${T2('Ribosoom', 'Ribosome')}" id="nl-pre">${pre}<circle data-anchor="ribosoom" cx="1250" cy="790" r="1" fill="none"/></g>
     </svg>`;
   },

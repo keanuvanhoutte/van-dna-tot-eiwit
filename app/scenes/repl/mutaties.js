@@ -77,6 +77,7 @@ export default {
     <g id="mu-extra"></g>
     <g data-node="quaternair" data-color="${C.prot}" data-label="${T2('Hemoglobine (quaternaire structuur)', 'Haemoglobin (quaternary structure)')}"><g id="mu-hb"></g><circle id="mu-hba" data-anchor="quaternair" data-pos="below" cx="-99" cy="-99" r="1" fill="none"/></g>
     <g data-node="nmd" data-color="${C.rna}" data-label="${T2('NMD in detail', 'NMD in detail')}"><g id="mu-nmd"></g><circle id="mu-nmda" data-anchor="nmd" data-pos="below" cx="-99" cy="-99" r="1" fill="none"/></g>
+    <g data-node="ribosoom" data-nolabel data-color="${C.rrna}"><g id="mu-rib"></g></g>
     <g data-node="herstel" data-color="${C.ok}" data-label="${T2('DNA-herstel', 'DNA repair')}"><g id="mu-her"></g><circle id="mu-hera" data-anchor="herstel" data-pos="below" cx="-99" cy="-99" r="1" fill="none"/></g>
     <g data-node="replisoom" data-color="${C.prot}" data-label="${T2('Replisoom (proeflezen)', 'Replisome (proofreading)')}"><g id="mu-rep"></g><circle id="mu-repa" data-anchor="replisoom" data-pos="below" cx="-99" cy="-99" r="1" fill="none"/></g>
     </svg>`;
@@ -124,7 +125,7 @@ export default {
     return {
       update(t, s) {
         const { step, p } = s;
-        let r = '', ex = '', hb = '', nm = '', her = '', rep = '';
+        let r = '', ex = '', hb = '', nm = '', her = '', rep = '', rib = '';
         const effect = (i, nl, en, col, op) => tag(cx(i), YA + 64, T2(nl, en), col, 17, 'middle', op);
 
         if (step === 0 || step === 1) {
@@ -185,7 +186,7 @@ export default {
           nm += `<g transform="translate(${ptc} ${Y})"><path d="M-10,-24 L10,-24 L24,-10 L24,10 L10,24 L-10,24 L-24,10 L-24,-10Z" fill="${C.danger}"/>${txt(0, 5, 'UAG', '#fff', 13, 'middle', 700)}</g>`;
           // ribosoom
           const rx = lerp(x0 + 20, ptc, clamp(kR * 1.4));
-          nm += `<g opacity="${f1(1 - kD)}"><ellipse cx="${f1(rx)}" cy="${Y - 30}" rx="44" ry="26" fill="${C.rrna}" fill-opacity=".35" stroke="${C.rrna}" stroke-width="3"/><ellipse cx="${f1(rx)}" cy="${Y + 22}" rx="34" ry="16" fill="${C.rrna}" fill-opacity=".35" stroke="${C.rrna}" stroke-width="3"/></g>`;
+          rib = `<g opacity="${f1(k * (1 - kD * .85) * (1 - kD))}"><ellipse cx="${f1(rx)}" cy="${Y - 30}" rx="44" ry="26" fill="${C.rrna}" fill-opacity=".35" stroke="${C.rrna}" stroke-width="3"/><ellipse cx="${f1(rx)}" cy="${Y + 22}" rx="34" ry="16" fill="${C.rrna}" fill-opacity=".35" stroke="${C.rrna}" stroke-width="3"/></g>`;
           nm += `<g opacity="${f1(kU * (1 - kD))}"><rect x="${ptc - 38}" y="${Y - 114}" width="76" height="34" rx="10" fill="${C.prot2}"/>${txt(ptc, Y - 91, 'UPF1', '#fff', 17, 'middle', 700)}</g>`;
           nm += `<g opacity="${f1(kU * (1 - kD))}">${seg(ptc + 34, Y - 94, e2 - 60, Y - 50, C.prot2, 3, 1, 'stroke-dasharray="6 5"')}</g>`;
           nm += '</g>';
@@ -225,7 +226,7 @@ export default {
         if (step !== 5) place('mu-nmda', -99, -99);
         if (step !== 7) { place('mu-hera', -99, -99); place('mu-repa', -99, -99); }
         place('mu-coa', cx(step === 4 || step === 6 ? 12 : 1), YM - 30 - 0);
-        $('mu-rows').innerHTML = r; $('mu-extra').innerHTML = ex; $('mu-hb').innerHTML = hb; $('mu-nmd').innerHTML = nm; $('mu-her').innerHTML = her; $('mu-rep').innerHTML = rep;
+        $('mu-rows').innerHTML = r; $('mu-extra').innerHTML = ex; $('mu-hb').innerHTML = hb; $('mu-nmd').innerHTML = nm; $('mu-her').innerHTML = her; $('mu-rep').innerHTML = rep; $('mu-rib').innerHTML = rib;
       },
     };
   },

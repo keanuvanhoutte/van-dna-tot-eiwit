@@ -64,6 +64,7 @@ export default {
   ],
   svg() {
     return svgOpen() + `
+    <g data-node="rt" data-nolabel data-color="${C.prot}"><g id="tl-tert"></g></g>
     <g id="tl-main"></g>
     <g id="tl-er"></g>
     <g id="tl-tlp"></g>
@@ -85,7 +86,7 @@ export default {
         /* ---------- hoofdtekening: lettermodel van het uiteinde (stappen 0, 3–7) ---------- */
         const showMain = step === 0 || (step >= 3 && step <= 7) || (step === 8 && p < .25);
         const mainOp = step === 8 ? 1 - sub(p, 0, .25) : step === 0 ? 1 : 1;
-        let m = '';
+        let m = '', tertS = '';
         const lo = step === 7 ? 1 - sub(p, 0, .2) : step === 8 ? 0 : 1;   // letters weg in het brede shelterinbeeld
         if (showMain) {
           // hoeveel nt zijn er toegevoegd?
@@ -130,7 +131,7 @@ export default {
             const cx = xOf(jStart + 5), cy = (YT + YB + BH) / 2 + 40 + (1 - kIn) * 90;
             const tert = `<g opacity="${f1(kIn)}"><ellipse cx="${f1(cx)}" cy="${f1(cy)}" rx="250" ry="140" fill="${C.prot}" fill-opacity=".14" stroke="${C.prot}" stroke-width="3"/>` +
               txt(cx + 200, cy + 60, 'TERT', '#fff', 22, 'middle', 700) + '</g>';
-            m = tert + m;
+            tertS = tert;
             // hTR: matrijs + (gestippeld) de rest van het 451-nt RNA
             let r = '';
             for (let j = 0; j < 11; j++) r += nt(xOf(jStart + j), yR, TEMPL[j], 22, BH);
@@ -166,6 +167,7 @@ export default {
             m += tag(760, 190, T2('shelterin (6 eiwitten)', 'shelterin (6 proteins)'), C.text, 28, 'middle', sub(p, .55, .7));
           }
         } else place('tl-rta', -99, -99);
+        $('tl-tert').innerHTML = tertS ? `<g opacity="${f1(mainOp)}">${tertS}</g>` : '';
         $('tl-main').innerHTML = `<g opacity="${f1(mainOp)}">${m}</g>`;
         $('tl-rt').innerHTML = step >= 3 && step <= 5 ? `<rect x="${f1(+$('tl-rta').getAttribute('cx') - 60)}" y="${f1(+$('tl-rta').getAttribute('cy') - 20)}" width="120" height="40" fill="transparent"/>` : '';
 

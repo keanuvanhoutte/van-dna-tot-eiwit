@@ -66,7 +66,7 @@ export default {
     <g data-node="lnp" data-color="${LIP}" data-label="${T2('mRNA-lipidenanodeeltje', 'mRNA lipid nanoparticle')}">
       <g id="en-lnp"></g><circle id="en-lnp-a" data-anchor="lnp" data-pos="below" cx="${PX + 70}" cy="330" r="1" fill="none"/>
     </g>
-    <g id="en-ves"></g>
+    <g id="en-ves" pointer-events="none"></g>
     <g data-node="cel" data-color="#8d6cc4" data-label="${T2('Lysosoom · afbraak', 'Lysosome · degradation')}" id="en-lyso" opacity="0">
       <circle data-anchor="cel" data-pos="below" cx="${LY[0]}" cy="${LY[1] + LY[2] + 10}" r="1" fill="none"/>
       <g id="en-lyso-body"></g>

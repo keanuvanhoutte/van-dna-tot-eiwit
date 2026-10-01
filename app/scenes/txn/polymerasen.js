@@ -51,7 +51,7 @@ export default {
       s += '</g>';
     });
     s += `<g id="pc-shared">` + txt(800, 385, '', C.muted, 14) + '</g>';
-    return svgOpen() + s + `<g id="pc-prod"></g><g id="pc-p3"></g><g id="pc-ama"></g><g id="pc-shr"></g>
+    return svgOpen() + s + `<g data-node="ribogenese" data-nolabel data-color="${C.rna}"><g id="pc-prod0"></g></g><g id="pc-prod"></g><g id="pc-p3"></g><g id="pc-ama"></g><g id="pc-shr"></g>
       <g data-node="adeno" data-color="${C.tdna}" data-label="${T2('Adenovirus: VA-RNA\'s', 'Adenovirus: VA RNAs')}"><g id="pc-va"></g><circle id="pc-vaA" data-anchor="adeno" r="1" fill="none"/></g>
       <g data-node="promoter" data-color="${C.prot}" data-label="${T2('Pol II-promoter', 'Pol II promoter')}"><g id="pc-p2"></g><circle id="pc-p2A" data-anchor="promoter" r="1" fill="none"/></g>
       </svg>`;
@@ -78,28 +78,28 @@ export default {
           txt(800, 523, T2('grijs = 5 gedeelde subeenheden (Rpb5, 6, 8, 10, 12)', 'grey = 5 shared subunits (Rpb5, 6, 8, 10, 12)'), C.text, 21) + '</g>' : '';
 
         // producten
-        let pr = '';
+        let pr = '', pr0 = '';
         const showProd = step >= 1 && step <= 3 ? step - 1 : -1;
         if (showProd === 0) {
           const x = COLX[0], y = 470;
           const cut = ease(sub(p, .35, .75));
-          pr += txt(x, y - 16, T2('47S-voorloper (pre-rRNA)', '47S precursor (pre-rRNA)'), C.rna, 17);
+          pr0 += txt(x, y - 16, T2('47S-voorloper (pre-rRNA)', '47S precursor (pre-rRNA)'), C.rna, 17);
           // segmenten: 5'ETS · 18S · ITS1 · 5.8S · ITS2 · 28S · 3'ETS (schematisch)
           const seg = [[60, 0, ''], [50, 1, '18S'], [22, 0, ''], [12, 1, '5,8S'], [24, 0, ''], [120, 1, '28S'], [12, 0, '']];
           let cx = x - 150;
           seg.forEach(([w, keep, lab], k) => {
             const gap = cut * 14 * k;
             const yy = y + (keep ? cut * 50 : cut * 20);
-            pr += `<rect x="${f1(cx + gap)}" y="${f1(yy)}" width="${w}" height="12" rx="5" fill="${C.rna}" opacity="${f1(keep ? 1 : 1 - cut * .8)}"/>`;
-            if (keep && cut > .5) pr += txt(cx + gap + w / 2, yy + 38, L({ nl: lab, en: lab.replace(',', '.') }), C.rna, 16);
+            pr0 += `<rect x="${f1(cx + gap)}" y="${f1(yy)}" width="${w}" height="12" rx="5" fill="${C.rna}" opacity="${f1(keep ? 1 : 1 - cut * .8)}"/>`;
+            if (keep && cut > .5) pr0 += txt(cx + gap + w / 2, yy + 38, L({ nl: lab, en: lab.replace(',', '.') }), C.rna, 16);
             cx += w;
           });
-          pr += txt(x, y + 118, T2('rDNA: honderden kopieën in tandem', 'rDNA: hundreds of tandem copies'), C.muted, 16) + txt(x, y + 142, T2('(5S rRNA komt van Pol III)', '(5S rRNA comes from Pol III)'), C.muted, 15);
+          pr0 += txt(x, y + 118, T2('rDNA: honderden kopieën in tandem', 'rDNA: hundreds of tandem copies'), C.muted, 16) + txt(x, y + 142, T2('(5S rRNA komt van Pol III)', '(5S rRNA comes from Pol III)'), C.muted, 15);
         }
         if (showProd >= 1) {
           PROD[showProd].forEach((it, k) => { pr += `<g opacity="${f1(sub(p, .1 + k * .1, .25 + k * .1))}">` + item(COLX[showProd], 468 + k * 30, it) + '</g>'; });
         }
-        $('pc-prod').innerHTML = pr;
+        $('pc-prod').innerHTML = pr; $('pc-prod0').innerHTML = pr0;
         // VA-RNA (stap 3) en Pol II-promoterknop (stap 2)
         const va = step === 3 ? sub(p, .6, .75) : 0;
         $('pc-va').innerHTML = va > .01 ? `<g opacity="${f1(va)}">` + item(COLX[2], 468 + 5 * 30, T2('adenovirus-VA-RNA\'s', 'adenovirus VA RNAs'), C.tdna) + '</g>' : '';

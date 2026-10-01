@@ -102,10 +102,12 @@ export default {
     // ---- inzet centromeer ----
     let cen = panel(860, 400, 680, 300, T2('Centromeer', 'Centromere'), '#2a3a60', 20);
     // α-satelliet-array met CENP-A-nucleosomen
+    cen += `<g data-node="nucleosoom" data-color="${C.histone}" data-nolabel>`;
     for (let i = 0; i < 9; i++) {
       const x = 930 + i * 58, nu = nucleo(x, 590, 20, { rot: -90 + i * 25, w: 5, core: i % 3 === 1 ? C.histone : '#c78bf0' });
       cen += nu.svg;
     }
+    cen += `</g>`;
     cen += `<path d="M900,600 L1450,600" stroke="${C.dna}" stroke-width="4" opacity=".0"/>`;
     cen += `<rect x="920" y="500" width="500" height="40" rx="20" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>` + txt(1170, 526, T2('kinetochoor', 'kinetochore'), '#fff', 18);
     for (let i = 0; i < 7; i++) cen += `<line x1="${960 + i * 70}" y1="500" x2="${1000 + i * 55}" y2="440" stroke="#7fdc6a" stroke-width="7" stroke-linecap="round"/>`;
@@ -141,7 +143,7 @@ export default {
       <g data-node="telomeren" data-color="${C.rna}" data-label="${T2('Telomeren', 'Telomeres')}">${telo}<circle data-anchor="telomeren" cx="${BX + 110}" cy="${top + len + 5}" r="1" fill="none"/></g>
       <g id="cs-coh"></g>
       <g id="cs-kin"></g>
-      <g id="cs-loops" opacity="0">${loops}</g>
+      <g id="cs-loops" data-node="chromatine" data-color="${C.dna2}" data-nolabel opacity="0">${loops}</g>
       <g id="cs-lab" font-family="Inter">
         ${txt(BX - 140, BC - 95, T2('p-arm', 'p arm'), C.text, 20)}${txt(BX - 140, BC + 120, T2('q-arm', 'q arm'), C.text, 20)}
         <path d="M${BX - 110},${BC} L${BX - 45},${BC}" stroke="${C.muted}" stroke-width="2" marker-end="url(#arrow)"/>${txt(BX - 118, BC + 6, T2('centromeer', 'centromere'), C.muted, 18, 'end')}

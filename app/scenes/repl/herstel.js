@@ -107,11 +107,13 @@ export default {
       frame('nhej', 'NHEJ · niet-homologe eindverbinding', 'NHEJ · non-homologous end joining', '#ff8a3d', 'NHEJ') +
       frame('hr', 'HR · homologe recombinatie', 'HR · homologous recombination', '#9b7bff', 'HR') +
       frame('dis', 'Als herstel faalt', 'When repair fails', '#ff6b6b', T2('Als herstel faalt', 'When repair fails')) + `
+    <g data-node="dnahelix" data-nolabel data-color="${C.dna}"><g id="hd-ber" transform="translate(0 0)"></g><g id="hd-ner" transform="translate(800 0)"></g><g id="hd-mmr" transform="translate(1600 0)"></g><g id="hd-nhej" transform="translate(0 450)"></g><g id="hd-hr" transform="translate(800 450)"></g></g>
     <g id="h-ber" transform="translate(0 0)"></g>
     <g id="h-ner" transform="translate(800 0)"></g>
     <g id="h-mmr" transform="translate(1600 0)"></g>
     <g id="h-nhej" transform="translate(0 450)"></g>
     <g id="h-hr" transform="translate(800 450)"></g>
+    <g data-node="ssdna" data-nolabel data-color="${RPA}"><g id="hs-ner" transform="translate(800 0)"></g><g id="hs-hr" transform="translate(800 450)"></g></g>
     <g data-node="mutaties" data-nolabel data-color="${C.danger}" data-label="${T2('Mutaties', 'Mutations')}"><g id="h-dis" transform="translate(1600 450)"></g><circle id="h-mua" data-anchor="mutaties" cx="-99" cy="-99" r="1" fill="none"/></g>
     <g data-node="replisoom" data-color="${C.prot}" data-label="${T2('Replisoom (proeflezen)', 'Replisome (proofreading)')}"><circle id="h-rpa" data-anchor="replisoom" cx="-99" cy="-99" r="1" fill="none"/><rect id="h-rpr" x="-99" y="-99" width="1" height="1" fill="transparent"/></g>
     <g data-node="integratie" data-color="${C.tdna}" data-label="${T2('Virale integratie gebruikt herstel', 'Viral integration uses repair')}"><circle id="h-ina" data-anchor="integratie" cx="-99" cy="-99" r="1" fill="none"/><rect id="h-inr" x="-99" y="-99" width="1" height="1" fill="transparent"/></g>
@@ -139,6 +141,7 @@ export default {
           $('hft-' + k).setAttribute('opacity', f1(inT));
           $('hfs-' + k).setAttribute('opacity', f1(ovT));
           const cg = $('h-' + k); if (cg) cg.setAttribute('opacity', f1(o));
+          for (const pre of ['hd-', 'hs-']) { const e = $(pre + k); if (e) e.setAttribute('opacity', f1(o)); }
         }
 
         /* ================= BER ================= */
@@ -153,7 +156,7 @@ export default {
           const fixed = kPol > .5;
           const over = { [U]: { top: fixed ? 'C' : 'U' } };
           const skipTop = new Set(kCut > .5 && !fixed ? [U] : []);
-          g += ladder(Y, GAP, { over, skipTop, cTop: i => (i === U && kApe > .5 && kLig < .5) ? null : C.dna });
+          const dna = ladder(Y, GAP, { over, skipTop, cTop: i => (i === U && kApe > .5 && kLig < .5) ? null : C.dna });
           // uitgeklapte U
           if (step <= 1) {
             const ux = xi(U), uy = Y - GAP / 2 - kFlip * 50;
@@ -170,7 +173,7 @@ export default {
           g += tag(400, 405, T2('één beschadigde base', 'one damaged base'), C.text, 36, 'middle', ovT);
           if (step === 1) g += tag(400, 405, T2('C → U door deaminatie (U paart met A → mutatie!)', 'C → U by deamination (U pairs with A → mutation!)'), C.muted, 18, 'middle', sub(p, .12, .25));
           if (step === 2) g += tag(400, 405, T2('juiste C terug tegenover G', 'correct C back opposite G'), C.ok, 19, 'middle', sub(p, .6, .75));
-          $('h-ber').innerHTML = g;
+          $('h-ber').innerHTML = g; $('hd-ber').innerHTML = dna;
         }
 
         /* ================= NER ================= */
@@ -188,7 +191,7 @@ export default {
           const removed = i => i >= e0 && i <= e1 && kOut > .5 && kFill < (i - e0 + 1) / (e1 - e0 + 2);
           const skipTop = new Set(); for (let i = e0; i <= e1; i++) if (removed(i)) skipTop.add(i);
           const bend = i => (step === 3 && kOpen < .1) || all || step < 3 ? 0 : 0;
-          g += ladder(Y, GAP, { top, skipTop, open, bend, cTop: i => removed(i) ? null : (i >= e0 && i <= e1 && step === 4 && kFill > 0 ? NEW : C.dna) });
+          const dna = ladder(Y, GAP, { top, skipTop, open, bend, cTop: i => removed(i) ? null : (i >= e0 && i <= e1 && step === 4 && kFill > 0 ? NEW : C.dna) });
           // dimeer-markering (op de oorspronkelijke streng, of op het uitgeknipte stuk)
           const dimer = (x, y, op) => `<g opacity="${f1(op)}"><rect x="${x - 26}" y="${y - 30}" width="${BP + 52}" height="44" rx="10" fill="none" stroke="${C.danger}" stroke-width="3"/>${OVERVIEW ? '' : txt(x + BP / 2, y - 36, 'T^T', C.danger, 16, 'middle', 700, 'JetBrains Mono')}</g>`;
           if (kOut < .01) g += dimer(xi(D), Y - GAP / 2 - open(D) - 6, step >= 3 || all ? 1 : 1);
@@ -203,7 +206,7 @@ export default {
           g += prot(xi(D) + 15, Y + 125, 110, 30, C.prot3, 'XPC–RAD23B', 15, step === 3 ? kRec * (1 - sub(p, .6, .72)) : 0);
           g += prot(xi(D) + 190, Y - 110, 90, 30, C.prot, 'TFIIH', 17, step === 3 ? ease(sub(p, .3, .45)) : step === 4 ? 1 - sub(p, .1, .22) : 0);
           g += prot(xi(D) - 150, Y - 120, 56, 26, C.prot2, 'XPA', 15, step === 3 ? ease(sub(p, .5, .65)) : step === 4 ? 1 - sub(p, .1, .22) : 0);
-          g += rpaRow(xi(D) - 90, xi(D) + 120, Y + GAP / 2 + 60, step === 3 ? ease(sub(p, .72, .85)) : step === 4 ? 1 - sub(p, .4, .55) : 0, 40, 13);
+          const rpa = rpaRow(xi(D) - 90, xi(D) + 120, Y + GAP / 2 + 60, step === 3 ? ease(sub(p, .72, .85)) : step === 4 ? 1 - sub(p, .4, .55) : 0, 40, 13);
           g += tag(xi(D) + 150, Y + GAP / 2 + 66, 'RPA', RPA, 16, 'start', step === 3 ? ease(sub(p, .72, .85)) : 0);
           g += prot(xi(e0) - 50, Y - 120, 92, 28, '#e0708f', 'XPF–ERCC1', 14, step === 4 ? ease(sub(p, 0, .1)) * (1 - sub(p, .25, .32)) : 0);
           g += prot(xi(e1) + 60, Y - 120, 56, 28, '#e0708f', 'XPG', 15, step === 4 ? ease(sub(p, 0, .1)) * (1 - sub(p, .25, .32)) : 0);
@@ -211,7 +214,7 @@ export default {
           g += clamp3(xi(e0 + kFill * (e1 - e0)) - 30, Y, 11, 50, PCNA, step === 4 ? ease(sub(p, .55, .6)) * (1 - sub(p, .88, .95)) : 0);
           g += E(46, Y - GAP / 2 + 6, "5'", C.dna) + E(754, Y - GAP / 2 + 6, "3'", C.dna) + E(46, Y + GAP / 2 + 6, "3'", C.dna2) + E(754, Y + GAP / 2 + 6, "5'", C.dna2);
           g += tag(400, 405, T2('UV-dimeer (groot letsel)', 'UV dimer (bulky lesion)'), C.text, 36, 'middle', ovT);
-          $('h-ner').innerHTML = g;
+          $('h-ner').innerHTML = g; $('hd-ner').innerHTML = dna; $('hs-ner').innerHTML = rpa;
         }
 
         /* ================= MMR ================= */
@@ -232,7 +235,7 @@ export default {
           const refilled = i => i >= LO && i <= INC && i >= fillEnd;
           const over = {}; over[M] = { top: 'T', bot: refilled(M) ? 'A' : 'G' };
           const skipBot = new Set(); for (let i = LO; i <= INC; i++) if (gone(i)) skipBot.add(i);
-          g += ladder(Y, GAP, { top: SEQ, over, skipBot, cBot: i => gone(i) || (i === INC + 1 && kN > .5 && kL < .5 && step === 5 && false) ? null : (refilled(i) ? '#8ef0ff' : NEW) });
+          const dna = ladder(Y, GAP, { top: SEQ, over, skipBot, cBot: i => gone(i) || (i === INC + 1 && kN > .5 && kL < .5 && step === 5 && false) ? null : (refilled(i) ? '#8ef0ff' : NEW) });
           if (kL < .5) g += `<circle cx="${xi(NICK) + BP / 2}" cy="${Y + GAP / 2}" r="8" fill="none" stroke="#fff" stroke-width="2.5"/>`;
           if (kN > .1 && kE < .05) g += `<g opacity="${f1(kN)}">${txt(xi(INC) + BP / 2, Y + GAP / 2 + 46, '✂', '#fff', 22)}</g>`;
           if (!refilled(M)) g += `<rect x="${xi(M) - 18}" y="${Y - GAP / 2 - 34}" width="36" height="${GAP + 68}" rx="10" fill="none" stroke="${C.danger}" stroke-width="3"/>`;
@@ -248,7 +251,7 @@ export default {
           g += tag(60, Y + GAP / 2 + 60, T2('nieuwe streng (met onderbreking)', 'new strand (with a nick)'), NEW, 15, 'start', step === 5 ? 1 : 0);
           g += tag(400, 405, T2('replicatiefout (G·T)', 'replication error (G·T)'), C.text, 36, 'middle', ovT);
           if (step === 5) g += tag(400, 410, T2('MMR maakt replicatie nog >100× nauwkeuriger', 'MMR makes replication >100× more accurate'), C.muted, 17, 'middle', sub(p, .88, .96));
-          $('h-mmr').innerHTML = g;
+          $('h-mmr').innerHTML = g; $('hd-mmr').innerHTML = dna;
         }
 
         /* ================= NHEJ ================= */
@@ -266,7 +269,7 @@ export default {
           const left = ladder(Y, GAP, { from: 1, to: B - trimL });
           const right = ladder(Y, GAP, { from: B + trimR, to: N - 1 });
           const shiftR = -((trimL + trimR) * BP) * kJoin;
-          g += `<g transform="translate(${f1(-gapPx / 2)} 0)">${left}</g><g transform="translate(${f1(gapPx / 2 + shiftR)} 0)">${right}</g>`;
+          const dna = `<g transform="translate(${f1(-gapPx / 2)} 0)">${left}</g><g transform="translate(${f1(gapPx / 2 + shiftR)} 0)">${right}</g>`;
           if (kTrim > .2 && kTrim < .9) g += `<g opacity="${f1(1 - kTrim)}">${seg(xi(B - 1) - 35, Y - 50, xi(B - 1) - 35, Y + 50, C.danger, 3)}</g>`;
           const xl = xi(B - 1 - trimL) - gapPx / 2 + BP / 2, xr = xi(B + trimR) + gapPx / 2 + shiftR - BP / 2;
           g += `<g opacity="${f1(kKu * (1 - sub(p, .8, .9)))}"><ellipse cx="${f1(xl - 20)}" cy="${Y}" rx="18" ry="56" fill="none" stroke="#e0708f" stroke-width="7"/><ellipse cx="${f1(xr + 20)}" cy="${Y}" rx="18" ry="56" fill="none" stroke="#e0708f" stroke-width="7"/>${txt(xl - 20, Y + 84, 'Ku70/80', '#e0708f', 15)}${txt(xr + 20, Y + 84, 'Ku70/80', '#e0708f', 15)}</g>`;
@@ -278,14 +281,14 @@ export default {
           const lx = xi(1) - BP / 2 - gapPx / 2 - 24, rx = xi(N - 2) + BP / 2 + gapPx / 2 + shiftR + 24;
           g += E(lx, Y - GAP / 2 + 6, "5'", C.dna) + E(rx, Y - GAP / 2 + 6, "3'", C.dna) + E(lx, Y + GAP / 2 + 6, "3'", C.dna2) + E(rx, Y + GAP / 2 + 6, "5'", C.dna2);
           if (step === 6) g += tag(400, 418, T2('fout-gevoelig · in elke fase van de celcyclus', 'error-prone · in every phase of the cell cycle'), C.muted, 17, 'middle', sub(p, .82, .92));
-          $('h-nhej').innerHTML = g;
+          $('h-nhej').innerHTML = g; $('hd-nhej').innerHTML = dna;
           if (step === 6) { place('h-ina', 640, 450 + 40); box('h-inr', 560, 450 + 20, 160, 40); } else { place('h-ina', -99, -99); box('h-inr', -99, -99, 1, 1); }
           if (step === 6) { place('h-tea', 170, 450 + 40); box('h-ter', 90, 450 + 20, 160, 40); } else { place('h-tea', -99, -99); box('h-ter', -99, -99, 1, 1); }
         }
 
         /* ================= HR (SDSA) ================= */
         {
-          let g = '';
+          let g = '', dna = '', rpa = '';
           const Y1 = 150, Y2 = 330, G = 40, x0 = 70, x1 = 730, bx = 400;
           const k = step === 7 ? p : all ? 0 : 0;
           const kRes = ease(sub(k, .05, .22)), kCoat = ease(sub(k, .22, .38)), kInv = ease(sub(k, .4, .58)), kSyn = sub(k, .58, .76), kBack = ease(sub(k, .78, .88)), kFill = ease(sub(k, .88, .97));
@@ -293,8 +296,8 @@ export default {
           // zusterchromatide (intact, onder)
           const loopUp = 30 * kInv * (1 - kBack);
           const sisTop = [[x0, Y2 - G / 2], [bx - 90, Y2 - G / 2], [bx - 40, Y2 - G / 2 - loopUp], [bx + 150, Y2 - G / 2 - loopUp], [bx + 200, Y2 - G / 2], [x1, Y2 - G / 2]];
-          g += pth(sisTop, C.dna, 6) + seg(x0, Y2 + G / 2, x1, Y2 + G / 2, C.dna2, 6);
-          for (let x = x0 + 12; x < x1; x += 22) g += seg(x, Y2 - G / 2 + (x > bx - 60 && x < bx + 180 ? 12 * kInv * (1 - kBack) : 0), x, Y2 + G / 2, '#3b4c70', 3);
+          dna += pth(sisTop, C.dna, 6) + seg(x0, Y2 + G / 2, x1, Y2 + G / 2, C.dna2, 6);
+          for (let x = x0 + 12; x < x1; x += 22) dna += seg(x, Y2 - G / 2 + (x > bx - 60 && x < bx + 180 ? 12 * kInv * (1 - kBack) : 0), x, Y2 + G / 2, '#3b4c70', 3);
           g += tag(x1 - 10, Y2 + G / 2 + 32, T2('zusterchromatide (intact)', 'sister chromatid (intact)'), C.muted, 15, 'end', kIn);
           // gebroken chromatide (boven): links + rechts
           const gp = kBack > .5 ? 0 : 30;
@@ -305,37 +308,37 @@ export default {
             const invY = lerp(Y1 - G / 2, Y2 - G / 2 + 10, kInv * (1 - kBack));
             const synLen = 150 * kSyn;
             const tx0 = bx - gp / 2 - res;
-            g += pth(tail, C.dna, 6);
+            dna += pth(tail, C.dna, 6);
             const tailPts = [[tx0, Y1 - G / 2], [tx0 + 30, lerp(Y1 - G / 2, invY, .6)], [tx0 + 60, invY], [bx - gp / 2, invY]];
-            g += pth(tailPts, C.dna, 6);
-            if (synLen > 1) g += seg(bx - gp / 2, invY, bx - gp / 2 + synLen, invY, NEW, 6);
+            dna += pth(tailPts, C.dna, 6);
+            if (synLen > 1) dna += seg(bx - gp / 2, invY, bx - gp / 2 + synLen, invY, NEW, 6);
             g += E(bx - gp / 2 + synLen + 18, invY + 6, "3'", synLen > 1 ? NEW : C.dna, 15, kRes);
             // RPA → RAD51 op de 3'-staart
             if (kRes > .5 && kBack < .5) {
               const rOp = kCoat < .5 ? 1 : 0, dOp = kCoat >= .5 ? 1 : 0;
               if (kInv < .05) {
-                g += rpaRow(tx0, bx - gp / 2, Y1 - G / 2 - 14, rOp * sub(k, .15, .22), 36, 11);
+                rpa += rpaRow(tx0, bx - gp / 2, Y1 - G / 2 - 14, rOp * sub(k, .15, .22), 36, 11);
                 for (let x = tx0 + 8; x < bx - gp / 2 - 6; x += 18) g += `<rect x="${f1(x - 7)}" y="${Y1 - G / 2 - 24}" width="14" height="20" rx="4" fill="#3fd0c9" opacity="${f1(dOp)}"/>`;
-              g += rpaRow(bx + gp / 2, bx + gp / 2 + res, Y1 + G / 2 + 14, rOp * sub(k, .15, .22), 36, 11);
+              rpa += rpaRow(bx + gp / 2, bx + gp / 2 + res, Y1 + G / 2 + 14, rOp * sub(k, .15, .22), 36, 11);
               for (let x = bx + gp / 2 + 8; x < bx + gp / 2 + res - 6; x += 18) g += `<rect x="${f1(x - 7)}" y="${Y1 + G / 2 + 4}" width="14" height="20" rx="4" fill="#3fd0c9" opacity="${f1(dOp)}"/>`;
               }
             }
-            g += seg(x0, Y1 + G / 2, bx - gp / 2 - (res > 0 ? res : 0) * (1 - kFill), Y1 + G / 2, C.dna2, 6);
-            if (kFill > 0) g += seg(bx - gp / 2 - res, Y1 + G / 2, bx - gp / 2 - res + res * kFill, Y1 + G / 2, NEW, 6);
+            dna += seg(x0, Y1 + G / 2, bx - gp / 2 - (res > 0 ? res : 0) * (1 - kFill), Y1 + G / 2, C.dna2, 6);
+            if (kFill > 0) dna += seg(bx - gp / 2 - res, Y1 + G / 2, bx - gp / 2 - res + res * kFill, Y1 + G / 2, NEW, 6);
             // rechterdeel: onder (3') blijft als staart, boven (5') ingekort
-            g += seg(bx + gp / 2 + res * (1 - kFill), Y1 - G / 2, x1, Y1 - G / 2, C.dna, 6);
-            g += seg(bx + gp / 2, Y1 + G / 2, x1, Y1 + G / 2, C.dna2, 6);
+            dna += seg(bx + gp / 2 + res * (1 - kFill), Y1 - G / 2, x1, Y1 - G / 2, C.dna, 6);
+            dna += seg(bx + gp / 2, Y1 + G / 2, x1, Y1 + G / 2, C.dna2, 6);
             // sporten in de dubbelstrengige delen
             for (let x = x0 + 12; x < x1; x += 22) {
               const inL = x < bx - gp / 2 - res, inR = x > bx + gp / 2 + res;
-              if (inL || inR) g += seg(x, Y1 - G / 2, x, Y1 + G / 2, '#3b4c70', 3);
+              if (inL || inR) dna += seg(x, Y1 - G / 2, x, Y1 + G / 2, '#3b4c70', 3);
             }
             // teruggekeerde, verlengde staart paart met de rechter 3'-staart
           } else {
             // hersteld: synthese (boven, bx→bx+res) en opvulling (onder, bx−res→bx) zijn nieuw
-            g += seg(x0, Y1 - G / 2, bx, Y1 - G / 2, C.dna, 6) + seg(bx, Y1 - G / 2, bx + res, Y1 - G / 2, NEW, 6) + seg(bx + res, Y1 - G / 2, x1, Y1 - G / 2, C.dna, 6, kFill > .95 ? 1 : 1);
-            g += seg(x0, Y1 + G / 2, bx - res, Y1 + G / 2, C.dna2, 6) + seg(bx - res, Y1 + G / 2, bx - res + res * kFill, Y1 + G / 2, NEW, 6) + seg(bx, Y1 + G / 2, x1, Y1 + G / 2, C.dna2, 6);
-            for (let x = x0 + 12; x < x1; x += 22) if (!(x > bx - res + res * kFill && x < bx)) g += seg(x, Y1 - G / 2, x, Y1 + G / 2, '#3b4c70', 3);
+            dna += seg(x0, Y1 - G / 2, bx, Y1 - G / 2, C.dna, 6) + seg(bx, Y1 - G / 2, bx + res, Y1 - G / 2, NEW, 6) + seg(bx + res, Y1 - G / 2, x1, Y1 - G / 2, C.dna, 6, kFill > .95 ? 1 : 1);
+            dna += seg(x0, Y1 + G / 2, bx - res, Y1 + G / 2, C.dna2, 6) + seg(bx - res, Y1 + G / 2, bx - res + res * kFill, Y1 + G / 2, NEW, 6) + seg(bx, Y1 + G / 2, x1, Y1 + G / 2, C.dna2, 6);
+            for (let x = x0 + 12; x < x1; x += 22) if (!(x > bx - res + res * kFill && x < bx)) dna += seg(x, Y1 - G / 2, x, Y1 + G / 2, '#3b4c70', 3);
             if (kFill > .95) g += tag(bx, Y1 - G / 2 - 18, T2('foutloos hersteld', 'repaired without errors'), C.ok, 17);
           }
           g += E(x0 - 26, Y1 - G / 2 + 6, "5'", C.dna, 15) + E(x1 + 26, Y1 - G / 2 + 6, "3'", C.dna, 15) + E(x0 - 26, Y1 + G / 2 + 6, "3'", C.dna2, 15) + E(x1 + 26, Y1 + G / 2 + 6, "5'", C.dna2, 15);
@@ -346,7 +349,7 @@ export default {
           const cap = step !== 7 ? '' : k < .22 ? T2("1 · 5'-uiteinden wegknippen (resectie)", "1 · resect the 5' ends") : k < .4 ? T2("2 · RPA, dan RAD51-filament op de 3'-staart", "2 · RPA, then a RAD51 filament on the 3' tail") : k < .58 ? T2('3 · strenginvasie in de zuster (D-lus)', '3 · strand invasion into the sister (D-loop)') : k < .78 ? T2('4 · DNA-synthese met de zuster als matrijs', '4 · DNA synthesis using the sister as template') : T2('5 · terugkeren, paren, opvullen, ligeren', '5 · return, anneal, fill in, ligate');
           g += tag(400, 425, cap, C.text, 18);
           g += tag(400, 250, T2('breuk + zuster als matrijs', 'break + sister as template'), C.text, 36, 'middle', ovT);
-          $('h-hr').innerHTML = g;
+          $('h-hr').innerHTML = g; $('hd-hr').innerHTML = dna; $('hs-hr').innerHTML = rpa;
         }
 
         /* ================= ziekten ================= */

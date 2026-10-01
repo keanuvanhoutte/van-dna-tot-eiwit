@@ -62,16 +62,18 @@ export default {
         <g id="tl-l40" opacity="0">${txt(800, 818, T2('kleine subeenheid (40S)', 'small subunit (40S)'), C.rrna, 24, 'middle', 700)}</g>
       </g>
     </g>
-    <g data-node="polya" data-color="${C.rna}" data-label="${T2('Poly(A)-staart', 'Poly(A) tail')}"><g id="tl-polya"></g><circle id="tl-polyaA" data-anchor="polya" r="1" fill="none"/></g>
     <g data-node="vouwing" data-color="${C.chain}" data-label="${T2('Groeiende keten → vouwing', 'Growing chain → folding')}"><g id="tl-chain"></g><circle id="tl-chainA" data-anchor="vouwing" r="1" fill="none"/></g>
     <g data-node="trna" data-color="${C.trna}" data-label="tRNA"><g id="tl-trnas"></g><circle id="tl-trnaA" data-anchor="trna" r="1" fill="none"/></g>
     <g data-node="aars" data-color="${C.trna}" data-label="${T2('geladen tRNA (aminoacyl-tRNA)', 'charged tRNA (aminoacyl-tRNA)')}" data-nolabel><g id="tl-inc"></g></g>
     <g data-node="elongatie" data-color="${C.prot}" data-label="eEF1A · eEF2"><g id="tl-eef"></g><circle id="tl-eefA" data-anchor="elongatie" r="1" fill="none"/></g>
     <g data-node="terminatie" data-color="${C.prot}" data-label="${T2('eRF1 (stop)', 'eRF1 (stop)')}"><g id="tl-rf"></g></g>
     <g data-node="codon" data-color="${C.rna}" data-label="${T2('mRNA · codons', 'mRNA · codons')}"><g id="tl-mrna"></g><circle id="tl-mrnaA" data-anchor="codon" data-pos="below" r="1" fill="none"/></g>
-    <g id="tl-pairs"></g>
+    <g data-node="polya" data-color="${C.rna}" data-label="${T2('Poly(A)-staart', 'Poly(A) tail')}"><g id="tl-polya"></g><circle id="tl-polyaA" data-anchor="polya" r="1" fill="none"/></g>
+    <g data-node="basenparing" data-color="${C.rna}" data-nolabel><g id="tl-pairs"></g></g>
+    <g data-node="peptide" data-color="${C.chain}" data-nolabel><g id="tl-ptc"></g></g>
+    <g id="tl-abce"></g>
     <g id="tl-ov"></g>
-    <g data-node="initiatie" data-color="${C.prot}" data-label="${T2("5'-cap · initiatiefactoren", "5' cap · initiation factors")}"><g id="tl-cap"></g><g id="tl-eif"></g></g>
+    <g data-node="initiatie" data-color="${C.prot}" data-label="${T2("5'-cap · initiatiefactoren", "5' cap · initiation factors")}"><g data-node="capping" data-color="${C.cap}" data-nolabel><g id="tl-cap"></g></g><g id="tl-eif"></g></g>
     </svg>`;
   },
   init(svg) {
@@ -225,7 +227,7 @@ export default {
         $('tl-eif').innerHTML = eif;
 
         // tRNA's, keten, factoren
-        let tr = '', inc = '', eef = '', rf = '', pairs = '';
+        let tr = '', inc = '', eef = '', rf = '', pairs = '', ptc = '', abce = '';
         $('tl-eefA').setAttribute('cx', '-9999');
         // tRNA-label links naast de arm van het tRNA in de P-plaats (niet op de keten)
         const tAx = phase === 'elong' ? SITE.P - v * COD - ease(sub(u, .85, 1)) * 160 : SITE.P;
@@ -260,7 +262,7 @@ export default {
           else chain = chainSVG([lerp(pAnchor[0], aAnchor[0], .5 + ease((bond - .5) * 2) * .5), lerp(pAnchor[1], aAnchor[1], .5 + ease((bond - .5) * 2) * .5)], c + 2);
           if (step === 7) {
             const rx = (pAnchor[0] + aAnchor[0]) / 2, ry = pAnchor[1] + 10, lo = sub(p, 0, .25);
-            pairs += `<circle cx="${f1(rx)}" cy="${f1(ry)}" r="${f1(34 + 8 * Math.sin(bond * Math.PI))}" fill="none" stroke="#fff" stroke-width="2.5" opacity="${f1(.5 + .5 * Math.sin(bond * Math.PI))}"/>` +
+            ptc += `<circle cx="${f1(rx)}" cy="${f1(ry)}" r="${f1(34 + 8 * Math.sin(bond * Math.PI))}" fill="none" stroke="#fff" stroke-width="2.5" opacity="${f1(.5 + .5 * Math.sin(bond * Math.PI))}"/>` +
               `<g opacity="${f1(lo)}"><line x1="${f1(rx - 36)}" y1="${f1(ry - 8)}" x2="${f1(rx - 136)}" y2="${f1(ry - 38)}" stroke="#fff" stroke-width="1.5"/>` +
               txt(rx - 142, ry - 44, T2('peptidyl-', 'peptidyl'), '#fff', 14, 'end') + txt(rx - 142, ry - 26, T2('transferasecentrum', 'transferase centre'), '#fff', 14, 'end') + '</g>';
           }
@@ -275,10 +277,10 @@ export default {
           rf = (rop <= .01 ? '' : `<g opacity="${f1(rop)}"><path d="M${rx - 30},${ry} L${rx - 30},${ry - 190} L${rx + 30},${ry - 190} L${rx + 30},${ry} Z" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>` +
             txt(rx, ry - 90, 'eRF1', '#fff', 20) + '</g>') + pill(rx + 100, ry - 170, 136, 34, 'eRF3·GTP', C.prot2, step === 12 ? sub(p, .1, .4) * (1 - sub(p, .75, 1)) : 0, 18);
           chain = chainSVG([SITE.P + 22, yDock - 222], c + 1, rel);
-          if (step === 14) pairs += pill(SITE.P, 505, 110, 38, 'ABCE1', C.prot2, sub(p, .2, .45), 22);
+          if (step === 14) abce += pill(SITE.P, 505, 110, 38, 'ABCE1', C.prot2, sub(p, .2, .45), 22);
         }
         $('tl-trnas').innerHTML = tr; $('tl-inc').innerHTML = inc; $('tl-eef').innerHTML = eef; $('tl-rf').innerHTML = rf;
-        $('tl-pairs').innerHTML = pairs; $('tl-chain').innerHTML = chain;
+        $('tl-pairs').innerHTML = pairs; $('tl-ptc').innerHTML = ptc; $('tl-abce').innerHTML = abce; $('tl-chain').innerHTML = chain;
       },
     };
   },

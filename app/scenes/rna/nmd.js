@@ -51,7 +51,7 @@ export default {
   ],
   svg() {
     return svgOpen() + `
-    <g id="nm-mrna"></g><g id="nm-ejc"></g><g id="nm-mut"></g><g id="nm-ribo"></g><g id="nm-fac"></g><g id="nm-dec"></g>
+    <g data-node="rnaprocessing" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-nolabel><g id="nm-mrna"></g></g><g data-node="capping" data-color="${C.cap}" data-nolabel><g id="nm-cap"></g></g><g data-node="splicing" data-color="#7a62e0" data-nolabel><g id="nm-ejc"></g></g><g id="nm-ejcn"></g><g data-node="mutaties" data-color="${C.danger}" data-nolabel><g id="nm-mut"></g></g><g data-node="ribosoom" data-color="${C.rrna}" data-nolabel><g id="nm-ribo"></g></g><g data-node="terminatie" data-color="#6f5bd6" data-nolabel><g id="nm-erf"></g></g><g id="nm-fac"></g><g id="nm-smg"></g><g data-node="mrnaafbraak" data-color="#8a5a3a" data-nolabel><g id="nm-deg"></g></g><g id="nm-dec"></g>
     ${hot('splicing', T2('EJC (uit splicing)', 'EJC (from splicing)'), '#7a62e0', 'nm-hS')}
     ${hot('mutaties', T2('Mutatie → PTC', 'Mutation → PTC'), C.danger, 'nm-hM', '', true)}
     ${hot('terminatie', T2('Ribosoom · terminatie', 'Ribosome · termination'), C.rrna, 'nm-hT')}
@@ -88,8 +88,9 @@ export default {
         if (!cut || rightStart < X.stop - 20) m += `<rect x="${X.stop - 20}" y="${Y - 11}" width="40" height="22" rx="4" fill="#fff" opacity=".9"/>`;
         // cap (+ CBC) verdwijnt bij decapping
         const capOp = cut ? 1 - sub(chew, .8, 1) : 1;
-        m += capG(X.cap, Y, 20, capOp) + prot(X.cap, Y - 40, 66, 32, 'CBC', '#7a62e0', capOp, 17) + note(X.cap - 30, Y - 12, "5'", C.text, 18, 'end', capOp) + note(X.pa[1] + 14, Y + 6, "3'", C.text, 18, 'start', cut ? 1 - sub(chew, .85, .95) : 1);
+        m += note(X.pa[1] + 14, Y + 6, "3'", C.text, 18, 'start', cut ? 1 - sub(chew, .85, .95) : 1);
         m += '</g>';
+        $('nm-cap').innerHTML = `<g opacity="${f1(1 - gone)}">` + capG(X.cap, Y, 20, capOp) + prot(X.cap, Y - 40, 66, 32, 'CBC', '#7a62e0', capOp, 17) + note(X.cap - 30, Y - 12, "5'", C.text, 18, 'end', capOp) + '</g>';
         if (step === 0 || step === 1) m += note(800, Y - 150, T2('normaal β-globine-mRNA', 'normal β-globin mRNA'), C.ok, 22);
         if (step >= 2 && step <= 3) m += note(800, Y - 190, T2('mutant mRNA (codon 39: UAG)', 'mutant mRNA (codon 39: UAG)'), C.danger, 22);
         $('nm-mrna').innerHTML = m;
@@ -121,7 +122,7 @@ export default {
         setHot(svg, 'nm-hT', rop > .5 && step === 3 && p > .6 ? [rx, Y - 30, 120, 150] : null);
 
         // EJC's: in stap 1 weggeduwd door het ribosoom; in het mutante mRNA blijft EJC 2 zitten
-        let ej = '';
+        let ej = '', ejn = '';
         EJC.forEach((x, i) => {
           let off = 0, op = 1;
           if (step === 1) { const k = clamp((rx - x + 60) / 70); off = k * 110; op = 1 - k; }
@@ -133,20 +134,20 @@ export default {
         // 50–55 nt-afstand
         if (step === 3 || step === 4) {
           const k = step === 3 ? sub(p, .6, .8) : 1;
-          ej += `<g opacity="${f1(k)}"><path d="M${X.ptc + 40},${Y + 124} v12 H${X.e2[1]} v-12" stroke="#ffd36b" stroke-width="3" fill="none"/></g>` +
+          ejn += `<g opacity="${f1(k)}"><path d="M${X.ptc + 40},${Y + 124} v12 H${X.e2[1]} v-12" stroke="#ffd36b" stroke-width="3" fill="none"/></g>` +
             note((X.ptc + 40 + X.e2[1]) / 2, Y + 166, T2('> 50–55 nt tot de laatste junctie', '> 50–55 nt to the last junction'), '#ffd36b', 19, 'middle', k);
         }
-        if (step === 1) ej += note(1150, Y + 110, T2('✓ geen EJC na het stopcodon → stabiel', '✓ no EJC after the stop codon → stable'), C.ok, 20, 'middle', sub(p, .8, .9));
-        $('nm-ejc').innerHTML = ej;
+        if (step === 1) ejn += note(1150, Y + 110, T2('✓ geen EJC na het stopcodon → stabiel', '✓ no EJC after the stop codon → stable'), C.ok, 20, 'middle', sub(p, .8, .9));
+        $('nm-ejc').innerHTML = ej; $('nm-ejcn').innerHTML = ejn;
         setHot(svg, 'nm-hS', step === 0 ? [EJC[1], Y - 36, 56, 30] : null);
 
         // NMD-factoren
-        let fa = '';
+        let fa = '', erf = '';
         const ejx = EJC[1];
-        if (step === 3) fa += prot(X.ptc + 78, Y - 98, 109, 34, 'eRF1·eRF3', '#6f5bd6', sub(p, .6, .75), 17);
+        if (step === 3) erf += prot(X.ptc + 78, Y - 98, 109, 34, 'eRF1·eRF3', '#6f5bd6', sub(p, .6, .75), 17);
         if (step >= 4 && step <= 6) {
           const k = step === 4 ? ease(sub(p, 0, .35)) : step === 6 ? 1 - sub(p, 0, .25) : 1;
-          fa += prot(X.ptc + 78, Y - 98, 109, 34, 'eRF1·eRF3', '#6f5bd6', step === 4 ? 1 - sub(p, .7, 1) : 0, 17);
+          erf += prot(X.ptc + 78, Y - 98, 109, 34, 'eRF1·eRF3', '#6f5bd6', step === 4 ? 1 - sub(p, .7, 1) : 0, 17);
           const ux = X.ptc + 110, uy = Y - 140;
           fa += prot(ux, uy, 76, 34, 'UPF1', '#e0679a', k, 17);
           fa += prot(ux - 80, uy - 30, 79, 32, 'SMG1', '#b44f7c', k, 17);
@@ -163,10 +164,10 @@ export default {
             if (step === 5) fa += note(ux - 150, uy - 80, 'SMG1: ATP → ADP', '#ffd36b', 17, 'middle', kp);
           }
         }
-        $('nm-fac').innerHTML = fa;
+        $('nm-erf').innerHTML = erf; $('nm-fac').innerHTML = fa;
 
         // afbraak
-        let de = '';
+        let de = '', dg = '', sm = '';
         // resten na de afbraak: losse nucleotiden tussen de twee exonucleasen (eindbeeld stap 6 = beginbeeld stap 7)
         const remains = (lE, rS, ch, op) => {
           if (op <= .01) return '';
@@ -179,13 +180,13 @@ export default {
         };
         if (step === 6) {
           const k = sub(p, 0, .15);
-          de += prot(X.ptc + 20, Y - 70, 79, 34, 'SMG6', '#e0679a', k * (1 - sub(p, .5, .7)), 17) + snip(X.ptc + 6, Y, sub(p, .12, .2) * (1 - sub(p, .3, .4)));
-          de += prot(X.ptc + 200, Y - 120, 125, 34, 'SMG5·SMG7', '#b44f7c', k * (1 - sub(p, .7, .9)), 17);
-          de += note(X.ptc + 200, Y - 158, T2('→ CCR4–NOT, decapping', '→ CCR4–NOT, decapping'), '#ffb3cf', 17, 'middle', k * (1 - sub(p, .7, .9)));
-          if (cut) de += remains(leftEnd, rightStart, chew, 1);
+          sm += prot(X.ptc + 20, Y - 70, 79, 34, 'SMG6', '#e0679a', k * (1 - sub(p, .5, .7)), 17) + snip(X.ptc + 6, Y, sub(p, .12, .2) * (1 - sub(p, .3, .4)));
+          sm += prot(X.ptc + 200, Y - 120, 125, 34, 'SMG5·SMG7', '#b44f7c', k * (1 - sub(p, .7, .9)), 17);
+          sm += note(X.ptc + 200, Y - 158, T2('→ CCR4–NOT, decapping', '→ CCR4–NOT, decapping'), '#ffb3cf', 17, 'middle', k * (1 - sub(p, .7, .9)));
+          if (cut) dg += remains(leftEnd, rightStart, chew, 1);
         }
         if (step === 7) {
-          de += remains(leftEnd, rightStart, 1, 1 - gone);
+          dg += remains(leftEnd, rightStart, 1, 1 - gone);
           // overzicht: drie mini-mRNA's met hun uitkomst
           const mini = (y, ptc, ejc, dim) => {
             let r = `<g opacity="${dim ? .45 : 1}"><circle cx="300" cy="${y}" r="13" fill="${C.cap}" stroke="${C.rna}" stroke-width="2"/>` +
@@ -209,7 +210,7 @@ export default {
             prot(1010, R3, 150, 42, T2('afgeknot', 'truncated'), '#a8842a', 1, 19) +
             note(800, R3 + 58, T2('PTC in laatste exon → geen NMD → afgeknot eiwit', 'PTC in last exon → no NMD → truncated protein'), '#ffd36b', 20) + '</g>';
         }
-        $('nm-dec').innerHTML = de;
+        $('nm-smg').innerHTML = sm; $('nm-deg').innerHTML = dg; $('nm-dec').innerHTML = de;
         setHot(svg, 'nm-hD', step === 6 && p > .2 && p < .7 ? [X.ptc + 200, Y - 120, 110, 30] : step === 7 && p > .3 ? [1300, 470, 12, 12] : null);
       },
     };

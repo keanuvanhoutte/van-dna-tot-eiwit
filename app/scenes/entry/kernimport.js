@@ -57,10 +57,10 @@ export default {
     const lip = x => `<path d="M${x},${OUT} q${x < PX ? 26 : -26},0 ${x < PX ? 26 : -26},30 q0,30 ${x < PX ? -26 : 26},30" stroke="#8ab0e4" stroke-width="9" fill="none"/>`;
     return svgOpen() + `
     <rect x="-400" y="${IN}" width="2400" height="1400" fill="url(#gNuc)"/>
-    ${CHROM}
+    <g data-node="chromatine" data-color="${C.dna}" data-nolabel>${CHROM}</g>
     <text x="140" y="${OUT - 70}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">${T2('cytoplasma', 'cytoplasm')}</text>
     <text x="140" y="${IN + 90}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">${T2('nucleoplasma', 'nucleoplasm')}</text>
-    ${memSide(-400, PX - 126)}${memSide(PX + 126, 2000)}${lip(PX - 126)}${lip(PX + 126)}
+    <g data-node="kern" data-color="#9cc0ff" data-nolabel>${memSide(-400, PX - 126)}${memSide(PX + 126, 2000)}${lip(PX - 126)}${lip(PX + 126)}</g>
     <g id="ki-memlab">${txt(PX + 140, OUT - 16, T2('buitenste kernmembraan', 'outer nuclear membrane'), '#7aa0d8', 21, 'start', 500)}
     ${txt(PX + 140, IN + 36, T2('binnenste kernmembraan', 'inner nuclear membrane'), '#9cc0ff', 21, 'start', 500)}</g>
     <g id="ki-mt" opacity="0"></g>
@@ -79,6 +79,7 @@ export default {
     </g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Pol II leest de genen', 'Pol II reads the genes')}" id="ki-txn" opacity="0">
       <circle data-anchor="transcriptie" data-pos="below" cx="1120" cy="800" r="1" fill="none"/>
+      <g data-node="rnapol" data-color="${C.prot}" data-nolabel><g id="ki-pol"></g></g>
       <g id="ki-txn-body"></g>
     </g>
     <g data-node="dnahelix" data-href="../atlas/index.html?id=bdna" data-color="${PINK}" data-label="${T2('Viraal dsDNA — atlas', 'Viral dsDNA — atlas')}" id="ki-epi" opacity="0">
@@ -178,10 +179,11 @@ export default {
              ${txt(0, 6, T2('episomaal viraal DNA', 'episomal viral DNA'), PINK, 21)}</g>` : '';
         const txnOn = step === 8 ? ease(sub(p, .55, .9)) : 0;
         $('ki-txn').setAttribute('opacity', f1(txnOn));
-        $('ki-txn-body').innerHTML = txnOn > .01
+        $('ki-pol').innerHTML = txnOn > .01
           ? `<g transform="translate(1120 720)"><ellipse rx="52" ry="42" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/>
-             ${txt(0, 6, 'Pol II', '#e8edf7', 20)}
-             <path d="M40,-30 q40,-30 90,-18" stroke="${C.rna}" stroke-width="5" fill="none"/>
+             ${txt(0, 6, 'Pol II', '#e8edf7', 20)}</g>` : '';
+        $('ki-txn-body').innerHTML = txnOn > .01
+          ? `<g transform="translate(1120 720)"><path d="M40,-30 q40,-30 90,-18" stroke="${C.rna}" stroke-width="5" fill="none"/>
              ${txt(150, -60, T2('viraal mRNA', 'viral mRNA'), C.rna, 20)}</g>` : '';
 
         /* notities */

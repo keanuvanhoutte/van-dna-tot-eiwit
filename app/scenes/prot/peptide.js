@@ -95,6 +95,8 @@ export default {
   svg() {
     return svgOpen() + `
     <g id="pe-2d"></g>
+    <g data-node="aminozuren" data-color="${CLASSCOL.h}" data-nolabel><g id="pe-aa"></g></g>
+    <g data-node="primair" data-color="${C.chain}" data-nolabel><g id="pe-pri"></g></g>
     <g id="pe-3d"></g>
     <g id="pe-panel"></g>
     <g id="pe-hs-rama" data-node="ramachandran" data-color="#ffc247" data-label="${T2('Alle toegestane φ/ψ: Ramachandran-plot', 'All allowed φ/ψ: Ramachandran plot')}">
@@ -271,7 +273,9 @@ export default {
             txt(840, y - 230, T2('elk aminozuur in de keten = een residu', 'each amino acid in the chain = a residue'), C.muted, 22) + '</g>';
           d2 = sct;
         }
-        $('pe-2d').innerHTML = d2; $('pe-3d').innerHTML = d3; $('pe-panel').innerHTML = pan;
+        // stap 0: twee losse aminozuren · stap 8: de keten (primaire structuur) — elk klikbaar naar hun eigen hoofdstuk
+        $('pe-aa').innerHTML = step === 0 ? d2 : ''; $('pe-pri').innerHTML = step === 8 ? d2 : '';
+        $('pe-2d').innerHTML = step === 0 || step === 8 ? '' : d2; $('pe-3d').innerHTML = d3; $('pe-panel').innerHTML = pan;
       },
     };
   },

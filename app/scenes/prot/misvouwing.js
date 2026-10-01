@@ -52,7 +52,7 @@ export default {
     const cards = [
       ['Aβ', T2('Alzheimer', 'Alzheimer\'s'), T2('plaques buiten neuronen', 'plaques outside neurons'), 'idp'],
       ['tau', T2('Alzheimer', 'Alzheimer\'s'), T2('kluwens in neuronen', 'tangles inside neurons'), null],
-      ['α-synucleïne', T2('Parkinson', 'Parkinson\'s'), T2('Lewy-lichaampjes', 'Lewy bodies'), null],
+      ['α-synucleïne', T2('Parkinson', 'Parkinson\'s'), T2('Lewy-lichaampjes', 'Lewy bodies'), 'idp'],
       ['IAPP (amyline)', T2('type 2-diabetes', 'type 2 diabetes'), T2('in de eilandjes van Langerhans', 'in the islets of Langerhans'), null],
       ['PrP', T2('Creutzfeldt-Jakob', 'Creutzfeldt–Jakob'), T2('prionziekte, overdraagbaar', 'prion disease, transmissible'), null],
     ];
@@ -77,6 +77,7 @@ export default {
     <g id="mf-prion"></g>
     <g data-node="er" data-color="${C.mem}" data-label="${T2('Ruw ER', 'Rough ER')}">${erm}<circle data-anchor="er" cx="9050" cy="395" r="1" fill="none"/></g>
     <g id="mf-upr"></g>
+    <g data-node="chaperones" data-color="${C.prot2}" data-nolabel><g id="mf-bip"></g></g>
     </svg>`;
   },
   init(svg) {
@@ -184,7 +185,7 @@ export default {
         $('mf-prion').innerHTML = pr;
 
         /* ---------- paneel F: UPR ---------- */
-        let up = '';
+        let up = '', bip = '';
         if (step >= 5) {
           const q = step === 6 ? p : 0;
           const unf = sub(q, .05, .3), rel = ease(sub(q, .25, .45)), act = [sub(q, .4, .55), sub(q, .55, .7), sub(q, .7, .85)], fin = sub(q, .85, .97);
@@ -200,7 +201,7 @@ export default {
               enz(sx, 500, 46, 34, '', { col: C.prot }) + enz(sx, 330, 60, 44, '', { col: C.prot, fillOp: a2 > .5 ? .55 : .25 }) + (i < 2 ? enz(sx + 70 * a2, 330, 60, 44, '', { col: C.prot, op: a2, fillOp: .55 }) + enz(sx + 70 * a2, 500, 46, 34, '', { col: C.prot, op: a2 }) : '') +
               T(sx, 262, lab, { size: 27, col: '#c9b8ff', w: 800 }) + '</g>';
             // BiP gebonden → los
-            up += enz(sx - 50 + (-80 * rel), 540 + 60 * rel, 40, 26, 'BiP', { col: C.prot2, fs: 19, fillOp: .6 });
+            bip += enz(sx - 50 + (-80 * rel), 540 + 60 * rel, 40, 26, 'BiP', { col: C.prot2, fs: 19, fillOp: .6 });
             if (i < 2) up += phos(sx + 35, 300, 16, a2);
           });
           // uitkomsten
@@ -209,7 +210,7 @@ export default {
           up += T(9800, 212, T2('naar Golgi → ATF6(N)', 'to Golgi → ATF6(N)'), { size: 23, col: C.text, op: act[2] });
           up += panel(8700, 100, 1200, 66, { op: fin, col: C.ok }) + T(9300, 142, T2('meer chaperones + ERAD · <tspan fill="#ff6b6b">te lang → apoptose</tspan>', 'more chaperones + ERAD · <tspan fill="#ff6b6b">too long → apoptosis</tspan>'), { size: 25, col: C.ok, op: fin });
         }
-        $('mf-upr').innerHTML = up;
+        $('mf-upr').innerHTML = up; $('mf-bip').innerHTML = bip;
       },
     };
   },

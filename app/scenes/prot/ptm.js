@@ -110,7 +110,7 @@ export default {
     <g data-node="ubiquitine" data-color="#ffd166" data-label="${T2('Ubiquitine → afbraak', 'Ubiquitin → degradation')}"><g id="pt-ub"></g><circle id="pt-ubA" data-anchor="ubiquitine" cx="0" cy="0" r="1" fill="none"/></g>
     <g id="pt-a-lbl"></g>
     <!-- paneel B: cascade -->
-    <g id="pt-casc"></g>
+    <g data-node="mapk" data-color="${C.prot}" data-nolabel><g id="pt-casc"></g></g>
     ${T(1790, 208, 'MAPKKK', { size: 20, col: C.muted, anchor: 'start', font: 'JetBrains Mono' })}${T(1790, 388, 'MAPKK', { size: 20, col: C.muted, anchor: 'start', font: 'JetBrains Mono' })}${T(1790, 568, 'MAPK', { size: 20, col: C.muted, anchor: 'start', font: 'JetBrains Mono' })}
     ${T(1790, 728, T2('doelen', 'targets'), { size: 20, col: C.muted, anchor: 'start' })}
     <!-- paneel C: overzicht -->
