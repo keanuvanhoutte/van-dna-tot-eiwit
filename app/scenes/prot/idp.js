@@ -145,7 +145,7 @@ export default {
         }
         $('id-seq').innerHTML = sq;
         $('id-plot').setAttribute('opacity', step === 2 ? '0.15' : step === 3 ? f1(.15 + .85 * sub(p, 0, .25)) : '1');
-        $('id-seqB').setAttribute('opacity', step === 3 ? f1(1 - .85 * sub(p, 0, .25)) : '1');
+        $('id-seqB').setAttribute('opacity', step <= 2 ? '1' : step === 3 ? f1(1 - sub(p, 0, .06)) : '0');
 
         /* ---------- paneel C: CREB-KID + KIX ---------- */
         let c = '';

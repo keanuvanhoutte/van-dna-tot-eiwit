@@ -82,6 +82,7 @@ export default {
     </svg>`;
   },
   init(svg) {
+    const STEPS = this?.steps ?? [];
     const $ = id => svg.getElementById(id);
     const hide = id => $(id).setAttribute('cx', '-9999');
     /* ribosoom gekanteld: grote subeenheid onder (tunneluitgang op (ex, ey)), kleine erboven, mRNA ertussen */
@@ -121,7 +122,7 @@ export default {
 
     return {
       update(t, s) {
-        placeHud(svg, 'er-hud');
+        placeHud(svg, 'er-hud', .015, .105, STEPS[s.step]?.cam);
         const { step: i, p } = s;
         const gA = i === 7 ? [420, 850] : i === 8 ? [700, 800] : [330, MB + 130];
         $('er-golgiA').setAttribute('cx', gA[0]); $('er-golgiA').setAttribute('cy', gA[1]);

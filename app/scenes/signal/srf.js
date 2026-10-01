@@ -57,13 +57,13 @@ const SCENE = {
     ST(8500, cam(640, 420, 1200), 'Mediator slaat de brug', 'Mediator bridges the gap',
       'Het gefosforyleerde activatiedomein bindt co-activatoren, o.a. het Mediator-complex (via MED23). Mediator verbindt het SRE met RNA-polymerase II aan de kernpromoter.',
       'The phosphorylated activation domain binds co-activators, including the Mediator complex (via MED23). Mediator connects the SRE to RNA polymerase II at the core promoter.'),
-    ST(9000, cam(1000, 460, 1300), 'FOS wordt afgeschreven', 'FOS is transcribed',
+    ST(9000, cam(980, 460, 1300), 'FOS wordt afgeschreven', 'FOS is transcribed',
       'RNA-polymerase II vertrekt en schrijft FOS af: binnen enkele minuten na het signaal ontstaat FOS-pre-mRNA.',
       'RNA polymerase II sets off and transcribes FOS: within minutes of the signal FOS pre-mRNA appears.'),
     ST(8500, cam(800, 450, 1600), 'Een onmiddellijk-vroeg gen', 'An immediate early gene',
       'Alle eiwitten voor deze schakelaar waren al aanwezig; alleen fosforylering was nodig. Daarom gaat FOS zelfs aan als de eiwitsynthese geblokkeerd is.',
       'All proteins for this switch were already present; only phosphorylation was needed. That is why FOS switches on even when protein synthesis is blocked.'),
-    ST(9000, cam(1150, 600, 1100), 'Straks: c-Fos + c-Jun = AP-1', 'Later: c-Fos + c-Jun = AP-1',
+    ST(9000, cam(1100, 600, 1100), 'Straks: c-Fos + c-Jun = AP-1', 'Later: c-Fos + c-Jun = AP-1',
       'Na processing, export en translatie vormt het c-Fos-eiwit met c-Jun de transcriptiefactor AP-1. AP-1 bindt TRE-plaatsen en zet zo latere genen aan.',
       'After processing, export and translation, the c-Fos protein forms the transcription factor AP-1 with c-Jun. AP-1 binds TRE sites and so switches on later genes.'),
     ST(8500, cam(800, 450, 1600), 'Een kort signaal – verder met FOS', 'A brief signal – on with FOS',
@@ -75,7 +75,7 @@ const SCENE = {
     return svgOpen(arrowDefs('sf', { m: C.muted, w: '#fff', r: C.rna })) + `
     <rect x="-600" y="-600" width="2800" height="2100" fill="url(#gNuc)"/>
     <g id="sf-sites">${box(ETS[0], ETS[1], ELK)}${box(CARG[0], CARG[1], SRF)}${box(TATA[0], TATA[1], '#ffc247')}
-      <rect x="${TSS}" y="${DY - 26}" width="900" height="52" rx="8" fill="${C.dna}" fill-opacity=".14" stroke="${C.dna}" stroke-width="2" stroke-dasharray="8 6"/></g>
+      <rect id="sf-gene" x="${TSS}" y="${DY - 26}" width="660" height="52" rx="8" fill="${C.dna}" fill-opacity=".14" stroke="${C.dna}" stroke-width="2" stroke-dasharray="8 6"/></g>
     ${dna(-300, 1900, DY)}
     <g><rect x="${BRK - 16}" y="${DY - 40}" width="32" height="80" fill="#12203f"/><path d="M${BRK - 22},${DY + 34} L${BRK - 4},${DY - 34} M${BRK + 4},${DY + 34} L${BRK + 22},${DY - 34}" stroke="#dfe6f5" stroke-width="4"/></g>
     <path d="M${TSS},${DY - 30} L${TSS},${DY - 64} L${TSS + 26},${DY - 64}" stroke="#fff" stroke-width="5" fill="none" marker-end="url(#sf-w)"/>
@@ -141,6 +141,8 @@ const SCENE = {
           md += T(372, 372 - my, 'MED23', { size: 22, col: '#d6ccff', w: 700, op: sub(medK, .6, 1) });
         }
         $('sf-med').innerHTML = md;
+        /* genlichaam valt half buiten de Mediator-zoom (stap 4): daar even weg, in stap 5 weer in */
+        $('sf-gene').setAttribute('opacity', step === 4 ? 0 : step === 5 ? f1(ease(sub(p, 0, .15))) : 1);
         $('sf-grA').setAttribute('opacity', (step === 4 && p > .6) || step === 8 ? 1 : 0);
 
         /* ---- Pol II + TFIID + RNA ---- */

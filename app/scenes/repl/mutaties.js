@@ -44,10 +44,10 @@ export default {
     nl: 'Alleen de coderende streng en de eerste 22 codons worden getoond. Codonnummers volgen de traditionele hemoglobinenummering (start-Met niet meegeteld; in HGVS-notatie is HbS p.Glu7Val). De stille mutatie in codon 2 (CAT→CAC) is een echte, onschadelijke variant (rs713040); HbS (codon 6), codon 17 A>T en codons 8/9 +G zijn bekende ziektemutaties. NMD is sterk vereenvoudigd (EJC\'s, UPF1-activatie en afbraakroutes niet in detail).',
     en: 'Only the coding strand and the first 22 codons are shown. Codon numbers follow the traditional haemoglobin numbering (start Met not counted; in HGVS notation HbS is p.Glu7Val). The silent mutation in codon 2 (CAT→CAC) is a real, harmless variant (rs713040); HbS (codon 6), codon 17 A>T and codons 8/9 +G are known disease mutations. NMD is strongly simplified (EJCs, UPF1 activation and decay routes not in detail).' },
   steps: [
-    S(8000, cam(480, 400, 1150), 'Gen → mRNA → eiwit', 'Gene → mRNA → protein',
+    S(8000, cam(520, 400, 1150), 'Gen → mRNA → eiwit', 'Gene → mRNA → protein',
       'Het begin van het β-globinegen (HBB). Elk codon van drie basen codeert voor één aminozuur; een mutatie verandert de DNA-sequentie.',
       'The start of the β-globin gene (HBB). Each codon of three bases encodes one amino acid; a mutation changes the DNA sequence.'),
-    S(8000, cam(480, 660, 1150), 'Transitie of transversie', 'Transition or transversion',
+    S(8000, cam(520, 660, 1150), 'Transitie of transversie', 'Transition or transversion',
       'Een puntmutatie vervangt één base. Transitie: purine ↔ purine of pyrimidine ↔ pyrimidine. Transversie: purine ↔ pyrimidine.',
       'A point mutation replaces one base. Transition: purine ↔ purine or pyrimidine ↔ pyrimidine. Transversion: purine ↔ pyrimidine.'),
     S(8000, cam(330, 430, 900), 'Stille mutatie', 'Silent mutation',
@@ -59,10 +59,10 @@ export default {
     S(8000, cam(1180, 470, 1150), 'Nonsense: een vroeg stopcodon', 'Nonsense: an early stop codon',
       'AAG → TAG in codon 17: lysine wordt een stopcodon (UAG). Er zou een sterk ingekort eiwit ontstaan (β⁰-thalassemie).',
       'AAG → TAG in codon 17: lysine becomes a stop codon (UAG). This would give a severely truncated protein (β⁰-thalassaemia).'),
-    S(9000, cam(1150, 700, 1150), 'Nonsense-mediated decay', 'Nonsense-mediated decay',
+    S(9000, cam(1164, 700, 1164), 'Nonsense-mediated decay', 'Nonsense-mediated decay',
       'Ligt een stopcodon meer dan ~50–55 nt vóór de laatste exon-exonovergang, dan wordt het mRNA als foutief herkend en afgebroken (NMD).',
       'If a stop codon lies more than ~50–55 nt upstream of the last exon–exon junction, the mRNA is recognised as faulty and degraded (NMD).'),
-    S(10000, cam(1110, 430, 1250), 'Insertie → frameshift', 'Insertion → frameshift',
+    S(10000, cam(1132, 430, 1250), 'Insertie → frameshift', 'Insertion → frameshift',
       'Eén extra G tussen codon 8 en 9 verschuift het leeskader: alle volgende codons veranderen, tot er toevallig een stopcodon opduikt. (Indels van 3 nt behouden het kader.)',
       'One extra G between codons 8 and 9 shifts the reading frame: all following codons change until a stop codon appears by chance. (Indels of 3 nt keep the frame.)'),
     S(8000, cam(800, 650, 1500), 'Waar komen mutaties vandaan?', 'Where do mutations come from?',
@@ -204,9 +204,9 @@ export default {
           ex += tag(bx(27), YD - 60, T2('+ G (insertie)', '+ G (insertion)'), '#fff', 19, 'middle', kI);
           ex += arrow(cx(9) - 20, YA + 64, cx(16), YA + 64, C.danger, 4, sub(p, .35, .5)) + tag(cx(12.5), YA + 96, T2('nieuw leeskader → andere aminozuren', 'new reading frame → different amino acids'), C.danger, 18, 'middle', sub(p, .35, .5));
           ex += tag(cx(22) + 26, YA + 96, T2('vroeg stopcodon', 'premature stop'), C.danger, 18, 'end', sub(p, .85, .95));
-          ex += tag(cx(6), YA + 96, T2('ongewijzigd', 'unchanged'), C.ok, 18, 'middle', sub(p, .35, .5));
+          ex += tag(cx(7), YA + 96, T2('ongewijzigd', 'unchanged'), C.ok, 18, 'middle', sub(p, .35, .5));
         } else if (step === 7) {
-          r = `<g opacity="${f1(lerp(1, .12, ease(sub(p, 0, .2))))}">${rows(FS, { hl: new Set([27]), ins: 27 })}</g>`;   // = eindbeeld stap 6, vervaagt
+          r = `<g opacity="${f1(lerp(1, .12, ease(sub(p, 0, .06))))}">${rows(FS, { hl: new Set([27]), ins: 27 })}</g>`;   // = eindbeeld stap 6, vervaagt
           const items = [
             [T2('replicatiefouten', 'replication errors'), T2('ontsnapt aan proeflezen + MMR', 'escaped proofreading + MMR'), C.prot],
             [T2('spontane schade', 'spontaneous damage'), T2('5-methyl-C → T (CpG)', '5-methyl-C → T (CpG)'), '#ffc247'],

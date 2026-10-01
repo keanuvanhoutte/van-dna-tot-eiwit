@@ -30,13 +30,13 @@ export default {
     ST(7000, FULL, 'Van kern naar nucleosoom', 'From nucleus to nucleosome',
       'Zoom in op het DNA van de kern: ~2 m DNA per cel past in een kern van ~5–10 µm dankzij verpakking in chromatine (DNA + eiwitten).',
       'Zooming in on the DNA of the nucleus: ~2 m of DNA per cell fits into a nucleus of ~5–10 µm because it is packed into chromatin (DNA + proteins).'),
-    ST(7500, cam(290, 450, 640), 'Chromosoomterritoria', 'Chromosome territories',
+    ST(7500, cam(290, 450, 820), 'Chromosoomterritoria', 'Chromosome territories',
       'In de interfasekern neemt elk chromosoom een eigen gebied in. Compact heterochromatine ligt vooral tegen de kernlamina en rond de nucleolus.',
       'In the interphase nucleus each chromosome occupies its own region. Compact heterochromatin lies mainly against the nuclear lamina and around the nucleolus.'),
-    ST(9000, cam(845, 275, 600), 'Lusextrusie: cohesine en CTCF', 'Loop extrusion: cohesin and CTCF',
+    ST(9000, cam(840, 295, 680), 'Lusextrusie: cohesine en CTCF', 'Loop extrusion: cohesin and CTCF',
       'Cohesine trekt de chromatinevezel ATP-afhankelijk tot een steeds grotere lus, tot het botst op CTCF-eiwitten die naar elkaar toe gericht zijn.',
       'Cohesin reels the chromatin fibre into a growing loop (ATP-dependent) until it meets CTCF proteins bound in convergent orientation.'),
-    ST(8000, cam(845, 340, 620), 'TADs in Hi-C-data', 'TADs in Hi-C data',
+    ST(8000, cam(840, 308, 730), 'TADs in Hi-C-data', 'TADs in Hi-C data',
       'Binnen zo\'n domein (TAD) raken DNA-stukken elkaar veel vaker: in een Hi-C-contactkaart vormt elk domein een donkere driehoek.',
       'Within such a domain (TAD) pieces of DNA touch each other much more often: in a Hi-C contact map each domain forms a dark triangle.'),
     ST(8500, cam(840, 672, 600), 'Euchromatine en heterochromatine', 'Euchromatin and heterochromatin',
@@ -194,8 +194,9 @@ export default {
     const panels = ['cr-pA', 'cr-pB', 'cr-pC', 'cr-pD1', 'cr-pD2', 'cr-pD3'];
     const focus = [null, 0, 1, 1, 2, 3, 4, 5];
     // paneeltitels: 21 px in het overzicht, maar kleiner in de ingezoomde stappen (≈ 18 px op het scherm = fs × 1000 / cambreedte)
-    const CAMW = [1600, 640, 600, 620, 600, 480, 480, 470];
+    const CAMW = [1600, 820, 680, 730, 600, 480, 480, 470];
     const tfs = k => Math.min(21, 18 * CAMW[k] / 1000);
+    const pAframe = $('cr-pA').querySelector('rect');
     const titles = [...svg.querySelectorAll('.ptitle')].map(el => ({ el, y0: +el.getAttribute('y') - 31 }));
 
     function fibre(u1, u2) {
@@ -247,7 +248,9 @@ export default {
       update(t, s) {
         const { step, p } = s;
         // focus: de andere panelen dimmen
-        panels.forEach((id, k) => $(id).setAttribute('opacity', focus[step] === null || focus[step] === k ? 1 : .35));
+        panels.forEach((id, k) => $(id).setAttribute('opacity', focus[step] === null || focus[step] === k ? 1 : .2));
+        // ingezoomd op paneel ① (hoger dan het beeld): kader weg, de kern zelf staat volledig in beeld
+        pAframe.setAttribute('opacity', step === 1 ? 0 : 1);
         const fsT = step === 0 ? tfs(0) : lerp(tfs(step - 1), tfs(step), ease(sub(p, 0, .2)));
         titles.forEach(({ el, y0 }) => { el.setAttribute('font-size', f1(fsT)); el.setAttribute('y', f1(y0 + fsT + 10)); });
         // detaillabels alleen in de stap waarin hun paneel centraal staat (paneeltitels blijven)

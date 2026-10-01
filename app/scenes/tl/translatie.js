@@ -38,9 +38,9 @@ export default {
     ST(8500, cam(870, 300, 640), 'Peptidebinding', 'Peptide bond', 'In het peptidyltransferasecentrum (rRNA = ribozym) wordt de keten overgedragen op het aminozuur in de A-plaats.', 'In the peptidyl transferase centre (rRNA = ribozyme) the chain is transferred onto the amino acid in the A site.'),
     ST(8500, cam(800, 470, 1350), 'Translocatie', 'Translocation', 'eEF2·GTP schuift het ribosoom één codon verder: A → P, P → E. Het mRNA beweegt 3 nucleotiden.', 'eEF2·GTP moves the ribosome one codon on: A → P, P → E. The mRNA moves 3 nucleotides.'),
     ST(6500, cam(760, 420, 1450), 'E-plaats: tRNA vertrekt', 'E site: tRNA leaves', 'Het lege tRNA verlaat de E-plaats en kan opnieuw geladen worden. De A-plaats is vrij voor het volgende codon.', 'The empty tRNA leaves the E site and can be recharged. The A site is free for the next codon.'),
-    ST(9000, cam(800, 450, 1450), 'Tweede ronde: zelfde cyclus', 'Second round: same cycle', 'Aankomst → decodering → peptidebinding → translocatie → vertrek. De keten groeit met één aminozuur per cyclus.', 'Arrival → decoding → peptide bond → translocation → release. The chain grows by one amino acid per cycle.'),
+    ST(9000, cam(835, 450, 1450), 'Tweede ronde: zelfde cyclus', 'Second round: same cycle', 'Aankomst → decodering → peptidebinding → translocatie → vertrek. De keten groeit met één aminozuur per cyclus.', 'Arrival → decoding → peptide bond → translocation → release. The chain grows by one amino acid per cycle.'),
     ST(15000, cam(800, 395, 1400), 'Elongatie gaat door (versneld)', 'Elongation continues (fast-forward)', 'Zo worden alle codons afgelezen. De keten verlaat het ribosoom via de uitgangstunnel en begint al te vouwen.', 'This is how all codons are read. The chain leaves the ribosome through the exit tunnel and already starts to fold.'),
-    ST(8500, cam(930, 450, 1250), 'Stopcodon: eRF1', 'Stop codon: eRF1', 'Voor UAA, UAG en UGA bestaat geen tRNA. eRF1 (met eRF3·GTP) herkent het stopcodon in de A-plaats; eRF1 lijkt op een tRNA.', 'No tRNA exists for UAA, UAG or UGA. eRF1 (with eRF3·GTP) recognises the stop codon in the A site; eRF1 mimics a tRNA.'),
+    ST(8500, cam(930, 375, 1350), 'Stopcodon: eRF1', 'Stop codon: eRF1', 'Voor UAA, UAG en UGA bestaat geen tRNA. eRF1 (met eRF3·GTP) herkent het stopcodon in de A-plaats; eRF1 lijkt op een tRNA.', 'No tRNA exists for UAA, UAG or UGA. eRF1 (with eRF3·GTP) recognises the stop codon in the A site; eRF1 mimics a tRNA.'),
     ST(8500, cam(840, 300, 1350), 'Keten komt vrij', 'Chain is released', 'eRF1 laat water de binding tussen keten en tRNA hydrolyseren: het eiwit komt vrij en gaat vouwen.', 'eRF1 lets water hydrolyse the bond between chain and tRNA: the protein is released and folds.'),
     ST(7500, FULL, 'Recycling', 'Recycling', 'ABCE1 splitst het ribosoom in subeenheden; die kunnen opnieuw beginnen, vaak op hetzelfde mRNA (polysoom).', 'ABCE1 splits the ribosome into subunits; they can start again, often on the same mRNA (polysome).'),
   ],
@@ -101,7 +101,7 @@ export default {
     const ntX = (i, c, v, scan) => PC + ((i - S0 - 1) - 3 * (c + v)) * NT + scan;
 
     /* ov = overzicht (stap 0, ver uitgezoomd): letters verborgen, grote regiolabels; lab5/lab3 = zichtbaarheid UTR-labels */
-    function drawMRNA(c, v, scan, ov, lab5, lab3) {
+    function drawMRNA(c, v, scan, ov, lab5, lab3, ovL = ov) {
       let m = '';
       const x0 = ntX(0, c, v, scan) - NT / 2, x1 = ntX(MRNA.length - 1, c, v, scan) + NT / 2, lo = 1 - ov;
       m += `<line x1="${f1(x0 - 20)}" y1="${YM}" x2="${f1(x1)}" y2="${YM}" stroke="${C.rna}" stroke-width="${f1(6 + 8 * ov)}"/>`;
@@ -132,10 +132,10 @@ export default {
       if (lab3 > .01) $('tl-mrna').innerHTML += `<g opacity="${f1(lab3)}">${txt(u3, YM - 26, "3'-UTR", C.text, 22)}</g>`;
       // overzicht: grote labels per gebied (leesbaar bij de ver uitgezoomde camera van stap 0)
       let o = '';
-      if (ov > .01) {
+      if (ovL > .01) {
         const cs = ntX(S0, c, v, scan) - NT / 2, ce = ntX(S0 + CDS.length - 1, c, v, scan) + NT / 2, ue = ntX(MRNA.length - POLYA.length - 1, c, v, scan) + NT / 2;
         const br = (xa, xb, col) => `<path d="M${f1(xa + 6)},${YM - 44} v-16 H${f1(xb - 6)} v16" stroke="${col}" stroke-width="6" fill="none"/>`;
-        o += `<g opacity="${f1(ov)}">` + br(x0, cs, C.muted) + br(cs, ce, C.rna) + br(ce, ue, C.muted) + br(aS, aE, C.rna) +
+        o += `<g opacity="${f1(ovL)}">` + br(x0, cs, C.muted) + br(cs, ce, C.rna) + br(ce, ue, C.muted) + br(aS, aE, C.rna) +
           txt((x0 + cs) / 2, YM - 90, "5'-UTR", C.text, 60) + txt((cs + ce) / 2, YM - 90, T2('coderend deel', 'coding region'), C.rna, 60, 'middle', 700) +
           txt((ce + ue) / 2, YM - 90, "3'-UTR", C.text, 60) + txt((aS + aE) / 2, YM - 90, 'poly(A)', C.rna, 60) +
           txt(capX, YM + 150, T2("5'-cap", "5' cap"), C.cap, 60) +
@@ -195,7 +195,9 @@ export default {
         const ov = step === 0 ? 1 : step === 1 ? 1 - ease(sub(p, 0, .35)) : 0;
         const lab5 = step === 1 ? 1 - ov : step === 2 ? 1 : step === 3 ? 1 - sub(p, 0, .3) : 0;
         const lab3 = step === 12 ? sub(p, .2, .5) : step === 13 ? 1 : step === 14 ? 1 - sub(p, 0, .3) : 0;
-        const capX = drawMRNA(c, v, scan, ov, lab5, lab3);
+        // grote overzichtslabels verdwijnen meteen bij het inzoomen (anders vallen ze half buiten de nieuwe camera)
+        const ovL = step === 1 ? ov * (1 - sub(p, 0, .06)) : ov;
+        const capX = drawMRNA(c, v, scan, ov, lab5, lab3, ovL);
         // labels van het ribosoom: alleen in de stap waar ze ertoe doen
         const l40 = step === 1 ? sub(p, .35, .7) : step === 2 ? 1 - sub(p, 0, .3) : step === 4 ? sub(p, .4, .7) : step === 5 ? 1 - sub(p, 0, .3) : 0;
         const l60 = step === 4 ? sub(p, .4, .7) : step === 5 ? 1 - sub(p, 0, .3) : 0;

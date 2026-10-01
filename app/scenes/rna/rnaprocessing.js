@@ -18,7 +18,7 @@ function sceneProcessing() {
     <g data-node="splicing" data-color="${C.prot}" data-label="${T('Spliceosoom', 'Spliceosome')}"><g id="pr-intron"></g><g id="pr-snrnp"></g></g>
     <g data-node="rnaprocessing" data-nolabel><g id="pr-mrna"></g></g>
     <g data-node="capping" data-color="${C.rna}" data-label="${T("5'-cap", "5' cap")}"><g id="pr-cap"></g></g>
-    <g data-node="nmd" data-color="${C.prot}" data-label="${T('EJC → NMD-controle', 'EJC → NMD check')}"><g id="pr-ejc"></g></g>
+    <g data-node="nmd" data-color="${C.prot}" data-label="${T('EJC → NMD-controle', 'EJC → NMD check')}"><g id="pr-ejc"></g></g><rect id="pr-ejc-a" data-anchor="nmd" x="0" y="0" width="0" height="0" fill="transparent" pointer-events="none"/>
     <g data-node="polya" data-color="${C.rna}" data-label="${T('Knippen & poly(A)', 'Cleavage & poly(A)')}"><g id="pr-pa"></g></g>
 
     <g id="pr-legend" font-family="Inter" font-size="12" fill="${C.muted}">
@@ -129,6 +129,10 @@ function initProcessing(svg) {
     if (ph >= 5 && lig1 > .95) ejc.push(off(X.e1[1]) - 66);
     if (ph >= 6 && lig2 > .95) ejc.push(off(X.e2[1]) - 66);
     $('pr-ejc').innerHTML = `<g ${up}>` + ejc.map(x => pill(x, Y - 26, 44, 20, 'EJC', '#7a62e0')).join('') + `</g>`;
+    // label 'EJC → NMD-controle' boven de laatst gevormde EJC (niet boven het midden van de groep, dat soms buiten beeld valt)
+    const ea = $('pr-ejc-a'), ex = ejc.length ? ejc[ejc.length - 1] : 0;
+    ea.setAttribute('x', ex - 22); ea.setAttribute('y', Y - 36); ea.setAttribute('width', ejc.length ? 44 : 0); ea.setAttribute('height', ejc.length ? 20 : 0);
+    ea.setAttribute('transform', `translate(0 ${moveY.toFixed(1)})`); ea.setAttribute('opacity', fade.toFixed(2));
 
     // 3'-uiteinde: CPSF/CstF, knippen, PAP, Xrn2-torpedo op het stroomafwaartse RNA, Pol II
     const f3 = ph < 7 ? 0 : ph === 7 ? fadeIn(7) : ph <= 9 ? 1 : 0;
@@ -180,17 +184,17 @@ export default {
       text: { nl: 'U1 en U4 verlaten het complex; U6 paart met de 5\'-splicesite en met U2 → katalytisch actief spliceosoom (RNA-katalyse)', en: "U1 and U4 leave; U6 pairs with the 5' splice site and with U2 → catalytically active spliceosome (RNA catalysis)" } },
     { dur: 7200, cam: cam(560, 470, 700), title: { nl: 'Eerste transesterificatie', en: 'First transesterification' },
       text: { nl: "De 2'-OH van het vertakkingspunt-A valt de 5'-splicesite aan → vrij exon 1 + lariat-intermediair (2'–5'-binding)", en: "The 2'-OH of the branch-point A attacks the 5' splice site → free exon 1 + lariat intermediate (2'–5' bond)" } },
-    { dur: 7800, cam: cam(560, 460, 820), title: { nl: 'Tweede transesterificatie', en: 'Second transesterification' },
+    { dur: 7800, cam: cam(530, 460, 820), title: { nl: 'Tweede transesterificatie', en: 'Second transesterification' },
       text: { nl: "De 3'-OH van exon 1 valt de 3'-splicesite aan → exonen gekoppeld, lariat vrij (DBR1 ontvertakt, daarna afbraak); EJC blijft ~20–24 nt stroomopwaarts van de junctie", en: "The 3'-OH of exon 1 attacks the 3' splice site → exons joined, lariat released (debranched by DBR1, then degraded); an EJC stays ~20–24 nt upstream of the junction" } },
     { dur: 5400, cam: cam(860, 480, 900), title: { nl: 'Tweede intron', en: 'Second intron' },
       text: { nl: 'Zelfde mechanisme; splicing verloopt grotendeels co-transcriptioneel', en: 'Same mechanism; splicing is largely co-transcriptional' } },
-    { dur: 6000, cam: cam(1300, 500, 700), title: { nl: "3'-herkenning", en: "3' end recognition" },
+    { dur: 6000, cam: cam(1255, 500, 760), title: { nl: "3'-herkenning", en: "3' end recognition" },
       text: { nl: 'CPSF bindt het AAUAAA-signaal, CstF het GU-rijke element stroomafwaarts', en: 'CPSF binds the AAUAAA signal, CstF the GU-rich element downstream' } },
     { dur: 6400, cam: cam(1380, 500, 700), title: { nl: 'Knippen', en: 'Cleavage' },
       text: { nl: "CPSF73 knipt ~10–30 nt na AAUAAA. Xrn2 breekt het stroomafwaartse RNA af en helpt Pol II loskomen (torpedomodel)", en: "CPSF73 cleaves ~10–30 nt after AAUAAA. Xrn2 degrades the downstream RNA and helps release Pol II (torpedo model)" } },
-    { dur: 7800, cam: cam(1300, 520, 720), title: { nl: 'Polyadenylatie', en: 'Polyadenylation' },
+    { dur: 7800, cam: cam(1255, 520, 760), title: { nl: 'Polyadenylatie', en: 'Polyadenylation' },
       text: { nl: 'Poly(A)-polymerase voegt ~200–250 A toe; PABPN1 bedekt de staart en regelt de lengte', en: 'Poly(A) polymerase adds ~200–250 A; PABPN1 coats the tail and controls its length' } },
-    { dur: 9000, cam: cam(900, 330, 1250), title: { nl: 'Rijp mRNP → export', en: 'Mature mRNP → export' },
+    { dur: 9000, cam: cam(930, 330, 1250), title: { nl: 'Rijp mRNP → export', en: 'Mature mRNP → export' },
       text: { nl: 'TREX en de exportreceptor NXF1–NXT1 brengen het mRNP naar de kernporie', en: 'TREX and the export receptor NXF1–NXT1 take the mRNP to the nuclear pore' } },
   ],
   svg: sceneProcessing,

@@ -32,7 +32,7 @@ export default {
     ST(7000, cam(PX, 495, 700), 'De FG-zeef', 'The FG sieve',
       'Het kanaal is gevuld met ongeordende FG-herhalingen. Kleine moleculen (< ~40 kDa, ~5 nm) glippen er passief door; grotere alleen met een transportfactor.',
       'The channel is filled with disordered FG repeats. Small molecules (< ~40 kDa, ~5 nm) slip through passively; larger ones only with a transport factor.'),
-    ST(7000, cam(660, 380, 900), 'Importine α/β leest de NLS', 'Importin α/β reads the NLS',
+    ST(7000, cam(580, 380, 900), 'Importine α/β leest de NLS', 'Importin α/β reads the NLS',
       'Een kernsignaal (NLS) in de vracht wordt door importine α herkend; importine β koppelt eraan en kan wél door de FG-zeef.',
       'A nuclear localisation signal (NLS) in the cargo is recognised by importin α; importin β attaches and can pass through the FG sieve.'),
     ST(6000, cam(PX, 520, 860), 'Door het kanaal', 'Through the channel',

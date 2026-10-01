@@ -28,7 +28,7 @@ export default {
     ST(8000, cam(800, 460, 1500), 'Als vouwen misloopt', 'When folding goes wrong',
       'Een misgevouwen eiwit toont hydrofobe stukken aan de buitenkant. Chaperones proberen het opnieuw te vouwen; lukt dat niet, dan volgt afbraak.',
       'A misfolded protein exposes hydrophobic stretches on the outside. Chaperones try to refold it; if that fails, it is degraded.'),
-    ST(8000, cam(1050, 470, 1250), 'Klonteren: aggregatie', 'Clumping: aggregation',
+    ST(8000, cam(915, 470, 1340), 'Klonteren: aggregatie', 'Clumping: aggregation',
       'Is de kwaliteitscontrole overbelast (stress, ouderdom, mutaties)? Dan plakken ketens aan elkaar: amorfe klonten of geordende oligomeren en fibrillen.',
       'Is quality control overloaded (stress, ageing, mutations)? Then chains stick together: amorphous clumps or ordered oligomers and fibrils.'),
     ST(9000, cam(2500, 470, 1500), 'Nucleatie-afhankelijke groei', 'Nucleation-dependent growth',

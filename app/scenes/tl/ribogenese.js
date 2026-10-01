@@ -34,7 +34,7 @@ export default {
     ST(8500, cam(510, 300, 820), 'Eén voorloper: het 47S pre-rRNA', 'One precursor: the 47S pre-rRNA', 'Het transcript (≈ 13 kb) bevat 18S, 5,8S en 28S rRNA, gescheiden door spacers (ETS, ITS). Zo worden de drie rRNA\'s in gelijke hoeveelheden gemaakt.', 'The transcript (≈ 13 kb) contains 18S, 5.8S and 28S rRNA separated by spacers (ETS, ITS). This makes the three rRNAs in equal amounts.'),
     ST(9000, cam(520, 360, 900), 'snoRNP\'s modificeren het rRNA', 'snoRNPs modify the rRNA', 'Kleine nucleolaire RNA\'s zoeken via basenparing de juiste plek. C/D-box-snoRNP\'s (fibrillarine) maken 2\'-O-methyl, H/ACA-snoRNP\'s (dyskerine) pseudo-uridine (Ψ).', 'Small nucleolar RNAs find the right site by base pairing. C/D box snoRNPs (fibrillarin) add 2\'-O-methyl groups, H/ACA snoRNPs (dyskerin) make pseudouridine (Ψ).'),
     ST(9000, cam(520, 400, 900), 'Knippen: 90S → pre-40S en pre-60S', 'Cleavage: 90S → pre-40S and pre-60S', 'Het SSU-processoom (90S, met U3-snoRNA) vouwt het 18S-deel. Knippen in ITS1 scheidt de route naar de kleine en de grote subeenheid; spacers worden afgebroken.', 'The SSU processome (90S, with U3 snoRNA) folds the 18S part. Cleavage in ITS1 separates the small- and large-subunit routes; spacers are degraded.'),
-    ST(9000, cam(720, 470, 1250), 'Eiwitten en 5S rRNA komen erbij', 'Proteins and 5S rRNA join', 'Ribosomale eiwitten (≈ 80) worden in het cytoplasma gemaakt en de kern in gebracht. Het 5S rRNA komt van Pol III (buiten de nucleolus) en gaat naar de pre-60S.', 'Ribosomal proteins (≈ 80) are made in the cytoplasm and imported. The 5S rRNA is made by Pol III (outside the nucleolus) and joins the pre-60S.'),
+    ST(9000, cam(720, 490, 1250), 'Eiwitten en 5S rRNA komen erbij', 'Proteins and 5S rRNA join', 'Ribosomale eiwitten (≈ 80) worden in het cytoplasma gemaakt en de kern in gebracht. Het 5S rRNA komt van Pol III (buiten de nucleolus) en gaat naar de pre-60S.', 'Ribosomal proteins (≈ 80) are made in the cytoplasm and imported. The 5S rRNA is made by Pol III (outside the nucleolus) and joins the pre-60S.'),
     ST(9000, cam(820, 460, 1350), 'Aparte export door kernporiën', 'Separate export through nuclear pores', 'Pre-40S en pre-60S verlaten de kern apart, met hulp van exportine CRM1 (XPO1) en adapters zoals NMD3 (pre-60S).', 'Pre-40S and pre-60S leave the nucleus separately, helped by exportin CRM1 (XPO1) and adaptors such as NMD3 (pre-60S).'),
     ST(9500, cam(1240, 460, 820), 'Laatste rijping in het cytoplasma', 'Final maturation in the cytoplasm', 'NOB1 knipt 18S-E tot 18S; factoren zoals eIF6 en NMD3 worden verwijderd. Pas dan kunnen 40S en 60S samen een 80S-ribosoom vormen op een mRNA.', 'NOB1 trims 18S-E to 18S; factors such as eIF6 and NMD3 are removed. Only then can 40S and 60S form an 80S ribosome on an mRNA.'),
   ],
@@ -42,7 +42,7 @@ export default {
     const [nx, ny, nrx, nry] = NUC, [ox, oy, orx, ory] = NO;
     const pore = ([x, y]) => `<rect x="${x - 10}" y="${y - 22}" width="20" height="44" rx="8" fill="#0c1530"/><path d="M${x - 8},${y - 24} v-8 M${x - 8},${y + 24} v8 M${x + 8},${y - 24} v-8 M${x + 8},${y + 24} v8" stroke="${C.prot}" stroke-width="5" stroke-linecap="round"/>`;
     return svgOpen() + `
-    <rect x="${nx + nrx}" y="-200" width="1200" height="1300" fill="url(#gCyto)" opacity=".5"/>
+    <path d="M${nx + nrx},-200 h1200 v1300 h-1200 Z" fill="url(#gCyto)" opacity=".5"/>
     <g data-node="kern" data-color="${C.dna}" data-label="${T2('Celkern', 'Nucleus')}" data-nolabel>
       <ellipse cx="${nx}" cy="${ny}" rx="${nrx}" ry="${nry}" fill="url(#gNuc)" stroke="#6c8fc9" stroke-width="10" stroke-opacity=".55"/>
       <ellipse cx="${nx}" cy="${ny}" rx="${nrx - 12}" ry="${nry - 12}" fill="none" stroke="#6c8fc9" stroke-width="3" stroke-opacity=".4"/>
@@ -68,6 +68,7 @@ export default {
     </svg>`;
   },
   init(svg) {
+    const STEPS = this?.steps ?? [];
     const $ = id => svg.getElementById(id);
     const hide = id => $(id).setAttribute('cx', '-9999');
     /* deeltjes: kleine (pre-)40S en grote (pre-)60S subeenheid, met factoren (grijs-paarse bolletjes) */
@@ -104,7 +105,7 @@ export default {
 
     return {
       update(t, s) {
-        placeHud(svg, 'rg-hud');
+        placeHud(svg, 'rg-hud', .015, .105, STEPS[s.step]?.cam);
         const { step: i, p } = s;
         let rd = '', br = '', sno = '', part = '', tl = '', ov = '', lab = '';
         // vaste labels (overzicht)

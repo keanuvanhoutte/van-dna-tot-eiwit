@@ -40,7 +40,7 @@ export default {
     ST(9500, cam(800, 445, 1440), "Aflezen van 5' naar 3'", "Reading from 5' to 3'", "Het ribosoom leest het mRNA 5'→3' in niet-overlappende tripletten, zonder komma's. Elk codon wijst via het wiel één aminozuur aan; de N-terminus wordt eerst gemaakt.", "The ribosome reads the mRNA 5'→3' in non-overlapping triplets, without commas. Each codon points to one amino acid on the wheel; the N terminus is made first."),
     ST(8000, cam(640, 445, 1300), 'Start en stop', 'Start and stop', 'AUG (Met) is het startcodon. UAA, UAG en UGA zijn stopcodons: daarvoor bestaat geen tRNA, maar een release factor (eRF1).', 'AUG (Met) is the start codon. UAA, UAG and UGA are stop codons: no tRNA exists for them, but a release factor (eRF1) does.'),
     ST(9000, cam(640, 445, 1300), 'Gedegenereerd: meerdere codons per aminozuur', 'Degenerate: several codons per amino acid', '61 zinvolle codons voor 20 aminozuren. Leu, Ser en Arg hebben er elk 6; Met en Trp maar 1. Verschillen zitten vooral op de 3e positie.', '61 sense codons for 20 amino acids. Leu, Ser and Arg have 6 each; Met and Trp only 1. Differences are mostly at the 3rd position.'),
-    ST(9500, cam(1150, 450, 900), 'Wobble op de derde positie', 'Wobble at the third position', 'De 5\'-base van het anticodon (positie 34) paart losser met de 3e codonbase. Zo leest één tRNA met inosine (I) de codons GCU, GCC en GCA (Ala).', 'The 5\' base of the anticodon (position 34) pairs more loosely with the 3rd codon base. One tRNA with inosine (I) thus reads GCU, GCC and GCA (Ala).'),
+    ST(9500, cam(1105, 450, 900), 'Wobble op de derde positie', 'Wobble at the third position', 'De 5\'-base van het anticodon (positie 34) paart losser met de 3e codonbase. Zo leest één tRNA met inosine (I) de codons GCU, GCC en GCA (Ala).', 'The 5\' base of the anticodon (position 34) pairs more loosely with the 3rd codon base. One tRNA with inosine (I) thus reads GCU, GCC and GCA (Ala).'),
     ST(9000, cam(1290, 460, 900), 'Drie leesramen', 'Three reading frames', 'Dezelfde sequentie kan in drie ramen gelezen worden. Het startcodon AUG legt het juiste leesraam vast.', 'The same sequence can be read in three frames. The start codon AUG sets the correct reading frame.'),
     ST(9000, cam(1290, 460, 900), 'Frameshift: één base erbij', 'Frameshift: one extra base', 'Een insertie (of deletie) van 1 nt verschuift het leesraam: alle volgende codons veranderen. Hier ontstaat meteen een stopcodon (UGA).', 'An insertion (or deletion) of 1 nt shifts the reading frame: all following codons change. Here a stop codon (UGA) appears straight away.'),
     ST(9000, cam(790, 445, 1320), 'Bijna universeel', 'Nearly universal', 'Mitochondriën gebruiken een iets andere code (bij de mens: UGA = Trp, AUA = Met). UGA kan ook selenocysteïne coderen, UAG pyrrolysine.', 'Mitochondria use a slightly different code (in humans: UGA = Trp, AUA = Met). UGA can also encode selenocysteine, UAG pyrrolysine.'),
@@ -76,6 +76,7 @@ export default {
     </svg>`;
   },
   init(svg) {
+    const STEPS = this?.steps ?? [];
     const $ = id => svg.getElementById(id);
     const hlCodon = (cod, col, w = 4, op = 1) => {
       const k = idxOf(cod), i1 = k >> 4, i2 = k >> 2;
@@ -88,7 +89,7 @@ export default {
 
     return {
       update(t, s) {
-        placeHud(svg, 'cd-hud', .015, .946);
+        placeHud(svg, 'cd-hud', .015, .946, STEPS[s.step]?.cam);
         const { step: i, p } = s;
         // wiel opbouwen / dimmen
         const rings = ['cd-r1', 'cd-r2', 'cd-r3', 'cd-r4'];

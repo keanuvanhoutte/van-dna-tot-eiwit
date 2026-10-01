@@ -1,0 +1,72 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>clip-check</title>
+<body style="background:#0a1224;color:#ddd"><pre id="out">running…</pre>
+<script type="module">
+/* Vindt wat half buiten beeld valt: per SVG-scène en per stap (eindbeeld p = 0,97, en begin p = 0,05) de zichtbare
+ * teksten en kaders (rect ≥ 80×40) waarvan de omtrek de camerarand van die stap doorsnijdt (deels zichtbaar = afgesneden).
+ * Gebruik: headless Chrome --dump-dom "tools/clip-check.html[?ids=a,b]"  */
+const out = document.getElementById('out');
+const only = new URLSearchParams(location.search).get('ids')?.split(',');
+const { SCENES } = await import('../app/scenes/index.js');
+const FULL = [0, 0, 1600, 900], M = 3;
+
+function op(el, root) {
+  let o = 1;
+  for (let e = el; e && e !== root.parentNode && e.getAttribute; e = e.parentNode) {
+    const a = e.getAttribute('opacity'); if (a !== null) o *= +a;
+    if (e.style?.opacity) o *= +e.style.opacity;
+    if (e.getAttribute('display') === 'none' || e.style?.display === 'none') return 0;
+  }
+  return o;
+}
+function rectIn(el) {
+  let bb; try { bb = el.getBBox(); } catch { return null; }
+  const m = el.getCTM(); if (!m || !bb.width) return null;
+  const pts = [[bb.x, bb.y], [bb.x + bb.width, bb.y], [bb.x, bb.y + bb.height], [bb.x + bb.width, bb.y + bb.height]].map(([x, y]) => [m.a * x + m.c * y + m.e, m.b * x + m.d * y + m.f]);
+  const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+  return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
+}
+function clipped(svg, box) {
+  const [x0, y0] = box, x1 = box[0] + box[2], y1 = box[1] + box[3], res = [];
+  for (const el of svg.querySelectorAll('text, rect')) {
+    if (el.closest('defs') || (el.parentNode.closest && el.parentNode.closest('text'))) continue;
+    if (op(el, svg) < .3) continue;
+    const isText = el.tagName === 'text';
+    if (isText && !(el.textContent || '').trim()) continue;
+    if (!isText) {
+      const f = el.getAttribute('fill'), s = el.getAttribute('stroke');
+      if ((!f || f === 'none' || f === 'transparent') && (!s || s === 'none')) continue;
+    }
+    const r = rectIn(el); if (!r) continue;
+    if (!isText && ((r[2] - r[0]) < 80 || (r[3] - r[1]) < 40)) continue;
+    if (!isText && (r[2] - r[0]) > box[2] * .9) continue;            // achtergrondvlakken
+    const inter = r[0] < x1 && r[2] > x0 && r[1] < y1 && r[3] > y0;
+    const inside = r[0] >= x0 - M && r[2] <= x1 + M && r[1] >= y0 - M && r[3] <= y1 + M;
+    if (inter && !inside) res.push(`${isText ? 'tekst' : 'kader'} "${isText ? el.textContent.trim().slice(0, 30) : (el.getAttribute('width') + '×' + el.getAttribute('height'))}"`);
+  }
+  return res;
+}
+const rows = []; let tot = 0;
+for (const [id, sc] of Object.entries(SCENES)) {
+  if (sc.alias || sc.kind === '3d' || !sc.svg) continue;
+  if (only && !only.includes(id)) continue;
+  const host = document.createElement('div'); host.style.cssText = 'position:absolute;left:-5000px;top:0;width:1600px;height:900px';
+  host.innerHTML = sc.svg(); document.body.append(host);
+  const svg = host.querySelector('svg'); svg.setAttribute('viewBox', FULL.join(' ')); svg.setAttribute('width', 1600); svg.setAttribute('height', 900);
+  let api = null; try { api = sc.init?.(svg, { lang: 'nl' }); } catch { host.remove(); continue; }
+  await new Promise(r => setTimeout(r, 300));
+  const steps = sc.overview ? [[sc.overview.step ?? 0, sc.overview.cam ?? sc.steps[sc.overview.step ?? 0].cam]] : sc.steps.map((s, k) => [k, s.cam]);
+  for (const [k, cam] of steps) {
+    const st = sc.steps[k], t0 = sc.steps.slice(0, k).reduce((a, x) => a + x.dur, 0), box = cam ?? FULL;
+    for (const p of sc.overview ? [.999] : [.05, .97]) {
+      try { api?.update?.(t0 + st.dur * p, { step: k, p, t: t0 + st.dur * p, total: 0 }); } catch {}
+      const c = clipped(svg, box);
+      if (c.length) { tot += c.length; rows.push(`${id} s${k} p${p}: ${c.slice(0, 5).join(' | ')}${c.length > 5 ? ` (+${c.length - 5})` : ''}`); }
+    }
+  }
+  try { api?.destroy?.(); } catch {}
+  host.remove();
+}
+out.textContent = `AFGESNEDEN ELEMENTEN: ${tot}\n` + rows.join('\n');
+</script>

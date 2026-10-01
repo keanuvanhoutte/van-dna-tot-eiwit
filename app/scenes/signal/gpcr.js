@@ -36,7 +36,7 @@ export default {
     ST(8000, cam(470, 400, 900), 'De receptor werkt als GEF', 'The receptor acts as a GEF',
       'De actieve receptor bindt Gs en laat Gαs zijn GDP loslaten. GTP, waarvan er in de cel veel meer is, neemt de plaats in: Gαs staat aan.',
       'The active receptor binds Gs and makes Gαs release its GDP. GTP, far more abundant in the cell, takes its place: Gαs is switched on.'),
-    ST(7500, cam(620, 400, 1000), 'Gαs laat Gβγ los', 'Gαs lets go of Gβγ',
+    ST(7500, cam(612, 400, 1000), 'Gαs laat Gβγ los', 'Gαs lets go of Gβγ',
       'Gαs·GTP maakt zich los van Gβγ en schuift langs het membraan naar adenylylcyclase. Eén receptor kan na elkaar meerdere G-eiwitten aanzetten.',
       'Gαs·GTP separates from Gβγ and moves along the membrane to adenylyl cyclase. One receptor can switch on several G proteins in turn.'),
     ST(8000, cam(860, 430, 1000), 'Adenylylcyclase maakt cAMP', 'Adenylyl cyclase makes cAMP',
@@ -51,7 +51,7 @@ export default {
     ST(8500, cam(1270, 740, 950), 'CBP/p300 zet het gen aan', 'CBP/p300 switches the gene on',
       'Fosfo-CREB bindt de co-activator CBP/p300, die histonen acetyleert en RNA-polymerase II helpt. Genen met een CRE worden afgeschreven.',
       'Phospho-CREB binds the co-activator CBP/p300, which acetylates histones and helps RNA polymerase II. Genes with a CRE are transcribed.'),
-    ST(9000, FULL, 'Uitschakelen', 'Switching off',
+    ST(9000, cam(800, 475, 1600), 'Uitschakelen', 'Switching off',
       'Gαs breekt zijn GTP zelf af tot GDP en bindt weer Gβγ. Fosfodiësterasen breken cAMP af tot AMP en fosfatasen halen het fosfaat van CREB: het signaal dooft uit.',
       'Gαs hydrolyses its own GTP to GDP and rebinds Gβγ. Phosphodiesterases break cAMP down to AMP and phosphatases remove the phosphate from CREB: the signal fades.'),
   ],
@@ -68,7 +68,7 @@ export default {
       ${nucEnv(-600, 2200, NY, [640, PORE, 1500])}
       <g id="gp-gene"></g>
       ${dna(-600, 2200, DY)}
-      ${T(40, 60, T2('buiten de cel', 'outside the cell'), { size: 24, col: C.muted, anchor: 'start', w: 500 })}
+      ${T(40, 72, T2('buiten de cel', 'outside the cell'), { size: 24, col: C.muted, anchor: 'start', w: 500 })}
       ${T(40, 420, 'cytosol', { size: 24, col: C.muted, anchor: 'start', w: 500 })}
       ${T(700, 752, T2('celkern', 'nucleus'), { size: 24, col: '#9cc0ff', anchor: 'start', w: 500 })}
       <g id="gp-ac">${ac}</g>
@@ -205,7 +205,7 @@ export default {
         k = on(4.2, 4.5, 5.02, 5.2);
         if (k > .01) L += T(700, 560, 'ATP → cAMP', { size: 22, col: GTPC, op: k }) +
           T(990, 598, T2('cAMP: tweede boodschapper', 'cAMP: second messenger'), { size: 22, col: C.text, op: k * K(g, 4.6, 4.9) });
-        k = on(5.1, 5.4, 6.02, 6.2);
+        k = on(5.1, 5.4, 6.0, 6.04);
         if (k > .01) L += T(PKX, 440, T2('PKA: 2 R + 2 C', 'PKA: 2 R + 2 C'), { size: 22, col: C.text, op: k }) +
           T(PKX + 130, 640, T2('actieve C', 'active C'), { size: 22, col: C.prot, op: k * K(g, 5.7, 5.85) }) +
           T(PKX - 110, 380, T2('4 cAMP op R', '4 cAMP on R'), { size: 22, col: GTPC, op: k * K(g, 5.2, 5.35) });

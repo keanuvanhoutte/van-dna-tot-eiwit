@@ -18,9 +18,12 @@ export function hud(id, items, { row = false } = {}) {
   }
   return `<g id="${id}">${s}</g>`;
 }
-/* zet de hud-groep op een vaste plek binnen de huidige camera (leest de viewBox van het vorige frame) */
-export function placeHud(svg, id, fx = .015, fy = .105) {
-  const vb = (svg.getAttribute('viewBox') || '0 0 1600 900').split(/[\s,]+/).map(Number);
+/* zet de hud-groep op een vaste plek binnen de huidige camera (leest de viewBox van het vorige frame).
+ * tcam = doelcamera van de stap: gebruikt zolang de lopende camera de viewBox nog niet zette (die schrijft altijd
+ * met decimalen), bv. vóór het eerste frame of in de meet-tools; zo staat de hud ook dan in het eindbeeld. */
+export function placeHud(svg, id, fx = .015, fy = .105, tcam = null) {
+  const raw = svg.getAttribute('viewBox') || '0 0 1600 900';
+  const vb = tcam && raw.trim() === '0 0 1600 900' ? tcam : raw.split(/[\s,]+/).map(Number);
   const k = vb[2] / 1600;
   svg.getElementById(id)?.setAttribute('transform', `translate(${f1(vb[0] + fx * vb[2])} ${f1(vb[1] + fy * vb[3])}) scale(${k.toFixed(4)})`);
 }

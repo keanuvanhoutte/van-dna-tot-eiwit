@@ -41,7 +41,7 @@ export default {
     ST(7500, cam(560, 420, 1000), 'CpG: C gevolgd door G', 'CpG: C followed by G',
       'Bij zoogdieren wordt vooral de C in CpG-dinucleotiden gemethyleerd. CpG is palindroom: ook de andere streng leest 5\'-CG-3\'.',
       'In mammals mainly the C in CpG dinucleotides is methylated. CpG is palindromic: the other strand also reads 5\'-CG-3\'.'),
-    ST(8500, cam(1300, 470, 860), '5-methylcytosine (5mC)', '5-methylcytosine (5mC)',
+    ST(8500, cam(1300, 425, 880), '5-methylcytosine (5mC)', '5-methylcytosine (5mC)',
       'Een methylgroep op C5 van cytosine. Die steekt in de grote groef en verandert de paring met G niet: de code blijft dezelfde.',
       'A methyl group on C5 of cytosine. It sticks into the major groove and does not change pairing with G: the code stays the same.'),
     ST(8500, cam(560, 420, 1000), 'De novo: DNMT3A en DNMT3B', 'De novo: DNMT3A and DNMT3B',
@@ -53,10 +53,10 @@ export default {
     ST(9000, cam(590, 470, 1120), 'Onderhoud: DNMT1', 'Maintenance: DNMT1',
       'DNMT1 (met UHRF1) herkent hemigemethyleerde CpG\'s en methyleert de nieuwe streng. Zo wordt het patroon bij elke celdeling gekopieerd.',
       'DNMT1 (with UHRF1) recognises hemimethylated CpGs and methylates the new strand. This copies the pattern at every cell division.'),
-    ST(9000, cam(800, 790, 1380), 'CpG-eilanden en promoters', 'CpG islands and promoters',
+    ST(9000, cam(790, 790, 1380), 'CpG-eilanden en promoters', 'CpG islands and promoters',
       'De meeste CpG\'s zijn gemethyleerd, maar CpG-eilanden in promoters meestal niet: daar kan het gen aan. Een gemethyleerde promoter bindt MBD-eiwitten en gaat uit.',
       'Most CpGs are methylated, but CpG islands in promoters usually are not: there the gene can be on. A methylated promoter binds MBD proteins and is switched off.'),
-    ST(8500, cam(1300, 470, 860), 'Demethylatie via TET', 'Demethylation via TET',
+    ST(8500, cam(1300, 425, 880), 'Demethylatie via TET', 'Demethylation via TET',
       'TET-enzymen oxideren 5mC stap voor stap; 5fC en 5caC worden door TDG en base-excisieherstel vervangen door gewone C.',
       'TET enzymes oxidise 5mC step by step; 5fC and 5caC are replaced by ordinary C through TDG and base excision repair.'),
     ST(7500, cam(600, 420, 1240), 'Een erfelijk "aan/uit"-geheugen', 'A heritable "on/off" memory',
@@ -178,7 +178,7 @@ export default {
         $('dm-chem').setAttribute('opacity', f1(step === 1 ? 1 : step === 0 ? .25 : step === 2 ? 1 - ease(sub(p, 0, .3)) : 0));
         $('dm-tet').setAttribute('opacity', step === 6 ? 1 : 0);
         for (let i = 0; i < 5; i++) $('dm-tet' + i).setAttribute('opacity', step === 6 ? (i === 0 ? 1 : f1(sub(p, .05 + i * .16, .15 + i * .16))) : 0);
-        $('dm-prom').setAttribute('opacity', f1(step === 5 ? ease(sub(p, 0, .25)) : step === 6 ? 1 - ease(sub(p, 0, .3)) : 0));
+        $('dm-prom').setAttribute('opacity', f1(step === 5 ? ease(sub(p, 0, .25)) : step === 6 ? 1 - ease(sub(p, 0, .05)) : 0));
         $('dm-rep').setAttribute('opacity', step === 3 || step === 4 ? 1 : 0);
         $('dm-sum').setAttribute('opacity', step === 7 ? ease(sub(p, .1, .4)) : 0);
       },

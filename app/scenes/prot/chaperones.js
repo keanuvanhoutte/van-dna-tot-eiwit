@@ -36,7 +36,7 @@ export default {
     ST(8000, cam(880, 420, 1050), 'NEF: ADP eruit, ATP erin', 'NEF: ADP out, ATP in',
       'Een nucleotide-uitwisselingsfactor (NEF) wisselt ADP voor ATP. Het deksel gaat open, de keten komt vrij en kan vouwen of opnieuw binden.',
       'A nucleotide exchange factor (NEF) swaps ADP for ATP. The lid opens, the chain is released and can fold or bind again.'),
-    ST(7500, cam(2500, 450, 1350), 'Chaperonine: een vouwkooi', 'Chaperonin: a folding cage',
+    ST(7500, cam(2500, 458, 1350), 'Chaperonine: een vouwkooi', 'Chaperonin: a folding cage',
       'Sommige eiwitten hebben een afgesloten kamer nodig: twee ringen rug aan rug. Mens: TRiC/CCT; best bestudeerd: GroEL–GroES van E. coli.',
       'Some proteins need an enclosed chamber: two rings back to back. Human: TRiC/CCT; best studied: GroEL–GroES of E. coli.'),
     ST(7500, cam(2500, 420, 1250), 'Binding aan de hydrofobe rand', 'Binding to the hydrophobic rim',

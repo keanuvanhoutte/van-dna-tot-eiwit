@@ -25,8 +25,8 @@ export default {
   steps: [
     ST(8500, cam(800, 520, 1500), 'UGA: stop… of selenocysteïne', 'UGA: stop… or selenocysteine', 'In 25 menselijke genen betekent een UGA midden in het leesraam selenocysteïne (Sec): een cysteïne met selenium in plaats van zwavel (bv. glutathionperoxidasen, deiodinasen).', 'In 25 human genes a UGA inside the reading frame means selenocysteine (Sec): a cysteine with selenium instead of sulfur (e.g. glutathione peroxidases, deiodinases).'),
     ST(9500, cam(800, 330, 1350), 'Sec wordt op zijn tRNA gemaakt', 'Sec is made on its tRNA', 'Er is geen vrij Sec: seryl-tRNA-synthetase laadt tRNA-Sec (anticodon UCA) met serine; PSTK fosforyleert, SepSecS vervangt de fosfaatgroep door selenium.', 'There is no free Sec: seryl-tRNA synthetase charges tRNA-Sec (anticodon UCA) with serine; PSTK phosphorylates it, SepSecS replaces the phosphate with selenium.'),
-    ST(9000, cam(1040, 520, 1050), "SECIS-element in de 3'-UTR", "SECIS element in the 3' UTR", "Een stam-lus in de 3'-UTR (SECIS) bindt het eiwit SBP2. SBP2 rekruteert de speciale elongatiefactor eEFSec met Sec-tRNA-Sec.", "A stem-loop in the 3' UTR (SECIS) binds the protein SBP2. SBP2 recruits the special elongation factor eEFSec carrying Sec-tRNA-Sec."),
-    ST(9000, cam(700, 480, 1050), 'Het ribosoom bereikt UGA', 'The ribosome reaches UGA', 'Staat UGA in de A-plaats, dan levert eEFSec·GTP het Sec-tRNA (in plaats van eEF1A). Het anticodon UCA paart met UGA.', 'With UGA in the A site, eEFSec·GTP delivers Sec-tRNA (instead of eEF1A). The anticodon UCA pairs with UGA.'),
+    ST(9000, cam(1060, 520, 1050), "SECIS-element in de 3'-UTR", "SECIS element in the 3' UTR", "Een stam-lus in de 3'-UTR (SECIS) bindt het eiwit SBP2. SBP2 rekruteert de speciale elongatiefactor eEFSec met Sec-tRNA-Sec.", "A stem-loop in the 3' UTR (SECIS) binds the protein SBP2. SBP2 recruits the special elongation factor eEFSec carrying Sec-tRNA-Sec."),
+    ST(9000, cam(720, 480, 1050), 'Het ribosoom bereikt UGA', 'The ribosome reaches UGA', 'Staat UGA in de A-plaats, dan levert eEFSec·GTP het Sec-tRNA (in plaats van eEF1A). Het anticodon UCA paart met UGA.', 'With UGA in the A site, eEFSec·GTP delivers Sec-tRNA (instead of eEF1A). The anticodon UCA pairs with UGA.'),
     ST(8500, cam(700, 460, 1050), 'Sec ingebouwd, translatie gaat door', 'Sec incorporated, translation continues', 'Sec wordt via een gewone peptidebinding ingebouwd; het ribosoom leest verder tot het echte stopcodon. Zonder selenium of SECIS stopt het ribosoom bij UGA.', 'Sec is added by a normal peptide bond; the ribosome reads on to the real stop codon. Without selenium or SECIS the ribosome stops at UGA.'),
     ST(9500, cam(800, 470, 1400), 'Pyrrolysine: UAG in methanogenen', 'Pyrrolysine: UAG in methanogens', 'Sommige archaea (bv. Methanosarcina) en enkele bacteriën lezen UAG als pyrrolysine (Pyl). Pyl wordt uit 2 lysines gemaakt en door PylRS rechtstreeks op tRNA-Pyl (anticodon CUA) gezet.', 'Some archaea (e.g. Methanosarcina) and a few bacteria read UAG as pyrrolysine (Pyl). Pyl is made from 2 lysines and loaded directly onto tRNA-Pyl (anticodon CUA) by PylRS.'),
     ST(9000, FULL, 'Het 21e en 22e aminozuur', 'The 21st and 22nd amino acids', 'Beide zijn genetisch gecodeerd via een stopcodon. Sec komt in alle drie domeinen van het leven voor (niet in alle soorten), Pyl alleen in enkele micro-organismen.', 'Both are genetically encoded via a stop codon. Sec occurs in all three domains of life (not in every species), Pyl only in a few microorganisms.'),
@@ -51,6 +51,7 @@ export default {
     </svg>`;
   },
   init(svg) {
+    const STEPS = this?.steps ?? [];
     const $ = id => svg.getElementById(id);
     const hide = id => $(id).setAttribute('cx', '-9999');
     const bead = (x, y, lab, col, r = 22) => `<circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${col}" stroke="#0a1224" stroke-width="2"/><text x="${f1(x)}" y="${f1(y + r * .3)}" font-size="${Math.round(r * .68)}" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">${lab}</text>`;
@@ -89,7 +90,7 @@ export default {
 
     return {
       update(t, s) {
-        placeHud(svg, 'se-hud');
+        placeHud(svg, 'se-hud', .015, .105, STEPS[s.step]?.cam);
         const { step: i, p } = s;
         let rb = '', mr = '', tr = '', fac = '', bio = '', aaS = '', pyl = '', ov = '';
         const P = cx(2), A = cx(3);                       // P-plaats boven codon 2 (UGU), A-plaats boven UGA
@@ -119,7 +120,7 @@ export default {
               if (bond < 1) { tr += trna(A - shift, yDock, 'ACU', secBead, 1); ov += chainAt(P + 26 + (A - P) * bond * .5, yDock - 222 - 0 * bond); }
               else { tr += trna(A - shift, yDock, 'ACU', null, 1); ov += chainAt(A - shift + 26 + 52, yDock - 222 + 26, secBead); }
               ov += `<g opacity="${f1(sub(p, .15, .35) * (1 - sub(p, .7, .8)))}">${txt(A + 140, yDock - 320, T2('peptidebinding', 'peptide bond'), '#fff', 22, 'start', 700)}</g>`;
-              ov += `<g opacity="${f1(sub(p, .8, .95))}">` + textBox(930, 180, 460, [T2('Zonder Se of SECIS: eRF1 wint', 'Without Se or SECIS: eRF1 wins'), T2('→ afgeknot eiwit', '→ truncated protein')], { col: C.danger, fs: 21 }) + '</g>';
+              ov += `<g opacity="${f1(sub(p, .8, .95))}">` + textBox(755, 180, 460, [T2('Zonder Se of SECIS: eRF1 wint', 'Without Se or SECIS: eRF1 wins'), T2('→ afgeknot eiwit', '→ truncated protein')], { col: C.danger, fs: 21 }) + '</g>';
             } else {
               tr += trna(x, y, 'ACU', ['Sec', SEC_COL], 1, k > .95);
               fac += `<g opacity="${f1(1 - sub(p, .7, .9))}">${pill(x + 110, y - 150, 150, 34, 'eEFSec·GTP', C.prot2, 1, 17)}</g>`;

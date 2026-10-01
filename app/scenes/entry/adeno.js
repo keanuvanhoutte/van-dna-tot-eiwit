@@ -113,7 +113,7 @@ export default {
 
         /* ── anatomie-inzet ───────────────────────────────── */
         // stap 2: de labels van de inzet vervagen snel; het capside zelf vliegt (krimpend) naar de cel (zie 'routevirus')
-        const anatOp = step <= 1 ? 1 : step === 2 ? 1 - ease(clamp(p / .12)) : 0;
+        const anatOp = step <= 1 ? 1 : step === 2 ? 1 - ease(clamp(p / .05)) : 0;
         $('ad-anat').setAttribute('opacity', f1(anatOp));
         if (anatOp > .01) {
           const wob = Math.sin(tt * .7) * 2;

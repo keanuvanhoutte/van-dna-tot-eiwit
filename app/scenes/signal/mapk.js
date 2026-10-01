@@ -73,7 +73,7 @@ const SCENE = {
     ST(8500, cam(820, 380, 1000), 'Raf fosforyleert MEK', 'Raf phosphorylates MEK',
       'Raf zet met ATP een fosfaat op twee serines van MEK (een MAPKK). Nu is MEK actief.',
       'Using ATP, Raf puts a phosphate on two serines of MEK (a MAPKK). MEK is now active.'),
-    ST(9000, cam(960, 470, 1000), 'MEK fosforyleert ERK op Thr én Tyr', 'MEK phosphorylates ERK on Thr and Tyr',
+    ST(9000, cam(935, 470, 1000), 'MEK fosforyleert ERK op Thr én Tyr', 'MEK phosphorylates ERK on Thr and Tyr',
       'MEK is dubbelspecifiek: het fosforyleert in ERK (de MAPK) zowel de threonine als de tyrosine van het TEY-motief. Pas met beide fosfaten is ERK volledig actief.',
       'MEK has dual specificity: in ERK (the MAPK) it phosphorylates both the threonine and the tyrosine of the TEY motif. Only with both phosphates is ERK fully active.'),
     ST(9000, cam(800, 450, 1600), 'Elke stap versterkt het signaal', 'Each step amplifies the signal',

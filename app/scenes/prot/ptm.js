@@ -38,7 +38,7 @@ export default {
     ST(7000, cam(680, 470, 1250), 'Na de vouwing: chemische extra\'s', 'After folding: chemical extras',
       'Enzymen hangen groepen aan zijketens of knippen de keten. Zo krijgt een eiwit eigenschappen die de 20 aminozuren alleen niet hebben.',
       'Enzymes attach groups to side chains or cut the chain. This gives a protein properties the 20 amino acids alone do not have.'),
-    ST(6500, cam(700, 390, 1150), 'Een kinase met ATP bindt', 'A kinase with ATP binds',
+    ST(6500, cam(700, 410, 1150), 'Een kinase met ATP bindt', 'A kinase with ATP binds',
       'Een eiwitkinase herkent een Ser (of Thr, Tyr) in de juiste sequentiecontext. In zijn actieve plaats ligt ATP.',
       'A protein kinase recognises a Ser (or Thr, Tyr) in the right sequence context. ATP sits in its active site.'),
     ST(8000, cam(930, 390, 1400), 'Fosforylatie: γ-fosfaat → Ser-OH', 'Phosphorylation: γ-phosphate → Ser-OH',
@@ -142,7 +142,7 @@ export default {
         let lidK = 0, pOn = 0, pPos = null, kinK = 0, atpLbl = 'ATP', ppK = 0, piK = 0, chemK = 0, glow = 0;
         if (step === 1) kinK = ease(sub(p, 0, .6));
         if (step === 2) { kinK = 1; const m = ease(sub(p, .15, .55)); const a = atpAt(kinPos(1)); const sr = LID_OFF[SER]; pPos = [lerp(a[0] + 30, sr[0], m), lerp(a[1], sr[1] - 34, m)]; if (p > .55) atpLbl = 'ADP'; chemK = sub(p, .05, .3); }
-        if (step === 3) { kinK = 1 - ease(sub(p, 0, .35)); atpLbl = 'ADP'; lidK = ease(sub(p, .25, .7)); glow = sub(p, .6, .85); chemK = 1 - sub(p, 0, .2); }
+        if (step === 3) { kinK = 1 - ease(sub(p, 0, .35)); atpLbl = 'ADP'; lidK = ease(sub(p, .25, .7)); glow = sub(p, .6, .85); chemK = 1 - sub(p, 0, .06); }
         if (step === 4) { ppK = ease(sub(p, 0, .3)) * (1 - ease(sub(p, .85, 1))); piK = sub(p, .35, .65); lidK = 1 - ease(sub(p, .55, .9)); glow = 1 - sub(p, .5, .7); }
         const lid = lerpPts(LID_OFF, LID_ON, lidK);
         const ser = lid[SER];

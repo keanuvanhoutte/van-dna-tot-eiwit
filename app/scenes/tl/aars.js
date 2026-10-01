@@ -54,6 +54,7 @@ export default {
     </svg>`;
   },
   init(svg) {
+    const STEPS = this?.steps ?? [];
     const $ = id => svg.getElementById(id);
     /* vereenvoudigd tRNA (L-vorm): hoek linksboven, anticodon onderaan; tip = positie van A76 */
     function trna(ox, oy, tip, charge, op = 1, hiId = 0) {
@@ -80,7 +81,7 @@ export default {
 
     return {
       update(t, s) {
-        placeHud(svg, 'rs-hud');
+        placeHud(svg, 'rs-hud', .015, .105, STEPS[s.step]?.cam);
         const { step: i, p } = s;
         let tr = '', mol = '', ov = '', eef = '';
         const dockOff = i < 2 ? [-620, 0] : i === 2 ? E2([-620, 0], [0, 0], ease(sub(p, .05, .5))) : [0, 0];

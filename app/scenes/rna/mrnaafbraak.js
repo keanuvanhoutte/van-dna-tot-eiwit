@@ -27,7 +27,7 @@ export default {
     ST(7500, cam(1060, 460, 760), 'AU-rijk element in de 3\'-UTR', 'AU-rich element in the 3\' UTR',
       'Sequenties als AUUUA in de 3\'-UTR binden eiwitten zoals TTP, die de afbraakmachine aantrekken. Zo leven mRNA\'s voor bv. TNF-α maar kort.',
       'Sequences such as AUUUA in the 3\' UTR bind proteins such as TTP, which recruit the decay machinery. This keeps mRNAs for e.g. TNF-α short-lived.'),
-    ST(8500, cam(1050, 450, 1000), 'Deadenylatie', 'Deadenylation',
+    ST(8500, cam(1020, 450, 1070), 'Deadenylatie', 'Deadenylation',
       'PAN2–PAN3 en daarna CCR4–NOT knabbelen de poly(A)-staart af; PABPC1 valt eraf en de lus gaat open. Meestal is dit de snelheidsbepalende stap.',
       'PAN2–PAN3 and then CCR4–NOT nibble away the poly(A) tail; PABPC1 falls off and the loop opens. This is usually the rate-limiting step.'),
     ST(8000, cam(720, 450, 1350), 'Decapping', 'Decapping',

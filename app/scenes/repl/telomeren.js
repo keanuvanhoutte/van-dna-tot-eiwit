@@ -43,16 +43,16 @@ export default {
     S(8000, cam(720, 700, 1200), 'Elke deling een beetje korter', 'A little shorter every division',
       'Zonder telomerase worden telomeren bij elke deling korter. Te korte telomeren zetten een DNA-schaderespons aan: de cel stopt met delen (senescentie).',
       'Without telomerase, telomeres get shorter with every division. Telomeres that are too short trigger a DNA damage response: the cell stops dividing (senescence).'),
-    S(8000, cam(1130, 440, 800), 'Telomerase bindt de 3\'-overhang', 'Telomerase binds the 3\' overhang',
+    S(8000, cam(1125, 440, 830), 'Telomerase bindt de 3\'-overhang', 'Telomerase binds the 3\' overhang',
       "Telomerase = TERT (reverse transcriptase) + telomerase-RNA (hTR). 5 nt van de RNA-matrijs paren met het DNA-uiteinde …GTTAG-3'.",
       "Telomerase = TERT (reverse transcriptase) + telomerase RNA (hTR). 5 nt of the RNA template pair with the DNA end …GTTAG-3'."),
-    S(9000, cam(1180, 440, 800), 'Reverse transcriptie: + GGTTAG', 'Reverse transcription: + GGTTAG',
+    S(9000, cam(1170, 440, 820), 'Reverse transcriptie: + GGTTAG', 'Reverse transcription: + GGTTAG',
       "TERT gebruikt de RNA-matrijs om DNA te maken: G, G, T, T, A, G worden aan het 3'-uiteinde gekoppeld (5'→3').",
       "TERT uses the RNA template to make DNA: G, G, T, T, A, G are added to the 3' end (5'→3')."),
     S(8000, cam(1260, 440, 820), 'Verschuiven en herhalen', 'Translocate and repeat',
       'De matrijs schuift 6 nt op en paart opnieuw met het nieuwe uiteinde. Zo kan telomerase meerdere herhalingen na elkaar toevoegen.',
       'The template shifts by 6 nt and pairs again with the new end. In this way telomerase can add several repeats in a row.'),
-    S(8000, cam(1000, 440, 1000), 'De C-streng wordt aangevuld', 'The C strand is filled in',
+    S(8000, cam(1030, 440, 1060), 'De C-streng wordt aangevuld', 'The C strand is filled in',
       'CST en Pol α-primase maken de complementaire C-rijke streng bij (met een RNA-primer). Er blijft een 3\'-overhang over.',
       'CST and Pol α-primase fill in the complementary C-rich strand (with an RNA primer). A 3\' overhang remains.'),
     S(8000, cam(810, 420, 1440), 'Shelterin beschermt het uiteinde', 'Shelterin protects the end',
@@ -196,8 +196,8 @@ export default {
           e += tag(xe, Yn + 70, T2('gat: niet op te vullen', 'gap: cannot be filled'), C.danger, 18, 'end', step === 1 ? sub(p, .55, .7) : 1);
           e += tag(640, Yn + 70, T2("interne gaten: opgevuld vanaf een 3'-OH", "internal gaps: filled from a 3'-OH"), C.muted, 17, 'middle', step === 1 ? sub(p, .35, .5) : 0);
         }
-        if (step === 2 || (step === 3 && p < .2)) {   // in stap 3 vervaagt de grafiek i.p.v. meteen te verdwijnen
-          const pp = step === 2 ? p : 1, fade = step === 3 ? 1 - sub(p, 0, .2) : 1;
+        if (step === 2 || (step === 3 && p < .06)) {   // in stap 3 vervaagt de grafiek i.p.v. meteen te verdwijnen
+          const pp = step === 2 ? p : 1, fade = step === 3 ? 1 - sub(p, 0, .06) : 1;
           let e2 = '';
           {
             const lens = [820, 740, 660, 580, 440];

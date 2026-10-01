@@ -64,7 +64,7 @@ export default {
     S(8000, cam(800, 440, 620), 'G1: origins krijgen een licentie', 'G1: origins are licensed',
       'ORC bindt de origin; met Cdc6 en Cdt1 worden twee MCM2-7-ringen als inactieve dubbelhexameer rond het dubbelstrengig DNA gelegd.',
       'ORC binds the origin; with Cdc6 and Cdt1, two MCM2-7 rings are loaded around the double-stranded DNA as an inactive double hexamer.'),
-    S(9000, cam(800, 440, 620), 'S-fase: de origin vuurt', 'S phase: the origin fires',
+    S(9000, cam(800, 458, 640), 'S-fase: de origin vuurt', 'S phase: the origin fires',
       'De kinasen DDK en CDK laten Cdc45 en GINS binden: twee CMG-helicasen. Elk omsluit één streng; ze schuiven langs elkaar en lopen uit elkaar.',
       'The kinases DDK and CDK let Cdc45 and GINS bind: two CMG helicases. Each encircles one strand; they pass each other and move apart.'),
     S(9000, cam(800, 450, 820), 'Een replicatiebel met twee vorken', 'A replication bubble with two forks',

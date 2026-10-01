@@ -178,7 +178,7 @@ export default {
         $('hm-chem').innerHTML = ch;
 
         // tabel en samenvatting
-        $('hm-tab').setAttribute('opacity', f1(step >= 6 ? 1 : step === 0 ? .3 : .08));
+        $('hm-tab').setAttribute('opacity', f1(step >= 6 ? 1 : step === 0 ? .2 : .08));
         [...$('hm-rows').children].slice(1).forEach(el => el.setAttribute('opacity', f1(1 - fade)));   // kader blijft, inhoud wijkt voor de samenvatting
         $('hm-tabsum').setAttribute('opacity', f1(fade));
         $('hm-dnalab').setAttribute('opacity', f1(1 - fade));

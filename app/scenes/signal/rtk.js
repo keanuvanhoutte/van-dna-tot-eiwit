@@ -293,7 +293,7 @@ const SCENE = {
           L(DOCK[0] - 40, DOCK[1] + 40, 'Grb2', { col: K.grb, anchor: 'end' });
         }
         if (step === 7) {
-          L(800, 64, T2('EGF-geactiveerd EGFR-dimeer', 'EGF-activated EGFR dimer'), { col: '#e0d6ff' });
+          L(800, 78, T2('EGF-geactiveerd EGFR-dimeer', 'EGF-activated EGFR dimer'), { col: '#e0d6ff' });
           L(DOCK[0] - 40, DOCK[1] + 40, 'Grb2', { col: K.grb, anchor: 'end' });
           L(RAS[0] + 50, RAS[1] + 9, 'Ras', { col: K.ras, anchor: 'start', size: 26, w: 800 });
           L(560, 842, 'P-Tyr', { col: PHOS });

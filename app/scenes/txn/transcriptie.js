@@ -28,11 +28,11 @@ export default {
       text: { nl: 'TFIIH ontwindt het DNA (transcriptiebel) en fosforyleert Ser5 van de CTD. De eerste nucleotiden worden gekoppeld.', en: 'TFIIH unwinds the DNA (transcription bubble) and phosphorylates Ser5 of the CTD. The first nucleotides are joined.' } },
     { dur: 6000, cam: cam(470, 460, 860), title: { nl: 'Promoter escape', en: 'Promoter escape' },
       text: { nl: 'Pol II laat de promoter en de meeste algemene factoren achter; TFIID kan blijven voor een volgende ronde.', en: 'Pol II leaves the promoter and most general factors behind; TFIID can stay for another round.' } },
-    { dur: 10000, cam: cam(600, 440, 900), title: { nl: 'Elongatie', en: 'Elongation' },
+    { dur: 10000, cam: cam(590, 440, 1000), title: { nl: 'Elongatie', en: 'Elongation' },
       text: { nl: 'Pol II leest de matrijsstreng 3\'→5\' en bouwt RNA 5\'→3\'. Achter het enzym sluit de dubbelhelix weer.', en: 'Pol II reads the template strand 3\'→5\' and builds RNA 5\'→3\'. Behind the enzyme the double helix closes again.' } },
     { dur: 8000, cam: cam(800, 440, 520), title: { nl: 'Close-up: de RNA–DNA-hybride', en: 'Close-up: the RNA–DNA hybrid' },
       text: { nl: 'Alleen ~8 basen van het nieuwe RNA blijven gepaard met de matrijs; elke nieuwe base is complementair (A–U, G–C).', en: 'Only ~8 bases of the new RNA stay paired with the template; each new base is complementary (A–U, G–C).' } },
-    { dur: 8000, cam: cam(640, 330, 960), title: { nl: '5\'-cap', en: '5\' cap' },
+    { dur: 8000, cam: cam(633, 410, 1066), title: { nl: '5\'-cap', en: '5\' cap' },
       text: { nl: 'Zodra ~20–30 nt uit het enzym steekt, zet het cappingenzym een m⁷G-cap op het 5\'-uiteinde.', en: 'Once ~20–30 nt emerge from the enzyme, the capping enzyme adds an m⁷G cap to the 5\' end.' } },
     { dur: 8000, cam: cam(960, 520, 1200), title: { nl: 'Supercoiling en Ser2-fosforylatie', en: 'Supercoiling and Ser2 phosphorylation' },
       text: { nl: 'Vóór Pol II ontstaan positieve, erachter negatieve supercoils (topo-isomerasen lossen ze op). De CTD krijgt nu ook Ser2-P.', en: 'Positive supercoils form ahead of Pol II and negative ones behind it (topoisomerases relax them). The CTD now also gains Ser2-P.' } },
@@ -144,7 +144,7 @@ export default {
         const capOn = rnaLen > 25 * BP;
         const capK = capOn ? clamp((rnaLen - 25 * BP) / 60) : 0;
         $('tx-cap').innerHTML = capK > 0 ? `<g transform="translate(${f1(end[0] - 8)} ${f1(end[1])})" opacity="${f1(capK)}"><circle r="19" fill="${C.cap}" stroke="${C.rna}" stroke-width="2"/><text y="5" font-size="14" text-anchor="middle" fill="#3a1a05" font-family="Inter" font-weight="700">m⁷G</text></g>` : '';
-        const enzK = rnaLen > 19 * BP ? clamp(1 - Math.max(0, rnaLen - 26 * BP) / 120) : 0;
+        const enzK = (rnaLen > 19 * BP ? clamp(1 - Math.max(0, rnaLen - 26 * BP) / 120) : 0) * (step === 7 ? 1 - sub(p, 0, .05) : step > 7 ? 0 : 1);
         $('tx-capenz').innerHTML = pill(end[0] - 130, end[1] + 4, 170, 30, T2('cappingenzym', 'capping enzyme'), C.prot2, enzK, 16);
 
         // Pol II + CTD-fosforylatie

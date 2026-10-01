@@ -36,7 +36,7 @@ export default {
     ST(7500, cam(300, 420, 820), 'MIR-gen → pri-miRNA', 'MIR gene → pri-miRNA',
       'RNA-polymerase II schrijft een MIR-gen over. Het pri-miRNA heeft een cap en poly(A)-staart en vouwt tot een lange haarspeld (dubbelstrengige stam + lus).',
       'RNA polymerase II transcribes a MIR gene. The pri-miRNA has a cap and poly(A) tail and folds into a long hairpin (double-stranded stem + loop).'),
-    ST(7500, cam(300, 420, 760), 'Microprocessor knipt', 'Microprocessor cuts',
+    ST(7500, cam(300, 412, 760), 'Microprocessor knipt', 'Microprocessor cuts',
       'Drosha (met DGCR8) knipt beide strengen aan de voet van de stam → pre-miRNA-haarspeld van ≈ 60–70 nt met een 3\'-overhang van 2 nt.',
       'Drosha (with DGCR8) cuts both strands at the base of the stem → pre-miRNA hairpin of ≈ 60–70 nt with a 2-nt 3\' overhang.'),
     ST(8500, cam(620, 450, 1000), 'Export met Exportine-5', 'Export by Exportin-5',

@@ -43,7 +43,7 @@ export default {
       text: { nl: 'Met glucose is cAMP laag en bindt CAP niet. RNA-polymerase start dan maar zelden: lage expressie.', en: 'With glucose, cAMP is low and CAP does not bind. RNA polymerase then starts only rarely: low expression.' } },
     { dur: 10000, cam: cam(790, 440, 1420), title: { nl: 'Glucose op: CAP–cAMP activeert', en: 'Glucose gone: CAP–cAMP activates' },
       text: { nl: 'Zonder glucose stijgt cAMP. CAP–cAMP bindt vóór de promoter en rekruteert RNA-polymerase via zijn α-subeenheid: sterke transcriptie.', en: 'Without glucose cAMP rises. CAP–cAMP binds upstream of the promoter and recruits RNA polymerase via its α subunit: strong transcription.' } },
-    { dur: 10000, cam: cam(1000, 390, 1100), title: { nl: 'Transcriptie en translatie tegelijk', en: 'Transcription and translation at once' },
+    { dur: 10000, cam: cam(960, 390, 1180), title: { nl: 'Transcriptie en translatie tegelijk', en: 'Transcription and translation at once' },
       text: { nl: 'Er is geen kern: ribosomen binden het mRNA al terwijl het nog gemaakt wordt. Uit één mRNA komen β-galactosidase, permease en transacetylase.', en: 'There is no nucleus: ribosomes bind the mRNA while it is still being made. One mRNA yields β-galactosidase, permease and transacetylase.' } },
     { dur: 12000, cam: cam(790, 440, 1420), title: { nl: 'De logica: twee signalen, één uitkomst', en: 'The logic: two signals, one output' },
       text: { nl: 'Het operon staat pas volledig aan als lactose aanwezig is (LacI weg) én glucose afwezig (CAP–cAMP gebonden).', en: 'The operon is fully on only when lactose is present (LacI gone) and glucose is absent (CAP–cAMP bound).' } },

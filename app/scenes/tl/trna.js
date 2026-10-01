@@ -65,8 +65,8 @@ export default {
   steps: [
     ST(8000, cam(800, 430, 1400), 'tRNA: de adapter', 'tRNA: the adapter', "Een tRNA is een kort RNA (≈ 76 nt) dat een codon koppelt aan het juiste aminozuur. Hier wordt gist-tRNA-Phe 5'→3' opgebouwd.", "A tRNA is a short RNA (≈ 76 nt) that links a codon to the right amino acid. Here yeast tRNA-Phe is built 5'→3'."),
     ST(8500, cam(800, 430, 1400), 'Klaverblad: vier armen', 'Cloverleaf: four arms', 'Basenparing binnen de streng geeft in 2D een klaverblad: acceptorstam, D-arm, anticodonarm en TΨC-arm, plus een variabele lus.', 'Base pairing within the strand gives a 2D cloverleaf: acceptor stem, D arm, anticodon arm and TΨC arm, plus a variable loop.'),
-    ST(8500, cam(850, 240, 760), "Acceptorstam met 3'-CCA", "Acceptor stem with 3'-CCA", "Alle tRNA's eindigen op 3'-CCA. Het aminozuur (hier Phe) wordt via een esterbinding aan de ribose van A76 gekoppeld.", "All tRNAs end in 3'-CCA. The amino acid (here Phe) is attached through an ester bond to the ribose of A76."),
-    ST(9000, cam(880, 680, 900), 'Anticodon GmAA leest UUC', 'Anticodon GmAA reads UUC', "Het anticodon (34–36) paart antiparallel met het codon. De wobble-base Gm34 paart met C of U: UUC én UUU coderen voor Phe.", 'The anticodon (34–36) pairs antiparallel with the codon. The wobble base Gm34 pairs with C or U: both UUC and UUU code for Phe.'),
+    ST(8500, cam(850, 232, 760), "Acceptorstam met 3'-CCA", "Acceptor stem with 3'-CCA", "Alle tRNA's eindigen op 3'-CCA. Het aminozuur (hier Phe) wordt via een esterbinding aan de ribose van A76 gekoppeld.", "All tRNAs end in 3'-CCA. The amino acid (here Phe) is attached through an ester bond to the ribose of A76."),
+    ST(9000, cam(880, 688, 900), 'Anticodon GmAA leest UUC', 'Anticodon GmAA reads UUC', "Het anticodon (34–36) paart antiparallel met het codon. De wobble-base Gm34 paart met C of U: UUC én UUU coderen voor Phe.", 'The anticodon (34–36) pairs antiparallel with the codon. The wobble base Gm34 pairs with C or U: both UUC and UUU code for Phe.'),
     ST(9000, cam(800, 420, 1350), 'Gemodificeerde basen', 'Modified bases', '14 gemodificeerde nucleotiden (wit omrand), o.a. D = dihydro-uridine, Ψ = pseudo-uridine, T = ribothymidine, m = methyl, yW = wybutosine. Ze stabiliseren vouwing en decodering.', '14 modified nucleotides (white rim), e.g. D = dihydrouridine, Ψ = pseudouridine, T = ribothymidine, m = methyl, yW = wybutosine. They stabilise folding and decoding.'),
     ST(9000, cam(800, 440, 1250), 'Van klaverblad naar L-vorm', 'From cloverleaf to L shape', 'In 3D vouwt het klaverblad tot een L. Elke nucleotide beweegt naar zijn echte positie in de kristalstructuur (PDB 1EHZ).', 'In 3D the cloverleaf folds into an L. Each nucleotide moves to its real position in the crystal structure (PDB 1EHZ).'),
     ST(9000, cam(800, 440, 1200), 'Twee helices in een L', 'Two helices forming an L', 'Acceptorstam + TΨC-arm stapelen tot één helix, D-arm + anticodonarm tot een tweede. In de elleboog houden D- en T-lus elkaar vast (G18–Ψ55, G19–C56).', 'Acceptor stem + TΨC arm stack into one helix, D arm + anticodon arm into a second. In the elbow the D and T loops hold each other (G18–Ψ55, G19–C56).'),
@@ -87,11 +87,12 @@ export default {
     </svg>`;
   },
   init(svg) {
+    const STEPS = this?.steps ?? [];
     const $ = id => svg.getElementById(id);
     const P3 = i => [XYZ[(i - 1) * 3], XYZ[(i - 1) * 3 + 1], XYZ[(i - 1) * 3 + 2]];
     return {
       update(t, s) {
-        placeHud(svg, 'tr-hud', .015, stepVal([.946, .946, .03, .946, .946, .946, .946, .946], s));
+        placeHud(svg, 'tr-hud', .015, stepVal([.946, .946, .03, .946, .946, .946, .946, .946], s), STEPS[s.step]?.cam);
         const i0 = s.step, p = s.p;
         let m = stepVal(K.morph, s), rot = stepVal(K.rot, s), halo = stepVal(K.halo, s);
         if (i0 === 5) m = ease(sub(p, .12, .85));

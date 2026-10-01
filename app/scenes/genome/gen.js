@@ -36,22 +36,22 @@ export default {
     ST(8000, FULL, 'Een gen: meer dan de code', 'A gene: more than the code',
       'Een gen is een stuk DNA dat tot RNA wordt afgeschreven, plus de regio\'s die dat regelen. De mens heeft net geen 20 000 eiwitcoderende genen; de coderende delen zijn slechts ~1–1,5 % van het genoom.',
       'A gene is a stretch of DNA transcribed into RNA, plus the regions that control it. Humans have just under 20,000 protein-coding genes; the coding parts are only ~1–1.5% of the genome.'),
-    ST(8500, cam(300, 250, 720), 'Enhancers: regelen op afstand', 'Enhancers: control from a distance',
+    ST(8500, cam(290, 250, 720), 'Enhancers: regelen op afstand', 'Enhancers: control from a distance',
       'Enhancers binden activatoren en kunnen ver van het gen liggen. Via een DNA-lus (cohesine, Mediator) komen ze bij de promoter.',
       'Enhancers bind activators and can lie far from the gene. Through a DNA loop (cohesin, Mediator) they reach the promoter.'),
-    ST(8000, cam(430, 350, 660), 'Promoter en startplaats (+1)', 'Promoter and start site (+1)',
+    ST(8000, cam(320, 350, 660), 'Promoter en startplaats (+1)', 'Promoter and start site (+1)',
       'In de kernpromoter bouwt Pol II zijn startcomplex. Soms ligt er een TATA-box (~−30); vaak een CpG-eiland. Transcriptie start op +1 (TSS).',
       'At the core promoter Pol II builds its initiation complex. Sometimes there is a TATA box (~−30); often a CpG island. Transcription starts at +1 (TSS).'),
-    ST(8500, cam(760, 330, 720), 'Exonen en intronen', 'Exons and introns',
+    ST(8500, cam(712, 330, 832), 'Exonen en intronen', 'Exons and introns',
       'Intronen worden later uitgeknipt. Ze beginnen bijna altijd met GT en eindigen met AG (GT–AG-regel), met een vertakkingspunt-A kort voor het einde.',
       'Introns are cut out later. They almost always start with GT and end with AG (GT–AG rule), with a branch-point A shortly before the end.'),
-    ST(8500, cam(830, 330, 1150), 'UTR\'s en coderende sequentie', 'UTRs and coding sequence',
+    ST(8500, cam(850, 330, 1150), 'UTR\'s en coderende sequentie', 'UTRs and coding sequence',
       'Het eiwit wordt gecodeerd van het startcodon ATG tot een stopcodon (TAA, TAG of TGA). Ervoor en erna liggen de 5\'- en 3\'-UTR: afgeschreven maar niet vertaald.',
       'The protein is encoded from the start codon ATG to a stop codon (TAA, TAG or TGA). Before and after lie the 5\' and 3\' UTR: transcribed but not translated.'),
-    ST(8000, cam(1300, 330, 560), 'Het einde: polyadenylatiesignaal', 'The end: polyadenylation signal',
+    ST(8000, cam(1270, 330, 600), 'Het einde: polyadenylatiesignaal', 'The end: polyadenylation signal',
       'In de 3\'-UTR ligt AATAAA. Het RNA wordt ~10–30 nt verder geknipt en krijgt een poly(A)-staart; Pol II loopt nog even door.',
       'The 3\' UTR contains AATAAA. The RNA is cleaved ~10–30 nt further on and receives a poly(A) tail; Pol II keeps going for a while.'),
-    ST(9000, cam(800, 560, 1300), 'Van pre-mRNA naar mRNA', 'From pre-mRNA to mRNA',
+    ST(9000, cam(800, 564, 1300), 'Van pre-mRNA naar mRNA', 'From pre-mRNA to mRNA',
       'Het primaire transcript bevat exonen én intronen. Na capping, splicing en polyadenylatie blijft een rijp mRNA over: 5\'-cap · 5\'-UTR · CDS · 3\'-UTR · poly(A).',
       'The primary transcript contains exons and introns. After capping, splicing and polyadenylation a mature mRNA remains: 5\' cap · 5\' UTR · CDS · 3\' UTR · poly(A).'),
     ST(7000, FULL, 'Klaar om af te lezen', 'Ready to be read',
@@ -150,7 +150,7 @@ export default {
         $('gn-dnaL').setAttribute('x2', f1(ENH[0] + dx));
         const lp = `M${f1(eR)},${Y} C${f1(eR - 70 * k)},${f1(Y - h * 1.25)} ${f1(PROM[0] + 60 * k)},${f1(Y - h * 1.25)} ${PROM[0] - 6},${Y}`;
         let g = `<path d="${lp}" stroke="${C.dna2}" stroke-width="6" fill="none"/>`;
-        if (k > .05 && step >= 1 && step <= 3) g += txt((eR + PROM[0]) / 2, Y - h * .95, T2('… 10–1000 kb …', '… 10–1,000 kb …'), C.muted, 16);
+        if (k > .05 && step >= 1 && step <= 2) g += txt((eR + PROM[0]) / 2, Y - h * .95, T2('… 10–1000 kb …', '… 10–1,000 kb …'), C.muted, 16);
         if (k < .05) g += `<g stroke="${C.muted}" stroke-width="3"><line x1="246" y1="${Y - 14}" x2="238" y2="${Y + 14}"/><line x1="258" y1="${Y - 14}" x2="250" y2="${Y + 14}"/></g>`;
         if (k > .05) {
           g += `<ellipse cx="${f1((eR + PROM[0]) / 2)}" cy="${Y - 34}" rx="${f1(10 + (PROM[0] - eR) / 2 + 8)}" ry="11" fill="none" stroke="#ffc247" stroke-width="5" opacity="${f1(k)}"/>`;
@@ -171,7 +171,7 @@ export default {
         }
         const detOp = f1(step === 0 ? 0 : step === 7 ? 1 - ease(sub(p, 0, .3)) : 1);
         svg.querySelectorAll('.gn-det').forEach(el => el.setAttribute('opacity', detOp));
-        $('gn-dna').setAttribute('opacity', f1(step === 6 ? 1 - .8 * ease(sub(p, 0, .3)) : step === 7 ? .2 + .8 * ease(sub(p, 0, .3)) : 1));
+        $('gn-dna').setAttribute('opacity', f1(step === 6 ? 1 - .8 * ease(sub(p, 0, .05)) : step === 7 ? .2 + .8 * ease(sub(p, 0, .3)) : 1));
         $('gn-pre').setAttribute('opacity', step === 6 ? 1 : step === 0 || step === 7 ? .9 : .15);
         const m = step === 6 ? ease(sub(p, .35, .8)) : step === 0 || step === 7 ? .9 : .15;
         $('gn-mat').setAttribute('opacity', f1(m));

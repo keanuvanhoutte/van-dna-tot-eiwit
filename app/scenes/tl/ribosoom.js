@@ -48,10 +48,10 @@ export default {
     ST(8000, cam(800, 470, 1500), 'Het humane 80S-ribosoom', 'The human 80S ribosome', 'Een machine van ≈ 4 MDa en ≈ 25–30 nm, opgebouwd uit 4 rRNA\'s en ≈ 80 eiwitten. Elke stip komt uit een echte cryo-EM-structuur (PDB 6Y0G).', 'A ≈ 4 MDa, ≈ 25–30 nm machine built from 4 rRNAs and ≈ 80 proteins. Every dot comes from a real cryo-EM structure (PDB 6Y0G).'),
     ST(8000, cam(800, 470, 1500), 'Twee subeenheden: 40S en 60S', 'Two subunits: 40S and 60S', 'De kleine (40S) en grote (60S) subeenheid vormen samen 80S. S = Svedberg (sedimentatiesnelheid): S-waarden tellen niet op (40 + 60 ≠ 80).', 'The small (40S) and large (60S) subunits together form 80S. S = Svedberg (sedimentation rate): S values do not add up (40 + 60 ≠ 80).'),
     ST(8000, cam(800, 470, 1500), 'Vooral RNA: rRNA vormt de kern', 'Mostly RNA: rRNA forms the core', 'rRNA (turquoise) vormt het skelet en de actieve centra; de ribosomale eiwitten (paars) zitten vooral aan de buitenkant.', 'rRNA (turquoise) forms the scaffold and the active centres; the ribosomal proteins (purple) sit mainly on the outside.'),
-    ST(8500, cam(760, 560, 1400), '40S: 18S rRNA + 33 eiwitten', '40S: 18S rRNA + 33 proteins', 'De kleine subeenheid bindt het mRNA en bevat het decodeercentrum: daar wordt gecontroleerd of codon en anticodon passen.', 'The small subunit binds the mRNA and holds the decoding centre, where codon–anticodon pairing is checked.'),
-    ST(8500, cam(760, 400, 1400), '60S: 28S + 5,8S + 5S rRNA + 47 eiwitten', '60S: 28S + 5.8S + 5S rRNA + 47 proteins', 'De grote subeenheid bevat drie rRNA\'s (28S ≈ 5070 nt, 5,8S ≈ 157 nt, 5S ≈ 121 nt) en maakt de peptidebinding.', 'The large subunit holds three rRNAs (28S ≈ 5070 nt, 5.8S ≈ 157 nt, 5S ≈ 121 nt) and forms the peptide bond.'),
+    ST(8500, cam(800, 560, 1400), '40S: 18S rRNA + 33 eiwitten', '40S: 18S rRNA + 33 proteins', 'De kleine subeenheid bindt het mRNA en bevat het decodeercentrum: daar wordt gecontroleerd of codon en anticodon passen.', 'The small subunit binds the mRNA and holds the decoding centre, where codon–anticodon pairing is checked.'),
+    ST(8500, cam(800, 400, 1400), '60S: 28S + 5,8S + 5S rRNA + 47 eiwitten', '60S: 28S + 5.8S + 5S rRNA + 47 proteins', 'De grote subeenheid bevat drie rRNA\'s (28S ≈ 5070 nt, 5,8S ≈ 157 nt, 5S ≈ 121 nt) en maakt de peptidebinding.', 'The large subunit holds three rRNAs (28S ≈ 5070 nt, 5.8S ≈ 157 nt, 5S ≈ 121 nt) and forms the peptide bond.'),
     ST(9000, cam(640, 520, 950), 'A-, P- en E-plaats', 'A, P and E sites', 'Tussen de subeenheden liggen drie tRNA-plaatsen: A (aminoacyl-tRNA), P (peptidyl-tRNA) en E (exit). Hier zitten tRNA\'s in A en P op het mRNA.', 'Between the subunits lie three tRNA sites: A (aminoacyl-tRNA), P (peptidyl-tRNA) and E (exit). Here tRNAs occupy A and P on the mRNA.'),
-    ST(9000, cam(650, 420, 900), 'Peptidyltransferasecentrum = ribozym', 'Peptidyl transferase centre = ribozyme', 'De CCA-uiteinden van de tRNA\'s komen samen in het PTC van de 60S. Dat actieve centrum is gemaakt van rRNA, niet van eiwit: het ribosoom is een ribozym.', 'The CCA ends of the tRNAs meet in the PTC of the 60S. That active site is made of rRNA, not protein: the ribosome is a ribozyme.'),
+    ST(9000, cam(650, 440, 900), 'Peptidyltransferasecentrum = ribozym', 'Peptidyl transferase centre = ribozyme', 'De CCA-uiteinden van de tRNA\'s komen samen in het PTC van de 60S. Dat actieve centrum is gemaakt van rRNA, niet van eiwit: het ribosoom is een ribozym.', 'The CCA ends of the tRNAs meet in the PTC of the 60S. That active site is made of rRNA, not protein: the ribosome is a ribozyme.'),
     ST(9000, cam(560, 400, 1000), 'De uitgangstunnel (≈ 100 Å)', 'The exit tunnel (≈ 100 Å)', 'De groeiende keten verlaat het PTC via een tunnel door de 60S (≈ 100 Å lang, ≈ 10–20 Å breed) en komt aan de achterkant naar buiten.', 'The growing chain leaves the PTC through a tunnel in the 60S (≈ 100 Å long, ≈ 10–20 Å wide) and emerges on the far side.'),
     ST(9500, FULL, 'Mens 80S vs bacterie 70S', 'Human 80S vs bacterial 70S', 'Bacteriën hebben een kleiner 70S-ribosoom (30S met 16S rRNA + 50S met 23S en 5S). Het verschil maakt antibiotica (bv. streptomycine, erytromycine) mogelijk die alleen bacteriële ribosomen remmen.', 'Bacteria have a smaller 70S ribosome (30S with 16S rRNA + 50S with 23S and 5S). The difference allows antibiotics (e.g. streptomycin, erythromycin) that inhibit only bacterial ribosomes.'),
   ],
@@ -72,6 +72,7 @@ export default {
     </svg>`;
   },
   init(svg) {
+    const STEPS = this?.steps ?? [];
     const $ = id => svg.getElementById(id);
     const P = {}; for (const k in RIBO) { const a = RIBO[k], out = []; for (let i = 0; i < a.length; i += 3) out.push([a[i], a[i + 1], a[i + 2]]); P[k] = out; }
     const paths = {}; for (const c of CATS) for (let b = 0; b < NB; b++) paths[c + b] = $(`rb-${c}-${b}`);
@@ -79,7 +80,7 @@ export default {
 
     return {
       update(t, s) {
-        placeHud(svg, 'rb-hud');
+        placeHud(svg, 'rb-hud', .015, .105, STEPS[s.step]?.cam);
         const rock = .22 * Math.sin(Math.PI * sub(s.p, .3, 1));
         const th = stepVal(K.ang, s) + (s.step === 5 || s.step === 6 ? rock * .3 : rock), ph = stepVal(K.tilt, s);
         const pop = stepVal(K.pop, s), sep = stepVal(K.sep, s), op = stepVal(K.op, s), trOp = stepVal(K.trna, s), [cx, cy, sc] = stepVal(K.pos, s);

@@ -25,7 +25,7 @@ export default {
     nl: 'Een menselijke kern heeft meestal 1–3 nucleoli; elke nucleolus bevat veel meer FC/DFC-eenheden dan getekend. De Miller-"kerstboom" toont één actieve rDNA-eenheid met slechts enkele tientallen polymerasen. Het 47S-schema is niet op schaal en de knipvolgorde is vereenvoudigd (er zijn meerdere alternatieve routes). De tijd is een orde van grootte.',
     en: 'A human nucleus usually has 1–3 nucleoli; each nucleolus contains far more FC/DFC units than drawn. The Miller "Christmas tree" shows one active rDNA unit with only a few dozen polymerases. The 47S scheme is not to scale and the cleavage order is simplified (there are several alternative pathways). The time is an order of magnitude.' },
   steps: [
-    ST(7500, cam(400, 460, 820), 'De nucleolus', 'The nucleolus',
+    ST(7500, cam(420, 425, 1040), 'De nucleolus', 'The nucleolus',
       'Het grootste lichaampje in de kern, zonder membraan. Hij vormt zich rond de rDNA-genen op de korte armen van de chromosomen 13, 14, 15, 21 en 22.',
       'The largest body in the nucleus, without a membrane. It forms around the rDNA genes on the short arms of chromosomes 13, 14, 15, 21 and 22.'),
     ST(8000, cam(420, 460, 700), 'Drie compartimenten', 'Three compartments',
@@ -104,7 +104,7 @@ export default {
     pre += `<g id="nl-prod"></g>`;
     return svgOpen() + `
     <g id="nl-left">
-      <g data-node="chromosoom" data-color="${C.dna}" data-label="${T2('Acrocentrische chromosomen (NOR)', 'Acrocentric chromosomes (NOR)')}">${chr}<circle data-anchor="chromosoom" cx="320" cy="262" r="1" fill="none"/></g>
+      <g id="nl-chr" data-node="chromosoom" data-color="${C.dna}" data-label="${T2('Acrocentrische chromosomen (NOR)', 'Acrocentric chromosomes (NOR)')}">${chr}<circle data-anchor="chromosoom" cx="320" cy="262" r="1" fill="none"/></g>
       ${nuc}${gc}${fc}
       <g id="nl-lab"></g>
       <rect x="${FCS[1][0] - 60}" y="${FCS[1][1] - 60}" width="120" height="120" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="6 4"/>
@@ -134,9 +134,12 @@ export default {
           `<line x1="${fx - 20}" y1="${fy}" x2="190" y2="410" stroke="#fff" stroke-width="2"/>` + K(pill(150, 410, 80, 30, 'FC', '#6f82ad', 1, 16)) +
           `<line x1="${gx - 48}" y1="${gy - 8}" x2="190" y2="500" stroke="#fff" stroke-width="2"/>` + K(pill(150, 500, 80, 30, 'DFC', '#4a5d8a', 1, 16)) +
           `<line x1="600" y1="330" x2="660" y2="300" stroke="#fff" stroke-width="2"/>` + K(pill(700, 300, 80, 30, 'GC', '#2f4677', 1, 16)) + '</g>' : '';
-        $('nl-left').setAttribute('opacity', step >= 2 && step <= 5 ? .45 : 1);
-        $('nl-mil').setAttribute('opacity', step === 2 || step === 3 ? 1 : step === 7 ? 1 : .3);
-        $('nl-pre').setAttribute('opacity', step === 4 || step === 5 ? 1 : step === 7 ? 1 : .3);
+        // niet-centrale delen ver genoeg dimmen (< 0,3) zodat wat half buiten de camera valt niet als afgesneden figuur oogt
+        $('nl-left').setAttribute('opacity', step >= 2 && step <= 5 ? .2 : 1);
+        $('nl-chr').setAttribute('opacity', step === 1 ? .2 : 1);
+        $('nl-envelope').setAttribute('opacity', step >= 2 && step <= 5 ? .2 : 1);
+        $('nl-mil').setAttribute('opacity', step === 2 || step === 3 ? 1 : step === 7 ? 1 : .2);
+        $('nl-pre').setAttribute('opacity', step === 4 || step === 5 ? 1 : step === 7 ? 1 : .2);
 
         // kerstboom: Pol I met groeiende transcripten (lengte ∝ afstand tot de promoter)
         let tr = '';

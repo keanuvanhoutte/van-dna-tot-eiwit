@@ -53,7 +53,7 @@ export default {
     return svgOpen() + `
     <rect x="-400" y="-400" width="2400" height="1800" fill="url(#gNuc)"/>
     ${CHROM}
-    ${txt(1290, 190, T2('celkern', 'nucleus'), C.muted, 21, 'middle', 500)}
+    ${txt(1250, 190, T2('celkern', 'nucleus'), C.muted, 21, 'middle', 500)}
     <g data-node="chromatine" data-color="${C.dna}" data-label="${T2('Gastheerchromosoom', 'Host chromosome')}">
       <circle data-anchor="chromatine" data-pos="below" cx="300" cy="${HOST + 40}" r="1" fill="none"/>
       <g id="in-host"></g>

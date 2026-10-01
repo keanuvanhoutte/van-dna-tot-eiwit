@@ -69,8 +69,8 @@ export default {
       ${nucEnv(-600, 2200, NY, [300, PORE, 1420])}
       <g id="st-gene"></g>
       ${dna(-600, 2200, DY)}
-      ${T(90, 60, T2('buiten de cel', 'outside the cell'), { size: 24, col: C.muted, anchor: 'start', w: 500 })}
-      ${T(90, 340, 'cytosol', { size: 24, col: C.muted, anchor: 'start', w: 500 })}
+      ${T(122, 60, T2('buiten de cel', 'outside the cell'), { size: 24, col: C.muted, anchor: 'start', w: 500 })}
+      ${T(122, 340, 'cytosol', { size: 24, col: C.muted, anchor: 'start', w: 500 })}
       ${T(40, 690, T2('celkern', 'nucleus'), { size: 24, col: '#9cc0ff', anchor: 'start', w: 500 })}
       <g id="st-trail"></g>
       <g data-node="chaperones" data-color="${HSPC}" data-label="${T2('Hsp90 · chaperones', 'Hsp90 · chaperones')}" id="st-chapG">
