@@ -8,4 +8,6 @@ import rna from './rna.js';
 import tl from './tl.js';
 import prot from './prot.js';
 import prot2 from './prot2.js';
-export const DETAILS = { ...entry, ...genome, ...genome2, ...repl, ...txn, ...rna, ...tl, ...prot, ...prot2 };
+import signal1 from './signal1.js';
+import signal2 from './signal2.js';
+export const DETAILS = { ...entry, ...genome, ...genome2, ...repl, ...txn, ...rna, ...tl, ...prot, ...prot2, ...signal1, ...signal2 };

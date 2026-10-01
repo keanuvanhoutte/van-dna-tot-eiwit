@@ -140,6 +140,9 @@ html, body { height: 100%; overflow: hidden; }
 .mapbox { width: min(1180px, 96%); max-height: 90%; overflow: auto; background: var(--bg-2); border: 1px solid var(--line); border-radius: 16px; padding: 18px 18px 22px; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
 .mapbox h2 { margin: 0 0 4px; font-size: 20px; }
 .mapbox .sub { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+.linehd { font: 600 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 10px 0 6px; }
+.linehd.cur { color: #ffc247; }
+.linehd span { text-transform: none; letter-spacing: 0; font-weight: 500; }
 .storyrow { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 .storyrow button { all: unset; cursor: pointer; font-size: 12px; padding: 5px 9px; border-radius: 8px; border: 1px solid var(--line); color: var(--muted); }
 .storyrow button b { color: var(--accent); font-family: var(--mono); margin-right: 5px; }

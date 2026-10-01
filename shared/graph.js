@@ -20,7 +20,7 @@
  */
 
 export const STAGES = [
-  { id: 'entry',   t: 'Binnenkomst',            en: 'Entry of genetic information' },
+  { id: 'entry',   t: 'Binnenkomst & signalen', en: 'Entry & signalling' },
   { id: 'genome',  t: 'Genoom & chromatine',    en: 'Genome & chromatin' },
   { id: 'repl',    t: 'Replicatie & herstel',   en: 'Replication & repair' },
   { id: 'txn',     t: 'Regulatie & transcriptie', en: 'Regulation & transcription' },
@@ -41,7 +41,26 @@ const N = [
   // ───────────── BINNENKOMST ─────────────
   { id: 'cel', t: 'Menselijke cel', en: 'Human cell', stage: 'entry', scale: 1, kind: 'structure',
     s: 'Startpunt: een menselijke epitheelcel. Het genoom zit in de kern (plus een klein genoom in de mitochondriën); eiwitsynthese gebeurt in het cytosol en aan het ruw ER.',
-    in: ['kern', 'ribosoom', 'er'], rel: ['adeno', 'lnp', 'virus'] },
+    in: ['kern', 'ribosoom', 'er'], rel: ['adeno', 'lnp', 'virus', 'signaal'] },
+  /* verhaallijn 2: een signaalmolecule zet een gen aan */
+  { id: 'signaal', t: 'Signaalmolecule & receptor', en: 'Cell signalling', stage: 'entry', scale: 1, kind: 'process',
+    s: 'Een signaalmolecule (bv. de groeifactor EGF, adrenaline of cortisol) bindt aan een receptor. De receptor zet het signaal om in een reactie in de cel, vaak tot in de kern, waar genen aan- of uitgaan.',
+    in: ['rtk', 'gpcr', 'steroid'], next: ['rtk'] },
+  { id: 'rtk', t: 'Receptortyrosinekinase (EGFR)', en: 'Receptor tyrosine kinase (EGFR)', stage: 'entry', scale: 3, kind: 'process',
+    s: 'EGF bindt de EGF-receptor; twee receptoren dimeriseren en fosforyleren elkaars tyrosines. Grb2 bindt die fosfotyrosines en brengt SOS naar het membraan.',
+    next: ['mapk'] },
+  { id: 'mapk', t: 'Ras–MAPK-cascade', en: 'Ras–MAPK cascade', stage: 'entry', scale: 3, kind: 'process',
+    s: 'SOS zet Ras-GDP om in Ras-GTP; Ras activeert Raf, Raf fosforyleert MEK en MEK fosforyleert ERK. Actief ERK gaat de kern in.',
+    next: ['srf'], rel: ['ptm'] },
+  { id: 'srf', t: 'Onmiddellijk-vroege genen (SRE)', en: 'Immediate early genes (SRE)', stage: 'txn', scale: 3, kind: 'process',
+    s: 'In de kern fosforyleert ERK de transcriptiefactor Elk-1, die samen met SRF op het serum-responselement (SRE) van het FOS-gen zit: binnen minuten wordt FOS afgeschreven.',
+    next: ['promoter', 'transcriptie'], rel: ['genregulatie'] },
+  { id: 'gpcr', t: 'G-eiwitgekoppelde receptor (cAMP)', en: 'G protein-coupled receptor (cAMP)', stage: 'entry', scale: 3, kind: 'process',
+    s: 'Adrenaline bindt de β2-adrenerge receptor; die activeert Gs, adenylylcyclase maakt cAMP, PKA wordt actief en fosforyleert in de kern de transcriptiefactor CREB.',
+    rel: ['srf', 'genregulatie'] },
+  { id: 'steroid', t: 'Kernreceptor (cortisol)', en: 'Nuclear receptor (cortisol)', stage: 'entry', scale: 3, kind: 'process',
+    s: 'Het lipofiele cortisol gaat door het membraan en bindt de glucocorticoïdreceptor in het cytosol; die laat Hsp90 los, gaat de kern in en bindt als dimeer het glucocorticoïd-responselement (GRE).',
+    rel: ['kernimport', 'genregulatie', 'chaperones'] },
   { id: 'virus', t: 'Virale infectie', en: 'Viral entry', stage: 'entry', scale: 1, kind: 'process',
     s: 'Een virus bindt receptoren op het celoppervlak, komt binnen via endocytose of membraanfusie en laat zijn genoom vrij. Wat daarna gebeurt hangt af van het genoomtype (Baltimore-klassen).',
     in: ['endocytose', 'baltimore'], rel: ['adeno', 'rt'] },

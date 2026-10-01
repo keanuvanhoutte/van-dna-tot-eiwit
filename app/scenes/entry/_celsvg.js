@@ -115,6 +115,14 @@ export function sceneCel() {
       ${[0, 2.5].map(b => `<path d="M-10,0 q4,-6 8,0 t8,0 t8,0" stroke="${C.rna}" stroke-width="3" fill="none"><animateMotion dur="5s" begin="-${b}s" repeatCount="indefinite" path="${lPath}" rotate="auto"/></path>`).join('')}
       ${[[700, 690], [735, 705]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="6" fill="${C.rrna}"/>`).join('')}
     </g>
+    <!-- route 3 (verhaal 2): een signaalmolecule (groeifactor EGF) bindt een receptor in het membraan -->
+    <g data-node="signaal" data-color="${C.prot}" data-label="${L({ nl: 'Signaalmolecule (EGF)', en: 'Signal molecule (EGF)' })}">
+      <circle data-anchor="signaal" cx="1350" cy="118" r="1" fill="none"/>
+      <rect x="1235" y="110" width="200" height="130" fill="transparent"/>
+      ${[[1236, 222, -38], [1262, 240, -35]].map(([x, y, rot]) => `<g transform="translate(${x} ${y}) rotate(${rot + 90})">
+        <path d="M0,26 V-6 M0,-6 L-10,-24 M0,-6 L10,-24" stroke="${C.prot}" stroke-width="5" stroke-linecap="round" fill="none"/></g>`).join('')}
+      ${[[1290, 180], [1335, 150], [1385, 190], [1400, 140]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="8" fill="#5fd3e6" opacity="${i ? .85 : 1}"><animate attributeName="cy" values="${y};${y - 6};${y}" dur="${3 + i * .7}s" repeatCount="indefinite"/></circle>`).join('')}
+    </g>
     <text x="110" y="120" fill="${C.muted}" font-size="22" font-family="Inter" opacity=".75">${L({ nl: 'extracellulair', en: 'extracellular' })}</text>
     <text x="1075" y="600" fill="${C.muted}" font-size="22" font-family="Inter" opacity=".75">cytosol</text>
   </svg>`;

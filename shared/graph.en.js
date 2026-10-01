@@ -1,6 +1,12 @@
 /* English summaries for the knowledge graph (same facts as the Dutch `s` in graph.js — keep both in sync). */
 export const S_EN = {
   cel: 'Starting point: a human epithelial cell. The genome sits in the nucleus (plus a small genome in the mitochondria); protein synthesis happens in the cytosol and on the rough ER.',
+  signaal: 'A signal molecule (e.g. the growth factor EGF, adrenaline or cortisol) binds to a receptor. The receptor turns the signal into a response inside the cell, often reaching the nucleus, where genes are switched on or off.',
+  rtk: 'EGF binds the EGF receptor; two receptors dimerise and phosphorylate each other’s tyrosines. Grb2 binds these phosphotyrosines and brings SOS to the membrane.',
+  mapk: 'SOS converts Ras-GDP into Ras-GTP; Ras activates Raf, Raf phosphorylates MEK and MEK phosphorylates ERK. Active ERK enters the nucleus.',
+  srf: 'In the nucleus ERK phosphorylates the transcription factor Elk-1, which sits together with SRF on the serum response element (SRE) of the FOS gene: within minutes FOS is transcribed.',
+  gpcr: 'Adrenaline binds the β2-adrenergic receptor; it activates Gs, adenylyl cyclase makes cAMP, PKA becomes active and in the nucleus phosphorylates the transcription factor CREB.',
+  steroid: 'Lipophilic cortisol crosses the membrane and binds the glucocorticoid receptor in the cytosol; the receptor releases Hsp90, enters the nucleus and binds the glucocorticoid response element (GRE) as a dimer.',
   virus: 'A virus binds receptors on the cell surface, enters by endocytosis or membrane fusion and releases its genome. What happens next depends on the genome type (Baltimore classes).',
   adeno: 'Double-stranded DNA virus. Its fibres attach to the CAR receptor; uptake occurs via αv integrins and clathrin-mediated endocytosis, and protein VI helps it escape from the endosome. Dynein carries the capsid along microtubules to a nuclear pore, where it docks at Nup214 and disassembles (with help from kinesin-1 and histone H1) so the DNA can enter the nucleus. The genome usually stays episomal; its protein-coding genes are transcribed by the host RNA polymerase II (the VA RNAs by Pol III).',
   lnp: 'mRNA packaged in a lipid nanoparticle is taken up by endocytosis; ionizable lipids help a small fraction escape the endosome (measured for siRNA-LNPs: ~1–2 %). The mRNA contains N1-methylpseudouridine, which reduces innate immune recognition and increases translation. It is translated in the cytosol and does not enter the nucleus.',

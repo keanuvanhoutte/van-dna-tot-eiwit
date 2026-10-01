@@ -9,7 +9,27 @@ import { NODES, STAGES, SCALES, title, sub, summary, stageTitle, scaleTitle } fr
 import { L, U, statusText, langSwitch, lang } from '../shared/i18n.js';
 import { DETAILS } from '../shared/details/index.js';
 import { SCENES } from './scenes/index.js';
-import { STORY, STORY_IDS } from './story.js';
+import { LINES, LINE_KEYS } from './story.js';
+
+/* ---------- verhaallijnen ---------- */
+const LINE_KEY = 'dna-app-story';
+let line = (() => {
+  const u = new URLSearchParams(location.search).get('story');
+  if (LINES[u]) { try { localStorage.setItem(LINE_KEY, u); } catch {} return u; }
+  try { const v = localStorage.getItem(LINE_KEY); if (LINES[v]) return v; } catch {}
+  return 'virus';
+})();
+let STORY = LINES[line].chapters, STORY_IDS = STORY.map(c => c.id);
+function setLine(k) {
+  if (!LINES[k] || k === line) return;
+  line = k; STORY = LINES[k].chapters; STORY_IDS = STORY.map(c => c.id);
+  try { localStorage.setItem(LINE_KEY, k); } catch {}
+}
+/* scène die alleen in een andere lijn voorkomt → naar die lijn overschakelen */
+function lineFor(id) {
+  if (STORY_IDS.includes(id)) return line;
+  return LINE_KEYS.find(k => LINES[k].chapters.some(c => c.id === id)) ?? line;
+}
 
 const UI2 = {
   home: { nl: 'Start', en: 'Start' }, zoomOut: { nl: 'Uitzoomen', en: 'Zoom out' }, whereAmI: { nl: 'Waar ben ik?', en: 'Where am I?' },
@@ -361,12 +381,13 @@ async function go(id, box, dir = 'in', push = true) {
   current = nxt; camNow = firstCam.slice();
   t = 0; endedOnce = false; lastStep = -1; ff = null; playStep(0);
   if (push) { const i = trail.indexOf(id); trail = i >= 0 ? trail.slice(0, i + 1) : [...trail, id]; }
+  const lk = lineFor(id); if (lk !== line) { setLine(lk); lastChapter = 0; }
   const ci = STORY_IDS.indexOf(id); if (ci >= 0) lastChapter = ci;
   render(); drawTicks();
   busy = false;
   labelsEl.classList.toggle('hide', !showLabels);
   requestAnimationFrame(placeLabels);
-  history.replaceState(null, '', `?scene=${id}`);
+  history.replaceState(null, '', `?scene=${id}&story=${line}`);
 }
 
 function parentOf(id) {
@@ -394,7 +415,7 @@ function renderStory() {
   const ci = STORY_IDS.indexOf(current.id);
   const dots = STORY.map((c, i) => `<i class="${i === ci ? 'cur' : i <= lastChapter ? 'on' : ''}"></i>`).join('');
   if (ci >= 0) {
-    $('sInfo').innerHTML = `${V('chapter')} <b>${ci + 1}/${STORY.length}</b> · ${title(NODES[current.id])}<div class="dots">${dots}</div>`;
+    $('sInfo').innerHTML = `${L(LINES[line].short)} · ${V('chapter')} <b>${ci + 1}/${STORY.length}</b> · ${title(NODES[current.id])}<div class="dots">${dots}</div>`;
     $('sPrev').disabled = ci === 0; $('sNext').disabled = ci === STORY.length - 1;
     $('sPrev').onclick = () => chapterGo(ci - 1); $('sNext').onclick = () => chapterGo(ci + 1);
   } else {
@@ -488,7 +509,11 @@ const STAGECOL = { entry: 'var(--tdna)', genome: 'var(--dna)', repl: 'var(--dna-
 function showMap() {
   const here = current.id;
   let h = `<button class="btn close" id="mClose">${V('close')} ✕</button><h2>${V('mapTitle')}</h2><p class="sub">${V('mapSub')}</p>`;
-  h += `<div class="storyrow">${STORY.map((c, i) => `<button data-id="${c.id}" class="${c.id === here ? 'cur' : ''}"><b>${i + 1}</b>${title(NODES[c.id])}</button>`).join('')}</div>`;
+  for (const k of LINE_KEYS) {
+    const ch = LINES[k].chapters;
+    h += `<div class="linehd ${k === line ? 'cur' : ''}">${L(LINES[k].title)}${k === line ? ` <span>· ${L({ nl: 'nu gekozen', en: 'current' })}</span>` : ''}</div>`;
+    h += `<div class="storyrow">${ch.map((c, i) => `<button data-id="${c.id}" data-line="${k}" class="${c.id === here && k === line ? 'cur' : ''}"><b>${i + 1}</b>${title(NODES[c.id])}</button>`).join('')}</div>`;
+  }
   h += `<div style="overflow-x:auto"><div class="mgrid"><div class="hd">↓ ${L({ nl: 'zoom', en: 'zoom' })} · ${L({ nl: 'proces', en: 'process' })} →</div>`;
   h += STAGES.map(s => `<div class="hd">${stageTitle(s)}</div>`).join('');
   for (const sc of SCALES) {
@@ -504,7 +529,11 @@ function showMap() {
   $('mapbody').innerHTML = h;
   $('map').classList.add('show');
   $('mClose').onclick = hideOverlays;
-  $('mapbody').querySelectorAll('[data-id]').forEach(b => b.onclick = () => { hideOverlays(); chipGo(b.dataset.id); });
+  $('mapbody').querySelectorAll('[data-id]').forEach(b => b.onclick = () => {
+    hideOverlays();
+    if (b.dataset.line && b.dataset.line !== line) { setLine(b.dataset.line); lastChapter = Math.max(0, STORY_IDS.indexOf(b.dataset.id)); if (b.dataset.id === current.id) { render(); return; } }
+    chipGo(b.dataset.id);
+  });
 }
 $('bMap').onclick = showMap;
 
@@ -527,6 +556,7 @@ if (fromId && hasScene(fromId) && fromId !== startId) trail = [fromId];
 if (startId) {
   current = build(startId);
   trail = [...trail, startId];
+  setLine(lineFor(startId));
   const ci = STORY_IDS.indexOf(startId); if (ci >= 0) lastChapter = ci;
   camNow = (current.steps[0].cam ?? FULL).slice();
   if (q.has('t')) t = Math.min(current.total - 1, +q.get('t'));

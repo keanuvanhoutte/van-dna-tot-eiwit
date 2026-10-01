@@ -1,11 +1,13 @@
 # Van DNA tot eiwit
 
-Een interactieve, stap-voor-stap moleculaire animatie van een menselijke cel: van genetische informatie die de cel binnenkomt, via transcriptie, RNA-bewerking en translatie, tot eiwitvouwing, modificaties en afbraak. Gemaakt als studiehulp op bachelorniveau (structurele bio-informatica). Nederlands en Engels.
+Een interactieve, stap-voor-stap moleculaire animatie van een menselijke cel: van genetische informatie of een signaal dat de cel bereikt, via transcriptie, RNA-bewerking en translatie, tot eiwitvouwing, modificaties en afbraak. Gemaakt als studiehulp op bachelorniveau (structurele bio-informatica). Nederlands en Engels.
 
 **Openen:** https://keanuvanhoutte.github.io/van-dna-tot-eiwit/
 
 ## Wat zit erin
-- **Het verhaal** (`app/`): 21 hoofdstukken en 72 scènes. Elke scène speelt stap voor stap; je klikt zelf verder. Klik op onderdelen van een figuur om in te zoomen op een deelproces; met "Waar ben ik?" zie je waar je zit in het geheel.
+- **Twee verhalen** (`app/`), samen 78 scènes. Elke scène speelt stap voor stap; je klikt zelf verder. Klik op onderdelen van een figuur om in te zoomen op een deelproces; met "Waar ben ik?" zie je waar je zit en wissel je van verhaal.
+  - **Verhaal 1 · Een virus brengt DNA binnen** (21 hoofdstukken): adenovirus → endocytose → kern → chromatine → transcriptie → RNA-bewerking → translatie → vouwing → afbraak.
+  - **Verhaal 2 · Een signaal zet een gen aan** (17 hoofdstukken): groeifactor EGF → EGF-receptor → Ras–MAPK-cascade → het onmiddellijk-vroege gen *FOS* → … → het eiwit c-Fos. Zijpaden: adrenaline → GPCR → cAMP → CREB, en cortisol → glucocorticoïdreceptor.
 - **DNA/RNA-atlas** (`atlas/`): 34 soorten nucleïnezuren (A/B/Z-DNA, quadruplexen, tRNA, ribozymen, geneesmiddel–DNA-complexen …) in 3D uit echte PDB-structuren, met filters en vergelijkmodus.
 - **Uitleg met bronnen** (`shared/details/`): per onderwerp wat, hoe, kerncijfers, waarom belangrijk en bronnen. Verificatierapporten staan in `docs/`.
 
