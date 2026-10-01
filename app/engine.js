@@ -342,6 +342,11 @@ function toggleInfo(force) {
   requestAnimationFrame(placeLabels);
 }
 $('bInfo').onclick = () => toggleInfo();
+/* klik op een onderdeel dat deze scène zelf is: toon de uitleg erover (zijpaneel open, bovenaan, even oplichten) */
+function showSelf() {
+  toggleInfo(true); side.scrollTop = 0;
+  side.classList.remove('flash'); void side.offsetWidth; side.classList.add('flash');
+}
 $('bInfo').setAttribute('aria-pressed', !narrow());
 function toggleCap() { showCap = !showCap; $('caption').classList.toggle('mini', !showCap); }
 $('bLabels').onclick = e => { showLabels = !showLabels; e.currentTarget.setAttribute('aria-pressed', showLabels); labelsEl.classList.toggle('hide', !showLabels); };
@@ -385,7 +390,7 @@ const lerpBox = (a, b, k) => a.map((x, i) => x + (b[i] - x) * k);
 
 async function go(id, box, dir = 'in', push = true) {
   if (busy || !hasScene(id)) return id && !hasScene(id) ? showCard(id) : null;
-  if (current && id === current.id) return;
+  if (current && id === current.id) return showSelf();
   busy = true; hideOverlays(); labelsEl.classList.add('hide'); $('nextCh').classList.remove('show');
   const old = current;
   let nxt;

@@ -220,3 +220,8 @@ html, body { height: 100%; overflow: hidden; }
 .tauto:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .capNext { background-image: linear-gradient(90deg, rgba(255,255,255,.4) var(--fill, 0%), transparent var(--fill, 0%)); }
 .nextch button { background-image: linear-gradient(90deg, rgba(255,255,255,.3) var(--fill, 0%), transparent var(--fill, 0%)), linear-gradient(135deg, #4f8ff7, #7c5cff); }
+
+/* uitlegpaneel kort laten oplichten (klik op de structuur van de huidige scène) */
+.side.flash { animation: sideflash 1.2s ease-out; }
+@keyframes sideflash { 0% { box-shadow: inset 0 0 0 3px var(--accent); } 100% { box-shadow: inset 0 0 0 0 transparent; } }
+@media (prefers-reduced-motion: reduce) { .side.flash { animation: none; } }
