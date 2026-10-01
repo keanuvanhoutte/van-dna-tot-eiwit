@@ -18,7 +18,7 @@ const PAULING = { t: 'Pauling L, Corey RB & Branson HR (1951) The structure of p
 export default {
   vouwing: {
     nl: {
-      kort: 'Een pas gemaakte eiwitketen is nog een slap draadje. Ze vouwt zich vanzelf tot één vaste 3D-vorm, zodat de waterschuwe delen binnenin komen. Pas met die vorm kan het eiwit zijn werk doen.',
+      kort: 'Een pas gemaakte eiwitketen is nog een slap draadje. Meestal vouwt ze zich vanzelf tot één vaste 3D-vorm, zodat de waterschuwe delen binnenin komen. Pas met die vorm kan het eiwit zijn werk doen.',
       what: 'Eiwitvouwing is het proces waarbij een lineaire polypeptideketen zijn unieke, functionele 3D-vorm (de natieve structuur) aanneemt. De informatie daarvoor zit in de aminozuursequentie zelf (Anfinsen). Vouwen gebeurt vaak al tijdens de translatie, terwijl de keten uit het ribosoom komt.',
       how: [
         'De keten verlaat het ribosoom via de uitgangstunnel, N-terminus eerst; het begin kan al vouwen voordat het einde gemaakt is (co-translationeel).',
@@ -32,7 +32,7 @@ export default {
       why: 'Alleen een correct gevouwen eiwit werkt. Misvouwing kan leiden tot aggregatie en ziekte (bv. amyloïd). In het verhaal: de β-globineketen die uit het ribosoom komt, vouwt tot de globinevouw die in de volgende hoofdstukken (secundair → tertiair → quaternair) wordt ontleed.',
     },
     en: {
-      kort: 'A freshly made protein chain is still a floppy string. It folds by itself into one fixed 3D shape, tucking the water-avoiding parts inside. Only with that shape can the protein do its job.',
+      kort: 'A freshly made protein chain is still a floppy string. It usually folds by itself into one fixed 3D shape, tucking the water-avoiding parts inside. Only with that shape can the protein do its job.',
       what: 'Protein folding is the process by which a linear polypeptide chain adopts its unique, functional 3D shape (the native structure). The information for this is contained in the amino acid sequence itself (Anfinsen). Folding often starts during translation, while the chain emerges from the ribosome.',
       how: [
         'The chain leaves the ribosome through the exit tunnel, N-terminus first; the beginning can fold before the end has been made (co-translational).',
@@ -142,7 +142,7 @@ export default {
   },
   secundair: {
     nl: {
-      kort: 'Secundaire structuur zijn de eenvoudige, terugkerende vormen die stukjes van de keten aannemen: de spiraalvormige α-helix en de platte β-strengen die samen een blad vormen. Waterstofbruggen in de ruggengraat houden ze op hun plaats. Het zijn de eerste bouwblokken van de 3D-vorm.',
+      kort: 'Secundaire structuur zijn de eenvoudige, terugkerende vormen die stukjes van de keten aannemen: de spiraalvormige α-helix en de gestrekte β-strengen die samen een blad vormen. Waterstofbruggen in de ruggengraat houden ze op hun plaats. Het zijn de eerste bouwblokken van de 3D-vorm.',
       what: 'Secundaire structuur is de lokale, regelmatige vorm van de backbone, gestabiliseerd door waterstofbruggen tussen C=O en N–H van de backbone. De belangrijkste vormen zijn de α-helix en de β-streng/het β-blad; lussen verbinden ze.',
       how: [
         'α-helix: rechtshandig, 3,6 residuen per winding, H-brug C=O(i) ··· H–N(i+4); zijketens naar buiten.',
@@ -156,7 +156,7 @@ export default {
       why: 'Helices en bladen zijn de bouwstenen van elke vouw. Hun H-bruggen neutraliseren de polaire backbone, zodat die in de hydrofobe kern kan liggen.',
     },
     en: {
-      kort: 'Secondary structure is the simple, recurring shapes that short stretches of the chain adopt: the spiral α-helix and the flat β-strands that together form a sheet. Hydrogen bonds in the backbone hold them in place. They are the first building blocks of the 3D shape.',
+      kort: 'Secondary structure is the simple, recurring shapes that short stretches of the chain adopt: the spiral α-helix and the extended β-strands that together form a sheet. Hydrogen bonds in the backbone hold them in place. They are the first building blocks of the 3D shape.',
       what: 'Secondary structure is the local, regular shape of the backbone, stabilised by hydrogen bonds between backbone C=O and N–H groups. The main forms are the α-helix and the β-strand/β-sheet; loops connect them.',
       how: [
         'α-helix: right-handed, 3.6 residues per turn, H-bond C=O(i) ··· H–N(i+4); side chains point outwards.',

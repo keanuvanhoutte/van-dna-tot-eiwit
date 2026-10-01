@@ -26,8 +26,8 @@ export default {
     en: 'A human nucleus usually has 1–3 nucleoli; each nucleolus contains far more FC/DFC units than drawn. The Miller "Christmas tree" shows one active rDNA unit with only a few dozen polymerases. The 47S scheme is not to scale and the cleavage order is simplified (there are several alternative pathways). The time is an order of magnitude.' },
   steps: [
     ST(7500, cam(420, 425, 1040), 'De nucleolus', 'The nucleolus',
-      'De nucleolus is het grootste lichaampje in de kern, zonder membraan. Hij ontstaat rond de genen voor ribosomaal RNA (rDNA) op vijf chromosomen.',
-      'The nucleolus is the largest body in the nucleus, without a membrane. It forms around the genes for ribosomal RNA (rDNA) on five chromosomes.'),
+      'De nucleolus is het grootste lichaampje in de kern, zonder membraan. Hij ontstaat rond de genen voor het meeste ribosomaal RNA (rDNA) op vijf chromosomen.',
+      'The nucleolus is the largest body in the nucleus, without a membrane. It forms around the genes for most of the ribosomal RNA (rDNA) on five chromosomes.'),
     ST(8000, cam(420, 460, 700), 'Drie compartimenten', 'Three compartments',
       'Hij heeft drie zones die in elkaar liggen (FC, DFC, GC). Het rRNA wordt binnenin gemaakt en schuift tijdens zijn rijping naar buiten.',
       'It has three zones nested inside each other (FC, DFC, GC). The rRNA is made on the inside and moves outwards as it matures.'),

@@ -178,7 +178,7 @@ export default {
 
   endocytose: {
     nl: {
-      kort: 'Endocytose is hoe een cel iets van buiten opslokt: het membraan stulpt naar binnen en snoert af tot een blaasje. Dat blaasje wordt steeds zuurder; wat er niet uit ontsnapt of wordt teruggestuurd, eindigt in de afvalverwerking van de cel (het lysosoom). Voor virussen en mRNA-vaccins is die ontsnapping de moeilijkste stap.',
+      kort: 'Endocytose is hoe een cel iets van buiten opslokt: het membraan stulpt naar binnen en snoert af tot een blaasje. Dat blaasje wordt steeds zuurder; wat er niet uit ontsnapt of wordt teruggestuurd, eindigt in de afvalverwerking van de cel (het lysosoom). Voor virussen en mRNA-vaccins die zo binnenkomen, is die ontsnapping een grote hindernis.',
       what: 'Endocytose is de manier waarop een cel materiaal van buiten naar binnen haalt: een stukje plasmamembraan stulpt naar binnen en snoert af tot een blaasje. De best bestudeerde vorm is klathrine-gemedieerde endocytose, met blaasjes van ongeveer 100 nm. Het blaasje fuseert met een vroeg endosoom, dat geleidelijk verzuurt en tot laat endosoom rijpt; wat niet ontsnapt of gerecycleerd wordt, eindigt in het lysosoom.',
       how: [
         'Adaptoreiwitten (o.a. AP-2) herkennen receptoren met vracht en verzamelen ze in één stukje membraan.',
@@ -195,7 +195,7 @@ export default {
       why: 'Dit is het knelpunt van elke aflevering van genetische informatie: binnenkomen is makkelijk, maar uit het blaasje raken is moeilijk. Voor virussen is het een verfijnd mechanisme; voor mRNA-vaccins en gentherapie is het de belangrijkste efficiëntiebeperking.',
     },
     en: {
-      kort: 'Endocytosis is how a cell swallows something from outside: the membrane folds inward and pinches off into a vesicle. That vesicle becomes more and more acidic; whatever does not escape or get sent back ends up in the cell’s waste processor (the lysosome). For viruses and mRNA vaccines, that escape is the hardest step.',
+      kort: 'Endocytosis is how a cell swallows something from outside: the membrane folds inward and pinches off into a vesicle. That vesicle becomes more and more acidic; whatever does not escape or get sent back ends up in the cell’s waste processor (the lysosome). For viruses and mRNA vaccines that enter this way, that escape is a major hurdle.',
       what: 'Endocytosis is how a cell brings material inside: a patch of plasma membrane invaginates and pinches off into a vesicle. The best-studied form is clathrin-mediated endocytosis, with vesicles of about 100 nm. The vesicle fuses with an early endosome, which gradually acidifies and matures into a late endosome; whatever does not escape or get recycled ends up in the lysosome.',
       how: [
         'Adaptor proteins (such as AP-2) recognise loaded receptors and gather them into a single membrane patch.',
@@ -223,7 +223,7 @@ export default {
 
   baltimore: {
     nl: {
-      kort: 'Ribosomen kunnen alleen mRNA lezen, dus elk virus moet zijn genoom op een of andere manier tot mRNA omzetten. De Baltimore-indeling groepeert virussen volgens die weg: is het genoom DNA of RNA, enkel- of dubbelstrengig? Zo zie je meteen welke enzymen een virus zelf moet meebrengen.',
+      kort: 'Ribosomen kunnen alleen mRNA lezen, dus elk virus moet zijn genoom op een of andere manier tot mRNA omzetten. De Baltimore-indeling groepeert virussen volgens die weg: is het genoom DNA of RNA, enkel- of dubbelstrengig, en zelf al leesbaar als mRNA (+) of niet (−)? Zo zie je meteen welke enzymen een virus zelf moet meebrengen.',
       what: 'David Baltimore stelde in 1971 een indeling van virussen voor die niet op verwantschap berust, maar op één praktische vraag: hoe komt dit genoom aan mRNA? Omdat ribosomen alleen (+)mRNA kunnen lezen, moet elk virus daar hoe dan ook uitkomen. Baltimore beschreef zes klassen; met de later toegevoegde klasse VII (dsDNA-RT) zijn het er zeven, en elke klasse zegt meteen welke enzymen het virus zelf moet meebrengen.',
       how: [
         'Klasse I — dsDNA: wordt (meestal in de kern) door RNA-polymerase II van de gastheer afgeschreven. Voorbeelden: adenovirus, herpesvirussen, en het pokkenvirus, dat in het cytoplasma repliceert met zijn eigen RNA-polymerase.',
@@ -239,7 +239,7 @@ export default {
       why: 'De indeling is eigenlijk het centrale dogma, toegepast op virussen: ze laat zien dat elke informatiestroom (DNA→RNA, RNA→RNA, RNA→DNA) ergens in de natuur voorkomt, maar dat alles uiteindelijk bij hetzelfde ribosoom uitkomt.',
     },
     en: {
-      kort: 'Ribosomes can only read mRNA, so every virus has to turn its genome into mRNA one way or another. The Baltimore classification groups viruses by that route: is the genome DNA or RNA, single- or double-stranded? This immediately shows which enzymes a virus has to bring along itself.',
+      kort: 'Ribosomes can only read mRNA, so every virus has to turn its genome into mRNA one way or another. The Baltimore classification groups viruses by that route: is the genome DNA or RNA, single- or double-stranded, and readable as mRNA itself (+) or not (−)? This immediately shows which enzymes a virus has to bring along itself.',
       what: 'In 1971 David Baltimore proposed a classification of viruses that is not based on relatedness but on one practical question: how does this genome get to mRNA? Because ribosomes can only read (+)mRNA, every virus has to end up there. Baltimore described six classes; with the later addition of class VII (dsDNA-RT) there are seven, and each class immediately tells you which enzymes the virus must bring along.',
       how: [
         'Class I — dsDNA: transcribed (usually in the nucleus) by the host RNA polymerase II. Examples: adenovirus, herpesviruses, and poxvirus, which replicates in the cytoplasm using its own RNA polymerase.',
@@ -354,7 +354,7 @@ export default {
 
   kernimport: {
     nl: {
-      kort: 'De kern is omgeven door een dubbel membraan met duizenden poriën: de enige doorgangen tussen kern en cytoplasma. Kleine moleculen glippen er zo door; grote hebben een ‘adreslabel’ en een transporteiwit nodig. Het adenovirus is te groot en wordt aan de porie uit elkaar getrokken, zodat alleen zijn DNA naar binnen gaat.',
+      kort: 'De kern is omgeven door een dubbel membraan met duizenden poriën: de enige doorgangen tussen kern en cytoplasma. Kleine moleculen glippen er zo door; grote hebben een ‘adreslabel’ en een transporteiwit nodig. Het adenovirus is te groot en wordt aan de porie uit elkaar getrokken, zodat alleen zijn DNA, met wat eiwit eraan, naar binnen gaat.',
       what: 'Het kernporiecomplex (NPC) is de enige doorgang tussen cytoplasma en nucleoplasma. Het is een achtvoudig symmetrische structuur van ongeveer 110–120 MDa, gebouwd uit ~30 verschillende nucleoporinen die elk in veelvouden van acht voorkomen (samen ~500–1 000 eiwitmoleculen per porie). Het kanaal is gevuld met ongeordende FG-herhalingen die als een zeef werken: kleine moleculen glippen er passief doorheen, grotere alleen met een transportfactor. Een menselijke kern bevat er ongeveer 3 000.',
       how: [
         'Kleine moleculen tot ongeveer 40 kDa (~5 nm) diffunderen passief door het FG-netwerk.',
@@ -372,7 +372,7 @@ export default {
       why: 'Dit is hoofdstuk 4 van het verhaal: het punt waarop vreemd DNA daadwerkelijk bij het genoom komt. Dezelfde poort bepaalt ook de rest van het verhaal — transcriptiefactoren en polymerasen moeten naar binnen, rijp mRNA en ribosoomsubeenheden moeten naar buiten. Wie de kernporie begrijpt, begrijpt waarom eukaryoten transcriptie en translatie in ruimte én tijd kunnen scheiden.',
     },
     en: {
-      kort: 'The nucleus is surrounded by a double membrane with thousands of pores: the only passages between nucleus and cytoplasm. Small molecules slip through freely; large ones need an ‘address label’ and a transport protein. Adenovirus is too big and is pulled apart at the pore, so only its DNA goes in.',
+      kort: 'The nucleus is surrounded by a double membrane with thousands of pores: the only passages between nucleus and cytoplasm. Small molecules slip through freely; large ones need an ‘address label’ and a transport protein. Adenovirus is too big and is pulled apart at the pore, so only its DNA, with some protein attached, goes in.',
       what: 'The nuclear pore complex (NPC) is the only passage between cytoplasm and nucleoplasm. It is an eightfold symmetric structure of about 110–120 MDa, built from ~30 different nucleoporins each present in multiples of eight (together ~500–1,000 protein molecules per pore). The channel is filled with disordered FG repeats that act as a sieve: small molecules slip through passively, larger ones only with a transport factor. A human nucleus contains about 3,000 of them.',
       how: [
         'Small molecules up to about 40 kDa (~5 nm) diffuse passively through the FG meshwork.',

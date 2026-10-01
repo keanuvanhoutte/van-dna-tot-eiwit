@@ -26,7 +26,7 @@ const S = {
 export default {
   transcriptie: {
     nl: {
-      kort: 'Bij transcriptie maakt het enzym RNA-polymerase II een RNA-kopie van een gen. Het leest één DNA-streng als matrijs en bouwt er een passende RNA-streng tegenover. Dat RNA is de eerste stap van gen naar eiwit.',
+      kort: 'Bij transcriptie maakt een RNA-polymerase een RNA-kopie van een gen; voor eiwitgenen is dat RNA-polymerase II. Het leest één DNA-streng als matrijs en bouwt er een passende RNA-streng tegenover. Dat RNA is de eerste stap van gen naar eiwit.',
       what: 'Transcriptie is het kopiëren van een gen naar RNA. RNA-polymerase II leest de matrijsstreng in de richting 3\'→5\' en bouwt het RNA 5\'→3\' op, telkens met een base die complementair is aan de matrijs. Het RNA heeft dus dezelfde sequentie als de coderende streng, met U in plaats van T.',
       how: [
         'Op de promoter bouwen algemene transcriptiefactoren en Pol II het preinitiatiecomplex op.',
@@ -41,7 +41,7 @@ export default {
       why: 'Transcriptie is het eerste en sterkst gereguleerde punt van genexpressie: welke genen hoeveel RNA maken, bepaalt grotendeels welke eiwitten een cel heeft. In ons verhaal schrijft dezelfde Pol II ook de eiwitgenen van het adenovirus af.',
     },
     en: {
-      kort: 'In transcription the enzyme RNA polymerase II makes an RNA copy of a gene. It reads one DNA strand as a template and builds a matching RNA strand against it. This RNA is the first step from gene to protein.',
+      kort: 'In transcription an RNA polymerase makes an RNA copy of a gene; for protein genes this is RNA polymerase II. It reads one DNA strand as a template and builds a matching RNA strand against it. This RNA is the first step from gene to protein.',
       what: 'Transcription is copying a gene into RNA. RNA polymerase II reads the template strand in the 3\'→5\' direction and builds the RNA 5\'→3\', each time with a base complementary to the template. The RNA therefore has the same sequence as the coding strand, with U instead of T.',
       how: [
         'At the promoter, general transcription factors and Pol II assemble the pre-initiation complex.',
@@ -128,7 +128,7 @@ export default {
 
   rnapol: {
     nl: {
-      kort: 'RNA-polymerase II is het enzym dat alle eiwitcoderende genen naar RNA kopieert. Het is een groot eiwitcomplex met een diepe kloof waarin het DNA wordt gelezen en het RNA wordt gebouwd. Een lange staart roept onderweg de enzymen op die het RNA verder bewerken.',
+      kort: 'RNA-polymerase II is het enzym dat alle eiwitcoderende genen in de kern naar RNA kopieert. Het is een groot eiwitcomplex met een diepe kloof waarin het DNA wordt gelezen en het RNA wordt gebouwd. Een lange staart roept onderweg de enzymen op die het RNA verder bewerken.',
       what: 'RNA-polymerase II (Pol II) is het enzym dat alle eiwitcoderende genen afschrijft. Het is een complex van 12 subeenheden (Rpb1–Rpb12, ≈ 0,5 MDa). De twee grootste, Rpb1 en Rpb2, vormen een diepe kloof met het actieve centrum; Rpb1 draagt bovendien de flexibele C-terminale staart (CTD).',
       how: [
         'Stroomafwaarts DNA komt de kloof binnen en wordt geopend; de beweeglijke klem sluit over het DNA.',
@@ -142,7 +142,7 @@ export default {
       why: 'Pol II is de structurele kern van genexpressie: bijna elke regulatiestap (Mediator, pauzeren, CTD-code) grijpt aan op dit ene enzym. Het is ook een doelwit van toxines (α-amanitine) en van virussen die hun genen door de cel laten afschrijven.',
     },
     en: {
-      kort: 'RNA polymerase II is the enzyme that copies all protein-coding genes into RNA. It is a large protein complex with a deep cleft in which the DNA is read and the RNA is built. A long tail recruits, along the way, the enzymes that further process the RNA.',
+      kort: 'RNA polymerase II is the enzyme that copies all protein-coding genes in the nucleus into RNA. It is a large protein complex with a deep cleft in which the DNA is read and the RNA is built. A long tail recruits, along the way, the enzymes that further process the RNA.',
       what: 'RNA polymerase II (Pol II) is the enzyme that transcribes all protein-coding genes. It is a complex of 12 subunits (Rpb1–Rpb12, ≈ 0.5 MDa). The two largest, Rpb1 and Rpb2, form a deep cleft containing the active site; Rpb1 also carries the flexible C-terminal tail (CTD).',
       how: [
         'Downstream DNA enters the cleft and is opened; the mobile clamp closes over the DNA.',

@@ -261,7 +261,7 @@ export default {
 
   gen: {
     nl: {
-      kort: 'Een gen is een stuk DNA dat wordt afgeschreven naar RNA, samen met de stukken die regelen wanneer dat gebeurt. Bij de mens bestaat een gen uit delen die in het mRNA blijven (exonen) en tussenstukken die eruit geknipt worden (intronen). Het gen is het startpunt van het hele verhaal van DNA naar eiwit.',
+      kort: 'Een gen is een stuk DNA dat wordt afgeschreven naar RNA, samen met de stukken die regelen wanneer dat gebeurt. Bij de mens bestaat een gen meestal uit delen die in het mRNA blijven (exonen) en tussenstukken die eruit geknipt worden (intronen). Het gen is het startpunt van het hele verhaal van DNA naar eiwit.',
       what: 'Een gen is een stuk DNA dat tot een functioneel RNA wordt afgeschreven, samen met de regio\'s die dat regelen. Een typisch menselijk eiwitcoderend gen bestaat uit een promoter, exonen en (meestal veel langere) intronen, en eindigt met een polyadenylatiesignaal. Enhancers kunnen op grote afstand liggen.',
       how: [
         'Enhancers binden activerende transcriptiefactoren en bereiken de promoter via een DNA-lus (o.a. cohesine en Mediator).',
@@ -275,7 +275,7 @@ export default {
       why: 'De architectuur van een gen bepaalt waar transcriptie begint en eindigt, welke delen in het mRNA terechtkomen en hoe het gereguleerd wordt. Alternatieve splicing laat één gen meerdere eiwitten maken.',
     },
     en: {
-      kort: 'A gene is a stretch of DNA that is copied into RNA, together with the regions that control when this happens. In humans a gene consists of parts that stay in the mRNA (exons) and intervening pieces that are cut out (introns). The gene is the starting point of the whole story from DNA to protein.',
+      kort: 'A gene is a stretch of DNA that is copied into RNA, together with the regions that control when this happens. In humans a gene usually consists of parts that stay in the mRNA (exons) and intervening pieces that are cut out (introns). The gene is the starting point of the whole story from DNA to protein.',
       what: 'A gene is a stretch of DNA that is transcribed into a functional RNA, together with the regions that control this. A typical human protein-coding gene consists of a promoter, exons and (usually much longer) introns, and ends with a polyadenylation signal. Enhancers can lie far away.',
       how: [
         'Enhancers bind activating transcription factors and reach the promoter through a DNA loop (involving cohesin and Mediator).',

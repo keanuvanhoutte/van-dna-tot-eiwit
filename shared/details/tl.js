@@ -60,7 +60,7 @@ export default {
 
   initiatie: {
     nl: {
-      kort: 'De initiatie is de start van de translatie. De kleine subeenheid van het ribosoom bindt vooraan op het mRNA en zoekt het startcodon AUG; daarna komt de grote subeenheid erbij. Zo begint het lezen op de juiste plek, anders zou er een volledig verkeerd eiwit ontstaan.',
+      kort: 'De initiatie is de start van de translatie. De kleine subeenheid van het ribosoom bindt vooraan op het mRNA en zoekt het startcodon AUG; daarna komt de grote subeenheid erbij. Zo begint het lezen op de juiste plek, anders zou er een verkeerd of ingekort eiwit ontstaan.',
       what: 'Bij de initiatie wordt het ribosoom op het juiste startcodon gezet, zodat het leesraam vastligt. Eukaryoten gebruiken daarvoor de 5\'-cap en scannen; bacteriën gebruiken de Shine–Dalgarno-sequentie.',
       how: [
         'eIF2·GTP bindt Met-tRNAi (ternair complex).',
@@ -71,10 +71,10 @@ export default {
         'eIF5B·GTP helpt de 60S koppelen → 80S met Met-tRNAi in de P-plaats; de elongatie kan starten.',
       ],
       facts: [['Startcodon', 'AUG (Met); bij bacteriën formyl-Met'], ['Kozak-consensus', 'GCC(A/G)CC-AUG-G'], ['Cap', 'm⁷G, gebonden door eIF4E'], ['Bacteriën', 'Shine–Dalgarno paart met het 3\'-uiteinde van 16S rRNA; IF1, IF2, IF3']],
-      why: 'De initiatie is de belangrijkste regelstap van de translatie (bv. via fosforylering van eIF2 bij stress). Een fout startcodon zou een volledig verkeerd eiwit opleveren.',
+      why: 'De initiatie is de belangrijkste regelstap van de translatie (bv. via fosforylering van eIF2 bij stress). Een fout startcodon zou een verkeerd of ingekort eiwit opleveren.',
     },
     en: {
-      kort: 'Initiation is the start of translation. The small ribosomal subunit binds near the front of the mRNA and searches for the start codon AUG; then the large subunit joins. This makes reading begin at the right spot; otherwise a completely wrong protein would be made.',
+      kort: 'Initiation is the start of translation. The small ribosomal subunit binds near the front of the mRNA and searches for the start codon AUG; then the large subunit joins. This makes reading begin at the right spot; otherwise a wrong or shortened protein would be made.',
       what: 'Initiation places the ribosome on the correct start codon so that the reading frame is fixed. Eukaryotes use the 5\' cap and scanning; bacteria use the Shine–Dalgarno sequence.',
       how: [
         'eIF2·GTP binds Met-tRNAi (ternary complex).',
@@ -85,7 +85,7 @@ export default {
         'eIF5B·GTP helps the 60S join → 80S with Met-tRNAi in the P site; elongation can begin.',
       ],
       facts: [['Start codon', 'AUG (Met); formyl-Met in bacteria'], ['Kozak consensus', 'GCC(A/G)CC-AUG-G'], ['Cap', 'm⁷G, bound by eIF4E'], ['Bacteria', 'Shine–Dalgarno pairs with the 3\' end of 16S rRNA; IF1, IF2, IF3']],
-      why: 'Initiation is the main control point of translation (e.g. phosphorylation of eIF2 under stress). A wrong start codon would produce a completely wrong protein.',
+      why: 'Initiation is the main control point of translation (e.g. phosphorylation of eIF2 under stress). A wrong start codon would produce a wrong or shortened protein.',
     },
     sources: [S.hinnebusch, S.albertsTl, S.dever],
   },
@@ -216,7 +216,7 @@ export default {
 
   aars: {
     nl: {
-      kort: 'Aminoacyl-tRNA-synthetasen zijn enzymen die elk tRNA met het juiste aminozuur laden. Ze controleren hun eigen werk en verbeteren fouten. Dat is belangrijk, want het ribosoom controleert later alleen het codon, niet het aminozuur.',
+      kort: 'Aminoacyl-tRNA-synthetasen zijn enzymen die elk tRNA met het juiste aminozuur laden. Veel ervan controleren hun eigen werk en verbeteren fouten. Dat is belangrijk, want het ribosoom controleert later alleen het codon, niet het aminozuur.',
       what: 'Aminoacyl-tRNA-synthetasen (aaRS) koppelen elk aminozuur aan de juiste tRNA\'s. Zij "vertalen" eigenlijk de genetische code: het ribosoom controleert daarna alleen nog codon–anticodon, niet het aminozuur.',
       how: [
         'Activering: aminozuur + ATP → aminoacyl-AMP (aminoacyl-adenylaat) + PPi.',
@@ -229,7 +229,7 @@ export default {
       why: 'Fouten van aaRS worden niet meer door het ribosoom opgevangen, daarom is proeflezen cruciaal. Mutaties in (mitochondriale) aaRS veroorzaken neurologische ziekten; aaRS van bacteriën zijn doelwit van antibiotica (bv. mupirocine op IleRS).',
     },
     en: {
-      kort: 'Aminoacyl-tRNA synthetases are enzymes that load each tRNA with the correct amino acid. They check their own work and correct mistakes. This matters because the ribosome later checks only the codon, not the amino acid.',
+      kort: 'Aminoacyl-tRNA synthetases are enzymes that load each tRNA with the correct amino acid. Many of them check their own work and correct mistakes. This matters because the ribosome later checks only the codon, not the amino acid.',
       what: 'Aminoacyl-tRNA synthetases (aaRS) attach each amino acid to the correct tRNAs. They actually "translate" the genetic code: the ribosome afterwards checks only codon–anticodon, not the amino acid.',
       how: [
         'Activation: amino acid + ATP → aminoacyl-AMP (aminoacyl adenylate) + PPi.',
@@ -310,7 +310,7 @@ export default {
 
   seleno: {
     nl: {
-      kort: 'Selenocysteïne en pyrrolysine zijn twee zeldzame extra aminozuren. Ze worden ingebouwd op een codon dat normaal \'stop\' betekent, omdat een extra signaal in het mRNA het ribosoom laat doorlezen. Dat toont dat de genetische code niet helemaal vastligt.',
+      kort: 'Selenocysteïne en pyrrolysine zijn twee zeldzame extra aminozuren. Ze worden ingebouwd op een codon dat normaal \'stop\' betekent: selenocysteïne op UGA wanneer een extra signaal in het mRNA dat aangeeft, pyrrolysine op UAG, en dat alleen in sommige microben. Dat toont dat de genetische code niet helemaal vastligt.',
       what: 'Selenocysteïne (Sec, U) en pyrrolysine (Pyl, O) zijn het 21e en 22e genetisch gecodeerde aminozuur. Ze worden ingebouwd op een stopcodon dat door extra signalen een nieuwe betekenis krijgt (hercodering): UGA voor Sec, UAG voor Pyl.',
       how: [
         'Sec wordt op zijn eigen tRNA gemaakt: seryl-tRNA-synthetase laadt tRNA-Sec (anticodon UCA) met serine.',
@@ -323,7 +323,7 @@ export default {
       why: 'Selenoproteïnen zijn belangrijk voor de redoxbalans en het schildklierhormoon; seleniumtekort of mutaties in SECISBP2 of tRNA-Sec geven ziekte. Het laat zien dat de genetische code niet volledig vastligt.',
     },
     en: {
-      kort: 'Selenocysteine and pyrrolysine are two rare extra amino acids. They are built in at a codon that normally means \'stop\', because an extra signal in the mRNA makes the ribosome read on. This shows that the genetic code is not completely fixed.',
+      kort: 'Selenocysteine and pyrrolysine are two rare extra amino acids. They are built in at a codon that normally means \'stop\': selenocysteine at UGA when an extra signal in the mRNA says so, pyrrolysine at UAG, and only in some microbes. This shows that the genetic code is not completely fixed.',
       what: 'Selenocysteine (Sec, U) and pyrrolysine (Pyl, O) are the 21st and 22nd genetically encoded amino acids. They are inserted at a stop codon that gets a new meaning through extra signals (recoding): UGA for Sec, UAG for Pyl.',
       how: [
         'Sec is made on its own tRNA: seryl-tRNA synthetase charges tRNA-Sec (anticodon UCA) with serine.',
@@ -340,7 +340,7 @@ export default {
 
   er: {
     nl: {
-      kort: 'Eiwitten die de cel uit moeten of in een membraan horen, worden al tijdens hun aanmaak naar het ER gebracht, een membraannetwerk in de cel. Een \'adreslabel\' aan het begin van het eiwit (het signaalpeptide) wordt herkend door een herkenningsdeeltje (SRP), dat het ribosoom naar een kanaal in het ER-membraan leidt. Daar schuift de keten tijdens het maken het ER in.',
+      kort: 'Eiwitten die de cel uit moeten of in een membraan horen, worden meestal al tijdens hun aanmaak naar het ER gebracht, een membraannetwerk in de cel. Een \'adreslabel\' aan het begin van het eiwit (het signaalpeptide) wordt herkend door een herkenningsdeeltje (SRP), dat het ribosoom naar een kanaal in het ER-membraan leidt. Daar schuift de keten tijdens het maken het ER in.',
       what: 'Eiwitten voor secretie, het plasmamembraan, lysosomen of het ER zelf worden al tijdens de translatie naar het ruw ER gebracht. Een N-terminaal signaalpeptide wordt herkend door het signal recognition particle (SRP), dat het ribosoom naar het Sec61-translocon leidt.',
       how: [
         'Het signaalpeptide (≈ 15–30 aa: positief n-gebied, hydrofobe kern, polaire knipplaats) komt uit de uitgangstunnel.',
@@ -354,7 +354,7 @@ export default {
       why: 'Ongeveer een derde van de menselijke eiwitten gaat via het ER (secretie- en membraaneiwitten). Het ER is ook de plaats van vouwing met chaperones, disulfidebruggen en kwaliteitscontrole voordat eiwitten naar het Golgi gaan.',
     },
     en: {
-      kort: 'Proteins that must leave the cell or belong in a membrane are brought to the ER, a membrane network in the cell, while they are still being made. An \'address label\' at the start of the protein (the signal peptide) is recognised by a recognition particle (SRP), which guides the ribosome to a channel in the ER membrane. There the chain threads into the ER as it is made.',
+      kort: 'Proteins that must leave the cell or belong in a membrane are usually brought to the ER, a membrane network in the cell, while they are still being made. An \'address label\' at the start of the protein (the signal peptide) is recognised by a recognition particle (SRP), which guides the ribosome to a channel in the ER membrane. There the chain threads into the ER as it is made.',
       what: 'Proteins destined for secretion, the plasma membrane, lysosomes or the ER itself are brought to the rough ER while they are still being translated. An N-terminal signal peptide is recognised by the signal recognition particle (SRP), which guides the ribosome to the Sec61 translocon.',
       how: [
         'The signal peptide (≈ 15–30 aa: positive n-region, hydrophobic core, polar cleavage region) emerges from the exit tunnel.',
