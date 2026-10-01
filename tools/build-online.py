@@ -4,7 +4,13 @@ import os, re, shutil
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 DIST = os.path.join(ROOT, 'dist')
 SKIP = re.compile(r'(\.md$|\.orig\.js$|\.bak$|/bak/|/orig)')
-if os.path.exists(DIST): shutil.rmtree(DIST)
+# niet de hele map wissen (OneDrive kan mappen vasthouden): verouderde bestanden apart verwijderen, de rest overschrijven
+def _clean():
+    for base, _, fs in os.walk(DIST):
+        for f in fs:
+            try: os.remove(os.path.join(base, f))
+            except OSError: pass
+if os.path.exists(DIST): _clean()
 files = []
 for d in ['app', 'shared', 'atlas', 'data']:
     for base, _, fs in os.walk(os.path.join(ROOT, d)):

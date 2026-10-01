@@ -80,9 +80,13 @@ export default {
 Bachelorniveau (cursus BIT 03 Structural bioinformatics, Howest). Elke bewering moet door een bron gedekt zijn.
 
 
-## Stap-voor-stap (vanaf 29-09-2026)
-De engine speelt nooit vanzelf door naar de volgende stap. Elke stap speelt één keer en blijft staan op zijn eindbeeld
-(p ≈ 1); de gebruiker gaat verder met ⏭ / → / spatie of de knop "Volgende stap →". Daarom:
+## Afspelen: automatisch verder (standaard) of zelf klikken
+Elke stap speelt één keer en blijft dan op zijn eindbeeld staan.
+- **Auto aan (standaard):** na een leestijd (≈ 1,8 s + 55 ms per teken van titel + ondertitel, 4–12 s, korter bij hogere snelheid) vloeit de
+  engine vanzelf over naar de volgende stap; na de laatste stap van een hoofdstuk (+ 2,5 s) naar het volgende hoofdstuk van de verhaallijn.
+  Zijpaden en het einde van een verhaal herhalen rustig. De knop "Volgende stap →" loopt vol tijdens de leespauze.
+- **Auto uit (knop "Auto" of toets A):** de stap herhaalt zich tot de gebruiker verder klikt. ⏸ / spatie zet altijd alles stil.
+Daarom:
 - Het eindbeeld van een stap moet een zinvol, volledig beeld zijn (niets half ingefade).
 - Het eindbeeld van stap i en het beginbeeld van stap i+1 moeten op elkaar aansluiten (geen sprong).
 - Het beginbeeld van stap 0 mag niet leeg zijn: de engine tekent het al tijdens de zoomovergang.

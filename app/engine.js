@@ -43,7 +43,9 @@ const UI2 = {
   struct3d: { nl: '3D-structuren (PDB)', en: '3D structures (PDB)' }, mapTitle: { nl: 'Waar ben ik?', en: 'Where am I?' },
   mapSub: { nl: 'Het hoofdverhaal (genummerd) en alle zijtakken. Geel = hier ben je. Klik om ernaartoe te gaan.', en: 'The main story (numbered) and all side paths. Yellow = you are here. Click to go there.' },
   close: { nl: 'Sluiten', en: 'Close' }, noScene: { nl: 'Voor deze knoop is nog geen animatie gebouwd.', en: 'No animation has been built for this node yet.' },
-  play: { nl: 'Afspelen (spatie)', en: 'Play (space)' }, pause: { nl: 'Pauze (spatie)', en: 'Pause (space)' }, prevStep: { nl: 'Vorige stap (←)', en: 'Previous step (←)' }, nextStep: { nl: 'Volgende stap (→)', en: 'Next step (→)' }, nextStepBtn: { nl: 'Volgende stap →', en: 'Next step →' },
+  play: { nl: 'Afspelen (spatie)', en: 'Play (space)' }, pause: { nl: 'Pauze (spatie)', en: 'Pause (space)' }, prevStep: { nl: 'Vorige stap (←)', en: 'Previous step (←)' }, nextStep: { nl: 'Volgende stap (→)', en: 'Next step (→)' }, nextStepBtn: { nl: 'Volgende stap →', en: 'Next step →' }, auto: { nl: 'Auto', en: 'Auto' },
+  autoOn: { nl: 'Automatisch verder: aan (A). Klik om zelf door te klikken.', en: 'Auto-advance: on (A). Click to step through yourself.' },
+  autoOff: { nl: 'Automatisch verder: uit (A). Klik om het verhaal vanzelf te laten doorlopen.', en: 'Auto-advance: off (A). Click to let the story run by itself.' },
   homeTip: { nl: 'Terug naar het begin van het verhaal', en: 'Back to the start of the story' }, upTip: { nl: 'Eén niveau uitzoomen (Esc)', en: 'Zoom out one level (Esc)' },
 };
 const V = k => L(UI2[k]);
@@ -64,6 +66,23 @@ const FF_MS = 650;
 /* Na afloop blijft een stap niet stilstaan: na een korte pauze speelt ze opnieuw (zacht overvloeiend),
  * tot de gebruiker zelf verder klikt. Pauze (⏸ / spatie) zet alles stil. */
 const LOOP_WAIT = 2600;
+/* Automatisch verder (standaard aan): na een stap blijft het eindbeeld een leestijd staan en gaat het dan vanzelf
+ * (zacht overvloeiend) naar de volgende stap; aan het einde van een hoofdstuk naar het volgende hoofdstuk van de lijn.
+ * Uit: de stap herhaalt zich tot de gebruiker zelf klikt. ⏸ zet altijd alles stil. Keuze wordt onthouden (?auto=0|1). */
+const AUTO_KEY = 'dna-app-auto';
+let auto = (() => {
+  const u = new URLSearchParams(location.search).get('auto');
+  if (u === '0' || u === '1') return u === '1';
+  try { const v = localStorage.getItem(AUTO_KEY); if (v === '0' || v === '1') return v === '1'; } catch {}
+  return true;
+})();
+const CHAPTER_WAIT = 2500;                        // extra pauze vóór een nieuw hoofdstuk
+/* leestijd: genoeg om titel + ondertitel rustig te lezen (≈ 55 ms per teken), 4–12 s, sneller bij hogere snelheid */
+function readMs(i) {
+  const st = current?.steps[i]; if (!st) return 5000;
+  const n = (L(st.title) ?? '').length + (L(st.text) ?? '').length;
+  return Math.min(12000, Math.max(4000, 1800 + 55 * n)) / Math.max(.5, speed);
+}
 let camNow = FULL.slice(), camTarget = FULL.slice(), camSnap = false;
 
 /* ---------- vaste teksten ---------- */
@@ -135,9 +154,19 @@ function frame(now) {
         const d = ff.to - t, stepT = Math.sign(d) * Math.min(Math.abs(d), ff.rate * dt);
         t += stepT;
         if (Math.abs(ff.to - t) < 1e-6) { t = ff.to; ff = null; }
-      } else if (held) {                          // even op het eindbeeld, dan de stap opnieuw
+      } else if (held) {                          // even op het eindbeeld: daarna verder (auto) of de stap opnieuw
         holdT += dt;
-        if (holdT > LOOP_WAIT) { makeGhost(); t = stepStart(stepInfo(t).step) + 1; held = false; }
+        const si = stepInfo(t);
+        if (auto) {
+          const last = si.step >= current.steps.length - 1, ci = STORY_IDS.indexOf(current.id);
+          const wait = readMs(si.step) + (last ? CHAPTER_WAIT : 0);
+          setAutoFill(Math.min(1, holdT / wait), last);
+          if (holdT > wait) {
+            if (!last) playStep(si.step + 1);
+            else if (ci >= 0 && ci < STORY.length - 1) { held = false; chapterGo(ci + 1); }
+            else { makeGhost(); t = stepStart(si.step) + 1; held = false; }   // einde verhaal of zijpad: rustig herhalen
+          }
+        } else if (holdT > LOOP_WAIT) { makeGhost(); t = stepStart(si.step) + 1; held = false; }
       } else {
         t = Math.min(goal, t + dt * speed);
         if (t >= goal) hold();
@@ -206,6 +235,16 @@ function syncPlayBtn() {
   $('tNext').classList.toggle('pulse', wait);
   $('capNext').classList.toggle('show', wait);
 }
+function setAutoFill(k, last) {
+  const b = last ? $('nextCh').querySelector('button') : $('capNext');
+  if (b) b.style.setProperty('--fill', (k * 100).toFixed(1) + '%');
+}
+function setAuto(v) {
+  auto = v; try { localStorage.setItem(AUTO_KEY, v ? '1' : '0'); } catch {}
+  $('tAuto').setAttribute('aria-pressed', v); $('tAuto').title = V(v ? 'autoOn' : 'autoOff');
+  if (!v) setAutoFill(0, false);
+  if (held) holdT = 0;
+}
 function hold() {
   held = true; holdT = 0; done = true; syncPlayBtn();
   if (isLast() && !endedOnce) { endedOnce = true; showNextChapter(); }
@@ -214,7 +253,7 @@ function hold() {
 function playStep(i, from = null) {
   if (!current) return;
   i = Math.max(0, Math.min(current.steps.length - 1, i));
-  goal = stepEnd(i); held = false; done = false;
+  goal = stepEnd(i); held = false; done = false; setAutoFill(0, false);
   if (from !== null && Math.abs(from - t) > 1) ff = { to: from, rate: Math.max(1, Math.abs(from - t) / FF_MS) };
   setPlaying(true);
 }
@@ -235,6 +274,8 @@ $('tPlay').onclick = () => setPlaying(!playing);
 $('tPrev').onclick = prevStep;
 $('tNext').onclick = nextStep;
 $('capNext').onclick = nextStep;
+$('tAuto').onclick = () => setAuto(!auto);
+setAuto(auto);
 $('speed').onchange = e => speed = +e.target.value;
 $('track').onclick = e => { const r = e.currentTarget.getBoundingClientRect(); t = Math.max(0, Math.min(.999, (e.clientX - r.left) / r.width)) * current.total; ff = null; playStep(stepInfo(t).step); };
 function drawTicks() {
@@ -546,6 +587,7 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'ArrowLeft') $('tPrev').click();
   else if (e.key === 'm') showMap();
   else if (e.key === 'c') toggleCap();
+  else if (e.key === 'a') setAuto(!auto);
 });
 addEventListener('resize', () => requestAnimationFrame(placeLabels));
 
