@@ -96,6 +96,14 @@ $('bAtlas').href = new URL(`../atlas/index.html?lang=${lang}`, import.meta.url).
 function resolve(id) {
   const def = SCENES[id];
   if (!def) return null;
+  /* Overzichtsscène (bv. de cel): één volledig beeld met een korte uitleg, geen verhaal met inzoomen.
+   * def.overview = { step: k, text: {nl,en}, title?, cam?, dur? } → toont het eindbeeld van stap k van de scène. */
+  if (def.overview) {
+    const ov = def.overview, st = def.steps[ov.step ?? 0];
+    const before = def.steps.slice(0, ov.step ?? 0).reduce((a, x) => a + x.dur, 0);
+    return { def, base: def, offset: 0, ov: { ...ov, t0: before + st.dur * .999 },
+      steps: [{ dur: ov.dur ?? 9000, cam: ov.cam ?? st.cam ?? FULL, title: ov.title ?? st.title, text: ov.text }] };
+  }
   if (!def.alias) return { def, base: def, steps: def.steps, offset: 0 };
   const base = SCENES[def.alias];
   const from = def.from ?? 0, to = def.to ?? base.steps.length - 1;
@@ -174,8 +182,9 @@ function frame(now) {
     }
     const si = stepInfo(t);
     if (si.step !== lastStep && lastStep >= 0) makeGhost();      // vorig beeld bewaren om zacht over te vloeien
-    const s = { step: si.step + (current.from ?? 0), p: si.p, t: t + current.offset, total: current.total };
-    try { current.api?.update?.(t + current.offset, s); } catch (e) { console.error(e); }
+    const s = current.ov ? { step: current.ov.step ?? 0, p: .999, t: current.ov.t0 + t, total: current.total }   // overzicht: vast eindbeeld, omgeving beweegt mee
+      : { step: si.step + (current.from ?? 0), p: si.p, t: t + current.offset, total: current.total };
+    try { current.api?.update?.(s.t, s); } catch (e) { console.error(e); }
     if (si.step !== lastStep) { lastStep = si.step; onStep(si.step); }
     // camera
     if (current.svg) {
@@ -401,7 +410,10 @@ async function go(id, box, dir = 'in', push = true) {
   }
   nxt.layer.style.opacity = 0;
   // de nieuwe scène meteen tekenen (anders is ze tijdens de overgang leeg → zwart beeld)
-  const drawFirst = () => { try { nxt.api?.update?.(nxt.offset, { step: nxt.from ?? 0, p: 0, t: nxt.offset, total: nxt.total }); } catch (e) { console.error(e); } };
+  const drawFirst = () => { try {
+    if (nxt.ov) nxt.api?.update?.(nxt.ov.t0, { step: nxt.ov.step ?? 0, p: .999, t: nxt.ov.t0, total: nxt.total });
+    else nxt.api?.update?.(nxt.offset, { step: nxt.from ?? 0, p: 0, t: nxt.offset, total: nxt.total });
+  } catch (e) { console.error(e); } };
   drawFirst();
   const firstCam = nxt.steps[0].cam ?? FULL;
   const nStart = dir === 'in' ? [firstCam[0] + firstCam[2] * .3, firstCam[1] + firstCam[3] * .3, firstCam[2] * .4, firstCam[3] * .4]

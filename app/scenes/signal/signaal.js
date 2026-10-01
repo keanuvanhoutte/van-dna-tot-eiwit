@@ -65,6 +65,10 @@ export default {
   simplified: {
     nl: 'De drie routes staan naast elkaar in één cel; in werkelijkheid heeft niet elke cel alle drie de receptoren en werken ze los van elkaar. Moleculen zijn niet op schaal en sterk vergroot ten opzichte van de cel. Van elke route tonen we alleen de hoofdlijn: bv. Ras is een GTPase (geen kinase) aan het membraan, adenylylcyclase en PKA staan symbolisch, en GR bindt het DNA als dimeer (we tekenen de tweede GR er gewoon bij). Echte signalen zijn netwerken met terugkoppeling en overspraak.',
     en: 'The three routes are shown side by side in one cell; in reality not every cell has all three receptors, and they work independently. Molecules are not to scale and greatly enlarged relative to the cell. For each route we show only the main line: e.g. Ras is a membrane-bound GTPase (not a kinase), adenylyl cyclase and PKA are symbolic, and GR binds DNA as a dimer (we simply add the second GR). Real signalling forms networks with feedback and crosstalk.' },
+  /* overzicht: het celmembraan met de drie strategieën (stap 4), zonder verhaal met inzoomen */
+  overview: { step: 4, dur: 10000, title: { nl: 'Signalen aan het celmembraan', en: 'Signals at the cell membrane' },
+    text: { nl: 'Wateroplosbare signalen (EGF, adrenaline) binden een receptor in het membraan; vetoplosbare (cortisol) gaan erdoor. Klik op een route; het verhaal volgt EGF.',
+            en: 'Water-soluble signals (EGF, adrenaline) bind a receptor in the membrane; fat-soluble ones (cortisol) pass through. Click a route; the story follows EGF.' } },
   steps: [
     ST(7000, FULL, 'Cellen praten met signaalmoleculen', 'Cells talk with signal molecules',
       'Hormonen, groeifactoren en neurotransmitters dragen boodschappen tussen cellen. Ook deze epitheelcel krijgt er voortdurend binnen.',

@@ -10,6 +10,10 @@ export default {
   simplified: {
     nl: 'Het adenovirus (~90 nm) en het lipidenanodeeltje (~100 nm) zijn sterk vergroot: in werkelijkheid zijn ze honderden keren kleiner dan de cel. mRNA-moleculen en ribosomen zijn symbolen; echte aantallen (miljoenen ribosomen) en groottes zijn niet op schaal. Het cytoskelet toont enkel microtubuli vanuit het centrosoom.',
     en: 'The adenovirus (~90 nm) and the lipid nanoparticle (~100 nm) are greatly enlarged: in reality they are hundreds of times smaller than the cell. mRNA molecules and ribosomes are symbols; real numbers (millions of ribosomes) and sizes are not to scale. The cytoskeleton only shows microtubules radiating from the centrosome.' },
+  /* overzicht: geen verhaal met inzoomen, enkel het hele beeld met een korte uitleg (stap 0) */
+  overview: { step: 0, dur: 10000, title: { nl: 'Een menselijke cel', en: 'A human cell' },
+    text: { nl: 'Kies je route: een virus of mRNA-vaccin brengt genetische informatie binnen, of een signaalmolecule zet een gen aan. Klik op een onderdeel om in te zoomen.',
+            en: 'Choose your route: a virus or mRNA vaccine brings in genetic information, or a signal molecule switches on a gene. Click any part to zoom in.' } },
   steps: [
     { dur: 7000, cam: FULL, title: { nl: 'Een menselijke cel', en: 'A human cell' },
       text: { nl: 'Een epitheelcel van ongeveer 20 µm. Volg het verhaal met ▶ of klik zelf op een onderdeel om in te zoomen.', en: 'An epithelial cell of about 20 µm. Follow the story with ▶ or click a part yourself to zoom in.' } },

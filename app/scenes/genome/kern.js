@@ -10,6 +10,10 @@ export default {
   simplified: {
     nl: 'Het aantal kernporiën is veel groter dan getekend (enkele duizenden per menselijke kern, afhankelijk van het celtype). De "kerstboom" bij de transcriptieplaats is gebaseerd op elektronenmicroscopie (Miller-preparaten): RNA\'s worden langer richting het einde van het gen. Het adenovirus-DNA gaat in werkelijkheid als lineair genoom met eiwitten door de porie nadat het capside aan de porie uiteenvalt; de plek in de kern is willekeurig gekozen.',
     en: 'There are far more nuclear pores than drawn (several thousand per human nucleus, depending on the cell type). The "Christmas tree" at the transcription site is based on electron microscopy (Miller spreads): RNAs get longer towards the end of the gene. In reality the adenovirus DNA passes through the pore as a linear, protein-bound genome after the capsid disassembles at the pore; its position in the nucleus is arbitrary.' },
+  /* overzicht: geen verhaal met inzoomen, enkel het hele beeld met een korte uitleg (stap 0) */
+  overview: { step: 0, dur: 10000, title: { nl: 'De celkern', en: 'The nucleus' },
+    text: { nl: 'Hier ligt het DNA, verpakt als chromatine. Genen worden afgeschreven naar RNA, en in de nucleolus worden ribosomen gebouwd. Klik op een onderdeel om in te zoomen.',
+            en: 'This is where the DNA lies, packed as chromatin. Genes are copied into RNA, and ribosomes are built in the nucleolus. Click any part to zoom in.' } },
   steps: [
     { dur: 6500, cam: FULL, title: { nl: 'De celkern', en: 'The nucleus' },
       text: { nl: 'Een kern van ~8 µm met het volledige genoom: 46 chromosomen, samen ~2 meter DNA.', en: 'A nucleus of ~8 µm holding the entire genome: 46 chromosomes, ~2 metres of DNA in total.' } },
