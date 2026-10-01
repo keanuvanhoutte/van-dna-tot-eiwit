@@ -467,7 +467,9 @@ function chapterGo(i) {
   if (i < 0 || i >= STORY.length) return;
   const id = STORY[i].id, cur = NODES[current.id], nx = NODES[id];
   const dir = (nx?.scale ?? 3) >= (cur?.scale ?? 3) ? 'in' : 'out';
-  go(id, null, dir);
+  // staat het volgende hoofdstuk als onderdeel in het huidige beeld (bv. de groeifactor in de cel)? dan daarop inzoomen
+  const el = dir === 'in' && current.svg ? [...current.root.querySelectorAll(`[data-node="${id}"]`)].find(e => e.__v !== false && visible(e)) : null;
+  go(id, el ? boxOf(el) : null, dir);
 }
 function renderStory() {
   const ci = STORY_IDS.indexOf(current.id);
