@@ -416,26 +416,60 @@ async function go(id, box, dir = 'in', push = true) {
   } catch (e) { console.error(e); } };
   drawFirst();
   const firstCam = nxt.steps[0].cam ?? FULL;
-  const nStart = dir === 'in' ? [firstCam[0] + firstCam[2] * .3, firstCam[1] + firstCam[3] * .3, firstCam[2] * .4, firstCam[3] * .4]
-                              : [firstCam[0] - firstCam[2] * .5, firstCam[1] - firstCam[3] * .5, firstCam[2] * 2, firstCam[3] * 2];
-  const oFrom = camNow.slice();
-  const oTo = dir === 'in' ? (box ?? [oFrom[0] + oFrom[2] * .4, oFrom[1] + oFrom[3] * .4, oFrom[2] * .2, oFrom[3] * .2]) : [oFrom[0] - oFrom[2], oFrom[1] - oFrom[3], oFrom[2] * 3, oFrom[3] * 3];
-  // 3D-lagen: zoom met CSS-schaal
-  const css = (lay, sc) => { lay.style.transform = `scale(${sc})`; };
-  if (nxt.svg) nxt.svg.setAttribute('viewBox', nStart.join(' '));
-  await tween(1150, k => {
-    if (old) {
-      if (old.svg) old.svg.setAttribute('viewBox', lerpBox(oFrom, oTo, Math.min(1, k * 1.25)).join(' '));
-      else css(old.layer, dir === 'in' ? 1 + k * 2.5 : 1 - k * .6);
-      old.layer.style.opacity = 1 - Math.max(0, (k - .35) / .5);
-    }
-    const kk = Math.max(0, (k - .3) / .7);
-    nxt.layer.style.opacity = Math.min(1, kk * 1.6);
-    if (nxt.svg) nxt.svg.setAttribute('viewBox', lerpBox(nStart, firstCam, kk).join(' '));
-    else css(nxt.layer, dir === 'in' ? .4 + .6 * kk : 2 - kk);
-  });
+  /* Doorlopende zoom-overgang (≈ 1,7 s):
+   *  in : de oude scène zoomt (met gelijkmatige zoomsnelheid) in op het aangeklikte onderdeel; de nieuwe scène groeit
+   *       precies uit dat onderdeel tevoorschijn en neemt het beeld over; de oude vervaagt pas daarna (geen donker gat).
+   *  out: omgekeerd — de nieuwe (grotere) scène zoomt uit vanaf het onderdeel dat de oude scène voorstelt, en de oude
+   *       krimpt terug in dat onderdeel. */
+  const W = stage.clientWidth, H = stage.clientHeight;
+  const fit = vb => { const sc = Math.min(W / vb[2], H / vb[3]); return { sc, ox: (W - vb[2] * sc) / 2, oy: (H - vb[3] * sc) / 2 }; };
+  const rectOf = (bx, vb) => { const f = fit(vb); return [f.ox + (bx[0] - vb[0]) * f.sc, f.oy + (bx[1] - vb[1]) * f.sc, bx[2] * f.sc, bx[3] * f.sc]; };
+  const contentRect = vb => { const f = fit(vb); return [f.ox, f.oy, vb[2] * f.sc, vb[3] * f.sc]; };
+  const place = (lay, from, to) => {            // laag zo transformeren dat rechthoek 'from' (in beeld) op 'to' komt
+    const sc = to[2] / from[2];
+    lay.style.transformOrigin = '0 0';
+    lay.style.transform = `translate(${(to[0] - from[0] * sc).toFixed(2)}px, ${(to[1] - from[1] * sc).toFixed(2)}px) scale(${sc.toFixed(4)})`;
+  };
+  /* zoomen met gelijkmatige snelheid: breedte geometrisch, middelpunt mee in verhouding */
+  const zoomBox = (a, b, k) => {
+    const w = a[2] * Math.pow(b[2] / a[2], k), h = w * a[3] / a[2];
+    const u = Math.abs(b[2] - a[2]) < 1e-6 ? k : (a[2] - w) / (a[2] - b[2]);
+    const cx = a[0] + a[2] / 2 + (b[0] + b[2] / 2 - a[0] - a[2] / 2) * u, cy = a[1] + a[3] / 2 + (b[1] + b[3] / 2 - a[1] - a[3] / 2) * u;
+    return [cx - w / 2, cy - h / 2, w, h];
+  };
+  const centerBox = (vb, f = .28) => [vb[0] + vb[2] * (1 - f) / 2, vb[1] + vb[3] * (1 - f) / 2, vb[2] * f, vb[3] * f];
+  const smooth = (k, a, b) => { const x = Math.min(1, Math.max(0, (k - a) / (b - a))); return x * x * (3 - 2 * x); };
+  const oFrom = old ? camNow.slice() : FULL;
+  if (nxt.svg) nxt.svg.setAttribute('viewBox', firstCam.join(' '));
+  if (dir === 'in') {
+    const target = box ?? centerBox(oFrom);
+    await tween(1700, k => {
+      const vb = zoomBox(oFrom, target, k);
+      if (old) {
+        if (old.svg) old.svg.setAttribute('viewBox', vb.join(' '));
+        else { old.layer.style.transformOrigin = '50% 50%'; old.layer.style.transform = `scale(${(oFrom[2] / vb[2]).toFixed(4)})`; }   // 3D: met CSS inzoomen
+        old.layer.style.opacity = (1 - smooth(k, .5, .95)).toFixed(3);
+      }
+      place(nxt.layer, contentRect(firstCam), rectOf(target, vb));
+      nxt.layer.style.opacity = smooth(k, .12, .5).toFixed(3);
+    });
+  } else {
+    const back = old && nxt.svg ? [...nxt.root.querySelectorAll(`[data-node="${old.id}"]`)].find(e => visible(e)) : null;
+    const target = back ? boxOf(back) : centerBox(firstCam);
+    const oRect = old ? contentRect(oFrom) : null;
+    await tween(1700, k => {
+      const vb = zoomBox(target, firstCam, k);
+      if (nxt.svg) nxt.svg.setAttribute('viewBox', vb.join(' '));
+      else { nxt.layer.style.transformOrigin = '50% 50%'; nxt.layer.style.transform = `scale(${(1 + .6 * (1 - k)).toFixed(4)})`; }
+      nxt.layer.style.opacity = smooth(k, 0, .35).toFixed(3);
+      if (old) {
+        place(old.layer, oRect, nxt.svg ? rectOf(target, vb) : zoomBox(oRect, contentRect(centerBox(FULL)), k));
+        old.layer.style.opacity = (1 - smooth(k, .45, .9)).toFixed(3);
+      }
+    });
+  }
   if (old) { try { old.api?.destroy?.(); } catch {} old.layer.remove(); }
-  nxt.layer.style.transform = '';
+  nxt.layer.style.transform = ''; nxt.layer.style.transformOrigin = ''; nxt.layer.style.opacity = '';
   current = nxt; camNow = firstCam.slice();
   t = 0; endedOnce = false; lastStep = -1; ff = null; playStep(0);
   if (push) { const i = trail.indexOf(id); trail = i >= 0 ? trail.slice(0, i + 1) : [...trail, id]; }
