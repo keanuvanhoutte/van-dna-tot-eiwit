@@ -119,7 +119,7 @@ export function gpcr7(x, y, h = 64, tilt6 = 0, op = 1, col = C.prot) {
       const ly = i % 2 === 0 ? bot : top, dy = i % 2 === 0 ? 14 : -14;
       s += `<path d="M${f1(hx)},${ly} q10.5,${dy * 1.6} 21,0" stroke="${col}" stroke-width="4" fill="none" opacity=".85"/>`;
     }
-    const rot = i === 5 ? tilt6 : 0;
+    const rot = i === 5 ? -tilt6 : 0;                // negatief = onderkant zwaait weg van de bundel (naar buiten)
     const hl6 = i === 5 && tilt6 > 1;
     s += `<rect x="${f1(hx - 8.5)}" y="${top}" width="17" height="${bot - top}" rx="8" fill="${hl6 ? '#c9b6ff' : col}" fill-opacity=".55" stroke="${hl6 ? '#e4dbff' : col}" stroke-width="2.5" transform="rotate(${f1(rot)} ${f1(hx)} ${top})"/>`;
   }

@@ -138,8 +138,8 @@ const SCENE = {
     nl: '<p style="font-size:13px;color:#93a0bb">3D: EGF gebonden aan het extracellulaire deel van EGFR (2:2-dimeer) PDB <a href="https://www.rcsb.org/structure/1IVO" target="_blank" rel="noopener">1IVO</a>; asymmetrisch dimeer van de kinasedomeinen PDB <a href="https://www.rcsb.org/structure/2GS2" target="_blank" rel="noopener">2GS2</a>.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">3D: EGF bound to the extracellular region of EGFR (2:2 dimer) PDB <a href="https://www.rcsb.org/structure/1IVO" target="_blank" rel="noopener">1IVO</a>; asymmetric dimer of the kinase domains PDB <a href="https://www.rcsb.org/structure/2GS2" target="_blank" rel="noopener">2GS2</a>.</p>' },
   simplified: {
-    nl: 'Schematisch en niet op schaal. De vier extracellulaire domeinen (I–IV) zijn bolletjes; de echte vormen staan in PDB 1IVO. Van de vele tyrosines in de lange C-terminale staart tonen we er drie per receptor. Hoe precies beide staarten gefosforyleerd raken (rolwissel binnen het dimeer, grotere clusters van receptoren) wordt nog onderzocht. Grb2 en SOS zijn als vooraf gevormd complex getekend; Grb2 kan ook via het adaptereiwit Shc binden. Endocytose en afbraak van de receptor zijn weggelaten.',
-    en: 'Schematic and not to scale. The four extracellular domains (I–IV) are drawn as balls; the real shapes are in PDB 1IVO. Of the many tyrosines in the long C-terminal tail we show three per receptor. Exactly how both tails get phosphorylated (role swapping within the dimer, larger receptor clusters) is still being studied. Grb2 and SOS are drawn as a preformed complex; Grb2 can also bind via the adaptor protein Shc. Endocytosis and degradation of the receptor are omitted.' },
+    nl: 'Schematisch en niet op schaal. De vier extracellulaire domeinen (I–IV) zijn bolletjes; de echte vormen staan in PDB 1IVO. Van de vele tyrosines in de lange C-terminale staart tonen we er drie per receptor. Een deel van de receptoren vormt ook zonder EGF al inactieve dimeren. Hier fosforyleert de actieve ontvanger eerst de staart van de activator (in trans); hoe precies beide staarten gefosforyleerd raken (rolwissel binnen het dimeer, grotere clusters van receptoren) wordt nog onderzocht. Grb2 en SOS zijn als vooraf gevormd complex getekend; Grb2 kan ook via het adaptereiwit Shc binden. Endocytose en afbraak van de receptor zijn weggelaten.',
+    en: 'Schematic and not to scale. The four extracellular domains (I–IV) are drawn as balls; the real shapes are in PDB 1IVO. Of the many tyrosines in the long C-terminal tail we show three per receptor. Some receptors also form inactive dimers without EGF. Here the active receiver first phosphorylates the activator’s tail (in trans); exactly how both tails get phosphorylated (role swapping within the dimer, larger receptor clusters) is still being studied. Grb2 and SOS are drawn as a preformed complex; Grb2 can also bind via the adaptor protein Shc. Endocytosis and degradation of the receptor are omitted.' },
   steps: [
     ST(7000, cam(800, 470, 1500), 'Een groeifactor bereikt de cel', 'A growth factor reaches the cell',
       'De epidermale groeifactor EGF, een klein eiwit van 53 aminozuren, komt buiten de cel aan. In het plasmamembraan wachten EGF-receptoren als losse, inactieve monomeren.',
@@ -211,8 +211,8 @@ const SCENE = {
         $('rtk-sigA').setAttribute('opacity', step === 0 ? 1 : 0);
 
         /* ---- receptoren ---- */
-        const r1 = receptor(x1, 1, e1, k1x, KY, { nums: step === 1 || step === 2, armHi, ys: [Y(3), Y(4), Y(5)], cw });
-        const r2 = receptor(x2, -1, e2, k2x, k2y, { nums: step === 1 || step === 2, armHi, kOn: on2, ys: [Y(0), Y(1), Y(2)], cw });
+        const r1 = receptor(x1, 1, e1, k1x, KY, { nums: step === 1 || step === 2, armHi, ys: [Y(0), Y(1), Y(2)], cw });
+        const r2 = receptor(x2, -1, e2, k2x, k2y, { nums: step === 1 || step === 2, armHi, kOn: on2, ys: [Y(3), Y(4), Y(5)], cw });
         let rc = r1.g + r2.g + egf(E1[0], E1[1]) + egf(E2[0], E2[1]);
         if (armHi > .01 && step === 2) rc += `<circle cx="800" cy="212" r="${f1(34 * sub(p, .6, .85))}" fill="#e0d6ff" opacity="${f1(.35 * sub(p, .6, .85))}" filter="url(#glow)"/>`;
         $('rtk-rec').innerHTML = rc;
@@ -230,7 +230,7 @@ const SCENE = {
         let fx = '';
         if (step === 3) fx += `<circle cx="787" cy="607" r="${f1(10 + 16 * sub(p, .5, .8))}" fill="#fff" opacity="${f1(.5 * sub(p, .5, .7))}" filter="url(#glow)"/>`;
         if (step === 4) {
-          for (let i = 0; i < 6; i++) { const k = clamp(ph - i); if (k > 0 && k < 1) { const tp = i < 3 ? r2.tp[i + 2] : r1.tp[i - 1]; fx += spark(tp[0], tp[1], k, PHOS); } }
+          for (let i = 0; i < 6; i++) { const k = clamp(ph - i); if (k > 0 && k < 1) { const tp = i < 3 ? r1.tp[i + 2] : r2.tp[i - 1]; /* eerst de staart van de activator: de actieve ontvanger fosforyleert in trans */ fx += spark(tp[0], tp[1], k, PHOS); } }
           fx += arr(800, 712, 660, 728, '#fff', 'rtk-w', { w: 3.5, bend: .3, op: sub(p, .05, .2) }) + arr(745, 682, 905, 792, '#fff', 'rtk-w', { w: 3.5, bend: -.2, op: sub(p, .05, .2) });
           const atpK = sub(p, .15, .8);
           fx += tag(930, 590, atpK < .5 ? 'ATP' : 'ADP', K.atp, { fs: 17 });

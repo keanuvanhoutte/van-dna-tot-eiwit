@@ -24,8 +24,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">3D: β2-adrenerge receptor met Gs, PDB <a href="https://www.rcsb.org/structure/3SN6" target="_blank" rel="noopener">3SN6</a>.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">3D: β2-adrenergic receptor with Gs, PDB <a href="https://www.rcsb.org/structure/3SN6" target="_blank" rel="noopener">3SN6</a>.</p>' },
   simplified: {
-    nl: 'De receptor is getekend als 7 staafjes; adenylylcyclase (12 TM-helices, twee katalytische domeinen) staat symbolisch met enkele helices. Gβγ geeft zelf ook signalen door (niet getoond). PKA zit in cellen vaak via AKAP-eiwitten op een vaste plek en de C-subeenheden laten in werkelijkheid niet altijd volledig los. We tonen één C-subeenheid die de kern in gaat en één CREB-dimeer; CREB wordt ook door andere kinasen gefosforyleerd. Desensitisatie van de receptor (GRK, β-arrestine) is weggelaten. Moleculen zijn niet op schaal.',
-    en: 'The receptor is drawn as 7 rods; adenylyl cyclase (12 TM helices, two catalytic domains) is shown symbolically with a few helices. Gβγ also relays signals itself (not shown). In cells PKA is often anchored at fixed sites by AKAP proteins, and the C subunits do not always fully dissociate. We show one C subunit entering the nucleus and one CREB dimer; CREB is also phosphorylated by other kinases. Receptor desensitisation (GRK, β-arrestin) is left out. Molecules are not to scale.' },
+    nl: 'De receptor is getekend als 7 staafjes; adenylylcyclase (12 TM-helices, twee katalytische domeinen) staat symbolisch met enkele helices. Gβγ geeft zelf ook signalen door (niet getoond). Dat Gαs volledig loskomt van Gβγ is het klassieke model; recenter werk toont dat ze soms eerder herschikken dan echt scheiden. PKA zit in cellen vaak via AKAP-eiwitten op een vaste plek en de C-subeenheden laten in werkelijkheid niet altijd volledig los. We tonen één C-subeenheid die de kern in gaat en één CREB-dimeer; CREB wordt ook door andere kinasen gefosforyleerd. Desensitisatie van de receptor (GRK, β-arrestine) is weggelaten. Moleculen zijn niet op schaal.',
+    en: 'The receptor is drawn as 7 rods; adenylyl cyclase (12 TM helices, two catalytic domains) is shown symbolically with a few helices. Gβγ also relays signals itself (not shown). Gαs fully separating from Gβγ is the classic model; more recent work shows they sometimes rearrange rather than truly separate. In cells PKA is often anchored at fixed sites by AKAP proteins, and the C subunits do not always fully dissociate. We show one C subunit entering the nucleus and one CREB dimer; CREB is also phosphorylated by other kinases. Receptor desensitisation (GRK, β-arrestin) is left out. Molecules are not to scale.' },
   steps: [
     ST(7000, cam(520, 330, 1000), 'Adrenaline komt aan', 'Adrenaline arrives',
       'Adrenaline, een catecholamine uit het bijniermerg, nadert de β2-adrenerge receptor. Onder het membraan wacht het G-eiwit Gs, met GDP gebonden.',
@@ -97,7 +97,7 @@ export default {
         /* ---------- receptor + adrenaline ---------- */
         const act = K(g, 1.5, 1.9) * (1 - K(g, 8.45, 8.8));
         const ad = track(g, [[0, 250, 70, 1.3], [.85, 350, 175, 1.3], [1.1, 350, 175, 1.3], [1.5, RX, 280, 1.05], [8.3, RX, 280, 1.05], [8.75, 260, 120, 1.3]]);
-        $('gp-rec').innerHTML = gpcr7(RX, MY, MH, 11 * act) + adr(ad[0], ad[1] + (g < 1.1 || g > 8.7 ? wob(1) : 0), ad[2]);
+        $('gp-rec').innerHTML = gpcr7(RX, MY, MH, 8 * act) + adr(ad[0], ad[1] + (g < 1.1 || g > 8.7 ? wob(1) : 0), ad[2]);
 
         /* ---------- G-eiwit ---------- */
         const dock = K(g, 2.05, 2.4);

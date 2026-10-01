@@ -181,7 +181,7 @@ export default {
 
         /* ---------- kolom B: β2-adrenerge receptor ---------- */
         const dimB = 1 - .78 * K(g, 7.05, 7.4);
-        const tilt = 10 * K(g, 2.55, 2.85);
+        const tilt = 8 * K(g, 2.55, 2.85);
         let B = gpcr7(XB, MY, MH, tilt, 1);
         // adenylylcyclase (2 × 6 TM, symbolisch) + katalytisch deel
         B += `<g opacity=".95">${[964, 976, 988].map(x => `<rect x="${x - 4}" y="${MY - 10}" width="9" height="${MH + 20}" rx="4" fill="#b58cff" fill-opacity=".55" stroke="#b58cff" stroke-width="1.5"/>`).join('')}` +
