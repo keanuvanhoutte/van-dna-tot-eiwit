@@ -134,7 +134,7 @@ export default {
         /* ---------- kern: GRE, co-activatoren, Pol II ---------- */
         let N = '';
         const gk = K(g, 5.05, 5.4);
-        N += `<g opacity="${f1(.35 + .65 * gk)}"><text x="${H1}" y="${DY + 50}" font-size="23" text-anchor="middle" fill="#cfe0ff" font-family="JetBrains Mono" font-weight="700">AGAACA</text>` +
+        N += `<g opacity="${f1(.35 + .65 * gk)}"><text x="${H1}" y="${DY + 50}" font-size="23" text-anchor="middle" fill="#cfe0ff" font-family="JetBrains Mono" font-weight="700">GGAACA</text>` +
           `<text x="1000" y="${DY + 50}" font-size="22" text-anchor="middle" fill="${C.muted}" font-family="JetBrains Mono" font-weight="700">nnn</text>` +
           `<text x="${H2}" y="${DY + 50}" font-size="23" text-anchor="middle" fill="#cfe0ff" font-family="JetBrains Mono" font-weight="700">TGTTCT</text></g>`;
         const co = track(g, [[6.05, 1200, 540, 0], [6.4, 1000, 612, 1]]);

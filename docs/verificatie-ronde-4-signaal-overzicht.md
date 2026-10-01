@@ -149,3 +149,6 @@ Er komen geen decimale getallen voor in de NL-teksten van deze drie scènes. Get
 ## Gewijzigde bestanden
 - `app/scenes/signal/_sig1.js`: richting van helix 6 in `gpcr7()`.
 - `shared/details/signal1.js`: twee bronvermeldingen gecorrigeerd, twee bronnen toegevoegd, "het KIX-domein", CREB-isoformnotitie.
+
+## Nabehandeling (keuze gebruiker, 01-10-2026)
+- Open punt 1 (GRE-consensus): op vraag van de gebruiker volgt de app nu de hoofdbron (Oakley & Cidlowski 2013): **GGAACAnnnTGTTCT**, zowel in de figuur (steroid.js) als in de uitleg (signal1.js, NL en EN).

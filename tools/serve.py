@@ -9,6 +9,7 @@ class NoCache(http.server.SimpleHTTPRequestHandler):
 class Server(http.server.ThreadingHTTPServer):
     request_queue_size = 256      # de app laadt ~100 modules tegelijk; standaard (5) laat verbindingen wegvallen
     daemon_threads = True
+    allow_reuse_address = False   # Windows: anders kunnen meerdere servers ongemerkt dezelfde poort delen
 
 if __name__ == '__main__':
     os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
