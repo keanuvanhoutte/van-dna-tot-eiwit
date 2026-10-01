@@ -41,8 +41,7 @@
     <h1 id="h"></h1>
     <p class="lead" id="lead"></p>
     <div class="grid">
-      <a class="card" href="app/index.html?story=virus&amp;scene=cel" style="--c:var(--rna)"><span class="tag" id="c0tag"></span><h2 id="c0t"></h2><p id="c0p"></p></a>
-      <a class="card" href="app/index.html?story=signaal&amp;scene=cel" style="--c:var(--prot)"><span class="tag" id="c1tag"></span><h2 id="c1t"></h2><p id="c1p"></p></a>
+      <a class="card" href="app/index.html?scene=cel" style="--c:var(--rna)"><span class="tag" id="c0tag"></span><h2 id="c0t"></h2><p id="c0p"></p></a>
       <a class="card" href="atlas/index.html" style="--c:var(--dna)"><span class="tag">Atlas</span><h2 id="c2t"></h2><p id="c2p"></p></a>
       <a class="card" href="docs/blueprint.html" style="--c:var(--chain)"><span class="tag" id="c3tag"></span><h2>Blueprint</h2><p id="c3p"></p></a>
     </div>
@@ -60,14 +59,10 @@ import { L, langSwitch } from './shared/i18n.js';
     h: { nl: 'Van DNA tot eiwit', en: 'From DNA to protein' },
     lead: { nl: 'Interactieve moleculaire reis door een menselijke cel. Klik op onderdelen om in te zoomen op het volgende proces, tot op het niveau van echte atoomstructuren.',
             en: 'An interactive molecular journey through a human cell. Click on parts to zoom into the next process, all the way down to real atomic structures.' },
-    c0tag: { nl: 'Verhaal 1', en: 'Story 1' },
-    c0t: { nl: 'Een virus brengt DNA binnen', en: 'A virus brings in DNA' },
-    c0p: { nl: 'Volg een adenovirus van het celmembraan tot in de kern, en daarna het gen tot een gevouwen en afgebroken eiwit. 21 hoofdstukken; klik op elk onderdeel voor een zijpad.',
-           en: 'Follow an adenovirus from the cell membrane into the nucleus, then the gene all the way to a folded and degraded protein. 21 chapters; click any part for a side path.' },
-    c1tag: { nl: 'Verhaal 2', en: 'Story 2' },
-    c1t: { nl: 'Een signaal zet een gen aan', en: 'A signal switches on a gene' },
-    c1p: { nl: 'De groeifactor EGF bindt een receptor; een kinasecascade draagt het signaal tot in de kern, waar het FOS-gen aangaat. Daarna volg je hoe het eiwit c-Fos gemaakt, gevouwen en afgebroken wordt.',
-           en: 'The growth factor EGF binds a receptor; a kinase cascade carries the signal into the nucleus, where the FOS gene switches on. Then you follow how the protein c-Fos is made, folded and degraded.' },
+    c0tag: { nl: 'Start', en: 'Start' },
+    c0t: { nl: 'Het verhaal: van DNA tot eiwit', en: 'The story: from DNA to protein' },
+    c0p: { nl: 'Je begint in een menselijke cel en kiest daar zelf je route: volg een virus dat DNA binnenbrengt, of een signaalmolecule dat een gen aanzet. Elke route loopt verder tot een gevouwen en afgebroken eiwit.',
+           en: 'You start in a human cell and choose your own route there: follow a virus bringing in DNA, or a signal molecule switching on a gene. Each route continues all the way to a folded and degraded protein.' },
     c2t: { nl: 'DNA/RNA-atlas', en: 'DNA/RNA atlas' },
     c2p: { nl: 'Alle soorten DNA en RNA in 3D uit echte PDB-structuren: A/B/Z-DNA, quadruplexen, tRNA, ribozymen, drug–DNA-complexen … met filters en vergelijkmodus.',
            en: 'All kinds of DNA and RNA in 3D from real PDB structures: A/B/Z-DNA, quadruplexes, tRNA, ribozymes, drug–DNA complexes … with filters and compare mode.' },
