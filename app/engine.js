@@ -655,7 +655,7 @@ if (startId) {
   const ci = STORY_IDS.indexOf(startId); if (ci >= 0) lastChapter = ci;
   camNow = (current.steps[0].cam ?? FULL).slice();
   if (q.has('t')) t = Math.min(current.total - 1, +q.get('t'));
-  if (q.has('step')) t = stepStart(+q.get('step')) + (q.has('p') ? +q.get('p') * current.steps[+q.get('step')].dur : 1);
+  if (q.has('step')) { const k = Math.max(0, Math.min(current.steps.length - 1, +q.get('step') || 0)); t = stepStart(k) + (q.has('p') ? +q.get('p') * current.steps[k].dur : 1); }   // stap buiten bereik (bv. overzichtsscène) → begrenzen
   camSnap = true;
   render(); drawTicks();
   playStep(stepInfo(t).step);
