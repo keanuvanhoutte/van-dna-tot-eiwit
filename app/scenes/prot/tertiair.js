@@ -68,7 +68,7 @@ export default molScene({
     ctx.data.fCore = frac(ctx.data.core); ctx.data.fSurf = frac(ctx.data.surf);
   },
   steps: [
-    ST(8000, 'Eén keten, één vouwing', 'One chain, one fold', 'De keten van 146 residuen vouwt tot een compact bolletje: de tertiaire structuur. Kleur: van N-terminus (blauw) naar C-terminus (rood).', 'The chain of 146 residues folds into a compact globule: the tertiary structure. Colour: from N-terminus (blue) to C-terminus (red).', {
+    ST(8000, 'Eén keten, één vouwing', 'One chain, one fold', 'De keten van 146 residuen vouwt tot een compact bolletje: de tertiaire structuur. Kleur: van begin (N, blauw) tot einde (C, rood).', 'The chain of 146 residues folds into a compact globule: the tertiary structure. Colour: from start (N, blue) to end (C, red).', {
       show(c) { c.style(B, cartoon('spectrum')); c.style({ chain: 'B', resn: 'HEM' }, hemeStyle); },
       zoom: B, spin: .02,
       panel: () => phead(T2('β-globine (hemoglobine)', 'β-globin (haemoglobin)')) + plines(222, [
@@ -76,7 +76,7 @@ export default molScene({
         [T2('• bindt één heemgroep', '• binds one haem group'), C.text], '',
         [T2('tertiair = 3D-vorm van één keten', 'tertiary = 3D shape of one chain'), C.muted, 22]]),
     }),
-    ST(8500, 'Acht helices: A tot H', 'Eight helices: A to H', 'De globinevouw bestaat uit acht α-helices, A tot H genoemd, verbonden door korte lussen (bv. de CD-hoek).', 'The globin fold consists of eight α-helices, named A to H, connected by short loops (e.g. the CD corner).', {
+    ST(8500, 'Acht helices: A tot H', 'Eight helices: A to H', 'Deze vouw, de globinevouw, heeft acht α-helices (A tot H), verbonden door korte lussen.', 'This fold, the globin fold, has eight α-helices (A to H), connected by short loops.', {
       show(c) {
         c.style(B, cartoon('#56607a'));
         HEL.forEach(([n, a, b], i) => { c.style({ chain: 'B', resi: rng(a, b) }, cartoon(HCOL[i])); c.label(n, c.center(c.sel({ chain: 'B', resi: rng(a, b), atom: 'CA' })), { size: 20, border: HCOL[i] }); });
@@ -88,7 +88,7 @@ export default molScene({
         ptxt(PX + 50, 219 + i * 46, `${a}–${b}`, C.text, 23)).join('') +
         ptxt(PX + 230, 222, T2('geen β-strengen:', 'no β-strands:'), C.muted, 22) + ptxt(PX + 230, 254, T2('een all-α-eiwit', 'an all-α protein'), C.muted, 22),
     }),
-    ST(8500, 'Hydrofobe kern', 'Hydrophobic core', 'Getoond: de meest begraven zijketens, bijna allemaal hydrofoob (groen). Samen gebundeld maken ze geordend water vrij (entropie ↑): dit hydrofoob effect drijft de vouwing.', 'Shown: the most buried side chains, nearly all hydrophobic (green). Clustered together they free ordered water (entropy ↑): this hydrophobic effect drives folding.', {
+    ST(8500, 'Hydrofobe kern', 'Hydrophobic core', 'Binnenin zitten bijna alleen waterschuwe zijketens (groen). Samengepakt laten ze geordend water los: dat hydrofoob effect drijft de vouwing.', 'Inside sit almost only water-avoiding side chains (green). Packed together they release ordered water: this hydrophobic effect drives folding.', {
       show(c) {
         c.style(B, cartoon('#465171'));
         const core = c.data.core ?? [];
@@ -103,7 +103,7 @@ export default molScene({
         [T2(`Meest blootgestelde 25 %: ${c.data.fSurf ?? '…'} % hydrofoob`, `Most exposed 25 %: ${c.data.fSurf ?? '…'} % hydrophobic`), CLASSCOL.p, 22, 700],
         [T2('(buren binnen 10 Å, uit 1BBB)', '(neighbours within 10 Å, from 1BBB)'), C.muted, 21]]),
     }),
-    ST(8500, 'Polair oppervlak', 'Polar surface', 'Alle atomen als bolletjes: het oppervlak is vooral polair (cyaan) en geladen (blauw/rood), zodat het eiwit oplost. Groene plekken zijn vaak contactvlakken met andere ketens.', 'All atoms as spheres: the surface is mostly polar (cyan) and charged (blue/red), so the protein dissolves. Green patches are often contact areas with other chains.', {
+    ST(8500, 'Polair oppervlak', 'Polar surface', 'Met alle atomen getoond: het oppervlak is vooral polair (cyaan) en geladen (blauw/rood), zodat het eiwit oplost. Groene plekken raken vaak andere ketens.', 'With all atoms shown: the surface is mostly polar (cyan) and charged (blue/red), so the protein dissolves. Green patches often touch other chains.', {
       show(c) {
         c.style({ chain: 'B', resn: HYD }, { sphere: { color: CLASSCOL.h } });
         c.style({ chain: 'B', resn: POL }, { sphere: { color: CLASSCOL.p } });
@@ -116,7 +116,7 @@ export default molScene({
         [T2('● polair: Ser, Thr, Cys, Asn, Gln, Tyr', '● polar: Ser, Thr, Cys, Asn, Gln, Tyr'), CLASSCOL.p, 22], [T2('● positief: Lys, Arg (His)', '● positive: Lys, Arg (His)'), CLASSCOL['+'], 22],
         [T2('● negatief: Asp, Glu', '● negative: Asp, Glu'), CLASSCOL['-'], 22], [T2('● hydrofoob', '● hydrophobic'), CLASSCOL.h, 22]]),
     }),
-    ST(9000, 'De heempocket: een metaalion', 'The haem pocket: a metal ion', 'Het heem ligt in een apolaire pocket tussen helix E en F. Fe²⁺ is gebonden aan His92 (F8, proximaal); aan de andere kant bindt O₂ (hier CO), naast His63 (E7, distaal).', 'The haem sits in a non-polar pocket between helices E and F. Fe²⁺ is bound to His92 (F8, proximal); on the other side O₂ binds (here CO), next to His63 (E7, distal).', {
+    ST(9000, 'De heempocket: een metaalion', 'The haem pocket: a metal ion', 'Het heem ligt in een waterschuwe holte tussen helix E en F. Het ijzer (Fe²⁺) is gebonden aan His92; aan de andere kant bindt O₂ (hier CO), naast His63.', 'The haem sits in a water-avoiding pocket between helices E and F. The iron (Fe²⁺) is bound to His92; on the other side O₂ binds (here CO), next to His63.', {
       show(c) {
         c.style(B, { cartoon: { style: 'trace', color: '#465171', thickness: .25 } });
         c.style({ chain: 'B', resi: rng(57, 76) }, { cartoon: { style: 'trace', color: HCOL[4], thickness: .35 } }); c.style({ chain: 'B', resi: rng(85, 93) }, { cartoon: { style: 'trace', color: HCOL[5], thickness: .35 } });
@@ -133,7 +133,7 @@ export default molScene({
         [T2('Heem = protoporfyrine IX + Fe²⁺', 'Haem = protoporphyrin IX + Fe²⁺'), C.text, 23, 700], '',
         T2('• His92 (F8) bindt het Fe²⁺', '• His92 (F8) binds the Fe²⁺'), T2('• O₂ bindt aan de andere kant', '• O₂ binds on the other side'), T2('• His63 (E7) stabiliseert O₂', '• His63 (E7) stabilises O₂')]),
     }),
-    ST(8500, 'Zoutbruggen en H-bruggen', 'Salt bridges and H-bonds', 'Tegengesteld geladen zijketens (Lys/Arg ↔ Asp/Glu) vormen zoutbruggen; polaire groepen vormen H-bruggen tussen helices. In de kern moeten alle backbone-H-bruggen voldaan zijn.', 'Oppositely charged side chains (Lys/Arg ↔ Asp/Glu) form salt bridges; polar groups form H-bonds between helices. In the core all backbone H-bonds must be satisfied.', {
+    ST(8500, 'Zoutbruggen en H-bruggen', 'Salt bridges and H-bonds', 'Tegengesteld geladen zijketens (+ en −) vormen zoutbruggen; polaire groepen vormen H-bruggen tussen helices. Samen houden ze de vouw op zijn plaats.', 'Oppositely charged side chains (+ and −) form salt bridges; polar groups form H-bonds between helices. Together they hold the fold in place.', {
       show(c) {
         c.style(B, cartoon('#465171'));
         c.style({ chain: 'B', resn: 'HEM' }, hemeStyle);
@@ -151,7 +151,7 @@ export default molScene({
         T2('zoutbrug = ionpaar (+ en −)', 'salt bridge = ion pair (+ and −)'), T2('H-brug = gedeeld H tussen N/O', 'H-bond = shared H between N/O')]),
       panelKey: (t, s, c) => c.data.sb?.length ?? 0,
     }),
-    ST(8000, 'Disulfidebruggen? Niet in hemoglobine', 'Disulfide bridges? Not in haemoglobin', 'Twee cysteïnes kunnen een covalente S–S-brug vormen. β-globine heeft Cys93 en Cys112, maar die vormen géén brug: het cytosol is reducerend.', 'Two cysteines can form a covalent S–S bridge. β-globin has Cys93 and Cys112, but they form no bridge: the cytosol is reducing.', {
+    ST(8000, 'Disulfidebruggen? Niet in hemoglobine', 'Disulfide bridges? Not in haemoglobin', 'Twee cysteïnes kunnen een sterke S–S-brug vormen. β-globine heeft er twee (Cys93, Cys112), maar zonder brug: het cytosol is daarvoor te reducerend.', 'Two cysteines can form a strong S–S bridge. β-globin has two (Cys93, Cys112), but no bridge: the cytosol is too reducing for that.', {
       show(c) {
         c.style(B, cartoon('#465171'));
         c.style({ chain: 'B', resn: 'CYS' }, { stick: { radius: .3, colorscheme: 'yellowCarbon' }, sphere: { radius: .5, colorscheme: 'yellowCarbon' } });
@@ -162,12 +162,12 @@ export default molScene({
         ['Cys–SH + HS–Cys → Cys–S–S–Cys', '#ffc247', 22, 700], '',
         T2('• vooral in eiwitten buiten de cel', '• mainly in proteins outside the cell'), T2('• gevormd in het ER (bv. antistoffen)', '• formed in the ER (e.g. antibodies)'), T2('• verbindt ook verre residuen', '• can join residues far apart')]),
     }),
-    ST(9000, 'Supersecundaire structuren', 'Supersecondary structures', 'Tussen secundair en tertiair: vaste combinaties van enkele elementen, zoals helix-turn-helix, β-haarspeld, Greek key of de Rossmann-vouw.', 'Between secondary and tertiary: recurring combinations of a few elements, such as helix-turn-helix, β-hairpin, Greek key or the Rossmann fold.', {
+    ST(9000, 'Supersecundaire structuren', 'Supersecondary structures', 'Tussen secundair en tertiair: vaste combinaties van enkele helices of strengen (motieven), zoals helix-turn-helix of de β-haarspeld.', 'Between secondary and tertiary: recurring combinations of a few helices or strands (motifs), such as helix-turn-helix or the β-hairpin.', {
       show(c) { c.style(B, cartoon('#56607a')); HEL.forEach(([n, a, b], i) => c.style({ chain: 'B', resi: rng(a, b) }, cartoon(HCOL[i]))); },
       zoom: B, spin: .02,
       panel: () => phead(T2('Motieven (topologie)', 'Motifs (topology)')) + motifs(),
     }),
-    ST(9000, 'Domeinen en vouwklassen', 'Domains and fold classes', 'Een domein is een compact deel dat op zichzelf kan vouwen en in verschillende eiwitten terugkomt. β-globine is één domein met een all-α-vouw. Naar vorm: globulair, membraan- of fibreus eiwit.', 'A domain is a compact part that can fold on its own and recurs in different proteins. β-globin is one domain with an all-α fold. By shape: globular, membrane or fibrous protein.', {
+    ST(9000, 'Domeinen en vouwklassen', 'Domains and fold classes', 'Een domein is een compact deel dat op zichzelf kan vouwen en in andere eiwitten terugkomt. β-globine is één domein met alleen helices.', 'A domain is a compact part that can fold on its own and recurs in other proteins. β-globin is one domain made of helices only.', {
       show(c) { c.style(B, cartoon('spectrum')); c.style({ chain: 'B', resn: 'HEM' }, hemeStyle); },
       zoom: B, spin: .03,
       panel: () => phead(T2('Hoe deel je vouwingen in?', 'How to classify folds?')) + classes(),

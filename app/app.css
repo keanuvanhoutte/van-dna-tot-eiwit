@@ -225,3 +225,7 @@ html, body { height: 100%; overflow: hidden; }
 .side.flash { animation: sideflash 1.2s ease-out; }
 @keyframes sideflash { 0% { box-shadow: inset 0 0 0 3px var(--accent); } 100% { box-shadow: inset 0 0 0 0 transparent; } }
 @media (prefers-reduced-motion: reduce) { .side.flash { animation: none; } }
+
+/* "In het kort" bovenaan het uitlegpaneel */
+.side .kort { margin: 12px 0 4px; padding: 12px 14px; border-radius: 12px; background: rgba(124,196,255,.08); border: 1px solid rgba(124,196,255,.25); font-size: 15px; line-height: 1.6; color: var(--text); }
+.side .kort b { display: block; font: 600 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }

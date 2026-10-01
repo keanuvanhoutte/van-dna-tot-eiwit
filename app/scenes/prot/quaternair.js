@@ -63,14 +63,14 @@ export default molScene({
   },
   panelKey: (t, s, c) => (c.data.ab ? 1 : 0),
   steps: [
-    ST(8500, 'Vier ketens: α₂β₂', 'Four chains: α₂β₂', 'Hemoglobine bestaat uit twee α- en twee β-ketens, elk met een heemgroep. Hun ruimtelijke schikking is de quaternaire structuur (opgelost door Perutz, 1959; Nobelprijs 1962).', 'Haemoglobin consists of two α and two β chains, each with a haem group. Their spatial arrangement is the quaternary structure (solved by Perutz, 1959; Nobel Prize 1962).', {
+    ST(8500, 'Vier ketens: α₂β₂', 'Four chains: α₂β₂', 'Hemoglobine bestaat uit vier ketens, twee α en twee β, elk met een heemgroep die O₂ bindt. Hoe ze samen liggen, is de quaternaire structuur.', 'Haemoglobin consists of four chains, two α and two β, each with a haem group that binds O₂. How they fit together is the quaternary structure.', {
       show(c) { allChains(c); hemes(c); chainLabels(c); },
       zoom: {}, spin: .02,
       panel: c => phead(T2('Hemoglobine A (HbA)', 'Haemoglobin A (HbA)')) + plines(222, [
         [T2('• 4 ketens (subeenheden)', '• 4 chains (subunits)'), C.text], [`• 2 × α (${c.data.nres?.A ?? 141} res.) + 2 × β (${c.data.nres?.B ?? 146} res.)`, C.text],
         [T2('• 4 hemen → 4 O₂-plaatsen', '• 4 haems → 4 O₂ sites'), C.text]]),
     }),
-    ST(8500, 'Twee soorten ketens: een heteromeer', 'Two kinds of chains: a heteromer', 'α en β hebben een verschillende sequentie, dus hemoglobine is een heterotetrameer. Ze zijn wel homoloog: dezelfde globinevouw rond een heem.', 'α and β have different sequences, so haemoglobin is a heterotetramer. They are homologous, though: the same globin fold around a haem.', {
+    ST(8500, 'Twee soorten ketens: een heteromeer', 'Two kinds of chains: a heteromer', 'α en β hebben een andere sequentie: hemoglobine is dus een heteromeer (verschillende ketens). Toch zijn ze verwant en vouwen ze op dezelfde manier rond een heem.', 'α and β have different sequences, so haemoglobin is a heteromer (different chains). Yet they are related and fold the same way around a haem.', {
       show(c) { c.style({ chain: ['A', 'C'] }, cart('#b39dff')); c.style({ chain: ['B', 'D'] }, cart('#7fdc6a')); hemes(c); chainLabels(c); },
       zoom: {}, spin: .02,
       panel: () => {
@@ -82,7 +82,7 @@ export default molScene({
           ptxt(PX + 140, 460, T2('hemoglobine: heterotetrameer', 'haemoglobin: heterotetramer'), C.text, 23, 700) + ptxt(PX + 140, 490, 'α₂β₂', C.muted, 22);
       },
     }),
-    ST(8500, 'Protomeren: twee αβ-dimeren', 'Protomers: two αβ dimers', 'Een protomeer is de herhaalde eenheid van een oligomeer. Hemoglobine is een dimeer van twee identieke αβ-protomeren.', 'A protomer is the repeating unit of an oligomer. Haemoglobin is a dimer of two identical αβ protomers.', {
+    ST(8500, 'Protomeren: twee αβ-paren', 'Protomers: two αβ pairs', 'Een protomeer is de bouwsteen die zich herhaalt. Hemoglobine bestaat uit twee identieke protomeren, elk een αβ-paar.', 'A protomer is the repeating building block. Haemoglobin consists of two identical protomers, each an αβ pair.', {
       show(c) { c.style({ chain: ['A', 'B'] }, cart('#ffc247')); c.style({ chain: ['C', 'D'] }, cart('#4fb0ff')); hemes(c);
         c.label(T2('protomeer 1 (α1β1)', 'protomer 1 (α1β1)'), c.center(c.sel({ chain: ['A', 'B'], atom: 'CA' })), { size: 18, border: '#ffc247' });
         c.label(T2('protomeer 2 (α2β2)', 'protomer 2 (α2β2)'), c.center(c.sel({ chain: ['C', 'D'], atom: 'CA' })), { size: 18, border: '#4fb0ff' }); },
@@ -91,7 +91,7 @@ export default molScene({
         [T2('1 keten  → monomeer', '1 chain  → monomer'), C.text], [T2('2 ketens → dimeer', '2 chains → dimer'), C.text], [T2('3 ketens → trimeer', '3 chains → trimer'), C.text],
         [T2('4 ketens → tetrameer', '4 chains → tetramer'), C.text], [T2('5, 6 … → pentameer, hexameer …', '5, 6 … → pentamer, hexamer …'), C.text]]),
     }),
-    ST(8500, 'Grensvlak α1β1: stevig vast', 'Interface α1β1: tightly packed', 'Residuen die binnen 4 Å van de andere keten liggen, vormen het grensvlak. Het α1β1-contact is groot, verandert weinig en houdt het αβ-protomeer bij elkaar.', 'Residues within 4 Å of the other chain form the interface. The α1β1 contact is large, changes little and keeps the αβ protomer together.', {
+    ST(8500, 'Grensvlak α1β1: stevig vast', 'Interface α1β1: tightly packed', 'Waar twee ketens elkaar raken (binnen 4 Å), ligt het grensvlak. Het α1β1-contact is groot en verandert weinig: het houdt elk αβ-paar samen.', 'Where two chains touch (within 4 Å) is the interface. The α1β1 contact is large and changes little: it holds each αβ pair together.', {
       show(c) {
         c.style({}, cart('#343d57')); c.style({ chain: 'A' }, cart(CH.A[1])); c.style({ chain: 'B' }, cart(CH.B[1]));
         if (c.data.ab) { c.style({ chain: 'A', resi: c.data.ab.A }, { sphere: { color: CH.A[1] } }); c.style({ chain: 'B', resi: c.data.ab.B }, { sphere: { color: CH.B[1] } }); }
@@ -102,7 +102,7 @@ export default molScene({
         [T2(`${c.data.ab?.A.length ?? '…'} residuen van α1 + ${c.data.ab?.B.length ?? '…'} van β1`, `${c.data.ab?.A.length ?? '…'} residues of α1 + ${c.data.ab?.B.length ?? '…'} of β1`), '#ffc247', 23, 700],
         [T2('(binnen 4 Å van de andere keten)', '(within 4 Å of the other chain)'), C.muted, 21]]),
     }),
-    ST(8500, 'Grensvlak α1β2: het scharnier', 'Interface α1β2: the hinge', 'Het α1β2-contact is kleiner. O₂-binding trekt aan de proximale His; de αβ-dimeren schuiven dan langs dit grensvlak (T → R), zo werken de subeenheden samen.', 'The α1β2 contact is smaller. O₂ binding pulls on the proximal His; the αβ dimers then slide along this interface (T → R), so the subunits cooperate.', {
+    ST(8500, 'Grensvlak α1β2: het scharnier', 'Interface α1β2: the hinge', 'Het α1β2-contact is kleiner. Als O₂ bindt, schuiven de αβ-paren langs dit vlak van de T- naar de R-vorm: zo werken de ketens samen.', 'The α1β2 contact is smaller. When O₂ binds, the αβ pairs slide along this surface from the T to the R form: this is how the chains cooperate.', {
       show(c) {
         c.style({}, cart('#343d57')); c.style({ chain: 'A' }, cart(CH.A[1])); c.style({ chain: 'D' }, cart(CH.D[1]));
         if (c.data.ad) { c.style({ chain: 'A', resi: c.data.ad.A }, { sphere: { color: CH.A[1] } }); c.style({ chain: 'D', resi: c.data.ad.D }, { sphere: { color: CH.D[1] } }); }
@@ -114,7 +114,7 @@ export default molScene({
         [T2(`(α1β1 had er ${c.data.ab ? c.data.ab.n : '…'})`, `(α1β1 had ${c.data.ab ? c.data.ab.n : '…'})`), C.muted, 21], '',
         T2('O₂-binding: dimeren schuiven', 'O₂ binding: dimers slide'), T2('→ coöperativiteit', '→ cooperativity')]),
     }),
-    ST(8500, 'Wat houdt de ketens samen?', 'What holds the chains together?', 'Dezelfde krachten als bij de tertiaire structuur: hydrofobe contacten, H-bruggen en zoutbruggen — hier tussen ketens.', 'The same forces as in tertiary structure: hydrophobic contacts, H-bonds and salt bridges — here between chains.', {
+    ST(8500, 'Wat houdt de ketens samen?', 'What holds the chains together?', 'Dezelfde krachten als binnen één keten: waterschuwe contacten, H-bruggen en zoutbruggen, maar nu tussen de ketens.', 'The same forces as within one chain: water-avoiding contacts, H-bonds and salt bridges, but now between the chains.', {
       show(c) {
         allChains(c);
         for (const { p, n } of c.data.sb ?? []) {
@@ -131,7 +131,7 @@ export default molScene({
         T2('+ vele hydrofobe contacten', '+ many hydrophobic contacts'), '',
         [T2('in Hb: alles niet-covalent', 'in Hb: all non-covalent'), C.muted, 22]]),
     }),
-    ST(8500, 'Vier hemen, samenwerkend', 'Four haems, working together', 'Elke subeenheid bindt één O₂. De eerste bindt moeilijk, de volgende steeds makkelijker: coöperatieve binding, alleen mogelijk dankzij de quaternaire structuur. (In 1BBB is CO gebonden.)', 'Each subunit binds one O₂. The first binds with difficulty, the next ones more and more easily: cooperative binding, only possible thanks to the quaternary structure. (1BBB has CO bound.)', {
+    ST(8500, 'Vier hemen, samenwerkend', 'Four haems, working together', 'Elke keten bindt één O₂. De eerste bindt moeilijk, de volgende steeds makkelijker: coöperatieve binding, mogelijk doordat de ketens samenwerken. (Dit model bindt CO.)', 'Each chain binds one O₂. The first binds with difficulty, the next ones ever more easily: cooperative binding, possible because the chains work together. (This model binds CO.)', {
       show(c) {
         Object.entries(CH).forEach(([k, [, col]]) => c.style({ chain: k }, { cartoon: { color: col, style: 'trace', thickness: .3 } }));
         c.style({ resn: 'HEM' }, { stick: { colorscheme: 'orangeCarbon', radius: .3 } });
@@ -144,7 +144,7 @@ export default molScene({
         [T2('O₂-transport in rode bloedcellen', 'O₂ transport in red blood cells'), C.text, 23, 700], '',
         T2('• longen: veel O₂ → bindt alle 4', '• lungs: lots of O₂ → binds all 4'), T2('• weefsels: minder O₂ → laat los', '• tissues: less O₂ → releases it')]),
     }),
-    ST(9000, 'Eén mutatie: sikkelcelhemoglobine', 'One mutation: sickle-cell haemoglobin', 'In HbS is Glu6 van de β-keten een Val. Die hydrofobe plek aan het oppervlak laat deoxy-HbS aan elkaar plakken tot lange vezels.', 'In HbS, Glu6 of the β chain is a Val. That hydrophobic spot on the surface makes deoxy-HbS stick together into long fibres.', {
+    ST(9000, 'Eén mutatie: sikkelcelhemoglobine', 'One mutation: sickle-cell haemoglobin', 'In sikkelcelhemoglobine (HbS) is Glu6 van de β-keten een Val. Zonder O₂ plakt die waterschuwe plek aan andere HbS tot lange vezels.', 'In sickle-cell haemoglobin (HbS), Glu6 of the β chain is a Val. Without O₂, that water-avoiding spot sticks to other HbS into long fibres.', {
       show(c) {
         allChains(c); hemes(c);
         c.style({ chain: ['B', 'D'], resi: 6 }, { sphere: { color: CLASSCOL['-'] } });

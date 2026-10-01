@@ -7,6 +7,7 @@ const S_ROS = { t: 'Roskoski (2012) ERK1/2 MAP kinases: structure, function, and
 export default {
   rtk: {
     nl: {
+      kort: 'De receptor voor de epidermale groeifactor (EGF) zit in het celmembraan en vangt die groeifactor op. Twee receptoren vormen dan een paar en zetten fosfaatgroepen op elkaars staart aan de binnenkant. Die fosfaten zijn aanmeerplaatsen voor eiwitten die het signaal doorgeven aan Ras.',
       what: 'De EGF-receptor (EGFR, ook ErbB1 of HER1) is een receptortyrosinekinase: één eiwitketen met een extracellulair deel dat de groeifactor bindt, één transmembraanhelix en binnen in de cel een tyrosinekinasedomein met een lange C-terminale staart. Binding van EGF brengt twee receptoren samen; hun kinasedomeinen activeren elkaar en fosforyleren tyrosines in de staarten. Die fosfotyrosines zijn dockingplaatsen voor signaaleiwitten zoals Grb2.',
       how: [
         'EGF (53 aminozuren, drie disulfidebruggen) wordt uit een grote membraangebonden voorloper geknipt en bereikt de receptor van buitenaf.',
@@ -23,6 +24,7 @@ export default {
       why: 'Receptortyrosinekinasen vertalen een signaal buiten de cel naar fosfotyrosines binnenin. In verhaallijn 2 is dit de eerste stap op weg naar het FOS-gen. EGFR is ook medisch belangrijk: mutaties of overexpressie komen voor bij o.a. longkanker, en kinaseremmers (zoals gefitinib) en antilichamen (zoals cetuximab) zijn erop gericht.',
     },
     en: {
+      kort: 'The receptor for epidermal growth factor (EGF) sits in the cell membrane and catches that growth factor. Two receptors then pair up and put phosphate groups on each other’s tails on the inside. These phosphates are docking sites for proteins that pass the signal on to Ras.',
       what: 'The EGF receptor (EGFR, also ErbB1 or HER1) is a receptor tyrosine kinase: a single protein chain with an extracellular region that binds the growth factor, one transmembrane helix, and inside the cell a tyrosine kinase domain with a long C-terminal tail. EGF binding brings two receptors together; their kinase domains activate each other and phosphorylate tyrosines in the tails. These phosphotyrosines are docking sites for signalling proteins such as Grb2.',
       how: [
         'EGF (53 amino acids, three disulfide bonds) is cut from a large membrane-bound precursor and reaches the receptor from outside.',
@@ -47,6 +49,7 @@ export default {
   },
   mapk: {
     nl: {
+      kort: 'Ras is een aan/uit-schakelaar aan de binnenkant van het membraan. Eenmaal aan start Ras een kettingreactie van drie enzymen (Raf, MEK en ERK) die elkaar na elkaar aanzetten en zo het signaal versterken. ERK brengt het signaal naar de kern; blijft deze route vast ‘aan’ staan, dan kan dat bijdragen tot kanker.',
       what: 'Ras is een klein GTPase: gebonden aan GTP staat het "aan", gebonden aan GDP "uit". SOS zet Ras aan; Ras-GTP start dan een cascade van drie kinasen – Raf (MAPKKK), MEK (MAPKK) en ERK (MAPK) – die elkaar achtereenvolgens fosforyleren. Actief ERK fosforyleert eiwitten in het cytosol en, na transport door de kernporiën, transcriptiefactoren in de kern.',
       how: [
         'Ras zit met een lipidestaart (farnesyl, bij sommige isovormen ook palmitoyl) aan het binnenblad van het plasmamembraan.',
@@ -63,6 +66,7 @@ export default {
       why: 'De Ras–MAPK-route is een van de belangrijkste routes voor celgroei en -deling. Mutante Ras-eiwitten (vooral op G12, G13 en Q61) worden niet meer door GAP\'s uitgeschakeld en blijven in de GTP-vorm: de route staat dan permanent aan. Daarom zijn Ras, Raf (bv. BRAF V600E) en MEK belangrijke doelwitten voor kankergeneesmiddelen. In verhaallijn 2 brengt ERK het signaal tot bij het FOS-gen.',
     },
     en: {
+      kort: 'Ras is an on/off switch on the inner side of the membrane. Once on, Ras starts a chain reaction of three enzymes (Raf, MEK and ERK) that switch each other on in turn and so amplify the signal. ERK carries the signal to the nucleus; if this route gets stuck ‘on’, it can contribute to cancer.',
       what: 'Ras is a small GTPase: bound to GTP it is "on", bound to GDP "off". SOS switches Ras on; Ras-GTP then starts a cascade of three kinases – Raf (MAPKKK), MEK (MAPKK) and ERK (MAPK) – that phosphorylate each other in turn. Active ERK phosphorylates proteins in the cytosol and, after passing through the nuclear pores, transcription factors in the nucleus.',
       how: [
         'Ras is attached to the inner leaflet of the plasma membrane by a lipid tail (farnesyl, in some isoforms also palmitoyl).',
@@ -86,6 +90,7 @@ export default {
   },
   srf: {
     nl: {
+      kort: 'FOS is een gen dat binnen enkele minuten na een groeisignaal aangaat. Vóór het gen zitten de nodige eiwitten al klaar op het DNA; ERK hoeft ze alleen een fosfaat te geven. Het eiwit c-Fos zet daarna zelf een volgende golf genen aan, zodat een kort signaal een langer effect krijgt.',
       what: 'FOS is een onmiddellijk-vroeg gen (immediate early gene): het wordt binnen minuten na een groeisignaal afgeschreven, zonder dat daarvoor eerst nieuwe eiwitten gemaakt moeten worden. De schakelaar is het serum-responselement (SRE) ~300 bp vóór de startplaats: een CArG-box waarop een SRF-dimeer zit, met ernaast een Ets-plek voor de ternaire-complexfactor Elk-1. ERK fosforyleert Elk-1 en zet zo de transcriptie van FOS aan.',
       how: [
         'SRF (serum-responsfactor) bindt als dimeer aan de CArG-box, consensus CC(A/T)₆GG.',
@@ -103,6 +108,7 @@ export default {
       why: 'Onmiddellijk-vroege genen zijn de eerste genen die op een groeisignaal reageren; hun producten (zoals c-Fos) zijn zelf transcriptiefactoren die een tweede golf van genen aanzetten. Zo wordt een kortstondig signaal omgezet in een langer durende verandering van genexpressie. In verhaallijn 2 volgen we nu het FOS-gen verder: promoter, transcriptie, processing, export en translatie tot het c-Fos-eiwit.',
     },
     en: {
+      kort: 'FOS is a gene that switches on within minutes of a growth signal. The proteins needed are already waiting on the DNA in front of the gene; ERK only has to give them a phosphate. The c-Fos protein then switches on a next wave of genes itself, so a brief signal has a longer-lasting effect.',
       what: 'FOS is an immediate early gene: it is transcribed within minutes of a growth signal, without new proteins having to be made first. The switch is the serum response element (SRE) ~300 bp upstream of the start site: a CArG box bound by an SRF dimer, with an adjacent Ets site for the ternary complex factor Elk-1. ERK phosphorylates Elk-1 and thereby switches on FOS transcription.',
       how: [
         'SRF (serum response factor) binds the CArG box, consensus CC(A/T)₆GG, as a dimer.',

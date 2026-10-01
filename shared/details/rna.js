@@ -6,6 +6,7 @@ const ALB_RNAWORLD = { t: 'Alberts et al., Molecular Biology of the Cell (4e) �
 export default {
   rnaprocessing: {
     nl: {
+      kort: "Een pas gemaakt RNA is nog niet klaar voor gebruik. Het krijgt een beschermkapje (cap) aan het begin, de stukken die er niet in horen (intronen) worden eruit geknipt en achteraan komt een staart van A's. Pas dan mag het mRNA de kern uit.",
       what: 'Een pas gemaakt pre-mRNA is nog niet bruikbaar. Terwijl RNA-polymerase II nog transcribeert, krijgt het een 5\'-cap, worden de intronen eruit gesplicet en wordt het 3\'-uiteinde geknipt en van een poly(A)-staart voorzien. Pas dan is het een rijp mRNP dat de kern mag verlaten.',
       how: [
         'De CTD-staart van Pol II (herhalingen van YSPTSPS) wordt gefosforyleerd en dient als platform voor de processingenzymen.',
@@ -20,6 +21,7 @@ export default {
       why: 'Processing beschermt het mRNA, bepaalt welke eiwitvariant ontstaat (alternatieve splicing) en is een kwaliteitscontrole: alleen correct bewerkt mRNA wordt geëxporteerd en vertaald.',
     },
     en: {
+      kort: "A freshly made RNA is not yet ready for use. It gets a protective cap at its start, the stretches that do not belong (introns) are cut out, and a tail of A's is added at the end. Only then may the mRNA leave the nucleus.",
       what: 'A freshly made pre-mRNA is not yet usable. While RNA polymerase II is still transcribing, it receives a 5\' cap, its introns are spliced out and its 3\' end is cleaved and given a poly(A) tail. Only then is it a mature mRNP that may leave the nucleus.',
       how: [
         'The CTD tail of Pol II (YSPTSPS repeats) is phosphorylated and serves as a platform for the processing enzymes.',
@@ -39,6 +41,7 @@ export default {
 
   capping: {
     nl: {
+      kort: "De cap is een omgekeerd geplaatste, gemethyleerde G op het begin (het 5'-uiteinde) van het mRNA. Hij komt erop zodra het RNA net begint te groeien. De cap beschermt het mRNA tegen afbraak en is nodig voor export en om de eiwitsynthese te starten.",
       what: 'De 5\'-cap is een 7-methylguanosine die via een ongewone 5\'–5\'-trifosfaatbrug aan het eerste nucleotide van elk Pol II-transcript hangt. Hij wordt al aangebracht als het RNA nog maar ≈ 20–30 nt lang is.',
       how: [
         'RNA-trifosfatase (domein van RNGTT) haalt het γ-fosfaat van het 5\'-uiteinde: pppN → ppN.',
@@ -51,6 +54,7 @@ export default {
       why: 'De cap beschermt tegen 5\'→3\'-exonucleasen, is nodig voor splicing van het eerste intron, voor export (CBC trekt TREX aan) en voor de start van translatie (eIF4E). Verwijdering (decapping door DCP2) is een sleutelstap in mRNA-afbraak.',
     },
     en: {
+      kort: "The cap is a reversed, methylated G on the start (the 5' end) of the mRNA. It is added as soon as the RNA starts to grow. The cap protects the mRNA from degradation and is needed for export and to start protein synthesis.",
       what: 'The 5\' cap is a 7-methylguanosine attached to the first nucleotide of every Pol II transcript through an unusual 5\'–5\' triphosphate bridge. It is added when the RNA is only ≈ 20–30 nt long.',
       how: [
         'RNA triphosphatase (a domain of RNGTT) removes the γ-phosphate from the 5\' end: pppN → ppN.',
@@ -68,6 +72,7 @@ export default {
 
   splicing: {
     nl: {
+      kort: "Een gen bevat stukken die in het mRNA horen (exonen) en tussenstukken die eruit moeten (intronen). Het spliceosoom, een grote machine van RNA en eiwit, knipt de intronen eruit en plakt de exonen aan elkaar. Door verschillende combinaties van exonen te kiezen, kan één gen meerdere eiwitten opleveren.",
       what: 'Splicing verwijdert de intronen uit het pre-mRNA en plakt de exonen aan elkaar. Het spliceosoom is een grote RNA-eiwitmachine waarvan het katalytisch centrum uit RNA (U2/U6) bestaat: het is een ribozym.',
       how: [
         'U1-snRNP paart met de 5\'-splicesite (GU); U2AF bindt het polypyrimidinestuk en de 3\'-AG.',
@@ -81,6 +86,7 @@ export default {
       why: 'Door alternatieve splicing kan één gen meerdere eiwitten opleveren. Mutaties in splicesites zijn een frequente oorzaak van ziekte; de EJC\'s die splicing achterlaat, sturen export en NMD.',
     },
     en: {
+      kort: "A gene contains stretches that belong in the mRNA (exons) and intervening stretches that must go (introns). The spliceosome, a large machine of RNA and protein, cuts out the introns and joins the exons. By choosing different combinations of exons, one gene can give several proteins.",
       what: 'Splicing removes the introns from the pre-mRNA and joins the exons. The spliceosome is a large RNA–protein machine whose catalytic centre consists of RNA (U2/U6): it is a ribozyme.',
       how: [
         'U1 snRNP pairs with the 5\' splice site (GU); U2AF binds the polypyrimidine tract and the 3\' AG.',
@@ -99,6 +105,7 @@ export default {
 
   polya: {
     nl: {
+      kort: "Het mRNA eindigt niet waar het overschrijven stopt: het wordt achter een signaal (AAUAAA) doorgeknipt. Daarna plakt een enzym er een lange staart van A's aan die niet in het DNA staat. Die poly(A)-staart helpt bij export en vertaling en beschermt het mRNA.",
       what: 'Het 3\'-uiteinde van een mRNA ontstaat niet waar Pol II stopt, maar door een knip: het transcript wordt achter een poly(A)-signaal geknipt en krijgt dan een staart van adenines die niet in het DNA gecodeerd is.',
       how: [
         'CPSF (via CPSF30 en WDR33) herkent het signaal AAUAAA; CstF bindt een GU/U-rijk element stroomafwaarts.',
@@ -111,6 +118,7 @@ export default {
       why: 'De poly(A)-staart bevordert export en translatie (gesloten lus met eIF4G) en beschermt tegen afbraak; zijn inkorting is het startschot voor mRNA-afbraak. Alternatieve polyadenylatie kan 3\'-UTR\'s met regulerende elementen in- of uitsluiten.',
     },
     en: {
+      kort: "The mRNA does not end where copying stops: it is cut after a signal (AAUAAA). An enzyme then adds a long tail of A's that is not in the DNA. This poly(A) tail helps with export and translation and protects the mRNA.",
       what: 'The 3\' end of an mRNA is not made where Pol II stops but by a cut: the transcript is cleaved downstream of a poly(A) signal and then receives a tail of adenines that is not encoded in the DNA.',
       how: [
         'CPSF (via CPSF30 and WDR33) recognises the AAUAAA signal; CstF binds a GU/U-rich element downstream.',
@@ -128,6 +136,7 @@ export default {
 
   export: {
     nl: {
+      kort: "Het rijpe mRNA verlaat de kern, ingepakt met eiwitten, door een kernporie: een grote poort in de kernenvelop. Een exportreceptor loodst het erdoorheen. Alleen goed bewerkt mRNA krijgt die receptor mee, zodat onafgewerkt RNA niet bij de ribosomen komt.",
       what: 'Een rijp mRNA verlaat de kern als mRNP (mRNA + eiwitten) door een kernporie. Bulk-mRNA gebruikt daarvoor de exportreceptor NXF1–NXT1, niet de Ran-GTP-afhankelijke karioferines die eiwitten en kleine RNA\'s vervoeren.',
       how: [
         'Het rijpe mRNP draagt CBC op de cap, EJC\'s op de exon-junctiesites en PABPN1 op de poly(A)-staart.',
@@ -142,6 +151,7 @@ export default {
       why: 'Export koppelt kwaliteitscontrole aan genexpressie: alleen correct gecapte, gesplicete en gepolyadenyleerde mRNA\'s krijgen TREX en NXF1 mee. Zo komen er geen onbewerkte transcripten bij de ribosomen.',
     },
     en: {
+      kort: "The mature mRNA leaves the nucleus, packed with proteins, through a nuclear pore: a large gate in the nuclear envelope. An export receptor guides it through. Only properly processed mRNA gets this receptor, so unfinished RNA does not reach the ribosomes.",
       what: 'A mature mRNA leaves the nucleus as an mRNP (mRNA + proteins) through a nuclear pore. Bulk mRNA uses the export receptor NXF1–NXT1 for this, not the Ran-GTP-dependent karyopherins that carry proteins and small RNAs.',
       how: [
         'The mature mRNP carries CBC on the cap, EJCs at exon-junction sites and PABPN1 on the poly(A) tail.',
@@ -163,6 +173,7 @@ export default {
 
   nmd: {
     nl: {
+      kort: "NMD is een kwaliteitscontrole die mRNA's met een te vroeg stopcodon opspoort en afbreekt. Het eerste ribosoom merkt de fout doordat er merktekens van splicing achter het stopcodon blijven liggen. Zo worden er geen afgeknotte, mogelijk schadelijke eiwitten gemaakt.",
       what: 'Nonsense-mediated decay (NMD) is een kwaliteitscontrole die mRNA\'s met een vroegtijdig stopcodon (PTC) herkent en afbreekt, zodat er geen afgeknotte, mogelijk schadelijke eiwitten ontstaan.',
       how: [
         'Bij splicing blijft ≈ 20–24 nt vóór elke exon-exonjunctie een exon-junctiecomplex (EJC) op het mRNA.',
@@ -177,6 +188,7 @@ export default {
       why: 'NMD bepaalt hoe een nonsensemutatie uitpakt: bv. bij β⁰-thalassemie (β-globine, codon 39 CAG → UAG) wordt het mutante mRNA afgebroken, waardoor dragers gezond blijven; PTC\'s in het laatste exon ontsnappen en kunnen dominant schadelijke eiwitten geven. NMD regelt ook normale genen en is een doelwit voor therapie (read-through).',
     },
     en: {
+      kort: "NMD is a quality check that finds and destroys mRNAs with a stop codon that comes too early. The first ribosome notices the error because splicing markers remain beyond the stop codon. This prevents truncated, possibly harmful proteins from being made.",
       what: 'Nonsense-mediated decay (NMD) is a quality-control pathway that recognises and degrades mRNAs with a premature termination codon (PTC), so that no truncated, potentially harmful proteins are made.',
       how: [
         'During splicing an exon junction complex (EJC) is left on the mRNA ≈ 20–24 nt upstream of each exon–exon junction.',
@@ -198,6 +210,7 @@ export default {
 
   rnai: {
     nl: {
+      kort: "MicroRNA's zijn heel korte RNA's die zelf geen eiwit maken. Samen met het eiwit Argonaute zoeken ze mRNA's met een passend stukje op en remmen hun vertaling of laten ze afbreken. Verwante kleine RNA's (siRNA's), ook gebruikt als geneesmiddel, laten één doel-mRNA gericht doorknippen.",
       what: 'MicroRNA\'s (miRNA\'s) zijn RNA\'s van ≈ 22 nt die in het RISC-complex (met Argonaute) mRNA\'s herkennen via basenparing en hun translatie remmen of hun afbraak versnellen. siRNA\'s gebruiken dezelfde machine maar paren perfect en laten het doel-mRNA knippen (RNA-interferentie).',
       how: [
         'RNA-polymerase II schrijft een MIR-gen over tot een pri-miRNA met cap en poly(A) dat een haarspeld vormt.',
@@ -212,6 +225,7 @@ export default {
       why: 'miRNA\'s stellen de expressie van een groot deel van de menselijke genen fijn af (ontwikkeling, kanker). Omdat een seed van 7 nt volstaat, kan één miRNA honderden mRNA\'s treffen. siRNA-geneesmiddelen (bv. tegen leverziekten) maken gebruik van dezelfde RISC-machine.',
     },
     en: {
+      kort: "MicroRNAs are very short RNAs that do not code for a protein themselves. Together with the protein Argonaute they find mRNAs with a matching stretch and repress their translation or have them degraded. Related small RNAs (siRNAs), also used as drugs, have one target mRNA cut precisely.",
       what: 'MicroRNAs (miRNAs) are ≈ 22-nt RNAs that, in the RISC complex (with Argonaute), recognise mRNAs by base pairing and repress their translation or speed up their decay. siRNAs use the same machinery but pair perfectly and have the target mRNA sliced (RNA interference).',
       how: [
         'RNA polymerase II transcribes a MIR gene into a capped, polyadenylated pri-miRNA that forms a hairpin.',
@@ -231,6 +245,7 @@ export default {
 
   mrnaafbraak: {
     nl: {
+      kort: "Elk mRNA wordt na een tijd afgebroken; hoe snel dat gaat, bepaalt mee hoeveel eiwit ervan gemaakt wordt. Meestal wordt eerst de poly(A)-staart ingekort, dan gaat de cap eraf en daarna wordt het mRNA vanaf de uiteinden afgebroken. Zo kan een cel snel stoppen met het maken van een eiwit.",
       what: 'Elk mRNA wordt uiteindelijk afgebroken; de snelheid daarvan bepaalt mee hoeveel eiwit ervan gemaakt wordt. In zoogdiercellen begint afbraak meestal met het inkorten van de poly(A)-staart, gevolgd door verwijdering van de cap en afbraak vanaf de uiteinden.',
       how: [
         'Een actief mRNA vormt een gesloten lus: eIF4E op de cap, PABPC1 op de poly(A)-staart, verbonden via eIF4G.',
@@ -245,6 +260,7 @@ export default {
       why: 'Door afbraak kan een cel snel stoppen met het maken van een eiwit (bv. cytokines met ARE\'s). Gespecialiseerde routes (NMD, miRNA\'s) sluiten op dezelfde nucleasen aan. Voor mRNA-vaccins is stabiliteit juist een ontwerpdoel (gemodificeerde nucleosiden, optimale UTR\'s en poly(A)).',
     },
     en: {
+      kort: "Every mRNA is eventually degraded; how fast this happens helps set how much protein is made from it. Usually the poly(A) tail is shortened first, then the cap is removed and the mRNA is degraded from its ends. This lets a cell quickly stop making a protein.",
       what: 'Every mRNA is eventually degraded; the rate of decay helps determine how much protein is made from it. In mammalian cells decay usually starts with shortening of the poly(A) tail, followed by removal of the cap and degradation from the ends.',
       how: [
         'An active mRNA forms a closed loop: eIF4E on the cap, PABPC1 on the poly(A) tail, linked by eIF4G.',
@@ -264,6 +280,7 @@ export default {
 
   editing: {
     nl: {
+      kort: "Bij RNA-editing verandert een enzym een base in het RNA, terwijl het DNA hetzelfde blijft. Bij de mens wordt vooral A in I veranderd (I wordt gelezen als G) of C in U. Zo kan één gen toch een ander eiwit opleveren, bv. een korte versie van apoB in de darm.",
       what: 'Bij RNA-editing wordt een base in het RNA na transcriptie chemisch veranderd, zodat de boodschap afwijkt van het DNA. Bij de mens zijn er twee hoofdtypes: A → I door ADAR-enzymen en C → U door APOBEC1.',
       how: [
         'ADAR1 en ADAR2 binden dubbelstrengig RNA via dsRNA-bindende domeinen (ADAR3 is katalytisch inactief).',
@@ -277,6 +294,7 @@ export default {
       why: 'Editing vergroot de diversiteit van eiwitten zonder het genoom te veranderen (bv. de Ca²⁺-doorlaatbaarheid van AMPA-receptoren). De meeste A-naar-I-plaatsen bij de mens liggen in Alu-herhalingen; ADAR1 voorkomt zo ook dat eigen dsRNA als viraal wordt herkend. Editing is ook een nieuwe route voor RNA-therapie.',
     },
     en: {
+      kort: "In RNA editing an enzyme changes a base in the RNA while the DNA stays the same. In humans mainly A is changed into I (I is read as G) or C into U. This lets one gene still give a different protein, e.g. a short version of apoB in the intestine.",
       what: 'In RNA editing a base in the RNA is chemically changed after transcription, so the message differs from the DNA. In humans there are two main types: A → I by ADAR enzymes and C → U by APOBEC1.',
       how: [
         'ADAR1 and ADAR2 bind double-stranded RNA through dsRNA-binding domains (ADAR3 is catalytically inactive).',
@@ -296,6 +314,7 @@ export default {
 
   rnastructuur: {
     nl: {
+      kort: "RNA is meestal één streng, maar vouwt op zichzelf terug: passende stukken paren tot stammen en de rest vormt lussen. Zo krijgt elk RNA een eigen 3D-vorm. Die vorm bepaalt wat het RNA doet: eiwitten binden, een aminozuur aandragen (tRNA) of zelfs reacties versnellen (ribozymen).",
       what: 'RNA is meestal enkelstrengig, maar vouwt terug op zichzelf: complementaire stukken vormen dubbelstrengige stammen (A-vorm), de rest vormt lussen. Zo ontstaan secundaire structuren (haarspelden, bulges, interne lussen, juncties, pseudoknopen) en compacte 3D-vormen zoals de L-vorm van tRNA en katalytische ribozymen.',
       how: [
         'Ribose draagt een 2\'-OH en RNA bevat U i.p.v. T; de 2\'-OH maakt RNA reactiever (zelfknippen) en houdt de suiker in C3\'-endo.',
@@ -311,6 +330,7 @@ export default {
       why: 'De vorm van een RNA bepaalt zijn functie: herkenning door eiwitten (Tat–TAR, SRP), katalyse (ribosoom = ribozym) en regulatie (riboswitches, frameshift-pseudoknopen). RNA-structuren zijn doelwitten voor geneesmiddelen, en structuurvoorspelling is een klassiek onderwerp van de structurele bio-informatica.',
     },
     en: {
+      kort: "RNA is usually a single strand, but it folds back on itself: matching stretches pair into stems and the rest forms loops. This gives each RNA its own 3D shape. That shape determines what the RNA does: bind proteins, deliver an amino acid (tRNA) or even speed up reactions (ribozymes).",
       what: 'RNA is usually single-stranded but folds back on itself: complementary stretches form double-stranded stems (A-form), the rest forms loops. This produces secondary structures (hairpins, bulges, internal loops, junctions, pseudoknots) and compact 3D shapes such as the L shape of tRNA and catalytic ribozymes.',
       how: [
         'Ribose carries a 2\'-OH and RNA contains U instead of T; the 2\'-OH makes RNA more reactive (self-cleavage) and keeps the sugar C3\'-endo.',

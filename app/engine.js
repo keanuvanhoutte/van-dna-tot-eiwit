@@ -43,7 +43,7 @@ const UI2 = {
   struct3d: { nl: '3D-structuren (PDB)', en: '3D structures (PDB)' }, mapTitle: { nl: 'Waar ben ik?', en: 'Where am I?' },
   mapSub: { nl: 'Het hoofdverhaal (genummerd) en alle zijtakken. Geel = hier ben je. Klik om ernaartoe te gaan.', en: 'The main story (numbered) and all side paths. Yellow = you are here. Click to go there.' },
   close: { nl: 'Sluiten', en: 'Close' }, noScene: { nl: 'Voor deze knoop is nog geen animatie gebouwd.', en: 'No animation has been built for this node yet.' },
-  play: { nl: 'Afspelen (spatie)', en: 'Play (space)' }, pause: { nl: 'Pauze (spatie)', en: 'Pause (space)' }, prevStep: { nl: 'Vorige stap (←)', en: 'Previous step (←)' }, nextStep: { nl: 'Volgende stap (→)', en: 'Next step (→)' }, nextStepBtn: { nl: 'Volgende stap →', en: 'Next step →' }, auto: { nl: 'Auto', en: 'Auto' },
+  play: { nl: 'Afspelen (spatie)', en: 'Play (space)' }, pause: { nl: 'Pauze (spatie)', en: 'Pause (space)' }, prevStep: { nl: 'Vorige stap (←)', en: 'Previous step (←)' }, nextStep: { nl: 'Volgende stap (→)', en: 'Next step (→)' }, nextStepBtn: { nl: 'Volgende stap →', en: 'Next step →' }, inShort: { nl: 'In het kort', en: 'In short' }, auto: { nl: 'Auto', en: 'Auto' },
   autoOn: { nl: 'Automatisch verder: aan (A). Klik om zelf door te klikken.', en: 'Auto-advance: on (A). Click to step through yourself.' },
   autoOff: { nl: 'Automatisch verder: uit (A). Klik om het verhaal vanzelf te laten doorlopen.', en: 'Auto-advance: off (A). Click to let the story run by itself.' },
   homeTip: { nl: 'Terug naar het begin van het verhaal', en: 'Back to the start of the story' }, upTip: { nl: 'Eén niveau uitzoomen (Esc)', en: 'Zoom out one level (Esc)' },
@@ -530,14 +530,17 @@ function showNextChapter() {
 
 /* ---------- zijpaneel ---------- */
 const chipsOf = (ids, cls) => ids.filter(i => NODES[i]).map(i => `<button class="chip ${cls} ${hasScene(i) ? 'has' : ''}" data-id="${i}">${title(NODES[i])}</button>`).join('');
+/* "In het kort": 2–3 zinnen in eenvoudige taal (details[lang].kort), bovenaan het uitlegpaneel */
+const kortOf = id => { const d = DETAILS[id]; return d ? (d[lang] ?? d.nl).kort ?? '' : ''; };
 function detailsHTML(id, open = true) {
   const d = DETAILS[id]; if (!d) return '';
   const x = d[lang] ?? d.nl;
   let h = '';
   if (x.what) h += `<details class="sec" ${open ? 'open' : ''}><summary>${V('what')}</summary><p>${x.what}</p></details>`;
-  if (x.how?.length) h += `<details class="sec" ${open ? 'open' : ''}><summary>${V('how')}</summary><ol>${x.how.map(s => `<li>${s}</li>`).join('')}</ol></details>`;
-  if (x.facts?.length) h += `<details class="sec" ${open ? 'open' : ''}><summary>${V('facts')}</summary><dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
-  if (x.why) h += `<details class="sec" ${open ? 'open' : ''}><summary>${V('why')}</summary><p>${x.why}</p></details>`;
+  // de diepgang blijft beschikbaar, maar staat standaard dicht (enkel "Wat" is open)
+  if (x.how?.length) h += `<details class="sec"><summary>${V('how')}</summary><ol>${x.how.map(s => `<li>${s}</li>`).join('')}</ol></details>`;
+  if (x.facts?.length) h += `<details class="sec"><summary>${V('facts')}</summary><dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
+  if (x.why) h += `<details class="sec"><summary>${V('why')}</summary><p>${x.why}</p></details>`;
   if (d.sources?.length) h += `<details class="sec"><summary>${V('sources')} (${d.sources.length})</summary><ol class="src">${d.sources.map(s => `<li>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${s.t}</a>` : s.t}</li>`).join('')}</ol></details>`;
   return h;
 }
@@ -556,7 +559,7 @@ function render() {
     <button class="btn sheetclose" id="sheetClose">${V('close')} ✕</button>
     <div class="kind">${n ? U(n.kind === 'process' ? 'process' : 'structure') : ''} · ${L(def.org ?? base.org) ?? ''} · ${n ? stageTitle(STAGES.find(s => s.id === n.stage)) : ''}</div>
     <h1>${n ? title(n) : L(def.title)}${n ? `<span class="status ${n.status === 'nagekeken' ? 'ok' : ''}">${statusText(n.status)}</span>` : ''}</h1>
-    ${n ? `<div class="en">${sub(n)}</div><p>${summary(n)}</p>` : ''}
+    ${n ? `<div class="en">${sub(n)}</div>${kortOf(current.id) ? `<div class="kort"><b>${V('inShort')}</b>${kortOf(current.id)}</div>` : `<p>${summary(n)}</p>`}` : ''}
     ${detailsHTML(current.id)}
     <details class="sec" open><summary>${V('stepsHere')}</summary><ol class="stepsList">${current.steps.map((s, i) => `<li data-i="${i}">${L(s.title)}</li>`).join('')}</ol></details>
     ${L(def.extra ?? base.extra) ?? ''}
