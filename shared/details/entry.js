@@ -3,7 +3,7 @@ export default {
 
   cel: {
     nl: {
-      kort: 'Dit is de menselijke cel waarin het hele verhaal zich afspeelt. Het DNA ligt in de kern en wordt daar overgeschreven naar mRNA. Buiten de kern lezen ribosomen dat mRNA en bouwen ze er eiwitten mee.',
+      kort: 'Dit is de menselijke cel waarin het hele verhaal zich afspeelt. In de kern ligt het DNA; daar wordt van een gen een kopie gemaakt, het [[mRNA|mrna]]. Buiten de kern lezen [[ribosomen|ribosoom]] die kopie en bouwen er eiwitten mee.',
       what: 'Het verhaal begint in een menselijke epitheelcel van ongeveer 20 µm. Het grootste deel van het genoom ligt in de celkern (5–10 µm), afgeschermd door een dubbele kernenvelop met kernporiën; mitochondriën hebben daarnaast hun eigen kleine genoom. Eiwitten worden gemaakt in het cytosol en aan het ruwe endoplasmatisch reticulum. Alles wat in deze app volgt — transcriptie, RNA-bewerking, translatie en vouwing — speelt zich in deze ene cel af.',
       how: [
         'Het plasmamembraan scheidt het cytosol van de buitenwereld en bepaalt wat binnenkomt.',
@@ -19,7 +19,7 @@ export default {
       why: 'Alle schaalniveaus in deze app horen bij deze ene cel: van 20 µm (cel) via 120 nm (kernporie) en 25 nm (ribosoom) tot 0,34 nm (afstand tussen twee basenparen). Door telkens in te zoomen blijft duidelijk waar in de cel elke stap gebeurt.',
     },
     en: {
-      kort: 'This is the human cell in which the whole story takes place. The DNA sits in the nucleus, where it is copied into mRNA. Outside the nucleus, ribosomes read that mRNA and use it to build proteins.',
+      kort: 'This is the human cell in which the whole story takes place. The DNA lies in the nucleus, where a copy of a gene is made: the [[mRNA|mrna]]. Outside the nucleus, [[ribosomes|ribosoom]] read that copy and use it to build proteins.',
       what: 'The story starts in a human epithelial cell of about 20 µm. Most of the genome sits in the nucleus (5–10 µm), shielded by a double nuclear envelope with nuclear pores; mitochondria also carry their own small genome. Proteins are made in the cytosol and on the rough endoplasmic reticulum. Everything that follows in this app — transcription, RNA processing, translation and folding — happens inside this one cell.',
       how: [
         'The plasma membrane separates the cytosol from the outside world and controls what gets in.',
@@ -44,7 +44,7 @@ export default {
 
   virus: {
     nl: {
-      kort: 'Een virus is erfelijk materiaal in een beschermende eiwitjas. Het kan zich niet zelf vermenigvuldigen: het moet zijn genen in een cel krijgen en de eiwitfabriek van die cel voor zich laten werken. Daarom volgt ook een virus de weg van DNA (of RNA) naar eiwit.',
+      kort: 'Een virus is erfelijk materiaal in een beschermende eiwitjas, de [[capside|capside]]. Het kan zich niet zelf vermenigvuldigen: het moet zijn genen in een cel krijgen en die cel voor zich laten werken. Zo volgt ook een virus de weg van DNA of RNA naar eiwit.',
       what: 'Een virus is een genoom in een eiwitjas (capside), soms omhuld door een membraan uit de vorige gastheercel. Het bezit geen ribosomen en geen eigen energievoorziening: om zich te vermenigvuldigen moet het zijn genoom in een cel krijgen en de machinerie van die cel gebruiken. Welke cellen besmet kunnen worden (het tropisme) hangt af van welke receptoren het virus herkent.',
       how: [
         'Aanhechting: eiwitten op het virusoppervlak binden een receptor (eiwit of suiker) op de gastheercel.',
@@ -60,7 +60,7 @@ export default {
       why: 'Virussen zijn het natuurlijke bewijs dat het centrale dogma universeel is: ze hebben geen eigen ribosomen en moeten hun informatie dus in de taal van de cel aanleveren. Daarom zijn ze ook zulke goede gereedschappen (vectoren) én zulke goede leermiddelen om de weg van DNA naar eiwit te volgen.',
     },
     en: {
-      kort: 'A virus is genetic material in a protective protein coat. It cannot multiply on its own: it has to get its genes into a cell and make that cell’s protein factory work for it. That is why a virus, too, follows the road from DNA (or RNA) to protein.',
+      kort: 'A virus is genetic material in a protective protein coat, the [[capsid|capside]]. It cannot multiply on its own: it has to get its genes into a cell and make that cell work for it. So a virus, too, follows the road from DNA or RNA to protein.',
       what: 'A virus is a genome in a protein coat (capsid), sometimes wrapped in a membrane taken from the previous host cell. It has no ribosomes and no energy metabolism of its own: to multiply it must get its genome into a cell and borrow that cell’s machinery. Which cells can be infected (the tropism) depends on which receptors the virus recognises.',
       how: [
         'Attachment: proteins on the virus surface bind a receptor (protein or sugar) on the host cell.',
@@ -85,7 +85,7 @@ export default {
 
   adeno: {
     nl: {
-      kort: 'Het adenovirus veroorzaakt onder meer luchtweginfecties en draagt DNA als erfelijk materiaal. Het hecht aan de cel, wordt opgenomen in een blaasje, ontsnapt en levert zijn DNA af aan de kern. Daar leest de cel de virale genen af alsof het haar eigen genen zijn — daarom is het een goede gids voor dit verhaal en een nuttig hulpmiddel in vaccins en gentherapie.',
+      kort: 'Het adenovirus veroorzaakt onder meer luchtweginfecties en draagt DNA als erfelijk materiaal. Het komt de cel binnen in een blaasje, ontsnapt en brengt zijn DNA via een [[kernporie|kernporie]] de kern in. Daar leest de cel de virale genen af alsof het haar eigen genen zijn; daarom wordt het ook gebruikt in vaccins en gentherapie.',
       what: 'Humaan adenovirus C5 (HAdV-C5) is een niet-omhuld virus met een icosaëdrisch capside van ongeveer 90 nm en een lineair dubbelstrengig DNA-genoom van ongeveer 36 kb (Baltimore-klasse I). Het capside bestaat uit 240 hexonen (de vlakken) en 12 pentonbasissen (de hoeken), elk met een uitstekende vezel met een knop. Het virus gebruikt twee verschillende oppervlakte-eiwitten om zich vast te hechten en om opgenomen te worden, en levert zijn DNA uiteindelijk af aan een kernporie.',
       how: [
         'De vezelknop bindt CAR (coxsackie- en adenovirusreceptor) op het epitheeloppervlak: dat is aanhechting, nog geen opname.',
@@ -103,7 +103,7 @@ export default {
       why: 'Dit is hoofdstuk 2 van het hoofdverhaal: het adenovirus levert vreemd DNA af op precies de plaats waar het eigen genoom van de cel ligt. Omdat het genoom episomaal blijft en toch door Pol II wordt afgelezen, is het een perfecte gids voor de rest van het verhaal — én de reden waarom adenovirale vectoren in gentherapie en vaccins gebruikt worden.',
     },
     en: {
-      kort: 'Adenovirus causes, among other things, respiratory infections and carries DNA as its genetic material. It attaches to the cell, is taken up in a vesicle, escapes and delivers its DNA to the nucleus. There the cell reads the viral genes as if they were its own — which makes it a good guide for this story and a useful tool in vaccines and gene therapy.',
+      kort: 'Adenovirus causes, among other things, respiratory infections and carries DNA as its genetic material. It enters the cell in a vesicle, escapes and delivers its DNA into the nucleus through a [[nuclear pore|kernporie]]. There the cell reads the viral genes as if they were its own, which is why it is also used in vaccines and gene therapy.',
       what: 'Human adenovirus C5 (HAdV-C5) is a non-enveloped virus with an icosahedral capsid of about 90 nm and a linear double-stranded DNA genome of about 36 kb (Baltimore class I). The capsid is built from 240 hexons (the faces) and 12 penton bases (the vertices), each carrying a protruding fibre with a knob. The virus uses two different surface proteins for attachment and for uptake, and finally delivers its DNA to a nuclear pore.',
       how: [
         'The fibre knob binds CAR (coxsackievirus and adenovirus receptor) at the epithelial surface: that is attachment, not yet uptake.',
@@ -131,7 +131,7 @@ export default {
 
   lnp: {
     nl: {
-      kort: 'Een mRNA-vaccin is een piepklein bolletje van vetachtige moleculen met mRNA erin. De cel neemt het op, een deel van het mRNA ontsnapt naar het cytosol en ribosomen maken er meteen een eiwit van, dat het afweersysteem leert herkennen. Het mRNA komt niet in de kern en wordt na enkele dagen afgebroken.',
+      kort: 'Een mRNA-vaccin is een piepklein bolletje van vetachtige moleculen met [[mRNA|mrna]] erin. In de cel ontsnapt een deel van dat mRNA, en [[ribosomen|ribosoom]] maken er een eiwit van dat het afweersysteem leert herkennen. Het mRNA komt niet in de kern en is na enkele dagen afgebroken.',
       what: 'Een mRNA-vaccin bestaat uit boodschapper-RNA verpakt in een lipidenanodeeltje (LNP) van ongeveer 80–100 nm. Het deeltje bevat vier soorten lipiden: een ioniseerbaar lipide dat het negatief geladen mRNA bindt, een helperfosfolipide, cholesterol en een PEG-lipide. Het mRNA wordt in het cytosol vertaald tot een antigeen; het komt de kern niet in en kan niet in het genoom terechtkomen.',
       how: [
         'Het LNP wordt via endocytose opgenomen (onder andere na binding van ApoE aan lipoproteïnereceptoren).',
@@ -150,7 +150,7 @@ export default {
       why: 'Het mRNA-vaccin is de spiegel van de virusroute: het slaat de hele kern-stap over en begint meteen bij de translatie. Naast elkaar laten de twee routes precies zien welke stappen van DNA naar eiwit noodzakelijk zijn en welke niet.',
     },
     en: {
-      kort: 'An mRNA vaccine is a tiny ball of fatty molecules with mRNA inside. The cell takes it up, part of the mRNA escapes into the cytosol and ribosomes immediately make a protein from it, which the immune system learns to recognise. The mRNA does not enter the nucleus and is broken down within days.',
+      kort: 'An mRNA vaccine is a tiny ball of fatty molecules with [[mRNA|mrna]] inside. In the cell, part of that mRNA escapes, and [[ribosomes|ribosoom]] make a protein from it that the immune system learns to recognise. The mRNA does not enter the nucleus and is broken down within days.',
       what: 'An mRNA vaccine consists of messenger RNA packaged in a lipid nanoparticle (LNP) of about 80–100 nm. The particle contains four kinds of lipid: an ionizable lipid that binds the negatively charged mRNA, a helper phospholipid, cholesterol and a PEG-lipid. The mRNA is translated into an antigen in the cytosol; it does not enter the nucleus and cannot end up in the genome.',
       how: [
         'The LNP is taken up by endocytosis (among other routes after ApoE binds lipoprotein receptors).',
@@ -178,7 +178,7 @@ export default {
 
   endocytose: {
     nl: {
-      kort: 'Endocytose is hoe een cel iets van buiten opslokt: het membraan stulpt naar binnen en snoert af tot een blaasje. Dat blaasje wordt steeds zuurder; wat er niet uit ontsnapt of wordt teruggestuurd, eindigt in de afvalverwerking van de cel (het lysosoom). Voor virussen en mRNA-vaccins die zo binnenkomen, is die ontsnapping een grote hindernis.',
+      kort: 'Endocytose is hoe een cel iets van buiten opslokt: het membraan stulpt naar binnen en snoert af tot een blaasje, dat steeds zuurder wordt (het [[endosoom|endosoom]]). Veel van wat er niet uit ontsnapt, wordt afgebroken in de afvalverwerking van de cel. Voor virussen en mRNA-vaccins is die ontsnapping dus een grote hindernis.',
       what: 'Endocytose is de manier waarop een cel materiaal van buiten naar binnen haalt: een stukje plasmamembraan stulpt naar binnen en snoert af tot een blaasje. De best bestudeerde vorm is klathrine-gemedieerde endocytose, met blaasjes van ongeveer 100 nm. Het blaasje fuseert met een vroeg endosoom, dat geleidelijk verzuurt en tot laat endosoom rijpt; wat niet ontsnapt of gerecycleerd wordt, eindigt in het lysosoom.',
       how: [
         'Adaptoreiwitten (o.a. AP-2) herkennen receptoren met vracht en verzamelen ze in één stukje membraan.',
@@ -195,7 +195,7 @@ export default {
       why: 'Dit is het knelpunt van elke aflevering van genetische informatie: binnenkomen is makkelijk, maar uit het blaasje raken is moeilijk. Voor virussen is het een verfijnd mechanisme; voor mRNA-vaccins en gentherapie is het de belangrijkste efficiëntiebeperking.',
     },
     en: {
-      kort: 'Endocytosis is how a cell swallows something from outside: the membrane folds inward and pinches off into a vesicle. That vesicle becomes more and more acidic; whatever does not escape or get sent back ends up in the cell’s waste processor (the lysosome). For viruses and mRNA vaccines that enter this way, that escape is a major hurdle.',
+      kort: 'Endocytosis is how a cell swallows something from outside: the membrane folds inward and pinches off into a vesicle that becomes more and more acidic (the [[endosome|endosoom]]). Much of what does not escape is broken down in the cell’s waste processor. For viruses and mRNA vaccines, that escape is therefore a major hurdle.',
       what: 'Endocytosis is how a cell brings material inside: a patch of plasma membrane invaginates and pinches off into a vesicle. The best-studied form is clathrin-mediated endocytosis, with vesicles of about 100 nm. The vesicle fuses with an early endosome, which gradually acidifies and matures into a late endosome; whatever does not escape or get recycled ends up in the lysosome.',
       how: [
         'Adaptor proteins (such as AP-2) recognise loaded receptors and gather them into a single membrane patch.',
@@ -223,7 +223,7 @@ export default {
 
   baltimore: {
     nl: {
-      kort: 'Ribosomen kunnen alleen mRNA lezen, dus elk virus moet zijn genoom op een of andere manier tot mRNA omzetten. De Baltimore-indeling groepeert virussen volgens die weg: is het genoom DNA of RNA, enkel- of dubbelstrengig, en zelf al leesbaar als mRNA (+) of niet (−)? Zo zie je meteen welke enzymen een virus zelf moet meebrengen.',
+      kort: '[[Ribosomen|ribosoom]] kunnen alleen [[mRNA|mrna]] lezen, dus elk virus moet zijn erfelijk materiaal op een of andere manier tot mRNA omzetten. De Baltimore-indeling deelt virussen in volgens die weg: DNA of RNA, één of twee strengen, en meteen leesbaar als mRNA of niet. Zo zie je welke enzymen een virus zelf moet meebrengen.',
       what: 'David Baltimore stelde in 1971 een indeling van virussen voor die niet op verwantschap berust, maar op één praktische vraag: hoe komt dit genoom aan mRNA? Omdat ribosomen alleen (+)mRNA kunnen lezen, moet elk virus daar hoe dan ook uitkomen. Baltimore beschreef zes klassen; met de later toegevoegde klasse VII (dsDNA-RT) zijn het er zeven, en elke klasse zegt meteen welke enzymen het virus zelf moet meebrengen.',
       how: [
         'Klasse I — dsDNA: wordt (meestal in de kern) door RNA-polymerase II van de gastheer afgeschreven. Voorbeelden: adenovirus, herpesvirussen, en het pokkenvirus, dat in het cytoplasma repliceert met zijn eigen RNA-polymerase.',
@@ -239,7 +239,7 @@ export default {
       why: 'De indeling is eigenlijk het centrale dogma, toegepast op virussen: ze laat zien dat elke informatiestroom (DNA→RNA, RNA→RNA, RNA→DNA) ergens in de natuur voorkomt, maar dat alles uiteindelijk bij hetzelfde ribosoom uitkomt.',
     },
     en: {
-      kort: 'Ribosomes can only read mRNA, so every virus has to turn its genome into mRNA one way or another. The Baltimore classification groups viruses by that route: is the genome DNA or RNA, single- or double-stranded, and readable as mRNA itself (+) or not (−)? This immediately shows which enzymes a virus has to bring along itself.',
+      kort: '[[Ribosomes|ribosoom]] can only read [[mRNA|mrna]], so every virus has to turn its genetic material into mRNA one way or another. The Baltimore classification groups viruses by that route: DNA or RNA, one or two strands, and readable as mRNA straight away or not. This shows which enzymes a virus has to bring along itself.',
       what: 'In 1971 David Baltimore proposed a classification of viruses that is not based on relatedness but on one practical question: how does this genome get to mRNA? Because ribosomes can only read (+)mRNA, every virus has to end up there. Baltimore described six classes; with the later addition of class VII (dsDNA-RT) there are seven, and each class immediately tells you which enzymes the virus must bring along.',
       how: [
         'Class I — dsDNA: transcribed (usually in the nucleus) by the host RNA polymerase II. Examples: adenovirus, herpesviruses, and poxvirus, which replicates in the cytoplasm using its own RNA polymerase.',
@@ -264,7 +264,7 @@ export default {
 
   rt: {
     nl: {
-      kort: 'Retrovirussen zoals hiv dragen hun genen als RNA, maar bouwen ze als DNA in het DNA van de cel in. Het virale enzym reverse transcriptase zet dat RNA om in dubbelstrengig DNA — de omgekeerde richting van de gewone transcriptie. Veel hiv-medicijnen blokkeren precies dit enzym.',
+      kort: '[[Retrovirussen|retrovirus]] zoals hiv dragen hun genen als RNA, maar bouwen ze als DNA in het DNA van de cel in. Het virale enzym [[reverse transcriptase|reverse-transcriptase]] maakt van dat RNA dubbelstrengig DNA: de omgekeerde richting van wat de cel normaal doet. Veel hiv-medicijnen blokkeren precies dit enzym.',
       what: 'Retrovirussen zoals HIV-1 dragen hun genetische informatie als RNA, maar bouwen hun erfelijk materiaal in als DNA. Reverse transcriptase (RT) zet het enkelstrengige (+)RNA-genoom om in dubbelstrengig DNA. Hetzelfde enzym doet drie dingen: DNA maken op een RNA-matrijs, DNA maken op een DNA-matrijs, en met zijn RNase H-activiteit het gekopieerde RNA afbreken. HIV-1 infecteert vooral CD4⁺-T-cellen en macrofagen; het proces gebeurt grotendeels nog binnen het capside in het cytoplasma.',
       how: [
         'Een gastheer-tRNA (tRNA-Lys3) hecht aan de primerbindplaats (PBS) van het genoom en levert het vrije 3\'-OH waar RT mee kan starten.',
@@ -282,7 +282,7 @@ export default {
       why: 'Reverse transcriptie draait het "gebruikelijke" DNA→RNA om en was het bewijs dat informatie ook terug kan stromen. Het verklaart waarom retrovirussen permanent in het genoom kunnen blijven, waarom hiv-behandelingen vaak RT als doelwit hebben, en het is de basis van de RT-stap in RT-qPCR en cDNA-technieken.',
     },
     en: {
-      kort: 'Retroviruses such as HIV carry their genes as RNA, but insert them as DNA into the cell’s DNA. The viral enzyme reverse transcriptase turns that RNA into double-stranded DNA — the reverse of normal transcription. Many HIV drugs block exactly this enzyme.',
+      kort: '[[Retroviruses|retrovirus]] such as HIV carry their genes as RNA, but insert them as DNA into the cell’s DNA. The viral enzyme [[reverse transcriptase|reverse-transcriptase]] turns that RNA into double-stranded DNA: the reverse of what the cell normally does. Many HIV drugs block exactly this enzyme.',
       what: 'Retroviruses such as HIV-1 carry their genetic information as RNA but insert their hereditary material as DNA. Reverse transcriptase (RT) converts the single-stranded (+)RNA genome into double-stranded DNA. The same enzyme does three things: make DNA on an RNA template, make DNA on a DNA template, and degrade the copied RNA with its RNase H activity. HIV-1 mainly infects CD4⁺ T cells and macrophages; the process largely takes place inside the capsid in the cytoplasm.',
       how: [
         'A host tRNA (tRNA-Lys3) anneals to the primer binding site (PBS) of the genome and supplies the free 3\'-OH that RT starts from.',
@@ -309,7 +309,7 @@ export default {
 
   integratie: {
     nl: {
-      kort: 'Bij integratie bouwt het virale enzym integrase het virus-DNA vast in een chromosoom van de cel. Vanaf dan is het virus een blijvend deel van het genoom: het wordt afgelezen als een gewoon gen en bij elke celdeling mee gekopieerd. Daarom is een hiv-infectie levenslang.',
+      kort: 'Bij integratie bouwt het virale enzym [[integrase|integrase]] het virus-DNA vast in een chromosoom van de cel. Vanaf dan hoort het virus blijvend bij het genoom: het wordt afgelezen als een gewoon gen en bij elke celdeling mee gekopieerd. Daarom is een hiv-infectie levenslang.',
       what: 'Integratie is de stap die een retrovirus permanent maakt: het virale enzym integrase bouwt het dubbelstrengige DNA uit de reverse transcriptie in een chromosoom van de gastheer in. Het ingebouwde virus heet een provirus en wordt daarna als een gewoon gen afgelezen en bij elke celdeling mee gekopieerd. Bij HIV-1 gebeurt dat niet willekeurig: de gastheerfactor LEDGF/p75 stuurt het complex naar transcriptioneel actieve genen.',
       how: [
         'Het virale dsDNA komt met het pre-integratiecomplex in de kern.',
@@ -327,7 +327,7 @@ export default {
       why: 'Integratie verklaart waarom een hiv-infectie levenslang is, waarom er een latent reservoir bestaat, en waarom integraseremmers (bv. dolutegravir) zo\'n belangrijke medicijnklasse zijn. Het is ook precies het verschil met het adenovirus uit het hoofdverhaal, dat episomaal blijft.',
     },
     en: {
-      kort: 'In integration, the viral enzyme integrase permanently inserts the viral DNA into one of the cell’s chromosomes. From then on the virus is a lasting part of the genome: it is read like an ordinary gene and copied at every cell division. That is why HIV infection is lifelong.',
+      kort: 'In integration, the viral enzyme [[integrase|integrase]] permanently inserts the viral DNA into one of the cell’s chromosomes. From then on the virus is a lasting part of the genome: it is read like an ordinary gene and copied at every cell division. That is why HIV infection is lifelong.',
       what: 'Integration is the step that makes a retrovirus permanent: the viral enzyme integrase inserts the double-stranded DNA produced by reverse transcription into a host chromosome. The inserted virus is called a provirus; from then on it is read like an ordinary gene and copied along at every cell division. In HIV-1 this does not happen at random: the host factor LEDGF/p75 steers the complex towards transcriptionally active genes.',
       how: [
         'The viral dsDNA enters the nucleus as part of the pre-integration complex.',
@@ -354,7 +354,7 @@ export default {
 
   kernimport: {
     nl: {
-      kort: 'De kern is omgeven door een dubbel membraan met duizenden poriën: de enige doorgangen tussen kern en cytoplasma. Kleine moleculen glippen er zo door; grote hebben een ‘adreslabel’ en een transporteiwit nodig. Het adenovirus is te groot en wordt aan de porie uit elkaar getrokken, zodat alleen zijn DNA, met wat eiwit eraan, naar binnen gaat.',
+      kort: 'De kern is omgeven door een dubbel membraan met duizenden [[kernporiën|kernporie]]: de enige doorgangen tussen de kern en de rest van de cel. Kleine moleculen glippen er zo door; grote hebben een ‘adreslabel’ en een transporteiwit nodig. Het adenovirus is te groot en wordt aan de porie uit elkaar getrokken, zodat alleen zijn DNA (met wat eiwit) naar binnen gaat.',
       what: 'Het kernporiecomplex (NPC) is de enige doorgang tussen cytoplasma en nucleoplasma. Het is een achtvoudig symmetrische structuur van ongeveer 110–120 MDa, gebouwd uit ~30 verschillende nucleoporinen die elk in veelvouden van acht voorkomen (samen ~500–1 000 eiwitmoleculen per porie). Het kanaal is gevuld met ongeordende FG-herhalingen die als een zeef werken: kleine moleculen glippen er passief doorheen, grotere alleen met een transportfactor. Een menselijke kern bevat er ongeveer 3 000.',
       how: [
         'Kleine moleculen tot ongeveer 40 kDa (~5 nm) diffunderen passief door het FG-netwerk.',
@@ -372,7 +372,7 @@ export default {
       why: 'Dit is hoofdstuk 4 van het verhaal: het punt waarop vreemd DNA daadwerkelijk bij het genoom komt. Dezelfde poort bepaalt ook de rest van het verhaal — transcriptiefactoren en polymerasen moeten naar binnen, rijp mRNA en ribosoomsubeenheden moeten naar buiten. Wie de kernporie begrijpt, begrijpt waarom eukaryoten transcriptie en translatie in ruimte én tijd kunnen scheiden.',
     },
     en: {
-      kort: 'The nucleus is surrounded by a double membrane with thousands of pores: the only passages between nucleus and cytoplasm. Small molecules slip through freely; large ones need an ‘address label’ and a transport protein. Adenovirus is too big and is pulled apart at the pore, so only its DNA, with some protein attached, goes in.',
+      kort: 'The nucleus is surrounded by a double membrane with thousands of [[nuclear pores|kernporie]]: the only passages between the nucleus and the rest of the cell. Small molecules slip through freely; large ones need an ‘address label’ and a transport protein. Adenovirus is too big and is pulled apart at the pore, so only its DNA (with some protein) goes in.',
       what: 'The nuclear pore complex (NPC) is the only passage between cytoplasm and nucleoplasm. It is an eightfold symmetric structure of about 110–120 MDa, built from ~30 different nucleoporins each present in multiples of eight (together ~500–1,000 protein molecules per pore). The channel is filled with disordered FG repeats that act as a sieve: small molecules slip through passively, larger ones only with a transport factor. A human nucleus contains about 3,000 of them.',
       how: [
         'Small molecules up to about 40 kDa (~5 nm) diffuse passively through the FG meshwork.',

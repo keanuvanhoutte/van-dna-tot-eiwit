@@ -7,7 +7,7 @@ const MOTM_DNA = { t: 'PDB-101 Molecule of the Month: DNA', url: 'https://pdb101
 export default {
   dnahelix: {
     nl: {
-      kort: 'DNA bestaat uit twee strengen die als een gedraaide ladder om elkaar heen lopen. De zijkanten zijn suiker en fosfaat; de sporten zijn basenparen (A met T, G met C). Omdat elke streng de andere bepaalt, kan DNA nauwkeurig gekopieerd en afgelezen worden.',
+      kort: 'DNA bestaat uit twee strengen die als een gedraaide ladder om elkaar heen lopen. De zijkanten zijn suiker en fosfaat; de sporten zijn [[basenparen|basenpaar]] (A met T, G met C). Omdat elke streng de andere bepaalt, kan DNA precies gekopieerd en afgelezen worden.',
       what: 'DNA is een dubbelhelix van twee antiparallelle polynucleotideketens. De suiker-fosfaatruggengraat ligt aan de buitenkant, de vlakke basen zitten binnenin als gepaarde, gestapelde "treden". In de cel is dat vrijwel overal de rechtshandige B-vorm.',
       how: [
         "Elke streng heeft een richting (5'→3'); de twee strengen lopen tegengesteld (antiparallel).",
@@ -22,7 +22,7 @@ export default {
       why: 'De helixvorm verklaart hoe DNA gekopieerd kan worden (elke streng is een matrijs), hoe het compact verpakt wordt rond nucleosomen en hoe eiwitten een sequentie kunnen herkennen zonder de helix te openen — de basis voor genregulatie in het volgende hoofdstuk.',
     },
     en: {
-      kort: 'DNA consists of two strands that wind around each other like a twisted ladder. The sides are sugar and phosphate; the rungs are base pairs (A with T, G with C). Because each strand determines the other, DNA can be copied and read accurately.',
+      kort: 'DNA consists of two strands that wind around each other like a twisted ladder. The sides are sugar and phosphate; the rungs are [[base pairs|basenpaar]] (A with T, G with C). Because each strand determines the other, DNA can be copied and read accurately.',
       what: 'DNA is a double helix of two antiparallel polynucleotide chains. The sugar–phosphate backbone lies on the outside, the flat bases sit inside as paired, stacked "steps". In the cell it is almost everywhere the right-handed B form.',
       how: [
         "Each strand has a direction (5'→3'); the two strands run in opposite directions (antiparallel).",
@@ -41,7 +41,7 @@ export default {
 
   dnavormen: {
     nl: {
-      kort: 'De DNA-dubbelhelix kan verschillende vormen aannemen. In de cel is bijna al het DNA de gewone B-vorm. De bredere A-vorm zie je bij dubbelstrengig RNA en bij RNA dat aan DNA gepaard is, en de linksdraaiende Z-vorm alleen bij bepaalde sequenties onder speciale omstandigheden.',
+      kort: 'De DNA-dubbelhelix kan verschillende vormen aannemen. In de cel is bijna al het DNA de gewone B-vorm. De bredere A-vorm zie je bij dubbel RNA en bij RNA dat aan DNA gepaard is; de linksdraaiende Z-vorm alleen bij bepaalde stukken DNA onder speciale omstandigheden.',
       what: 'Dezelfde dubbelhelix kan verschillende conformaties aannemen. B-DNA is de standaardvorm; A-DNA is korter en breder (typisch voor dubbelstrengig RNA en RNA–DNA-hybriden); Z-DNA is linkshandig met een zigzaggende ruggengraat.',
       how: [
         'B-DNA: rechtshandig, ≈ 10,5 bp/winding in oplossing (klassiek vezelmodel: 10), 3,4 Å/bp, ≈ 20 Å breed, suikers C2′-endo, basen anti.',
@@ -55,7 +55,7 @@ export default {
       why: 'Examenstof: de vormen verschillen in bp per winding, stijging, draairichting, groeven en suikerpuckering. RNA-duplexen zijn (vrijwel) altijd A-vorm, wat hun herkenning door eiwitten bepaalt; Z-DNA kan tijdelijk ontstaan achter RNA-polymerase (negatieve supercoiling) en wordt herkend door Zα-domeinen (bv. ADAR1).',
     },
     en: {
-      kort: 'The DNA double helix can take on different shapes. In the cell almost all DNA has the usual B form. The wider A form is seen in double-stranded RNA and in RNA paired with DNA, and the left-handed Z form only in certain sequences under special conditions.',
+      kort: 'The DNA double helix can take on different shapes. In the cell almost all DNA has the usual B form. The wider A form is seen in double RNA and in RNA paired with DNA; the left-handed Z form only in certain pieces of DNA under special conditions.',
       what: 'The same double helix can adopt different conformations. B-DNA is the standard form; A-DNA is shorter and wider (typical of double-stranded RNA and RNA–DNA hybrids); Z-DNA is left-handed with a zigzag backbone.',
       how: [
         'B-DNA: right-handed, ≈ 10.5 bp/turn in solution (classic fibre model: 10), 3.4 Å/bp, ≈ 20 Å wide, sugars C2′-endo, bases anti.',
@@ -73,7 +73,7 @@ export default {
 
   noncanon: {
     nl: {
-      kort: 'Op sommige plaatsen kan DNA tijdelijk afwijken van de gewone dubbelhelix, bijvoorbeeld als vierkant van vier G\'s of met een derde streng. Zulke vormen ontstaan vooral bij herhaalde of G-rijke sequenties, zoals aan de uiteinden van chromosomen. Ze kunnen het aflezen en kopiëren van DNA beïnvloeden.',
+      kort: 'Op sommige plaatsen kan DNA even afwijken van de gewone dubbelhelix, bijvoorbeeld als vierkant van vier G’s of met een derde streng. Dat gebeurt vooral bij herhaalde of G-rijke stukken, zoals aan de uiteinden van chromosomen ([[telomeren|telomeer]]). Zulke vormen kunnen het aflezen en kopiëren van DNA beïnvloeden.',
       what: 'Bepaalde sequenties kunnen lokaal van de B-helix afwijken. G-rijke strengen vormen G-quadruplexen, spiegelherhalingen van purines/pyrimidines vormen triplex-DNA (H-DNA), omgekeerde herhalingen vormen kruisvormen en C-rijke strengen i-motieven.',
       how: [
         'G-kwartet: vier guanines in een vlak, verbonden door 8 Hoogsteen-H-bruggen (N1–H···O6, N2–H···N7).',
@@ -88,7 +88,7 @@ export default {
       why: 'G-quadruplexen aan telomeren en in promoters (bv. MYC) beïnvloeden replicatie, transcriptie en genoomstabiliteit en zijn doelwit voor kankergeneesmiddelen; niet-B-structuren zijn ook hotspots voor mutaties. Ze tonen dat basenparing meer kan dan Watson–Crick.',
     },
     en: {
-      kort: 'In some places DNA can temporarily depart from the usual double helix, for example as a square of four G\'s or with a third strand. Such shapes arise mainly at repeated or G-rich sequences, such as the ends of chromosomes. They can affect how DNA is read and copied.',
+      kort: 'In some places DNA can briefly depart from the usual double helix, for example as a square of four G’s or with a third strand. This happens mainly at repeated or G-rich stretches, such as the ends of chromosomes ([[telomeres|telomeer]]). Such shapes can affect how DNA is read and copied.',
       what: 'Certain sequences can locally deviate from the B helix. G-rich strands form G-quadruplexes, purine/pyrimidine mirror repeats form triplex DNA (H-DNA), inverted repeats form cruciforms and C-rich strands i-motifs.',
       how: [
         'G-quartet: four guanines in a plane, connected by 8 Hoogsteen H-bonds (N1–H···O6, N2–H···N7).',
@@ -113,7 +113,7 @@ export default {
 
   basenparing: {
     nl: {
-      kort: 'In DNA paart A altijd met T en G altijd met C, via waterstofbruggen. Beide paren zijn even breed, zodat elke sequentie in dezelfde helix past. Door deze vaste paring kan elke streng als mal dienen om de andere te maken, bij het kopiëren én bij het afschrijven naar RNA.',
+      kort: 'In DNA paart A altijd met T en G altijd met C, via [[waterstofbruggen|waterstofbrug]]. Beide paren zijn even breed, zodat elke volgorde in dezelfde helix past. Zo kan elke streng dienen als mal voor de andere, bij het kopiëren én bij het maken van RNA.',
       what: 'In de dubbelhelix paart een purine altijd met een pyrimidine: A met T via 2 waterstofbruggen, G met C via 3. Beide paren hebben bijna dezelfde afmetingen, zodat elke sequentie in dezelfde regelmatige helix past.',
       how: [
         'A–T: N6–H(A)···O4(T) en N1(A)···H–N3(T).',
@@ -128,7 +128,7 @@ export default {
       why: 'Complementaire basenparing is de basis van replicatie, transcriptie en translatie (codon–anticodon). Alternatieve paringen (Hoogsteen, wobble) maken triplexen, G-quadruplexen en de flexibele derde codonpositie mogelijk.',
     },
     en: {
-      kort: 'In DNA, A always pairs with T and G always with C, through hydrogen bonds. Both pairs are equally wide, so any sequence fits into the same helix. Because of this fixed pairing, each strand can serve as a template to make the other, both when DNA is copied and when it is transcribed into RNA.',
+      kort: 'In DNA, A always pairs with T and G always with C, through [[hydrogen bonds|waterstofbrug]]. Both pairs are equally wide, so any sequence fits into the same helix. So each strand can serve as a template for the other, both when DNA is copied and when RNA is made.',
       what: 'In the double helix a purine always pairs with a pyrimidine: A with T through 2 hydrogen bonds, G with C through 3. Both pairs have almost the same dimensions, so any sequence fits the same regular helix.',
       how: [
         'A–T: N6–H(A)···O4(T) and N1(A)···H–N3(T).',
@@ -154,7 +154,7 @@ export default {
 
   nucleotide: {
     nl: {
-      kort: 'Een nucleotide is de bouwsteen van DNA en RNA. Het bestaat uit een base (de \'letter\' A, C, G, T of U), een suiker en een fosfaatgroep. Nucleotiden worden via hun suiker en fosfaat aan elkaar geschakeld tot een streng met een vaste richting.',
+      kort: 'Een nucleotide is de bouwsteen van DNA en RNA. Het bestaat uit een base (de “letter” A, C, G, T of U), een suiker en een [[fosfaatgroep|fosfaat]]. Nucleotiden worden via suiker en fosfaat aan elkaar geschakeld tot een streng met een vaste richting.',
       what: 'Een nucleotide is de bouwsteen van DNA en RNA: een stikstofbase, een pentose (2′-deoxyribose in DNA, ribose in RNA) en één of meer fosfaatgroepen. Zonder fosfaat heet het een nucleoside.',
       how: [
         "De suikerkoolstoffen worden genummerd 1′–5′ (met accent), om ze te onderscheiden van de atomen van de base.",
@@ -169,7 +169,7 @@ export default {
       why: 'De chemie van het nucleotide bepaalt alles erboven: de 5′→3′-richting van synthese, de lading van DNA, het verschil in stabiliteit tussen DNA en RNA en, via puckering en χ, welke helixvorm ontstaat.',
     },
     en: {
-      kort: 'A nucleotide is the building block of DNA and RNA. It consists of a base (the \'letter\' A, C, G, T or U), a sugar and a phosphate group. Nucleotides are linked through their sugar and phosphate into a strand with a fixed direction.',
+      kort: 'A nucleotide is the building block of DNA and RNA. It consists of a base (the “letter” A, C, G, T or U), a sugar and a [[phosphate group|fosfaat]]. Nucleotides are linked through sugar and phosphate into a strand with a fixed direction.',
       what: 'A nucleotide is the building block of DNA and RNA: a nitrogenous base, a pentose (2′-deoxyribose in DNA, ribose in RNA) and one or more phosphate groups. Without phosphate it is called a nucleoside.',
       how: [
         "The sugar carbons are numbered 1′–5′ (primed), to distinguish them from the base atoms.",
@@ -188,7 +188,7 @@ export default {
 
   supercoiling: {
     nl: {
-      kort: 'Als de uiteinden van DNA niet vrij kunnen draaien, kan het DNA te strak of te los gewonden raken; het gaat dan kronkelen, zoals een gedraaid telefoonsnoer. Dat gebeurt bijvoorbeeld voor en achter een enzym dat DNA afleest. Topo-isomerasen knippen het DNA tijdelijk om die spanning weg te nemen.',
+      kort: 'Als de uiteinden van DNA niet vrij kunnen draaien, kan het DNA te strak of te los gewonden raken. Het gaat dan kronkelen, zoals een gedraaid telefoonsnoer. Speciale enzymen ([[topo-isomerasen|topoisomerase]]) knippen het DNA even door om die spanning weg te nemen.',
       what: 'Als de uiteinden van een DNA-stuk niet vrij kunnen draaien (circulair DNA of vastgemaakte lussen), kan het DNA onder torsiespanning komen: supercoiling. Topo-isomerasen veranderen die toestand door strengen tijdelijk te knippen.',
       how: [
         'Linking number Lk = aantal keren dat de ene streng rond de andere gaat; een geheel getal dat alleen verandert als een streng breekt.',
@@ -203,7 +203,7 @@ export default {
       why: 'Negatieve supercoiling maakt het makkelijker om de helix te openen voor transcriptie en replicatie en stimuleert Z-DNA, kruisvormen en H-DNA. Zonder topo-isomerasen zouden transcriptie en replicatie vastlopen; daarom zijn ze belangrijke doelwitten van kankertherapie.',
     },
     en: {
-      kort: 'When the ends of DNA cannot rotate freely, the DNA can become wound too tightly or too loosely; it then starts to coil, like a twisted telephone cord. This happens, for example, ahead of and behind an enzyme that reads DNA. Topoisomerases cut the DNA temporarily to relieve this strain.',
+      kort: 'When the ends of DNA cannot rotate freely, the DNA can become wound too tightly or too loosely. It then starts to coil, like a twisted telephone cord. Special enzymes ([[topoisomerases|topoisomerase]]) briefly cut the DNA to relieve this strain.',
       what: 'When the ends of a DNA segment cannot rotate freely (circular DNA or anchored loops), the DNA can come under torsional stress: supercoiling. Topoisomerases change this state by transiently cutting strands.',
       how: [
         'Linking number Lk = the number of times one strand winds around the other; an integer that changes only if a strand is broken.',

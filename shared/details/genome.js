@@ -29,7 +29,7 @@ const S = {
 export default {
   kern: {
     nl: {
-      kort: 'De celkern is de ruimte in de cel waar het DNA ligt. Twee membranen met poriën scheiden ze van de rest van de cel. Hier wordt het DNA afgelezen naar RNA, dat daarna via de poriën naar buiten gaat.',
+      kort: 'De kern is de ruimte in de cel waar het DNA ligt. Twee membranen met kleine poorten ([[kernporiën|kernporie]]) omringen hem. Hier wordt het DNA afgelezen naar RNA, dat via die poorten naar buiten gaat.',
       what: 'De celkern is het compartiment waarin het genoom van een menselijke cel ligt. Ze is omgeven door een dubbel membraan (de kernenvelop) met duizenden kernporiecomplexen, de enige doorgang tussen kern en cytoplasma. Binnenin liggen chromatine (DNA + eiwitten) en kernlichaampjes zoals de nucleolus, zonder eigen membraan.',
       how: [
         'De kernenvelop bestaat uit een binnen- en buitenmembraan; het buitenmembraan loopt door in het ruw ER.',
@@ -43,7 +43,7 @@ export default {
       why: 'Door transcriptie (kern) en translatie (cytoplasma) ruimtelijk te scheiden kan een eukaryote cel RNA eerst bewerken en controleren voor het vertaald wordt. Daarom moet ook een DNA-virus zoals het adenovirus zijn genoom tot in de kern brengen.',
     },
     en: {
-      kort: 'The nucleus is the space in the cell where the DNA is kept. Two membranes with pores separate it from the rest of the cell. Here the DNA is read into RNA, which then leaves through the pores.',
+      kort: 'The nucleus is the space in the cell where the DNA is kept. Two membranes with small gates ([[nuclear pores|kernporie]]) surround it. Here the DNA is read into RNA, which leaves through those gates.',
       what: 'The nucleus is the compartment that holds the genome of a human cell. It is surrounded by a double membrane (the nuclear envelope) with thousands of nuclear pore complexes, the only passage between nucleus and cytoplasm. Inside lie chromatin (DNA + proteins) and nuclear bodies such as the nucleolus, which have no membrane of their own.',
       how: [
         'The nuclear envelope consists of an inner and an outer membrane; the outer membrane is continuous with the rough ER.',
@@ -61,7 +61,7 @@ export default {
 
   nucleolus: {
     nl: {
-      kort: 'De nucleolus is een dicht gebied in de kern zonder eigen membraan. Hier worden de meeste RNA\'s van het ribosoom gemaakt en samen met eiwitten tot de twee delen van het ribosoom gebouwd. Zonder nucleolus dus geen ribosomen, en geen eiwitten.',
+      kort: 'De nucleolus is een dicht gebied in de kern, zonder eigen membraan. Hier wordt het meeste RNA van het [[ribosoom|ribosoom]] gemaakt en met eiwitten tot de twee delen van het ribosoom gebouwd. Zonder nucleolus dus geen ribosomen, en geen eiwitten.',
       what: 'De nucleolus is het grootste lichaampje in de kern en heeft geen membraan. Hij vormt zich rond de rRNA-genen (rDNA) op de korte armen van de vijf acrocentrische chromosomen. Hier maakt RNA-polymerase I het rRNA en worden de subeenheden van het ribosoom opgebouwd.',
       how: [
         'rDNA ligt als honderden kop-aan-staart-herhalingen van ~43 kb (≈13 kb getranscribeerd + intergene spacer) op chromosomen 13, 14, 15, 21 en 22.',
@@ -76,7 +76,7 @@ export default {
       why: 'Ribosomen zijn de machines die mRNA vertalen. Een groeiende cel heeft er miljoenen nodig; rRNA vormt het grootste deel van al het RNA in de cel. Stoornissen in ribosoombiogenese veroorzaken ziekten (ribosomopathieën).',
     },
     en: {
-      kort: 'The nucleolus is a dense region in the nucleus without its own membrane. Here most of the RNAs of the ribosome are made and assembled with proteins into the two parts of the ribosome. So without a nucleolus there are no ribosomes, and no proteins.',
+      kort: 'The nucleolus is a dense region in the nucleus, without its own membrane. Here most of the RNA of the [[ribosome|ribosoom]] is made and built, together with proteins, into the two parts of the ribosome. So without a nucleolus there are no ribosomes, and no proteins.',
       what: 'The nucleolus is the largest body in the nucleus and has no membrane. It forms around the rRNA genes (rDNA) on the short arms of the five acrocentric chromosomes. Here RNA polymerase I makes rRNA and the subunits of the ribosome are built.',
       how: [
         'rDNA lies as hundreds of head-to-tail repeats of ~43 kb (≈13 kb transcribed + intergenic spacer) on chromosomes 13, 14, 15, 21 and 22.',
@@ -95,7 +95,7 @@ export default {
 
   chromosoom: {
     nl: {
-      kort: 'Een chromosoom is één heel lange DNA-molecule, verpakt met eiwitten. Een menselijke lichaamscel heeft er 46, in paren. Vlak voor een celdeling is elk chromosoom gekopieerd en sterk opgevouwen, zodat elke dochtercel een volledige set krijgt.',
+      kort: 'Een chromosoom is één heel lange DNA-draad, verpakt met eiwitten ([[chromatine|chromatine]]). Een menselijke lichaamscel heeft er 46, in paren. Voor een celdeling wordt elk chromosoom gekopieerd en opgevouwen, zodat elke dochtercel een volledige set krijgt.',
       what: 'Een chromosoom is één lange, lineaire DNA-molecule met de eiwitten die het verpakken. Een menselijke lichaamscel heeft 46 chromosomen: 22 paren autosomen en twee geslachtschromosomen (XX of XY). Na replicatie bestaat elk chromosoom uit twee identieke zusterchromatiden.',
       how: [
         'In de interfase is elk chromosoom ontvouwen tot chromatine en neemt het een eigen territorium in de kern in.',
@@ -109,7 +109,7 @@ export default {
       why: 'Chromosomen zorgen ervoor dat twee meter DNA georganiseerd, gekopieerd en eerlijk verdeeld wordt over de dochtercellen. Fouten in aantal of structuur (bv. trisomie 21) hebben grote gevolgen.',
     },
     en: {
-      kort: 'A chromosome is one very long DNA molecule, packed with proteins. A human body cell has 46 of them, in pairs. Just before a cell divides, each chromosome has been copied and tightly folded, so that each daughter cell receives a complete set.',
+      kort: 'A chromosome is one very long DNA thread, packed with proteins ([[chromatin|chromatine]]). A human body cell has 46 of them, in pairs. Before a cell divides, each chromosome is copied and folded up, so that each daughter cell gets a complete set.',
       what: 'A chromosome is one long, linear DNA molecule together with the proteins that package it. A human body cell has 46 chromosomes: 22 pairs of autosomes and two sex chromosomes (XX or XY). After replication each chromosome consists of two identical sister chromatids.',
       how: [
         'In interphase each chromosome is unfolded into chromatin and occupies its own territory in the nucleus.',
@@ -127,7 +127,7 @@ export default {
 
   chromatine: {
     nl: {
-      kort: 'Chromatine is DNA samen met de eiwitten die het verpakken. Zo past ongeveer twee meter DNA in een kern van enkele micrometer. Hoe strak het verpakt is, bepaalt mee welke genen kunnen worden afgelezen: open chromatine is actief, compact chromatine meestal stil.',
+      kort: 'Chromatine is DNA samen met de eiwitten die het verpakken, vooral [[histonen|histon]]. Zo past ongeveer twee meter DNA in een kern van enkele micrometer. Open chromatine wordt afgelezen, compact chromatine is meestal stil.',
       what: 'Chromatine is het complex van DNA met eiwitten (vooral histonen) waarin het genoom in de kern verpakt zit. Het is geen statische verpakking: open euchromatine laat genen aflezen, compact heterochromatine houdt ze meestal stil. Op grotere schaal is chromatine georganiseerd in lussen, domeinen (TADs) en chromosoomterritoria.',
       how: [
         'DNA wikkelt rond histonoctameren tot nucleosomen, verbonden door linker-DNA: de 10 nm-vezel ("kralen aan een snoer").',
@@ -142,7 +142,7 @@ export default {
       why: 'Verpakking bepaalt toegankelijkheid: voordat een gen kan worden afgeschreven, moet zijn chromatine open zijn. Daarom is chromatine de brug tussen het genoom en genregulatie.',
     },
     en: {
-      kort: 'Chromatin is DNA together with the proteins that pack it. This is how about two metres of DNA fits into a nucleus a few micrometres wide. How tightly it is packed helps decide which genes can be read: open chromatin is active, compact chromatin is mostly silent.',
+      kort: 'Chromatin is DNA together with the proteins that pack it, mainly [[histones|histon]]. This is how about two metres of DNA fits into a nucleus a few micrometres wide. Open chromatin is read; compact chromatin is mostly silent.',
       what: 'Chromatin is the complex of DNA with proteins (mainly histones) in which the genome is packed inside the nucleus. It is not static packaging: open euchromatin allows genes to be read, compact heterochromatin mostly keeps them silent. On a larger scale chromatin is organised into loops, domains (TADs) and chromosome territories.',
       how: [
         'DNA wraps around histone octamers to form nucleosomes, joined by linker DNA: the 10 nm fibre ("beads on a string").',
@@ -161,7 +161,7 @@ export default {
 
   nucleosoom: {
     nl: {
-      kort: 'Het nucleosoom is de kleinste verpakkingseenheid van het DNA: een stukje DNA dat bijna twee keer rond een klosje van acht histoneiwitten gewikkeld is. Een lange rij nucleosomen vormt chromatine. Om een gen af te lezen moet het DNA er gedeeltelijk afgehaald of opgeschoven worden.',
+      kort: 'Het nucleosoom is de kleinste verpakkingseenheid van DNA: een stukje DNA dat bijna twee keer rond een klosje van acht [[histonen|histon]] gewikkeld is. Een lange rij nucleosomen vormt [[chromatine|chromatine]]. Om een gen af te lezen moet het DNA er deels af of opgeschoven worden.',
       what: 'Het nucleosoom is de basiseenheid van chromatine. In het kerndeeltje ligt ~147 bp DNA in ongeveer 1,7 linkshandige superhelische windingen rond een octameer van histoneiwitten: twee kopieën van H2A, H2B, H3 en H4. Linker-DNA (en histon H1) verbindt opeenvolgende nucleosomen.',
       how: [
         'Elk kernhiston heeft een histonplooi: drie α-helices (α1–L1–α2–L2–α3). Twee histonen grijpen kop-aan-staart in elkaar ("handdruk"): H3 met H4, H2A met H2B.',
@@ -175,7 +175,7 @@ export default {
       why: 'Het nucleosoom is tegelijk verpakking en regelknop: het maakt DNA compact, maar ook minder toegankelijk. Remodelers en histonmodificaties verschuiven, openen of verwijderen nucleosomen om genen af te lezen.',
     },
     en: {
-      kort: 'The nucleosome is the smallest packing unit of DNA: a piece of DNA wrapped almost twice around a spool of eight histone proteins. A long row of nucleosomes forms chromatin. To read a gene, the DNA has to be partly unwrapped or shifted.',
+      kort: 'The nucleosome is the smallest packing unit of DNA: a piece of DNA wrapped almost twice around a spool of eight [[histones|histon]]. A long row of nucleosomes forms [[chromatin|chromatine]]. To read a gene, the DNA has to be partly unwrapped or shifted.',
       what: 'The nucleosome is the basic unit of chromatin. In the core particle ~147 bp of DNA is wrapped in about 1.7 left-handed superhelical turns around an octamer of histone proteins: two copies each of H2A, H2B, H3 and H4. Linker DNA (and histone H1) connects consecutive nucleosomes.',
       how: [
         'Each core histone has a histone fold: three α-helices (α1–L1–α2–L2–α3). Two histones interlock head-to-tail ("handshake"): H3 with H4, H2A with H2B.',
@@ -193,7 +193,7 @@ export default {
 
   histonmod: {
     nl: {
-      kort: 'Histonen kunnen kleine chemische merktekens krijgen, vooral op hun uitstekende staarten. Sommige merktekens maken het chromatine losser, andere houden het dicht. Zo helpen ze bepalen welke genen aan of uit staan, zonder de DNA-code zelf te veranderen.',
+      kort: '[[Histonen|histon]], de eiwitten waar het DNA omheen ligt, kunnen kleine chemische merktekens krijgen op hun staarten. Sommige merktekens maken het [[chromatine|chromatine]] losser, andere houden het dicht. Zo helpen ze bepalen welke genen aan of uit staan, zonder de DNA-code te veranderen.',
       what: 'Histonen worden na de translatie chemisch gemodificeerd, vooral op hun N-terminale staarten: acetylatie, methylatie, fosforylatie, ubiquitinering en meer. Die merktekens veranderen de lading van de staart en vormen bindingsplaatsen voor andere eiwitten. Zo helpen ze bepalen of chromatine open (actief) of dicht (stil) is.',
       how: [
         'De H3-staart bevat veel lysines (o.a. K4, K9, K14, K18, K23, K27); de nummering telt vanaf het eerste residu na de verwijderde methionine.',
@@ -208,7 +208,7 @@ export default {
       why: 'Histonmodificaties vertalen signalen in een chromatinetoestand die genen aan- of uitzet en die bij celdeling (deels) wordt doorgegeven. Ze zijn het doelwit van geneesmiddelen, bv. HDAC-remmers bij kanker.',
     },
     en: {
-      kort: 'Histones can receive small chemical marks, mainly on their protruding tails. Some marks loosen the chromatin, others keep it closed. In this way they help decide which genes are on or off, without changing the DNA code itself.',
+      kort: '[[Histones|histon]], the proteins the DNA is wrapped around, can receive small chemical marks on their tails. Some marks loosen the [[chromatin|chromatine]], others keep it closed. In this way they help decide which genes are on or off, without changing the DNA code.',
       what: 'Histones are chemically modified after translation, mainly on their N-terminal tails: acetylation, methylation, phosphorylation, ubiquitination and more. These marks change the charge of the tail and create binding sites for other proteins. In this way they help determine whether chromatin is open (active) or closed (silent).',
       how: [
         'The H3 tail contains many lysines (e.g. K4, K9, K14, K18, K23, K27); numbering starts at the first residue after the removed methionine.',
@@ -227,7 +227,7 @@ export default {
 
   dnamethyl: {
     nl: {
-      kort: 'Bij DNA-methylatie krijgt een C in het DNA een kleine methylgroep. De letter en de basenparing blijven hetzelfde, maar eiwitten herkennen het merkteken. Een gemethyleerde promoter zet het gen meestal uit, en het patroon wordt bij elke celdeling doorgegeven.',
+      kort: 'Bij DNA-methylatie krijgt een C in het DNA een klein chemisch groepje: een methylgroep. De code blijft hetzelfde, maar eiwitten herkennen het merkteken. Een gemerkte [[promoter|promoter]] zet het gen meestal uit, en het patroon gaat mee bij elke celdeling.',
       what: 'Bij DNA-methylatie wordt een methylgroep op koolstof 5 van cytosine gezet (5-methylcytosine, 5mC). Bij zoogdieren gebeurt dat vooral in CpG-dinucleotiden. De basenparing verandert niet, maar het patroon wordt gelezen door eiwitten en helpt genen stabiel uit te schakelen.',
       how: [
         'CpG is palindroom: op beide strengen staat 5\'-CG-3\', dus een CpG-plaats kan op beide strengen gemethyleerd zijn.',
@@ -242,7 +242,7 @@ export default {
       why: 'DNA-methylatie is een erfelijk "geheugen" van genactiviteit: het houdt transposons, het inactieve X-chromosoom en ingeprente genen stil. Afwijkende methylatie (bv. van tumorsuppressorpromoters) komt vaak voor bij kanker.',
     },
     en: {
-      kort: 'In DNA methylation a C in the DNA receives a small methyl group. The letter and the base pairing stay the same, but proteins recognise the mark. A methylated promoter usually switches the gene off, and the pattern is passed on at every cell division.',
+      kort: 'In DNA methylation a C in the DNA gets a small chemical group: a methyl group. The code stays the same, but proteins recognise the mark. A marked [[promoter|promoter]] usually switches the gene off, and the pattern is passed on at every cell division.',
       what: 'In DNA methylation a methyl group is added to carbon 5 of cytosine (5-methylcytosine, 5mC). In mammals this happens mainly in CpG dinucleotides. Base pairing does not change, but the pattern is read by proteins and helps to switch genes off stably.',
       how: [
         'CpG is palindromic: both strands read 5\'-CG-3\', so a CpG site can be methylated on both strands.',
@@ -261,7 +261,7 @@ export default {
 
   gen: {
     nl: {
-      kort: 'Een gen is een stuk DNA dat wordt afgeschreven naar RNA, samen met de stukken die regelen wanneer dat gebeurt. Bij de mens bestaat een gen meestal uit delen die in het mRNA blijven (exonen) en tussenstukken die eruit geknipt worden (intronen). Het gen is het startpunt van het hele verhaal van DNA naar eiwit.',
+      kort: 'Een gen is een stuk DNA dat naar RNA wordt gekopieerd, samen met de stukken die regelen wanneer dat gebeurt. Bij de mens heeft een gen meestal stukken die in het mRNA blijven ([[exonen|exon]]) en tussenstukken die eruit geknipt worden ([[intronen|intron]]). Het gen is het begin van het hele verhaal van DNA naar eiwit.',
       what: 'Een gen is een stuk DNA dat tot een functioneel RNA wordt afgeschreven, samen met de regio\'s die dat regelen. Een typisch menselijk eiwitcoderend gen bestaat uit een promoter, exonen en (meestal veel langere) intronen, en eindigt met een polyadenylatiesignaal. Enhancers kunnen op grote afstand liggen.',
       how: [
         'Enhancers binden activerende transcriptiefactoren en bereiken de promoter via een DNA-lus (o.a. cohesine en Mediator).',
@@ -275,7 +275,7 @@ export default {
       why: 'De architectuur van een gen bepaalt waar transcriptie begint en eindigt, welke delen in het mRNA terechtkomen en hoe het gereguleerd wordt. Alternatieve splicing laat één gen meerdere eiwitten maken.',
     },
     en: {
-      kort: 'A gene is a stretch of DNA that is copied into RNA, together with the regions that control when this happens. In humans a gene usually consists of parts that stay in the mRNA (exons) and intervening pieces that are cut out (introns). The gene is the starting point of the whole story from DNA to protein.',
+      kort: 'A gene is a stretch of DNA that is copied into RNA, together with the parts that control when this happens. In humans a gene usually has pieces that stay in the mRNA ([[exons|exon]]) and pieces in between that are cut out ([[introns|intron]]). The gene is the start of the whole story from DNA to protein.',
       what: 'A gene is a stretch of DNA that is transcribed into a functional RNA, together with the regions that control this. A typical human protein-coding gene consists of a promoter, exons and (usually much longer) introns, and ends with a polyadenylation signal. Enhancers can lie far away.',
       how: [
         'Enhancers bind activating transcription factors and reach the promoter through a DNA loop (involving cohesin and Mediator).',

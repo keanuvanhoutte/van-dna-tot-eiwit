@@ -4,7 +4,7 @@ const ALB = id => `https://www.ncbi.nlm.nih.gov/books/${id}/`;
 export default {
   ptm: {
     nl: {
-      kort: 'Na het maken van een eiwit kunnen enzymen er nog kleine chemische groepen aanhangen of stukken afknippen. Zo\'n aanpassing kan een eiwit aan- of uitzetten, het naar een plek sturen of het markeren voor afbraak. Een bekend voorbeeld is fosforylatie: een fosfaatgroep werkt als een aan-uitschakelaar.',
+      kort: 'Na het maken van een eiwit kunnen enzymen er nog kleine chemische groepen aanhangen of stukken afknippen. Zo’n aanpassing kan een eiwit aan- of uitzetten, ergens heen sturen of markeren voor afbraak. Bekend voorbeeld: [[fosforylatie|fosforylatie]], waarbij een [[kinase|kinase]] een fosfaatgroep aanhangt die werkt als aan-uitschakelaar.',
       what: 'Post-translationele modificaties (PTM\'s) zijn chemische veranderingen aan een eiwit na (of tijdens) de translatie: enzymen hangen groepen aan zijketens (fosfaat, acetyl, methyl, suikers, lipiden, ubiquitine), vormen disulfidebruggen of knippen de keten. Zo breiden cellen de chemie van de 20 standaardaminozuren uit en kunnen ze eiwitten snel aan- of uitzetten, sturen of markeren.',
       how: [
         'Fosforylatie: een eiwitkinase zet het γ-fosfaat van ATP op de OH-groep van Ser, Thr of Tyr; ATP wordt ADP.',
@@ -20,7 +20,7 @@ export default {
       why: 'Eén gen kan zo vele functionele varianten van een eiwit opleveren. PTM\'s zijn de snelle schakelaars van celsignalering, bepalen waar een eiwit naartoe gaat en hoe lang het leeft. In de cursus worden ze genoemd als manier om de chemische eigenschappen van aminozuren uit te breiden (bv. hydroxyproline in collageen).',
     },
     en: {
-      kort: 'After a protein has been made, enzymes can still attach small chemical groups or cut off pieces. Such a change can switch a protein on or off, send it somewhere or mark it for breakdown. A well-known example is phosphorylation: a phosphate group acts as an on-off switch.',
+      kort: 'After a protein has been made, enzymes can still attach small chemical groups or cut off pieces. Such a change can switch a protein on or off, send it somewhere or mark it for breakdown. A well-known example is [[phosphorylation|fosforylatie]]: a [[kinase|kinase]] attaches a phosphate group that acts as an on-off switch.',
       what: 'Post-translational modifications (PTMs) are chemical changes made to a protein after (or during) translation: enzymes attach groups to side chains (phosphate, acetyl, methyl, sugars, lipids, ubiquitin), form disulfide bonds or cut the chain. Cells thus extend the chemistry of the 20 standard amino acids and can quickly switch proteins on or off, direct or label them.',
       how: [
         'Phosphorylation: a protein kinase transfers the γ-phosphate of ATP to the OH group of Ser, Thr or Tyr; ATP becomes ADP.',
@@ -45,7 +45,7 @@ export default {
 
   ubiquitine: {
     nl: {
-      kort: 'Eiwitten die beschadigd, fout gevouwen of niet meer nodig zijn, krijgen een label: een ketting van het kleine eiwit ubiquitine. Drie enzymen hangen dat label aan. Het proteasoom, een afbraakmachine, herkent het label en knipt het eiwit in stukjes, zodat de aminozuren hergebruikt kunnen worden.',
+      kort: 'Eiwitten die beschadigd, fout gevouwen of overbodig zijn, krijgen een label: een ketting van het kleine eiwit [[ubiquitine|ubiquitine]]. Het [[proteasoom|proteasoom]], een afbraakmachine, herkent dat label en knipt het eiwit in stukjes. Zo kunnen de aminozuren opnieuw gebruikt worden.',
       what: 'Het ubiquitine–proteasoomsysteem breekt de meeste kortlevende, beschadigde en misgevouwen eiwitten in cytosol en kern af. Ubiquitine (76 aminozuren) wordt via een cascade van drie enzymen (E1–E2–E3) aan Lys-residuen van het doeleiwit gekoppeld; een K48-gekoppelde keten van minstens ~4 ubiquitines stuurt het eiwit naar het 26S-proteasoom, dat het ontvouwt en tot korte peptiden knipt.',
       how: [
         'E1 activeert ubiquitine met ATP (ubiquitine-adenylaat, AMP + PPᵢ) en bindt het via een thio-esterbinding aan zijn actieve Cys.',
@@ -60,7 +60,7 @@ export default {
       why: 'Afbraak is even belangrijk als synthese: zo regelt de cel hoeveel van elk eiwit er is (bv. cyclines in de celcyclus), ruimt ze foute eiwitten op en levert ze peptiden voor antigeenpresentatie (MHC I). Het is het eindpunt van het hoofdverhaal: van gen tot eiwit tot afbraak en hergebruik van aminozuren.',
     },
     en: {
-      kort: 'Proteins that are damaged, misfolded or no longer needed get a label: a chain of the small protein ubiquitin. Three enzymes attach that label. The proteasome, a shredding machine, recognises the label and cuts the protein into pieces, so the amino acids can be reused.',
+      kort: 'Proteins that are damaged, misfolded or no longer needed get a label: a chain of the small protein [[ubiquitin|ubiquitine]]. The [[proteasome|proteasoom]], a shredding machine, recognises that label and cuts the protein into pieces. That way the amino acids can be reused.',
       what: 'The ubiquitin–proteasome system degrades most short-lived, damaged and misfolded proteins in the cytosol and nucleus. Ubiquitin (76 amino acids) is attached to Lys residues of the target protein by a cascade of three enzymes (E1–E2–E3); a K48-linked chain of at least ~4 ubiquitins sends the protein to the 26S proteasome, which unfolds it and cuts it into short peptides.',
       how: [
         'E1 activates ubiquitin using ATP (ubiquitin adenylate, AMP + PPᵢ) and binds it via a thioester bond to its active-site Cys.',
@@ -86,7 +86,7 @@ export default {
 
   chaperones: {
     nl: {
-      kort: 'Chaperones zijn helpereiwitten die andere eiwitten helpen vouwen. Ze schermen waterschuwe stukken af, zodat ketens niet aan elkaar klonteren, en verbruiken daarbij meestal ATP. Ze bepalen de vorm niet zelf: die zit in de aminozuurvolgorde.',
+      kort: '[[Chaperones|chaperone]] zijn helpereiwitten die andere eiwitten helpen vouwen. Ze schermen waterschuwe stukken af, zodat ketens niet aan elkaar klonteren; veel ervan verbruiken daarbij [[ATP|atp]]. De vorm zelf bepalen ze niet: die zit in de volgorde van de aminozuren.',
       what: 'Moleculaire chaperones zijn eiwitten die andere eiwitten helpen vouwen zonder deel uit te maken van de eindstructuur. Ze binden blootgestelde hydrofobe stukken van ongevouwen of misgevouwen ketens, voorkomen zo aggregatie in het drukke cytosol en verbruiken daarbij meestal ATP. De informatie voor de vouwing blijft in de sequentie zitten (Anfinsen); chaperones verhogen alleen het rendement.',
       how: [
         'Hsp70 bindt korte hydrofobe segmenten van ontstaande of ontvouwen ketens via zijn substraatbindend domein.',
@@ -102,7 +102,7 @@ export default {
       why: 'Zonder chaperones zouden veel eiwitten klonteren voor ze gevouwen zijn. Het chaperonenetwerk is de kern van proteostase; als het met de leeftijd verzwakt, kunnen aggregatieziekten zoals Alzheimer en Parkinson ontstaan.',
     },
     en: {
-      kort: 'Chaperones are helper proteins that help other proteins fold. They shield water-avoiding stretches so chains do not clump together, usually using ATP. They do not decide the shape themselves: that is in the amino acid order.',
+      kort: '[[Chaperones|chaperone]] are helper proteins that help other proteins fold. They shield water-avoiding stretches so chains do not clump together; many of them use up [[ATP|atp]] in the process. They do not decide the shape themselves: that is in the order of the amino acids.',
       what: 'Molecular chaperones are proteins that help other proteins fold without becoming part of the final structure. They bind exposed hydrophobic stretches of unfolded or misfolded chains, thereby preventing aggregation in the crowded cytosol, and usually consume ATP. The information for folding stays in the sequence (Anfinsen); chaperones only improve the yield.',
       how: [
         'Hsp70 binds short hydrophobic segments of nascent or unfolded chains via its substrate-binding domain.',
@@ -128,7 +128,7 @@ export default {
 
   glyco: {
     nl: {
-      kort: 'Veel eiwitten die de cel verlaten of in een membraan zitten, krijgen in het ER een boompje van suikers op een asparagine. Die suikers werken als een label voor de kwaliteitscontrole: zolang het eiwit niet goed gevouwen is, wordt het vastgehouden. In het Golgi wordt de suikerboom verder bijgewerkt.',
+      kort: 'Veel eiwitten die de cel verlaten of in een membraan zitten, krijgen in het [[ER|er]] een boompje van suikers. Die suikers werken als label voor de kwaliteitscontrole: zolang het eiwit niet goed gevouwen is, wordt het vastgehouden. In het [[Golgi|golgi]] wordt de suikerboom verder bijgewerkt.',
       what: 'Bij N-glycosylatie wordt een voorgebouwde suikerboom van 14 suikers (Glc3Man9GlcNAc2) in één blok op de amide-stikstof van een asparagine gezet, in het lumen van het ruw ER en meestal al tijdens de translatie. Alleen Asn in het motief N-X-S/T (X ≠ Pro) komt in aanmerking. De glucoses op de boom dienen daarna als "vouwlabel" in de kwaliteitscontrole van het ER; in het Golgi wordt de boom verder bewerkt.',
       how: [
         'De suikerboom wordt stap voor stap opgebouwd op het lipide dolichol-pyrofosfaat in het ER-membraan.',
@@ -143,7 +143,7 @@ export default {
       why: 'Glycanen helpen vouwen, beschermen tegen proteasen, bepalen de bestemming van eiwitten (bv. mannose-6-fosfaat voor lysosomen) en vormen herkenningssignalen aan het celoppervlak (bv. bloedgroepen). Fouten in N-glycosylatie veroorzaken aangeboren glycosyleringsziekten (CDG).',
     },
     en: {
-      kort: 'Many proteins that leave the cell or sit in a membrane get a small tree of sugars on an asparagine in the ER. Those sugars act as a label for quality control: as long as the protein is not folded correctly, it is held back. In the Golgi the sugar tree is trimmed and extended further.',
+      kort: 'Many proteins that leave the cell or sit in a membrane get a small tree of sugars in the [[ER|er]]. Those sugars act as a label for quality control: as long as the protein is not folded correctly, it is held back. In the [[Golgi|golgi]] the sugar tree is reworked further.',
       what: 'In N-glycosylation a pre-assembled tree of 14 sugars (Glc3Man9GlcNAc2) is transferred en bloc onto the amide nitrogen of an asparagine, in the lumen of the rough ER and usually during translation. Only Asn in the motif N-X-S/T (X ≠ Pro) qualifies. The glucoses on the tree then serve as a "folding tag" in ER quality control; in the Golgi the tree is processed further.',
       how: [
         'The sugar tree is built step by step on the lipid dolichol pyrophosphate in the ER membrane.',
@@ -167,7 +167,7 @@ export default {
 
   disulfide: {
     nl: {
-      kort: 'Een disulfidebrug is een stevige verbinding tussen twee cysteïnes die door de vouwing naast elkaar komen te liggen. Ze werkt als een nietje dat de vorm vastzet. Zulke bruggen ontstaan vooral in het ER, met hulp van het enzym PDI, en verstevigen vooral eiwitten die de cel verlaten.',
+      kort: 'Een disulfidebrug is een stevige verbinding tussen twee [[cysteïnes|cysteine]] die door de vouwing naast elkaar komen te liggen. Ze werkt als een nietje dat de vorm vastzet. Zulke bruggen ontstaan vooral in het [[ER|er]] en verstevigen vooral eiwitten die de cel verlaten.',
       what: 'Een disulfidebrug is een covalente S–S-binding tussen de thiolgroepen (–SH) van twee cysteïnes, die ver uit elkaar kunnen liggen in de sequentie maar door de vouwing naast elkaar komen. Het vormen ervan is een oxidatie. Bij de mens gebeurt dat vooral in het oxiderende lumen van het ER, met hulp van proteïne-disulfide-isomerase (PDI); in het reducerende cytosol blijven cysteïnes meestal vrij.',
       how: [
         'Door de vouwing komen twee Cys-zijketens dicht bij elkaar.',
@@ -181,7 +181,7 @@ export default {
       why: 'Disulfidebruggen stabiliseren vooral eiwitten die de cel verlaten (hormonen, antilichamen, verteringsenzymen). De cursus vermeldt ze als de enige veelvoorkomende covalente interactie tussen zijketens in de tertiaire en quaternaire structuur; niet elke Cys vormt echter een brug.',
     },
     en: {
-      kort: 'A disulfide bridge is a strong link between two cysteines that folding has brought next to each other. It works like a staple that locks the shape. Such bridges form mainly in the ER, helped by the enzyme PDI, and mostly reinforce proteins that leave the cell.',
+      kort: 'A disulfide bridge is a strong link between two [[cysteines|cysteine]] that folding has brought next to each other. It works like a staple that locks the shape. Such bridges form mainly in the [[ER|er]] and mostly reinforce proteins that leave the cell.',
       what: 'A disulfide bond is a covalent S–S bond between the thiol groups (–SH) of two cysteines, which may be far apart in the sequence but come together through folding. Forming it is an oxidation. In humans this happens mainly in the oxidising lumen of the ER, helped by protein disulfide isomerase (PDI); in the reducing cytosol cysteines mostly stay free.',
       how: [
         'Folding brings two Cys side chains close together.',
@@ -204,7 +204,7 @@ export default {
 
   golgi: {
     nl: {
-      kort: 'Eiwitten uit het ER reizen in kleine blaasjes naar het Golgi-apparaat, een stapel platte schijven. Daar worden ze verder afgewerkt, vooral hun suikers, en gesorteerd. Daarna gaan ze naar het celmembraan, naar buiten de cel of naar het lysosoom.',
+      kort: 'Eiwitten uit het [[ER|er]] reizen in kleine blaasjes naar het Golgi-apparaat, een stapel platte schijven. Daar worden ze afgewerkt (vooral hun suikers) en gesorteerd. Daarna gaan ze naar het celmembraan, naar buiten de cel of naar het [[lysosoom|lysosoom]].',
       what: 'De secretieroute brengt eiwitten die in het ruw ER gemaakt zijn via het Golgi-apparaat naar het plasmamembraan, naar buiten de cel of naar lysosomen. Het Golgi is een stapel afgeplatte cisternen (cis → medial → trans) plus het trans-Golginetwerk (TGN), waar eiwitten verder bewerkt en gesorteerd worden.',
       how: [
         'Correct gevouwen eiwitten verlaten het ER bij ER-uitgangsplaatsen in COPII-omhulde blaasjes.',
@@ -219,7 +219,7 @@ export default {
       why: 'Ongeveer een derde van alle eiwitten gaat door de secretieroute: hormonen, antilichamen, receptoren, membraaneiwitten en lysosomale enzymen. Fouten in sortering of glycosylering veroorzaken ziekten, bv. I-cell disease wanneer het M6P-merk ontbreekt.',
     },
     en: {
-      kort: 'Proteins from the ER travel in small vesicles to the Golgi apparatus, a stack of flat discs. There they are finished further, especially their sugars, and sorted. They then go to the cell membrane, out of the cell or to the lysosome.',
+      kort: 'Proteins from the [[ER|er]] travel in small vesicles to the Golgi apparatus, a stack of flat discs. There they are finished (especially their sugars) and sorted. They then go to the cell membrane, out of the cell or to the [[lysosome|lysosoom]].',
       what: 'The secretory pathway carries proteins made in the rough ER via the Golgi apparatus to the plasma membrane, out of the cell or to lysosomes. The Golgi is a stack of flattened cisternae (cis → medial → trans) plus the trans-Golgi network (TGN), where proteins are further processed and sorted.',
       how: [
         'Correctly folded proteins leave the ER at ER exit sites in COPII-coated vesicles.',
@@ -242,7 +242,7 @@ export default {
 
   misvouwing: {
     nl: {
-      kort: 'Soms vouwt een eiwit verkeerd, bijvoorbeeld door een mutatie, stress of ouderdom. Fout gevouwen ketens kunnen aan elkaar plakken tot klonten of lange vezels (amyloïd). Zulke klonten spelen een rol bij ziekten als Alzheimer en Parkinson.',
+      kort: 'Soms vouwt een eiwit verkeerd, bijvoorbeeld door een [[mutatie|mutatie]], stress of ouderdom. Fout gevouwen ketens kunnen aan elkaar plakken tot klonten of lange vezels ([[amyloïd|amyloide]]). Zulke klonten spelen een rol bij ziekten als Alzheimer en Parkinson.',
       what: 'Eiwitten kunnen verkeerd vouwen door mutaties, stress of ouderdom. Misgevouwen ketens tonen hydrofobe stukken en kunnen aggregeren: tot amorfe klonten of tot geordende amyloïdfibrillen met een cross-β-structuur. Zulke aggregaten (en vooral kleinere oligomeren) worden in verband gebracht met o.a. Alzheimer, Parkinson, type 2-diabetes en prionziekten.',
       how: [
         'Chaperones proberen misgevouwen eiwitten opnieuw te vouwen; lukt dat niet, dan worden ze via ubiquitine naar het proteasoom gestuurd (of via autofagie afgebroken).',
@@ -256,7 +256,7 @@ export default {
       why: 'Misvouwing laat zien dat de sequentie niet de enige factor is: dezelfde keten kan een functionele en een ziekmakende vorm aannemen. Begrip van nucleatie en de cross-β-structuur is de basis voor onderzoek naar geneesmiddelen tegen neurodegeneratieve ziekten.',
     },
     en: {
-      kort: 'Sometimes a protein folds incorrectly, for example because of a mutation, stress or ageing. Misfolded chains can stick together into clumps or long fibres (amyloid). Such clumps play a role in diseases like Alzheimer\'s and Parkinson\'s.',
+      kort: 'Sometimes a protein folds incorrectly, for example because of a [[mutation|mutatie]], stress or ageing. Misfolded chains can stick together into clumps or long fibres ([[amyloid|amyloide]]). Such clumps play a role in diseases like Alzheimer’s and Parkinson’s.',
       what: 'Proteins can misfold because of mutations, stress or ageing. Misfolded chains expose hydrophobic stretches and can aggregate: into amorphous clumps or into ordered amyloid fibrils with a cross-β structure. Such aggregates (and especially smaller oligomers) are linked to e.g. Alzheimer\'s, Parkinson\'s, type 2 diabetes and prion diseases.',
       how: [
         'Chaperones try to refold misfolded proteins; if that fails they are sent via ubiquitin to the proteasome (or degraded by autophagy).',

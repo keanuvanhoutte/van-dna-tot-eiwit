@@ -28,7 +28,7 @@ const S = {
 export default {
   translatie: {
     nl: {
-      kort: 'Translatie is de stap waarin een eiwit gemaakt wordt volgens de boodschap in het mRNA. Het ribosoom leest het mRNA per drie letters (een codon), en tRNA\'s brengen telkens het passende aminozuur. Zo wordt de genetische informatie eindelijk een werkend eiwit.',
+      kort: 'Bij translatie maakt de cel een eiwit volgens de boodschap in het [[mRNA|mrna]]. Het [[ribosoom|ribosoom]] leest het mRNA per drie letters, en [[tRNA’s|trna]] brengen telkens het passende aminozuur. Zo wordt een gen eindelijk een werkend eiwit.',
       what: 'Translatie is het vertalen van de nucleotidevolgorde van een mRNA in de aminozuurvolgorde van een eiwit. Ribosomen lezen het mRNA 5\'→3\' per codon (3 nucleotiden); tRNA\'s brengen de bijpassende aminozuren aan, die tot een keten worden gekoppeld van N- naar C-terminus.',
       how: [
         'Initiatie: de kleine subeenheid (40S) met het initiator-tRNA (Met-tRNAi) wordt via eIF4F naar de 5\'-cap gebracht en scant naar het startcodon AUG; daarna koppelt de grote subeenheid (60S) → 80S.',
@@ -42,7 +42,7 @@ export default {
       why: 'Hier wordt genetische informatie eindelijk functie: de volgorde van aminozuren bepaalt hoe het eiwit vouwt (primaire → tertiaire structuur). Veel antibiotica werken door het bacteriële ribosoom te remmen, en mRNA-vaccins maken gebruik van precies deze machinerie.',
     },
     en: {
-      kort: 'Translation is the step in which a protein is made according to the message in the mRNA. The ribosome reads the mRNA three letters (one codon) at a time, and tRNAs bring the matching amino acid each time. This is where genetic information finally becomes a working protein.',
+      kort: 'In translation the cell makes a protein following the message in the [[mRNA|mrna]]. The [[ribosome|ribosoom]] reads the mRNA three letters at a time, and [[tRNAs|trna]] bring the matching amino acid each time. This is how a gene finally becomes a working protein.',
       what: 'Translation converts the nucleotide sequence of an mRNA into the amino-acid sequence of a protein. Ribosomes read the mRNA 5\'→3\' codon by codon (3 nucleotides); tRNAs bring the matching amino acids, which are linked into a chain from N to C terminus.',
       how: [
         'Initiation: the small subunit (40S) carrying the initiator tRNA (Met-tRNAi) is recruited via eIF4F to the 5\' cap and scans to the AUG start codon; then the large subunit (60S) joins → 80S.',
@@ -60,7 +60,7 @@ export default {
 
   initiatie: {
     nl: {
-      kort: 'De initiatie is de start van de translatie. De kleine subeenheid van het ribosoom bindt vooraan op het mRNA en zoekt het startcodon AUG; daarna komt de grote subeenheid erbij. Zo begint het lezen op de juiste plek, anders zou er een verkeerd of ingekort eiwit ontstaan.',
+      kort: 'De initiatie is de start van de translatie. De kleine helft van het [[ribosoom|ribosoom]] zoekt op het mRNA het startsein AUG, het startcodon; daarna komt de grote helft erbij. Zo begint het lezen op de juiste plek, anders ontstaat een fout eiwit.',
       what: 'Bij de initiatie wordt het ribosoom op het juiste startcodon gezet, zodat het leesraam vastligt. Eukaryoten gebruiken daarvoor de 5\'-cap en scannen; bacteriën gebruiken de Shine–Dalgarno-sequentie.',
       how: [
         'eIF2·GTP bindt Met-tRNAi (ternair complex).',
@@ -74,7 +74,7 @@ export default {
       why: 'De initiatie is de belangrijkste regelstap van de translatie (bv. via fosforylering van eIF2 bij stress). Een fout startcodon zou een verkeerd of ingekort eiwit opleveren.',
     },
     en: {
-      kort: 'Initiation is the start of translation. The small ribosomal subunit binds near the front of the mRNA and searches for the start codon AUG; then the large subunit joins. This makes reading begin at the right spot; otherwise a wrong or shortened protein would be made.',
+      kort: 'Initiation is the start of translation. The small half of the [[ribosome|ribosoom]] searches the mRNA for the start signal AUG, the start codon; then the large half joins. This makes reading begin at the right spot; otherwise a wrong protein is made.',
       what: 'Initiation places the ribosome on the correct start codon so that the reading frame is fixed. Eukaryotes use the 5\' cap and scanning; bacteria use the Shine–Dalgarno sequence.',
       how: [
         'eIF2·GTP binds Met-tRNAi (ternary complex).',
@@ -92,7 +92,7 @@ export default {
 
   elongatie: {
     nl: {
-      kort: 'De elongatie is de herhaalde cyclus waarin de eiwitketen groeit. Per ronde komt er een tRNA met een aminozuur aan, controleert het ribosoom of het past, koppelt het aminozuur aan de keten en schuift het één codon op. Zo groeit het eiwit met één aminozuur per codon.',
+      kort: 'De elongatie is de herhaalde ronde waarin de eiwitketen groeit. Telkens brengt een [[tRNA|trna]] een aminozuur, controleert het ribosoom of het past en koppelt het aan de keten. Daarna schuift het ribosoom één [[codon|codon]] op.',
       what: 'De elongatiecyclus verlengt de keten met één aminozuur per codon. Elke ronde bestaat uit aanlevering, decodering, peptidebinding en translocatie.',
       how: [
         'eEF1A·GTP (bacterie: EF-Tu) brengt een aminoacyl-tRNA naar de A-plaats.',
@@ -105,7 +105,7 @@ export default {
       why: 'De nauwkeurigheid komt uit twee controles: het laden van de tRNA\'s (aaRS) en de decodering in het ribosoom. Antibiotica als tetracycline (A-plaats) en erytromycine (uitgangstunnel) grijpen hier in bij bacteriën.',
     },
     en: {
-      kort: 'Elongation is the repeating cycle in which the protein chain grows. Each round a tRNA with an amino acid arrives, the ribosome checks the fit, links the amino acid to the chain and moves one codon on. This way the protein grows by one amino acid per codon.',
+      kort: 'Elongation is the repeating round in which the protein chain grows. Each time a [[tRNA|trna]] brings an amino acid, the ribosome checks the fit and links it to the chain. Then the ribosome moves one [[codon|codon]] on.',
       what: 'The elongation cycle extends the chain by one amino acid per codon. Each round consists of delivery, decoding, peptide bond formation and translocation.',
       how: [
         'eEF1A·GTP (bacteria: EF-Tu) delivers an aminoacyl-tRNA to the A site.',
@@ -122,7 +122,7 @@ export default {
 
   terminatie: {
     nl: {
-      kort: 'De terminatie is het einde van de translatie. Bij een stopcodon past geen tRNA; in de plaats daarvan bindt een stopeiwit (release factor) dat de afgewerkte keten loslaat. Daarna valt het ribosoom uiteen, zodat het opnieuw gebruikt kan worden.',
+      kort: 'De terminatie is het einde van de translatie. Op een stopcodon past geen [[tRNA|trna]]; een stopeiwit bindt en laat de afgewerkte keten los. Daarna valt het ribosoom uit elkaar, zodat het opnieuw gebruikt kan worden.',
       what: 'Bij een stopcodon (UAA, UAG, UGA) is er geen passend tRNA. Een release factor bindt de A-plaats en laat de keten los; daarna wordt het ribosoom gerecycleerd.',
       how: [
         'eRF1 (vorm lijkt op een tRNA) herkent alle drie stopcodons in de A-plaats.',
@@ -135,7 +135,7 @@ export default {
       why: 'Een vroegtijdig stopcodon (nonsense-mutatie) levert een ingekort eiwit op en activeert vaak nonsense-mediated decay. Hercodering van UGA/UAG geeft selenocysteïne en pyrrolysine.',
     },
     en: {
-      kort: 'Termination is the end of translation. No tRNA fits a stop codon; instead a stop protein (release factor) binds and releases the finished chain. The ribosome then comes apart so it can be used again.',
+      kort: 'Termination is the end of translation. No [[tRNA|trna]] fits a stop codon; a stop protein binds instead and releases the finished chain. The ribosome then comes apart so it can be used again.',
       what: 'At a stop codon (UAA, UAG, UGA) no matching tRNA exists. A release factor binds the A site and releases the chain; then the ribosome is recycled.',
       how: [
         'eRF1 (shaped like a tRNA) recognises all three stop codons in the A site.',
@@ -152,7 +152,7 @@ export default {
 
   ribosoom: {
     nl: {
-      kort: 'Het ribosoom is de machine die eiwitten bouwt. Het bestaat uit een kleine en een grote subeenheid, gemaakt van ribosomaal RNA (rRNA) en eiwitten. Het eigenlijke koppelwerk gebeurt door het rRNA zelf, niet door een eiwit.',
+      kort: 'Het ribosoom is de machine die eiwitten bouwt. Het heeft een kleine en een grote helft, gemaakt van [[ribosomaal RNA|rrna]] en eiwitten. Het koppelen van de aminozuren doet het RNA zelf, niet een eiwit.',
       what: 'Het ribosoom is een groot RNA–eiwitcomplex dat eiwitten maakt. Het humane 80S-ribosoom bestaat uit een kleine (40S) en een grote (60S) subeenheid; bacteriën hebben een kleiner 70S-ribosoom (30S + 50S). Het katalytische hart is van rRNA: het ribosoom is een ribozym.',
       how: [
         'De 40S-subeenheid (18S rRNA + 33 eiwitten) bindt het mRNA en bevat het decodeercentrum.',
@@ -166,7 +166,7 @@ export default {
       why: 'Het ribosoom is het bewijs dat RNA zowel informatie kan dragen als katalyseren (RNA-wereldhypothese). Door de verschillen tussen 70S en 80S kunnen antibiotica selectief bacteriën remmen; 16S rRNA wordt gebruikt om bacteriën te identificeren (metagenomics).',
     },
     en: {
-      kort: 'The ribosome is the machine that builds proteins. It consists of a small and a large subunit, made of ribosomal RNA (rRNA) and proteins. The actual linking work is done by the rRNA itself, not by a protein.',
+      kort: 'The ribosome is the machine that builds proteins. It has a small and a large half, made of [[ribosomal RNA|rrna]] and proteins. The linking of the amino acids is done by the RNA itself, not by a protein.',
       what: 'The ribosome is a large RNA–protein complex that makes proteins. The human 80S ribosome consists of a small (40S) and a large (60S) subunit; bacteria have a smaller 70S ribosome (30S + 50S). Its catalytic heart is made of rRNA: the ribosome is a ribozyme.',
       how: [
         'The 40S subunit (18S rRNA + 33 proteins) binds the mRNA and contains the decoding centre.',
@@ -184,7 +184,7 @@ export default {
 
   trna: {
     nl: {
-      kort: 'Een tRNA (transfer-RNA) is een klein RNA dat als vertaler werkt. Aan het ene uiteinde zit het anticodon, dat een codon op het mRNA herkent; aan het andere uiteinde hangt het bijpassende aminozuur. Zo verbindt het de taal van het RNA met die van het eiwit.',
+      kort: 'Een tRNA is een klein RNA dat als vertaler werkt. Aan het ene uiteinde herkent het [[anticodon|anticodon]] een [[codon|codon]] op het mRNA; aan het andere uiteinde hangt het passende aminozuur. Zo verbindt het de taal van RNA met die van eiwit.',
       what: 'Transfer-RNA is de adapter tussen codon en aminozuur: ≈ 76 nucleotiden, met aan het ene uiteinde het anticodon en aan het andere het 3\'-CCA waaraan het aminozuur hangt. In 2D tekent men een klaverblad, in 3D is het een L-vorm.',
       how: [
         'Basenparing binnen de streng vormt vier stammen: acceptorstam, D-arm, anticodonarm en TΨC-arm (plus een variabele lus).',
@@ -198,7 +198,7 @@ export default {
       why: 'De L-vorm legt precies de afstand tussen het decodeercentrum (40S) en het peptidyltransferasecentrum (60S) af. tRNA was ook de eerste grote RNA-structuur die liet zien dat RNA complexe 3D-vormen aanneemt.',
     },
     en: {
-      kort: 'A tRNA (transfer RNA) is a small RNA that acts as a translator. At one end sits the anticodon, which recognises a codon on the mRNA; at the other end hangs the matching amino acid. It thus connects the language of RNA with that of protein.',
+      kort: 'A tRNA is a small RNA that works as a translator. At one end the [[anticodon|anticodon]] recognises a [[codon|codon]] on the mRNA; at the other end hangs the matching amino acid. It thus connects the language of RNA with that of protein.',
       what: 'Transfer RNA is the adapter between codon and amino acid: ≈ 76 nucleotides, with the anticodon at one end and the 3\'-CCA carrying the amino acid at the other. In 2D it is drawn as a cloverleaf, in 3D it is an L shape.',
       how: [
         'Base pairing within the strand forms four stems: acceptor stem, D arm, anticodon arm and TΨC arm (plus a variable loop).',
@@ -216,7 +216,7 @@ export default {
 
   aars: {
     nl: {
-      kort: 'Aminoacyl-tRNA-synthetasen zijn enzymen die elk tRNA met het juiste aminozuur laden. Veel ervan controleren hun eigen werk en verbeteren fouten. Dat is belangrijk, want het ribosoom controleert later alleen het codon, niet het aminozuur.',
+      kort: 'Aminoacyl-tRNA-synthetasen zijn enzymen die aan elk [[tRNA|trna]] het juiste aminozuur hangen. Veel ervan controleren hun eigen werk en verbeteren fouten. Dat is belangrijk, want het ribosoom controleert later alleen het [[codon|codon]], niet het aminozuur.',
       what: 'Aminoacyl-tRNA-synthetasen (aaRS) koppelen elk aminozuur aan de juiste tRNA\'s. Zij "vertalen" eigenlijk de genetische code: het ribosoom controleert daarna alleen nog codon–anticodon, niet het aminozuur.',
       how: [
         'Activering: aminozuur + ATP → aminoacyl-AMP (aminoacyl-adenylaat) + PPi.',
@@ -229,7 +229,7 @@ export default {
       why: 'Fouten van aaRS worden niet meer door het ribosoom opgevangen, daarom is proeflezen cruciaal. Mutaties in (mitochondriale) aaRS veroorzaken neurologische ziekten; aaRS van bacteriën zijn doelwit van antibiotica (bv. mupirocine op IleRS).',
     },
     en: {
-      kort: 'Aminoacyl-tRNA synthetases are enzymes that load each tRNA with the correct amino acid. Many of them check their own work and correct mistakes. This matters because the ribosome later checks only the codon, not the amino acid.',
+      kort: 'Aminoacyl-tRNA synthetases are enzymes that attach the correct amino acid to each [[tRNA|trna]]. Many of them check their own work and fix mistakes. This matters because the ribosome later checks only the [[codon|codon]], not the amino acid.',
       what: 'Aminoacyl-tRNA synthetases (aaRS) attach each amino acid to the correct tRNAs. They actually "translate" the genetic code: the ribosome afterwards checks only codon–anticodon, not the amino acid.',
       how: [
         'Activation: amino acid + ATP → aminoacyl-AMP (aminoacyl adenylate) + PPi.',
@@ -246,7 +246,7 @@ export default {
 
   codon: {
     nl: {
-      kort: 'De genetische code is de \'woordenlijst\' die zegt welk aminozuur bij elk codon (groepje van drie basen) hoort. Er is één startcodon en er zijn drie stopcodons; de meeste aminozuren hebben meerdere codons. Bijna alle levende wezens gebruiken dezelfde code.',
+      kort: 'De genetische code is de woordenlijst die zegt welk aminozuur bij elk [[codon|codon]] (drie letters) hoort. Er is één startcodon en er zijn drie stopcodons; de meeste aminozuren hebben meerdere codons. Bijna alle levende wezens gebruiken dezelfde code.',
       what: 'De genetische code koppelt elk triplet van nucleotiden (codon) aan een aminozuur of een stopsignaal. Met 4 basen zijn er 4³ = 64 codons: 61 coderen voor de 20 aminozuren, 3 zijn stopcodons.',
       how: [
         'Het mRNA wordt 5\'→3\' in niet-overlappende tripletten gelezen, zonder scheidingstekens.',
@@ -260,7 +260,7 @@ export default {
       why: 'De code is (bijna) universeel, wat gemeenschappelijke afstamming aantoont en genetische technologie mogelijk maakt. De degeneratie buffert mutaties: veel 3e-positiemutaties zijn stil.',
     },
     en: {
-      kort: 'The genetic code is the \'dictionary\' that says which amino acid belongs to each codon (group of three bases). There is one start codon and there are three stop codons; most amino acids have several codons. Almost all living things use the same code.',
+      kort: 'The genetic code is the dictionary that says which amino acid belongs to each [[codon|codon]] (three letters). There is one start codon and there are three stop codons; most amino acids have several codons. Almost all living things use the same code.',
       what: 'The genetic code links each nucleotide triplet (codon) to an amino acid or a stop signal. With 4 bases there are 4³ = 64 codons: 61 encode the 20 amino acids, 3 are stop codons.',
       how: [
         'The mRNA is read 5\'→3\' in non-overlapping triplets, without punctuation.',
@@ -278,7 +278,7 @@ export default {
 
   ribogenese: {
     nl: {
-      kort: 'Ribosoombiogenese is de bouw van nieuwe ribosomen. Ze begint in de nucleolus in de kern, waar ribosomaal RNA gemaakt, aangepast en op maat geknipt wordt en samengevoegd met eiwitten. De twee subeenheden worden apart naar het cytoplasma gebracht en daar afgewerkt.',
+      kort: 'Ribosoombiogenese is de bouw van nieuwe ribosomen. In de nucleolus, een plek in de kern, wordt [[ribosomaal RNA|rrna]] gemaakt, aangepast, geknipt en met eiwitten samengevoegd. De twee helften gaan apart door de [[kernporiën|kernporie]] naar buiten en worden daar afgewerkt.',
       what: 'Ribosoombiogenese is de bouw van nieuwe ribosomale subeenheden. Ze begint in de nucleolus met de transcriptie van rDNA en eindigt in het cytoplasma, waar 40S en 60S hun laatste rijping krijgen.',
       how: [
         'RNA-polymerase I schrijft de rDNA-herhalingen (op chr 13, 14, 15, 21, 22) af tot één 47S pre-rRNA met 18S, 5,8S en 28S.',
@@ -292,7 +292,7 @@ export default {
       why: 'Een groeiende cel besteedt een groot deel van zijn transcriptie aan rRNA. Fouten in ribosoombiogenese veroorzaken "ribosomopathieën" (bv. Diamond–Blackfan-anemie), en de nucleolus is een sensor voor celstress.',
     },
     en: {
-      kort: 'Ribosome biogenesis is the construction of new ribosomes. It starts in the nucleolus in the nucleus, where ribosomal RNA is made, modified, trimmed and combined with proteins. The two subunits are sent separately to the cytoplasm and finished there.',
+      kort: 'Ribosome biogenesis is the building of new ribosomes. In the nucleolus, a spot in the nucleus, [[ribosomal RNA|rrna]] is made, modified, cut and joined with proteins. The two halves leave separately through the [[nuclear pores|kernporie]] and are finished outside.',
       what: 'Ribosome biogenesis is the construction of new ribosomal subunits. It starts in the nucleolus with transcription of rDNA and ends in the cytoplasm, where 40S and 60S receive their final maturation.',
       how: [
         'RNA polymerase I transcribes the rDNA repeats (on chr 13, 14, 15, 21, 22) into one 47S pre-rRNA containing 18S, 5.8S and 28S.',
@@ -310,7 +310,7 @@ export default {
 
   seleno: {
     nl: {
-      kort: 'Selenocysteïne en pyrrolysine zijn twee zeldzame extra aminozuren. Ze worden ingebouwd op een codon dat normaal \'stop\' betekent: selenocysteïne op UGA wanneer een extra signaal in het mRNA dat aangeeft, pyrrolysine op UAG, en dat alleen in sommige microben. Dat toont dat de genetische code niet helemaal vastligt.',
+      kort: 'Selenocysteïne en pyrrolysine zijn twee zeldzame extra aminozuren. Ze worden ingebouwd op een [[codon|codon]] dat normaal ‘stop’ betekent: selenocysteïne op UGA als een extra signaal in het mRNA dat aangeeft, pyrrolysine op UAG in enkele microben. Zo ligt de genetische code niet helemaal vast.',
       what: 'Selenocysteïne (Sec, U) en pyrrolysine (Pyl, O) zijn het 21e en 22e genetisch gecodeerde aminozuur. Ze worden ingebouwd op een stopcodon dat door extra signalen een nieuwe betekenis krijgt (hercodering): UGA voor Sec, UAG voor Pyl.',
       how: [
         'Sec wordt op zijn eigen tRNA gemaakt: seryl-tRNA-synthetase laadt tRNA-Sec (anticodon UCA) met serine.',
@@ -323,7 +323,7 @@ export default {
       why: 'Selenoproteïnen zijn belangrijk voor de redoxbalans en het schildklierhormoon; seleniumtekort of mutaties in SECISBP2 of tRNA-Sec geven ziekte. Het laat zien dat de genetische code niet volledig vastligt.',
     },
     en: {
-      kort: 'Selenocysteine and pyrrolysine are two rare extra amino acids. They are built in at a codon that normally means \'stop\': selenocysteine at UGA when an extra signal in the mRNA says so, pyrrolysine at UAG, and only in some microbes. This shows that the genetic code is not completely fixed.',
+      kort: 'Selenocysteine and pyrrolysine are two rare extra amino acids. They are built in at a [[codon|codon]] that normally means ‘stop’: selenocysteine at UGA when an extra signal in the mRNA says so, pyrrolysine at UAG in a few microbes. So the genetic code is not completely fixed.',
       what: 'Selenocysteine (Sec, U) and pyrrolysine (Pyl, O) are the 21st and 22nd genetically encoded amino acids. They are inserted at a stop codon that gets a new meaning through extra signals (recoding): UGA for Sec, UAG for Pyl.',
       how: [
         'Sec is made on its own tRNA: seryl-tRNA synthetase charges tRNA-Sec (anticodon UCA) with serine.',
@@ -340,7 +340,7 @@ export default {
 
   er: {
     nl: {
-      kort: 'Eiwitten die de cel uit moeten of in een membraan horen, worden meestal al tijdens hun aanmaak naar het ER gebracht, een membraannetwerk in de cel. Een \'adreslabel\' aan het begin van het eiwit (het signaalpeptide) wordt herkend door een herkenningsdeeltje (SRP), dat het ribosoom naar een kanaal in het ER-membraan leidt. Daar schuift de keten tijdens het maken het ER in.',
+      kort: 'Eiwitten die de cel uit moeten of in een membraan horen, gaan meestal al tijdens hun aanmaak het ER in, een netwerk van membranen. Een adreslabel vooraan het eiwit wordt herkend door een deeltje dat het [[ribosoom|ribosoom]] naar een kanaal in het ER brengt. Daar schuift de keten tijdens het maken het ER in.',
       what: 'Eiwitten voor secretie, het plasmamembraan, lysosomen of het ER zelf worden al tijdens de translatie naar het ruw ER gebracht. Een N-terminaal signaalpeptide wordt herkend door het signal recognition particle (SRP), dat het ribosoom naar het Sec61-translocon leidt.',
       how: [
         'Het signaalpeptide (≈ 15–30 aa: positief n-gebied, hydrofobe kern, polaire knipplaats) komt uit de uitgangstunnel.',
@@ -354,7 +354,7 @@ export default {
       why: 'Ongeveer een derde van de menselijke eiwitten gaat via het ER (secretie- en membraaneiwitten). Het ER is ook de plaats van vouwing met chaperones, disulfidebruggen en kwaliteitscontrole voordat eiwitten naar het Golgi gaan.',
     },
     en: {
-      kort: 'Proteins that must leave the cell or belong in a membrane are usually brought to the ER, a membrane network in the cell, while they are still being made. An \'address label\' at the start of the protein (the signal peptide) is recognised by a recognition particle (SRP), which guides the ribosome to a channel in the ER membrane. There the chain threads into the ER as it is made.',
+      kort: 'Proteins that must leave the cell or belong in a membrane usually enter the ER, a network of membranes, while they are still being made. An address label at the front of the protein is recognised by a particle that brings the [[ribosome|ribosoom]] to a channel in the ER. There the chain threads into the ER as it is made.',
       what: 'Proteins destined for secretion, the plasma membrane, lysosomes or the ER itself are brought to the rough ER while they are still being translated. An N-terminal signal peptide is recognised by the signal recognition particle (SRP), which guides the ribosome to the Sec61 translocon.',
       how: [
         'The signal peptide (≈ 15–30 aa: positive n-region, hydrophobic core, polar cleavage region) emerges from the exit tunnel.',

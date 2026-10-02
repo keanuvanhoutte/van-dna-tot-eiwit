@@ -9,7 +9,7 @@ const CHATTERJEE = { t: 'Chatterjee & Walker (2017) Mechanisms of DNA damage, re
 export default {
   replicatie: {
     nl: {
-      kort: 'Voordat een cel deelt, kopieert ze al haar DNA precies één keer. Elke kopie bestaat uit één oude en één nieuwe streng. Zo krijgt elke dochtercel dezelfde genetische informatie.',
+      kort: 'Voordat een cel deelt, kopieert ze al haar DNA precies één keer: de [[replicatie|replicatie]]. Elke kopie heeft één oude en één nieuwe streng. Zo krijgt elke dochtercel hetzelfde DNA.',
       what: 'Vóór elke celdeling wordt het volledige genoom precies één keer gekopieerd. Replicatie is semi-conservatief: elke dochtermolecule bestaat uit één oude en één nieuwe streng. Bij de mens start ze op vele origins per chromosoom en loopt ze vanuit elke origin in twee richtingen.',
       how: [
         'G1-fase: ORC bindt de origins; samen met Cdc6 en Cdt1 wordt het MCM2-7-complex als inactieve dubbelhexameer rond dubbelstrengig DNA gelegd (licentie).',
@@ -24,7 +24,7 @@ export default {
       why: 'Replicatie zorgt ervoor dat elke dochtercel dezelfde genetische informatie krijgt. Omdat licentie (G1) en vuren (S) gescheiden zijn, wordt elk stuk DNA maar één keer per celcyclus gekopieerd; fouten in dit systeem leiden tot genoominstabiliteit, een kenmerk van kanker.',
     },
     en: {
-      kort: 'Before a cell divides, it copies all of its DNA exactly once. Each copy consists of one old and one new strand. This way every daughter cell receives the same genetic information.',
+      kort: 'Before a cell divides, it copies all of its DNA exactly once: [[replication|replicatie]]. Each copy has one old and one new strand. This way every daughter cell gets the same DNA.',
       what: 'Before every cell division the whole genome is copied exactly once. Replication is semi-conservative: each daughter molecule consists of one old and one new strand. In humans it starts at many origins per chromosome and proceeds in two directions from each origin.',
       how: [
         'G1 phase: ORC binds the origins; together with Cdc6 and Cdt1 the MCM2-7 complex is loaded around double-stranded DNA as an inactive double hexamer (licensing).',
@@ -49,7 +49,7 @@ export default {
 
   replisoom: {
     nl: {
-      kort: 'Het replisoom is de eiwitmachine die DNA kopieert op de plek waar de dubbele helix opengaat (de replicatievork). Eén enzym ritst het DNA open, andere bouwen de nieuwe strengen. Omdat de twee strengen tegengesteld lopen, groeit de ene in één stuk en de andere in korte stukjes.',
+      kort: 'Het replisoom is de eiwitmachine die DNA kopieert. Eén enzym ritst de dubbele [[helix|dubbelhelix]] open, [[DNA-polymerasen|polymerase]] bouwen de nieuwe strengen. Omdat de strengen tegengesteld lopen, groeit de ene in één stuk en de andere in stukjes.',
       what: 'Het replisoom is de eiwitmachine aan de replicatievork. De CMG-helicase ontwindt het DNA, drie DNA-polymerasen maken de nieuwe strengen, de klem PCNA houdt ze op het DNA en RPA beschermt het enkelstrengige DNA. Omdat polymerasen alleen 5\'→3\' kunnen verlengen, groeit één streng continu en de andere in stukken.',
       how: [
         "CMG (Cdc45–MCM2-7–GINS) omsluit de leidende-streng-matrijs en loopt er 3'→5' over; vóór de vork halen topo-isomerasen de positieve supercoils weg.",
@@ -65,7 +65,7 @@ export default {
       why: 'De opbouw van het replisoom verklaart waarom DNA-replicatie zo snel én nauwkeurig is, en waarom lineaire chromosomen een eindreplicatieprobleem hebben (telomeren). Veel kankermutaties (bv. in POLE) en geneesmiddelen (topo-isomeraseremmers) grijpen hier aan.',
     },
     en: {
-      kort: 'The replisome is the protein machine that copies DNA where the double helix opens up (the replication fork). One enzyme unzips the DNA, others build the new strands. Because the two strands run in opposite directions, one grows in one piece and the other in short pieces.',
+      kort: 'The replisome is the protein machine that copies DNA. One enzyme unzips the double [[helix|dubbelhelix]], [[DNA polymerases|polymerase]] build the new strands. Because the strands run in opposite directions, one grows in one piece and the other in pieces.',
       what: 'The replisome is the protein machine at the replication fork. The CMG helicase unwinds the DNA, three DNA polymerases make the new strands, the PCNA clamp keeps them on the DNA and RPA protects the single-stranded DNA. Because polymerases can only extend 5\'→3\', one strand grows continuously and the other in pieces.',
       how: [
         "CMG (Cdc45–MCM2-7–GINS) encircles the leading-strand template and moves 3'→5' along it; ahead of the fork topoisomerases remove the positive supercoils.",
@@ -91,7 +91,7 @@ export default {
 
   ssdna: {
     nl: {
-      kort: 'Als de dubbele helix opengaat, liggen de basen van de losse strengen bloot. Dat enkelstrengige DNA raakt makkelijk beschadigd. Het eiwit RPA bedekt het meteen, beschermt het en geeft het door aan de juiste enzymen.',
+      kort: 'Als de dubbele [[helix|dubbelhelix]] opengaat, liggen de basen van de losse strengen bloot. Zo’n losse streng raakt makkelijk beschadigd. Het eiwit RPA bedekt ze meteen en geeft ze door aan de juiste enzymen.',
       what: 'Enkelstrengig DNA (ssDNA) ontstaat tijdelijk bij replicatie, herstel en recombinatie. Omdat de basen niet gepaard zijn, is het chemisch en structureel kwetsbaar. Bij eukaryoten wordt het meteen bedekt door RPA (bij bacteriën door SSB).',
       how: [
         'De helicase aan de vork of een nuclease bij herstel legt enkelstrengig DNA bloot.',
@@ -105,7 +105,7 @@ export default {
       why: 'Blootliggend ssDNA is een zwakke plek: het muteert sneller, breekt makkelijker en kan afwijkende structuren vormen. RPA beschermt het en fungeert tegelijk als alarmsignaal en als platform dat de juiste enzymen doorlaat.',
     },
     en: {
-      kort: 'When the double helix opens, the bases of the single strands are exposed. This single-stranded DNA is easily damaged. The protein RPA coats it at once, protects it and hands it over to the right enzymes.',
+      kort: 'When the double [[helix|dubbelhelix]] opens, the bases of the single strands are exposed. Such a single strand is easily damaged. The protein RPA coats it at once and hands it on to the right enzymes.',
       what: 'Single-stranded DNA (ssDNA) forms transiently during replication, repair and recombination. Because its bases are unpaired, it is chemically and structurally vulnerable. In eukaryotes it is coated immediately by RPA (in bacteria by SSB).',
       how: [
         'The helicase at the fork, or a nuclease during repair, exposes single-stranded DNA.',
@@ -128,7 +128,7 @@ export default {
 
   telomeren: {
     nl: {
-      kort: 'Telomeren zijn de uiteinden van onze chromosomen: lange reeksen van dezelfde korte DNA-herhaling. Ze worden bij elke deling iets korter, tenzij het enzym telomerase ze weer verlengt. Een beschermende eiwitkap zorgt dat de cel ze niet als DNA-breuk behandelt.',
+      kort: 'Telomeren zijn de uiteinden van onze [[chromosomen|chromosoom]]: lange reeksen van dezelfde korte DNA-herhaling. Ze worden bij elke deling iets korter, tenzij het enzym telomerase ze verlengt. Een eiwitkap zorgt dat de cel ze niet als DNA-breuk ziet.',
       what: 'Telomeren zijn de uiteinden van lineaire chromosomen: bij de mens duizenden basenparen TTAGGG-herhalingen, eindigend in een enkelstrengige 3\'-overhang van de G-rijke streng. Ze lossen twee problemen op: het eindreplicatieprobleem en het eindbeschermingsprobleem.',
       how: [
         "Eindreplicatieprobleem: op de volgende streng kan de laatste RNA-primer niet door DNA vervangen worden (geen 3'-OH om te verlengen); nucleasen die het uiteinde bijwerken dragen ook bij.",
@@ -143,7 +143,7 @@ export default {
       why: 'Telomeren bepalen hoe vaak een cel kan delen en beschermen chromosoomuiteinden tegen afbraak en fusie. Kankercellen heractiveren meestal telomerase om onbeperkt te delen; defecten in telomerase of shelterin geven ziekten zoals dyskeratosis congenita.',
     },
     en: {
-      kort: 'Telomeres are the ends of our chromosomes: long runs of the same short DNA repeat. They get a little shorter with every division, unless the enzyme telomerase lengthens them again. A protective protein cap makes sure the cell does not treat them as DNA breaks.',
+      kort: 'Telomeres are the ends of our [[chromosomes|chromosoom]]: long runs of the same short DNA repeat. They get a little shorter with every division, unless the enzyme telomerase lengthens them. A protein cap makes sure the cell does not see them as DNA breaks.',
       what: 'Telomeres are the ends of linear chromosomes: in humans thousands of base pairs of TTAGGG repeats, ending in a single-stranded 3\' overhang of the G-rich strand. They solve two problems: the end-replication problem and the end-protection problem.',
       how: [
         "End-replication problem: on the lagging strand the last RNA primer cannot be replaced by DNA (no 3'-OH to extend); nucleases processing the end also contribute.",
@@ -168,7 +168,7 @@ export default {
 
   herstel: {
     nl: {
-      kort: 'DNA raakt elke dag duizenden keren beschadigd, en bij het kopiëren sluipen soms fouten in. De cel heeft daarom verschillende herstelroutes, elk voor een eigen soort schade. Werkt herstel niet goed, dan stapelen mutaties zich op en stijgt de kans op kanker.',
+      kort: 'DNA raakt elke dag duizenden keren beschadigd, en bij het kopiëren sluipen soms fouten in. De cel heeft verschillende herstelroutes, elk voor een eigen soort schade. Werkt herstel niet, dan stapelen [[mutaties|mutatie]] zich op en stijgt de kans op kanker.',
       what: 'DNA wordt voortdurend beschadigd door hydrolyse, oxidatie, alkylering, UV en straling, en de replicatie maakt af en toe fouten. Cellen hebben daarom verschillende herstelroutes, elk gespecialiseerd in een soort letsel. De onbeschadigde complementaire streng of de zusterchromatide dient als voorbeeld.',
       how: [
         "BER (één beschadigde base, bv. uracil of 8-oxoG): een DNA-glycosylase knipt de base weg → AP-plaats → APE1 knipt de ruggengraat → Pol β vult 1 nt in en verwijdert de suikerrest → ligase III–XRCC1 (of ligase I) sluit.",
@@ -182,7 +182,7 @@ export default {
       why: 'Zonder herstel zouden mutaties zich snel ophopen. Erfelijke defecten tonen het belang: xeroderma pigmentosum (NER), Lynch-syndroom (MMR) en BRCA1/2-mutaties (HR) verhogen de kans op kanker sterk. Veel kankertherapieën (bestraling, cisplatine, PARP-remmers) buiten juist hersteldefecten uit.',
     },
     en: {
-      kort: 'DNA is damaged thousands of times every day, and copying occasionally introduces errors. The cell therefore has several repair pathways, each for its own kind of damage. When repair fails, mutations pile up and the risk of cancer rises.',
+      kort: 'DNA is damaged thousands of times every day, and copying sometimes introduces errors. The cell has several repair pathways, each for its own kind of damage. When repair fails, [[mutations|mutatie]] pile up and the risk of cancer rises.',
       what: 'DNA is damaged continuously by hydrolysis, oxidation, alkylation, UV and radiation, and replication makes occasional errors. Cells therefore have several repair pathways, each specialised in one kind of lesion. The undamaged complementary strand or the sister chromatid serves as template.',
       how: [
         'BER (one damaged base, e.g. uracil or 8-oxoG): a DNA glycosylase removes the base → AP site → APE1 cuts the backbone → Pol β fills in 1 nt and removes the sugar remnant → ligase III–XRCC1 (or ligase I) seals.',
@@ -205,7 +205,7 @@ export default {
 
   mutaties: {
     nl: {
-      kort: 'Een mutatie is een blijvende verandering in de DNA-sequentie. Het gevolg hangt af van wat er met de codons gebeurt: soms verandert het eiwit niet, soms verandert één aminozuur, soms stopt het eiwit veel te vroeg. Zo kan één enkele base een ziekte zoals sikkelcelanemie veroorzaken.',
+      kort: 'Een [[mutatie|mutatie]] is een blijvende verandering in het DNA. Soms verandert het eiwit niet, soms verandert één [[aminozuur|aminozuur]], soms stopt het eiwit veel te vroeg. Zo kan één base een ziekte zoals sikkelcelanemie veroorzaken.',
       what: 'Een mutatie is een blijvende verandering in de DNA-sequentie. Puntmutaties vervangen één base; inserties en deleties (indels) voegen basen toe of halen ze weg. Het effect op het eiwit hangt af van hoe de genetische code het veranderde codon leest.',
       how: [
         'Transitie: purine ↔ purine (A↔G) of pyrimidine ↔ pyrimidine (C↔T). Transversie: purine ↔ pyrimidine. Er zijn 4 mogelijke transities en 8 transversies.',
@@ -220,7 +220,7 @@ export default {
       why: 'Mutaties zijn de grondstof van evolutie, maar ook de oorzaak van erfelijke ziekten en kanker. Door ze te koppelen aan de genetische code en de eiwitstructuur (bv. hydrofobe Val op het oppervlak van HbS) begrijp je waarom één base een heel eiwitcomplex kan veranderen.',
     },
     en: {
-      kort: 'A mutation is a permanent change in the DNA sequence. The effect depends on what happens to the codons: sometimes the protein does not change, sometimes one amino acid changes, sometimes the protein stops far too early. This is how a single base can cause a disease such as sickle-cell anaemia.',
+      kort: 'A [[mutation|mutatie]] is a permanent change in the DNA. Sometimes the protein does not change, sometimes one [[amino acid|aminozuur]] changes, sometimes the protein stops far too early. This is how a single base can cause a disease such as sickle-cell anaemia.',
       what: 'A mutation is a permanent change in the DNA sequence. Point mutations replace one base; insertions and deletions (indels) add or remove bases. The effect on the protein depends on how the genetic code reads the altered codon.',
       how: [
         'Transition: purine ↔ purine (A↔G) or pyrimidine ↔ pyrimidine (C↔T). Transversion: purine ↔ pyrimidine. There are 4 possible transitions and 8 transversions.',

@@ -5,7 +5,7 @@ const UNI = id => `https://www.uniprot.org/uniprotkb/${id}/entry`;
 export default {
   signaal: {
     nl: {
-      kort: 'Cellen sturen elkaar boodschappen met signaalmoleculen, zoals hormonen en groeifactoren. Een cel reageert alleen als ze de passende receptor heeft. Wateroplosbare signalen binden een receptor aan de buitenkant van de cel; vetoplosbare gaan door het membraan en binden een receptor binnenin.',
+      kort: 'Cellen sturen elkaar boodschappen met signaalmoleculen, zoals hormonen. Een cel reageert alleen als ze de passende [[receptor|receptor]] heeft. Sommige signalen binden buiten op de cel; vetoplosbare gaan door het membraan.',
       what: 'Cellen in een meercellig organisme sturen elkaar boodschappen met signaalmoleculen: hormonen, groeifactoren, neurotransmitters en lokale mediatoren. Een signaal werkt alleen op een cel die de passende receptor heeft; die bindt het signaal specifiek en zet het om in een reactie in de cel. Hydrofiele signalen (bv. de groeifactor EGF, een peptide, of adrenaline) kunnen niet door het membraan en binden een receptor op het celoppervlak. Kleine lipofiele signalen (bv. het steroïdhormoon cortisol) diffunderen door het membraan en binden een receptor in de cel.',
       how: [
         'Een cel toont alleen de receptoren waarvoor ze de genen afschrijft; daardoor reageren verschillende celtypes anders (of niet) op hetzelfde signaal.',
@@ -23,7 +23,7 @@ export default {
       why: 'Dit is het begin van verhaal 2: een signaal van buiten zet een gen aan. We volgen EGF: via de EGF-receptor en de Ras–MAPK-cascade gaat het onmiddellijk-vroege gen FOS aan, en het eiwit dat we uiteindelijk maken is c-Fos. De zijpaden (GPCR/cAMP en de kernreceptor) tonen dat er meer dan één manier is om een signaal tot in de kern te krijgen.',
     },
     en: {
-      kort: 'Cells send each other messages with signal molecules, such as hormones and growth factors. A cell only responds if it has the matching receptor. Water-soluble signals bind a receptor on the outside of the cell; fat-soluble ones cross the membrane and bind a receptor inside.',
+      kort: 'Cells send each other messages with signal molecules, such as hormones. A cell only responds if it has the matching [[receptor|receptor]]. Some signals bind on the outside of the cell; fat-soluble ones pass through the membrane.',
       what: 'Cells in a multicellular organism send each other messages with signal molecules: hormones, growth factors, neurotransmitters and local mediators. A signal only acts on a cell that has the matching receptor; the receptor binds the signal specifically and converts it into a response inside the cell. Hydrophilic signals (e.g. the growth factor EGF, a peptide, or adrenaline) cannot cross the membrane and bind a receptor on the cell surface. Small lipophilic signals (e.g. the steroid hormone cortisol) diffuse through the membrane and bind a receptor inside the cell.',
       how: [
         'A cell only displays the receptors whose genes it transcribes; so different cell types respond differently (or not at all) to the same signal.',
@@ -52,7 +52,7 @@ export default {
 
   gpcr: {
     nl: {
-      kort: 'Dit is een tweede manier om een signaal tot in de kern te krijgen. Adrenaline bindt een receptor in het membraan, die een schakelaareiwit (een G-eiwit) aanzet. Daardoor maakt de cel een klein boodschappermolecuul (cyclisch AMP) dat via het enzym proteïnekinase A een gen-schakelaar in de kern activeert.',
+      kort: 'Adrenaline bindt een [[receptor|receptor]] in het membraan, die een schakelaar-eiwit aanzet: het [[G-eiwit|g-eiwit]]. Daardoor maakt de cel het kleine boodschappermolecuul cAMP. Via een [[kinase|kinase]] zet dat uiteindelijk een gen in de kern aan.',
       what: 'G-eiwitgekoppelde receptoren (GPCR\'s) gaan 7 keer door het membraan en geven een signaal door via een heterotrimeer G-eiwit (α, β, γ). Het klassieke voorbeeld: adrenaline bindt de β2-adrenerge receptor, die Gs activeert. Gαs zet adenylylcyclase aan, dat ATP omzet in de tweede boodschapper cAMP. cAMP activeert proteïnekinase A (PKA); de katalytische subeenheden van PKA fosforyleren in de kern de transcriptiefactor CREB, die genen met een cAMP-responselement (CRE) aanzet.',
       how: [
         'Adrenaline bindt in een holte tussen de 7 transmembraanhelices van de β2-adrenerge receptor.',
@@ -69,7 +69,7 @@ export default {
       why: 'Dit is een tweede manier om een signaal tot in de kern te brengen, naast de EGF → MAPK-route van het hoofdverhaal. Vergelijk: bij EGF zetten kinasen (ERK) het serum-responselement (SRE) aan, hier zet PKA het CRE aan. Het FOS-gen heeft beide elementen in zijn promoter (SRE en CRE), dus ook cAMP kan FOS aanzetten. Ongeveer een derde van de goedgekeurde geneesmiddelen werkt via GPCR\'s, bv. β2-agonisten bij astma.',
     },
     en: {
-      kort: 'This is a second way to get a signal into the nucleus. Adrenaline binds a receptor in the membrane, which switches on a switch protein (a G protein). The cell then makes a small messenger molecule (cyclic AMP) that, through the enzyme protein kinase A, activates a gene switch in the nucleus.',
+      kort: 'Adrenaline binds a [[receptor|receptor]] in the membrane, which switches on a switch protein: the [[G protein|g-eiwit]]. The cell then makes the small messenger molecule cAMP. Through a [[kinase|kinase]], this finally switches on a gene in the nucleus.',
       what: 'G protein-coupled receptors (GPCRs) cross the membrane 7 times and relay a signal via a heterotrimeric G protein (α, β, γ). The classic example: adrenaline binds the β2-adrenergic receptor, which activates Gs. Gαs switches on adenylyl cyclase, which converts ATP into the second messenger cAMP. cAMP activates protein kinase A (PKA); the catalytic subunits of PKA phosphorylate the transcription factor CREB in the nucleus, which switches on genes with a cAMP response element (CRE).',
       how: [
         'Adrenaline binds in a pocket between the 7 transmembrane helices of the β2-adrenergic receptor.',
@@ -101,7 +101,7 @@ export default {
 
   steroid: {
     nl: {
-      kort: 'Cortisol is een vetoplosbaar hormoon dat zo door het celmembraan gaat. Binnen bindt het zijn receptor, die daarna zelf naar de kern reist en daar genen aan- of uitzet. Het is de kortste weg van signaal naar gen: de receptor is zelf de gen-schakelaar.',
+      kort: 'Cortisol is een hormoon dat oplost in vet en zo door het membraan gaat. Binnen bindt het zijn [[receptor|receptor]], die zelf naar de kern reist en daar genen aan- of uitzet. Zo is de receptor zelf de [[gen-schakelaar|transcriptiefactor]]: de kortste weg van signaal naar gen.',
       what: 'Steroïdhormonen zoals cortisol zijn klein en lipofiel: ze diffunderen door het plasmamembraan en binden een receptor in de cel. De glucocorticoïdreceptor (GR, gen NR3C1) hoort bij de superfamilie van de kernreceptoren: hij is tegelijk receptor en transcriptiefactor. Zonder hormoon zit GR in het cytosol in een complex met chaperones (Hsp90, p23, FKBP51). Na binding van cortisol verandert GR van vorm, laat het complex los, gaat de kern in en bindt als dimeer aan glucocorticoïd-responselementen (GRE\'s) in het DNA, waarna co-activatoren de transcriptie van doelgenen aanzetten.',
       how: [
         'Cortisol wordt in de bijnierschors uit cholesterol gemaakt en diffundeert als klein lipofiel molecule door de lipidendubbellaag.',
@@ -119,7 +119,7 @@ export default {
       why: 'Dit zijpad is het kortste signaal naar de kern: geen tweede boodschapper of kinasecascade, want de receptor zelf is de transcriptiefactor. Het verbindt drie hoofdstukken: chaperones (Hsp90 houdt GR klaar), kernimport (NLS en importines) en genregulatie (co-activatoren op een responselement). Glucocorticoïden behoren tot de meest voorgeschreven geneesmiddelen tegen ontsteking.',
     },
     en: {
-      kort: 'Cortisol is a fat-soluble hormone that passes straight through the cell membrane. Inside, it binds its receptor, which then travels to the nucleus itself and switches genes on or off there. It is the shortest route from signal to gene: the receptor itself is the gene switch.',
+      kort: 'Cortisol is a hormone that dissolves in fat and so passes through the membrane. Inside, it binds its [[receptor|receptor]], which itself travels to the nucleus and switches genes on or off there. So the receptor itself is the [[gene switch|transcriptiefactor]]: the shortest route from signal to gene.',
       what: 'Steroid hormones such as cortisol are small and lipophilic: they diffuse through the plasma membrane and bind a receptor inside the cell. The glucocorticoid receptor (GR, gene NR3C1) belongs to the nuclear receptor superfamily: it is receptor and transcription factor at once. Without hormone, GR sits in the cytosol in a complex with chaperones (Hsp90, p23, FKBP51). After cortisol binds, GR changes shape, leaves the complex, enters the nucleus and binds as a dimer to glucocorticoid response elements (GREs) in the DNA, after which co-activators switch on transcription of target genes.',
       how: [
         'Cortisol is made from cholesterol in the adrenal cortex and, as a small lipophilic molecule, diffuses through the lipid bilayer.',

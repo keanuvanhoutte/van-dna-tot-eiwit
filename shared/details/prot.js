@@ -18,7 +18,7 @@ const PAULING = { t: 'Pauling L, Corey RB & Branson HR (1951) The structure of p
 export default {
   vouwing: {
     nl: {
-      kort: 'Een pas gemaakte eiwitketen is nog een slap draadje. Meestal vouwt ze zich vanzelf tot één vaste 3D-vorm, zodat de waterschuwe delen binnenin komen. Pas met die vorm kan het eiwit zijn werk doen.',
+      kort: 'Een pas gemaakte eiwitketen is nog een slap draadje. Meestal vouwt ze zich vanzelf tot één vaste 3D-vorm, met de waterschuwe [[aminozuren|aminozuur]] binnenin. Pas met die vorm kan het eiwit zijn werk doen.',
       what: 'Eiwitvouwing is het proces waarbij een lineaire polypeptideketen zijn unieke, functionele 3D-vorm (de natieve structuur) aanneemt. De informatie daarvoor zit in de aminozuursequentie zelf (Anfinsen). Vouwen gebeurt vaak al tijdens de translatie, terwijl de keten uit het ribosoom komt.',
       how: [
         'De keten verlaat het ribosoom via de uitgangstunnel, N-terminus eerst; het begin kan al vouwen voordat het einde gemaakt is (co-translationeel).',
@@ -32,7 +32,7 @@ export default {
       why: 'Alleen een correct gevouwen eiwit werkt. Misvouwing kan leiden tot aggregatie en ziekte (bv. amyloïd). In het verhaal: de β-globineketen die uit het ribosoom komt, vouwt tot de globinevouw die in de volgende hoofdstukken (secundair → tertiair → quaternair) wordt ontleed.',
     },
     en: {
-      kort: 'A freshly made protein chain is still a floppy string. It usually folds by itself into one fixed 3D shape, tucking the water-avoiding parts inside. Only with that shape can the protein do its job.',
+      kort: 'A freshly made protein chain is still a floppy string. It usually folds by itself into one fixed 3D shape, with the water-avoiding [[amino acids|aminozuur]] inside. Only with that shape can the protein do its job.',
       what: 'Protein folding is the process by which a linear polypeptide chain adopts its unique, functional 3D shape (the native structure). The information for this is contained in the amino acid sequence itself (Anfinsen). Folding often starts during translation, while the chain emerges from the ribosome.',
       how: [
         'The chain leaves the ribosome through the exit tunnel, N-terminus first; the beginning can fold before the end has been made (co-translational).',
@@ -49,7 +49,7 @@ export default {
   },
   primair: {
     nl: {
-      kort: 'De primaire structuur is gewoon de volgorde van de aminozuren in de keten, van begin tot einde. Die volgorde komt rechtstreeks uit het mRNA. Ze bepaalt hoe het eiwit later vouwt.',
+      kort: 'De primaire structuur is de volgorde van de [[aminozuren|aminozuur]] in de keten, van begin tot einde. Die volgorde komt rechtstreeks uit het [[mRNA|mrna]]. Ze bepaalt hoe het eiwit later vouwt.',
       what: 'De primaire structuur is de volgorde van de aminozuren in een polypeptideketen, geschreven van de N-terminus (vrije aminogroep) naar de C-terminus (vrije carboxylgroep). Ze wordt tijdens de translatie vastgelegd door de codons van het mRNA en bepaalt uiteindelijk de 3D-structuur.',
       how: [
         'Het ribosoom leest het mRNA codon per codon (5′→3′) en koppelt de aminozuren in die volgorde (N→C).',
@@ -62,7 +62,7 @@ export default {
       why: 'Sanger toonde dat elk eiwit een eigen, vaste sequentie heeft. Omdat de sequentie de structuur bepaalt, is ze het startpunt van elke structuuranalyse en -voorspelling.',
     },
     en: {
-      kort: 'The primary structure is simply the order of the amino acids in the chain, from start to end. That order comes straight from the mRNA. It determines how the protein will fold later.',
+      kort: 'The primary structure is the order of the [[amino acids|aminozuur]] in the chain, from start to end. That order comes straight from the [[mRNA|mrna]]. It determines how the protein will fold later.',
       what: 'The primary structure is the order of the amino acids in a polypeptide chain, written from the N-terminus (free amino group) to the C-terminus (free carboxyl group). It is fixed during translation by the codons of the mRNA and ultimately determines the 3D structure.',
       how: [
         'The ribosome reads the mRNA codon by codon (5′→3′) and links the amino acids in that order (N→C).',
@@ -78,7 +78,7 @@ export default {
   },
   aminozuren: {
     nl: {
-      kort: 'Aminozuren zijn de bouwstenen van eiwitten; er zijn er 20 standaard. Ze hebben allemaal hetzelfde basisstuk en verschillen alleen in hun zijketen. Of die zijketen water mijdt, water opzoekt of geladen is, bepaalt waar het aminozuur in het eiwit terechtkomt.',
+      kort: 'Aminozuren zijn de bouwstenen van eiwitten, met 20 standaardsoorten. Ze hebben allemaal hetzelfde basisstuk en verschillen alleen in hun [[zijketen|zijketen]]. Of die water mijdt, water opzoekt of geladen is, bepaalt waar het aminozuur in het eiwit terechtkomt.',
       what: 'Eiwitten zijn opgebouwd uit 20 standaard-aminozuren. Elk heeft een centraal Cα-atoom met een aminogroep, een carboxylgroep, een H-atoom en een zijketen (R) die de eigenschappen bepaalt. Examenstof: volledige naam, drie- en éénlettercode en eigenschap (hydrofoob, polair, geladen).',
       how: [
         'Hydrofoob: Gly (G), Ala (A), Val (V), Leu (L), Ile (I), Met (M), Phe (F), Trp (W), Pro (P) — meestal in de kern.',
@@ -93,7 +93,7 @@ export default {
       why: 'Wie in PyMOL of in een sequentie "W" ziet, moet weten dat dit tryptofaan is. De eigenschappen van de zijketens verklaren waar residuen in een eiwit liggen en hoe het vouwt.',
     },
     en: {
-      kort: 'Amino acids are the building blocks of proteins; there are 20 standard ones. They all share the same core and differ only in their side chain. Whether that side chain avoids water, likes water or is charged decides where the amino acid ends up in the protein.',
+      kort: 'Amino acids are the building blocks of proteins, with 20 standard kinds. They all share the same core and differ only in their [[side chain|zijketen]]. Whether it avoids water, likes water or is charged decides where the amino acid ends up in the protein.',
       what: 'Proteins are built from 20 standard amino acids. Each has a central Cα atom with an amino group, a carboxyl group, an H atom and a side chain (R) that determines its properties. Exam material: full name, three- and one-letter code and property (hydrophobic, polar, charged).',
       how: [
         'Hydrophobic: Gly (G), Ala (A), Val (V), Leu (L), Ile (I), Met (M), Phe (F), Trp (W), Pro (P) — mostly in the core.',
@@ -111,7 +111,7 @@ export default {
   },
   peptide: {
     nl: {
-      kort: 'De peptidebinding koppelt twee aminozuren aan elkaar, waarbij water vrijkomt. Die binding is vlak en stijf, dus de keten kan alleen draaien bij het centrale koolstofatoom (Cα) van elk aminozuur. Die beperkte draaibaarheid bepaalt welke vormen een eiwit kan aannemen.',
+      kort: 'De peptidebinding koppelt twee [[aminozuren|aminozuur]] aan elkaar; daarbij komt water vrij. Die binding is plat en stijf, dus de keten kan alleen draaien bij het centrale koolstofatoom van elk aminozuur. Daardoor kan een eiwit maar bepaalde vormen aannemen.',
       what: 'De peptidebinding is de amidebinding tussen de carboxylgroep van één aminozuur en de aminogroep van het volgende; netto komt er water vrij (condensatie). Door resonantie heeft de C–N-binding deels een dubbelbindingskarakter: de peptide-eenheid is vlak (planair) en star, meestal trans. Draaien kan alleen rond N–Cα (φ) en Cα–C (ψ).',
       how: [
         'Condensatie: COOH van residu i + NH₂ van residu i+1 → C(O)–NH + H₂O (in de cel gekatalyseerd door het ribosoom).',
@@ -125,7 +125,7 @@ export default {
       why: 'Omdat alleen φ en ψ vrij zijn, wordt de hele backbone-conformatie beschreven door twee hoeken per residu. Dat verklaart welke secundaire structuren mogelijk zijn en is de basis van structuurvalidatie.',
     },
     en: {
-      kort: 'The peptide bond links two amino acids together, releasing water. The bond is flat and rigid, so the chain can only rotate at the central carbon atom (Cα) of each amino acid. That limited rotation decides which shapes a protein can take.',
+      kort: 'The peptide bond links two [[amino acids|aminozuur]] together, releasing water. The bond is flat and rigid, so the chain can only rotate at the central carbon atom of each amino acid. That is why a protein can only take certain shapes.',
       what: 'The peptide bond is the amide bond between the carboxyl group of one amino acid and the amino group of the next; the net result is loss of water (condensation). Because of resonance the C–N bond has partial double-bond character: the peptide unit is flat (planar) and rigid, usually trans. Rotation is only possible around N–Cα (φ) and Cα–C (ψ).',
       how: [
         'Condensation: COOH of residue i + NH₂ of residue i+1 → C(O)–NH + H₂O (in the cell catalysed by the ribosome).',
@@ -142,7 +142,7 @@ export default {
   },
   secundair: {
     nl: {
-      kort: 'Secundaire structuur zijn de eenvoudige, terugkerende vormen die stukjes van de keten aannemen: de spiraalvormige α-helix en de gestrekte β-strengen die samen een blad vormen. Waterstofbruggen in de ruggengraat houden ze op hun plaats. Het zijn de eerste bouwblokken van de 3D-vorm.',
+      kort: 'Secundaire structuur zijn eenvoudige vormen die korte stukken van de keten aannemen: de spiraalvormige [[α-helix|helix]] en het platte [[β-blad|betablad]]. Zwakke [[waterstofbruggen|waterstofbrug]] houden ze op hun plaats. Het zijn de eerste bouwblokken van de 3D-vorm.',
       what: 'Secundaire structuur is de lokale, regelmatige vorm van de backbone, gestabiliseerd door waterstofbruggen tussen C=O en N–H van de backbone. De belangrijkste vormen zijn de α-helix en de β-streng/het β-blad; lussen verbinden ze.',
       how: [
         'α-helix: rechtshandig, 3,6 residuen per winding, H-brug C=O(i) ··· H–N(i+4); zijketens naar buiten.',
@@ -156,7 +156,7 @@ export default {
       why: 'Helices en bladen zijn de bouwstenen van elke vouw. Hun H-bruggen neutraliseren de polaire backbone, zodat die in de hydrofobe kern kan liggen.',
     },
     en: {
-      kort: 'Secondary structure is the simple, recurring shapes that short stretches of the chain adopt: the spiral α-helix and the extended β-strands that together form a sheet. Hydrogen bonds in the backbone hold them in place. They are the first building blocks of the 3D shape.',
+      kort: 'Secondary structure is the simple shapes that short stretches of the chain adopt: the spiral [[α-helix|helix]] and the flat [[β-sheet|betablad]]. Weak [[hydrogen bonds|waterstofbrug]] hold them in place. They are the first building blocks of the 3D shape.',
       what: 'Secondary structure is the local, regular shape of the backbone, stabilised by hydrogen bonds between backbone C=O and N–H groups. The main forms are the α-helix and the β-strand/β-sheet; loops connect them.',
       how: [
         'α-helix: right-handed, 3.6 residues per turn, H-bond C=O(i) ··· H–N(i+4); side chains point outwards.',
@@ -173,7 +173,7 @@ export default {
   },
   ramachandran: {
     nl: {
-      kort: 'De Ramachandran-plot toont voor elk aminozuur twee draaihoeken van de keten als één punt. Omdat atomen niet mogen botsen, zijn maar enkele gebieden toegestaan, zoals die van de helix en de β-streng. Zo kun je snel zien of een eiwitmodel er realistisch uitziet.',
+      kort: 'De Ramachandran-plot toont voor elk aminozuur twee draaihoeken van de keten als één punt. Omdat atomen niet mogen botsen, zijn maar enkele gebieden toegestaan, zoals die van de [[helix|helix]] en de [[β-streng|betastreng]]. Zo zie je snel of een eiwitmodel realistisch is.',
       what: 'De Ramachandran-plot zet voor elk residu ψ uit tegen φ. Omdat sterische botsingen veel combinaties verbieden, vallen de punten in enkele toegestane gebieden: rechtshandige α-helix, β-gebied en (kleiner) linkshandige α-helix. Punten erbuiten zijn uitschieters.',
       how: [
         'Bereken per residu φ = C(i−1)–N–Cα–C en ψ = N–Cα–C–N(i+1) uit de atoomcoördinaten.',
@@ -187,7 +187,7 @@ export default {
       why: 'De plot is een standaardcontrole voor experimentele én voorspelde structuren, en laat in één oogopslag zien welke secundaire structuur een eiwit bevat.',
     },
     en: {
-      kort: 'The Ramachandran plot shows two rotation angles of the chain for each amino acid as one point. Because atoms may not clash, only a few regions are allowed, such as those of the helix and the β-strand. This lets you quickly check whether a protein model looks realistic.',
+      kort: 'The Ramachandran plot shows two rotation angles of the chain for each amino acid as one point. Because atoms may not clash, only a few regions are allowed, such as those of the [[helix|helix]] and the [[β-strand|betastreng]]. This lets you quickly check whether a protein model is realistic.',
       what: 'The Ramachandran plot shows ψ against φ for each residue. Because steric clashes forbid many combinations, the points fall into a few allowed regions: right-handed α-helix, β region and (smaller) left-handed α-helix. Points outside are outliers.',
       how: [
         'Compute for each residue φ = C(i−1)–N–Cα–C and ψ = N–Cα–C–N(i+1) from the atomic coordinates.',
@@ -204,7 +204,7 @@ export default {
   },
   tertiair: {
     nl: {
-      kort: 'De tertiaire structuur is de volledige 3D-vouw van één keten: hoe helices, strengen en lussen samen een compact bolletje vormen. Waterschuwe zijketens zitten binnenin, waterminnende aan de buitenkant. Die vorm maakt plaatsen vrij waar het eiwit iets kan binden, zoals het heem in hemoglobine.',
+      kort: 'De tertiaire structuur is de volledige 3D-vouw van één keten: [[helices|helix]], strengen en lussen samen in een compact bolletje. Waterschuwe zijketens zitten binnenin, waterminnende buiten. Zo ontstaan plekken waar het eiwit iets kan binden, zoals het [[heem|heem]] in hemoglobine.',
       what: 'De tertiaire structuur is de globale 3D-vouw van één polypeptideketen: hoe helices, strengen en lussen samen gepakt zijn. Hier spelen de zijketens de hoofdrol. Tussenniveaus zijn supersecundaire structuren (motieven) en domeinen.',
       how: [
         'Hydrofoob effect: apolaire zijketens verzamelen zich in de kern, polaire en geladen aan het oppervlak.',
@@ -220,7 +220,7 @@ export default {
       why: 'De tertiaire structuur plaatst de chemische groepen die de functie bepalen op de juiste plek in 3D, bv. de heempocket die O₂ bindt.',
     },
     en: {
-      kort: 'The tertiary structure is the complete 3D fold of one chain: how helices, strands and loops pack into a compact ball. Water-avoiding side chains sit inside, water-loving ones outside. This shape creates spots where the protein can bind something, like the haem in haemoglobin.',
+      kort: 'The tertiary structure is the complete 3D fold of one chain: [[helices|helix]], strands and loops packed into a compact ball. Water-avoiding side chains sit inside, water-loving ones outside. This creates spots where the protein can bind something, like the [[haem|heem]] in haemoglobin.',
       what: 'The tertiary structure is the global 3D fold of a single polypeptide chain: how helices, strands and loops pack together. Here the side chains play the main role. Intermediate levels are supersecondary structures (motifs) and domains.',
       how: [
         'Hydrophobic effect: non-polar side chains gather in the core, polar and charged ones at the surface.',
@@ -239,7 +239,7 @@ export default {
   },
   quaternair: {
     nl: {
-      kort: 'Sommige eiwitten bestaan uit meerdere ketens die samen één geheel vormen; hun schikking is de quaternaire structuur. Hemoglobine heeft er vier: twee α- en twee β-ketens. Omdat de ketens elkaar beïnvloeden, kan hemoglobine zuurstof efficiënt opnemen en weer afgeven.',
+      kort: 'Sommige eiwitten bestaan uit meerdere ketens die samen één geheel vormen; hoe die samen liggen, is de quaternaire structuur. [[Hemoglobine|hemoglobine]] heeft er vier: twee α- en twee β-ketens. Omdat de ketens elkaar beïnvloeden, kan hemoglobine zuurstof goed opnemen en weer afgeven.',
       what: 'De quaternaire structuur is de ruimtelijke schikking van meerdere polypeptideketens (subeenheden) in één eiwitcomplex. Identieke ketens geven een homomeer, verschillende een heteromeer. Menselijk hemoglobine A is een α₂β₂-heterotetrameer: een dimeer van twee αβ-protomeren.',
       how: [
         'Elke keten vouwt tot zijn eigen tertiaire structuur (α: 141, β: 146 residuen, beide globinevouw).',
@@ -253,7 +253,7 @@ export default {
       why: 'Veel eiwitten werken pas als complex. Bij hemoglobine maakt de quaternaire structuur coöperatieve binding mogelijk: efficiënt O₂ opladen in de longen en afgeven in weefsels.',
     },
     en: {
-      kort: 'Some proteins consist of several chains that together form one unit; their arrangement is the quaternary structure. Haemoglobin has four: two α and two β chains. Because the chains influence each other, haemoglobin can take up and release oxygen efficiently.',
+      kort: 'Some proteins consist of several chains that together form one unit; how they fit together is the quaternary structure. [[Haemoglobin|hemoglobine]] has four: two α and two β chains. Because the chains influence each other, haemoglobin can take up and release oxygen efficiently.',
       what: 'The quaternary structure is the spatial arrangement of several polypeptide chains (subunits) in one protein complex. Identical chains give a homomer, different ones a heteromer. Human haemoglobin A is an α₂β₂ heterotetramer: a dimer of two αβ protomers.',
       how: [
         'Each chain folds into its own tertiary structure (α: 141, β: 146 residues, both globin fold).',

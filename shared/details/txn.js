@@ -26,7 +26,7 @@ const S = {
 export default {
   transcriptie: {
     nl: {
-      kort: 'Bij transcriptie maakt een RNA-polymerase een RNA-kopie van een gen; voor eiwitgenen is dat RNA-polymerase II. Het leest één DNA-streng als matrijs en bouwt er een passende RNA-streng tegenover. Dat RNA is de eerste stap van gen naar eiwit.',
+      kort: 'Bij transcriptie maakt de cel een RNA-kopie van een gen. Het enzym [[RNA-polymerase|rnapol]] leest één DNA-streng af en bouwt er een passende RNA-streng tegenover. Dat RNA is de eerste stap van gen naar eiwit.',
       what: 'Transcriptie is het kopiëren van een gen naar RNA. RNA-polymerase II leest de matrijsstreng in de richting 3\'→5\' en bouwt het RNA 5\'→3\' op, telkens met een base die complementair is aan de matrijs. Het RNA heeft dus dezelfde sequentie als de coderende streng, met U in plaats van T.',
       how: [
         'Op de promoter bouwen algemene transcriptiefactoren en Pol II het preinitiatiecomplex op.',
@@ -41,7 +41,7 @@ export default {
       why: 'Transcriptie is het eerste en sterkst gereguleerde punt van genexpressie: welke genen hoeveel RNA maken, bepaalt grotendeels welke eiwitten een cel heeft. In ons verhaal schrijft dezelfde Pol II ook de eiwitgenen van het adenovirus af.',
     },
     en: {
-      kort: 'In transcription an RNA polymerase makes an RNA copy of a gene; for protein genes this is RNA polymerase II. It reads one DNA strand as a template and builds a matching RNA strand against it. This RNA is the first step from gene to protein.',
+      kort: 'In transcription the cell makes an RNA copy of a gene. The enzyme [[RNA polymerase|rnapol]] reads one DNA strand and builds a matching RNA strand against it. This RNA is the first step from gene to protein.',
       what: 'Transcription is copying a gene into RNA. RNA polymerase II reads the template strand in the 3\'→5\' direction and builds the RNA 5\'→3\', each time with a base complementary to the template. The RNA therefore has the same sequence as the coding strand, with U instead of T.',
       how: [
         'At the promoter, general transcription factors and Pol II assemble the pre-initiation complex.',
@@ -60,7 +60,7 @@ export default {
 
   genregulatie: {
     nl: {
-      kort: 'Niet elk gen staat altijd aan. Eiwitten die op schakelplaatsen in het DNA binden (transcriptiefactoren), bepalen of en hoe sterk een gen wordt afgeschreven. Zo verschilt een levercel van een zenuwcel, ook al hebben ze (bijna) hetzelfde DNA.',
+      kort: 'Niet elk gen staat altijd aan. Schakelaar-eiwitten ([[transcriptiefactoren|transcriptiefactor]]) binden op het DNA en bepalen of en hoe sterk een gen wordt afgelezen. Zo verschilt een levercel van een zenuwcel, ook al hebben ze (bijna) hetzelfde DNA.',
       what: 'Genregulatie bepaalt of, wanneer en hoe sterk een gen wordt afgeschreven. Bij de mens gebeurt dat vooral via transcriptiefactoren die op enhancers en promoters binden, co-activatoren die het chromatine openen, en Mediator die het signaal doorgeeft aan RNA-polymerase II.',
       how: [
         'In compact chromatine zijn promoter en enhancer bedekt door nucleosomen; het gen staat stil.',
@@ -75,7 +75,7 @@ export default {
       why: 'Alle cellen van een mens hebben (bijna) hetzelfde genoom; het verschil tussen een levercel en een neuron zit in welke genen aan staan. Fouten in transcriptiefactoren, enhancers of CTCF-grenzen liggen aan de basis van ontwikkelingsziekten en kanker.',
     },
     en: {
-      kort: 'Not every gene is always on. Proteins that bind to switch sites in the DNA (transcription factors) decide whether and how strongly a gene is transcribed. This is how a liver cell differs from a nerve cell, even though they have (almost) the same DNA.',
+      kort: 'Not every gene is always on. Switch proteins ([[transcription factors|transcriptiefactor]]) bind to the DNA and decide whether and how strongly a gene is read. This is how a liver cell differs from a nerve cell, even though they have (almost) the same DNA.',
       what: 'Gene regulation decides whether, when and how strongly a gene is transcribed. In humans this happens mainly through transcription factors binding enhancers and promoters, co-activators that open chromatin, and Mediator, which passes the signal on to RNA polymerase II.',
       how: [
         'In compact chromatin the promoter and enhancer are covered by nucleosomes; the gene is silent.',
@@ -94,7 +94,7 @@ export default {
 
   promoter: {
     nl: {
-      kort: 'De promoter is het stukje DNA rond het begin van een gen waar transcriptie start. Daar verzamelen algemene startfactoren en RNA-polymerase II zich tot een startklare machine. Hier valt de beslissing of het gen wordt afgeschreven.',
+      kort: 'De promoter is het stukje DNA aan het begin van een gen waar het aflezen start. Daar zetten hulpeiwitten het enzym [[RNA-polymerase II|rnapol]] klaar. Hier wordt beslist of het gen wordt afgelezen.',
       what: 'De kernpromoter is het stukje DNA (~−40 tot +40 rond de startplaats) waar RNA-polymerase II met de algemene transcriptiefactoren (GTF\'s) het preinitiatiecomplex (PIC) vormt. Hij bevat korte motieven zoals BRE, TATA-box, Inr, MTE en DPE, maar geen enkel element komt in alle promoters voor.',
       how: [
         'TFIID bindt de promoter: TBP zit op de kleine groef van de TATA-box en buigt het DNA ~80°; TAF\'s herkennen Inr en DPE.',
@@ -109,7 +109,7 @@ export default {
       why: 'De promoter bepaalt waar en in welke richting transcriptie start. Het is het knooppunt waar alle regulatiesignalen (activatoren, chromatine, Mediator) samenkomen in één beslissing: vertrekt Pol II of niet?',
     },
     en: {
-      kort: 'The promoter is the stretch of DNA around the start of a gene where transcription begins. There, general start factors and RNA polymerase II assemble into a machine ready to start. This is where the decision is made whether the gene is transcribed.',
+      kort: 'The promoter is the stretch of DNA at the start of a gene where reading begins. There, helper proteins set up the enzyme [[RNA polymerase II|rnapol]]. This is where it is decided whether the gene is read.',
       what: 'The core promoter is the stretch of DNA (~−40 to +40 around the start site) where RNA polymerase II forms the pre-initiation complex (PIC) with the general transcription factors (GTFs). It contains short motifs such as BRE, TATA box, Inr, MTE and DPE, but no single element occurs in all promoters.',
       how: [
         'TFIID binds the promoter: TBP sits on the minor groove of the TATA box and bends the DNA ~80°; TAFs recognise Inr and DPE.',
@@ -128,7 +128,7 @@ export default {
 
   rnapol: {
     nl: {
-      kort: 'RNA-polymerase II is het enzym dat alle eiwitcoderende genen in de kern naar RNA kopieert. Het is een groot eiwitcomplex met een diepe kloof waarin het DNA wordt gelezen en het RNA wordt gebouwd. Een lange staart roept onderweg de enzymen op die het RNA verder bewerken.',
+      kort: 'RNA-polymerase II is het enzym dat in de kern alle genen voor eiwitten naar RNA kopieert. Het is een grote machine met een diepe kloof, waarin het DNA wordt gelezen en het RNA gebouwd. Een lange staart roept onderweg enzymen op die het RNA verder bewerken.',
       what: 'RNA-polymerase II (Pol II) is het enzym dat alle eiwitcoderende genen afschrijft. Het is een complex van 12 subeenheden (Rpb1–Rpb12, ≈ 0,5 MDa). De twee grootste, Rpb1 en Rpb2, vormen een diepe kloof met het actieve centrum; Rpb1 draagt bovendien de flexibele C-terminale staart (CTD).',
       how: [
         'Stroomafwaarts DNA komt de kloof binnen en wordt geopend; de beweeglijke klem sluit over het DNA.',
@@ -142,7 +142,7 @@ export default {
       why: 'Pol II is de structurele kern van genexpressie: bijna elke regulatiestap (Mediator, pauzeren, CTD-code) grijpt aan op dit ene enzym. Het is ook een doelwit van toxines (α-amanitine) en van virussen die hun genen door de cel laten afschrijven.',
     },
     en: {
-      kort: 'RNA polymerase II is the enzyme that copies all protein-coding genes in the nucleus into RNA. It is a large protein complex with a deep cleft in which the DNA is read and the RNA is built. A long tail recruits, along the way, the enzymes that further process the RNA.',
+      kort: 'RNA polymerase II is the enzyme in the nucleus that copies all genes for proteins into RNA. It is a large machine with a deep cleft, where the DNA is read and the RNA is built. A long tail calls in, along the way, enzymes that further process the RNA.',
       what: 'RNA polymerase II (Pol II) is the enzyme that transcribes all protein-coding genes. It is a complex of 12 subunits (Rpb1–Rpb12, ≈ 0.5 MDa). The two largest, Rpb1 and Rpb2, form a deep cleft containing the active site; Rpb1 also carries the flexible C-terminal tail (CTD).',
       how: [
         'Downstream DNA enters the cleft and is opened; the mobile clamp closes over the DNA.',
@@ -160,7 +160,7 @@ export default {
 
   operon: {
     nl: {
-      kort: 'Bij bacteriën liggen genen voor één taak vaak samen in een operon, met één gezamenlijke aan/uit-schakelaar. Het lac-operon van de darmbacterie E. coli gaat pas volledig aan als er lactose is en geen glucose. Het is het klassieke voorbeeld van hoe eiwitten genen aan- en uitzetten.',
+      kort: 'Bij bacteriën liggen genen voor één taak vaak samen in een operon, met één gedeelde aan/uit-schakelaar. Het lac-operon van de darmbacterie E. coli gaat pas volop aan als er lactose is en geen glucose. Het is het klassieke voorbeeld van hoe eiwitten genen aan- en uitzetten.',
       what: 'Bij bacteriën liggen genen met een gezamenlijke functie vaak in een operon: één promoter en operator sturen meerdere genen aan, die samen tot één polycistronisch mRNA worden afgeschreven. Het lac-operon van E. coli (lacZ, lacY, lacA) is het klassieke voorbeeld van een genschakelaar die op twee signalen reageert: lactose en glucose.',
       how: [
         'Bacteriën hebben één RNA-polymerase; de σ70-factor van het holo-enzym herkent de −35- (TTGACA) en −10-box (TATAAT), ~17 bp uit elkaar.',
@@ -192,7 +192,7 @@ export default {
 
   polymerasen: {
     nl: {
-      kort: 'Menselijke cellen hebben drie verwante RNA-polymerasen in de kern, elk met een eigen taak. Pol I maakt de grote ribosomale RNA\'s, Pol II de boodschapper-RNA\'s (mRNA) en Pol III korte RNA\'s zoals transfer-RNA. Een paddenstoelengif remt ze in verschillende mate, zodat je ze kunt onderscheiden.',
+      kort: 'Onze cellen hebben drie verwante enzymen die RNA maken, elk met een eigen taak. Pol I maakt de grote RNA’s van het [[ribosoom|ribosoom]], Pol II het mRNA en Pol III korte RNA’s zoals [[tRNA|trna]]. Een paddenstoelengif remt ze elk in andere mate, zodat je ze kunt onderscheiden.',
       what: 'De eukaryote kern heeft drie verwante RNA-polymerasen met een taakverdeling. Pol I maakt de grote rRNA\'s, Pol II de mRNA\'s en veel niet-coderende RNA\'s, Pol III korte stabiele RNA\'s zoals tRNA en 5S rRNA. Ze delen een geconserveerde kern en vijf identieke subeenheden, maar hebben elk hun eigen promoters en factoren.',
       how: [
         'Pol I (13 subeenheden bij de mens, 14 in gist) werkt in de nucleolus op de rDNA-herhalingen en maakt één 47S-voorloper, die via o.a. 45S wordt geknipt tot 18S, 5,8S en 28S rRNA; hij gebruikt UBF en SL1 (met TBP).',
@@ -207,7 +207,7 @@ export default {
       why: 'Ribosomen hebben enorme hoeveelheden rRNA en tRNA nodig; een aparte, gespecialiseerde machine voor die RNA\'s laat de cel groei en eiwitsynthese los van mRNA-regulatie sturen. Het α-amanitineverschil werd historisch gebruikt om te bepalen welk polymerase een gen afschrijft, bv. dat de VA-RNA\'s van het adenovirus van Pol III komen.',
     },
     en: {
-      kort: 'Human cells have three related RNA polymerases in the nucleus, each with its own task. Pol I makes the large ribosomal RNAs, Pol II the messenger RNAs (mRNA) and Pol III short RNAs such as transfer RNA. A mushroom toxin inhibits them to different degrees, so you can tell them apart.',
+      kort: 'Our cells have three related enzymes that make RNA, each with its own task. Pol I makes the large RNAs of the [[ribosome|ribosoom]], Pol II the mRNA and Pol III short RNAs such as [[tRNA|trna]]. A mushroom toxin blocks each of them to a different degree, so you can tell them apart.',
       what: 'The eukaryotic nucleus has three related RNA polymerases with a division of labour. Pol I makes the large rRNAs, Pol II the mRNAs and many non-coding RNAs, Pol III short stable RNAs such as tRNA and 5S rRNA. They share a conserved core and five identical subunits, but each has its own promoters and factors.',
       how: [
         'Pol I (13 subunits in humans, 14 in yeast) works in the nucleolus on the rDNA repeats and makes one 47S precursor, which is cut (via e.g. 45S) into 18S, 5.8S and 28S rRNA; it uses UBF and SL1 (with TBP).',

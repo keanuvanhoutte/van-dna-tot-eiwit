@@ -8,6 +8,7 @@
 import { NODES, STAGES, SCALES, title, sub, summary, stageTitle, scaleTitle } from '../shared/content.js';
 import { L, U, statusText, langSwitch, lang } from '../shared/i18n.js';
 import { DETAILS } from '../shared/details/index.js';
+import { GLOSSARY } from '../shared/glossary.js';
 import { SCENES } from './scenes/index.js';
 import { LINES, LINE_KEYS } from './story.js';
 
@@ -562,19 +563,32 @@ function showNextChapter() {
 
 /* ---------- zijpaneel ---------- */
 const chipsOf = (ids, cls) => ids.filter(i => NODES[i]).map(i => `<button class="chip ${cls} ${hasScene(i) ? 'has' : ''}" data-id="${i}">${title(NODES[i])}</button>`).join('');
-/* "In het kort": 2–3 zinnen in eenvoudige taal (details[lang].kort), bovenaan het uitlegpaneel */
-const kortOf = id => { const d = DETAILS[id]; return d ? (d[lang] ?? d.nl).kort ?? '' : ''; };
+/* "In het kort": 2–3 zinnen in eenvoudige taal (details[lang].kort), bovenaan het uitlegpaneel.
+ * Vaktermen staan erin als [[zoals in de zin|sleutel]] → aantikbaar woord met een uitleg van één zin (shared/glossary.js). */
+const glossOf = k => { const g = GLOSSARY[k]; return g ? (g[lang] ?? g.nl) : null; };
+const termsHTML = txt => txt.replace(/\[\[([^\]|]+)\|([a-z0-9-]+)\]\]/g, (_, w, k) => glossOf(k) ? `<button class="term" data-g="${k}">${w}</button>` : w);
+const kortOf = id => { const d = DETAILS[id]; return d ? termsHTML((d[lang] ?? d.nl).kort ?? '') : ''; };
+function showGloss(btn) {
+  const box = btn.closest('.kort, .cardbox'); if (!box) return;
+  const open = box.querySelector('.gloss');
+  if (open) { open.remove(); if (open.dataset.g === btn.dataset.g) return; }
+  const [t, d] = glossOf(btn.dataset.g);
+  const el = document.createElement('div'); el.className = 'gloss'; el.dataset.g = btn.dataset.g; el.setAttribute('role', 'note');
+  el.innerHTML = `<b></b> <span></span>`; el.querySelector('b').textContent = t + ':'; el.querySelector('span').textContent = d;
+  btn.closest('.kort, p')?.after(el) ?? box.append(el);
+}
+document.addEventListener('click', e => { const b = e.target.closest('.term'); if (b) { e.preventDefault(); showGloss(b); } });
 function detailsHTML(id, open = true) {
   const d = DETAILS[id]; if (!d) return '';
   const x = d[lang] ?? d.nl;
   let h = '';
+  // de diepere uitleg (vakterminologie, cijfers, bronnen) zit samen in één dichtgeklapte laag "Voor wie meer wil"
   if (x.what) h += `<details class="sec" ${open ? 'open' : ''}><summary>${V('what')}</summary><p>${x.what}</p></details>`;
-  // de diepgang blijft beschikbaar, maar staat standaard dicht (enkel "Wat" is open)
   if (x.how?.length) h += `<details class="sec"><summary>${V('how')}</summary><ol>${x.how.map(s => `<li>${s}</li>`).join('')}</ol></details>`;
   if (x.facts?.length) h += `<details class="sec"><summary>${V('facts')}</summary><dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
   if (x.why) h += `<details class="sec"><summary>${V('why')}</summary><p>${x.why}</p></details>`;
   if (d.sources?.length) h += `<details class="sec"><summary>${V('sources')} (${d.sources.length})</summary><ol class="src">${d.sources.map(s => `<li>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${s.t}</a>` : s.t}</li>`).join('')}</ol></details>`;
-  return h;
+  return h ? `<details class="more"><summary>${V('more')}</summary><div class="morebody">${h}</div></details>` : '';
 }
 function render() {
   const def = current.def, base = current.base, n = NODES[current.id];
@@ -627,7 +641,7 @@ function showCard(id) {
     <div class="kind" style="font:500 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)">${U(n.kind === 'process' ? 'process' : 'structure')}</div>
     <h2 style="margin:6px 0 2px">${title(n)}<span class="status ${n.status === 'nagekeken' ? 'ok' : ''}">${statusText(n.status)}</span></h2>
     <div style="color:var(--muted);font-style:italic;font-size:13px">${sub(n)}</div>
-    <p style="font-size:14px;line-height:1.6;color:#c9d2e4">${summary(n)}</p>${detailsHTML(id, false)}
+    ${kortOf(id) ? `<div class="kort"><b>${V('inShort')}</b>${kortOf(id)}</div>` : `<p style="font-size:14px;line-height:1.6;color:#c9d2e4">${summary(n)}</p>`}${detailsHTML(id, true)}
     <div>${chipsOf(n.in, '')}${chipsOf(n.next, 'next')}${chipsOf(n.rel, 'rel')}</div>
     <p style="font-size:12.5px;color:var(--muted);margin-top:14px">${V('noScene')}</p>`;
   $('card').classList.add('show');
