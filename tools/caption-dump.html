@@ -1,0 +1,30 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>caption-dump</title>
+<body style="background:#0a1224;color:#ddd"><pre id="out">running…</pre>
+<script type="module">
+/* Alle ondertitels (titel + tekst per stap, NL en EN) en elk "In het kort" als JSON, plus een korte samenvatting
+ * (aantal stappen, gemiddelde lengte, langste ondertitels). Voor nalezen van het taalniveau.
+ * Gebruik: headless Chrome --dump-dom "tools/caption-dump.html[?ids=a,b]" */
+const out = document.getElementById('out');
+const only = new URLSearchParams(location.search).get('ids')?.split(',');
+const { SCENES } = await import('../app/scenes/index.js');
+const { DETAILS } = await import('../shared/details/index.js');
+const res = { scenes: {}, kort: {} };
+let n = 0, sum = 0; const long = [];
+for (const [id, def] of Object.entries(SCENES)) {
+  if (only && !only.includes(id)) continue;
+  let steps = def.steps ?? [];
+  if (def.alias) {
+    const base = SCENES[def.alias], from = def.from ?? 0, to = def.to ?? base.steps.length - 1;
+    steps = base.steps.slice(from, to + 1).map((s, i) => ({ ...s, ...(def.steps?.[i] ?? {}) }));
+    if (!def.steps) continue;                      // zelfde tekst als de basis: niet dubbel tellen
+  }
+  if (def.overview) steps = [{ title: def.overview.title ?? def.steps[def.overview.step ?? 0].title, text: def.overview.text }];
+  res.scenes[id] = steps.map(s => ({ title: s.title, text: s.text }));
+  for (const s of steps) { const L = (s.text?.nl ?? '').length; n++; sum += L; long.push([L, id, s.title?.nl]); }
+}
+for (const [id, d] of Object.entries(DETAILS)) if (!only || only.includes(id)) res.kort[id] = { nl: d.nl?.kort, en: d.en?.kort };
+long.sort((a, b) => b[0] - a[0]);
+out.textContent = `STEPS ${n} · gemiddeld ${(sum / n).toFixed(0)} tekens (NL-tekst)\nLANGSTE: ${long.slice(0, 8).map(x => x.join(' | ')).join('\n  ')}\nJSON ${JSON.stringify(res)}`;
+</script>

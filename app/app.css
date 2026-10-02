@@ -21,7 +21,8 @@ html, body { height: 100%; overflow: hidden; }
 /* bovenbalk (boven de figuur, niet erover) */
 .topbar { flex: none; display: flex; flex-direction: column; gap: 6px; padding: 8px 12px 6px; background: #080d1a; border-bottom: 1px solid var(--line); z-index: 5; }
 .row1 { display: flex; gap: 8px; align-items: center; min-width: 0; }
-.row2 { display: flex; gap: 10px; align-items: center; min-width: 0; }
+.row2 { display: flex; flex-wrap: wrap; row-gap: 4px; gap: 10px; align-items: center; min-width: 0; }
+.row2 .scalebox { flex-shrink: 0; max-width: 100%; }   /* past het niet naast de hoofdstukbalk, dan schuift die naar een eigen regel */
 .navbtns { display: flex; gap: 6px; flex: none; }
 .crumbs { display: flex; flex-wrap: nowrap; gap: 4px; align-items: center; font-size: 13px; overflow: hidden; min-width: 0; flex: 1; white-space: nowrap; }
 .crumbs button { all: unset; cursor: pointer; color: var(--muted); }
@@ -41,7 +42,10 @@ html, body { height: 100%; overflow: hidden; }
 .sinfo .dots i.on { background: var(--accent); }
 .sinfo .dots i.cur { background: #ffc247; width: 12px; }
 .sinfo button.back { all: unset; cursor: pointer; color: #ffc247; }
-.sbtn { all: unset; cursor: pointer; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; color: var(--text); background: rgba(124,196,255,.12); font-size: 12px; }
+.sbtn { all: unset; cursor: pointer; height: 28px; display: inline-flex; align-items: center; gap: 6px; padding: 0 11px; border-radius: 999px; color: var(--text); background: rgba(124,196,255,.12); font-size: 12.5px; white-space: nowrap; }
+.sbtn .arr { font-size: 15px; line-height: 1; }
+.sbtn .nm { max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
+.sbtn .nm:empty { display: none; }
 .sbtn:hover { background: rgba(124,196,255,.25); }
 .sbtn:disabled { opacity: .25; cursor: default; }
 
@@ -56,33 +60,44 @@ html, body { height: 100%; overflow: hidden; }
 .lbl.ext::after { content: "↗"; color: var(--accent); font-size: 11px; }
 .lbl:hover { border-color: var(--accent); background: rgba(20,32,60,.95); }
 
-/* onderstrook: uitleg + bediening (onder de figuur, niet erover) */
+/* onderstrook: uitleg + bediening als videospeler (onder de figuur, niet erover) */
 .dock { flex: none; background: #080d1a; border-top: 1px solid var(--line); padding: 8px 14px 8px; display: flex; flex-direction: column; gap: 6px; z-index: 5; }
-.drow { display: flex; gap: 14px; align-items: center; min-height: 52px; }
-.ctl { display: flex; gap: 4px; flex: none; }
-.caption { flex: 1; min-width: 0; }
+.caption { min-width: 0; min-height: 44px; }
 .caption .ct { font-weight: 600; font-size: 16px; color: var(--text); }
 .caption .cx { font-size: 14.5px; color: #c3cde2; margin-top: 2px; line-height: 1.45; }
 .caption.mini .cx { display: none; }
-.dnext { flex: none; display: flex; gap: 8px; align-items: center; }
-.trow { display: flex; gap: 10px; align-items: center; }
-.tbtn { all: unset; cursor: pointer; width: 38px; height: 34px; display: grid; place-items: center; border-radius: 7px; color: var(--text); font-size: 14px; }
+.prow { display: flex; gap: 8px; align-items: center; }
+.tbtn { all: unset; cursor: pointer; flex: none; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; color: var(--text); font-size: 18px; border: 1px solid var(--line); box-sizing: border-box; }
 .tbtn:hover { background: rgba(124,196,255,.15); }
-.tbtn.play { background: rgba(124,196,255,.18); }
-/* stap-voor-stap: wachten op de gebruiker */
-.capNext { all: unset; display: none; cursor: pointer; padding: 8px 16px; white-space: nowrap; border-radius: 999px; font-size: 14px; font-weight: 600;
-  color: #0a1224; background: var(--accent); animation: nudge 1.6s ease-in-out infinite; }
-.capNext.show { display: inline-block; }
-.capNext:hover { filter: brightness(1.12); }
-.capNext:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-.tbtn.pulse { background: rgba(124,196,255,.28); box-shadow: 0 0 0 0 rgba(124,196,255,.6); animation: ring 1.6s ease-out infinite; }
-@keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
+.tbtn:disabled { opacity: .3; cursor: default; background: none; }
+.tbtn.play { width: 44px; height: 44px; border: 0; background: var(--accent); color: #0a1224; font-size: 17px; }
+.tbtn.play:hover { filter: brightness(1.12); background: var(--accent); }
+.tbtn:focus-visible, .seg:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* ⏸-modus en stap klaar: › knippert zacht */
+.tbtn.pulse { background: rgba(124,196,255,.28); border-color: var(--accent); animation: ring 1.6s ease-out infinite; }
 @keyframes ring { 0% { box-shadow: 0 0 0 0 rgba(124,196,255,.55); } 100% { box-shadow: 0 0 0 10px rgba(124,196,255,0); } }
-@media (prefers-reduced-motion: reduce) { .capNext, .tbtn.pulse { animation: none; } }
-.track { position: relative; flex: 1; height: 6px; border-radius: 4px; background: #1b2640; cursor: pointer; }
-.track .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; background: linear-gradient(90deg, #4f8ff7, #7cc4ff); }
-.track .tick { position: absolute; top: -3px; width: 2px; height: 14px; background: rgba(232,237,247,.35); border-radius: 1px; }
-.stepno { font: 500 11.5px var(--mono); color: var(--muted); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .tbtn.pulse { animation: none; } }
+/* tijdlijn in stukken: één stuk per stap; de naam van een stap verschijnt erboven als je erover gaat
+ * (de naam van de huidige stap staat al als titel van de ondertitel) */
+.track { flex: 1; min-width: 0; display: flex; gap: 3px; align-items: center; }
+.seg { all: unset; cursor: pointer; flex: 1 1 0; min-width: 0; padding: 12px 0; position: relative; }
+.seg .sl { display: none; position: absolute; bottom: calc(100% - 4px); left: 0; font-size: 12px; color: var(--text); white-space: nowrap; background: var(--bg-2); border: 1px solid var(--line); border-radius: 7px; padding: 3px 8px; z-index: 6; pointer-events: none; }
+.seg:nth-last-child(-n+3):not(:nth-child(-n+3)) .sl { left: auto; right: 0; }
+.seg:hover .sl, .seg:focus-visible .sl { display: block; }
+.seg i { position: relative; display: block; height: 7px; border-radius: 4px; background: #1b2640; overflow: hidden; }
+.seg.cur i { height: 9px; box-shadow: 0 0 0 1px rgba(124,196,255,.5); }
+.seg:hover i { background: #2a3a5c; }
+.seg i em, .seg i s { position: absolute; left: 0; top: 0; bottom: 0; width: 0; text-decoration: none; }
+.seg i s { background: rgba(124,196,255,.38); }                /* leespauze */
+.seg i em { background: linear-gradient(90deg, #4f8ff7, #7cc4ff); }
+.seg.done i em { background: #3f6db8; }
+.srow { display: flex; justify-content: space-between; gap: 10px; font: 500 11.5px var(--mono); color: var(--muted); padding-left: 2px; }
+.stepno { white-space: nowrap; }
+/* ⚙: zelden nodige instellingen (snelheid) */
+.gear { position: relative; flex: none; }
+.gear > summary { list-style: none; font-size: 16px; }
+.gear > summary::-webkit-details-marker { display: none; }
+.gearbox { position: absolute; right: 0; bottom: calc(100% + 8px); background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,.4); z-index: 20; }
 #speed { background: #0d1426; color: var(--text); border: 1px solid var(--line); border-radius: 7px; font: 500 12px var(--mono); padding: 3px 4px; }
 
 .scalebox { display: flex; gap: 16px; align-items: center; font-size: 12.5px; color: var(--muted); min-width: 0; overflow: hidden; white-space: nowrap; }
@@ -92,9 +107,12 @@ html, body { height: 100%; overflow: hidden; }
 .zoomlvl i { width: 16px; height: 5px; border-radius: 2px; background: #243049; }
 .zoomlvl i.on { background: var(--accent); }
 
-.nextch { display: none; }
+.nextch { display: none; flex: none; }
 .nextch.show { display: block; }
-.nextch button { all: unset; cursor: pointer; background: linear-gradient(135deg, #4f8ff7, #7c5cff); color: #fff; font-weight: 600; font-size: 14px; padding: 9px 14px; border-radius: 12px; white-space: nowrap; }
+.nextch button { all: unset; cursor: pointer; background: var(--accent); color: #0a1224; font-weight: 500; font-size: 14px; padding: 9px 16px; border-radius: 999px; white-space: nowrap; max-width: 340px; overflow: hidden; text-overflow: ellipsis; }
+.nextch button b { font-weight: 700; }
+.nextch button:hover { filter: brightness(1.12); }
+.nextch button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
 /* zijpaneel */
 .side { background: var(--bg-2); border-left: 1px solid var(--line); overflow-y: auto; padding: 18px 18px 40px; }
@@ -183,7 +201,9 @@ html, body { height: 100%; overflow: hidden; }
   .app.noside .side { display: block; }
   .sheetclose { display: inline-flex; }
   .row2 { flex-wrap: wrap; row-gap: 4px; }
-  .story { margin-left: 0; }
+  .story { margin-left: 0; width: 100%; box-sizing: border-box; justify-content: space-between; }
+  .story .sbtn { min-width: 0; flex: 0 1 auto; }
+  .story .sinfo { flex: none; padding: 0 4px; }
 }
 @media (max-width: 700px) {
   .topbar { padding: 6px 8px 5px; gap: 5px; }
@@ -193,15 +213,16 @@ html, body { height: 100%; overflow: hidden; }
   #bLabels { display: none; }
   .tools { gap: 4px; }
   .navbtns { gap: 4px; }
-  .trow .stepno { display: none; }
   .zoomlvl { display: none; }
   .sinfo .dots { display: none; }
   .dock { padding: 6px 8px 8px; }
-  .drow { flex-wrap: wrap; gap: 8px; }
-  .caption { order: -1; flex-basis: 100%; }
+  .prow { flex-wrap: wrap; gap: 6px; }
+  .nextch { order: 5; flex-basis: 100%; }
+  .nextch button { display: block; text-align: center; max-width: none; }
   .caption .ct { font-size: 15px; }
   .caption .cx { font-size: 13.5px; }
-  .dnext { margin-left: auto; }
+  .sbtn .nm { max-width: none; }
+  .sinfo { font-size: 12px; }
   .lbl { font-size: 11px; padding: 3px 7px 3px 6px; }
   .h3 { font-size: 11.5px; padding: 5px 8px 5px 20px; }
 }
@@ -214,12 +235,8 @@ html, body { height: 100%; overflow: hidden; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .boot i { animation: none; } }
 
-/* automatisch verder: schakelaar + vullende knop tijdens de leespauze */
-.tauto { all: unset; cursor: pointer; align-self: center; margin-left: 4px; padding: 5px 10px; border-radius: 999px; font: 600 12px var(--mono); color: var(--muted); border: 1px solid var(--line); }
-.tauto[aria-pressed=true] { color: #0a1224; background: var(--accent); border-color: var(--accent); }
-.tauto:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.capNext { background-image: linear-gradient(90deg, rgba(255,255,255,.4) var(--fill, 0%), transparent var(--fill, 0%)); }
-.nextch button { background-image: linear-gradient(90deg, rgba(255,255,255,.3) var(--fill, 0%), transparent var(--fill, 0%)), linear-gradient(135deg, #4f8ff7, #7c5cff); }
+/* volgend hoofdstuk: de knop vult zich tijdens de leespauze */
+.nextch button { background-image: linear-gradient(90deg, rgba(255,255,255,.4) var(--fill, 0%), transparent var(--fill, 0%)); }
 
 /* uitlegpaneel kort laten oplichten (klik op de structuur van de huidige scène) */
 .side.flash { animation: sideflash 1.2s ease-out; }

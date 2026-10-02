@@ -31,9 +31,9 @@
       <div class="row2">
         <div class="scalebox" id="scalebox"></div>
         <div class="story" id="story">
-          <button class="sbtn" id="sPrev" aria-label="prev">◀</button>
+          <button class="sbtn" id="sPrev"><span class="arr">‹</span><span class="nm" id="sPrevName"></span></button>
           <div class="sinfo" id="sInfo"></div>
-          <button class="sbtn" id="sNext" aria-label="next">▶</button>
+          <button class="sbtn" id="sNext"><span class="nm" id="sNextName"></span><span class="arr">›</span></button>
         </div>
       </div>
     </header>
@@ -43,25 +43,25 @@
       <div class="boot" id="boot" role="status"><i></i><span>Van DNA tot eiwit wordt geladen…<br><small>Loading…</small></span></div>
     </div>
 
-    <!-- onderstrook: uitleg van de stap + bediening -->
+    <!-- onderstrook: uitleg van de stap + bediening als videospeler (onder de figuur, niet erover) -->
     <footer class="dock">
-      <div class="drow">
-        <div class="ctl">
-          <button class="tbtn" id="tPrev" title="">⏮</button>
-          <button class="tbtn play" id="tPlay" title="">⏸</button>
-          <button class="tbtn" id="tNext" title="">⏭</button>
-          <button class="tauto" id="tAuto" aria-pressed="true" data-u="auto"></button>
-        </div>
-        <div class="caption" id="caption"><div class="ct" id="capTitle"></div><div class="cx" id="capText"></div></div>
-        <div class="dnext"><button class="capNext" id="capNext" data-u="nextStepBtn"></button><div class="nextch" id="nextCh"></div></div>
+      <div class="caption" id="caption"><div class="ct" id="capTitle"></div><div class="cx" id="capText"></div></div>
+      <div class="prow">
+        <button class="tbtn play" id="tPlay" title=""></button>
+        <button class="tbtn step" id="tPrev" title="">‹</button>
+        <div class="track" id="track"></div>
+        <button class="tbtn step" id="tNext" title="">›</button>
+        <div class="nextch" id="nextCh"></div>
+        <details class="gear" id="gear">
+          <summary class="tbtn" id="gearBtn" title="">⚙</summary>
+          <div class="gearbox"><label for="speed" data-u="speedLbl"></label>
+            <select id="speed">
+              <option value="0.5">0,5×</option><option value="0.75">0,75×</option><option value="1" selected>1×</option><option value="1.5">1,5×</option><option value="2">2×</option>
+            </select>
+          </div>
+        </details>
       </div>
-      <div class="trow">
-        <div class="track" id="track"><div class="fill" id="fill"></div></div>
-        <span class="stepno" id="stepNo"></span>
-        <select id="speed" aria-label="speed">
-          <option value="0.5">0,5×</option><option value="0.75">0,75×</option><option value="1" selected>1×</option><option value="1.5">1,5×</option><option value="2">2×</option>
-        </select>
-      </div>
+      <div class="srow"><span id="playState"></span><span class="stepno" id="stepNo"></span></div>
     </footer>
 
     <div class="overlay" id="card"><div class="cardbox" id="cardbody"></div></div>

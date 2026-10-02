@@ -43,9 +43,10 @@ const UI2 = {
   struct3d: { nl: '3D-structuren (PDB)', en: '3D structures (PDB)' }, mapTitle: { nl: 'Waar ben ik?', en: 'Where am I?' },
   mapSub: { nl: 'Het hoofdverhaal (genummerd) en alle zijtakken. Geel = hier ben je. Klik om ernaartoe te gaan.', en: 'The main story (numbered) and all side paths. Yellow = you are here. Click to go there.' },
   close: { nl: 'Sluiten', en: 'Close' }, noScene: { nl: 'Voor deze knoop is nog geen animatie gebouwd.', en: 'No animation has been built for this node yet.' },
-  play: { nl: 'Afspelen (spatie)', en: 'Play (space)' }, pause: { nl: 'Pauze (spatie)', en: 'Pause (space)' }, prevStep: { nl: 'Vorige stap (←)', en: 'Previous step (←)' }, nextStep: { nl: 'Volgende stap (→)', en: 'Next step (→)' }, nextStepBtn: { nl: 'Volgende stap →', en: 'Next step →' }, inShort: { nl: 'In het kort', en: 'In short' }, auto: { nl: 'Auto', en: 'Auto' },
-  autoOn: { nl: 'Automatisch verder: aan (A). Klik om zelf door te klikken.', en: 'Auto-advance: on (A). Click to step through yourself.' },
-  autoOff: { nl: 'Automatisch verder: uit (A). Klik om het verhaal vanzelf te laten doorlopen.', en: 'Auto-advance: off (A). Click to let the story run by itself.' },
+  play: { nl: 'Afspelen (spatie)', en: 'Play (space)' }, pause: { nl: 'Pauze (spatie)', en: 'Pause (space)' }, prevStep: { nl: 'Vorige stap (←)', en: 'Previous step (←)' }, nextStep: { nl: 'Volgende stap (→)', en: 'Next step (→)' }, inShort: { nl: 'In het kort', en: 'In short' },
+  playAuto: { nl: 'Vanzelf verder gaan (spatie)', en: 'Continue by itself (space)' }, holdStep: { nl: 'Blijf bij deze stap (spatie)', en: 'Stay on this step (space)' },
+  stateAuto: { nl: '▶ gaat vanzelf verder', en: '▶ continues by itself' }, stateHold: { nl: '⏸ blijft bij deze stap (herhaalt)', en: '⏸ stays on this step (repeats)' },
+  speedLbl: { nl: 'Snelheid', en: 'Speed' }, settings: { nl: 'Instellingen', en: 'Settings' }, more: { nl: 'Voor wie meer wil', en: 'Want to know more?' },
   homeTip: { nl: 'Terug naar het begin van het verhaal', en: 'Back to the start of the story' }, upTip: { nl: 'Eén niveau uitzoomen (Esc)', en: 'Zoom out one level (Esc)' },
 };
 const V = k => L(UI2[k]);
@@ -88,7 +89,7 @@ let camNow = FULL.slice(), camTarget = FULL.slice(), camSnap = false;
 /* ---------- vaste teksten ---------- */
 document.querySelectorAll('[data-u]').forEach(e => e.textContent = V(e.dataset.u));
 $('bHome').title = V('homeTip'); $('bUp').title = V('upTip');
-$('tPrev').title = V('prevStep'); $('tNext').title = V('nextStep');
+$('tPrev').title = V('prevStep'); $('tNext').title = V('nextStep'); $('gearBtn').title = V('settings');
 $('langBox').append(langSwitch('btn'));
 $('bAtlas').href = new URL(`../atlas/index.html?lang=${lang}`, import.meta.url).href;   // werkt ook als de pagina elders staat (online)
 
@@ -194,7 +195,7 @@ function frame(now) {
       current.svg.setAttribute('viewBox', camNow.map(n => n.toFixed(2)).join(' '));
     }
     fadeGhost(now);
-    $('fill').style.width = (100 * t / current.total) + '%';
+    updateSegs(si);
     if (showLabels) updateLabels();
   }
   requestAnimationFrame(frame);
@@ -231,6 +232,7 @@ function onStep(i) {
   $('capText').textContent = L(st.text) ?? '';
   $('stepNo').textContent = `${V('step')} ${i + 1}/${current.steps.length}`;
   side.querySelectorAll('.stepsList li').forEach((li, k) => li.classList.toggle('cur', k === i));
+  syncPlayBtn();
 }
 function setPlaying(v) {
   playing = v; syncPlayBtn();
@@ -238,21 +240,28 @@ function setPlaying(v) {
 }
 const stepEnd = i => stepStart(i + 1) - 1;       // net vóór het begin van de volgende stap
 const isLast = () => stepInfo(t).step >= current.steps.length - 1;
+/* Bediening als videospeler: ▶ = vanzelf verder (met leespauze), ⏸ = blijf bij deze stap (de stap herhaalt zich).
+ * Het beeld zelf stilzetten gebeurt niet meer via de knop (enkel ?freeze, voor de testhulpmiddelen). */
 function syncPlayBtn() {
-  $('tPlay').textContent = playing ? '⏸' : '▶'; $('tPlay').title = playing ? V('pause') : V('play');
-  const wait = done && current && !isLast();
-  $('tNext').classList.toggle('pulse', wait);
-  $('capNext').classList.toggle('show', wait);
+  $('tPlay').textContent = auto ? '⏸' : '▶'; $('tPlay').title = V(auto ? 'holdStep' : 'playAuto');
+  $('tPlay').setAttribute('aria-label', $('tPlay').title);
+  $('playState').textContent = V(auto ? 'stateAuto' : 'stateHold');
+  const last = !!current && isLast();
+  $('tNext').disabled = last;
+  $('tPrev').disabled = !!current && stepInfo(t).step === 0;
+  $('tNext').classList.toggle('pulse', done && !auto && !last);
 }
+let autoFill = 0;                                 // leespauze (0–1) van de huidige stap, getoond in haar stuk van de tijdlijn
 function setAutoFill(k, last) {
-  const b = last ? $('nextCh').querySelector('button') : $('capNext');
-  if (b) b.style.setProperty('--fill', (k * 100).toFixed(1) + '%');
+  autoFill = last ? 0 : k;
+  const b = $('nextCh').querySelector('button');
+  if (b) b.style.setProperty('--fill', ((last ? k : 0) * 100).toFixed(1) + '%');
 }
 function setAuto(v) {
   auto = v; try { localStorage.setItem(AUTO_KEY, v ? '1' : '0'); } catch {}
-  $('tAuto').setAttribute('aria-pressed', v); $('tAuto').title = V(v ? 'autoOn' : 'autoOff');
   if (!v) setAutoFill(0, false);
   if (held) holdT = 0;
+  syncPlayBtn();
 }
 function hold() {
   held = true; holdT = 0; done = true; syncPlayBtn();
@@ -279,18 +288,36 @@ function prevStep() {
   playStep(Math.max(0, i), stepStart(Math.max(0, i)) + 1);
 }
 function gotoStep(i) { i = Math.max(0, Math.min(current.steps.length - 1, i)); t = stepStart(i) + 1; ff = null; playStep(i); }
-$('tPlay').onclick = () => setPlaying(!playing);
+$('tPlay').onclick = () => {
+  setAuto(!auto); if (!playing) setPlaying(true);
+  // ▶ na een stap die al helemaal getoond is: meteen verder (niet eerst de herhaling uitspelen)
+  if (auto && done && current) { const i = stepInfo(t).step; if (i < current.steps.length - 1) playStep(i + 1); else { held = true; holdT = 1e9; } }
+};
 $('tPrev').onclick = prevStep;
 $('tNext').onclick = nextStep;
-$('capNext').onclick = nextStep;
-$('tAuto').onclick = () => setAuto(!auto);
-setAuto(auto);
 $('speed').onchange = e => speed = +e.target.value;
-$('track').onclick = e => { const r = e.currentTarget.getBoundingClientRect(); t = Math.max(0, Math.min(.999, (e.clientX - r.left) / r.width)) * current.total; ff = null; playStep(stepInfo(t).step); };
+document.addEventListener('click', e => { if (!e.target.closest('#gear')) $('gear').open = false; });
+/* tijdlijn in stukken: één stuk per stap (klikbaar, met de naam erbij); het stuk vult zich terwijl de stap speelt,
+ * een lichtere vulling toont de leespauze voor het vanzelf verder gaat */
 function drawTicks() {
-  const tr = $('track'); tr.querySelectorAll('.tick').forEach(x => x.remove());
-  let acc = 0;
-  current.steps.forEach((s, i) => { if (i) { const d = document.createElement('i'); d.className = 'tick'; d.style.left = (100 * acc / current.total) + '%'; tr.append(d); } acc += s.dur; });
+  const tr = $('track'); tr.innerHTML = '';
+  current.steps.forEach((s, i) => {
+    const b = document.createElement('button'); b.className = 'seg';
+    b.title = `${i + 1}. ${L(s.title) ?? ''}`; b.setAttribute('aria-label', `${V('step')} ${b.title}`);
+    b.innerHTML = '<span class="sl"></span><i><s></s><em></em></i>';
+    b.querySelector('.sl').textContent = L(s.title) ?? '';
+    b.onclick = () => gotoStep(i);
+    tr.append(b);
+  });
+}
+function updateSegs(si) {
+  const segs = $('track').children;
+  for (let i = 0; i < segs.length; i++) {
+    const b = segs[i], k = i < si.step ? 1 : i > si.step ? 0 : si.p;
+    b.classList.toggle('cur', i === si.step); b.classList.toggle('done', i < si.step);
+    b.querySelector('em').style.width = (k * 100).toFixed(1) + '%';
+    b.querySelector('s').style.width = (i === si.step ? autoFill * 100 : 0).toFixed(1) + '%';
+  }
 }
 
 /* ---------- labels ---------- */
@@ -509,13 +536,17 @@ function renderStory() {
   const ci = STORY_IDS.indexOf(current.id);
   const dots = STORY.map((c, i) => `<i class="${i === ci ? 'cur' : i <= lastChapter ? 'on' : ''}"></i>`).join('');
   if (ci >= 0) {
-    $('sInfo').innerHTML = `${L(LINES[line].short)} · ${V('chapter')} <b>${ci + 1}/${STORY.length}</b> · ${title(NODES[current.id])}<div class="dots">${dots}</div>`;
-    $('sPrev').disabled = ci === 0; $('sNext').disabled = ci === STORY.length - 1;
+    $('sInfo').innerHTML = `${L(LINES[line].short)} · ${V('chapter')} <b>${ci + 1}/${STORY.length}</b><div class="dots">${dots}</div>`;
+    const pv = STORY[ci - 1], nx = STORY[ci + 1];   // hoofdstukken enkel hier, met de naam van het vorige/volgende erbij
+    $('sPrevName').textContent = pv ? title(NODES[pv.id]) : ''; $('sNextName').textContent = nx ? title(NODES[nx.id]) : '';
+    $('sPrev').title = pv ? `${V('chapter')} ${ci}: ${title(NODES[pv.id])}` : ''; $('sNext').title = nx ? `${V('chapter')} ${ci + 2}: ${title(NODES[nx.id])}` : '';
+    $('sPrev').disabled = !pv; $('sNext').disabled = !nx;
     $('sPrev').onclick = () => chapterGo(ci - 1); $('sNext').onclick = () => chapterGo(ci + 1);
   } else {
-    $('sInfo').innerHTML = `${V('sidePath')} · <button class="back" id="sBack">${V('backTo')} (${lastChapter + 1})</button><div class="dots">${dots}</div>`;
-    $('sBack').onclick = () => chapterGo(lastChapter);
-    $('sPrev').disabled = true; $('sNext').disabled = false; $('sNext').onclick = () => chapterGo(lastChapter);
+    $('sInfo').innerHTML = `${V('sidePath')}<div class="dots">${dots}</div>`;
+    $('sPrevName').textContent = ''; $('sPrev').title = ''; $('sPrev').disabled = true;
+    $('sNextName').textContent = `${V('backTo')} (${lastChapter + 1})`; $('sNext').title = title(NODES[STORY[lastChapter].id]);
+    $('sNext').disabled = false; $('sNext').onclick = () => chapterGo(lastChapter);
   }
 }
 function showNextChapter() {
@@ -523,7 +554,7 @@ function showNextChapter() {
   const box = $('nextCh');
   if (ci < 0 || ci >= STORY.length - 1) return;
   const nx = STORY[ci + 1];
-  box.innerHTML = `<button title="${L(STORY[ci].bridge)}">${V('nextChapter')}: ${title(NODES[nx.id])} →</button>`;
+  box.innerHTML = `<button title="${L(STORY[ci].bridge)}"><span>${V('nextChapter')}: <b>${title(NODES[nx.id])}</b> ›</span></button>`;
   box.querySelector('button').onclick = () => chapterGo(ci + 1);
   box.classList.add('show');
 }
@@ -638,12 +669,12 @@ $('bMap').onclick = showMap;
 document.addEventListener('keydown', e => {
   if (e.target.closest('select, input')) return;
   if (e.key === 'Escape') { if ($('card').classList.contains('show') || $('map').classList.contains('show')) hideOverlays(); else zoomOut(); }
-  else if (e.key === ' ') { e.preventDefault(); $('tPlay').click(); }
+  else if (e.key === ' ') { e.preventDefault(); $('tPlay').click(); }   // ▶ vanzelf verder / ⏸ blijf bij deze stap
   else if (e.key === 'ArrowRight') $('tNext').click();
   else if (e.key === 'ArrowLeft') $('tPrev').click();
   else if (e.key === 'm') showMap();
   else if (e.key === 'c') toggleCap();
-  else if (e.key === 'a') setAuto(!auto);
+  else if (e.key === 'a') $('tPlay').click();
 });
 addEventListener('resize', () => requestAnimationFrame(placeLabels));
 
