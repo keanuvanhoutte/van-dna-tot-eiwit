@@ -46,6 +46,8 @@ html, body { height: 100%; overflow: hidden; }
 .sbtn .arr { font-size: 15px; line-height: 1; }
 .sbtn .nm { max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
 .sbtn .nm:empty { display: none; }
+.sbtn.back { color: #ffc247; }
+.sbtn.back .nm { max-width: none; }   /* zijpad: "↩ terug naar het verhaal" volledig tonen */
 .sbtn:hover { background: rgba(124,196,255,.25); }
 .sbtn:disabled { opacity: .25; cursor: default; }
 

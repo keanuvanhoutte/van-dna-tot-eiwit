@@ -548,6 +548,7 @@ function renderStory() {
     $('sNextName').textContent = `${V('backTo')} (${lastChapter + 1})`; $('sNext').title = title(NODES[STORY[lastChapter].id]);
     $('sNext').disabled = false; $('sNext').onclick = () => chapterGo(lastChapter);
   }
+  $('sNext').classList.toggle('back', ci < 0);
 }
 function showNextChapter() {
   const ci = STORY_IDS.indexOf(current.id);
