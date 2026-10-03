@@ -84,11 +84,19 @@ export function structure3d(o) {
           if (!ready) return;
           if (s.step !== lastStep) { lastStep = s.step; applyStep(s.step); }
           // draaien op de echte klok: ook terwijl een stap op het eindbeeld wacht, blijft de structuur rustig draaien
-          const now = performance.now(), dt = now - lastT; lastT = now;
+          // ~30 beelden/s volstaat voor rustig draaien en halveert het werk voor de grafische kaart
+          const now = performance.now(), dt = now - lastT;
+          if (dt < 32) return;
+          lastT = now;
           const spin = (o.steps[s.step].spin ?? .012) * SPIN;
-          if (dt > 0 && dt < 200 && spin) { viewer.rotate(dt * spin, 'y'); viewer.render(); }
+          if (dt < 200 && spin) { viewer.rotate(dt * spin, 'y'); viewer.render(); }
         },
-        destroy() { dead = true; try { viewer?.clear(); } catch {} },
+        destroy() {
+          dead = true;
+          try { viewer?.clear(); } catch {}
+          // WebGL-geheugen meteen vrijgeven (anders stapelen de 3D-beelden zich op bij elke scènewissel)
+          try { for (const cv of el.querySelectorAll('canvas')) (cv.getContext('webgl2') ?? cv.getContext('webgl'))?.getExtension('WEBGL_lose_context')?.loseContext(); } catch {}
+        },
       };
     },
   };

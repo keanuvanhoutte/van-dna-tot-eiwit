@@ -156,7 +156,13 @@ const stepStart = i => current.steps.slice(0, i).reduce((s, x) => s + x.dur, 0);
 // test-hulp: ?rafpoly vervangt requestAnimationFrame door een timer (headless Chrome rendert anders geen frames)
 if (q.has('rafpoly')) window.requestAnimationFrame = cb => setTimeout(() => cb(performance.now()), 16);
 let lastFrame = performance.now(), lastStep = -1;
+/* Zuinig tekenen: hoogstens ~60 beelden/s (ook op 120/144 Hz-schermen), en alleen opnieuw tekenen wat veranderd is.
+ * Staat het beeld stil (pauze of wachten op het eindbeeld), dan kost een frame bijna niets. */
+const MIN_FRAME = 1000 / 62;
+let lastScene = null, lastVB = '', lastLabelsAt = 0, labelsDirty = true;
 function frame(now) {
+  requestAnimationFrame(frame);
+  if (now - lastFrame < MIN_FRAME - 1) return;
   const dt = Math.min(60, now - lastFrame); lastFrame = now;
   if (current && !busy) {
     if (playing) {
@@ -186,20 +192,28 @@ function frame(now) {
     if (si.step !== lastStep && lastStep >= 0) makeGhost();      // vorig beeld bewaren om zacht over te vloeien
     const s = current.ov ? { step: current.ov.step ?? 0, p: .999, t: current.ov.t0 + t, total: current.total }   // overzicht: vast eindbeeld, omgeving beweegt mee
       : { step: si.step + (current.from ?? 0), p: si.p, t: t + current.offset, total: current.total };
-    try { current.api?.update?.(s.t, s); } catch (e) { console.error(e); }
+    // update(t, s) is deterministisch: zelfde tijd → zelfde beeld, dus overslaan als er niets veranderd is (3D draait wel altijd)
+    const key = `${s.t}|${s.step}|${s.p}`;
+    let changed = false;
+    if (current.is3d || lastScene !== current.api || current.api?.__k !== key) {
+      try { current.api?.update?.(s.t, s); } catch (e) { console.error(e); }
+      if (current.api) current.api.__k = key;
+      lastScene = current.api; changed = true;
+    }
     if (si.step !== lastStep) { lastStep = si.step; onStep(si.step); }
     // camera
     if (current.svg) {
       camTarget = current.steps[si.step].cam ?? FULL;
       const k = camSnap ? 1 : 1 - Math.exp(-dt / 550); camSnap = false;
-      camNow = camNow.map((v, i) => v + (camTarget[i] - v) * k);
-      current.svg.setAttribute('viewBox', camNow.map(n => n.toFixed(2)).join(' '));
+      camNow = camNow.map((v, i) => Math.abs(camTarget[i] - v) < .01 ? camTarget[i] : v + (camTarget[i] - v) * k);
+      const vb = camNow.map(n => n.toFixed(2)).join(' ');
+      if (vb !== lastVB || current.svg.getAttribute('viewBox') !== vb) { current.svg.setAttribute('viewBox', vb); lastVB = vb; changed = true; }
     }
-    fadeGhost(now);
+    if (ghost) { fadeGhost(now); changed = true; }
     updateSegs(si);
-    if (showLabels) updateLabels();
+    // labels volgen het beeld; bij stilstand enkel af en toe nakijken (bv. na het openklappen van een paneel)
+    if (showLabels && (changed || labelsDirty || now - lastLabelsAt > 300)) { updateLabels(); lastLabelsAt = now; labelsDirty = false; }
   }
-  requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
 
@@ -301,7 +315,7 @@ document.addEventListener('click', e => { if (!e.target.closest('#gear')) $('gea
 /* tijdlijn in stukken: één stuk per stap (klikbaar, met de naam erbij); het stuk vult zich terwijl de stap speelt,
  * een lichtere vulling toont de leespauze voor het vanzelf verder gaat */
 function drawTicks() {
-  const tr = $('track'); tr.innerHTML = '';
+  const tr = $('track'); tr.innerHTML = ''; segKey = '';
   current.steps.forEach((s, i) => {
     const b = document.createElement('button'); b.className = 'seg';
     b.title = `${i + 1}. ${L(s.title) ?? ''}`; b.setAttribute('aria-label', `${V('step')} ${b.title}`);
@@ -311,7 +325,11 @@ function drawTicks() {
     tr.append(b);
   });
 }
+let segKey = '';
 function updateSegs(si) {
+  const sk = `${si.step}|${si.p.toFixed(3)}|${autoFill.toFixed(3)}|${$('track').children.length}`;
+  if (sk === segKey) return;
+  segKey = sk;
   const segs = $('track').children;
   for (let i = 0; i < segs.length; i++) {
     const b = segs[i], k = i < si.step ? 1 : i > si.step ? 0 : si.p;
@@ -691,7 +709,7 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'c') toggleCap();
   else if (e.key === 'a') $('tPlay').click();
 });
-addEventListener('resize', () => requestAnimationFrame(placeLabels));
+addEventListener('resize', () => { labelsDirty = true; requestAnimationFrame(placeLabels); });
 
 /* ---------- start ---------- */
 const startId = hasScene(q.get('scene')) ? q.get('scene') : (hasScene('cel') ? 'cel' : Object.keys(SCENES)[0]);
