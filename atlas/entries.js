@@ -249,9 +249,81 @@ export const ENTRIES = [
     src: [doi('10.1093/nar/28.10.2171', 'Xiong & Sundaralingam (2000) Nucleic Acids Res 28:2171')],
   },
   {
+    id: 'mismatch', pdb: '1LNT', type: ['rna'], cls: ['duplex'], ctx: ['cell', 'other'], org: { nl: 'E. coli-SRP-RNA (synthetisch fragment)', en: 'E. coli SRP RNA (synthetic fragment)' },
+    name: { nl: 'Mismatches in een RNA-helix (SRP)', en: 'Mismatches in an RNA helix (SRP)' }, sub: { nl: 'inwendige lus van SRP-RNA domein IV · 1,7 Å', en: 'internal loop of SRP RNA domain IV · 1.7 Å' },
+    helix: ['A', 'B'], hand: 'r', cmp: ['wobble', 'dsrna'], scenes: ['rnastructuur', 'er'],
+    mark: [
+      { col: '#f06bc0', label: { nl: 'mismatch (A·C, G·A)', en: 'mismatch (A·C, G·A)' }, res: ['A:6', 'B:19', 'A:8', 'B:17'] },
+      { col: '#ffd84d', label: { nl: 'G–U-paar (wobble)', en: 'G–U pair (wobble)' }, res: ['A:4', 'B:21'] },
+      { col: '#f2f4f8', label: { nl: 'base zonder partner', en: 'base without partner' }, res: ['A:5', 'B:18', 'B:20'] },
+    ],
+    what: {
+      nl: 'Dubbelstrengig RNA-dodecameer met het sterk geconserveerde stuk van domein IV van het 4.5S-RNA van het bacteriële signal recognition particle (SRP). Tussen gewone Watson–Crick-paren zit een inwendige lus met niet-canonieke paren: een A·C- en een G·A-mismatch, een G·U-wobblepaar, en drie nucleotiden (C5, G18, A20) die in dit model geen eigen paringspartner hebben (minder dan twee waterstofbruggen naar een andere base; berekend uit de coördinaten). Twee cytidines zijn 5-broomcytidine (hulpmiddel voor de kristallografie).',
+      en: 'Double-stranded RNA dodecamer containing the highly conserved part of domain IV of the 4.5S RNA of the bacterial signal recognition particle (SRP). Between ordinary Watson–Crick pairs lies an internal loop with non-canonical pairs: an A·C and a G·A mismatch, a G·U wobble pair, and three nucleotides (C5, G18, A20) that have no pairing partner of their own in this model (fewer than two hydrogen bonds to another base; computed from the coordinates). Two cytidines are 5-bromocytidine (an aid for crystallography).' },
+    feat: {
+      nl: ['mismatch = twee basen tegenover elkaar die niet complementair zijn (geen A–U of G–C)', 'gemarkeerd in de figuur: mismatches roze, G–U geel, basen zonder partner wit', 'de helix blijft rechtshandig en A-vormig ondanks de afwijkende paren', 'RNA verdraagt zulke paren veel beter dan DNA: ze zijn stabiel en vormen herkenningsplaatsen voor eiwitten'],
+      en: ['mismatch = two bases facing each other that are not complementary (not A–U or G–C)', 'highlighted in the figure: mismatches pink, G–U yellow, bases without a partner white', 'the helix stays right-handed and A-form despite the unusual pairs', 'RNA tolerates such pairs much better than DNA: they are stable and form recognition sites for proteins'] },
+    cell: {
+      nl: 'Het SRP herkent de signaalsequentie van een eiwit in aanmaak en brengt het ribosoom naar het ER-membraan. In de bacterie bindt het Ffh-eiwit precies op deze inwendige lus van domein IV; het menselijke SRP-RNA (7SL-RNA) heeft een overeenkomstig geconserveerd deel. Mismatches en bulges komen in alle grote RNA’s voor (tRNA, mRNA, rRNA) en geven RNA zijn veelzijdige 3D-vormen.',
+      en: 'SRP recognises the signal sequence of a protein being made and brings the ribosome to the ER membrane. In bacteria the Ffh protein binds exactly at this internal loop of domain IV; the human SRP RNA (7SL RNA) has a corresponding conserved part. Mismatches and bulges occur in all large RNAs (tRNA, mRNA, rRNA) and give RNA its versatile 3D shapes.' },
+    simpl: {
+      nl: 'Of een base "gepaard" is, wordt hier eenvoudig bepaald: minstens twee waterstofbruggen (N/O op 2,6–3,3 Å) met één andere base. Basen met één brug of in een basentriplet tellen dus als "zonder partner".',
+      en: 'Whether a base is "paired" is decided simply here: at least two hydrogen bonds (N/O at 2.6–3.3 Å) with one other base. Bases with a single bond or in a base triple therefore count as "without partner".' },
+    src: [doi('10.1107/S0907444903006747', 'Deng et al. (2003) Acta Cryst D 59:1004')],
+  },
+  {
+    id: 'wobble', pdb: '1D4R', type: ['rna'], cls: ['duplex'], ctx: ['cell'], org: { nl: 'mens (SRP-RNA, synthetisch fragment)', en: 'human (SRP RNA, synthetic fragment)' },
+    name: { nl: 'G–U-wobblepaar in RNA', en: 'G–U wobble pair in RNA' }, sub: { nl: 'helix 6 van menselijk SRP-RNA · 2,0 Å', en: 'helix 6 of human SRP RNA · 2.0 Å' },
+    helix: ['A', 'B'], hand: 'r', keep: ['A', 'B'], cmp: ['mismatch', 'dsrna'], scenes: ['rnastructuur', 'er'],
+    mark: [
+      { col: '#ffd84d', label: { nl: 'G–U-paar (wobble)', en: 'G–U pair (wobble)' }, res: ['A:8', 'B:21', 'A:21', 'B:8'] },
+      { col: '#f06bc0', label: { nl: 'G·G-paren (mismatch)', en: 'G·G pairs (mismatch)' }, res: ['A:12', 'A:13', 'A:16', 'B:13', 'B:16'] },
+    ],
+    what: {
+      nl: 'Een 29-nucleotide-fragment van helix 6 van het menselijke SRP-RNA (7SL-RNA). In het kristal paren twee kopieën tot een lange dubbelhelix. Naast gewone G–C- en A–U-paren bevat ze twee G·U-wobbleparen: de U schuift een halve plaats op t.o.v. een gewone Watson–Crick-positie en vormt twee waterstofbruggen (G O6–U N3 en G N1–U O2). In het midden liggen bovendien G·G-paren.',
+      en: 'A 29-nucleotide fragment of helix 6 of the human SRP RNA (7SL RNA). In the crystal two copies pair into a long double helix. Besides ordinary G–C and A–U pairs it contains two G·U wobble pairs: the U is shifted by half a position relative to a normal Watson–Crick position and forms two hydrogen bonds (G O6–U N3 and G N1–U O2). In the middle there are also G·G pairs.' },
+    feat: {
+      nl: ['G·U is het meest voorkomende niet-Watson–Crick-paar in RNA', 'twee waterstofbruggen, zoals A–U, maar verschoven ("wobble")', 'gemarkeerd: G–U geel, G·G-paren roze', 'de verschuiving geeft een plaatselijk andere groef, die eiwitten en ionen kunnen herkennen'],
+      en: ['G·U is the most common non-Watson–Crick pair in RNA', 'two hydrogen bonds, like A–U, but shifted ("wobble")', 'highlighted: G–U yellow, G·G pairs pink', 'the shift gives a locally different groove that proteins and ions can recognise'] },
+    cell: {
+      nl: 'G·U-paren komen overal in cellulair RNA voor. Bij de translatie maakt hetzelfde wobble-principe het mogelijk dat één tRNA meerdere codons leest (wobble op de derde codonpositie). Helix 6 van het menselijke SRP-RNA is de bindingsplaats van het eiwit SRP19.',
+      en: 'G·U pairs occur everywhere in cellular RNA. In translation the same wobble principle allows one tRNA to read several codons (wobble at the third codon position). Helix 6 of the human SRP RNA is the binding site of the protein SRP19.' },
+    simpl: {
+      nl: 'Het fragment is synthetisch; in het kristal vormen twee kopieën samen één helix (hier ketens A en B; een derde kopie is weggelaten). Het 5’-uiteinde draagt een extra fosfaat (GDP).',
+      en: 'The fragment is synthetic; in the crystal two copies together form one helix (chains A and B here; a third copy is left out). The 5’ end carries an extra phosphate (GDP).' },
+    src: [doi('10.1016/S0969-2126(00)80024-6', 'Wild et al. (1999) Structure 7:1345')],
+  },
+  {
+    id: 'stemloop', pdb: '1EHZ', type: ['rna'], cls: ['folded'], ctx: ['cell'], org: { nl: 'gist (S. cerevisiae)', en: 'yeast (S. cerevisiae)' },
+    name: { nl: 'Stam en lus (anticodonarm van tRNA)', en: 'Stem and loop (tRNA anticodon arm)' }, sub: { nl: 'tRNA^Phe van gist, anticodonarm gemarkeerd · 1,93 Å', en: 'yeast tRNA^Phe, anticodon arm highlighted · 1.93 Å' },
+    cmp: ['trna', 'tar'], scenes: ['trna', 'rnastructuur'], dim: true,
+    mark: [
+      { col: '#5fd3e6', label: { nl: 'stam (5 basenparen)', en: 'stem (5 base pairs)' }, res: ['A:27', 'A:28', 'A:29', 'A:30', 'A:31', 'A:39', 'A:40', 'A:41', 'A:42', 'A:43'] },
+      { col: '#f06bc0', label: { nl: 'lus (7 basen)', en: 'loop (7 bases)' }, res: ['A:32', 'A:33', 'A:37', 'A:38'] },
+      { col: '#ffd84d', label: { nl: 'anticodon (in de lus)', en: 'anticodon (in the loop)' }, res: ['A:34', 'A:35', 'A:36'] },
+    ],
+    what: {
+      nl: 'Een stam-lus (haarspeld) ontstaat als een RNA-streng terugvouwt en met zichzelf paart. De stam is het dubbelstrengige stuk, de lus het enkelstrengige stuk aan het uiteinde. Hier gemarkeerd in de anticodonarm van tRNA^Phe: een stam van 5 basenparen (27–31 met 39–43) en een lus van 7 nucleotiden (32–38) met het anticodon (34–36, GmAA) dat het codon UUC/UUU op het mRNA leest.',
+      en: 'A stem-loop (hairpin) forms when an RNA strand folds back and pairs with itself. The stem is the double-stranded part, the loop the single-stranded part at the end. Highlighted here in the anticodon arm of tRNA^Phe: a stem of 5 base pairs (27–31 with 39–43) and a loop of 7 nucleotides (32–38) containing the anticodon (34–36, GmAA) that reads the codon UUC/UUU on the mRNA.' },
+    feat: {
+      nl: ['stam (stem) = dubbelstrengig stuk waar een streng met zichzelf paart', 'lus (loop) = enkelstrengig stuk aan het uiteinde van een stam', 'tRNA heeft vier stammen ("armen"); de rest van het tRNA is hier grijs', 'de basen van de lus stapelen en wijzen naar buiten, klaar om het codon te lezen'],
+      en: ['stem = double-stranded part where a strand pairs with itself', 'loop = single-stranded part at the end of a stem', 'tRNA has four stems ("arms"); the rest of the tRNA is grey here', 'the loop bases stack and point outwards, ready to read the codon'] },
+    cell: {
+      nl: 'Stam-lussen zijn de basisbouwsteen van gevouwen RNA: ze zitten in tRNA, rRNA, mRNA (bv. regelelementen in de UTR’s), snRNA en virale RNA’s (zoals TAR van HIV). De lus is vaak de plaats waar een ander RNA of een eiwit bindt.',
+      en: 'Stem-loops are the basic building block of folded RNA: they occur in tRNA, rRNA, mRNA (e.g. regulatory elements in the UTRs), snRNA and viral RNAs (such as HIV TAR). The loop is often where another RNA or a protein binds.' },
+    simpl: {
+      nl: 'Zelfde kristalstructuur als het item "tRNA"; enkel de kleuren verschillen om de anticodonarm te laten zien. Het paar A31·Ψ39 bovenaan de stam wordt door de eenvoudige telling van waterstofbruggen hier niet als paar herkend.',
+      en: 'Same crystal structure as the "tRNA" entry; only the colours differ to show the anticodon arm. The pair A31·Ψ39 at the top of the stem is not recognised as a pair by the simple hydrogen-bond count used here.' },
+    src: [doi('10.1017/S1355838200000364', 'Shi & Moore (2000) RNA 6:1091')],
+  },
+  {
     id: 'tar', pdb: '1ANR', type: ['rna'], cls: ['folded'], ctx: ['virus'], org: { nl: 'HIV-1', en: 'HIV-1' },
     name: { nl: 'HIV-1 TAR-RNA (bulge)', en: 'HIV-1 TAR RNA (bulge)' }, sub: { nl: 'haarspeld met trinucleotide-bulge · NMR', en: 'hairpin with trinucleotide bulge · NMR' },
     cmp: ['dsrna', 'pseudoknot'], scenes: ['rnastructuur', 'integratie'],
+    mark: [
+      { col: '#f2f4f8', label: { nl: 'bulge (3 basen zonder partner)', en: 'bulge (3 bases without partner)' }, res: ['A:23', 'A:24', 'A:25'] },
+      { col: '#f06bc0', label: { nl: 'lus (6 basen)', en: 'loop (6 bases)' }, res: ['A:30', 'A:31', 'A:32', 'A:33', 'A:34', 'A:35'] },
+    ],
     what: {
       nl: 'Het TAR-element (transactivation response) is een haarspeld aan het 5\'-uiteinde van alle HIV-1-transcripten. Een bulge van drie ongepaarde nucleotiden (U23-C24-U25) onderbreekt de A-vormige stam en laat de helix knikken; bovenaan zit een lus van zes nucleotiden. Dit NMR-model toont het 29-nt kerngedeelte.',
       en: 'The TAR element (transactivation response) is a hairpin at the 5\' end of all HIV-1 transcripts. A bulge of three unpaired nucleotides (U23-C24-U25) interrupts the A-form stem and kinks the helix; a six-nucleotide loop sits at the top. This NMR model shows the 29-nt core.' },
@@ -613,6 +685,7 @@ export const PRESETS = [
   { ids: ['dsrna', 'hybrid', 'bdna'], label: { nl: 'RNA · hybride · DNA', en: 'RNA · hybrid · DNA' } },
   { ids: ['netropsin', 'intercalator', 'cisplatin'], label: { nl: 'Hoe medicijnen DNA vastpakken', en: 'How drugs grab DNA' } },
   { ids: ['g4', 'g4basket', 'imotif'], label: { nl: 'Vier strengen', en: 'Four strands' } },
+  { ids: ['mismatch', 'wobble', 'tar'], label: { nl: 'Afwijkende paren en bulges', en: 'Unusual pairs and bulges' } },
   { ids: ['pseudoknot', 'terc', 'tar'], label: { nl: 'RNA-knopen en -lussen', en: 'RNA knots and loops' } },
   { ids: ['trna', 'hammerhead', 'riboswitch'], label: { nl: 'Gevouwen RNA', en: 'Folded RNA' } },
 ];

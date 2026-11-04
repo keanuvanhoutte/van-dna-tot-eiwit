@@ -4,6 +4,7 @@
  *  - fetchCoords(code, big): .pdb-bestand; bestaat dat niet (zeer grote structuren) of is de structuur groot → .cif.gz, in de browser uitgepakt
  *  - customEntry(code, meta): maakt een atlas-item met automatisch opgebouwde, eenvoudige tekst en feiten (NL/EN)
  */
+import { fetchText } from './fetchprog.js';
 export const CODE_RE = /^[0-9][A-Z0-9]{3}$/;
 
 const GQL = 'https://data.rcsb.org/graphql';
@@ -22,18 +23,14 @@ export async function fetchMeta(code) {
   return j?.data?.entry ?? null;
 }
 
-async function gunzipText(resp) {
-  const ds = resp.body.pipeThrough(new DecompressionStream('gzip'));
-  return await new Response(ds).text();
-}
+/* coördinaten: .pdb, of .cif.gz (in de browser uitgepakt) als de structuur groot is of geen .pdb-bestand heeft.
+ * Geeft ook de url terug, zodat de laadbalk de voortgang (fetchprog.js) kan volgen. */
+export const coordUrl = (code, fmt) => `https://files.rcsb.org/download/${code}.${fmt === 'cif' ? 'cif.gz' : 'pdb'}`;
 export async function fetchCoords(code, big) {
   if (!big) {
-    const r = await fetch(`https://files.rcsb.org/download/${code}.pdb`);
-    if (r.ok) return { txt: await r.text(), fmt: 'pdb' };
+    try { return { txt: await fetchText(coordUrl(code, 'pdb')), fmt: 'pdb' }; } catch { /* geen .pdb → mmCIF */ }
   }
-  const r = await fetch(`https://files.rcsb.org/download/${code}.cif.gz`);
-  if (!r.ok) throw new Error(`${code}: ${r.status}`);
-  return { txt: await gunzipText(r), fmt: 'cif' };
+  return { txt: await fetchText(coordUrl(code, 'cif'), { gz: true }), fmt: 'cif' };
 }
 
 /* ---------- van RCSB-gegevens naar een eenvoudig atlas-item ---------- */

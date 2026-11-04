@@ -4,6 +4,7 @@
 import * as d1 from './simple-1.js';
 import * as d2 from './simple-2.js';
 import * as d3 from './simple-3.js';
+import * as d4 from './simple-4.js';
 
-export const SIMPLE = { ...d1.SIMPLE, ...d2.SIMPLE, ...d3.SIMPLE };
-export const EXTRA_GLOSS = { ...d1.EXTRA_GLOSS, ...d2.EXTRA_GLOSS, ...d3.EXTRA_GLOSS };
+export const SIMPLE = { ...d1.SIMPLE, ...d2.SIMPLE, ...d3.SIMPLE, ...d4.SIMPLE };
+export const EXTRA_GLOSS = { ...d1.EXTRA_GLOSS, ...d2.EXTRA_GLOSS, ...d3.EXTRA_GLOSS, ...d4.EXTRA_GLOSS };

@@ -46,8 +46,8 @@ export const SIMPLE = {
       nl: 'Een RNA-draad plooit terug op zichzelf tot een [[haarspeld|haarspeld]]. Op één plek zitten drie letters zonder partner: een [[bulge|bulge]]. Daardoor krijgt de staaf een knik, en net daar hecht een eiwit van HIV zich vast.',
       en: 'An RNA strand folds back on itself into a [[hairpin|haarspeld]]. In one spot three letters have no partner: a [[bulge|bulge]]. This puts a kink in the stem, and that is exactly where an HIV protein attaches.' },
     look: {
-      nl: 'Eén oranje streng plooit dubbel tot een staaf met bovenaan een lusje. Zoek halverwege de knik, waar drie ongepaarde basen de staaf onderbreken.',
-      en: 'One orange strand folds double into a stem with a small loop at the top. Look halfway for the kink, where three unpaired bases interrupt the stem.' },
+      nl: 'Eén oranje streng plooit dubbel tot een staaf met bovenaan een lusje (roze). De drie witte basen halverwege zijn de bulge: ze hebben geen partner en doen de staaf knikken.',
+      en: 'One orange strand folds double into a stem with a small loop at the top (pink). The three white bases halfway are the bulge: they have no partner and make the stem kink.' },
     why: {
       nl: 'Het HIV-eiwit Tat bindt op de bulge en zorgt dat de cel de virusgenen blijft aflezen. Daarom is TAR een doelwit voor nieuwe middelen tegen HIV.',
       en: 'The HIV protein Tat binds the bulge and makes the cell keep reading the virus genes. That is why TAR is a target for new anti-HIV drugs.' },

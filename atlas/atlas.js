@@ -11,7 +11,8 @@ import { preparePdb, analyse, orient, parentBase, LIGNAME, IONLABEL } from './an
 import { DIAGRAMS, diagramLegend } from './diagrams.js';
 import { SIMPLE, EXTRA_GLOSS } from './simple.js';
 import { GLOSSARY } from '../shared/glossary.js';
-import { CODE_RE, fetchMeta, fetchCoords, customEntry } from './custom.js';
+import { CODE_RE, fetchMeta, fetchCoords, coordUrl, customEntry } from './custom.js';
+import { fetchText, PROGRESS } from './fetchprog.js';
 
 const $ = id => document.getElementById(id);
 const BY = Object.fromEntries(ENTRIES.map(e => [e.id, e]));
@@ -60,7 +61,7 @@ const T = {
   view: { nl: 'Weergave', en: 'View' }, stick: { nl: 'Stokjes', en: 'Sticks' }, sphere: { nl: 'Ruimtevullend', en: 'Space-filling' }, trace: { nl: 'Ruggengraat', en: 'Backbone' },
   colour: { nl: 'Kleur', en: 'Colour' }, byStrand: { nl: 'Per streng', en: 'By strand' }, byType: { nl: 'Per ketentype', en: 'By chain type' }, byBase: { nl: 'Per base', en: 'By base' }, byElem: { nl: 'Per element', en: 'By element' },
   hb: { nl: 'Waterstofbruggen', en: 'Hydrogen bonds' }, synMark: { nl: 'Omgeklapte basen (syn)', en: 'Flipped bases (syn)' }, ions: { nl: 'Ionen', en: 'Ions' }, ligs: { nl: 'Medicijn / klein molecule', en: 'Drug / small molecule' },
-  water: { nl: 'Water', en: 'Water' }, spin: { nl: 'Rondraaien', en: 'Spin' }, link: { nl: 'Samen draaien', en: 'Rotate together' },
+  markT: { nl: 'Markeringen', en: 'Highlights' }, water: { nl: 'Water', en: 'Water' }, spin: { nl: 'Rondraaien', en: 'Spin' }, link: { nl: 'Samen draaien', en: 'Rotate together' },
   loading: { nl: 'Structuur laden uit de PDB…', en: 'Loading structure from the PDB…' },
   loadingBig: { nl: 'Grote structuur laden (enkele MB)…', en: 'Loading a large structure (several MB)…' },
   failed: { nl: 'Laden mislukt: ', en: 'Loading failed: ' },
@@ -125,6 +126,11 @@ const T = {
   rVery: { nl: 'zeer scherp', en: 'very sharp' }, rSharp: { nl: 'scherp', en: 'sharp' }, rGood: { nl: 'redelijk', en: 'fair' }, rRough: { nl: 'grof', en: 'rough' },
   mXray: { nl: 'röntgenstralen door een kristal', en: 'X-rays through a crystal' }, mNmr: { nl: 'NMR, in oplossing', en: 'NMR, in solution' }, mEm: { nl: 'elektronenmicroscoop', en: 'electron microscope' },
   seqLbl: { nl: 'Volgorde:', en: 'Sequence:' },
+  // laadbalk
+  stDownload: { nl: 'Downloaden', en: 'Downloading' }, stParse: { nl: 'Atomen inlezen', en: 'Reading the atoms' },
+  stCalc: { nl: 'Vorm berekenen', en: 'Computing the shape' }, stDraw: { nl: 'Figuur tekenen', en: 'Drawing the figure' },
+  stepOf: { nl: (n, m) => `stap ${n} van ${m}`, en: (n, m) => `step ${n} of ${m}` }, received: { nl: 'binnen', en: 'received' },
+  bigHint: { nl: 'grote structuur', en: 'large structure' },
   eChains: { nl: 'ketens', en: 'chains' }, eSS: { nl: 'Vorm van het eiwit', en: 'Shape of the protein' },
   eHelix: { nl: 'opgerold stuk (helix)', en: 'coiled piece (helix)' }, eSheet: { nl: 'gestrekt stuk (β-streng)', en: 'stretched piece (β-strand)' },
   // zelf een PDB-code opzoeken
@@ -137,7 +143,7 @@ const T = {
   lookFor: { nl: c => `🔎 PDB-code ${c} opzoeken`, en: c => `🔎 Look up PDB code ${c}` }, lookForSub: { nl: 'haalt de structuur op van rcsb.org', en: 'fetches the structure from rcsb.org' },
   mine: { nl: 'Zelf opgezocht', en: 'Looked up yourself' }, ours: { nl: 'Atlas', en: 'Atlas' }, mineBadge: { nl: 'zelf opgezocht', en: 'looked up yourself' },
   forget: { nl: 'Uit de lijst halen', en: 'Remove from the list' },
-  loadingHuge: { nl: n => `Zeer grote structuur (~${n} 000 atomen) laden en uitpakken… dit kan even duren.`, en: n => `Loading and unpacking a very large structure (~${n},000 atoms)… this may take a while.` },
+  loadingHuge: { nl: n => `zeer groot (~${n} 000 atomen), dit kan even duren`, en: n => `very large (~${n},000 atoms), this may take a while` },
   // uitlegpaneel
   inShort: { nl: 'In het kort', en: 'In short' }, look: { nl: 'Wat zie je in de figuur?', en: 'What do you see in the figure?' },
   why: { nl: 'Waarom is dit belangrijk?', en: 'Why does it matter?' }, more: { nl: 'Voor wie meer wil', en: 'For those who want more' },
@@ -163,12 +169,12 @@ const state = {
   id: BY[q.get('id')] ? q.get('id') : 'bdna',
   cmp: false, set: [],
   filt: { type: new Set(), cls: new Set(), ctx: new Set() }, text: '',
-  style: 'cartoon', color: 'strand', hb: false, syn: false, ions: true, ligs: true, water: false,
+  style: 'cartoon', color: 'strand', hb: false, syn: false, ions: true, ligs: true, water: false, mark: true,
 };
 // optionele weergave-instellingen via de URL (deelbare links): ?style=trace&color=base&hb=1&syn=1&water=1&ions=0&ligs=0
 if (['cartoon', 'stick', 'sphere', 'trace'].includes(q.get('style'))) state.style = q.get('style');
 if (['strand', 'type', 'base', 'elem'].includes(q.get('color'))) state.color = q.get('color');
-for (const k of ['hb', 'syn', 'ions', 'ligs', 'water']) if (q.has(k)) state[k] = q.get(k) === '1';
+for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'mark']) if (q.has(k)) state[k] = q.get(k) === '1';
 const cmpIds = (q.get('cmp') || '').split(',').filter(id => BY[id] && id !== state.id).slice(0, 2);
 if (cmpIds.length) { state.cmp = true; state.set = [state.id, ...cmpIds]; } else state.set = [state.id];
 
@@ -301,7 +307,39 @@ for (let i = 0; i < 3; i++) {
 
 const cache = new Map();
 const coordCache = new Map();
-function getText(url) { if (!cache.has(url)) cache.set(url, fetch(url).then(r => { if (!r.ok) throw new Error(`${r.status} ${url}`); return r.text(); })); return cache.get(url); }
+function getText(url) { if (!cache.has(url)) cache.set(url, fetchText(url).catch(err => { cache.delete(url); throw err; })); return cache.get(url); }
+
+/* ---------- laadbalk: download in %, daarna inlezen → berekenen → tekenen ----------
+ * Tussen de stappen wordt het scherm eerst getekend (nextPaint), zodat je ziet dat de app bezig is.
+ * De bewegende balk is een CSS-transform-animatie: die loopt ook door terwijl de browser rekent. */
+// (requestAnimationFrame pauzeert in een verborgen tabblad → na 60 ms toch verder, anders blijft het laden hangen)
+const nextPaint = () => new Promise(r => { let done = false; const go = () => { if (!done) { done = true; setTimeout(r, 0); } }; requestAnimationFrame(go); setTimeout(go, 60); });
+const MB = b => (b / 1048576).toFixed(1).replace('.', lang === 'nl' ? ',' : '.') + ' MB';
+function loader(load, now) {
+  load.innerHTML = `<div class="lbar ${now ? 'now' : ''}" role="progressbar" aria-live="polite"><div class="lt"><b></b><span></span></div><div class="track"><i></i></div><div class="ls"></div></div>`;
+  const lb = load.querySelector('.lbar'), b = lb.querySelector('b'), st = lb.querySelector('.lt span'), bar = lb.querySelector('.track i'), sub = lb.querySelector('.ls');
+  let timer = null;
+  const api = {
+    step(n, label, hint = '') { b.textContent = label; st.textContent = t('stepOf')(n, 4); api.pct(null, hint); },
+    pct(p, txt = '') {
+      lb.classList.toggle('ind', p == null);
+      bar.style.width = p == null ? '' : `${Math.min(100, p * 100).toFixed(1)}%`;
+      if (p != null) lb.setAttribute('aria-valuenow', Math.round(p * 100)); else lb.removeAttribute('aria-valuenow');
+      sub.textContent = txt;
+    },
+    watch(urls, hint = '') {
+      api.stop();
+      timer = setInterval(() => {
+        const ps = urls.map(u => PROGRESS.get(u)).filter(Boolean); if (!ps.length) return;
+        const got = ps.reduce((a, p) => a + p.got, 0), total = ps.every(p => p.total) ? ps.reduce((a, p) => a + p.total, 0) : 0;
+        if (total && got <= total) api.pct(got / total, `${Math.round(got / total * 100)} % · ${MB(got)} / ${MB(total)}${hint ? ' · ' + hint : ''}`);
+        else api.pct(null, `${MB(got)} ${t('received')}${hint ? ' · ' + hint : ''}`);
+      }, 120);
+    },
+    stop() { clearInterval(timer); timer = null; },
+  };
+  return api;
+}
 function getJson(url) { if (!cache.has(url)) cache.set(url, fetch(url).then(r => r.ok ? r.json() : null).catch(() => null)); return cache.get(url); }
 
 async function loadSlot(s, e) {
@@ -331,28 +369,33 @@ async function loadSlot(s, e) {
   dleg.hidden = true; dleg.innerHTML = '';
   if (s.stage.classList.contains('dg')) { s.stage.classList.remove('dg'); s.viewer.resize(); }
   pl.textContent = `PDB ${e.pdb} ↗`; pl.href = `https://www.rcsb.org/structure/${e.pdb}`;
-  load.textContent = e.heavy ? t('loadingBig') : t('loading');
+  const lb = loader(load, e.heavy || e.big);
+  const hint = e.big ? t('loadingHuge')(Math.round(e.atoms / 1000)) : e.heavy ? t('bigHint') : '';
+  lb.step(1, t('stDownload'), hint);
   try {
     let txt, fmt = 'pdb', info;
     if (e.custom) {
       // zelf opgezocht: rechtstreeks van RCSB (.pdb, of .cif.gz voor zeer grote structuren)
-      if (e.big) load.textContent = t('loadingHuge')(Math.round(e.atoms / 1000));
+      lb.watch([coordUrl(e.pdb, 'pdb'), coordUrl(e.pdb, 'cif')], hint);
       if (!coordCache.has(e.pdb)) coordCache.set(e.pdb, fetchCoords(e.pdb, e.big));
       let c;
       [c, info] = await Promise.all([coordCache.get(e.pdb).catch(err => { coordCache.delete(e.pdb); throw err; }), getJson(rcsbEntryUrl(e.pdb))]);
       ({ txt, fmt } = c);
     } else {
       const url = pdbUrl(e.pdb, e.assembly ? 'pdb1' : 'pdb');
+      lb.watch([url], hint);
       [txt, info] = await Promise.all([getText(url), getJson(rcsbEntryUrl(e.pdb))]);
     }
+    lb.stop();
     if (token !== s.token) return;
+    lb.step(2, t('stParse'), hint); await nextPaint(); if (token !== s.token) return;
     const mdl = fmt === 'cif' ? s.viewer.addModel(txt, 'cif') : s.viewer.addModel(preparePdb(txt, { assembly: !!e.assembly, keep: e.keep ?? null }), 'pdb');
     const atoms = mdl.selectedAtoms({});
+    lb.step(3, t('stCalc'), hint); await nextPaint(); if (token !== s.token) return;
     const an = analyse(atoms, e);
     if (e.custom && an.helix && an.helix.nbp < 4) delete an.helix;  // geen echte dubbelhelix gevonden
     orient(atoms, an.frame);
     s.atoms = atoms; s.an = an; s.info = info;
-    load.textContent = '';
     const method = info?.exptl?.[0]?.method ?? '';
     const nmr = /NMR/i.test(method);
     if (e.heavy || nmr) { n3.hidden = false; n3.textContent = [nmr ? t('nmrNote') : '', e.heavy ? t('heavyNote') : ''].filter(Boolean).join(' · '); }
@@ -369,11 +412,14 @@ async function loadSlot(s, e) {
       const k = { na: a.ctype === 'rna' ? 'RNA' : 'DNA', prot: t('protein'), ion: IONLABEL[a.resn] ?? a.resn, lig: L(LIGNAME[a.resn] ?? { nl: 'ligand', en: 'ligand' }), water: t('water1') }[a.kind] ?? '';
       hov.textContent = `${a.resn} ${a.resi} · ${t('chain')} ${a.chain} · ${a.atom} (${a.elem}) · ${k}`; hov.style.opacity = 1;
     }, () => { hov.style.opacity = 0; });
+    lb.step(4, t('stDraw'), hint); await nextPaint(); if (token !== s.token) return;
     render(s);
+    load.textContent = '';
     s.viewer.zoomTo({ predicate: a => a.kind === 'na' || a.kind === 'prot' }); s.viewer.zoom(e.heavy ? 1.0 : 0.92); s.viewer.render();
     if ($('spin').checked) s.viewer.spin('y', .6);
     syncFrom(SLOTS.find(o => o !== s && o.atoms && !o.el.hidden));
   } catch (err) {
+    lb.stop();
     if (token !== s.token) return;
     load.textContent = t('failed') + (e.custom ? t('codeOffline') + ' (' + err.message + ')' : err.message); console.error(err);
   }
@@ -505,7 +551,18 @@ function chainColours(s) {
   if (s.entry.third && map[s.entry.third]) map[s.entry.third] = '#5fd3e6';
   return map;
 }
+/* markeringen (entry.mark): basen die het begrip tonen (mismatch, G–U, bulge, stam, lus…) krijgen een eigen kleur;
+ * met entry.dim wordt de rest van het RNA grijs, zodat het gemarkeerde stuk opvalt */
+function markOf(e) {
+  if (!e?.mark || !state.mark || state.color === 'elem') return null;
+  const m = new Map(); for (const g of e.mark) for (const r of g.res) m.set(r, g.col); return m;
+}
 function colorFn(s) {
+  const cf = baseColorFn(s), mk = markOf(s.entry);
+  if (!mk || !cf) return cf;
+  return a => mk.get(a.chain + ':' + a.resi) ?? (s.entry.dim && a.kind === 'na' ? '#5b6378' : cf(a));
+}
+function baseColorFn(s) {
   const cm = chainColours(s);
   const typeCol = a => a.ctype === 'rna' ? COL.rna : a.ctype === 'prot' ? (s.entry.histone ? COL.histone : COL.prot) : COL.dna;
   if (state.color === 'strand') return a => cm[a.chain] ?? '#aaa';
@@ -546,6 +603,9 @@ function render(s) {
       if (!heavy) for (const p of ps) viewer.addSphere({ center: xyz(p), radius: .9, color: c });
     });
   }
+  // gemarkeerde basen dikker, zodat ze opvallen in cartoon/ruggengraat
+  const mk = markOf(e);
+  if (mk && (state.style === 'cartoon' || state.style === 'trace')) viewer.addStyle({ predicate: a => a.kind === 'na' && mk.has(a.chain + ':' + a.resi) && !BB.test(a.atom) }, { stick: { colorfunc: cf, radius: .34 } });
   // liganden, ionen, water
   if (state.ligs) {
     viewer.setStyle({ predicate: a => a.kind === 'lig' }, { stick: { colorscheme: 'greenCarbon', radius: .24 }, sphere: { colorscheme: 'greenCarbon', scale: .3 } });
@@ -584,6 +644,7 @@ function legend() {
   }
   if (state.ions) { const ions = new Set(shown.flatMap(s => Object.keys(s.an.ions))); for (const k of ions) sw(IONCOL[k] ?? '#ff1493', IONLABEL[k] ?? k); }
   if (state.ligs && shown.some(s => Object.keys(s.an.ligs).length)) sw('#33ff33', t('lig'));
+  if (state.mark && state.color !== 'elem') { const seen = new Set(); for (const s of shown) for (const g of s.entry.mark ?? []) { const lab = L(g.label); if (!seen.has(lab)) { seen.add(lab); sw(g.col, `<b>${lab}</b>`); } } }
   if (state.hb) sw('#fff', `- - ${t('hbond')}`);
   if (state.syn) sw('#f06bc0', t('synConf'));
   $('legend').innerHTML = items.join('');
@@ -685,8 +746,8 @@ function seg(id, key) {
 }
 seg('style', 'style'); seg('color', 'color');
 for (const id of ['style', 'color']) $(id).querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === state[id]));
-for (const k of ['hb', 'syn', 'ions', 'ligs', 'water']) $(k).checked = state[k];
-for (const k of ['hb', 'syn', 'ions', 'ligs', 'water']) $(k).onchange = e => { state[k] = e.target.checked; renderAll(); legend(); };
+for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'mark']) $(k).checked = state[k];
+for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'mark']) $(k).onchange = e => { state[k] = e.target.checked; renderAll(); legend(); };
 $('spin').onchange = e => SLOTS.forEach(s => s.viewer.spin(e.target.checked ? 'y' : false, .6));
 
 /* ---------- alles bijwerken ---------- */
@@ -705,6 +766,7 @@ function update() {
   $('cmpBtn').setAttribute('aria-pressed', state.cmp);
   $('presets').hidden = !state.cmp; $('cmpHint').hidden = !state.cmp; $('linkTog').hidden = !state.cmp;
   const only2d = state.set.every(id => !BY[id].pdb);
+  $('markTog').hidden = !state.set.some(id => BY[id].mark);
   $('toolbar').hidden = only2d; $('legend').hidden = only2d;
   const n = state.set.length;
   $('slots').className = 'slots' + (n > 1 ? ' n' + n : '');
