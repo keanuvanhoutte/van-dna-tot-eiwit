@@ -584,24 +584,24 @@ export const FILTERS = {
     label: { nl: 'Soort', en: 'Kind' },
     opts: {
       dna: { nl: 'DNA', en: 'DNA' }, rna: { nl: 'RNA', en: 'RNA' }, hybrid: { nl: 'Hybride', en: 'Hybrid' },
-      prot: { nl: 'Met eiwit', en: 'With protein' }, drug: { nl: 'Met geneesmiddel', en: 'Drug complex' },
+      prot: { nl: 'Met eiwit', en: 'With protein' }, drug: { nl: 'Met medicijn', en: 'With a drug' },
     },
   },
   cls: {
-    label: { nl: 'Structuurklasse', en: 'Structural class' },
+    label: { nl: 'Vorm', en: 'Shape' },
     opts: {
-      duplex: { nl: 'Dubbelhelix', en: 'Double helix' }, quad: { nl: 'Vierstrengig (G4, i-motief)', en: 'Four-stranded (G4, i-motif)' },
-      triplex: { nl: 'Triplex', en: 'Triplex' }, junction: { nl: 'Vertakking', en: 'Junction' },
-      single: { nl: 'Enkelstrengig', en: 'Single-stranded' }, folded: { nl: 'Gevouwen RNA & ribozymen', en: 'Folded RNA & ribozymes' },
-      complex: { nl: 'Nucleoproteïnecomplex', en: 'Nucleoprotein complex' }, circular: { nl: 'Circulair', en: 'Circular' },
-      info: { nl: 'Overzicht (geen 3D)', en: 'Overview (no 3D)' },
+      duplex: { nl: 'Dubbele helix', en: 'Double helix' }, quad: { nl: 'Vier strengen', en: 'Four strands' },
+      triplex: { nl: 'Drie strengen', en: 'Three strands' }, junction: { nl: 'Kruispunt van strengen', en: 'Strand crossing' },
+      single: { nl: 'Eén streng', en: 'One strand' }, folded: { nl: 'Gevouwen RNA', en: 'Folded RNA' },
+      complex: { nl: 'Samen met eiwit', en: 'Together with protein' }, circular: { nl: 'Ringvormig', en: 'Ring-shaped' },
+      info: { nl: 'Schema (geen 3D)', en: 'Diagram (no 3D)' },
     },
   },
   ctx: {
-    label: { nl: 'Context', en: 'Context' },
+    label: { nl: 'Waar komt het voor?', en: 'Where is it found?' },
     opts: {
       cell: { nl: 'In de menselijke cel', en: 'In the human cell' }, virus: { nl: 'Virus', en: 'Virus' },
-      drug: { nl: 'Geneesmiddel', en: 'Drug' }, lab: { nl: 'Lab & biotech', en: 'Lab & biotech' },
+      drug: { nl: 'Medicijn', en: 'Medicine' }, lab: { nl: 'Lab & biotech', en: 'Lab & biotech' },
       other: { nl: 'Ander organisme', en: 'Other organism' },
     },
   },
@@ -609,10 +609,10 @@ export const FILTERS = {
 
 /* snelle vergelijkingen */
 export const PRESETS = [
-  { ids: ['adna', 'bdna', 'zdna'], label: { nl: 'A · B · Z', en: 'A · B · Z' } },
+  { ids: ['adna', 'bdna', 'zdna'], label: { nl: 'Drie DNA-vormen (A · B · Z)', en: 'Three DNA shapes (A · B · Z)' } },
   { ids: ['dsrna', 'hybrid', 'bdna'], label: { nl: 'RNA · hybride · DNA', en: 'RNA · hybrid · DNA' } },
-  { ids: ['netropsin', 'intercalator', 'cisplatin'], label: { nl: 'Groef · intercalatie · crosslink', en: 'Groove · intercalation · cross-link' } },
-  { ids: ['g4', 'g4basket', 'imotif'], label: { nl: 'G4 (K⁺) · G4 (Na⁺) · i-motief', en: 'G4 (K⁺) · G4 (Na⁺) · i-motif' } },
-  { ids: ['pseudoknot', 'terc', 'tar'], label: { nl: 'Pseudoknopen & bulge', en: 'Pseudoknots & bulge' } },
+  { ids: ['netropsin', 'intercalator', 'cisplatin'], label: { nl: 'Hoe medicijnen DNA vastpakken', en: 'How drugs grab DNA' } },
+  { ids: ['g4', 'g4basket', 'imotif'], label: { nl: 'Vier strengen', en: 'Four strands' } },
+  { ids: ['pseudoknot', 'terc', 'tar'], label: { nl: 'RNA-knopen en -lussen', en: 'RNA knots and loops' } },
   { ids: ['trna', 'hammerhead', 'riboswitch'], label: { nl: 'Gevouwen RNA', en: 'Folded RNA' } },
 ];

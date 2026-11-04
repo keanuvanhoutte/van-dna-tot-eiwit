@@ -201,6 +201,18 @@ export function analyse(atoms, entry) {
   const nts = [...res.values()].filter(r => r.kind === 'na');
   const prots = [...res.values()].filter(r => r.kind === 'prot');
   const out = { chainType, nts: nts.length, prot: prots.length, heavy: atoms.length };
+  out.protChains = Object.values(chainType).filter(v => v === 'prot').length;
+  /* eiwit: aantal opgerolde stukken (α-helix) en gestrekte stukken (β-streng), uit de ss-toewijzing van 3Dmol */
+  if (prots.length) {
+    let h = 0, s = 0, prev = '', seen = false;
+    for (const r of [...prots].sort((a, b) => a.chain < b.chain ? -1 : a.chain > b.chain ? 1 : a.resi - b.resi)) {
+      const ss = r.at.CA?.ss; if (ss) seen = true;
+      const k = r.chain + (ss ?? 'c');
+      if (k !== prev) { if (ss === 'h') h++; else if (ss === 's') s++; }
+      prev = k;
+    }
+    if (seen) out.ss = { h, s };
+  }
 
   /* per nucleotide: puckering en χ */
   let north = 0, south = 0, other = 0, syn = 0, anti = 0, border = 0;
@@ -234,7 +246,7 @@ export function analyse(atoms, entry) {
   const polar = atoms.filter(a => a.kind === 'na' && (a.elem === 'N' || a.elem === 'O') && !BACKBONE.has(a.atom));
   const near = grid(polar, 3.4);
   const hbonds = [];
-  for (const a of polar) near(a, b => {
+  if (!entry.noHb) for (const a of polar) near(a, b => {
     if (b.index <= a.index || b.rkey === a.rkey) return;
     if (a.chain === b.chain && Math.abs(a.resi - b.resi) === 1) {
       // opeenvolgende nucleotiden: vrijwel altijd stapeling, geen paring
