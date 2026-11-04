@@ -538,11 +538,11 @@ function parentOf(id) {
   if (cand.length) return cand[0];
   const ci = STORY_IDS.indexOf(id);
   if (ci > 0) return STORY_IDS[ci - 1];
-  return id === 'cel' ? null : STORY_IDS[lastChapter] ?? 'cel';
+  return id === 'cel' || id === STORY_IDS[0] ? null : STORY_IDS[lastChapter] ?? 'cel';
 }
 function zoomOut() { const p = parentOf(current.id); if (p) go(p, null, 'out'); }
 $('bUp').onclick = zoomOut;
-$('bHome').onclick = () => { trail = []; go('cel', null, 'out'); };
+$('bHome').onclick = () => { trail = []; go(STORY_IDS[0] ?? 'cel', null, 'out'); };   // begin van de gekozen verhaallijn (mens: cel, bacterie: bcel)
 
 /* ---------- verhaallijn ---------- */
 function chapterGo(i) {
@@ -668,7 +668,7 @@ function showCard(id) {
   $('cClose').onclick = hideOverlays;
   $('cardbody').querySelectorAll('.chip[data-id]').forEach(c => c.onclick = () => { hideOverlays(); chipGo(c.dataset.id); });
 }
-const STAGECOL = { entry: 'var(--tdna)', genome: 'var(--dna)', repl: 'var(--dna-2)', txn: 'var(--prot)', rna: 'var(--rna)', tl: 'var(--rrna)', prot: 'var(--chain)' };
+const STAGECOL = { entry: 'var(--tdna)', genome: 'var(--dna)', repl: 'var(--dna-2)', txn: 'var(--prot)', rna: 'var(--rna)', tl: 'var(--rrna)', prot: 'var(--chain)', bact: '#d65a5a' };
 function showMap() {
   const here = current.id;
   let h = `<button class="btn close" id="mClose">${V('close')} ✕</button><h2>${V('mapTitle')}</h2><p class="sub">${V('mapSub')}</p>`;

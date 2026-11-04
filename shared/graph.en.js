@@ -78,6 +78,11 @@ export const S_EN = {
   ubiquitine: 'An E1–E2–E3 cascade attaches ubiquitin chains; K48-linked chains target the protein to the 26S proteasome for degradation.',
   misvouwing: 'Misfolded proteins can aggregate into amyloid fibrils (cross-β); involved in e.g. Alzheimer’s and Parkinson’s disease.',
   idp: 'Proteins or regions without a fixed structure that only become ordered upon binding or under certain conditions (last chapter of the course).',
+  bcel: 'E. coli has no nucleus: its DNA lies in the cytoplasm as the nucleoid. One circular chromosome (K-12: ≈ 4.6 million bp, ≈ 4,300 protein genes), often plasmids, and 70S ribosomes.',
+  bplasmide: 'A small, usually circular DNA molecule next to the chromosome, with its own origin of replication (ori) that helps set the copy number. Often carries extra genes such as antibiotic resistance; some plasmids pass to another bacterium by conjugation.',
+  bgen: 'Promoter (−35 and −10, recognised by a σ factor), operator, start site (+1), Shine-Dalgarno sequence, start codon, coding part, stop codon and terminator. No spliceosome; introns are rare and self-splicing. Essential: oriC and ≈ 300 essential genes.',
+  bpol: 'A single RNA polymerase (core α₂ββ′ω) makes all RNA. The σ factor turns it into a holoenzyme that recognises the promoter: σ domain 4 binds the −35, σ domain 2 binds the −10 and helps open the DNA.',
+  bmrna: "Bacterial mRNA gets no 5' cap, no poly(A) tail and is not spliced. Ribosomes bind while transcription is still going on: the Shine-Dalgarno sequence pairs with the 16S rRNA and places the start codon (usually AUG, with fMet-tRNA) in the 70S ribosome.",
 };
 
 export const SCALES_EN = {

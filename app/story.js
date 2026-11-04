@@ -49,10 +49,22 @@ const SIGNAAL = [
   { id: 'ubiquitine', bridge: { nl: 'Einde van verhaal 2. Verken nu de zijtakken of verhaal 1 via de kaart.', en: 'End of story 2. Now explore the side paths or story 1 via the map.' } },
 ];
 
+/* Verhaallijn 3 (POC 04-11-2026): een bacteriecel (E. coli) als tweede leermodel. Zie docs/bacterie-schema.md.
+ * Hergebruikt de bestaande scène 'operon'; de andere hoofdstukken zijn bacteriescènes (app/scenes/bact/). */
+const BACTERIE = [
+  { id: 'bcel', bridge: { nl: 'Naast het chromosoom liggen vaak kleine extra DNA-ringen: plasmiden.', en: 'Next to the chromosome there are often small extra DNA rings: plasmids.' } },
+  { id: 'bplasmide', bridge: { nl: 'Zoom in op één gen: welke onderdelen heeft het?', en: 'Zoom in on one gene: what parts does it have?' } },
+  { id: 'bgen', bridge: { nl: 'Het RNA-polymerase vindt de promoter met hulp van een σ-factor.', en: 'RNA polymerase finds the promoter with the help of a σ factor.' } },
+  { id: 'bpol', bridge: { nl: 'Zo wordt een groep genen samen aan- en uitgezet: het lac-operon.', en: 'This is how a group of genes is switched on and off together: the lac operon.' } },
+  { id: 'operon', bridge: { nl: 'Het mRNA wordt meteen vertaald, nog terwijl het gemaakt wordt.', en: 'The mRNA is translated straight away, while it is still being made.' } },
+  { id: 'bmrna', bridge: { nl: 'Einde van het bacterieverhaal. Codons lezen en vouwen gaat zoals bij de mens: verken die via de kaart.', en: 'End of the bacterial story. Reading codons and folding work as in humans: explore them via the map.' } },
+];
+
 /* Alle verhaallijnen. De engine kiest er één (?story=… of de laatst gekozen) en kan wisselen. */
 export const LINES = {
   virus: { chapters: VIRUS, title: { nl: 'Verhaal 1 · Een virus brengt DNA binnen', en: 'Story 1 · A virus brings in DNA' }, short: { nl: 'Verhaal 1', en: 'Story 1' } },
   signaal: { chapters: SIGNAAL, title: { nl: 'Verhaal 2 · Een signaal zet een gen aan', en: 'Story 2 · A signal switches on a gene' }, short: { nl: 'Verhaal 2', en: 'Story 2' } },
+  bacterie: { chapters: BACTERIE, title: { nl: 'Bacterie · Van DNA tot eiwit in E. coli', en: 'Bacterium · From DNA to protein in E. coli' }, short: { nl: 'Bacterie', en: 'Bacterium' } },
 };
 export const LINE_KEYS = Object.keys(LINES);
 /* standaardlijn (voor oudere code en tools) */

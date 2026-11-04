@@ -27,6 +27,7 @@ export const STAGES = [
   { id: 'rna',     t: 'RNA-processing & -lot',  en: 'RNA processing & fate' },
   { id: 'tl',      t: 'Translatie',             en: 'Translation' },
   { id: 'prot',    t: 'Eiwitstructuur & -lot',  en: 'Protein structure & fate' },
+  { id: 'bact',    t: 'Bacteriecel (E. coli)',  en: 'Bacterial cell (E. coli)' },
 ];
 
 export const SCALES = [
@@ -279,6 +280,22 @@ const N = [
   { id: 'idp', t: 'Intrinsiek ongeordende eiwitten', en: 'Intrinsically disordered proteins', stage: 'prot', scale: 4, kind: 'structure',
     s: 'Eiwitten of regio\'s zonder vaste structuur die pas ordenen bij binding of onder bepaalde condities (laatste hoofdstuk van de cursus).',
     course: true },
+  // ───────────── BACTERIE (E. coli) — verhaallijn 3, POC 04-11-2026 (docs/bacterie-schema.md) ─────────────
+  { id: 'bcel', t: 'Bacteriecel (E. coli)', en: 'Bacterial cell (E. coli)', stage: 'bact', scale: 1, kind: 'structure',
+    s: 'E. coli heeft geen kern: het DNA ligt als nucleoïd in het cytoplasma. Eén ringvormig chromosoom (K-12: ≈ 4,6 miljoen bp, ≈ 4 300 eiwitgenen), vaak plasmiden en 70S-ribosomen.',
+    in: ['bplasmide', 'bgen'], next: ['bplasmide'], rel: ['cel', 'operon', 'ribosoom'] },
+  { id: 'bplasmide', t: 'Plasmide', en: 'Plasmid', stage: 'bact', scale: 2, kind: 'structure',
+    s: 'Kleine, meestal ringvormige DNA-molecule naast het chromosoom, met een eigen replicatie-oorsprong (ori) die het kopieaantal mee bepaalt. Draagt vaak extra genen, zoals antibioticumresistentie; sommige plasmiden gaan via conjugatie over naar een andere bacterie.',
+    next: ['bgen'], rel: ['bcel', 'replicatie'] },
+  { id: 'bgen', t: 'Onderdelen van een bacterieel gen', en: 'Anatomy of a bacterial gene', stage: 'bact', scale: 3, kind: 'structure',
+    s: 'Promoter (−35 en −10, herkend door een σ-factor), operator, startpunt (+1), Shine-Dalgarno-volgorde, startcodon, coderend deel, stopcodon en terminator. Geen spliceosoom; introns zijn zeldzaam en zelfsplicend. Noodzakelijk: oriC en ≈ 300 essentiële genen.',
+    in: ['bpol', 'operon'], next: ['bpol'], rel: ['gen', 'promoter', 'splicing', 'replicatie'] },
+  { id: 'bpol', t: 'Bacterieel RNA-polymerase & σ70', en: 'Bacterial RNA polymerase & σ70', stage: 'bact', scale: 4, kind: 'structure',
+    s: 'Eén RNA-polymerase (core α₂ββ′ω) maakt alle RNA. De σ-factor maakt er een holo-enzym van dat de promoter herkent: σ-domein 4 bindt de −35, σ-domein 2 de −10 en helpt het DNA openen.',
+    next: ['operon'], pdb: ['6OUL'], rel: ['rnapol', 'polymerasen', 'promoter'] },
+  { id: 'bmrna', t: 'Bacterieel mRNA & 70S-translatie', en: 'Bacterial mRNA & 70S translation', stage: 'bact', scale: 3, kind: 'process',
+    s: "Bacterieel mRNA krijgt geen 5'-cap, geen poly(A)-staart en wordt niet gesplicet. Ribosomen binden al tijdens de transcriptie: de Shine-Dalgarno-volgorde paart met het 16S-rRNA en zet het startcodon (meestal AUG, met fMet-tRNA) op zijn plaats in het 70S-ribosoom.",
+    pdb: ['4YBB', '6ZTJ'], rel: ['initiatie', 'codon', 'elongatie', 'vouwing', 'ribosoom', 'capping', 'splicing', 'polya'] },
 ];
 
 const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid']); // verificatierondes 1–4 (verhaallijn 2: ronde 4) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
