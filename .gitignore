@@ -7,3 +7,4 @@ dist/
 dist-files.json
 __pycache__/
 *.orig.js
+.firebase/
