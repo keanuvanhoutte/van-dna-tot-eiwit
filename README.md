@@ -2,7 +2,9 @@
 
 Een interactieve, stap-voor-stap moleculaire animatie van een menselijke cel: van genetische informatie of een signaal dat de cel bereikt, via transcriptie, RNA-bewerking en translatie, tot eiwitvouwing, modificaties en afbraak. Gemaakt als studiehulp op bachelorniveau (structurele bio-informatica). Nederlands en Engels.
 
-**Openen:** https://keanuvanhoutte.github.io/van-dna-tot-eiwit/
+**Openen:** https://van-dna-tot-eiwit.web.app (Firebase) · ook op https://keanuvanhoutte.github.io/van-dna-tot-eiwit/
+
+**Online zetten (Firebase):** `firebase deploy --only hosting` (project `van-dna-tot-eiwit`; cursusmateriaal, `tools/` en lokale bestanden worden uitgesloten in `firebase.json`).
 
 ## Wat zit erin
 - **Twee verhalen** (`app/`), samen 78 scènes. Elke scène speelt stap voor stap; je klikt zelf verder. Klik op onderdelen van een figuur om in te zoomen op een deelproces; met "Waar ben ik?" zie je waar je zit en wissel je van verhaal.
