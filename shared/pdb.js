@@ -62,8 +62,12 @@ const LOCAL = new Set([
   '4PJO.pdb',
   '4W5N.json',
   '4W5N.pdb',
+  '1IHF.cif',
+  '1U6B.cif',
   '5FLM.cif',
   '6OUL.cif',
+  '6WRF.cif',
+  '6ZTJ.cif',
   '6BNA.json',
   '6BNA.pdb',
 ]);

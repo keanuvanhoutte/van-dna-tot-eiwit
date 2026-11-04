@@ -1,5 +1,5 @@
 /* Uitleg per knoop voor de bacterie-route (stage 'bact', verhaallijn 3) — zie app/SCENES.md en docs/bacterie-schema.md.
- * Elke bewering is gedekt door een van de bronnen hieronder (POC 04-11-2026, nog niet in een verificatieronde nagekeken). */
+ * Elke bewering is gedekt door een van de bronnen hieronder; nagekeken in verificatieronde 6 (docs/verificatie-ronde-6-bacterie.md). */
 const S = {
   blattner: { t: 'Blattner et al. (1997) The complete genome sequence of Escherichia coli K-12. Science 277:1453 (PubMed 9278503)', url: 'https://pubmed.ncbi.nlm.nih.gov/9278503/' },
   cooper_prok: { t: 'Cooper, The Cell, 2nd ed. — Transcription in Prokaryotes (NCBI Bookshelf)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK9850/' },
@@ -20,6 +20,9 @@ const S = {
   pdb6oul: { t: 'RCSB PDB 6OUL — E. coli RNA polymerase bound to rpsT P2 promoter DNA (Chen et al., eLife 2019)', url: 'https://www.rcsb.org/structure/6OUL' },
   pdb4ybb: { t: 'RCSB PDB 4YBB — High-resolution structure of the Escherichia coli ribosome (Noeske et al., NSMB 2015)', url: 'https://www.rcsb.org/structure/4YBB' },
   pdb6ztj: { t: 'RCSB PDB 6ZTJ — E. coli 70S–RNAP expressome complex (Webster et al., Science 2020)', url: 'https://www.rcsb.org/structure/6ZTJ' },
+  campbell: { t: 'Campbell et al. (2001) Structural mechanism for rifampicin inhibition of bacterial RNA polymerase. Cell 104:901 (PubMed 11290327)', url: 'https://pubmed.ncbi.nlm.nih.gov/11290327/' },
+  cahova: { t: 'Cahová et al. (2015) NAD captureSeq indicates NAD as a bacterial cap for a subset of regulatory RNAs. Nature 519:374 (PubMed 25533955)', url: 'https://pubmed.ncbi.nlm.nih.gov/25533955/' },
+  oppenheim: { t: 'Oppenheim & Yanofsky (1980) Translational coupling during expression of the tryptophan operon of Escherichia coli. Genetics 95:785 (PubMed 6162715)', url: 'https://pubmed.ncbi.nlm.nih.gov/6162715/' },
   rpod: { t: 'UniProt P00579 — RNA polymerase sigma factor RpoD (σ70), E. coli K-12', url: 'https://www.uniprot.org/uniprotkb/P00579/entry' },
   tem1: { t: 'UniProt P62593 — β-lactamase TEM (bla), E. coli', url: 'https://www.uniprot.org/uniprotkb/P62593/entry' },
   dnaa: { t: 'UniProt P03004 — Chromosomal replication initiator protein DnaA, E. coli K-12', url: 'https://www.uniprot.org/uniprotkb/P03004/entry' },
@@ -64,7 +67,7 @@ export default {
         'Conjugatieve plasmiden dragen tra-genen. Een relaxase knipt één streng bij oriT; die streng gaat via een transportkanaal (type IV-secretiesysteem) naar de ontvanger.',
         'In donor en ontvanger wordt de enkele streng weer aangevuld tot dubbelstrengs DNA; de ontvanger kan het plasmide nu zelf doorgeven.',
       ],
-      facts: [['Grootte', '≈ 2 kb tot > 100 kb (F ≈ 100 kb)'], ['Kopieaantal', '1–2 (F) tot tientallen of meer'], ['bla-product', 'TEM-1 β-lactamase (286 aminozuren)'], ['Overdracht', 'conjugatie (één streng, vanaf oriT)']],
+      facts: [['Grootte', '≈ 2 kb tot > 100 kb (F ≈ 100 kb)'], ['Kopieaantal', '1–2 (F) tot tientallen of meer'], ['bla-product', 'TEM-1 β-lactamase (286 aminozuren, 263 na het afknippen van het signaalpeptide)'], ['Overdracht', 'conjugatie (één streng, vanaf oriT)']],
       why: 'Plasmiden verklaren waarom resistentie tegen antibiotica zich zo snel verspreidt. In het lab zijn ze ook het belangrijkste werktuig om een gen in een bacterie te brengen, bv. om een menselijk eiwit zoals insuline te laten maken.',
     },
     en: {
@@ -76,7 +79,7 @@ export default {
         'Conjugative plasmids carry tra genes. A relaxase nicks one strand at oriT; this strand passes through a transport channel (type IV secretion system) to the recipient.',
         'In donor and recipient the single strand is filled in again to double-stranded DNA; the recipient can now pass the plasmid on itself.',
       ],
-      facts: [['Size', '≈ 2 kb to > 100 kb (F ≈ 100 kb)'], ['Copy number', '1–2 (F) to tens or more'], ['bla product', 'TEM-1 β-lactamase (286 amino acids)'], ['Transfer', 'conjugation (one strand, from oriT)']],
+      facts: [['Size', '≈ 2 kb to > 100 kb (F ≈ 100 kb)'], ['Copy number', '1–2 (F) to tens or more'], ['bla product', 'TEM-1 β-lactamase (286 amino acids, 263 after removal of the signal peptide)'], ['Transfer', 'conjugation (one strand, from oriT)']],
       why: 'Plasmids explain why resistance to antibiotics spreads so fast. In the lab they are also the main tool for bringing a gene into a bacterium, e.g. to have it make a human protein such as insulin.',
     },
     sources: [S.delsolar, S.virolle, S.tem1],
@@ -124,8 +127,8 @@ export default {
         'De α-subeenheden houden het enzym bijeen; hun staarten (α-CTD) kunnen DNA en activatoren zoals CAP binden.',
         'Na het verlaten van de promoter komt σ meestal vrij en schrijft de kern het gen verder af.',
       ],
-      facts: [['Subeenheden core', 'α₂ββ′ω (5)'], ['σ70 (RpoD)', '613 aminozuren'], ['Structuur', 'PDB 6OUL, cryo-EM 3,4 Å'], ['Vergelijk', 'mens: 3 RNA-polymerasen, Pol II = 12 subeenheden']],
-      why: 'Dat de bacteriële en menselijke RNA-polymerase dezelfde kern delen, toont dat dit enzym heel oud is. Het verschil (geen σ, wel algemene transcriptiefactoren bij de mens) verklaart waarom antibiotica zoals rifampicine het bacteriële enzym remmen maar het onze niet.',
+      facts: [['Subeenheden core', 'α₂ββ′ω (5)'], ['σ70 (RpoD)', '613 aminozuren'], ['Structuur', 'PDB 6OUL, cryo-EM 3,4 Å'], ['Vergelijk', 'mens: 3 in de kern (I, II, III), Pol II = 12 subeenheden']],
+      why: 'Dat het bacteriële en het menselijke RNA-polymerase dezelfde kern delen, toont dat dit enzym heel oud is. Het antibioticum rifampicine past in een holte van de β-subeenheid van het bacteriële enzym en blokkeert zo de weg van het groeiende RNA. Ons Pol II heeft die holte niet en wordt dus niet geremd.',
     },
     en: {
       kort: 'Bacteria have only one kind of RNA polymerase. A helper protein, the σ factor, guides it to the promoter and helps open the DNA. The core of this enzyme is related to our own [[RNA polymerase II|rnapol]].',
@@ -136,39 +139,39 @@ export default {
         'The α subunits hold the enzyme together; their tails (α-CTD) can bind DNA and activators such as CAP.',
         'After leaving the promoter, σ is usually released and the core goes on to transcribe the gene.',
       ],
-      facts: [['Core subunits', 'α₂ββ′ω (5)'], ['σ70 (RpoD)', '613 amino acids'], ['Structure', 'PDB 6OUL, cryo-EM 3.4 Å'], ['Compare', 'human: 3 RNA polymerases, Pol II = 12 subunits']],
-      why: 'That bacterial and human RNA polymerase share the same core shows how old this enzyme is. The difference (no σ, but general transcription factors in humans) explains why antibiotics such as rifampicin inhibit the bacterial enzyme but not ours.',
+      facts: [['Core subunits', 'α₂ββ′ω (5)'], ['σ70 (RpoD)', '613 amino acids'], ['Structure', 'PDB 6OUL, cryo-EM 3.4 Å'], ['Compare', 'human: 3 in the nucleus (I, II, III), Pol II = 12 subunits']],
+      why: 'That bacterial and human RNA polymerase share the same core shows how old this enzyme is. The antibiotic rifampicin fits into a pocket of the β subunit of the bacterial enzyme and so blocks the path of the growing RNA. Our Pol II lacks this pocket, so it is not inhibited.',
     },
-    sources: [S.pdb6oul, S.rpod, S.feklistov, S.cooper_prok, S.alberts_rna],
+    sources: [S.pdb6oul, S.rpod, S.feklistov, S.cooper_prok, S.alberts_rna, S.campbell],
   },
 
   bmrna: {
     nl: {
-      kort: 'In een bacterie wordt mRNA al vertaald terwijl het nog gemaakt wordt. Het krijgt geen kapje, geen staart en wordt niet geknipt. Het ribosoom vindt de start via een korte landingsplaats, de Shine-Dalgarno-volgorde. Vergelijk met de [[start bij de mens|initiatie]].',
+      kort: 'In een bacterie wordt mRNA al vertaald terwijl het nog gemaakt wordt. Het krijgt geen kapje zoals bij ons en wordt niet gesplicet. Het ribosoom vindt de start via een korte landingsplaats, de Shine-Dalgarno-volgorde. Vergelijk met de [[start bij de mens|initiatie]].',
       what: 'Omdat er geen kern is, zijn transcriptie en translatie gekoppeld: ribosomen binden het 5′-uiteinde van het mRNA terwijl het RNA-polymerase verder schrijft. De 30S-eenheid vindt het startcodon doordat de Shine-Dalgarno-volgorde paart met het 3′-uiteinde van het 16S-rRNA. Daarna komt fMet-tRNA op het AUG en sluit de 50S-eenheid aan: het 70S-ribosoom.',
       how: [
         'Elektronenmicroscopie (Miller, 1970) toonde ribosomen op mRNA dat nog aan het DNA vastzat; cryo-EM toont dat RNA-polymerase en het eerste ribosoom een complex kunnen vormen (expressoom).',
         'De Shine-Dalgarno-volgorde (bv. AGGAGG) paart met …CCUCC… in het 16S-rRNA en zet het startcodon in de P-plaats.',
         'Het eerste tRNA draagt N-formylmethionine (fMet); hulpfactoren IF1, IF2 en IF3 en GTP sturen de start.',
-        'In een polycistronisch mRNA (operon) heeft elk gen een eigen Shine-Dalgarno en startcodon.',
-        'Bacterieel mRNA krijgt geen 5′-cap en geen poly(A)-staart zoals bij de mens, en wordt niet gesplicet.',
+        'In een polycistronisch mRNA (operon) heeft elk gen meestal een eigen Shine-Dalgarno en startcodon; bij overlappende genen hangt de start soms af van het vorige gen (translatiekoppeling).',
+        'Bacterieel mRNA krijgt geen 5′-cap en geen beschermende poly(A)-staart zoals bij de mens, en wordt niet gesplicet. Een korte poly(A)-staart is bij bacteriën juist een signaal om het RNA af te breken, en enkele RNA’s krijgen een ander kapje (NAD).',
       ],
       facts: [['Ribosoom', '70S = 30S + 50S (16S, 23S, 5S rRNA)'], ['Eerste aminozuur', 'fMet (mens: Met)'], ['Translatiesnelheid', '≈ 10–20 aminozuren/s'], ['Structuren', 'PDB 4YBB (70S), 6ZTJ (RNAP + 70S)']],
       why: 'Omdat bacteriële ribosomen (70S) verschillen van de onze (80S), kunnen veel antibiotica (bv. streptomycine, tetracycline) gericht de bacteriële translatie remmen. Het gebrek aan RNA-bewerking verklaart ook waarom bacteriën een menselijk gen met introns niet correct kunnen aflezen.',
     },
     en: {
-      kort: 'In a bacterium, mRNA is translated while it is still being made. It gets no cap, no tail and is not cut. The ribosome finds the start via a short landing site, the Shine-Dalgarno sequence. Compare with the [[start in humans|initiatie]].',
+      kort: 'In a bacterium, mRNA is translated while it is still being made. It gets no cap like ours and is not spliced. The ribosome finds the start via a short landing site, the Shine-Dalgarno sequence. Compare with the [[start in humans|initiatie]].',
       what: 'Because there is no nucleus, transcription and translation are coupled: ribosomes bind the 5′ end of the mRNA while RNA polymerase keeps writing. The 30S subunit finds the start codon because the Shine-Dalgarno sequence pairs with the 3′ end of the 16S rRNA. Then fMet-tRNA arrives on the AUG and the 50S subunit joins: the 70S ribosome.',
       how: [
         'Electron microscopy (Miller, 1970) showed ribosomes on mRNA still attached to the DNA; cryo-EM shows that RNA polymerase and the first ribosome can form a complex (expressome).',
         'The Shine-Dalgarno sequence (e.g. AGGAGG) pairs with …CCUCC… in the 16S rRNA and places the start codon in the P site.',
         'The first tRNA carries N-formylmethionine (fMet); helper factors IF1, IF2 and IF3 and GTP drive initiation.',
-        'In a polycistronic mRNA (operon) each gene has its own Shine-Dalgarno and start codon.',
-        'Bacterial mRNA gets no 5′ cap and no poly(A) tail as in humans, and is not spliced.',
+        'In a polycistronic mRNA (operon) each gene usually has its own Shine-Dalgarno and start codon; with overlapping genes the start sometimes depends on the previous gene (translational coupling).',
+        'Bacterial mRNA gets no 5′ cap and no protective poly(A) tail as in humans, and is not spliced. In bacteria a short poly(A) tail is instead a signal to break the RNA down, and a few RNAs get a different cap (NAD).',
       ],
       facts: [['Ribosome', '70S = 30S + 50S (16S, 23S, 5S rRNA)'], ['First amino acid', 'fMet (human: Met)'], ['Translation speed', '≈ 10–20 amino acids/s'], ['Structures', 'PDB 4YBB (70S), 6ZTJ (RNAP + 70S)']],
       why: 'Because bacterial ribosomes (70S) differ from ours (80S), many antibiotics (e.g. streptomycin, tetracycline) can specifically inhibit bacterial translation. The lack of RNA processing also explains why bacteria cannot correctly read a human gene with introns.',
     },
-    sources: [S.miller, S.webster, S.shine, S.alberts_prot, S.pdb4ybb, S.pdb6ztj],
+    sources: [S.miller, S.webster, S.shine, S.alberts_prot, S.pdb4ybb, S.pdb6ztj, S.cahova, S.oppenheim],
   },
 };

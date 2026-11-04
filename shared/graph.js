@@ -27,7 +27,7 @@ export const STAGES = [
   { id: 'rna',     t: 'RNA-processing & -lot',  en: 'RNA processing & fate' },
   { id: 'tl',      t: 'Translatie',             en: 'Translation' },
   { id: 'prot',    t: 'Eiwitstructuur & -lot',  en: 'Protein structure & fate' },
-  { id: 'bact',    t: 'Bacteriecel (E. coli)',  en: 'Bacterial cell (E. coli)' },
+  { id: 'bact',    t: 'Bacteriën (model: E. coli)', en: 'Bacteria (model: E. coli)' },
 ];
 
 export const SCALES = [
@@ -283,22 +283,43 @@ const N = [
   // ───────────── BACTERIE (E. coli) — verhaallijn 3, POC 04-11-2026 (docs/bacterie-schema.md) ─────────────
   { id: 'bcel', t: 'Bacteriecel (E. coli)', en: 'Bacterial cell (E. coli)', stage: 'bact', scale: 1, kind: 'structure',
     s: 'E. coli heeft geen kern: het DNA ligt als nucleoïd in het cytoplasma. Eén ringvormig chromosoom (K-12: ≈ 4,6 miljoen bp, ≈ 4 300 eiwitgenen), vaak plasmiden en 70S-ribosomen.',
-    in: ['bplasmide', 'bgen'], next: ['bplasmide'], rel: ['cel', 'operon', 'ribosoom'] },
+    in: ['bnucleoid', 'bplasmide', 'bgen'], next: ['bnucleoid'], rel: ['cel', 'breplicatie', 'operon', 'ribosoom'] },
   { id: 'bplasmide', t: 'Plasmide', en: 'Plasmid', stage: 'bact', scale: 2, kind: 'structure',
     s: 'Kleine, meestal ringvormige DNA-molecule naast het chromosoom, met een eigen replicatie-oorsprong (ori) die het kopieaantal mee bepaalt. Draagt vaak extra genen, zoals antibioticumresistentie; sommige plasmiden gaan via conjugatie over naar een andere bacterie.',
-    next: ['bgen'], rel: ['bcel', 'replicatie'] },
+    next: ['bgen'], rel: ['bcel', 'breplicatie', 'replicatie'] },
   { id: 'bgen', t: 'Onderdelen van een bacterieel gen', en: 'Anatomy of a bacterial gene', stage: 'bact', scale: 3, kind: 'structure',
     s: 'Promoter (−35 en −10, herkend door een σ-factor), operator, startpunt (+1), Shine-Dalgarno-volgorde, startcodon, coderend deel, stopcodon en terminator. Geen spliceosoom; introns zijn zeldzaam en zelfsplicend. Noodzakelijk: oriC en ≈ 300 essentiële genen.',
-    in: ['bpol', 'operon'], next: ['bpol'], rel: ['gen', 'promoter', 'splicing', 'replicatie'] },
+    in: ['bpol', 'operon', 'bterm', 'bsplicing'], next: ['bpol'], rel: ['breplicatie', 'btrp', 'gen', 'promoter', 'splicing'] },
   { id: 'bpol', t: 'Bacterieel RNA-polymerase & σ70', en: 'Bacterial RNA polymerase & σ70', stage: 'bact', scale: 4, kind: 'structure',
     s: 'Eén RNA-polymerase (core α₂ββ′ω) maakt alle RNA. De σ-factor maakt er een holo-enzym van dat de promoter herkent: σ-domein 4 bindt de −35, σ-domein 2 de −10 en helpt het DNA openen.',
-    next: ['operon'], pdb: ['6OUL'], rel: ['rnapol', 'polymerasen', 'promoter'] },
+    next: ['operon'], pdb: ['6OUL'], rel: ['bterm', 'rnapol', 'polymerasen', 'promoter'] },
   { id: 'bmrna', t: 'Bacterieel mRNA & 70S-translatie', en: 'Bacterial mRNA & 70S translation', stage: 'bact', scale: 3, kind: 'process',
-    s: "Bacterieel mRNA krijgt geen 5'-cap, geen poly(A)-staart en wordt niet gesplicet. Ribosomen binden al tijdens de transcriptie: de Shine-Dalgarno-volgorde paart met het 16S-rRNA en zet het startcodon (meestal AUG, met fMet-tRNA) op zijn plaats in het 70S-ribosoom.",
-    pdb: ['4YBB', '6ZTJ'], rel: ['initiatie', 'codon', 'elongatie', 'vouwing', 'ribosoom', 'capping', 'splicing', 'polya'] },
+    s: "Bacterieel mRNA krijgt geen 5'-cap en geen beschermende poly(A)-staart zoals bij de mens, en wordt niet gesplicet. Ribosomen binden al tijdens de transcriptie: de Shine-Dalgarno-volgorde paart met het 16S-rRNA en zet het startcodon (meestal AUG, met fMet-tRNA) op zijn plaats in het 70S-ribosoom.",
+    in: ['bribosoom'], next: ['bribosoom'], pdb: ['4YBB', '6ZTJ'], rel: ['btrp', 'initiatie', 'codon', 'ribosoom', 'capping', 'splicing', 'polya'] },
+  { id: 'bnucleoid', t: 'Nucleoïd: DNA opvouwen zonder histonen', en: 'Nucleoid: folding DNA without histones', stage: 'bact', scale: 4, kind: 'structure',
+    s: 'E. coli en de meeste bacteriën hebben geen nucleosomen. Kleine nucleoïd-geassocieerde eiwitten (HU, IHF, H-NS, Fis) buigen, overbruggen en bundelen het DNA; IHF buigt het met meer dan 160°. DNA-gyrase houdt het DNA negatief gesupercoild.',
+    in: ['dnahelix'], next: ['bplasmide'], pdb: ['1IHF'], rel: ['supercoiling', 'chromatine', 'nucleosoom'] },
+  { id: 'breplicatie', t: 'Bacteriële DNA-replicatie', en: 'Bacterial DNA replication', stage: 'bact', scale: 2, kind: 'process',
+    s: 'Replicatie start op één plaats (oriC), waar DnaA het DNA opent. Twee vorken lopen in tegengestelde richting rond de ring (≈ 1 000 nt/s per vork) en ontmoeten elkaar in de ter-zone, waar Tus–ter-complexen ze tegenhouden.',
+    rel: ['replicatie', 'replisoom', 'bplasmide', 'bgen'] },
+  { id: 'bterm', t: 'Einde van de transcriptie', en: 'Transcription termination', stage: 'bact', scale: 3, kind: 'process',
+    s: 'Intrinsieke terminatie: een GC-rijke haarspeld in het RNA gevolgd door een U-reeks doet RNA-polymerase loslaten. Rho-afhankelijke terminatie: de helicase Rho bindt vrij RNA, haalt het enzym in en beëindigt de transcriptie; ribosomen schermen het mRNA af.',
+    next: ['bmrna'], rel: ['btrp', 'operon', 'transcriptie'] },
+  { id: 'btrp', t: 'trp-operon & attenuatie', en: 'trp operon & attenuation', stage: 'bact', scale: 3, kind: 'process',
+    s: 'De vijf trp-genen worden geremd door de Trp-repressor (met tryptofaan) en door attenuatie: een ribosoom op het leiderpeptide (twee Trp-codons) bepaalt of het leider-RNA een terminator (3:4) of een antiterminator (2:3) vouwt.',
+    rel: ['operon', 'bterm', 'bmrna'] },
+  { id: 'bribosoom', t: '70S-ribosoom & expressoom', en: '70S ribosome & expressome', stage: 'bact', scale: 4, kind: 'structure',
+    s: '70S = 30S (16S-rRNA + 21 eiwitten) + 50S (23S- en 5S-rRNA + ruim 30 eiwitten). In het expressoom zit RNA-polymerase vlak voor het ribosoom; NusG verbindt beide.',
+    next: ['codon'], pdb: ['6ZTJ', '4YBB'], rel: ['ribosoom', 'trna', 'codon', 'elongatie'] },
+  { id: 'bsplicing', t: 'Zelfsplicende introns & inteïnes', en: 'Self-splicing introns & inteins', stage: 'bact', scale: 4, kind: 'structure',
+    s: 'Bacteriën hebben geen spliceosoom. Zeldzame groep I- en groep II-introns zijn ribozymen die zichzelf uitknippen; inteïnes knippen zichzelf uit een eiwit. Voorbeeld: het groep I-intron uit een tRNA-Ile-gen van Azoarcus.',
+    pdb: ['1U6B'], rel: ['splicing', 'bgen', 'rnastructuur'] },
+  { id: 'bafbraak', t: 'Eiwitafbraak: ClpXP & Lon', en: 'Protein degradation: ClpXP & Lon', stage: 'bact', scale: 4, kind: 'process',
+    s: 'E. coli heeft geen ubiquitine of 26S-proteasoom. AAA+-proteasen zoals ClpXP en Lon ontvouwen eiwitten met ATP en knippen ze in een afgesloten kamer. Het ssrA-label (van tmRNA) markeert eiwitten van vastgelopen ribosomen.',
+    pdb: ['6WRF'], rel: ['ubiquitine', 'chaperones', 'misvouwing'] },
 ];
 
-const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid']); // verificatierondes 1–4 (verhaallijn 2: ronde 4) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
+const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid', 'bcel', 'bnucleoid', 'bplasmide', 'bgen', 'bpol', 'bterm', 'bmrna', 'bribosoom', 'bafbraak', 'breplicatie', 'btrp', 'bsplicing', 'bact']); // verificatierondes 1–6 (verhaallijn 2: ronde 4; bacterie: ronde 6, docs/verificatie-ronde-6-bacterie.md) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
 export const NODES = Object.fromEntries(N.map(n => [n.id, { in: [], next: [], rel: [], pdb: [], status: CHECKED.has(n.id) ? 'nagekeken' : 'concept', ...n }]));
 
 /* Bereken ook de omgekeerde verbanden (wie verwijst naar mij) */

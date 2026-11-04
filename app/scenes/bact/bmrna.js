@@ -14,9 +14,9 @@ const bx = i => NX + i * NW;
 const ROWS = [
   [{ nl: 'DNA ligt in', en: 'DNA lies in' }, { nl: 'de kern', en: 'the nucleus' }, { nl: 'de nucleoïd (geen kern)', en: 'the nucleoid (no nucleus)' }],
   [{ nl: 'Chromosomen', en: 'Chromosomes' }, { nl: '46 lineaire', en: '46 linear' }, { nl: '1 ring (+ plasmiden)', en: '1 ring (+ plasmids)' }],
-  [{ nl: 'RNA-polymerase', en: 'RNA polymerase' }, { nl: '3 soorten (I, II, III)', en: '3 kinds (I, II, III)' }, { nl: '1 soort + σ-factor', en: '1 kind + σ factor' }],
+  [{ nl: 'RNA-polymerase', en: 'RNA polymerase' }, { nl: '3 in de kern (I, II, III)', en: '3 in the nucleus (I, II, III)' }, { nl: '1 soort + σ-factor', en: '1 kind + σ factor' }],
   [{ nl: 'Genen per mRNA', en: 'Genes per mRNA' }, { nl: 'meestal 1', en: 'usually 1' }, { nl: 'vaak meerdere (operon)', en: 'often several (operon)' }],
-  [{ nl: "5′-cap, splicing, poly(A)", en: "5′ cap, splicing, poly(A)" }, { nl: 'ja', en: 'yes' }, { nl: 'nee', en: 'no' }],
+  [{ nl: "5′-cap en splicing", en: "5′ cap and splicing" }, { nl: 'ja', en: 'yes' }, { nl: 'nee', en: 'no' }],
   [{ nl: 'Kopiëren en vertalen', en: 'Copying and translating' }, { nl: 'gescheiden (kern / cytosol)', en: 'separate (nucleus / cytosol)' }, { nl: 'tegelijk (gekoppeld)', en: 'at once (coupled)' }],
   [{ nl: 'Start van translatie', en: 'Start of translation' }, { nl: 'ribosoom scant vanaf de cap', en: 'ribosome scans from the cap' }, { nl: 'Shine-Dalgarno', en: 'Shine-Dalgarno' }],
   [{ nl: 'Ribosoom', en: 'Ribosome' }, { nl: '80S (40S + 60S)', en: '80S (40S + 60S)' }, { nl: '70S (30S + 50S)', en: '70S (30S + 50S)' }],
@@ -29,21 +29,21 @@ export default {
   org: { nl: 'bacterie (Escherichia coli)', en: 'bacterium (Escherichia coli)' },
   legend: [[C.dna, 'DNA'], [K.rnap, { nl: 'RNA-polymerase', en: 'RNA polymerase' }], [C.rna, 'mRNA'], [K.ribo, { nl: 'ribosoom (30S, 50S)', en: 'ribosome (30S, 50S)' }], [K.sd, 'Shine-Dalgarno'], [C.trna, 'fMet-tRNA'], [C.chain, { nl: 'nieuwe eiwitketen', en: 'new protein chain' }]],
   simplified: {
-    nl: 'Niet op schaal. De start (initiatie) heeft ook drie hulpeiwitten nodig (IF1, IF2, IF3) en GTP; die zijn weggelaten. De afstand tussen Shine-Dalgarno en startcodon is hier 6 nt; in echte genen varieert die, en sommige mRNA’s hebben geen Shine-Dalgarno. Het eerste RNA-polymerase en het eerste ribosoom kunnen elkaar fysiek raken (het "expressoom"); de getekende afstand is willekeurig. Het formyl-groepje (en vaak de methionine) wordt later van het eiwit geknipt. "70S" is geen optelsom: S (Svedberg) meet hoe snel een deeltje zakt in een centrifuge.',
-    en: 'Not to scale. Initiation also needs three helper proteins (IF1, IF2, IF3) and GTP; these are left out. The distance between Shine-Dalgarno and start codon is 6 nt here; in real genes it varies, and some mRNAs have no Shine-Dalgarno. The leading RNA polymerase and the first ribosome can physically touch (the "expressome"); the drawn distance is arbitrary. The formyl group (and often the methionine) is later cut off the protein. "70S" is not a sum: S (Svedberg) measures how fast a particle sinks in a centrifuge.' },
+    nl: 'Niet op schaal. De start (initiatie) heeft ook drie hulpeiwitten nodig (IF1, IF2, IF3) en GTP; die zijn weggelaten. De afstand tussen Shine-Dalgarno en startcodon is hier 6 nt; in echte genen varieert die, en sommige mRNA’s hebben geen Shine-Dalgarno. Het eerste RNA-polymerase en het eerste ribosoom kunnen elkaar fysiek raken (het "expressoom"); de getekende afstand is willekeurig. Het formyl-groepje (en vaak de methionine) wordt later van het eiwit geknipt. "70S" is geen optelsom: S (Svedberg) meet hoe snel een deeltje zakt in een centrifuge. Soms is het startcodon GUG of UUG; ook dan begint het eiwit met fMet. Bacteriën plakken soms een korte poly(A)-staart aan RNA, maar als signaal om het af te breken, en enkele RNA’s krijgen een ander kapje (NAD).',
+    en: 'Not to scale. Initiation also needs three helper proteins (IF1, IF2, IF3) and GTP; these are left out. The distance between Shine-Dalgarno and start codon is 6 nt here; in real genes it varies, and some mRNAs have no Shine-Dalgarno. The leading RNA polymerase and the first ribosome can physically touch (the "expressome"); the drawn distance is arbitrary. The formyl group (and often the methionine) is later cut off the protein. "70S" is not a sum: S (Svedberg) measures how fast a particle sinks in a centrifuge. Sometimes the start codon is GUG or UUG; then too the protein starts with fMet. Bacteria sometimes add a short poly(A) tail to RNA, but as a signal for breakdown, and a few RNAs get a different cap (NAD).' },
   steps: [
     { dur: 9000, cam: cam(800, 470, 1600), title: { nl: 'Kopiëren en vertalen tegelijk', en: 'Copying and translating at once' },
       text: { nl: 'Terwijl het RNA-polymerase mRNA maakt, springen ribosomen er al op. Er is geen kern die ze scheidt.', en: 'While RNA polymerase makes mRNA, ribosomes already hop on. There is no nucleus to keep them apart.' } },
-    { dur: 9000, cam: cam(700, 430, 1300), title: { nl: 'Het ribosoom zoekt de landingsplaats', en: 'The ribosome finds the landing site' },
+    { dur: 9000, cam: cam(790, 430, 1420), title: { nl: 'Het ribosoom zoekt de landingsplaats', en: 'The ribosome finds the landing site' },
       text: { nl: 'De kleine eenheid (30S) paart met de Shine-Dalgarno-volgorde. Zo ligt het startcodon op de juiste plek.', en: 'The small subunit (30S) pairs with the Shine-Dalgarno sequence. That puts the start codon in the right spot.' } },
-    { dur: 8000, cam: cam(800, 400, 1300), title: { nl: 'Start met formylmethionine', en: 'Starting with formylmethionine' },
+    { dur: 8000, cam: cam(790, 400, 1420), title: { nl: 'Start met formylmethionine', en: 'Starting with formylmethionine' },
       text: { nl: 'Het eerste tRNA brengt fMet naar AUG. Bacteriën starten elk eiwit met deze aangepaste methionine.', en: 'The first tRNA brings fMet to AUG. Bacteria start every protein with this modified methionine.' } },
-    { dur: 8000, cam: cam(800, 400, 1300), title: { nl: 'Twee delen worden één: 70S', en: 'Two parts become one: 70S' },
+    { dur: 8000, cam: cam(790, 400, 1420), title: { nl: 'Twee delen worden één: 70S', en: 'Two parts become one: 70S' },
       text: { nl: 'De grote eenheid (50S) sluit aan bij de kleine (30S). Samen vormen ze het 70S-ribosoom.', en: 'The large subunit (50S) joins the small one (30S). Together they form the 70S ribosome.' } },
     { dur: 9000, cam: cam(800, 450, 1600), title: { nl: 'Eén mRNA, meerdere eiwitten', en: 'One mRNA, several proteins' },
-      text: { nl: 'In een operon-mRNA heeft elk gen een eigen Shine-Dalgarno. Zo vertalen ribosomen elk gen apart.', en: 'In an operon mRNA, each gene has its own Shine-Dalgarno. So ribosomes translate each gene separately.' } },
+      text: { nl: 'In een operon-mRNA heeft elk gen meestal een eigen Shine-Dalgarno. Zo vertalen ribosomen elk gen apart.', en: 'In an operon mRNA, each gene usually has its own Shine-Dalgarno. So ribosomes translate each gene separately.' } },
     { dur: 12000, cam: cam(800, 450, 1600), title: { nl: 'Mens en bacterie naast elkaar', en: 'Human and bacterium side by side' },
-      text: { nl: 'Geen cap, geen staart, geen splicing: bacterieel mRNA is meteen klaar. Bij de mens wordt het eerst bewerkt.', en: 'No cap, no tail, no splicing: bacterial mRNA is ready at once. In humans it is processed first.' } },
+      text: { nl: 'Geen kapje en geen splicing: bacterieel mRNA is meteen klaar. Bij de mens wordt het eerst bewerkt.', en: 'No cap and no splicing: bacterial mRNA is ready at once. In humans it is processed first.' } },
   ],
   svg() {
     return svgOpen() + `
@@ -51,10 +51,13 @@ export default {
     <g id="bm-close"></g>
     <g id="bm-poly"></g>
     <g id="bm-table"></g>
-    <g data-node="initiatie" data-color="${C.rrna}" data-label="${T2('Vergelijk: start bij de mens', 'Compare: start in humans')}" data-pos="below"><circle data-anchor="initiatie" cx="260" cy="860" r="1" fill="none"/><rect x="259" y="859" width="2" height="2" fill="none"/></g>
-    <g data-node="rnaprocessing" data-color="${C.rna}" data-label="${T2('Bij de mens: cap, splicing, staart', 'In humans: cap, splicing, tail')}" data-pos="below"><circle data-anchor="rnaprocessing" cx="640" cy="860" r="1" fill="none"/><rect x="639" y="859" width="2" height="2" fill="none"/></g>
-    <g data-node="codon" data-color="${C.trna}" data-label="${T2('Codons lezen →', 'Reading codons →')}" data-pos="below"><circle data-anchor="codon" cx="1000" cy="860" r="1" fill="none"/><rect x="999" y="859" width="2" height="2" fill="none"/></g>
-    <g data-node="vouwing" data-color="${C.chain}" data-label="${T2('Het eiwit vouwt →', 'The protein folds →')}" data-pos="below"><circle data-anchor="vouwing" cx="1340" cy="860" r="1" fill="none"/><rect x="1339" y="859" width="2" height="2" fill="none"/></g>
+    <g id="bm-hot">
+    <g data-node="initiatie" data-color="${C.rrna}" data-label="${T2('Vergelijk: start bij de mens', 'Compare: start in humans')}" data-pos="below"><circle data-anchor="initiatie" cx="260" cy="735" data-pos="below" r="1" fill="none"/><rect x="259" y="734" width="2" height="2" fill="none"/></g>
+    <g data-node="rnaprocessing" data-color="${C.rna}" data-label="${T2('Bij de mens: cap, splicing, staart', 'In humans: cap, splicing, tail')}" data-pos="below"><circle data-anchor="rnaprocessing" cx="640" cy="735" data-pos="below" r="1" fill="none"/><rect x="639" y="734" width="2" height="2" fill="none"/></g>
+    <g data-node="codon" data-color="${C.trna}" data-label="${T2('Codons lezen →', 'Reading codons →')}" data-pos="below"><circle data-anchor="codon" cx="1000" cy="735" data-pos="below" r="1" fill="none"/><rect x="999" y="734" width="2" height="2" fill="none"/></g>
+    <g data-node="bribosoom" data-color="${C.rrna}" data-label="${T2('70S-ribosoom in 3D →', '70S ribosome in 3D →')}" data-pos="below"><circle data-anchor="bribosoom" cx="1340" cy="735" data-pos="below" r="1" fill="none"/><rect x="1339" y="734" width="2" height="2" fill="none"/></g>
+    <g data-node="btrp" data-color="${K.term}" data-label="${T2('Gekoppeld als schakelaar: trp-operon', 'Coupling as a switch: trp operon')}"><circle data-anchor="btrp" cx="1250" cy="80" r="1" fill="none"/><rect x="1249" y="79" width="2" height="2" fill="none"/></g>
+    </g>
     </svg>`;
   },
   init(svg) {
@@ -75,7 +78,7 @@ export default {
         const ch = Math.min(70, d * .25);
         g += `<path d="M${f1(q[0])},${f1(q[1] - 28)} q${f1(ch * .3)},${f1(-ch * .5)} 0,${f1(-ch)}" stroke="${C.chain}" stroke-width="4" fill="none"/>` + ribo(q[0], q[1] - 6, 2, 1);
       }
-      g += prot(x, Y - 30, 60, 40, K.rnap, 1, 31, 'RNAP', 20) + '</g>';
+      g += prot(x, Y - 30, 60, 40, K.rnap, 1, 31, 'RNAP', 22) + '</g>';
       return g;
     }
     return {
@@ -90,8 +93,11 @@ export default {
 
         // close-up (stap 1–3)
         let cl = '';
-        if (step >= 1 && step <= 3) {
-          const a = step === 1 ? ease(sub(p, .15, .4)) : 1;
+        const clA = step >= 1 && step <= 3 ? 1 : step === 4 ? 1 - sub(p, 0, .25) : 0;
+        const P0 = p, step0 = step;
+        if (clA > .01) {
+          const step = step0 === 4 ? 3 : step0, p = step0 === 4 ? 1 : P0;
+          const a = (step === 1 ? ease(sub(p, .15, .4)) : 1) * clA;
           cl += `<g opacity="${f1(a)}">`;
           // 30S
           cl += `<ellipse cx="${bx(11)}" cy="${NY + 90}" rx="560" ry="105" fill="${K.ribo}" fill-opacity=".14" stroke="${K.ribo}" stroke-width="3"/>` + txt(bx(19) + 40, NY + 160, '30S', K.ribo, 30, 'middle', 800);
@@ -119,7 +125,7 @@ export default {
             cl += `<g transform="translate(0 ${f1(dy)})" opacity="${f1(step === 2 ? sub(p, .05, .2) : 1)}"><path d="M${x - 60},${NY - 54} V${NY - 190} H${x + 60} V${NY - 54}" fill="${C.trna}" fill-opacity=".25" stroke="${C.trna}" stroke-width="3"/>` +
               [...'UAC'].map((c, i) => nt(bx(14 + i), NY - 50, c, 46, 40)).join('') +
               `<circle cx="${x}" cy="${NY - 222}" r="30" fill="${C.chain}" fill-opacity=".85"/>` + txt(x, NY - 214, 'fMet', '#0a1224', 20, 'middle', 800) + '</g>';
-            if (step === 2) cl += `<g opacity="${f1(sub(p, .55, .75))}">` + txt(bx(20) + 30, NY - 200, T2('formyl-methionine', 'formyl-methionine'), C.chain, 24, 'start', 700) + txt(bx(20) + 30, NY - 166, T2('mens: gewone Met', 'human: plain Met'), C.muted, 22, 'start') + '</g>';
+            if (step === 2) cl += `<g opacity="${f1(sub(p, .55, .75))}">` + txt(bx(17) + 40, NY - 214, T2('formyl-methionine', 'formyl-methionine'), C.chain, 24, 'start', 700) + txt(bx(17) + 40, NY - 180, T2('mens: gewone Met', 'human: plain Met'), C.muted, 22, 'start') + '</g>';
           }
           cl += '</g>';
         }
@@ -127,8 +133,10 @@ export default {
 
         // polycistronisch mRNA (stap 4)
         let po = '';
-        if (step === 4) {
-          const a = sub(p, 0, .2), u = ease(sub(p, .2, .95));
+        const poA = step === 4 ? sub(p, .05, .3) : step === 5 ? 1 - sub(p, 0, .2) : 0;
+        if (poA > .01) {
+          const step = 4, p = step0 === 5 ? 1 : P0;
+          const a = poA, u = ease(sub(p, .2, .95));
           const G = [[230, 600], [720, 1030], [1150, 1460]], cols = ['#ffb27a', '#ffc247', '#d9e37a'];
           po += `<g opacity="${f1(a)}"><line x1="100" y1="470" x2="1520" y2="470" stroke="${C.rna}" stroke-width="6" stroke-linecap="round"/>` + txt(80, 478, "5′", C.rna, 22, 'end') + txt(1540, 478, "3′", C.rna, 22, 'start');
           G.forEach(([g0, g1], i) => {
@@ -158,6 +166,7 @@ export default {
           tb += '</g>';
         }
         $('bm-table').innerHTML = tb;
+        $('bm-hot').setAttribute('opacity', step === 5 ? '0' : '1');
       },
     };
   },

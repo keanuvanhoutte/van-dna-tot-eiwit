@@ -52,12 +52,19 @@ const SIGNAAL = [
 /* Verhaallijn 3 (POC 04-11-2026): een bacteriecel (E. coli) als tweede leermodel. Zie docs/bacterie-schema.md.
  * Hergebruikt de bestaande scène 'operon'; de andere hoofdstukken zijn bacteriescènes (app/scenes/bact/). */
 const BACTERIE = [
-  { id: 'bcel', bridge: { nl: 'Naast het chromosoom liggen vaak kleine extra DNA-ringen: plasmiden.', en: 'Next to the chromosome there are often small extra DNA rings: plasmids.' } },
+  { id: 'bcel', bridge: { nl: 'Zoom in op de nucleoïd: hoe past zoveel DNA in zo’n kleine cel?', en: 'Zoom in on the nucleoid: how does so much DNA fit into such a small cell?' } },
+  { id: 'bnucleoid', bridge: { nl: 'Naast het chromosoom liggen vaak kleine extra DNA-ringen: plasmiden.', en: 'Next to the chromosome there are often small extra DNA rings: plasmids.' } },
   { id: 'bplasmide', bridge: { nl: 'Zoom in op één gen: welke onderdelen heeft het?', en: 'Zoom in on one gene: what parts does it have?' } },
   { id: 'bgen', bridge: { nl: 'Het RNA-polymerase vindt de promoter met hulp van een σ-factor.', en: 'RNA polymerase finds the promoter with the help of a σ factor.' } },
   { id: 'bpol', bridge: { nl: 'Zo wordt een groep genen samen aan- en uitgezet: het lac-operon.', en: 'This is how a group of genes is switched on and off together: the lac operon.' } },
-  { id: 'operon', bridge: { nl: 'Het mRNA wordt meteen vertaald, nog terwijl het gemaakt wordt.', en: 'The mRNA is translated straight away, while it is still being made.' } },
-  { id: 'bmrna', bridge: { nl: 'Einde van het bacterieverhaal. Codons lezen en vouwen gaat zoals bij de mens: verken die via de kaart.', en: 'End of the bacterial story. Reading codons and folding work as in humans: explore them via the map.' } },
+  { id: 'operon', bridge: { nl: 'Aan het einde van het operon moet het kopiëren weer stoppen.', en: 'At the end of the operon, copying has to stop again.' } },
+  { id: 'bterm', bridge: { nl: 'Het mRNA is al klaar om vertaald te worden, zelfs terwijl het nog gemaakt wordt.', en: 'The mRNA is ready to be translated, even while it is still being made.' } },
+  { id: 'bmrna', bridge: { nl: 'Bekijk het 70S-ribosoom en het RNA-polymerase ervoor in 3D.', en: 'See the 70S ribosome and the RNA polymerase in front of it in 3D.' } },
+  { id: 'bribosoom', bridge: { nl: 'Het ribosoom leest het mRNA per drie letters: bij E. coli is de genetische code dezelfde als bij ons.', en: 'The ribosome reads the mRNA three letters at a time: in E. coli the genetic code is the same as ours.' } },
+  { id: 'codon', bridge: { nl: 'De nieuwe keten moet zijn 3D-vorm vinden; dat gaat bij bacteriën net zo.', en: 'The new chain has to find its 3D shape; this works the same way in bacteria.' } },
+  { id: 'vouwing', bridge: { nl: 'Soms is hulp nodig: chaperonnes zoals GroEL–GroES (een bacterieel voorbeeld).', en: 'Sometimes help is needed: chaperones such as GroEL–GroES (a bacterial example).' } },
+  { id: 'chaperones', bridge: { nl: 'Eiwitten die fout of overbodig zijn, worden afgebroken, maar zonder ubiquitine.', en: 'Proteins that are faulty or no longer needed are broken down, but without ubiquitin.' } },
+  { id: 'bafbraak', bridge: { nl: 'Einde van het bacterieverhaal. Verken de zijpaden (replicatie, trp-operon, introns) via de kaart.', en: 'End of the bacterial story. Explore the side paths (replication, trp operon, introns) via the map.' } },
 ];
 
 /* Alle verhaallijnen. De engine kiest er één (?story=… of de laatst gekozen) en kan wisselen. */

@@ -52,7 +52,7 @@ export default {
     { dur: 7000, cam: cam(800, 450, 1100), title: { nl: 'Het DNA ligt los in de cel', en: 'The DNA lies free in the cell' },
       text: { nl: 'Het DNA ligt opgevouwen in het midden. Die zone heet de nucleoïd; er zit geen membraan omheen.', en: 'The DNA lies folded up in the middle. This zone is called the nucleoid; there is no membrane around it.' } },
     { dur: 8000, cam: cam(800, 450, 1100), title: { nl: 'Eén ringvormig chromosoom', en: 'One circular chromosome' },
-      text: { nl: 'Al het DNA zit in één gesloten ring van ≈ 4,6 miljoen basenparen. De mens heeft 46 lineaire chromosomen.', en: 'All the DNA sits in one closed ring of ≈ 4.6 million base pairs. Humans have 46 linear chromosomes.' } },
+      text: { nl: 'Het chromosoom is één gesloten ring van ≈ 4,6 miljoen basenparen. De mens heeft 46 lineaire chromosomen.', en: 'The chromosome is one closed ring of ≈ 4.6 million base pairs. Humans have 46 linear chromosomes.' } },
     { dur: 7000, cam: cam(800, 450, 1500), title: { nl: 'Extra ringen: plasmiden', en: 'Extra rings: plasmids' },
       text: { nl: 'Veel bacteriën hebben ook kleine extra DNA-ringen. Die plasmiden kopiëren zichzelf apart.', en: 'Many bacteria also carry small extra DNA rings. These plasmids copy themselves separately.' } },
     { dur: 8000, cam: cam(800, 450, 1500), title: { nl: 'Ribosomen vlak naast het DNA', en: 'Ribosomes right next to the DNA' },
@@ -61,7 +61,8 @@ export default {
   svg() {
     return svgOpen() + rodCell(...CELL) + `
     <g id="bc-nucout"></g>
-    <g data-node="bgen" data-color="${C.dna}" data-label="${T2('Een gen van dichtbij', 'A gene up close')}"><path id="bc-chrom" fill="none" stroke="${C.dna}" stroke-width="4" stroke-linejoin="round"/><circle data-anchor="bgen" cx="${CX}" cy="${CY - 120}" r="1" fill="none"/></g>
+    <g data-node="bnucleoid" data-color="${C.dna}" data-label="${T2('Nucleoïd van dichtbij (3D)', 'Nucleoid up close (3D)')}"><path id="bc-chrom" fill="none" stroke="${C.dna}" stroke-width="4" stroke-linejoin="round"/><circle data-anchor="bnucleoid" cx="${CX}" cy="${CY - 120}" r="1" fill="none"/></g>
+    <g data-node="breplicatie" data-color="${K.ori}" data-label="${T2('Hoe het chromosoom gekopieerd wordt', 'How the chromosome is copied')}" data-pos="below"><circle data-anchor="breplicatie" cx="${CX}" cy="${CY + 120}" r="1" fill="none"/><rect x="${CX}" y="${CY + 119}" width="1" height="1" fill="none"/></g>
     <g id="bc-ring"></g>
     <g data-node="bplasmide" data-color="${K.plas}" data-label="${T2('Plasmiden', 'Plasmids')}"><g id="bc-plas"></g><circle data-anchor="bplasmide" cx="1270" cy="290" r="1" fill="none"/></g>
     <g data-node="bmrna" data-color="${K.ribo}" data-label="${T2('mRNA & 70S-ribosoom', 'mRNA & 70S ribosome')}"><g id="bc-ribo"></g><g id="bc-mrna"></g><circle data-anchor="bmrna" cx="560" cy="640" r="1" fill="none"/></g>

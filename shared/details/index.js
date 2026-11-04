@@ -11,4 +11,5 @@ import prot2 from './prot2.js';
 import signal1 from './signal1.js';
 import signal2 from './signal2.js';
 import bact from './bact.js';
-export const DETAILS = { ...entry, ...genome, ...genome2, ...repl, ...txn, ...rna, ...tl, ...prot, ...prot2, ...signal1, ...signal2, ...bact };
+import bact2 from './bact2.js';
+export const DETAILS = { ...entry, ...genome, ...genome2, ...repl, ...txn, ...rna, ...tl, ...prot, ...prot2, ...signal1, ...signal2, ...bact, ...bact2 };

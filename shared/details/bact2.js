@@ -1,0 +1,241 @@
+/* Uitleg per knoop, bacterie-route deel 2 (volledige uitwerking 04-11-2026): nucleoïd, replicatie, terminatie, trp-operon,
+ * 70S/expressoom, zelfsplicende introns, eiwitafbraak. Zie app/SCENES.md en docs/bacterie-schema.md. */
+const S = {
+  dillon: { t: 'Dillon & Dorman (2010) Bacterial nucleoid-associated proteins, nucleoid structure and gene expression. Nat Rev Microbiol 8:185 (PubMed 20140026)', url: 'https://pubmed.ncbi.nlm.nih.gov/20140026/' },
+  rice: { t: 'Rice et al. (1996) Crystal structure of an IHF-DNA complex: a protein-induced DNA U-turn. Cell 87:1295 (PubMed 8980235)', url: 'https://pubmed.ncbi.nlm.nih.gov/8980235/' },
+  bush: { t: 'Bush, Evans-Roberts & Maxwell (2015) DNA topoisomerases. EcoSal Plus 6 (PMC11575854)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11575854/' },
+  pdb1ihf: { t: 'RCSB PDB 1IHF — Integration host factor/DNA complex (Rice et al., Cell 1996)', url: 'https://www.rcsb.org/structure/1IHF' },
+  katayama: { t: 'Katayama et al. (2010) Regulation of the replication cycle: conserved and diverse regulatory systems for DnaA and oriC. Nat Rev Microbiol 8:163 (PubMed 20157337)', url: 'https://pubmed.ncbi.nlm.nih.gov/20157337/' },
+  alberts_repl: { t: 'Alberts et al., Molecular Biology of the Cell, 4e ed. — DNA Replication Mechanisms (NCBI Bookshelf)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK26850/' },
+  alberts_init: { t: 'Alberts et al., MBoC 4e ed. — The Initiation and Completion of DNA Replication in Chromosomes (NCBI Bookshelf)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK26826/' },
+  neylon: { t: 'Neylon et al. (2005) Replication termination in Escherichia coli: structure and antihelicase activity of the Tus-Ter complex. Microbiol Mol Biol Rev 69:501 (PMC1197808)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC1197808/' },
+  blattner: { t: 'Blattner et al. (1997) The complete genome sequence of Escherichia coli K-12. Science 277:1453 (PubMed 9278503)', url: 'https://pubmed.ncbi.nlm.nih.gov/9278503/' },
+  landick: { t: 'Ray-Soni, Bellecourt & Landick (2016) Mechanisms of bacterial transcription termination: all good things must end. Annu Rev Biochem 85:319 (PubMed 27023849)', url: 'https://pubmed.ncbi.nlm.nih.gov/27023849/' },
+  said: { t: 'Said et al. (2021) Steps toward translocation-independent RNA polymerase inactivation by terminator ATPase ρ. Science 371:eabd1673 (PubMed 33243850)', url: 'https://pubmed.ncbi.nlm.nih.gov/33243850/' },
+  yanofsky: { t: 'Yanofsky (2000) Transcription attenuation: once viewed as a novel regulatory strategy. J Bacteriol 182:1 (PMC94232)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC94232/' },
+  cooper_prok: { t: 'Cooper, The Cell, 2nd ed. — Transcription in Prokaryotes (NCBI Bookshelf)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK9850/' },
+  webster: { t: 'Webster et al. (2020) Structural basis of transcription-translation coupling and collision in bacteria. Science 369:1355 (PubMed 32820062)', url: 'https://pubmed.ncbi.nlm.nih.gov/32820062/' },
+  pdb6ztj: { t: 'RCSB PDB 6ZTJ — E. coli 70S–RNAP expressome complex in NusG-coupled state (Webster et al., Science 2020)', url: 'https://www.rcsb.org/structure/6ZTJ' },
+  pdb4ybb: { t: 'RCSB PDB 4YBB — High-resolution structure of the Escherichia coli ribosome (Noeske et al., NSMB 2015)', url: 'https://www.rcsb.org/structure/4YBB' },
+  alberts_prot: { t: 'Alberts et al., Molecular Biology of the Cell (4e): From RNA to Protein (NCBI Bookshelf)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK26829/' },
+  adams: { t: 'Adams et al. (2004) Crystal structure of a self-splicing group I intron with both exons. Nature 430:45 (PubMed 15175762)', url: 'https://pubmed.ncbi.nlm.nih.gov/15175762/' },
+  pdb1u6b: { t: 'RCSB PDB 1U6B — Crystal structure of a self-splicing group I intron with both exons', url: 'https://www.rcsb.org/structure/1U6B' },
+  edgell: { t: 'Edgell, Belfort & Shub (2000) Barriers to intron promiscuity in bacteria. J Bacteriol 182:5281 (PMC110968)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC110968/' },
+  lambowitz: { t: 'Lambowitz & Zimmerly (2011) Group II introns: mobile ribozymes that invade DNA. Cold Spring Harb Perspect Biol 3:a003616 (PMC3140690)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3140690/' },
+  mills: { t: 'Mills, Johnson & Perler (2014) Protein splicing: how inteins escape from precursor proteins. J Biol Chem 289:14498 (PMC4031507)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4031507/' },
+  fei: { t: 'Fei et al. (2020) Structures of the ATP-fueled ClpXP proteolytic machine bound to protein substrate. eLife 9:e52774 (PMC7112951)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7112951/' },
+  fei2: { t: 'Fei et al. (2020) Structural basis of ClpXP recognition and unfolding of ssrA-tagged substrates. eLife 9:e61496 (PMC7652416)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7652416/' },
+  pearce: { t: 'Pearce et al. (2008) Ubiquitin-like protein involved in the proteasome pathway of Mycobacterium tuberculosis. Science 322:1104 (PubMed 18832610)', url: 'https://pubmed.ncbi.nlm.nih.gov/18832610/' },
+  hocher: { t: 'Hocher et al. (2023) Histones with an unconventional DNA-binding mode in vitro are major chromatin constituents in the bacterium Bdellovibrio bacteriovorus. Nat Microbiol 8:2006 (PubMed 37814071)', url: 'https://pubmed.ncbi.nlm.nih.gov/37814071/' },
+  yanofsky84: { t: 'Yanofsky, Kelley & Horn (1984) Repression is relieved before attenuation in the trp operon of Escherichia coli as tryptophan starvation becomes increasingly severe. J Bacteriol 158:1018 (PMC215544)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC215544/' },
+  lundgren: { t: 'Lundgren et al. (2004) Three replication origins in Sulfolobus species: synchronous initiation of chromosome replication and asynchronous termination. PNAS 101:7046 (PubMed 15107501)', url: 'https://pubmed.ncbi.nlm.nih.gov/15107501/' },
+  baker: { t: 'Baker & Sauer (2012) ClpXP, an ATP-powered unfolding and protein-degradation machine. Biochim Biophys Acta 1823:15 (PMC3209554)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3209554/' },
+  gottesman: { t: 'Gottesman (1996) Proteases and their targets in Escherichia coli. Annu Rev Genet 30:465 (PubMed 8982462)', url: 'https://pubmed.ncbi.nlm.nih.gov/8982462/' },
+  pdb6wrf: { t: 'RCSB PDB 6WRF — ClpX-ClpP complex bound to GFP-ssrA, recognition complex (Fei et al., eLife 2020, e61496)', url: 'https://www.rcsb.org/structure/6WRF' },
+};
+
+export default {
+  bnucleoid: {
+    nl: {
+      kort: 'E. coli en de meeste andere bacteriën hebben geen histonen. Toch past hun DNA, dat uitgerekt meer dan een millimeter lang is, in een cel van 2 µm. Kleine eiwitten buigen, overbruggen en bundelen het DNA, en het enzym gyrase draait het extra losser op. Vergelijk met het [[nucleosoom|nucleosoom]] bij de mens.',
+      what: 'De nucleoïd is het compact opgevouwen chromosoom van een bacterie. In plaats van nucleosomen gebruiken bacteriën nucleoïd-geassocieerde eiwitten (NAP’s) zoals HU, IHF, H-NS en Fis. Daarnaast houdt DNA-gyrase het DNA negatief gesupercoild.',
+      how: [
+        'IHF (een heterodimeer van α en β) bindt een specifieke volgorde en buigt het DNA met meer dan 160°; in twee knikken schuift telkens een proline tussen de basen.',
+        'IHF leest zijn bindingsplaats vooral indirect: via de vorm van de kleine groef en de ruggengraat, niet door de basen zelf te "lezen".',
+        'HU buigt DNA zonder voorkeur voor een volgorde; H-NS overbrugt twee DNA-stukken en zet zo vooral AT-rijke (vaak "vreemde") genen stil; Fis is talrijk bij snelle groei.',
+        'DNA-gyrase (een type II-topo-isomerase) brengt met ATP negatieve supercoils aan; dat maakt het DNA compacter en makkelijker te openen.',
+      ],
+      facts: [['IHF-buiging', '> 160°'], ['Wiggen in het DNA', 'Pro65 (α) en Pro64 (β)'], ['Belangrijke NAP’s', 'HU, IHF, H-NS, Fis'], ['Supercoiling', 'negatief, door gyrase']],
+      why: 'De nucleoïd toont dat DNA compact én toegankelijk moet zijn, ook zonder kern. Omdat gyrase niet bij de mens voorkomt, is het een doelwit voor antibiotica zoals ciprofloxacine.',
+    },
+    en: {
+      kort: 'E. coli and most other bacteria have no histones. Yet their DNA, more than a millimetre long when stretched out, fits into a 2 µm cell. Small proteins bend, bridge and bundle the DNA, and the enzyme gyrase underwinds it. Compare with the human [[nucleosome|nucleosoom]].',
+      what: 'The nucleoid is the compactly folded chromosome of a bacterium. Instead of nucleosomes, bacteria use nucleoid-associated proteins (NAPs) such as HU, IHF, H-NS and Fis. In addition, DNA gyrase keeps the DNA negatively supercoiled.',
+      how: [
+        'IHF (a heterodimer of α and β) binds a specific sequence and bends the DNA by more than 160°; at two kinks a proline slides in between the bases.',
+        'IHF reads its binding site mostly indirectly: through the shape of the minor groove and the backbone, not by "reading" the bases themselves.',
+        'HU bends DNA without sequence preference; H-NS bridges two DNA stretches and thereby mainly silences AT-rich (often "foreign") genes; Fis is abundant during fast growth.',
+        'DNA gyrase (a type II topoisomerase) uses ATP to introduce negative supercoils; this makes the DNA more compact and easier to open.',
+      ],
+      facts: [['IHF bend', '> 160°'], ['Wedges in the DNA', 'Pro65 (α) and Pro64 (β)'], ['Main NAPs', 'HU, IHF, H-NS, Fis'], ['Supercoiling', 'negative, by gyrase']],
+      why: 'The nucleoid shows that DNA must be compact and accessible, even without a nucleus. Because gyrase does not occur in humans, it is a target for antibiotics such as ciprofloxacin.',
+    },
+    sources: [S.rice, S.pdb1ihf, S.dillon, S.bush, S.hocher],
+  },
+
+  breplicatie: {
+    nl: {
+      kort: 'Een bacterie kopieert haar hele chromosoom vanaf één startplaats, oriC. Twee kopieervorken lopen elk een andere kant op rond de ring en ontmoeten elkaar aan de overkant. Daarna krijgt elke dochtercel één kopie.',
+      what: 'Replicatie van het E. coli-chromosoom start bij oriC, waar DnaA-ATP bindt en een AT-rijk stuk opent. De helicase DnaB wordt geladen en er vertrekken twee replicatievorken (bidirectioneel). Ze ontmoeten elkaar in de ter-zone, waar Tus-eiwitten op ter-plaatsen vorken maar in één richting doorlaten.',
+      how: [
+        'DnaA bindt de DnaA-boxen in oriC en opent het naburige AT-rijke stuk (de DUE).',
+        'DnaB-helicase opent het DNA; primase legt RNA-primers; DNA-polymerase III verlengt ze.',
+        'De leidende streng wordt in één stuk gemaakt, de achterblijvende in Okazaki-fragmenten, die DNA-polymerase I en ligase daarna afwerken.',
+        'Elke vork bouwt ≈ 1 000 nucleotiden per seconde in; voor 2 × ≈ 2,3 miljoen bp is dat ≈ 40 minuten.',
+        'Tus gebonden op ter houdt een vork maar vanaf één kant tegen: zo ontmoeten de vorken elkaar in de ter-zone.',
+        'De twee dochterchromosomen zijn in elkaar gehaakt; topo-isomerase IV haalt ze uit elkaar.',
+      ],
+      facts: [['Startplaatsen', '1 (oriC); mens: tienduizenden'], ['Vorksnelheid', '≈ 1 000 nt/s (mens ≈ 50 nt/s)'], ['Duur', '≈ 40 min bij 37 °C'], ['Einde', 'ter-zone met Tus']],
+      why: 'Dat er maar één startplaats is, maakt het bacteriële chromosoom eenvoudig te volgen. De mens heeft telomeren nodig omdat zijn chromosomen lineair zijn. Veel startplaatsen zijn nodig omdat ons DNA veel groter is en de vorken trager lopen (sommige archaea hebben zelfs een ring met drie startplaatsen).',
+    },
+    en: {
+      kort: 'A bacterium copies its whole chromosome from one starting point, oriC. Two copying forks each run a different way around the ring and meet on the opposite side. Then each daughter cell gets one copy.',
+      what: 'Replication of the E. coli chromosome starts at oriC, where DnaA-ATP binds and opens an AT-rich stretch. The helicase DnaB is loaded and two replication forks set off (bidirectional). They meet in the ter region, where Tus proteins bound to ter sites let forks pass in one direction only.',
+      how: [
+        'DnaA binds the DnaA boxes in oriC and opens the nearby AT-rich stretch (the DUE).',
+        'DnaB helicase opens the DNA; primase lays down RNA primers; DNA polymerase III extends them.',
+        'The leading strand is made in one piece, the lagging strand in Okazaki fragments, which DNA polymerase I and ligase then finish.',
+        'Each fork adds ≈ 1,000 nucleotides per second; for 2 × ≈ 2.3 million bp this takes ≈ 40 minutes.',
+        'Tus bound to ter stops a fork from one side only: so the forks meet in the ter region.',
+        'The two daughter chromosomes are interlinked; topoisomerase IV separates them.',
+      ],
+      facts: [['Origins', '1 (oriC); human: tens of thousands'], ['Fork speed', '≈ 1,000 nt/s (human ≈ 50 nt/s)'], ['Duration', '≈ 40 min at 37 °C'], ['End', 'ter region with Tus']],
+      why: 'Having only one origin makes the bacterial chromosome easy to follow. Humans need telomeres because their chromosomes are linear. Many origins are needed because our DNA is much larger and the forks move more slowly (some archaea even have a ring with three origins).',
+    },
+    sources: [S.katayama, S.alberts_repl, S.alberts_init, S.neylon, S.blattner, S.lundgren],
+  },
+
+  bterm: {
+    nl: {
+      kort: 'Aan het einde van een bacterieel gen of operon ligt een terminator. Ofwel vouwt het RNA daar een haarspeld gevolgd door U’s, ofwel haalt het eiwit Rho het RNA-polymerase in. In beide gevallen laat het enzym het DNA en het RNA los.',
+      what: 'Bacteriën hebben twee soorten terminatie. Bij intrinsieke terminatie vormt het RNA een GC-rijke haarspeld vlak achter het enzym, gevolgd door een reeks U’s. Bij Rho-afhankelijke terminatie bindt de hexamere helicase Rho op een C-rijk, onbedekt stuk RNA (rut) en beweegt met ATP naar het RNA-polymerase.',
+      how: [
+        'De haarspeld vormt zich in het uitgangskanaal en verzwakt de greep van het enzym op het RNA.',
+        'Het rU:dA-hybride van de U-reeks is het zwakste basenparingshybride; daardoor laten RNA en enzym makkelijk los.',
+        'Rho is een ring van zes subeenheden die RNA rond zich wikkelt en met ATP 5′→3′ verschuift.',
+        'Ribosomen op het mRNA bedekken de rut-plaatsen; daardoor werkt Rho vooral op RNA dat niet vertaald wordt (polariteit).',
+      ],
+      facts: [['Intrinsiek', 'GC-haarspeld + ≈ 7–8 U’s'], ['Rho', 'hexamere RNA-helicase, ATP-afhankelijk'], ['Bindplaats Rho', 'rut: C-rijk, onbedekt RNA'], ['Helpers', 'o.a. NusA, NusG']],
+      why: 'Terminatie bepaalt waar een RNA eindigt en wordt ook als schakelaar gebruikt, bv. bij attenuatie van het [[trp-operon|btrp]]. Bij de mens stopt RNA-polymerase II op een andere manier, gekoppeld aan de poly(A)-staart.',
+    },
+    en: {
+      kort: 'At the end of a bacterial gene or operon lies a terminator. Either the RNA folds a hairpin followed by U’s there, or the protein Rho catches up with RNA polymerase. Either way the enzyme lets go of the DNA and the RNA.',
+      what: 'Bacteria have two kinds of termination. In intrinsic termination the RNA forms a GC-rich hairpin just behind the enzyme, followed by a run of U’s. In Rho-dependent termination the hexameric helicase Rho binds a C-rich, uncovered stretch of RNA (rut) and moves towards RNA polymerase using ATP.',
+      how: [
+        'The hairpin forms in the exit channel and weakens the enzyme’s grip on the RNA.',
+        'The rU:dA hybrid of the U tract is the weakest base-pair hybrid; that is why RNA and enzyme let go easily.',
+        'Rho is a ring of six subunits that wraps RNA around itself and translocates 5′→3′ using ATP.',
+        'Ribosomes on the mRNA cover the rut sites; as a result Rho mainly acts on RNA that is not translated (polarity).',
+      ],
+      facts: [['Intrinsic', 'GC hairpin + ≈ 7–8 U’s'], ['Rho', 'hexameric RNA helicase, ATP-dependent'], ['Rho binding site', 'rut: C-rich, uncovered RNA'], ['Helpers', 'e.g. NusA, NusG']],
+      why: 'Termination decides where an RNA ends and is also used as a switch, e.g. in attenuation of the [[trp operon|btrp]]. In humans RNA polymerase II stops in a different way, linked to the poly(A) tail.',
+    },
+    sources: [S.landick, S.cooper_prok, S.said],
+  },
+
+  btrp: {
+    nl: {
+      kort: 'Het trp-operon maakt het aminozuur tryptofaan. Het heeft twee knoppen: een repressor die met tryptofaan op het DNA gaat zitten, en een "meetstuk" vooraan het RNA waar een ribosoom bepaalt of het kopiëren doorgaat. Dat tweede trucje kan alleen omdat er geen [[kern|bcel]] is.',
+      what: 'Het trp-operon van E. coli (trpE, D, C, B, A) codeert de enzymen voor de synthese van tryptofaan. Het wordt op twee manieren geregeld: door repressie (de Trp-repressor met tryptofaan bindt de operator) en door attenuatie in het leider-RNA (trpL), dat vóór trpE ligt.',
+      how: [
+        'Met tryptofaan als corepressor bindt de Trp-repressor de operator en vermindert hij de start van de transcriptie sterk.',
+        'Het leider-RNA codeert een kort peptide van 14 aminozuren met twee Trp-codons naast elkaar (regio 1).',
+        'Het leider-RNA kan drie haarspelden vormen: 1:2, 2:3 of 3:4. Alleen 3:4 werkt als terminator.',
+        'Veel Trp: het ribosoom vertaalt vlot tot het stopcodon en bedekt regio 2; 3:4 vormt → transcriptie stopt.',
+        'Weinig Trp: het ribosoom staat stil op de Trp-codons; regio 2 paart met 3 (antiterminator) → 3:4 kan niet vormen → het operon wordt gekopieerd.',
+      ],
+      facts: [['Genen', 'trpE, trpD, trpC, trpB, trpA'], ['Leiderpeptide', '14 aminozuren, 2 × Trp'], ['Terminator', 'haarspeld 3:4'], ['Antiterminator', 'haarspeld 2:3']],
+      why: 'Attenuatie is een mooi voorbeeld van hoe gekoppelde transcriptie en translatie zelf een regelmechanisme worden. Het principe – RNA dat afhankelijk van de omstandigheden anders vouwt – komt ook terug in riboswitches.',
+    },
+    en: {
+      kort: 'The trp operon makes the amino acid tryptophan. It has two switches: a repressor that sits on the DNA together with tryptophan, and a "measuring piece" at the front of the RNA where a ribosome decides whether copying continues. That second trick only works because there is no [[nucleus|bcel]].',
+      what: 'The E. coli trp operon (trpE, D, C, B, A) encodes the enzymes for tryptophan synthesis. It is controlled in two ways: by repression (the Trp repressor with tryptophan binds the operator) and by attenuation in the leader RNA (trpL), which lies before trpE.',
+      how: [
+        'With tryptophan as corepressor, the Trp repressor binds the operator and strongly reduces transcription initiation.',
+        'The leader RNA encodes a short peptide of 14 amino acids with two adjacent Trp codons (region 1).',
+        'The leader RNA can form three hairpins: 1:2, 2:3 or 3:4. Only 3:4 acts as a terminator.',
+        'Plenty of Trp: the ribosome translates smoothly up to the stop codon and covers region 2; 3:4 forms → transcription stops.',
+        'Little Trp: the ribosome stalls on the Trp codons; region 2 pairs with 3 (antiterminator) → 3:4 cannot form → the operon is copied.',
+      ],
+      facts: [['Genes', 'trpE, trpD, trpC, trpB, trpA'], ['Leader peptide', '14 amino acids, 2 × Trp'], ['Terminator', 'hairpin 3:4'], ['Antiterminator', 'hairpin 2:3']],
+      why: 'Attenuation is a fine example of how coupled transcription and translation themselves become a control mechanism. The principle – RNA that folds differently depending on conditions – also returns in riboswitches.',
+    },
+    sources: [S.yanofsky, S.yanofsky84, S.cooper_prok, S.landick],
+  },
+
+  bribosoom: {
+    nl: {
+      kort: 'Het bacteriële ribosoom (70S) bestaat uit een kleine en een grote eenheid, vooral gemaakt van RNA. In een bacterie kan het vlak achter het RNA-polymerase rijden over hetzelfde mRNA, verbonden door het eiwit NusG. Vergelijk met ons [[80S-ribosoom|ribosoom]].',
+      what: 'Het 70S-ribosoom van E. coli bestaat uit de 30S-eenheid (16S-rRNA en 21 eiwitten) en de 50S-eenheid (23S- en 5S-rRNA en ruim 30 eiwitten). Ongeveer twee derde van de massa is RNA, en het 23S-rRNA katalyseert de peptidebinding. Cryo-EM toonde een "expressoom": RNA-polymerase en het eerste ribosoom vlak achter elkaar, met NusG als brug.',
+      how: [
+        'De 30S-eenheid bindt het mRNA en controleert de codon–anticodonparing; de 50S-eenheid koppelt de aminozuren.',
+        'tRNA’s schuiven door drie plaatsen: A (aankomst), P (groeiende keten) en E (uitgang).',
+        'In het expressoom ligt het mRNA tussen polymerase en ribosoom vrij; NusG bindt met zijn N-terminale deel het RNA-polymerase en met zijn C-terminale KOW-deel het ribosoomeiwit uS10.',
+        'Zo houdt het ribosoom gelijke tred met het polymerase en blijft het mRNA bedekt (zie [[Rho|bterm]]).',
+      ],
+      facts: [['70S', '30S (16S + 21 eiwitten) + 50S (23S, 5S + ruim 30 eiwitten)'], ['Massa', '≈ 2,5 MDa, ≈ ⅔ RNA'], ['Koppeling', 'NusG: RNAP ↔ uS10'], ['Structuur', 'PDB 6ZTJ (cryo-EM 3,4 Å)']],
+      why: 'Omdat het bacteriële ribosoom verschilt van het onze, kunnen antibiotica zoals streptomycine, tetracycline en erytromycine het gericht remmen. Omdat er geen kern is en mRNA meteen vertaald (en snel weer afgebroken) wordt, kan een bacterie snel bijsturen.',
+    },
+    en: {
+      kort: 'The bacterial ribosome (70S) consists of a small and a large subunit, made mostly of RNA. In a bacterium it can ride right behind RNA polymerase on the same mRNA, linked by the protein NusG. Compare with our [[80S ribosome|ribosoom]].',
+      what: 'The E. coli 70S ribosome consists of the 30S subunit (16S rRNA and 21 proteins) and the 50S subunit (23S and 5S rRNA and over 30 proteins). About two thirds of the mass is RNA, and the 23S rRNA catalyses peptide-bond formation. Cryo-EM revealed an "expressome": RNA polymerase and the leading ribosome right behind each other, with NusG as a bridge.',
+      how: [
+        'The 30S subunit binds the mRNA and checks codon–anticodon pairing; the 50S subunit joins the amino acids.',
+        'tRNAs move through three sites: A (arrival), P (growing chain) and E (exit).',
+        'In the expressome the mRNA between polymerase and ribosome is exposed; NusG binds RNA polymerase with its N-terminal part and ribosomal protein uS10 with its C-terminal KOW part.',
+        'This way the ribosome keeps pace with the polymerase and the mRNA stays covered (see [[Rho|bterm]]).',
+      ],
+      facts: [['70S', '30S (16S + 21 proteins) + 50S (23S, 5S + over 30 proteins)'], ['Mass', '≈ 2.5 MDa, ≈ ⅔ RNA'], ['Coupling', 'NusG: RNAP ↔ uS10'], ['Structure', 'PDB 6ZTJ (cryo-EM 3.4 Å)']],
+      why: 'Because the bacterial ribosome differs from ours, antibiotics such as streptomycin, tetracycline and erythromycin can inhibit it specifically. Because there is no nucleus and mRNA is translated at once (and soon broken down), a bacterium can adjust quickly.',
+    },
+    sources: [S.webster, S.pdb6ztj, S.pdb4ybb, S.alberts_prot],
+  },
+
+  bsplicing: {
+    nl: {
+      kort: 'Bacteriën splicen bijna nooit. De zeldzame introns die ze toch hebben, knippen zichzelf uit: het RNA is zelf het enzym (een ribozym). Daarnaast bestaan inteïnes: stukken eiwit die zichzelf uit een eiwit knippen. Vergelijk met het [[spliceosoom|splicing]] bij de mens.',
+      what: 'Bacteriën hebben geen spliceosoom. Groep I- en groep II-introns zijn zelfsplicende ribozymen; ze komen in bacteriën weinig voor (bv. groep I in sommige tRNA- en faaggenen, groep II in een deel van de genomen). Inteïnes zijn eiwitstukken die zichzelf uit een voorlopereiwit knippen en de flanken (exteïnes) aan elkaar zetten.',
+      how: [
+        'Groep I: een vrij guanosine valt de 5′-splitsplaats aan; daarna valt het vrijgekomen 5′-exon de 3′-splitsplaats aan en worden de exonen verbonden.',
+        'De structuur 1U6B toont een groep I-intron uit een tRNA-Ile-gen van Azoarcus, met beide exonen, net vóór de tweede stap.',
+        'Groep II: een adenosine in het intron start de reactie, zoals bij het spliceosoom (lariat); veel groep II-introns zijn mobiel en dragen een eigen eiwit.',
+        'Inteïnes splicen op eiwitniveau, zonder hulpenzymen; ze worden in het lab gebruikt om eiwitten te koppelen of vrij te knippen.',
+      ],
+      facts: [['Spliceosoom', 'nee (alleen eukaryoten)'], ['Groep I', 'zeldzaam; tRNA- en faaggenen'], ['Groep II', 'in een deel van de bacteriegenomen'], ['Structuur', 'PDB 1U6B (Azoarcus, 3,1 Å)']],
+      why: 'Zelfsplicende introns tonen dat RNA een enzym kan zijn; vooral groep II-introns zijn mogelijk de voorlopers van onze introns en van het spliceosoom. Dat gewone bacteriegenen geen introns hebben, verklaart waarom een bacterie een menselijk gen alleen goed kan aflezen als cDNA.',
+    },
+    en: {
+      kort: 'Bacteria almost never splice. The rare introns they do have cut themselves out: the RNA itself is the enzyme (a ribozyme). There are also inteins: pieces of protein that cut themselves out of a protein. Compare with the human [[spliceosome|splicing]].',
+      what: 'Bacteria have no spliceosome. Group I and group II introns are self-splicing ribozymes; they are uncommon in bacteria (e.g. group I in some tRNA and phage genes, group II in part of the genomes). Inteins are protein segments that cut themselves out of a precursor protein and join the flanking parts (exteins).',
+      how: [
+        'Group I: a free guanosine attacks the 5′ splice site; then the released 5′ exon attacks the 3′ splice site and the exons are joined.',
+        'Structure 1U6B shows a group I intron from a tRNA-Ile gene of Azoarcus, with both exons, just before the second step.',
+        'Group II: an adenosine within the intron starts the reaction, as in the spliceosome (lariat); many group II introns are mobile and carry their own protein.',
+        'Inteins splice at the protein level, without helper enzymes; in the lab they are used to join or release proteins.',
+      ],
+      facts: [['Spliceosome', 'no (eukaryotes only)'], ['Group I', 'rare; tRNA and phage genes'], ['Group II', 'in part of bacterial genomes'], ['Structure', 'PDB 1U6B (Azoarcus, 3.1 Å)']],
+      why: 'Self-splicing introns show that RNA can be an enzyme; group II introns in particular may be the ancestors of our introns and of the spliceosome. That ordinary bacterial genes have no introns explains why a bacterium can only read a human gene correctly as cDNA.',
+    },
+    sources: [S.adams, S.pdb1u6b, S.edgell, S.lambowitz, S.mills],
+  },
+
+  bafbraak: {
+    nl: {
+      kort: 'Ook bacteriën ruimen eiwitten op die fout of overbodig zijn. E. coli doet dat zonder ubiquitine of proteasoom. Machines zoals ClpXP grijpen een eiwit bij een label, trekken het met ATP open en knippen het in een afgesloten kamer. Vergelijk met het [[proteasoom|ubiquitine]] bij de mens.',
+      what: 'ClpXP is een AAA+-protease: de zesring ClpX herkent een afbraaklabel, ontvouwt het eiwit met ATP en duwt de keten in ClpP, twee ringen van zeven met de knipplaatsen aan de binnenkant. Andere bacteriële proteasen zijn Lon, ClpAP, FtsH en HslUV.',
+      how: [
+        'Een bekend label is ssrA: tmRNA voegt het toe aan eiwitten van ribosomen die vastlopen op een mRNA zonder stopcodon, bv. een afgebroken mRNA (trans-translatie).',
+        'ClpX grijpt het label in zijn centrale porie en trekt de keten stap voor stap naar binnen; daarbij wordt het eiwit ontvouwen.',
+        'In ClpP knippen 14 serineprotease-plaatsen de keten in korte peptiden.',
+        'Lon breekt vooral misvouwde eiwitten en enkele regeleiwitten af.',
+        'Sommige bacteriën, zoals de tuberculosebacterie, hebben wel een proteasoom, met een eigen label (Pup) in plaats van ubiquitine.',
+      ],
+      facts: [['ClpX', 'zesring, AAA+-ATPase'], ['ClpP', '2 × 7 subeenheden'], ['Label', 'o.a. ssrA (AANDENYALAA)'], ['Structuur', 'PDB 6WRF (cryo-EM)']],
+      why: 'Afbraak is even belangrijk als aanmaak: zo houdt de cel haar eiwitten van goede kwaliteit en stuurt ze snel bij. Het principe (ontvouwen met ATP, knippen in een kamer) is hetzelfde als bij het proteasoom, maar de labels verschillen.',
+    },
+    en: {
+      kort: 'Bacteria also clear away proteins that are faulty or no longer needed. E. coli does this without ubiquitin or a proteasome. Machines such as ClpXP grab a protein by a tag, pull it open using ATP and cut it up in a closed chamber. Compare with the human [[proteasome|ubiquitine]].',
+      what: 'ClpXP is an AAA+ protease: the six-membered ring ClpX recognises a degradation tag, unfolds the protein using ATP and pushes the chain into ClpP, two rings of seven with the cutting sites on the inside. Other bacterial proteases are Lon, ClpAP, FtsH and HslUV.',
+      how: [
+        'A well-known tag is ssrA: tmRNA adds it to proteins from ribosomes that stall on an mRNA without a stop codon, e.g. a broken mRNA (trans-translation).',
+        'ClpX grips the tag in its central pore and pulls the chain in step by step; this unfolds the protein.',
+        'Inside ClpP, 14 serine-protease sites cut the chain into short peptides.',
+        'Lon mainly degrades misfolded proteins and some regulatory proteins.',
+        'Some bacteria, such as the tuberculosis bacterium, do have a proteasome, with their own tag (Pup) instead of ubiquitin.',
+      ],
+      facts: [['ClpX', 'six-membered ring, AAA+ ATPase'], ['ClpP', '2 × 7 subunits'], ['Tag', 'e.g. ssrA (AANDENYALAA)'], ['Structure', 'PDB 6WRF (cryo-EM)']],
+      why: 'Degradation is as important as synthesis: it keeps the cell’s proteins in good shape and allows quick adjustment. The principle (unfold with ATP, cut in a chamber) is the same as for the proteasome, but the tags differ.',
+    },
+    sources: [S.fei2, S.pdb6wrf, S.fei, S.baker, S.gottesman, S.pearce],
+  },
+};

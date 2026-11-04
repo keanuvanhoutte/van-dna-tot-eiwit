@@ -1,6 +1,6 @@
 # Schema: bacterie-route (E. coli) — voorstel POC
 
-Status: **POC gebouwd en getest 04-11-2026** (akkoord gebruiker; aangevuld met plasmide, gen-onderdelen en 3D). Scènes: `app/scenes/bact/`, uitleg + bronnen: `shared/details/bact.js`, verhaallijn `bacterie` in `app/story.js`. Inhoud staat op "concept" tot een verificatieronde.
+Status: **volledig uitgewerkt en nagekeken 04-11-2026** (verificatieronde 6: `docs/verificatie-ronde-6-bacterie.md`). Scènes: `app/scenes/bact/`, uitleg + bronnen: `shared/details/bact.js` en `bact2.js`, verhaallijn `bacterie` in `app/story.js`.
 
 ## 1. Startpagina: drie keuzes
 
@@ -68,3 +68,29 @@ Hergebruik: na hoofdstuk 6 leiden knoppen naar de bestaande scènes **codon**, *
 ## 6. Bewust *niet* in de POC
 
 Replicatie in detail, celdeling, attenuatie (trp-operon), werking van antibiotica, 3D-scènes buiten `bpol`. Kan in een volgende ronde.
+
+## 7. Volledige uitwerking (04-11-2026)
+
+Verhaallijn `bacterie` (13 hoofdstukken), met 3D waar het kan en hergebruik van menselijke scènes waar het principe hetzelfde is:
+
+| # | Scène | Soort | Inhoud |
+|---|---|---|---|
+| 1 | `bcel` | 2D | geen kern, nucleoïd, ringchromosoom, plasmiden, 70S-ribosomen |
+| 2 | `bnucleoid` | **3D** 1IHF | DNA opvouwen zonder histonen: IHF buigt > 160° (Pro65/Pro64), HU, H-NS, Fis, gyrase |
+| 3 | `bplasmide` | 2D | ori en kopieaantal, bla-resistentie, conjugatie |
+| 4 | `bgen` | 2D | promoter/σ-factoren, operator, SD, terminator, introns/inteïnes, oriC, essentiële genen |
+| 5 | `bpol` | **3D** 6OUL | RNA-polymerase + σ70 op de promoter |
+| 6 | `operon` | hergebruik | lac-operon |
+| 7 | `bterm` | 2D | intrinsieke terminator en Rho, polariteit |
+| 8 | `bmrna` | 2D | gekoppeld, Shine-Dalgarno, fMet, 70S, vergelijkingstabel |
+| 9 | `bribosoom` | **3D** 6ZTJ | 70S-ribosoom + RNA-polymerase (expressoom), NusG-brug |
+| 10 | `codon` | hergebruik | genetische code (bij E. coli dezelfde) |
+| 11 | `vouwing` | hergebruik | eiwitvouwing |
+| 12 | `chaperones` | hergebruik | o.a. GroEL–GroES (bacterieel) |
+| 13 | `bafbraak` | **3D** 6WRF | ClpXP: afbraak zonder ubiquitine |
+
+Zijpaden: `breplicatie` (2D: oriC, twee vorken, ter/Tus), `btrp` (2D: trp-repressor en attenuatie), `bsplicing` (**3D** 1U6B: zelfsplicend groep I-intron, plus groep II en inteïnes). Elke bacteriescène heeft knoppen naar de vergelijkbare menselijke scène.
+
+Lokale structuurbestanden in `data/pdb`: 1IHF, 1U6B, 6OUL volledig; 6ZTJ (alleen CA/P, bolletjesmodel) en 6WRF (alleen ruggengraat) ingekort zodat ze snel laden.
+
+Nog mogelijk in een volgende ronde: antibiotica als zijpad (rifampicine, aminoglycosiden, gyraseremmers), het 70S-ribosoom met EF-Tu in 3D, en fagen (bacterievirussen) als tegenhanger van het adenovirus-verhaal.

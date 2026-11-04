@@ -82,7 +82,14 @@ export const S_EN = {
   bplasmide: 'A small, usually circular DNA molecule next to the chromosome, with its own origin of replication (ori) that helps set the copy number. Often carries extra genes such as antibiotic resistance; some plasmids pass to another bacterium by conjugation.',
   bgen: 'Promoter (−35 and −10, recognised by a σ factor), operator, start site (+1), Shine-Dalgarno sequence, start codon, coding part, stop codon and terminator. No spliceosome; introns are rare and self-splicing. Essential: oriC and ≈ 300 essential genes.',
   bpol: 'A single RNA polymerase (core α₂ββ′ω) makes all RNA. The σ factor turns it into a holoenzyme that recognises the promoter: σ domain 4 binds the −35, σ domain 2 binds the −10 and helps open the DNA.',
-  bmrna: "Bacterial mRNA gets no 5' cap, no poly(A) tail and is not spliced. Ribosomes bind while transcription is still going on: the Shine-Dalgarno sequence pairs with the 16S rRNA and places the start codon (usually AUG, with fMet-tRNA) in the 70S ribosome.",
+  bmrna: "Bacterial mRNA gets no 5' cap and no protective poly(A) tail as in humans, and is not spliced. Ribosomes bind while transcription is still going on: the Shine-Dalgarno sequence pairs with the 16S rRNA and places the start codon (usually AUG, with fMet-tRNA) in the 70S ribosome.",
+  bnucleoid: 'E. coli and most bacteria have no nucleosomes. Small nucleoid-associated proteins (HU, IHF, H-NS, Fis) bend, bridge and bundle the DNA; IHF bends it by more than 160°. DNA gyrase keeps the DNA negatively supercoiled.',
+  breplicatie: 'Replication starts at one site (oriC), where DnaA opens the DNA. Two forks run in opposite directions around the ring (≈ 1,000 nt/s per fork) and meet in the ter region, where Tus–ter complexes stop them.',
+  bterm: 'Intrinsic termination: a GC-rich hairpin in the RNA followed by a U tract makes RNA polymerase let go. Rho-dependent termination: the helicase Rho binds free RNA, catches up with the enzyme and ends transcription; ribosomes shield the mRNA.',
+  btrp: 'The five trp genes are repressed by the Trp repressor (with tryptophan) and by attenuation: a ribosome on the leader peptide (two Trp codons) decides whether the leader RNA folds a terminator (3:4) or an antiterminator (2:3).',
+  bribosoom: '70S = 30S (16S rRNA + 21 proteins) + 50S (23S and 5S rRNA + over 30 proteins). In the expressome RNA polymerase sits right in front of the ribosome; NusG links the two.',
+  bsplicing: 'Bacteria have no spliceosome. Rare group I and group II introns are ribozymes that cut themselves out; inteins cut themselves out of a protein. Example: the group I intron from a tRNA-Ile gene of Azoarcus.',
+  bafbraak: 'E. coli has no ubiquitin or 26S proteasome. AAA+ proteases such as ClpXP and Lon unfold proteins using ATP and cut them up in a closed chamber. The ssrA tag (from tmRNA) marks proteins from stalled ribosomes.',
 };
 
 export const SCALES_EN = {

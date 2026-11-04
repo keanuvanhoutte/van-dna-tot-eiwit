@@ -11,6 +11,7 @@
  *              spin: 0.02 } ],                                    // graden per ms rond de y-as
  *   hotspots: [ { node: 'histonmod', label: {nl,en}, color } ],   // klikbare knoppen links in beeld
  *   hide: { resn: ['HOH'] },                                      // wat te verbergen (standaard water)
+ *   dimOpacity: false,                                            // optioneel: niet doorschijnend dimmen (bv. bij bolletjesmodellen)
  * })
  */
 import { L, C, SPIN } from './kit.js';
@@ -60,7 +61,8 @@ export function structure3d(o) {
         viewer.setStyle({}, {});
         for (const b of o.base ?? [{ sel: {}, style: { cartoon: { color: 'spectrum' } } }]) {
           const st = JSON.parse(JSON.stringify(b.style));
-          if (dim) for (const k of Object.keys(st)) st[k].opacity = Math.min(st[k].opacity ?? 1, .28);
+          // dimOpacity: false → niet doorschijnend dimmen (3Dmol waarschuwt bij bollen met gemengde opaciteit); de scène dimt dan zelf
+          if (dim && o.dimOpacity !== false) for (const k of Object.keys(st)) st[k].opacity = Math.min(st[k].opacity ?? 1, .28);
           viewer.setStyle(b.sel, st);
         }
         viewer.setStyle(hide, {});
