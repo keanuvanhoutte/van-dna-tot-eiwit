@@ -62,7 +62,7 @@ export const SIMPLE = {
   },
 
   zalpha: {
-    title: { nl: 'Eiwit herkent linksdraaiend DNA', en: 'Protein recognises left-handed DNA' },
+    title: { nl: 'Eiwit herkent linksdraaiend DNA (Zα-domein)', en: 'Protein recognises left-handed DNA (Zα domain)' },
     sub: { nl: 'voorbeeld: een stukje van menselijk ADAR1', en: 'example: a piece of human ADAR1' },
     kort: {
       nl: 'Hier houden twee kleine eiwitstukjes een kort stuk linksdraaiend DNA vast. Ze letten niet op de letters van het DNA, maar op de vorm: de zigzag van de ruggengraat. Dit toont dat de cel Z-DNA echt kan herkennen.',
@@ -82,7 +82,7 @@ export const SIMPLE = {
   },
 
   g4: {
-    title: { nl: 'G-vierkanten in DNA (G-quadruplex)', en: 'G-squares in DNA (G-quadruplex)' },
+    title: { nl: 'Vier strengen rond G-kwartetten (G-quadruplex)', en: 'Four strands around G-quartets (G-quadruplex)' },
     sub: { nl: 'uit het uiteinde van menselijke chromosomen', en: 'from the end of human chromosomes' },
     kort: {
       nl: 'Een DNA-streng met veel G’s kan zich opvouwen tot een blokje. Telkens vier G’s vormen een plat vierkant, en drie vierkanten liggen op elkaar gestapeld. In het midden zitten [[kaliumionen|ion]] die het blokje bijeenhouden.',

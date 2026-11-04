@@ -1,7 +1,7 @@
 /* Eenvoudige laag voor de atlas (deel 2). */
 export const SIMPLE = {
   dsrna: {
-    title: { nl: 'Dubbele helix van RNA', en: 'RNA double helix' },
+    title: { nl: 'Dubbele helix van RNA (A-vorm)', en: 'RNA double helix (A-form)' },
     sub: { nl: 'voorbeeld: kort stukje, gemaakt in het lab', en: 'example: short piece, made in the lab' },
     kort: {
       nl: 'Meestal is RNA één losse draad. Maar twee passende RNA-draden kunnen ook rond elkaar draaien, net zoals DNA. Die spiraal is wel korter en breder dan die van DNA.',
@@ -20,7 +20,7 @@ export const SIMPLE = {
     ],
   },
   hybrid: {
-    title: { nl: 'RNA en DNA samen in één helix', en: 'RNA and DNA together in one helix' },
+    title: { nl: 'RNA en DNA samen in één helix (RNA–DNA-hybride)', en: 'RNA and DNA together in one helix (RNA–DNA hybrid)' },
     sub: { nl: 'één RNA-streng gepaard met één DNA-streng', en: 'one RNA strand paired with one DNA strand' },
     kort: {
       nl: 'Hier paart een RNA-draad met een DNA-draad. Zo’n mengvorm ontstaat even als de cel haar DNA kopieert, of als een [[retrovirus|retrovirus]] zoals HIV zijn RNA omzet in DNA. De spiraal lijkt het meest op die van dubbel RNA.',
@@ -80,7 +80,7 @@ export const SIMPLE = {
     ],
   },
   pseudoknot: {
-    title: { nl: 'Slippen op een RNA-knoop (pseudoknoop)', en: 'Slipping on an RNA knot (pseudoknot)' },
+    title: { nl: 'Ribosoom verspringt op een RNA-knoop (frameshift-pseudoknoop)', en: 'Ribosome shifts on an RNA knot (frameshift pseudoknot)' },
     sub: { nl: 'voorbeeld: uit een plantenvirus', en: 'example: from a plant virus' },
     kort: {
       nl: 'Bij een [[pseudoknoop|pseudoknoop]] paart de lus van een [[haarspeld|haarspeld]] met een stuk RNA verderop. Als het ribosoom tegen die knoop botst, schuift het soms één letter terug. Zo maakt het virus twee eiwitten uit één mRNA.',
@@ -100,7 +100,7 @@ export const SIMPLE = {
     ],
   },
   terc: {
-    title: { nl: 'RNA-knoop met drievoudige paring', en: 'RNA knot with triple pairing' },
+    title: { nl: 'RNA-knoop met drievoudige paring (pseudoknoop)', en: 'RNA knot with triple pairing (pseudoknot)' },
     sub: { nl: 'voorbeeld: uit menselijk telomerase', en: 'example: from human telomerase' },
     kort: {
       nl: '[[Telomerase|telomerase]] maakt de uiteinden van chromosomen ([[telomeren|telomeer]]) weer langer. Het heeft een eigen RNA met een knoop erin. In die knoop ligt een lus in de groef van een staaf, zodat telkens drie letters samen paren.',
@@ -140,7 +140,7 @@ export const SIMPLE = {
     ],
   },
   groupi: {
-    title: { nl: 'RNA knipt zichzelf eruit (intron)', en: 'RNA that cuts itself out (intron)' },
+    title: { nl: 'RNA knipt zichzelf eruit (groep I-intron)', en: 'RNA that cuts itself out (group I intron)' },
     sub: { nl: 'voorbeeld: uit een bacterie', en: 'example: from a bacterium' },
     kort: {
       nl: 'Een [[intron|intron]] is een tussenstuk dat uit een RNA moet. Dit intron doet dat helemaal zelf, zonder eiwit. Het knipt zichzelf eruit en plakt de stukken links en rechts ([[exonen|exon]]) aan elkaar, in twee stappen.',
@@ -200,7 +200,7 @@ export const SIMPLE = {
     ],
   },
   ribosome: {
-    title: { nl: 'Kleine helft van de eiwitfabriek', en: 'Small half of the protein factory' },
+    title: { nl: 'Kleine helft van het ribosoom (30S-subeenheid)', en: 'Small half of the ribosome (30S subunit)' },
     sub: { nl: 'voorbeeld: uit een bacterie', en: 'example: from a bacterium' },
     kort: {
       nl: 'Het [[ribosoom|ribosoom]] bouwt eiwitten volgens de code op het [[mRNA|mrna]]. Het bestaat uit twee helften; dit is de kleine. Opvallend: het skelet is een groot RNA, en de eiwitten zitten vooral aan de buitenkant.',

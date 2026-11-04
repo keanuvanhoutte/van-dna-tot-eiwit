@@ -43,7 +43,7 @@ export const SIMPLE = {
   },
 
   ssdna: {
-    title: { nl: 'Eiwit beschermt losse DNA-streng', en: 'Protein shields a single DNA strand' },
+    title: { nl: 'Eiwit beschermt enkelstrengig DNA (RPA)', en: 'Protein shields single-stranded DNA (RPA)' },
     sub: { nl: 'Eén DNA-streng, bedekt door een beschermeiwit', en: 'One DNA strand, coated by a guard protein' },
     kort: {
       nl: 'Als DNA gekopieerd of hersteld wordt, gaat de ladder even open. Eén losse streng is slap en kwetsbaar. Het beschermeiwit RPA legt zich er meteen op, zoals plakband over een losse draad.',
