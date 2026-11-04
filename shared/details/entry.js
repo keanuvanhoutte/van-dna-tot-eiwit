@@ -79,7 +79,7 @@ export default {
       { t: 'Alberts et al., Molecular Biology of the Cell (NCBI Bookshelf)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK21054/' },
       { t: 'Koonin et al., The Baltimore Classification of Viruses 50 Years Later. Microbiol Mol Biol Rev 2021', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8483701/' },
       { t: 'Kremer & Nemerow, Adenovirus Tales: From the Cell Surface to the Nuclear Pore Complex. PLoS Pathog 2015', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4456001/' },
-      { t: 'ViralZone (SIB Swiss Institute of Bioinformatics) — virusfamilies, afmetingen en replicatiecycli', url: 'https://viralzone.expasy.org/' },
+      { t: { nl: 'ViralZone (SIB Swiss Institute of Bioinformatics) — virusfamilies, afmetingen en replicatiecycli', en: 'ViralZone (SIB Swiss Institute of Bioinformatics) — virus families, sizes and replication cycles' }, url: 'https://viralzone.expasy.org/' },
     ],
   },
 
@@ -216,7 +216,7 @@ export default {
       { t: 'Luisoni et al. (2015) Co-option of membrane wounding enables virus penetration into cells. Cell Host Microbe 18:75', url: 'https://pubmed.ncbi.nlm.nih.gov/26159720/' },
       { t: 'Alberts et al., Transport into the Cell from the Plasma Membrane: Endocytosis (NCBI Bookshelf)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK26870/' },
       { t: 'Hu et al., The endosomal-lysosomal system: from acidification and cargo sorting to neurodegeneration. Transl Neurodegener 2015', url: 'https://link.springer.com/article/10.1186/s40035-015-0041-1' },
-      { t: 'Kremer & Nemerow, Adenovirus Tales (proteïne VI en endosomale ontsnapping). PLoS Pathog 2015', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4456001/' },
+      { t: { nl: 'Kremer & Nemerow, Adenovirus Tales (proteïne VI en endosomale ontsnapping). PLoS Pathog 2015', en: 'Kremer & Nemerow, Adenovirus Tales (protein VI and endosomal escape). PLoS Pathog 2015' }, url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4456001/' },
       { t: 'Endosomal escape: a bottleneck for LNP-mediated therapeutics. PNAS 2023', url: 'https://www.pnas.org/doi/10.1073/pnas.2307800120' },
     ],
   },
@@ -255,7 +255,7 @@ export default {
       why: 'The classification is really the central dogma applied to viruses: it shows that every direction of information flow (DNA→RNA, RNA→RNA, RNA→DNA) exists somewhere in nature, but that everything converges on the same ribosome.',
     },
     sources: [
-      { t: 'Taylor (2015) Hepatitis D virus replication. Cold Spring Harb Perspect Med 5:a021568 (RNA-polymerase II kopieert het HDV-RNA)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4632862/' },
+      { t: { nl: 'Taylor (2015) Hepatitis D virus replication. Cold Spring Harb Perspect Med 5:a021568 (RNA-polymerase II kopieert het HDV-RNA)', en: 'Taylor (2015) Hepatitis D virus replication. Cold Spring Harb Perspect Med 5:a021568 (RNA polymerase II copies the HDV RNA)' }, url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4632862/' },
       { t: 'Koonin et al., The Baltimore Classification of Viruses 50 Years Later. Microbiol Mol Biol Rev 2021;85:e0005321', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8483701/' },
       { t: 'ICTV — International Committee on Taxonomy of Viruses (virustaxonomie)', url: 'https://ictv.global/' },
       { t: 'ViralZone (SIB Swiss Institute of Bioinformatics) — Baltimore-klassen met voorbeelden per familie', url: 'https://viralzone.expasy.org/' },
@@ -348,7 +348,7 @@ export default {
       { t: 'Craigie & Bushman, HIV DNA Integration. Cold Spring Harb Perspect Med 2012;2:a006890', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3385939/' },
       { t: 'Engelman & Cherepanov, Retroviral Integrase Structure and DNA Recombination Mechanism. Microbiol Spectr 2014', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4334468/' },
       { t: 'RCSB PDB 5U1C — tetrameric HIV-1 strand transfer complex intasome', url: 'https://www.rcsb.org/structure/5U1C' },
-      { t: 'RCSB PDB 3OS0 — PFV strand transfer complex (model voor strengoverdracht)', url: 'https://www.rcsb.org/structure/3OS0' },
+      { t: { nl: 'RCSB PDB 3OS0 — PFV strand transfer complex (model voor strengoverdracht)', en: 'RCSB PDB 3OS0 — PFV strand transfer complex (model for strand transfer)' }, url: 'https://www.rcsb.org/structure/3OS0' },
     ],
   },
 

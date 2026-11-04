@@ -92,6 +92,8 @@ document.querySelectorAll('[data-u]').forEach(e => e.textContent = V(e.dataset.u
 $('bHome').title = V('homeTip'); $('bUp').title = V('upTip');
 $('tPrev').title = V('prevStep'); $('tNext').title = V('nextStep'); $('gearBtn').title = V('settings');
 $('langBox').append(langSwitch('btn'));
+document.title = L({ nl: 'Van DNA tot eiwit', en: 'From DNA to protein' });
+if (lang === 'en') for (const o of $('speed').options) o.textContent = o.textContent.replace(',', '.');   // 0,5× → 0.5×
 $('bAtlas').href = new URL(`../atlas/index.html?lang=${lang}`, import.meta.url).href;   // werkt ook als de pagina elders staat (online)
 
 /* ---------- scène-definities ---------- */
@@ -605,7 +607,7 @@ function detailsHTML(id, open = true) {
   if (x.how?.length) h += `<details class="sec"><summary>${V('how')}</summary><ol>${x.how.map(s => `<li>${s}</li>`).join('')}</ol></details>`;
   if (x.facts?.length) h += `<details class="sec"><summary>${V('facts')}</summary><dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
   if (x.why) h += `<details class="sec"><summary>${V('why')}</summary><p>${x.why}</p></details>`;
-  if (d.sources?.length) h += `<details class="sec"><summary>${V('sources')} (${d.sources.length})</summary><ol class="src">${d.sources.map(s => `<li>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${s.t}</a>` : s.t}</li>`).join('')}</ol></details>`;
+  if (d.sources?.length) h += `<details class="sec"><summary>${V('sources')} (${d.sources.length})</summary><ol class="src">${d.sources.map(s => `<li>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${L(s.t)}</a>` : L(s.t)}</li>`).join('')}</ol></details>`;
   return h ? `<details class="more"><summary>${V('more')}</summary><div class="morebody">${h}</div></details>` : '';
 }
 function render() {

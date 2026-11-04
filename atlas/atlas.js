@@ -11,7 +11,7 @@ import { preparePdb, analyse, orient, parentBase, LIGNAME, IONLABEL } from './an
 import { DIAGRAMS, diagramLegend } from './diagrams.js';
 import { SIMPLE, EXTRA_GLOSS } from './simple.js';
 import { GLOSSARY } from '../shared/glossary.js';
-import { CODE_RE, fetchMeta, fetchCoords, coordUrl, customEntry } from './custom.js';
+import { CODE_RE, fetchMeta, fetchCoords, coordUrl, customEntry, searchPDB } from './custom.js';
 import { fetchText, PROGRESS } from './fetchprog.js';
 
 const $ = id => document.getElementById(id);
@@ -50,7 +50,7 @@ const T = {
   ttlSub: { nl: 'Echte 3D-vormen van DNA en RNA, zoals onderzoekers ze gemeten hebben', en: 'Real 3D shapes of DNA and RNA, as researchers measured them' },
   back: { nl: '← terug naar de animatie', en: '← back to the animation' },
   home: { nl: 'Start', en: 'Home' }, story: { nl: 'Verhaal-app', en: 'Story app' },
-  search: { nl: 'Zoek: bv. medicijn, helix, ribosoom…', en: 'Search: e.g. drug, helix, ribosome…' },
+  search: { nl: 'Filter de atlas: bv. helix, ribosoom…', en: 'Filter the atlas: e.g. helix, ribosome…' },
   count: { nl: n => `${n} item${n === 1 ? '' : 's'}`, en: n => `${n} entr${n === 1 ? 'y' : 'ies'}` },
   reset: { nl: 'filters wissen', en: 'clear filters' },
   none: { nl: 'Geen items voor deze filters.', en: 'No entries for these filters.' },
@@ -134,13 +134,28 @@ const T = {
   eChains: { nl: 'ketens', en: 'chains' }, eSS: { nl: 'Vorm van het eiwit', en: 'Shape of the protein' },
   eHelix: { nl: 'opgerold stuk (helix)', en: 'coiled piece (helix)' }, eSheet: { nl: 'gestrekt stuk (β-streng)', en: 'stretched piece (β-strand)' },
   // zelf een PDB-code opzoeken
-  pdbLbl: { nl: 'PDB-code', en: 'PDB code' }, pdbGo: { nl: 'Toon', en: 'Show' }, pdbPh: { nl: 'bv. 4HHB', en: 'e.g. 4HHB' },
-  pdbTip: { nl: 'Typ een code van 4 tekens uit de PDB-databank (rcsb.org); de structuur wordt meteen opgehaald.', en: 'Type a 4-character code from the PDB database (rcsb.org); the structure is fetched right away.' },
+  pdbLbl: { nl: '🔎 Zoek elk eiwit of gen in de PDB', en: '🔎 Find any protein or gene in the PDB' }, pdbGo: { nl: 'Zoek', en: 'Search' }, pdbPh: { nl: 'bv. TP53 of 4HHB', en: 'e.g. TP53 or 4HHB' },
+  pdbTip: { nl: 'Typ een gen (TP53), een eiwitnaam (insuline) of een PDB-code van 4 tekens (4HHB). De app zoekt in UniProt en de PDB-databank (rcsb.org).', en: 'Type a gene (TP53), a protein name (insulin) or a 4-character PDB code (4HHB). The app searches UniProt and the PDB database (rcsb.org).' },
+  // zoeken op gen- of eiwitnaam
+  srchBusy: { nl: t => `Zoeken naar ${t}…`, en: t => `Searching for ${t}…` },
+  srchNone: { nl: t => `Geen structuren gevonden voor ${t}.`, en: t => `No structures found for ${t}.` },
+  srchShort: { nl: 'Typ minstens 2 tekens.', en: 'Type at least 2 characters.' },
+  srchHead: { nl: (t, n) => `PDB-resultaten voor „${t}” (${n})`, en: (t, n) => `PDB results for “${t}” (${n})` },
+  srchGene: { nl: (g, nm, org) => `Gen ${g}: ${nm}${org ? ` (${org})` : ''}`, en: (g, nm, org) => `Gene ${g}: ${nm}${org ? ` (${org})` : ''}` },
+  srchOrder: { nl: 'Bovenaan: het grootste stuk van het eiwit, het scherpst gemeten. De titels zijn Engels, zoals in de PDB.', en: 'At the top: the largest piece of the protein, measured most sharply.' },
+  srchText: { nl: 'Geen gen of eiwit herkend: gewone zoekopdracht in de (Engelse) titels van de PDB.', en: 'No gene name recognised: plain search in titles and descriptions.' },
+  srchMore: { nl: n => `Toon ${n} meer`, en: n => `Show ${n} more` }, srchClose: { nl: 'Resultaten sluiten', en: 'Close the results' },
+  srchCov: { nl: (a, b) => `stuk: ${a} van ${b} aminozuren`, en: (a, b) => `piece: ${a} of ${b} amino acids` }, srchFull: { nl: 'heel het eiwit', en: 'the whole protein' },
+  srchDna: { nl: '+ DNA', en: '+ DNA' }, srchRna: { nl: '+ RNA', en: '+ RNA' },
+  srchPartners: { nl: n => `+ ${n} ander${n === 1 ? ' eiwit' : 'e eiwitten'}`, en: n => `+ ${n} other protein${n === 1 ? '' : 's'}` },
+  mXrayS: { nl: 'röntgen', en: 'X-ray' }, mNmrS: { nl: 'NMR', en: 'NMR' }, mEmS: { nl: 'elektronenmicroscoop', en: 'electron microscope' }, mOtherS: { nl: 'andere methode', en: 'other method' },
+  srchHuman: { nl: 'mens', en: 'human' },
   codeBad: { nl: 'Een PDB-code heeft 4 tekens en begint met een cijfer (bv. 4HHB).', en: 'A PDB code has 4 characters and starts with a digit (e.g. 4HHB).' },
   codeLooking: { nl: 'Zoeken in de PDB…', en: 'Searching the PDB…' },
   codeNone: { nl: c => `${c} bestaat niet in de PDB.`, en: c => `${c} does not exist in the PDB.` },
   codeOffline: { nl: 'Geen verbinding met de PDB (internet nodig).', en: 'No connection to the PDB (internet needed).' },
   lookFor: { nl: c => `🔎 PDB-code ${c} opzoeken`, en: c => `🔎 Look up PDB code ${c}` }, lookForSub: { nl: 'haalt de structuur op van rcsb.org', en: 'fetches the structure from rcsb.org' },
+  lookName: { nl: c => `🔎 „${c}” zoeken in de PDB`, en: c => `🔎 Search the PDB for “${c}”` }, lookNameSub: { nl: 'als gen (TP53), eiwitnaam (insuline) of woord uit de titel', en: 'as a gene (TP53), protein name (insulin) or word from the title' },
   mine: { nl: 'Zelf opgezocht', en: 'Looked up yourself' }, ours: { nl: 'Atlas', en: 'Atlas' }, mineBadge: { nl: 'zelf opgezocht', en: 'looked up yourself' },
   forget: { nl: 'Uit de lijst halen', en: 'Remove from the list' },
   loadingHuge: { nl: n => `zeer groot (~${n} 000 atomen), dit kan even duren`, en: n => `very large (~${n},000 atoms), this may take a while` },
@@ -169,6 +184,7 @@ const state = {
   id: BY[q.get('id')] ? q.get('id') : 'bdna',
   cmp: false, set: [],
   filt: { type: new Set(), cls: new Set(), ctx: new Set() }, text: '',
+  found: null, foundShown: 10,
   style: 'cartoon', color: 'strand', hb: false, syn: false, ions: true, ligs: true, water: false, mark: true,
 };
 // optionele weergave-instellingen via de URL (deelbare links): ?style=trace&color=base&hb=1&syn=1&water=1&ions=0&ligs=0
@@ -222,9 +238,11 @@ function renderList() {
   const list = [...CUSTOM, ...ENTRIES].filter(matches);
   $('count').textContent = t('count')(list.length);
   const code = state.text.toUpperCase();
-  const look = CODE_RE.test(code) && !BY['pdb-' + code] ? `<li class="item lookup" data-code="${code}" tabindex="0"><span class="tx"><div class="nm">${t('lookFor')(code)}</div><div class="sb">${t('lookForSub')}</div></span></li>` : '';
+  const raw = $('q').value.trim();
+  const look = CODE_RE.test(code) ? (BY['pdb-' + code] ? '' : `<li class="item lookup" data-code="${code}" tabindex="0"><span class="tx"><div class="nm">${t('lookFor')(code)}</div><div class="sb">${t('lookForSub')}</div></span></li>`)
+    : raw.length >= 2 && state.found?.term.toLowerCase() !== raw.toLowerCase() ? `<li class="item lookup" data-search="${esc(raw)}" tabindex="0"><span class="tx"><div class="nm">${t('lookName')(esc(raw))}</div><div class="sb">${t('lookNameSub')}</div></span></li>` : '';
   let lastCustom = false;
-  $('list').innerHTML = look + (list.length ? list.map(e => {
+  $('list').innerHTML = look + foundHTML() + (list.length ? list.map(e => {
     const head = e.custom && !lastCustom ? `<li class="lhead">${t('mine')}</li>` : !e.custom && lastCustom ? `<li class="lhead">${t('ours')}</li>` : '';
     lastCustom = !!e.custom;
     const inSet = state.set.includes(e.id);
@@ -239,9 +257,43 @@ function renderList() {
 $('list').onclick = e => {
   const f = e.target.closest('[data-forget]');
   if (f) { e.stopPropagation(); forget(f.dataset.forget); return; }
+  if (e.target.closest('[data-clear]')) { e.stopPropagation(); state.found = null; renderList(); return; }
+  if (e.target.closest('[data-more]')) { state.foundShown += 10; renderList(); return; }
   const li = e.target.closest('.item'); if (!li) return;
-  if (li.dataset.code) openCode(li.dataset.code); else pick(li.dataset.id);
+  if (li.dataset.search) runSearch(li.dataset.search); else if (li.dataset.code) openCode(li.dataset.code); else pick(li.dataset.id);
 };
+/* ---------- zoeken op gen- of eiwitnaam ---------- */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function foundHTML() {
+  const f = state.found; if (!f) return '';
+  const p = f.prot;
+  const head = `<li class="lhead found"><span>${t('srchHead')(esc(f.term), f.total)}</span><button class="forget" data-clear title="${t('srchClose')}">×</button></li>
+    <li class="fnote">${p ? `${t('srchGene')(esc(p.gene), esc(p.name), p.sci === 'Homo sapiens' ? t('srchHuman') : esc(p.sci ?? ''))}<br>${t('srchOrder')}` : t('srchText')}</li>`;
+  const meth = x => `${t({ xray: 'mXrayS', nmr: 'mNmrS', em: 'mEmS', other: 'mOtherS' }[x.method])}${x.res ? ` ${num(x.res)} Å` : ''}`;
+  const rows = f.items.slice(0, state.foundShown).map(x => {
+    const on = state.id === 'pdb-' + x.code;
+    const bits = [meth(x), x.year, x.cov != null && p?.len ? (x.len >= p.len * .95 ? t('srchFull') : t('srchCov')(x.len, p.len)) : '', x.dna ? t('srchDna') : '', x.rna ? t('srchRna') : '', x.partners ? t('srchPartners')(x.partners) : ''].filter(Boolean);
+    return `<li class="item res ${on ? 'on' : ''}" data-code="${x.code}" tabindex="0"><span class="tx"><div class="nm">${esc(x.title)}</div><div class="sb">${bits.join(' · ')}</div></span><span class="pdb">${x.code}</span></li>`;
+  }).join('');
+  const left = f.items.length - state.foundShown;
+  return head + rows + (left > 0 ? `<li class="fmore"><button class="link" data-more>${t('srchMore')(Math.min(10, left))}</button></li>` : '') + `<li class="lhead">${t('ours')}</li>`;
+}
+let searchNo = 0;
+async function runSearch(raw) {
+  const term = String(raw ?? '').trim(); const msg = $('pdbMsg');
+  if (CODE_RE.test(term.toUpperCase())) return openCode(term);
+  if (term.length < 2) { msg.textContent = t('srchShort'); msg.className = 'pdbmsg bad'; return; }
+  const me = ++searchNo;
+  msg.textContent = t('srchBusy')(term); msg.className = 'pdbmsg';
+  let f = null;
+  try { f = await searchPDB(term); } catch { if (me === searchNo) { msg.textContent = t('codeOffline'); msg.className = 'pdbmsg bad'; } return; }
+  if (me !== searchNo) return;
+  if (!f || !f.items.length) { msg.textContent = t('srchNone')(term); msg.className = 'pdbmsg bad'; return; }
+  msg.textContent = ''; msg.className = 'pdbmsg';
+  state.found = f; state.foundShown = 10; $('pdbIn').value = '';
+  if (state.text) { state.text = ''; $('q').value = ''; }
+  renderList(); $('list').scrollTop = 0;
+}
 function forget(id) {
   const i = CUSTOM.findIndex(x => x.id === id); if (i < 0) return;
   forgetRecent(CUSTOM[i].pdb); CUSTOM.splice(i, 1); delete BY[id];
@@ -267,10 +319,10 @@ async function openCode(raw) {
   pick('pdb-' + code);
   const li = document.querySelector(`.item[data-id="pdb-${code}"]`); li?.scrollIntoView({ block: 'nearest' });
 }
-$('pdbForm').onsubmit = e => { e.preventDefault(); openCode($('pdbIn').value); };
-$('pdbIn').oninput = e => { e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); $('pdbMsg').textContent = ''; };
-$('q').onkeydown = e => { if (e.key === 'Enter' && CODE_RE.test(e.target.value.trim().toUpperCase())) openCode(e.target.value); };
-$('list').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { const li = e.target.closest('.item'); if (li) { e.preventDefault(); pick(li.dataset.id); } } };
+$('pdbForm').onsubmit = e => { e.preventDefault(); runSearch($('pdbIn').value); };
+$('pdbIn').oninput = () => { $('pdbMsg').textContent = ''; };
+$('q').onkeydown = e => { const v = e.target.value.trim(); if (e.key === 'Enter' && v.length >= 2 && (CODE_RE.test(v.toUpperCase()) || !document.querySelector('#list .item[data-id]'))) runSearch(v); };
+$('list').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { const li = e.target.closest('.item'); if (li) { e.preventDefault(); li.click(); } } };
 
 function pick(id) {
   if (state.cmp) {

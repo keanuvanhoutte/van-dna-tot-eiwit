@@ -17,7 +17,7 @@ const S = {
   motmAars: { t: 'PDB-101 Molecule of the Month: Aminoacyl-tRNA Synthetases', url: 'https://pdb101.rcsb.org/motm/16' },
   ibba: { t: 'Rubio Gomez & Ibba (2020) Aminoacyl-tRNA synthetases. RNA 26:910–936 (PMC7373986)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7373986/' },
   crick: { t: 'Crick (1966) Codon–anticodon pairing: the wobble hypothesis. J Mol Biol 19:548–555 (PubMed 5969078)', url: 'https://pubmed.ncbi.nlm.nih.gov/5969078/' },
-  ncbiCode: { t: 'NCBI — The Genetic Codes (translatietabellen 1 en 2)', url: 'https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi' },
+  ncbiCode: { t: { nl: 'NCBI — The Genetic Codes (translatietabellen 1 en 2)', en: 'NCBI — The Genetic Codes (translation tables 1 and 2)' }, url: 'https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi' },
   henras: { t: 'Henras et al. (2015) An overview of pre-ribosomal RNA processing in eukaryotes. WIREs RNA 6:225–242 (PMC4361047)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4361047/' },
   labunskyy: { t: 'Labunskyy, Hatfield & Gladyshev (2014) Selenoproteins: molecular pathways and physiological roles. Physiol Rev 94:739–777 (PMC4101630)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4101630/' },
   pyl: { t: 'Longstaff et al. (2007) A natural genetic code expansion cassette enables transmissible biosynthesis and genetic encoding of pyrrolysine. PNAS 104:1021–1026 (PMC1783357)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC1783357/' },

@@ -15,12 +15,6 @@
   <a class="back" id="back" hidden></a>
   <a class="home" id="home" href="../index.html"></a>
   <div class="ttl"><b id="ttl"></b><span id="ttlSub"></span></div>
-  <form class="pdbform" id="pdbForm" autocomplete="off">
-    <label for="pdbIn" id="pdbLbl"></label>
-    <input id="pdbIn" maxlength="4" spellcheck="false">
-    <button id="pdbGo" type="submit"></button>
-    <span class="pdbmsg" id="pdbMsg" role="status"></span>
-  </form>
   <div class="sp"></div>
   <a class="story" id="storyLink" href="../app/index.html"></a>
   <span id="langBox"></span>
@@ -28,6 +22,11 @@
 
 <div class="layout">
   <aside class="side">
+    <form class="pdbform" id="pdbForm" autocomplete="off">
+      <label for="pdbIn" id="pdbLbl"></label>
+      <div class="pdbrow"><input id="pdbIn" maxlength="40" spellcheck="false"><button id="pdbGo" type="submit"></button></div>
+      <div class="pdbmsg" id="pdbMsg" role="status"></div>
+    </form>
     <div class="search"><input id="q" type="search" autocomplete="off"></div>
     <div id="filters"></div>
     <div class="count"><span id="count"></span><button class="link" id="reset"></button></div>

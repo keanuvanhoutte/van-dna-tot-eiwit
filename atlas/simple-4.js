@@ -45,7 +45,7 @@ export const SIMPLE = {
     sub: { nl: 'voorbeeld: de anticodonarm van tRNA', en: 'example: the anticodon arm of tRNA' },
     kort: {
       nl: 'Een RNA-streng kan terugvouwen en met zichzelf paren, zoals een haarspeld. Het gepaarde stuk heet de [[stam|stam]], het open stukje aan het einde de [[lus|lus]].',
-      en: 'An RNA strand can fold back and pair with itself, like a hairpin. The paired part is called the [[stam|stem]], the open bit at the end the [[lus|loop]].' },
+      en: 'An RNA strand can fold back and pair with itself, like a hairpin. The paired part is called the [[stem|stam]], the open bit at the end the [[loop|lus]].' },
     look: {
       nl: 'Blauw is de stam (5 paren), roze de lus en geel het anticodon in die lus. De rest van het tRNA is grijs.',
       en: 'Blue is the stem (5 pairs), pink the loop and yellow the anticodon in that loop. The rest of the tRNA is grey.' },

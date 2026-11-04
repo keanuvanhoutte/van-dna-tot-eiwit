@@ -41,6 +41,10 @@
     <div class="stage" id="stage">
       <div class="labels" id="labels"></div>
       <div class="boot" id="boot" role="status"><i></i><span>Van DNA tot eiwit wordt geladen…<br><small>Loading…</small></span></div>
+      <script>/* laadtekst meteen in de gekozen taal (vóór de app geladen is) */
+        try { var q = new URLSearchParams(location.search).get('lang'), l = q || localStorage.getItem('dna-app-lang');
+          if (l === 'en') { document.documentElement.lang = 'en'; document.title = 'From DNA to protein'; document.querySelector('#boot span').textContent = 'Loading From DNA to protein…'; } } catch (e) {}
+      </script>
     </div>
 
     <!-- onderstrook: uitleg van de stap + bediening als videospeler (onder de figuur, niet erover) -->
