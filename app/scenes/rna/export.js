@@ -97,6 +97,7 @@ export default {
     <g data-node="nmd" data-color="#7a62e0" data-label="${T2('EJC → NMD-controle', 'EJC → NMD check')}"><circle id="ex-eA" data-anchor="nmd" r="16" fill="transparent"/></g>
     <g data-node="polya" data-color="${C.cap}" data-nolabel><g id="ex-pa"></g></g>
     <g data-node="mrnaafbraak" data-color="${C.cap}" data-label="${T2('poly(A) → later afbraak', 'poly(A) → later decay')}"><circle id="ex-pA" data-anchor="mrnaafbraak" r="14" fill="transparent"/></g>
+    <g data-node="lokalisatie" data-color="#ffd166" data-label="${T2('Adreslabel → naar een vaste plek', 'Address label → to a fixed place')}"><circle id="ex-lA" data-anchor="lokalisatie" r="14" fill="transparent"/></g>
     <g data-node="initiatie" data-color="${C.rrna}" data-label="${T2('→ Translatie-initiatie', '→ Translation initiation')}"><g id="ex-ribo"></g><circle id="ex-rA" data-anchor="initiatie" r="1" fill="none"/></g>
     <g data-node="rnai" data-color="#e0679a" data-label="${T2('miRNA’s remmen mRNA’s', 'miRNAs repress mRNAs')}"><g id="ex-risc"></g></g>
     </svg>`;
@@ -163,6 +164,7 @@ export default {
         const pt = P.at(sOf(560)); pa += step <= 1 ? note(pt[0] + 10, pt[1] + 36, 'poly(A)', C.cap, 18) : '';
         $('ex-pa').innerHTML = pa;
         const pA = side(sOf(684), step >= 6 ? -90 : -80); $('ex-pA').setAttribute('cx', f1(pA[0])); $('ex-pA').setAttribute('cy', f1(pA[1]));
+        const lA = step === 8 && p > .5 ? side(sOf(600), 60) : [-9999, -9999]; $('ex-lA').setAttribute('cx', f1(lA[0])); $('ex-lA').setAttribute('cy', f1(lA[1]));   // zijpad RNA-lot
         svg.querySelector('[data-node="mrnaafbraak"]').setAttribute('opacity', step === 8 ? f1(sub(p, .5, .7)) : '0');
 
         // cap + CBC / eIF4E

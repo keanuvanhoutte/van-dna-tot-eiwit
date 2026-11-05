@@ -237,7 +237,7 @@ const N = [
     rel: ['codon'] },
   { id: 'export', t: 'mRNA-export', en: 'mRNA nuclear export', stage: 'rna', scale: 3, kind: 'process',
     s: 'Het rijpe mRNP wordt via TREX en de exportreceptor NXF1–NXT1 door de kernporie gebracht (grotendeels Ran-onafhankelijk).',
-    next: ['initiatie'], rel: ['kernimport', 'rnai', 'mrnaafbraak'] },
+    next: ['initiatie'], rel: ['kernimport', 'rnai', 'mrnaafbraak', 'lokalisatie'] },
   { id: 'nmd', t: 'Nonsense-mediated decay', en: 'NMD', stage: 'rna', scale: 3, kind: 'process',
     s: 'Kwaliteitscontrole: een stopcodon dat meer dan 50–55 nt vóór de laatste exon-exonjunctie ligt, laat een exon-junctiecomplex achter het ribosoom; dat wijst op een fout mRNA dat dan wordt afgebroken.',
     rel: ['mutaties', 'splicing'] },
@@ -245,10 +245,24 @@ const N = [
     s: 'pri-miRNA → Drosha/DGCR8 → pre-miRNA → Exportine-5 → Dicer → RISC met Argonaute; onderdrukt translatie of knipt doel-mRNA.',
     rel: ['mrnaafbraak'] },
   { id: 'mrnaafbraak', t: 'mRNA-afbraak', en: 'mRNA decay', stage: 'rna', scale: 3, kind: 'process',
-    s: 'Meestal deadenylatie, dan decapping (DCP2) en 5\'→3\'-afbraak door XRN1, of 3\'→5\' door het exosoom.' },
+    s: 'Meestal deadenylatie, dan decapping (DCP2) en 5\'→3\'-afbraak door XRN1, of 3\'→5\' door het exosoom.',
+    rel: ['korrels'] },
   { id: 'rnastructuur', t: 'RNA-structuur', en: 'RNA structure', stage: 'rna', scale: 4, kind: 'structure',
     s: 'Enkelstrengig maar vouwt op zichzelf: haarspelden, bulges, pseudoknopen. De 2\'-OH maakt RNA reactiever en dwingt dubbelstrengige stukken in A-vorm.',
-    rel: ['dnavormen', 'trna', 'ribosoom'] },
+    rel: ['dnavormen', 'trna', 'ribosoom', 'riboswitch'] },
+  /* zijpad RNA-lot (05-11-2026): waarheen een mRNA gaat, druppels bij stress, lange niet-coderende RNA's, riboswitch */
+  { id: 'lokalisatie', t: 'mRNA-lokalisatie & lokale translatie', en: 'mRNA localization & local translation', stage: 'rna', scale: 2, kind: 'process',
+    s: 'Een zipcode (adreslabel) in de 3′-UTR wordt door RNA-bindende eiwitten herkend; motoreiwitten vervoeren het mRNA langs het cytoskelet en het wordt pas op de bestemming vertaald. Voorbeeld: β-actine-mRNA (zipcode van 54 nt, gebonden door ZBP1) naar de voorste rand van kippen- en muizencellen; in zenuwcellen lokale translatie in de dendrieten.',
+    next: ['korrels'], rel: ['export', 'initiatie', 'sortering'] },
+  { id: 'korrels', t: 'Stressgranules & P-bodies', en: 'Stress granules & P-bodies', stage: 'rna', scale: 2, kind: 'process',
+    s: 'Bij stress (bv. hitte) valt de start van de translatie stil; vrije mRNA’s met RNA-bindende eiwitten vormen stressgranules: druppels zonder membraan, volgens het huidige model door fasescheiding. P-bodies bevatten afbraakeiwitten maar vooral onderdrukte, niet afgebroken mRNA’s (bewaren of afbreken: nog in debat). De ALS-eiwitten TDP-43 en FUS komen in de korrels voor.',
+    next: ['mrnaafbraak'], rel: ['idp', 'misvouwing'] },
+  { id: 'lncrna', t: 'Lange niet-coderende RNA’s', en: 'Long non-coding RNAs', stage: 'rna', scale: 3, kind: 'process',
+    s: 'RNA’s van meer dan 200 nt die niet vertaald worden. Ze kunnen werken als steiger, gids of lokaas (bv. XIST, NORAD). GENCODE 50 telt 35 885 lncRNA-genen (19 442 eiwitgenen); van slechts een minderheid is de functie betrouwbaar bekend.',
+    next: ['rnastructuur'], rel: ['xinact', 'rnai', 'genregulatie'] },
+  { id: 'riboswitch', t: 'Riboswitch', en: 'Riboswitch', stage: 'rna', scale: 4, kind: 'structure',
+    s: 'Een stuk mRNA dat een klein molecuul rechtstreeks bindt (aptameer) en daardoor van vorm verandert, wat de transcriptie of translatie aan- of uitzet. De adenine-riboswitch van Vibrio vulnificus (add) zet de translatie aan: zonder adenine is de Shine-Dalgarno-volgorde verstopt. Vooral in bacteriën; de TPP-riboswitch ook in planten, schimmels en algen; bij de mens niet bekend.',
+    pdb: ['1Y26'], rel: ['rnastructuur', 'bmrna', 'btrp', 'operon'] },
 
   // ───────────── TRANSLATIE ─────────────
   { id: 'translatie', t: 'Translatie', en: 'Translation', stage: 'tl', scale: 2, kind: 'process',
@@ -400,7 +414,7 @@ const N = [
     pdb: ['6WRF'], rel: ['ubiquitine', 'chaperones', 'misvouwing'] },
 ];
 
-const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid', 'bcel', 'bnucleoid', 'bplasmide', 'bgen', 'bpol', 'bterm', 'bmrna', 'bribosoom', 'bafbraak', 'breplicatie', 'btrp', 'bsplicing', 'bact', 'origins', 'mmr', 'ber', 'ner', 'dsb', 'p53', 'sortering', 'membraan', 'lysosoom', 'mito', 'perox', 'proteasoom', 'autofagie', 'remodeler', 'lussen', 'enhancer', 'xinact', 'imprinting', 'sleutel', 'viruskopie', 'schaar', 'assemblage', 'faag', 'crispr']); // verificatierondes 1–10 (zijpad virussen: ronde 10, docs/verificatie-ronde-10-virussen.md); (zijpad epigenetica: ronde 9, docs/verificatie-ronde-9-epigenetica.md); (zijpad eiwitlot: ronde 8, docs/verificatie-ronde-8-eiwittargeting.md); ronde 1–7 (zijpad replicatie & herstel: ronde 7, docs/verificatie-ronde-7-replicatie-herstel.md); (verhaallijn 2: ronde 4; bacterie: ronde 6, docs/verificatie-ronde-6-bacterie.md) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
+const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid', 'bcel', 'bnucleoid', 'bplasmide', 'bgen', 'bpol', 'bterm', 'bmrna', 'bribosoom', 'bafbraak', 'breplicatie', 'btrp', 'bsplicing', 'bact', 'origins', 'mmr', 'ber', 'ner', 'dsb', 'p53', 'sortering', 'membraan', 'lysosoom', 'mito', 'perox', 'proteasoom', 'autofagie', 'remodeler', 'lussen', 'enhancer', 'xinact', 'imprinting', 'sleutel', 'viruskopie', 'schaar', 'assemblage', 'faag', 'crispr', 'lokalisatie', 'korrels', 'lncrna', 'riboswitch']); // verificatierondes 1–11 (zijpad RNA-lot: ronde 11, docs/verificatie-ronde-11-rna-lot.md); (zijpad virussen: ronde 10, docs/verificatie-ronde-10-virussen.md); (zijpad epigenetica: ronde 9, docs/verificatie-ronde-9-epigenetica.md); (zijpad eiwitlot: ronde 8, docs/verificatie-ronde-8-eiwittargeting.md); ronde 1–7 (zijpad replicatie & herstel: ronde 7, docs/verificatie-ronde-7-replicatie-herstel.md); (verhaallijn 2: ronde 4; bacterie: ronde 6, docs/verificatie-ronde-6-bacterie.md) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
 export const NODES = Object.fromEntries(N.map(n => [n.id, { in: [], next: [], rel: [], pdb: [], status: CHECKED.has(n.id) ? 'nagekeken' : 'concept', ...n }]));
 
 /* Bereken ook de omgekeerde verbanden (wie verwijst naar mij) */

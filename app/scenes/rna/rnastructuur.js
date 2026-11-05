@@ -117,6 +117,7 @@ export default {
     ${hot('rnastructuur', T2('Hammerhead-ribozym (atlas)', 'Hammerhead ribozyme (atlas)'), '#ffd36b', 'rs-hA', '../atlas/index.html?id=hammerhead')}
     ${hot('ribosoom', T2('Ribosoom = ribozym', 'Ribosome = ribozyme'), C.rrna, 'rs-rA', '', true)}
     ${hot('splicing', T2('Spliceosoom (U2/U6)', 'Spliceosome (U2/U6)'), C.prot, 'rs-sA', '', true)}
+    ${hot('riboswitch', T2('Kruispunt als schakelaar (3D)', 'Junction as a switch (3D)'), '#ffd36b', 'rs-wA')}
     </svg>`;
   },
   init(svg) {
@@ -302,6 +303,7 @@ export default {
         setHot(svg, 'rs-nA', step === 0 && p > .3 ? [unf(7)[0], 450, 44, 44] : null);
         $('rs-tar').innerHTML = drawTAR(step, p);
         $('rs-r2').setAttribute('opacity', step === 4 ? f1(.55 + .45 * ease(sub(p, 0, .1))) : '0');   // meteen zichtbaar (geen zwart beeld)
+        setHot(svg, 'rs-wA', step === 4 && p > .4 ? [3260, 560, 40, 40] : null);   // zijpad RNA-lot: kruispunt → riboswitch
         $('rs-pk').innerHTML = drawPK(step, p);
         setHot(svg, 'rs-pA', step === 5 && p > .5 ? [1090, 1400, 40, 20] : null);
         setHot(svg, 'rs-bA', step === 6 ? [1760, 1075, 60, 10] : null); setHot(svg, 'rs-dA', step === 6 ? [2240, 1075, 60, 10] : null);

@@ -428,7 +428,7 @@ export const ENTRIES = [
   {
     id: 'riboswitch', pdb: '1Y26', type: ['rna'], cls: ['folded'], ctx: ['other'], org: { nl: 'Vibrio vulnificus (bacterie)', en: 'Vibrio vulnificus (bacterium)' },
     name: { nl: 'Adenine-riboswitch', en: 'Adenine riboswitch' }, sub: { nl: 'aptameerdomein + adenine · 2,1 Å', en: 'aptamer domain + adenine · 2.1 Å' },
-    cmp: ['trna', 'pseudoknot'], scenes: ['genregulatie'], ions: true,
+    cmp: ['trna', 'pseudoknot'], scenes: ['riboswitch', 'genregulatie'], ions: true,
     what: {
       nl: 'Een riboswitch is een stuk mRNA (meestal in de 5\'-UTR) dat een klein metaboliet rechtstreeks bindt en daardoor van vorm verandert. Dit aptameerdomein (71 nt) vormt een drieweg-junctie waarvan de twee haarspeldlussen elkaar "kussen"; het adenine-ligand wordt volledig ingesloten in de junctie en herkend door Watson–Crick-paring met U74.',
       en: 'A riboswitch is a piece of mRNA (usually in the 5\' UTR) that binds a small metabolite directly and changes shape as a result. This aptamer domain (71 nt) forms a three-way junction whose two hairpin loops "kiss"; the adenine ligand is completely enclosed in the junction and recognised by Watson–Crick pairing with U74.' },

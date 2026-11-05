@@ -127,6 +127,19 @@ const VIRUSROUTE = [
   { id: 'lnp', bridge: { nl: 'Einde van dit zijpad. Ga via de kaart terug naar een hoofdverhaal of kies een ander zijpad.', en: 'End of this side path. Use the map to return to a main story or pick another side path.' } },
 ];
 
+/* Zijpad 5 (05-11-2026): het leven van een RNA na de kern — waarheen, pauze, afbraak, RNA's zonder eiwit, RNA als schakelaar. */
+const RNALOT = [
+  { id: 'export', bridge: { nl: 'Sommige mRNA’s reizen eerst naar een vaste plek in de cel.', en: 'Some mRNAs first travel to a fixed place in the cell.' } },
+  { id: 'lokalisatie', bridge: { nl: 'Onder stress houdt de cel haar mRNA’s even apart, in druppels.', en: 'Under stress the cell briefly keeps its mRNAs apart, in droplets.' } },
+  { id: 'korrels', bridge: { nl: 'Elk mRNA wordt uiteindelijk afgebroken.', en: 'Every mRNA is eventually broken down.' } },
+  { id: 'mrnaafbraak', bridge: { nl: 'Een fout mRNA wordt extra snel opgeruimd.', en: 'A faulty mRNA is cleared away extra fast.' } },
+  { id: 'nmd', bridge: { nl: 'Kleine RNA’s kunnen een mRNA ook remmen of laten knippen.', en: 'Small RNAs can also repress an mRNA or have it cut.' } },
+  { id: 'rnai', bridge: { nl: 'Er zijn ook lange RNA’s die nooit eiwit worden.', en: 'There are also long RNAs that never become protein.' } },
+  { id: 'lncrna', bridge: { nl: 'Wat een RNA doet, hangt vaak af van hoe het zich vouwt.', en: 'What an RNA does often depends on how it folds.' } },
+  { id: 'rnastructuur', bridge: { nl: 'Een gevouwen RNA kan zelfs als schakelaar werken.', en: 'A folded RNA can even work as a switch.' } },
+  { id: 'riboswitch', bridge: { nl: 'Einde van dit zijpad. Ga via de kaart terug naar een hoofdverhaal of kies een ander zijpad.', en: 'End of this side path. Use the map to return to a main story or pick another side path.' } },
+];
+
 /* Alle verhaallijnen. De engine kiest er één (?story=… of de laatst gekozen) en kan wisselen.
  * side: true = zijpad (in de kaart apart gegroepeerd; geen automatische overschakeling vanuit een andere lijn). */
 export const LINES = {
@@ -137,6 +150,7 @@ export const LINES = {
   targeting: { chapters: EIWITLOT, side: true, title: { nl: 'Zijpad · Waar een eiwit heen gaat en hoe het verdwijnt', en: 'Side path · Where a protein goes and how it is removed' }, short: { nl: 'Zijpad eiwitlot', en: 'Side path protein fate' } },
   epigen: { chapters: EPIGEN, side: true, title: { nl: 'Zijpad · Hoe de cel kiest welke genen aan staan', en: 'Side path · How a cell chooses which genes are on' }, short: { nl: 'Zijpad epigenetica', en: 'Side path epigenetics' } },
   virusroute: { chapters: VIRUSROUTE, side: true, title: { nl: 'Zijpad · Hoe een virus zichzelf laat maken', en: 'Side path · How a virus gets itself made' }, short: { nl: 'Zijpad virussen', en: 'Side path viruses' } },
+  rnalot: { chapters: RNALOT, side: true, title: { nl: 'Zijpad · Het leven van een RNA', en: 'Side path · The life of an RNA' }, short: { nl: 'Zijpad RNA-lot', en: 'Side path RNA fate' } },
 };
 export const LINE_KEYS = Object.keys(LINES);
 export const MAIN_KEYS = LINE_KEYS.filter(k => !LINES[k].side), SIDE_KEYS = LINE_KEYS.filter(k => LINES[k].side);

@@ -16,4 +16,5 @@ import signal2 from './signal2.js';
 import bact from './bact.js';
 import bact2 from './bact2.js';
 import virus2 from './virus2.js';
-export const DETAILS = { ...entry, ...genome, ...genome2, ...genome3, ...repl, ...repl2, ...txn, ...rna, ...tl, ...prot, ...prot2, ...prot3, ...signal1, ...signal2, ...bact, ...bact2, ...virus2 };
+import rna2 from './rna2.js';
+export const DETAILS = { ...entry, ...genome, ...genome2, ...genome3, ...repl, ...repl2, ...txn, ...rna, ...tl, ...prot, ...prot2, ...prot3, ...signal1, ...signal2, ...bact, ...bact2, ...virus2, ...rna2 };

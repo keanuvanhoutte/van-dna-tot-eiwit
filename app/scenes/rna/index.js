@@ -9,4 +9,9 @@ import rnai from './rnai.js';
 import mrnaafbraak from './mrnaafbraak.js';
 import editing from './editing.js';
 import rnastructuur from './rnastructuur.js';
-export default [rnaprocessing, capping, splicing, polya, exportScene, nmd, rnai, mrnaafbraak, editing, rnastructuur];
+/* zijpad RNA-lot (05-11-2026) */
+import lokalisatie from './lokalisatie.js';
+import korrels from './korrels.js';
+import lncrna from './lncrna.js';
+import riboswitch from './riboswitch.js';
+export default [rnaprocessing, capping, splicing, polya, exportScene, nmd, rnai, mrnaafbraak, editing, rnastructuur, lokalisatie, korrels, lncrna, riboswitch];

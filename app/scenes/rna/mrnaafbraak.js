@@ -49,6 +49,7 @@ export default {
     ${hot('mrnaafbraak', T2('mRNA (atlas)', 'mRNA (atlas)'), C.rna, 'md-mA', '../atlas/index.html?id=mrna', true)}
     ${hot('rnai', T2('miRNA → CCR4–NOT', 'miRNA → CCR4–NOT'), '#e0679a', 'md-iA')}
     ${hot('nmd', T2('NMD: snelle route', 'NMD: fast route'), '#e0679a', 'md-nA')}
+    ${hot('korrels', T2('Druppels bij stress →', 'Droplets under stress →'), '#5fd3e6', 'md-kA')}
     </svg>`;
   },
   init(svg) {
@@ -166,6 +167,7 @@ export default {
         setHot(svg, 'md-iA', step === 2 && p > .6 ? [1260, Y + 110, 118, 30] : step === 6 && p > .3 ? [860, 600, 60, 28] : null);
         $('md-nmd').innerHTML = step === 4 ? prot(1250, 250, 204, 36, T2('NMD (SMG6-knip)', 'NMD (SMG6 cut)'), '#e0679a', sub(p, .3, .5), 19) : '';
         setHot(svg, 'md-nA', step === 4 && p > .4 ? [1250, 250, 150, 30] : null);
+        setHot(svg, 'md-kA', step === 6 && p > .5 ? [800, 242, 110, 30] : null);   // zijpad RNA-lot: P-body → druppels bij stress
       },
     };
   },
