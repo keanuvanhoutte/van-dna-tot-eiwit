@@ -53,6 +53,8 @@ const T = {
   search: { nl: 'Filter de atlas: bv. helix, ribosoom…', en: 'Filter the atlas: e.g. helix, ribosome…' },
   count: { nl: n => `${n} item${n === 1 ? '' : 's'}`, en: n => `${n} entr${n === 1 ? 'y' : 'ies'}` },
   reset: { nl: 'filters wissen', en: 'clear filters' },
+  filt: { nl: 'Filters: soort, vorm, plaats', en: 'Filters: type, shape, place' },
+  showOpts: { nl: 'Tonen ▾', en: 'Show ▾' },
   none: { nl: 'Geen items voor deze filters.', en: 'No entries for these filters.' },
   schema: { nl: 'schema', en: 'diagram' },
   cmp: { nl: 'Vergelijken', en: 'Compare' },
@@ -203,6 +205,7 @@ $('storyLink').href = FROM ? `../app/index.html?scene=${encodeURIComponent(FROM)
 $('q').placeholder = t('search');
 $('pdbLbl').textContent = t('pdbLbl'); $('pdbGo').textContent = t('pdbGo'); $('pdbIn').placeholder = t('pdbPh'); $('pdbForm').title = t('pdbTip');
 $('reset').textContent = t('reset');
+$('filtLbl').textContent = t('filt');
 $('cmpBtn').textContent = t('cmp');
 $('cmpHint').textContent = t('cmpHint');
 document.querySelectorAll('[data-t]').forEach(e => e.textContent = t(e.dataset.t));
@@ -210,7 +213,13 @@ $('langBox').innerHTML = ['nl', 'en'].map(l => `<button class="lang" data-l="${l
 $('langBox').onclick = e => { const b = e.target.closest('.lang'); if (b && b.dataset.l !== lang) setLang(b.dataset.l); };
 
 /* ---------- filters en lijst ---------- */
+function filtCount() {
+  const n = Object.values(state.filt).reduce((a, s) => a + s.size, 0);
+  $('filtN').textContent = n ? n : '';
+}
+document.addEventListener('click', e => { const o = $('optsBox'); if (o.open && !o.contains(e.target)) o.open = false; });
 function buildFilters() {
+  queueMicrotask(filtCount);
   $('filters').innerHTML = Object.entries(FILTERS).map(([g, def]) =>
     `<div class="fgrp"><h4>${L(def.label)}</h4><div class="chips">${Object.entries(def.opts).map(([k, lab]) =>
       `<button class="chip" data-g="${g}" data-k="${k}" aria-pressed="${state.filt[g].has(k)}">${L(lab)}</button>`).join('')}</div></div>`).join('');
@@ -220,6 +229,7 @@ $('filters').onclick = e => {
   const s = state.filt[b.dataset.g];
   s.has(b.dataset.k) ? s.delete(b.dataset.k) : s.add(b.dataset.k);
   b.setAttribute('aria-pressed', s.has(b.dataset.k));
+  filtCount();
   renderList();
 };
 $('reset').onclick = () => { for (const s of Object.values(state.filt)) s.clear(); state.text = ''; $('q').value = ''; buildFilters(); renderList(); };

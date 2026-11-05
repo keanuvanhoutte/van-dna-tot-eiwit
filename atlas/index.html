@@ -28,7 +28,10 @@
       <div class="pdbmsg" id="pdbMsg" role="status"></div>
     </form>
     <div class="search"><input id="q" type="search" autocomplete="off"></div>
-    <div id="filters"></div>
+    <details class="filt" id="filtBox">
+      <summary><span id="filtLbl"></span> <b class="fn" id="filtN"></b></summary>
+      <div id="filters"></div>
+    </details>
     <div class="count"><span id="count"></span><button class="link" id="reset"></button></div>
     <ul class="list" id="list"></ul>
   </aside>
@@ -57,6 +60,7 @@
           <button data-v="elem" data-t="byElem"></button>
         </div>
       </div>
+      <details class="opts" id="optsBox"><summary data-t="showOpts"></summary>
       <div class="togs">
         <label class="tog" id="markTog" hidden><input type="checkbox" id="mark" checked> <span data-t="markT"></span></label>
         <label class="tog"><input type="checkbox" id="hb"> <span data-t="hb"></span></label>
@@ -67,6 +71,7 @@
         <label class="tog"><input type="checkbox" id="spin"> <span data-t="spin"></span></label>
         <label class="tog" id="linkTog" hidden><input type="checkbox" id="link" checked> <span data-t="link"></span></label>
       </div>
+      </details>
     </div>
     <div class="legend" id="legend"></div>
     <div class="slots" id="slots"></div>
