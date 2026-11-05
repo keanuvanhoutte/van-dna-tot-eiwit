@@ -30,3 +30,7 @@
 - [x] Woordkeuze botste: de genregulatie-scène noemt de enhancer "versterker" en de activator "schakelaar-eiwit", de nieuwe scènes noemden de enhancer "schakelaar" | pagina: enhancer, imprinting, lussen | verwacht: overal dezelfde term — **na: "versterker" in enhancer.js, imprinting.js, lussen.js, genome3.js, story.js; 0 keer "schakelaar" voor de enhancer**
 - [x] Nieuwe scènes nagekeken | verwacht: check/text/clip/blank 0, geen console-fouten — **na: check 108·108·108 PROBLEMS (0); 0 console-fouten; verificatieronde 9 (o.a. ≈100 ingeprente genen, ≈15 % + 10 % variabel ontsnapt aan X-inactivatie)**
 - [~] Twee handboekfeiten (X-inactivatie rond innesteling, Barr-lichaampje = inactieve X) niet met een gelezen bron bevestigd — gemarkeerd ⚠️ in docs/verificatie-ronde-9-epigenetica.md
+
+## Fix-ronde 05-11-2026 — zijpad virussen (tak 4)
+- [x] Console-fout "circle r: negative value (-12.1)" in viruskopie/assemblage: blaasje met binnenrand r − 13 terwijl het blaasje nog groeit | verwacht: geen console-fouten — **na: binnenrand begrensd op ≥ 0 (_corona.js); alle stappen van beide scènes doorgerekend (21 tijdstippen per stap): 0 negatieve stralen**
+- [x] Nieuwe scènes nagekeken | verwacht: check/text/clip/blank 0 — **na: check 114·114·114 PROBLEMS (0); verificatieronde 10 (o.a. twee binnenkomstroutes, spacer 32 nt, geen burst size zonder bron)**
