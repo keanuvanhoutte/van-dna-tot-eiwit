@@ -34,3 +34,9 @@
 ## Fix-ronde 05-11-2026 — zijpad virussen (tak 4)
 - [x] Console-fout "circle r: negative value (-12.1)" in viruskopie/assemblage: blaasje met binnenrand r − 13 terwijl het blaasje nog groeit | verwacht: geen console-fouten — **na: binnenrand begrensd op ≥ 0 (_corona.js); alle stappen van beide scènes doorgerekend (21 tijdstippen per stap): 0 negatieve stralen**
 - [x] Nieuwe scènes nagekeken | verwacht: check/text/clip/blank 0 — **na: check 114·114·114 PROBLEMS (0); verificatieronde 10 (o.a. twee binnenkomstroutes, spacer 32 nt, geen burst size zonder bron)**
+
+## Fix-ronde 05-11-2026 — zijpad RNA-lot (tak 5) + eindcontrole fase 3
+- [x] Nieuwe scènes nagekeken | verwacht: check/text/clip/blank 0, geen console-fouten in een verse pagina — **na: check 118·118·118 PROBLEMS (0); text/clip/blank 0; 0 console-fouten; verificatieronde 11 (GENCODE 50: 35 885 lncRNA- tegenover 19 442 eiwitgenen; onzekerheden als onzeker geformuleerd)**
+- [x] Woordkeuze: "druppels zonder membraan" zoals in mrnaafbraak, nucleolus en ribogenese (niet "vlies") — link mrnaafbraak → korrels toegevoegd
+- [x] Eindcontrole fase 3: startpagina toont 5 zijpaden (NL/EN); 118 knopen · 118 scènes · 118 uitlegkaarten, PROBLEMS (0)
+- [~] Open voor later (app-breed, niet van de zijpaden): 2D-overzichten met cam: FULL zijn klein op een gsm; 3D niet met de hand gedraaid op een echt toestel
