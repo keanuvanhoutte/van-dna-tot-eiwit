@@ -20,3 +20,8 @@
 - [x] Startpagina noemt nog "Fase 2" terwijl de zijpaden (fase 3) online komen | pagina: / | verwacht: fase-label klopt — **na: "Fase 3 · zijpaden in opbouw" / "Phase 3 · side paths in progress"**
 - [x] Nieuwe scènes nagekeken op pc en gsm (375 px), NL en EN: origins, mmr, ber, ner, dsb, p53, herstel | verwacht: geen console-fouten, 3D laadt, startpagina en kaart tonen het zijpad — **na: 0 console-fouten; check.html 96·96·96, PROBLEMS (0)**
 - [~] Op een gsm zijn 2D-scènes met cam: FULL (herstel, ner, dsb) klein — dat geldt app-breed voor overzichtsbeelden zonder inzoom-camera, geen fout van dit zijpad; kandidaat voor de latere aanpassingen aan doorloop/weergave
+
+## Fix-ronde 05-11-2026 — 3D-aanvulling tak 1 + zijpad eiwitlot (tak 2)
+- [x] Tak 1 te weinig 3D | pagina: replisoom, telomeren, ner, dsb | verwacht: echte menselijke structuren — **na: 3D-stappen met 7PFO, 7QXA, 6RO4, 1JEY, 8BQ2; tak 1 nu 9/12 scènes met 3D**
+- [x] Zijpad eiwitlot gebouwd en nagekeken (pc + 375 px, NL + EN) | verwacht: check/text/clip/blank 0 — **na: check 103·103·103 PROBLEMS (0), text 0, clip 0, blank 0, 0 console-fouten; verificatieronde 8: 11 correcties**
+- [~] Drie uitspraken niet met een bron in één stuk bevestigd (geen label = cytosol; kernlabel kan overal liggen; blaasjes behouden de oriëntatie) — standaard handboekkennis, gemarkeerd ⚠️ in docs/verificatie-ronde-8-eiwittargeting.md
