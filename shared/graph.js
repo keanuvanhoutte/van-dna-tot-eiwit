@@ -64,7 +64,7 @@ const N = [
     rel: ['kernimport', 'genregulatie', 'chaperones'] },
   { id: 'virus', t: 'Virale infectie', en: 'Viral entry', stage: 'entry', scale: 1, kind: 'process',
     s: 'Een virus bindt receptoren op het celoppervlak, komt binnen via endocytose of membraanfusie en laat zijn genoom vrij. Wat daarna gebeurt hangt af van het genoomtype (Baltimore-klassen).',
-    in: ['endocytose', 'baltimore'], rel: ['adeno', 'rt'] },
+    in: ['endocytose', 'baltimore'], rel: ['adeno', 'rt', 'sleutel'] },
   { id: 'adeno', t: 'Adenovirus: DNA naar de kern', en: 'Adenovirus entry & nuclear delivery', stage: 'entry', scale: 1, kind: 'process',
     s: 'Dubbelstrengig DNA-virus. De vezels hechten aan de CAR-receptor, opname gebeurt via αv-integrines en klathrine-endocytose; eiwit VI helpt ontsnappen uit het endosoom. Dyneïne brengt het capside over microtubuli naar een kernporie, waar het aan Nup214 dokt en (met hulp van kinesine-1 en histon H1) uiteenvalt, zodat het DNA de kern in kan. Het genoom blijft meestal episomaal; de eiwitgenen worden door RNA-polymerase II van de cel afgeschreven (de VA-RNA\'s door Pol III).',
     in: ['endocytose'], next: ['kernimport'], rel: ['baltimore', 'transcriptie'] },
@@ -72,7 +72,8 @@ const N = [
     s: 'mRNA verpakt in een lipidenanodeeltje wordt via endocytose opgenomen; ioniseerbare lipiden helpen een klein deel ontsnappen uit het endosoom (bij siRNA-LNP\'s gemeten: ~1–2 %). Het mRNA bevat N1-methylpseudouridine, wat de aangeboren immuunherkenning vermindert en de translatie verhoogt. Het wordt in het cytosol vertaald en komt de kern niet in.',
     in: ['endocytose'], next: ['initiatie'], rel: ['mrnaafbraak', 'translatie'] },
   { id: 'endocytose', t: 'Endocytose & endosomale ontsnapping', en: 'Endocytosis & endosomal escape', stage: 'entry', scale: 2, kind: 'process',
-    s: 'Instulping van het plasmamembraan vormt een vesikel; bij verzuring van het endosoom ontsnappen virussen of nanodeeltjes naar het cytosol, anders volgt afbraak in het lysosoom.' },
+    s: 'Instulping van het plasmamembraan vormt een vesikel; bij verzuring van het endosoom ontsnappen virussen of nanodeeltjes naar het cytosol, anders volgt afbraak in het lysosoom.',
+    rel: ['viruskopie'] },
   { id: 'baltimore', t: 'Baltimore-klassen', en: 'Baltimore classification', stage: 'entry', scale: 4, kind: 'structure',
     s: 'Zeven klassen op basis van genoomtype en hoe mRNA gemaakt wordt: dsDNA, ssDNA, dsRNA, (+)ssRNA, (−)ssRNA, ssRNA-RT, dsDNA-RT (Baltimore 1971: zes klassen; klasse VII kwam later).',
     rel: ['rt', 'rnastructuur'] },
@@ -85,6 +86,19 @@ const N = [
   { id: 'kernimport', t: 'Kernporie & kernimport', en: 'Nuclear pore complex & import', stage: 'entry', scale: 3, kind: 'process',
     s: 'Kernporiecomplex van ~30 verschillende nucleoporines in veelvoud; een menselijke kern (bv. HeLa) heeft er ~3 000. Cargo met een NLS wordt door importine α/β binnengebracht; de RanGTP-gradiënt (hoog in de kern) bepaalt de richting.',
     rel: ['kern', 'export', 'adeno'] },
+  /* zijpad virussen (05-11-2026): hoe een virus zichzelf laat maken (SARS-CoV-2, fagen, CRISPR) */
+  { id: 'sleutel', t: 'Spike–ACE2: sleutel en slot', en: 'Spike–ACE2 binding', stage: 'entry', scale: 4, kind: 'structure',
+    s: 'Het receptorbindend domein (RBD) van het SARS-CoV-2-spike-eiwit bindt het menselijke ACE2 (17 RBD-residuen raken 20 ACE2-residuen). De spike is een trimeer (S1 bindt, S2 fuseert). Na binding knipt TMPRSS2 aan het celoppervlak of cathepsine L in het endosoom de S2′-plaats, waarna de membranen fuseren: twee routes naar binnen.',
+    next: ['endocytose'], pdb: ['6M0J'], rel: ['virus', 'lnp', 'viruskopie'] },
+  { id: 'viruskopie', t: 'Replicatie van een (+)RNA-virus', en: 'Positive-strand RNA virus replication', stage: 'entry', scale: 2, kind: 'process',
+    s: 'Het (+)RNA-genoom van SARS-CoV-2 (29 903 nt, met kap en poly(A)) wordt meteen door ribosomen vertaald tot de polyproteïnen pp1a en pp1ab (−1-frameshift); PLpro en Mpro knippen die in nsp1–16. Het replicatie-/transcriptiecomplex met RdRp (nsp12) werkt in blaasjes met een dubbel membraan (DMV’s) uit het ER, via een (−)RNA-tussenkopie; een porie (nsp3) laat RNA naar het cytosol.',
+    next: ['schaar'], rel: ['baltimore', 'translatie', 'er', 'endocytose'] },
+  { id: 'schaar', t: 'Hoofdprotease (Mpro) & nirmatrelvir', en: 'Main protease (Mpro) & nirmatrelvir', stage: 'entry', scale: 4, kind: 'structure',
+    s: 'Mpro (3CLpro, nsp5) is een cysteïneprotease (katalytische dyade His41–Cys145) die als dimeer werkt en de polyproteïnen op ten minste 11 plaatsen knipt, meestal na Leu-Gln. Nirmatrelvir bindt covalent aan Cys145 in de actieve plaats; samen met ritonavir (vertraagt de afbraak) is het Paxlovid.',
+    next: ['assemblage'], pdb: ['7RFW'], rel: ['viruskopie', 'proteasoom'] },
+  { id: 'assemblage', t: 'Assemblage & uitgang van coronavirussen', en: 'Coronavirus assembly & egress', stage: 'entry', scale: 2, kind: 'process',
+    s: 'De structurele eiwitten S, E en M zitten in ER-membranen en reizen naar het ER–Golgi-tussencompartiment (ERGIC); het N-eiwit pakt het nieuwe genoom in (vRNP’s), waarna het virus naar het lumen afknopt. Blaasjes brengen het naar buiten (exocytose); β-coronavirussen gebruiken daarvoor lysosomen, die minder zuur worden.',
+    rel: ['er', 'golgi', 'lysosoom', 'sleutel', 'faag'] },
 
   // ───────────── GENOOM & CHROMATINE ─────────────
   { id: 'kern', t: 'Celkern', en: 'Nucleus', stage: 'genome', scale: 2, kind: 'structure',
@@ -340,13 +354,20 @@ const N = [
   { id: 'autofagie', t: 'Autofagie', en: 'Autophagy', stage: 'prot', scale: 2, kind: 'process',
     s: 'Macroautofagie: een fagofoor groeit rond een stuk cytoplasma (ook organellen en aggregaten) en sluit tot een autofagosoom met dubbele membraan, dat met het lysosoom versmelt; de inhoud wordt afgebroken en de bouwstenen hergebruikt. Sterk aangezet bij honger (mTORC1 inactief); basale autofagie ruimt ook gewoon op. LC3 zit op de autofagosoommembraan.',
     next: ['misvouwing'], rel: ['lysosoom', 'mito', 'proteasoom'] },
+  /* zijpad virussen (05-11-2026): fagen en CRISPR */
+  { id: 'faag', t: 'Bacteriofaag: lytisch & lysogeen', en: 'Bacteriophage: lytic & lysogenic cycles', stage: 'bact', scale: 2, kind: 'process',
+    s: 'Een faag hecht aan de bacterie en injecteert zijn DNA via de staart. Lytisch: nieuwe fagen worden gemaakt en de cel lyseert (T-even fagen: latente periode ≈ 20–25 min). Lysogeen: λ integreert met Int op de att-plaats als profaag; bij DNA-schade (UV) inactiveert geactiveerd RecA de repressor CI, Xis knipt de profaag los en de lytische cyclus start.',
+    next: ['crispr'], rel: ['bcel', 'bplasmide', 'integratie', 'virus'] },
+  { id: 'crispr', t: 'CRISPR–Cas: afweer van bacteriën', en: 'CRISPR–Cas adaptive immunity', stage: 'bact', scale: 3, kind: 'process',
+    s: 'Bacteriën bouwen stukjes faag-DNA (spacers) in hun CRISPR-rij in; het transcript wordt geknipt tot crRNA’s die Cas-eiwitten naar passend DNA leiden en het laten knippen (E. coli: Cascade + Cas3; S. pyogenes: Cas9 met crRNA:tracrRNA). CRISPR–cas komt voor in 42 % van de bacteriële en 85 % van de archaeagenomen. Met een zelfgekozen gids is Cas9 een werktuig voor genbewerking.',
+    pdb: ['4OO8'], rel: ['faag', 'dsb', 'lnp'] },
   // ───────────── BACTERIE (E. coli) — verhaallijn 3, POC 04-11-2026 (docs/bacterie-schema.md) ─────────────
   { id: 'bcel', t: 'Bacteriecel (E. coli)', en: 'Bacterial cell (E. coli)', stage: 'bact', scale: 1, kind: 'structure',
     s: 'E. coli heeft geen kern: het DNA ligt als nucleoïd in het cytoplasma. Eén ringvormig chromosoom (K-12: ≈ 4,6 miljoen bp, ≈ 4 300 eiwitgenen), vaak plasmiden en 70S-ribosomen.',
     in: ['bnucleoid', 'bplasmide', 'bgen'], next: ['bnucleoid'], rel: ['cel', 'breplicatie', 'operon', 'ribosoom'] },
   { id: 'bplasmide', t: 'Plasmide', en: 'Plasmid', stage: 'bact', scale: 2, kind: 'structure',
     s: 'Kleine, meestal ringvormige DNA-molecule naast het chromosoom, met een eigen replicatie-oorsprong (ori) die het kopieaantal mee bepaalt. Draagt vaak extra genen, zoals antibioticumresistentie; sommige plasmiden gaan via conjugatie over naar een andere bacterie.',
-    next: ['bgen'], rel: ['bcel', 'breplicatie', 'replicatie'] },
+    next: ['bgen'], rel: ['bcel', 'breplicatie', 'replicatie', 'faag'] },
   { id: 'bgen', t: 'Onderdelen van een bacterieel gen', en: 'Anatomy of a bacterial gene', stage: 'bact', scale: 3, kind: 'structure',
     s: 'Promoter (−35 en −10, herkend door een σ-factor), operator, startpunt (+1), Shine-Dalgarno-volgorde, startcodon, coderend deel, stopcodon en terminator. Geen spliceosoom; introns zijn zeldzaam en zelfsplicend. Noodzakelijk: oriC en ≈ 300 essentiële genen.',
     in: ['bpol', 'operon', 'bterm', 'bsplicing'], next: ['bpol'], rel: ['breplicatie', 'btrp', 'gen', 'promoter', 'splicing'] },
@@ -379,7 +400,7 @@ const N = [
     pdb: ['6WRF'], rel: ['ubiquitine', 'chaperones', 'misvouwing'] },
 ];
 
-const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid', 'bcel', 'bnucleoid', 'bplasmide', 'bgen', 'bpol', 'bterm', 'bmrna', 'bribosoom', 'bafbraak', 'breplicatie', 'btrp', 'bsplicing', 'bact', 'origins', 'mmr', 'ber', 'ner', 'dsb', 'p53', 'sortering', 'membraan', 'lysosoom', 'mito', 'perox', 'proteasoom', 'autofagie', 'remodeler', 'lussen', 'enhancer', 'xinact', 'imprinting']); // verificatierondes 1–9 (zijpad epigenetica: ronde 9, docs/verificatie-ronde-9-epigenetica.md); (zijpad eiwitlot: ronde 8, docs/verificatie-ronde-8-eiwittargeting.md); ronde 1–7 (zijpad replicatie & herstel: ronde 7, docs/verificatie-ronde-7-replicatie-herstel.md); (verhaallijn 2: ronde 4; bacterie: ronde 6, docs/verificatie-ronde-6-bacterie.md) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
+const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid', 'bcel', 'bnucleoid', 'bplasmide', 'bgen', 'bpol', 'bterm', 'bmrna', 'bribosoom', 'bafbraak', 'breplicatie', 'btrp', 'bsplicing', 'bact', 'origins', 'mmr', 'ber', 'ner', 'dsb', 'p53', 'sortering', 'membraan', 'lysosoom', 'mito', 'perox', 'proteasoom', 'autofagie', 'remodeler', 'lussen', 'enhancer', 'xinact', 'imprinting', 'sleutel', 'viruskopie', 'schaar', 'assemblage', 'faag', 'crispr']); // verificatierondes 1–10 (zijpad virussen: ronde 10, docs/verificatie-ronde-10-virussen.md); (zijpad epigenetica: ronde 9, docs/verificatie-ronde-9-epigenetica.md); (zijpad eiwitlot: ronde 8, docs/verificatie-ronde-8-eiwittargeting.md); ronde 1–7 (zijpad replicatie & herstel: ronde 7, docs/verificatie-ronde-7-replicatie-herstel.md); (verhaallijn 2: ronde 4; bacterie: ronde 6, docs/verificatie-ronde-6-bacterie.md) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
 export const NODES = Object.fromEntries(N.map(n => [n.id, { in: [], next: [], rel: [], pdb: [], status: CHECKED.has(n.id) ? 'nagekeken' : 'concept', ...n }]));
 
 /* Bereken ook de omgekeerde verbanden (wie verwijst naar mij) */

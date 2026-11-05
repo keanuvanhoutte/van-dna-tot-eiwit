@@ -11,4 +11,7 @@ import bafbraak from './bafbraak.js';
 import breplicatie from './breplicatie.js';
 import btrp from './btrp.js';
 import bsplicing from './bsplicing.js';
-export default [bcel, bnucleoid, bplasmide, bgen, bpol, bterm, bmrna, bribosoom, bafbraak, breplicatie, btrp, bsplicing];
+/* zijpad virussen (05-11-2026) */
+import faag from './faag.js';
+import crispr from './crispr.js';
+export default [bcel, bnucleoid, bplasmide, bgen, bpol, bterm, bmrna, bribosoom, bafbraak, breplicatie, btrp, bsplicing, faag, crispr];

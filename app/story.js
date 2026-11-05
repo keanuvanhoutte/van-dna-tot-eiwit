@@ -113,6 +113,20 @@ const EPIGEN = [
   { id: 'imprinting', bridge: { nl: 'Einde van dit zijpad. Ga via de kaart terug naar een hoofdverhaal of kies een ander zijpad.', en: 'End of this side path. Use the map to return to a main story or pick another side path.' } },
 ];
 
+/* Zijpad 4 (05-11-2026): hoe een virus zichzelf laat maken (coronavirus als voorbeeld, daarna fagen en CRISPR). */
+const VIRUSROUTE = [
+  { id: 'virus', bridge: { nl: 'Welke weg een virus in de cel volgt, hangt af van zijn erfelijk materiaal.', en: 'Which path a virus takes in the cell depends on its genetic material.' } },
+  { id: 'baltimore', bridge: { nl: 'We volgen een RNA-virus: het coronavirus. Eerst moet het aan de cel binden.', en: 'We follow an RNA virus: the coronavirus. First it has to bind to the cell.' } },
+  { id: 'sleutel', bridge: { nl: 'Na het binden komt het virus binnen, aan het oppervlak of via een blaasje.', en: 'After binding, the virus gets in, at the surface or through a vesicle.' } },
+  { id: 'endocytose', bridge: { nl: 'Eenmaal vrij in de cel gaat het RNA van het virus meteen aan het werk.', en: 'Once free in the cell, the RNA of the virus gets to work straight away.' } },
+  { id: 'viruskopie', bridge: { nl: 'Bekijk de schaar die de lange keten knipt in 3D.', en: 'See the scissors that cut the long chain in 3D.' } },
+  { id: 'schaar', bridge: { nl: 'Met de stukken en de RNA-kopieën bouwt de cel nieuwe virussen.', en: 'With the pieces and the RNA copies, the cell builds new viruses.' } },
+  { id: 'assemblage', bridge: { nl: 'Ook bacteriën worden door virussen besmet.', en: 'Bacteria get infected by viruses too.' } },
+  { id: 'faag', bridge: { nl: 'Bacteriën kunnen zich verdedigen, met een geheugen in hun DNA.', en: 'Bacteria can defend themselves, with a memory in their DNA.' } },
+  { id: 'crispr', bridge: { nl: 'Ook mRNA werd een werktuig: verpakt in een vetbolletje, als vaccin.', en: 'mRNA became a tool too: packed in a fat droplet, as a vaccine.' } },
+  { id: 'lnp', bridge: { nl: 'Einde van dit zijpad. Ga via de kaart terug naar een hoofdverhaal of kies een ander zijpad.', en: 'End of this side path. Use the map to return to a main story or pick another side path.' } },
+];
+
 /* Alle verhaallijnen. De engine kiest er één (?story=… of de laatst gekozen) en kan wisselen.
  * side: true = zijpad (in de kaart apart gegroepeerd; geen automatische overschakeling vanuit een andere lijn). */
 export const LINES = {
@@ -122,6 +136,7 @@ export const LINES = {
   herstel: { chapters: HERSTEL, side: true, title: { nl: 'Zijpad · DNA kopiëren en herstellen', en: 'Side path · Copying and repairing DNA' }, short: { nl: 'Zijpad replicatie', en: 'Side path replication' } },
   targeting: { chapters: EIWITLOT, side: true, title: { nl: 'Zijpad · Waar een eiwit heen gaat en hoe het verdwijnt', en: 'Side path · Where a protein goes and how it is removed' }, short: { nl: 'Zijpad eiwitlot', en: 'Side path protein fate' } },
   epigen: { chapters: EPIGEN, side: true, title: { nl: 'Zijpad · Hoe de cel kiest welke genen aan staan', en: 'Side path · How a cell chooses which genes are on' }, short: { nl: 'Zijpad epigenetica', en: 'Side path epigenetics' } },
+  virusroute: { chapters: VIRUSROUTE, side: true, title: { nl: 'Zijpad · Hoe een virus zichzelf laat maken', en: 'Side path · How a virus gets itself made' }, short: { nl: 'Zijpad virussen', en: 'Side path viruses' } },
 };
 export const LINE_KEYS = Object.keys(LINES);
 export const MAIN_KEYS = LINE_KEYS.filter(k => !LINES[k].side), SIDE_KEYS = LINE_KEYS.filter(k => LINES[k].side);

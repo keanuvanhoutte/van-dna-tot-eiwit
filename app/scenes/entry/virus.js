@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { capsid, bilayer, car, PINK, FIBRE, LIP } from './_bits.js';
+import { btn } from '../prot/_fate.js';
 
 /* Zijpad: wat doet een virus eigenlijk bij een cel? Twee binnenkomstroutes, dan het genoomtype. */
 const MEM = 330, LX = 430, RX = 1160;
@@ -82,6 +83,7 @@ export default {
       <g id="vi-nuc-body"></g>
     </g>
     <g id="vi-notes"></g>
+    ${btn('sleutel', 610, 380, T2('sleutel en slot in 3D →', 'key and lock in 3D →'), '#ff9d5c')}
     </svg>`;
   },
 

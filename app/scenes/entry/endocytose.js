@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, pill, txt, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { capsid, viralGenome, bilayer, triskelion, lnpParticle, PINK, FIBRE, LIP } from './_bits.js';
+import { btn } from '../prot/_fate.js';
 
 /* Hoofdstuk 3: van klathrine-put tot endosomale ontsnapping (of afbraak in het lysosoom). */
 const MEM = 170, PX = 520;
@@ -81,6 +82,7 @@ export default {
       <g id="en-ribo-body"></g>
     </g>
     <g id="en-notes"></g>
+    ${btn('viruskopie', 1130, 400, T2('een RNA-virus aan het werk →', 'an RNA virus at work →'), C.rna, 70)}
     </svg>`;
   },
 

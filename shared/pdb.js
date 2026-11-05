@@ -91,6 +91,9 @@ const LOCAL = new Set([
   '8DNV.pdb',
   /* zijpad epigenetica (05-11-2026): cohesine–NIPBL–CTCF–DNA, ingekort tot CA/P-atomen en star gedraaid */
   '7W1M.cif',
+  /* zijpad virussen (05-11-2026): spike-RBD–ACE2 (CA-atomen, star gedraaid) en Mpro-dimeer met nirmatrelvir (CA + His41/Cys145 + ligand) */
+  '6M0J.cif',
+  '7RFW.cif',
 ]);
 const here = f => new URL(`../data/pdb/${f}`, import.meta.url).href;
 export const pdbUrl = (id, ext = 'pdb') => LOCAL.has(`${id}.${ext}`) ? here(`${id}.${ext}`) : `https://files.rcsb.org/download/${id}.${ext}`;
