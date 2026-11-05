@@ -53,7 +53,6 @@ const T = {
   search: { nl: 'Filter de atlas: bv. helix, ribosoom…', en: 'Filter the atlas: e.g. helix, ribosome…' },
   count: { nl: n => `${n} item${n === 1 ? '' : 's'}`, en: n => `${n} entr${n === 1 ? 'y' : 'ies'}` },
   reset: { nl: 'filters wissen', en: 'clear filters' },
-  filt: { nl: 'Filters: soort, vorm, plaats', en: 'Filters: type, shape, place' },
   showOpts: { nl: 'Tonen ▾', en: 'Show ▾' },
   none: { nl: 'Geen items voor deze filters.', en: 'No entries for these filters.' },
   schema: { nl: 'schema', en: 'diagram' },
@@ -205,7 +204,6 @@ $('storyLink').href = FROM ? `../app/index.html?scene=${encodeURIComponent(FROM)
 $('q').placeholder = t('search');
 $('pdbLbl').textContent = t('pdbLbl'); $('pdbGo').textContent = t('pdbGo'); $('pdbIn').placeholder = t('pdbPh'); $('pdbForm').title = t('pdbTip');
 $('reset').textContent = t('reset');
-$('filtLbl').textContent = t('filt');
 $('cmpBtn').textContent = t('cmp');
 $('cmpHint').textContent = t('cmpHint');
 document.querySelectorAll('[data-t]').forEach(e => e.textContent = t(e.dataset.t));
@@ -213,23 +211,24 @@ $('langBox').innerHTML = ['nl', 'en'].map(l => `<button class="lang" data-l="${l
 $('langBox').onclick = e => { const b = e.target.closest('.lang'); if (b && b.dataset.l !== lang) setLang(b.dataset.l); };
 
 /* ---------- filters en lijst ---------- */
-function filtCount() {
-  const n = Object.values(state.filt).reduce((a, s) => a + s.size, 0);
-  $('filtN').textContent = n ? n : '';
-}
+/* filters: per groep een inklapbare lijst met vinkjes onder elkaar (met aantal items per keuze) */
 document.addEventListener('click', e => { const o = $('optsBox'); if (o.open && !o.contains(e.target)) o.open = false; });
 function buildFilters() {
-  queueMicrotask(filtCount);
-  $('filters').innerHTML = Object.entries(FILTERS).map(([g, def]) =>
-    `<div class="fgrp"><h4>${L(def.label)}</h4><div class="chips">${Object.entries(def.opts).map(([k, lab]) =>
-      `<button class="chip" data-g="${g}" data-k="${k}" aria-pressed="${state.filt[g].has(k)}">${L(lab)}</button>`).join('')}</div></div>`).join('');
+  const open = new Set([...document.querySelectorAll('#filters details[open]')].map(d => d.dataset.g));
+  $('filters').innerHTML = Object.entries(FILTERS).map(([g, def]) => {
+    const n = state.filt[g].size;
+    return `<details class="fgrp" data-g="${g}"${open.has(g) ? ' open' : ''}><summary>${L(def.label)}<b class="fn">${n || ''}</b></summary><div class="fl">${
+      Object.entries(def.opts).map(([k, lab]) => {
+        const c = ENTRIES.filter(e => e[g].includes(k)).length;
+        return `<label class="fo"><input type="checkbox" data-g="${g}" data-k="${k}"${state.filt[g].has(k) ? ' checked' : ''}><span>${L(lab)}</span><i>${c}</i></label>`;
+      }).join('')}</div></details>`;
+  }).join('');
 }
-$('filters').onclick = e => {
-  const b = e.target.closest('.chip'); if (!b) return;
+$('filters').onchange = e => {
+  const b = e.target.closest('input[data-g]'); if (!b) return;
   const s = state.filt[b.dataset.g];
-  s.has(b.dataset.k) ? s.delete(b.dataset.k) : s.add(b.dataset.k);
-  b.setAttribute('aria-pressed', s.has(b.dataset.k));
-  filtCount();
+  b.checked ? s.add(b.dataset.k) : s.delete(b.dataset.k);
+  b.closest('details').querySelector('.fn').textContent = s.size || '';
   renderList();
 };
 $('reset').onclick = () => { for (const s of Object.values(state.filt)) s.clear(); state.text = ''; $('q').value = ''; buildFilters(); renderList(); };
@@ -363,6 +362,9 @@ for (let i = 0; i < 3; i++) {
   const stage = el.querySelector('.stage');
   const viewer = $3Dmol.createViewer(stage, { backgroundColor: CSS('--bg-2') || '#0d1426', antialias: true });
   const s = { i, el, stage, viewer, token: 0, entry: null, atoms: null, an: null };
+  // het vak krijgt zijn hoogte uit de lay-out (vult het scherm): de viewer schaalt mee als het vak van maat verandert
+  let lastH = 0;
+  new ResizeObserver(() => { const h = Math.round(stage.clientHeight); if (h && h !== lastH && !el.hidden) { lastH = h; viewer.resize(); viewer.render(); } }).observe(stage);
   el.querySelector('.x').onclick = () => { if (state.set.length > 1) { state.set = state.set.filter(x => x !== s.entry?.id); state.id = state.set[0]; update(); } };
   SLOTS.push(s);
 }

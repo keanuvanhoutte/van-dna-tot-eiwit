@@ -53,17 +53,23 @@ button { font-family: inherit; }
 /* ---------- zijbalk ---------- */
 .search input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); border-radius: 9px; padding: 6px 10px; font: 13.5px var(--font); outline: none; }
 .search input:focus { border-color: rgba(124,196,255,.6); }
-/* filters: inklapbaar, zodat de lijst de ruimte krijgt */
-.filt { margin-top: 8px; border: 1px solid var(--line); border-radius: 10px; padding: 0 9px; }
-.filt > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 6px; padding: 7px 0; font-size: 12.5px; color: var(--muted); }
-.filt > summary::-webkit-details-marker { display: none; }
-.filt > summary::after { content: "▾"; margin-left: auto; transition: transform .2s; }
-.filt:not([open]) > summary::after { transform: rotate(-90deg); }
-.filt > summary:hover { color: var(--text); }
-.filt .fn { font: 600 11px var(--mono); color: #0a1224; background: var(--accent); border-radius: 999px; padding: 1px 7px; }
-.filt .fn:empty { display: none; }
-.filt[open] { padding-bottom: 8px; max-height: 45vh; overflow-y: auto; }
-.fgrp { margin-top: 6px; }
+/* filters: drie inklapbare groepen, keuzes als vinkjes onder elkaar */
+.filt { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; max-height: 46vh; overflow-y: auto; flex: none; }
+.fgrp { border: 1px solid var(--line); border-radius: 9px; }
+.fgrp > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 7px; padding: 6px 10px; font-size: 13px; font-weight: 600; color: var(--text); }
+.fgrp > summary::-webkit-details-marker { display: none; }
+.fgrp > summary::after { content: "▾"; margin-left: auto; color: var(--muted); transition: transform .2s; }
+.fgrp:not([open]) > summary::after { transform: rotate(-90deg); }
+.fgrp > summary:hover { background: rgba(124,196,255,.06); border-radius: 9px; }
+.fgrp .fn { font: 600 11px var(--mono); color: #0a1224; background: var(--accent); border-radius: 999px; padding: 1px 7px; }
+.fgrp .fn:empty { display: none; }
+.fl { display: flex; flex-direction: column; padding: 2px 6px 6px; }
+.fo { display: flex; align-items: center; gap: 8px; padding: 4px 6px; border-radius: 7px; font-size: 13px; color: var(--muted); cursor: pointer; }
+.fo:hover { background: rgba(124,196,255,.07); color: var(--text); }
+.fo input { accent-color: #7cc4ff; margin: 0; }
+.fo:has(input:checked) { color: var(--text); }
+.fo span { flex: 1; }
+.fo i { font: 500 11px var(--mono); font-style: normal; color: var(--muted); }
 .fgrp h4 { margin: 0 0 5px; font: 600 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 .chips { display: flex; flex-wrap: wrap; gap: 5px; }
 .chip { all: unset; cursor: pointer; font-size: 12px; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
@@ -138,7 +144,7 @@ button { font-family: inherit; }
 .slot .sh .pdbl:hover { color: var(--accent); }
 .slot .sh .x { all: unset; cursor: pointer; color: var(--muted); font-size: 16px; line-height: 1; padding: 0 2px; }
 .slot .sh .x:hover { color: var(--text); }
-.stage { position: relative; height: clamp(360px, calc(100vh - 230px), 1000px); }
+.stage { position: relative; overflow: hidden; height: clamp(360px, calc(100vh - 230px), 1000px); }
 .slots.n2 .stage, .slots.n3 .stage { height: clamp(300px, calc(100vh - 330px), 600px); }
 .stage .load { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 13px; text-align: center; padding: 20px; pointer-events: none; }
 /* laadbalk (verschijnt na 0,35 s, meteen bij grote structuren) */
@@ -259,4 +265,16 @@ button { font-family: inherit; }
   .stage { height: clamp(340px, 60vh, 560px); }
   .slots.n2 .stage, .slots.n3 .stage { height: clamp(280px, 48vh, 440px); }
   .slots.n3 .sh .hand { display: none; }
+}
+
+/* brede schermen, één figuur: het hoofdpaneel vult precies de hoogte (geen scrollbalk) — 3D-beeld krijgt de rest */
+@media (min-width: 1321px) {
+  .main { display: flex; flex-direction: column; padding-bottom: 12px; }
+  .main > * { flex: none; }
+  .main > .slots:not(.n2):not(.n3):not(:has(.stage.dg)) { flex: 1; min-height: 0; grid-template-rows: minmax(0, 1fr); }
+  .slots:not(.n2):not(.n3):not(:has(.stage.dg)) .slot { min-height: 0; }
+  .slots:not(.n2):not(.n3):not(:has(.stage.dg)) .sbody { flex: 1; min-height: 0; grid-template-rows: minmax(0, 1fr); }
+  .slots:not(.n2):not(.n3):not(:has(.stage.dg)) .sview { min-height: 0; }
+  .slots:not(.n2):not(.n3):not(:has(.stage.dg)) .stage { height: auto; flex: 1; min-height: 220px; }
+  .slots:not(.n2):not(.n3):not(:has(.stage.dg)) .calcgrid { max-height: none; }
 }
