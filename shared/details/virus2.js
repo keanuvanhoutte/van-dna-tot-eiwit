@@ -84,7 +84,7 @@ export default {
       facts: [['Genome', '29,903 letters, (+)RNA'], ['Pieces', '16 (nsp1–16)'], ['Slip', 'in about half of the ribosomes'], ['Copying', 'in double-membrane vesicles from the ER'], ['Export', 'through a pore across both membranes']],
       why: 'A (+)RNA virus brings no copying machine of its own: it has our cell make one first. That explains why blocking a single step (the scissors, the copying machine) stops the whole multiplication.',
     },
-    sources: [VKOV, WU, SNIJ, WOLFF, KELLY],
+    sources: [VKOV, WU, SNIJ, WOLFF, KELLY, KLEIN],
   },
   schaar: {
     nl: {

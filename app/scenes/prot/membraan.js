@@ -61,7 +61,7 @@ export default {
     { dur: 8500, cam: cam(HX + 60, MY, 900), title: L3('Een spiraal van ongeveer 20 bouwstenen past precies', 'A spiral of about 20 building blocks fits exactly'),
       text: L3('Het vettige stuk rolt op tot een spiraal (helix). Zo’n 20 bouwstenen zijn net zo lang als het membraan dik is.', 'The greasy stretch coils into a spiral (helix). About 20 building blocks are just as long as the membrane is thick.') },
     { dur: 9000, cam: FULL, title: L3('Het eiwit reist mee in het membraan', 'The protein travels along in the membrane'),
-      text: L3('Een blaasje knijpt af en neemt het eiwit mee naar het Golgi. De kant die in het ER zat, blijft binnen.', 'A vesicle pinches off and carries the protein to the Golgi. The side that was inside the ER stays inside.') },
+      text: L3('Een blaasje knijpt af en neemt het eiwit mee naar het Golgi. Hoe het in het membraan staat, werd al in het ER beslist.', 'A vesicle pinches off and carries the protein to the Golgi. How it sits in the membrane was already decided in the ER.') },
   ],
   svg() {
     return svgOpen() + `

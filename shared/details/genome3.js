@@ -23,6 +23,10 @@ const BROWN = S('Brown et al. (1991) A gene from the region of the human X inact
 const CLEMSON = S('Clemson et al. (1996) XIST RNA paints the inactive X chromosome at interphase. J Cell Biol 132:259 (PMC)', 'XIST-RNA bedekt het inactieve X', 'XIST RNA coats the inactive X', PMC('PMC2120729'));
 const CARREL = S('Carrel & Willard (2005) X-inactivation profile reveals extensive variability in X-linked gene expression in females. Nature 434:400 (PubMed 15772666)', '≈ 15 % van de X-genen ontsnapt, ≈ 10 % wisselend', '≈ 15% of X genes escape, ≈ 10% variably', PM(15772666));
 const TUKI = S('Tukiainen et al. (2017) Landscape of X chromosome inactivation across human tissues. Nature 550:244 (PMC)', 'onvolledige X-inactivatie bij ≥ 23 % van de X-genen', 'incomplete XCI for ≥ 23% of X genes', PMC('PMC5685192'));
+const JANG = S('Jang & Yoo (2026) 3D chromatin architecture in cancer. Exp Mol Med 58:1734 (PMC)', 'lussen liggen binnen TADs, die de werking van enhancers tot de juiste genen beperken', 'loops lie within TADs, which restrict enhancer activity to the right genes', PMC('PMC13324790'));
+const PARK = S('Park, Yin & Theunissen (2026) Exiting the ground state: the broad spectrum of cell fates accessible from naïve human pluripotent stem cells. Cell Mol Life Sci 83:23 (PMC)', 'bij de innesteling wordt één X willekeurig stilgezet', 'upon implantation one X is randomly inactivated', PMC('PMC12775239'));
+const FU = S('Fu et al. (2026) From inactivation to intervention: X chromosome silencing in disease pathogenesis. Genes Dis 13:101964 (PMC)', 'het Barr-lichaampje is het zichtbare, compacte inactieve X', 'the Barr body is the visible, condensed inactive X', PMC('PMC13196324'));
+const PAPULINO = S('Papulino et al. (2020) Preclinical and clinical epigenetic-based reconsideration of Beckwith-Wiedemann syndrome. Front Genet 11:563718 (PMC)', 'IGF2 en H19 liggen in 11p15.5', 'IGF2 and H19 lie in 11p15.5', PMC('PMC7522569'));
 const PATRAT = S('Patrat, Ouimette & Rougeulle (2020) X chromosome inactivation in human development. Development 147:dev183095 (PubMed 31900287)', 'X-inactivatie in het vroege menselijke embryo', 'X inactivation in the early human embryo', PM(31900287));
 const KAELIN = S('Kaelin et al. (2025) Molecular and genetic characterization of sex-linked orange coat color in the domestic cat. Curr Biol 35:2826 (PMC)', 'oranje vacht: X-gebonden, lapjeskat = willekeurige X-inactivatie', 'orange coat: X-linked, calico = random X inactivation', PMC('PMC12187551'));
 const BARTO = S('Bartolomei & Ferguson-Smith (2011) Mammalian genomic imprinting. Cold Spring Harb Perspect Biol 3:a002592 (PMC)', '≈ 100 geïmprinte genen; ICR’s, wissen en opnieuw zetten in de kiemlijn', '≈ 100 imprinted genes; ICRs, erasure and resetting in the germline', PMC('PMC3119911'));
@@ -112,7 +116,7 @@ export default {
       facts: [['Distance', 'can be large: up to ≈ 1 Mb'], ['Example', 'ZRS lies 1 Mb from SHH (in an intron of LMBR1)'], ['Disease', 'ZRS mutations → preaxial polydactyly (extra digit on the thumb side)'], ['Relay', 'Mediator']],
       why: 'Enhancers decide in which tissue and at what moment a gene switches on. Because they can lie far away, a fault far from a gene can still disturb that gene, as with the ZRS and extra fingers.',
     },
-    sources: [SOUT, SCHOEN, LETTICE, RAO14],
+    sources: [SOUT, SCHOEN, LETTICE, RAO14, JANG],
   },
   xinact: {
     nl: {
@@ -139,7 +143,7 @@ export default {
       facts: [['Escape', '≈ 15% of X genes, another ≈ 10% variably'], ['Discovered', 'Lyon hypothesis, 1961'], ['RNA', 'XIST (1991), coats the inactive X'], ['Example', 'calico and tortoiseshell cats: orange gene on the X']],
       why: 'X inactivation explains why women are mosaics for genes on the X. In cats the orange gene is X-linked: the orange and black patches of a calico show the random choice.',
     },
-    sources: [LYON, BROWN, CLEMSON, CARREL, TUKI, PATRAT, KAELIN],
+    sources: [LYON, BROWN, CLEMSON, CARREL, TUKI, PATRAT, PARK, FU, KAELIN],
   },
   imprinting: {
     nl: {
@@ -166,6 +170,6 @@ export default {
       facts: [['Number', '≈ 100 genes (mammals, 2011 review)'], ['Example', 'IGF2 paternal, H19 maternal'], ['Deletion 15q11–q13', 'paternal → Prader-Willi, maternal → Angelman'], ['Inheritance across generations', 'not shown in humans']],
       why: 'Imprinting explains why the same loss of a piece of DNA can cause two very different disorders. Beware of a common myth: that experiences of parents or grandparents are passed on to later generations through epigenetic marks has not been shown in humans. It does happen in plants and worms, but in humans genetic, cultural and environmental influences cannot be separated from epigenetic ones, and the marks are largely erased in the germline.',
     },
-    sources: [BARTO, BELL, MONK, BUITING, HEARD, HORST],
+    sources: [BARTO, BELL, MONK, BUITING, HEARD, HORST, PAPULINO],
   },
 };

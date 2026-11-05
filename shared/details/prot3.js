@@ -17,6 +17,9 @@ const BRAULKE = { t: 'Braulke & Bonifacino (2009) Sorting of lysosomal proteins.
 const MINDELL = { t: 'Mindell (2012) Lysosomal acidification mechanisms. Annu Rev Physiol 74:69 (PubMed 22335796)', url: 'https://pubmed.ncbi.nlm.nih.gov/22335796/' };
 const MLREV = { t: 'Khan & Tomatsu (2020) Mucolipidoses overview: past, present, and future. Int J Mol Sci 21:6812 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7555117/' };
 const POMPE = { t: 'Schoser (2026) Defining the therapeutic corridor of stability in enzyme replacement therapy for Pompe disease: a position statement. Orphanet J Rare Dis 21:259 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC13428432/' };
+const LU = { t: 'Lu et al. (2021) Types of nuclear localization signals and mechanisms of protein import into the nucleus. Cell Commun Signal 19:60 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8140498/' };
+const JIANG = { t: 'Jiang et al. (2025) MULoc-target: targeting peptide classification and detection using a protein language model. Brief Bioinform 26:bbaf436 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC12454934/' };
+const TONG = { t: 'Tong et al. (2026) The degradation revolution: harnessing targeted protein degradation for the treatment of human diseases. Cell Mol Life Sci 83:254 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC13265442/' };
 const YIM = { t: 'Yim & Mizushima (2020) Lysosome biology in autophagy. Cell Discov 6:6 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7010707/' };
 const BARD = { t: 'Bard et al. (2018) Structure and function of the 26S proteasome. Annu Rev Biochem 87:697 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6422034/' };
 const DONG = { t: 'Dong et al. (2019) Cryo-EM structures and dynamics of substrate-engaged human 26S proteasome. Nature 565:49 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6370054/' };
@@ -54,7 +57,7 @@ export default {
       facts: [['ER signal', 'N-terminal, hydrophobic'], ['NLS', 'basic, may be internal'], ['Presequence', 'N-terminal, positive, amphipathic'], ['PTS1', 'C-terminal S-K-L'], ['Lysosome', 'mannose 6-phosphate (Golgi)']],
       why: 'A protein only works in the right place. Sorting errors cause diseases, such as I-cell disease (lysosomal enzymes without a tag) or the Zellweger spectrum (no working peroxisomes).',
     },
-    sources: [SHAO, LANGE, PFANNER, GOULD, RAPP, BRAULKE, MLREV],
+    sources: [SHAO, LANGE, LU, JIANG, PFANNER, GOULD, RAPP, BRAULKE, MLREV],
   },
   membraan: {
     nl: {
@@ -65,7 +68,7 @@ export default {
         'Komt een hydrofoob segment in het kanaal, dan stopt de doorgang (stop-transfer) en verlaat het segment het kanaal zijdelings via de laterale poort, gevormd door vooral helix 2 en helix 7 van Sec61α.',
         'Na een geknipt signaalpeptide krijgt zo\'n intern segment een type I-oriëntatie: N-uiteinde in het lumen, C-uiteinde in het cytosol.',
         'Ook de flankerende ladingen spelen mee: positieve ladingen liggen meestal aan de cytosolkant (positive-inside rule).',
-        'Vesikels nemen het eiwit mee naar het Golgi; de kant die in het ER-lumen lag, blijft aan de binnenkant van het blaasje.',
+        'De definitieve oriëntatie wordt in het ER bepaald; daarna nemen blaasjes het eiwit mee naar het Golgi.',
       ],
       facts: [['TMD', '≈ 20 aminozuren, α-helix'], ['Membraandikte', '≈ 30 Å (3 nm)'], ['Laterale poort', 'helix 2 en 7 van Sec61α'], ['Structuur', 'PDB 8DNV: menselijk Sec61, cryo-EM 3,03 Å']],
       why: 'Receptoren, kanalen en transporters zijn membraaneiwitten, en hun oriëntatie bepaalt welke kant naar buiten wijst. De laterale poort is ook een doelwit voor geneesmiddelen: verschillende natuurlijke remmers binden precies daar.',
@@ -78,7 +81,7 @@ export default {
         'When a hydrophobic segment enters the channel, passage stops (stop transfer) and the segment leaves the channel sideways via the lateral gate, formed mainly by helix 2 and helix 7 of Sec61α.',
         'After a cleaved signal peptide such an internal segment takes a type I orientation: N terminus in the lumen, C terminus in the cytosol.',
         'Flanking charges also matter: positive charges usually lie on the cytosolic side (positive-inside rule).',
-        'Vesicles carry the protein to the Golgi; the side that faced the ER lumen stays on the inside of the vesicle.',
+        'The final orientation is decided in the ER; vesicles then carry the protein on to the Golgi.',
       ],
       facts: [['TMD', '≈ 20 amino acids, α-helix'], ['Membrane thickness', '≈ 30 Å (3 nm)'], ['Lateral gate', 'helix 2 and 7 of Sec61α'], ['Structure', 'PDB 8DNV: human Sec61, cryo-EM 3.03 Å']],
       why: 'Receptors, channels and transporters are membrane proteins, and their orientation decides which side faces outwards. The lateral gate is also a drug target: several natural inhibitors bind right there.',
@@ -228,6 +231,6 @@ export default {
       facts: [['Trigger', 'starvation: mTORC1 inactive'], ['Membrane', 'double (autophagosome)'], ['Marker', 'LC3'], ['Other forms', 'chaperone-mediated autophagy, microautophagy']],
       why: 'Basal autophagy constantly clears abnormal proteins. Mice lacking autophagy in nerve cells (Atg5 knocked out) develop protein inclusions and neurodegeneration, even without a disease gene. Autophagy therefore plays a role in e.g. cancer and brain diseases.',
     },
-    sources: [YIM, MIZU, HARA, DIKIC],
+    sources: [YIM, MIZU, HARA, DIKIC, TONG],
   },
 };

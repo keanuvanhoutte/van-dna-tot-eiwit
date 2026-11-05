@@ -7,6 +7,9 @@ const HUTT = S('Hüttelmaier et al. (2005) Nature 438:512 (PubMed 16306994)', 'Z
 const LION = S('Lionnet et al. (2011) Nat Methods 8:165 (PMC)', 'muis met gemerkt β-actine-mRNA; losse mRNA’s in zenuwcellen gevolgd', 'mouse with labelled β-actin mRNA; single mRNAs followed in nerve cells', PMC('PMC3076588'));
 const MART = S('Martin & Ephrussi (2009) Cell 136:719 (PMC)', 'overzicht: adreslabels, lezende eiwitten, motoren en sporen', 'review: address labels, reader proteins, motors and tracks', PMC('PMC2819924'));
 const HOLT = S('Holt, Martin & Schuman (2019) Nat Struct Mol Biol 26:557', 'lokale translatie in zenuwcellen', 'local translation in nerve cells', 'https://doi.org/10.1038/s41594-019-0263-5');
+const NUNEZ = S('Núñez et al. (2022) Tagged actin mRNA dysregulation in IGF2BP1 mice. Proc Natl Acad Sci USA 119:e2208465119 (PMC)', 'ZBP1 (kip) is hetzelfde eiwit als IGF2BP1/IMP1 bij zoogdieren', 'ZBP1 (chicken) is the same protein as IGF2BP1/IMP1 in mammals', PMC('PMC9477413'));
+const KED = S('Kedersha et al. (1999) J Cell Biol 147:1431 (PMC)', 'hitte doet stressgranules ontstaan in menselijke cellen; na de stress verdwijnen ze', 'heat makes stress granules form in human cells; after the stress they disappear', PMC('PMC2174242'));
+const ENGR = S('Engreitz et al. (2016) Nature 539:452 (PMC)', 'soms regelt het afschrijven zelf een buurgen, niet het RNA', 'sometimes the act of transcription itself, not the RNA, regulates a neighbouring gene', PMC('PMC6853796'));
 const PROT = S('Protter & Parker (2016) Trends Cell Biol 26:668 (PMC)', 'eigenschappen van stressgranules', 'properties of stress granules', PMC('PMC4993645'));
 const HUB = S('Hubstenberger et al. (2017) Mol Cell 68:144 (PubMed 28965817)', 'gezuiverde P-bodies: mRNA’s onderdrukt, niet afgebroken', 'purified P-bodies: mRNAs repressed, not degraded', PM(28965817));
 const COUR = S('Courel et al. (2019) eLife 8:e49708', 'P-bodies bij de mens: vooral bewaren', 'P-bodies in humans: mainly storage', 'https://elifesciences.org/articles/49708');
@@ -47,7 +50,7 @@ export default {
       facts: [['Example', 'β-actin mRNA → leading edge'], ['Address label', '54 letters, in the 3′ UTR'], ['Reader', 'ZBP1 (human: IMP1)'], ['Tracks', 'microtubules and actin filaments'], ['Studied in', 'chicken and mouse cells']],
       why: 'This lets a cell make one part of itself different from the rest: the leading edge builds actin, a nerve branch makes proteins at one contact point. If the address label is blocked, β-actin mRNA becomes scattered and the shape of the edge changes.',
     },
-    sources: [KISL, HUTT, LION, MART, HOLT],
+    sources: [KISL, HUTT, LION, MART, HOLT, NUNEZ],
   },
   korrels: {
     nl: {
@@ -76,7 +79,7 @@ export default {
       facts: [['Wall', 'no membrane'], ['Cause', 'start of translation blocked'], ['Typical proteins', 'G3BP1, TIA-1 (stress); DCP2, XRN1 (P-body)'], ['P-bodies', 'present even without stress'], ['Disease', 'ALS proteins TDP-43 and FUS in the droplets']],
       why: 'This lets a cell switch quickly: under stress ordinary proteins are briefly not made, while the mRNAs are probably kept for later. In ALS, proteins from these droplets (TDP-43, FUS) are found in clumps in the dying nerve cells; whether lasting droplets cause those clumps is still being studied.',
     },
-    sources: [PROT, HUB, COUR, LI],
+    sources: [PROT, KED, HUB, COUR, LI],
   },
   lncrna: {
     nl: {
@@ -105,7 +108,7 @@ export default {
       facts: [['Length', 'more than 200 letters'], ['Genes (GENCODE 50)', '35,885 (protein genes: 19,442)'], ['Roles', 'scaffold, guide, decoy'], ['Examples', 'XIST, NORAD'], ['Function known', 'for a minority']],
       why: 'Long RNAs show that RNA is more than a messenger. Two myths are wrong: they are not all ‘junk’, and they are not all important either. For each individual RNA the function still has to be shown.',
     },
-    sources: [WANG, MATT, GENC],
+    sources: [WANG, MATT, ENGR, GENC],
   },
   riboswitch: {
     nl: {

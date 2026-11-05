@@ -16,7 +16,7 @@ const DRUGS = (ch, label) => ({ sel: { chain: ch, resn: '4WI' }, style: { stick:
 export default structure3d({
   id: 'schaar', pdb: '7RFW',
   title: L3('Een virusschaar knipt de lange keten', 'A virus scissors cuts the long chain'),
-  scale: L3('≈ 7 nm (twee helften)', '≈ 7 nm (two halves)'), time: L3('één knip: een fractie van een seconde', 'one cut: a fraction of a second'),
+  scale: L3('≈ 7 nm (twee helften)', '≈ 7 nm (two halves)'), time: L3('vertraagd getoond (schematisch)', 'shown slowed down (schematic)'),
   org: L3('SARS-CoV-2 · PDB 7RFW', 'SARS-CoV-2 · PDB 7RFW'),
   legend: [[PA, L3('schaar, helft 1', 'scissors, half 1')], [PB, L3('schaar, helft 2', 'scissors, half 2')], [SITE, L3('knipplek (His41 + Cys145)', 'cutting site (His41 + Cys145)')],
     [DRUG, L3('medicijn (nirmatrelvir)', 'medicine (nirmatrelvir)')]],

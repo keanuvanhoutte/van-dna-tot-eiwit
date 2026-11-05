@@ -2,7 +2,7 @@
 
 Nagekeken: de zes nieuwe knopen `sleutel`, `viruskopie`, `schaar`, `assemblage` (stage `entry`) en `faag`, `crispr` (stage `bact`) — graph.js, graph.en.js, shared/details/virus2.js, scènes in app/scenes/entry/ en app/scenes/bact/ — plus de overgangszinnen van de verhaallijn `virusroute` (app/story.js). De bestaande hoofdstukken `virus`, `baltimore`, `endocytose` en `lnp` waren al nagekeken (rondes 1–5); daar zijn alleen verwijzingen en één knop bijgekomen.
 Methode: elke bewering in kort/what/how/facts/why, stapteksten, labels, schaal/duur en `simplified` vergeleken met de bron in `sources` (opgehaald op 05-11-2026: PubMed-abstracts via E-utilities, volledige teksten van Jackson 2022, V'kovski 2021, Zhang 2020, Casjens & Hendrix 2015, Brouns 2008 en Makarova 2020 via de PMC-BioC-API). PDB-ID's gecontroleerd via `https://data.rcsb.org/rest/v1/core/entry/<ID>` en `/polymer_entity/<ID>/<n>` (organisme per entiteit); ketens, residuen en afstanden nagemeten in het coördinatenbestand van RCSB.
-⚠️ = alleen door een handboek of een niet volledig gelezen tekst gedekt. 🔧 = correctie tegenover de opdracht of de eerste versie.
+Bronnencontrole 05-11-2026: punten die eerst alleen door een handboek of een ordegrootte gedekt waren, zijn met een gelezen bron bevestigd of herschreven. 🔧 = correctie tegenover de opdracht of de eerste versie.
 
 ## PDB-structuren
 
@@ -23,7 +23,7 @@ Kandidaten die afvielen: 7SI9 (2,0 Å, kamertemperatuur) en 7VH8 (1,59 Å) bevat
 - ✅ De drie RBD's wisselen tussen "up" (bindbaar) en "down" — Jackson 2022 ("samples two distinct conformations: 'up' … 'down'").
 - ✅ **Twee routes naar binnen**: de S2′-plaats wordt geknipt door TMPRSS2 aan het celoppervlak **of** door cathepsine L in het endosoom na ACE2-afhankelijke endocytose — Jackson 2022 (letterlijk), Hoffmann 2020 (TMPRSS2). 🔧 De scène zegt daarom nooit "alleen via een blaasje": stap 6 en `simplified` noemen beide routes, en de knop naar `endocytose` heet "de weg via een blaasje".
 - ✅ ACE2 zit hoog in de neus (trilhaarcellen), beperkt in de diepe long, en ook in darm, nier, hart — Jackson 2022. In de app: "neus, longen en darm", feiten: "veel in de neus, minder diep in de longen".
-- ⚠️ "Binden: een fractie van een seconde" (duurveld) is een ordegrootte-uitspraak, niet uit een gelezen bron; daarom staat er geen getal.
+- 🔧 Geschrapt (bronnencontrole 05-11-2026): duurveld "binden: een fractie van een seconde" (ordegrootte zonder bron) → "vertraagd getoond (schematisch)".
 
 ### viruskopie — V'kovski 2021 (PMC7592455, volledige tekst), Wu 2020 (PMC7094943), Snijder 2020 (PMC7302735), Wolff 2020 (PMC7665310), Kelly 2020 (PMC7397099)
 - ✅ Genoom = 29 903 nucleotiden — Wu 2020 (letterlijk).
@@ -33,7 +33,7 @@ Kandidaten die afvielen: 7SI9 (2,0 Å, kamertemperatuur) en 7VH8 (1,59 Å) bevat
 - ✅ RNA-synthese gebeurt in blaasjes met dubbel membraan (DMV's) uit ER-membranen; DMV's zijn aantoonbaar de plaats van RNA-synthese — Snijder 2020 (EM-autoradiografie), V'kovski 2021.
 - ✅ Replicatie via volledige (−)RNA-kopieën; kortere subgenomische boodschappers voor de structurele eiwitten — V'kovski 2021. In de app: alleen in `simplified` en in de uitleg.
 - ✅ Een porie (hexameer van een groot viraal membraaneiwit, nsp3) overspant beide membranen van de DMV en zou RNA-export toelaten — Wolff 2020. 🔧 Wolff schrijft "would allow export": de porie is in beeld gebracht, de RNA-export is het voorstel. `simplified` en de uitleg zeggen daarom "vermoedelijk" / "het voorstel van de onderzoekers"; de stap zelf blijft beschrijvend ("door een poortje").
-- ⚠️ "Blaasjes ≈ 0,1–0,3 µm" (schaalveld): ordegrootte uit de EM-beelden van Snijder/Klein, niet als getal in de gelezen tekst; de scène zegt "schematisch".
+- ✅ Schaalveld nu "blaasjes ≈ 0,3 µm" (bronnencontrole 05-11-2026): Klein et al. 2020 (PMC7676268, volledige tekst): DMV's in SARS-CoV-2-cellen "with an inner average diameter of 338 nm (SD = 56 nm)"; Snijder 2020 (volledige tekst): mediaan 247 nm. 🔧 De vroegere ondergrens 0,1 µm had geen bron en is weg. Klein toegevoegd aan `sources` van `viruskopie`.
 
 ### schaar — Owen 2021 (PubMed 34726479), Zhang 2020 (PMC7164518, volledige tekst), Hammond 2022 (PMC8908851), V'kovski 2021
 - ✅ Mpro (3CLpro, nsp5) knipt "no fewer than 11 cleavage sites" op polyproteïne 1ab, meestal Leu-Gln↓(Ser, Ala, Gly) — Zhang 2020 (letterlijk). In de app: "ten minste elf plaatsen".
@@ -42,13 +42,14 @@ Kandidaten die afvielen: 7SI9 (2,0 Å, kamertemperatuur) en 7VH8 (1,59 Å) bevat
 - ✅ Nirmatrelvir (PF-07321332) is een orale Mpro-inhibitor; 7RFW is de bijhorende structuur — Owen 2021; de covalente binding aan Cys145 is in het bestand nagemeten (1,92 Å).
 - ✅ Nirmatrelvir wordt met ritonavir gegeven (farmacokinetische versterker, vertraagt de afbraak) en verlaagde in een fase 2–3-studie bij niet-gevaccineerde risicopatiënten het aantal ziekenhuisopnames/overlijdens sterk — Hammond 2022. 🔧 De uitleg zegt neutraal "duidelijk lager dan bij placebo" en noemt geen percentage of merknaam in de stapteksten; "Paxlovid" staat alleen in `facts` en in `graph.js`.
 - ✅ Het virus heeft naast Mpro een tweede protease (PLpro) — V'kovski 2021; staat in `simplified`.
+- 🔧 Geschrapt (bronnencontrole 05-11-2026): duurveld "één knip: een fractie van een seconde" (ordegrootte zonder bron; Zhang 2020 geeft alleen kcat/Km) → "vertraagd getoond (schematisch)".
 
 ### assemblage — V'kovski 2021, Klein 2020 (PMC7676268), Ghosh 2020 (PMC7590812)
 - ✅ Structurele eiwitten (S, E, M) komen in ER-membranen en gaan naar het ER–Golgi-tussencompartiment (ERGIC), waar ze met door N ingepakt genomisch RNA samenkomen en naar het lumen afknoppen; virions worden door exocytose uitgescheiden — V'kovski 2021 (letterlijk).
 - ✅ Assemblage aan interne membranen; vRNP's als aparte cilindrische pakketjes, verrijkt op gekromde knopmembranen — Klein 2020. In de app: "kluwen".
 - ✅ β-coronavirussen (o.a. SARS-CoV-2) verlaten de cel via lysosomale route in plaats van de klassieke secretieweg; de lysosomen worden daarbij minder zuur en hun enzymen minder actief — Ghosh 2020 (letterlijk, *Cell* 183:1520, 2020). 🔧 Dit is aangetoond in gekweekte cellen; de scène zegt "wellicht" en `simplified` + de uitleg vermelden dat het niet in alle details bevestigd is.
 - ✅ "ERGIC" komt alleen in de uitleg en in `graph.js` voor; in beeld staat "tussen ER en Golgi".
-- ⚠️ "Virusdeeltje ≈ 0,1 µm": handboekwaarde (coronavirions ≈ 80–120 nm), niet uit de gelezen teksten; de scène zegt "niet op schaal".
+- ✅ "Virusdeeltje ≈ 0,1 µm": Klein et al. 2020 (PMC7676268, volledige tekst): SARS-CoV-2-virions met "an average diameter of 89.8 nm (SD = 13.7 nm)" (al in `sources` van `assemblage`) (bronnencontrole 05-11-2026).
 
 ### faag — Casjens & Hendrix 2015 (PMC4424060, volledige tekst), Abedon 2019 (PMC6832632), Barrangou 2007 (PubMed 17379808)
 - ✅ Na adsorptie wordt het faag-DNA door de staart geïnjecteerd (receptoren en inner-membraaneiwitten bepalen of dat lukt) — Casjens & Hendrix 2015.
@@ -75,3 +76,6 @@ Kandidaten die afvielen: 7SI9 (2,0 Å, kamertemperatuur) en 7VH8 (1,59 Å) bevat
 ## Status
 De zes knopen zijn na deze ronde aan `CHECKED` in `shared/graph.js` toegevoegd (status "nagekeken").
 Niet nagekeken: de bestaande knopen `virus`, `baltimore`, `endocytose`, `lnp` (rondes 1–5), en het handmatig draaien/slepen van de 3D-vensters op een echt toestel.
+
+## Bronnencontrole (05-11-2026)
+- 3 eerder open nuances: 2 bevestigd (✅, Klein et al. 2020: blaasjes ≈ 0,3 µm, virusdeeltje ≈ 90 nm), 1 geschrapt (🔧, duurveld zonder bron); daarnaast hetzelfde soort duurveld bij `schaar` geschrapt. 0 onzekere punten.

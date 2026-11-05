@@ -28,7 +28,7 @@ Opmerking: NCBI Bookshelf (Alberts) gaf bij ophalen een reCAPTCHA; de Bookshelf-
 ### mmr — Kunkel & Erie 2015 (PMC5439269), Burgers & Kunkel 2017, Warren et al. 2007 (PubMed 17531815)
 - ✅ Drie stappen: basenselectie, proeflezen, MMR; vóór proeflezen ≈ 1 fout per 10⁴–10⁵ (in vitro) — Kunkel.
 - ✅ Pol ε en Pol δ hebben een 3'-exonuclease (proeflezen) — Burgers.
-- ✅ MutSα herkent base-base- en indel-mispaar; MutSα wordt een klem die langs het DNA beweegt; knikt het DNA bij de fout — Kunkel. (⚠️ nuance: "zoekt/scant" is voor MutS-homologen beschreven; de stap zegt "glijdt over het DNA en zoekt foute paren", aanvaardbaar als vereenvoudiging.)
+- ✅ MutSα herkent base-base- en indel-mispaar; MutSα wordt een klem die langs het DNA beweegt; knikt het DNA bij de fout — Kunkel. ✅ "Glijdt over het DNA en zoekt foute paren": Gorman et al. 2007, *Mol Cell* 28:359 (PMC2953642, abstract): "Msh2-Msh6 slides along DNA via one-dimensional diffusion" en "mismatch repair proteins must scan millions of base pairs to find rare biosynthetic errors" (gist-Msh2–Msh6 = hetzelfde complex als MutSα). Toegevoegd aan `sources` van `mmr` (bronnencontrole 05-11-2026).
 - ✅ PCNA (geladen door RFC) activeert MutLα, dat de nieuwe streng inknipt; strengherkenning via onderbrekingen (Okazaki-uiteinden) en oriëntatie van PCNA; EXO1 5'→3' of strengverdringing door Pol δ; Pol δ + ligase — Kunkel.
 - ✅ Gemiddelde MMR-efficiëntie ≈ 99 % → "≈ 100× minder fouten" — Kunkel.
 - ✅ MutSα-inactivatie bij ongeveer de helft van de bekende HNPCC(Lynch)-families — Warren (abstract).
@@ -69,7 +69,7 @@ Opmerking: NCBI Bookshelf (Alberts) gaf bij ophalen een reCAPTCHA; de Bookshelf-
 - 🔧 `kort` vereenvoudigd; "duizenden keren per dag" weggelaten (het getal ≈ 10 000 AP-plaatsen staat al met bron in de feiten).
 
 ## Resultaat
-- 6 nieuwe knopen nagekeken; 17 correcties doorgevoerd (🔧), 1 nuance (⚠️) aanvaard.
+- 6 nieuwe knopen nagekeken; 17 correcties doorgevoerd (🔧); de ene open nuance is met een bron bevestigd (✅, Gorman 2007). Met de aanvulling 3D: 0 onzekere punten.
 - Status: `origins`, `mmr`, `ber`, `ner`, `dsb`, `p53` → **nagekeken** (CHECKED in shared/graph.js). `herstel` was al nagekeken.
 
 ## Aanvulling 3D (05-11-2026)
@@ -98,5 +98,5 @@ Nieuwe beweringen (stapteksten, labels, `simplified`, details):
 - ✅ dsb: "het DNA-uiteinde steekt door de ring" — Walker et al. 2001 (Ku omsluit het DNA-uiteinde).
 - ✅ dsb: "veel dezelfde eiwitten vormen een spiraal met de losse streng in het midden"; "elk RAD51 houdt 3 letters vast" — 8BQ2-bestand (9 identieke ketens, 3 nt per keten) + Appleby et al. 2023.
 - ✅ Abstracts gelezen via Europe PMC (Jones PMC8634136: CMG, Pol ε, Timeless–Tipin, Claspin en AND-1 op een vork, 3,2 Å; Sekne PMC7612489: telomerase met TPP1, 3,2 Å; Kokic PMC6599211; Appleby PMC10192527: RAD51-draad op ssDNA met ATP).
-- ⚠️ Jones et al. bepalen ook de plaats van het katalytische domein van Pol ε (abstract), maar dat domein zit niet in de coördinaten van 7PFO (keten B = 1317–2282); de tekst zegt daarom "ontbreekt in dit model".
-- ⚠️ Volledige teksten niet gelezen; de structuurdetails steunen op de coördinaten zelf.
+- ✅ "Het bouwende deel van Pol ε ontbreekt in dit model": Jones et al. 2021 (PMC8634136, volledige tekst gelezen (bronnencontrole 05-11-2026)): gemodelleerd is "approximately half of Pol ε comprising the POLE2 subunit and the C-terminal non-catalytic domain of the POLE1 catalytic subunit"; het katalytische domein van POLE1 was "invisible in our highest resolution cryo-EM map" (alleen als vage dichtheid in een zeldzame klasse van 1,4 %). Klopt met keten B = 1317–2282.
+- ✅ Volledige teksten nu gelezen (bronnencontrole 05-11-2026) voor de beweringen in de stappen: Jones 2021 — "the parental DNA duplex extends approximately 2 turns from the central pore" en "11 nt of ssDNA bound … engaging MCM3, 5, 2 and 6" (dubbel vóór de ring, één streng in het kanaal); Sekne 2022 (PMC7612489) — "four base-pair DNA-RNA template duplex" en TERT gebonden aan de PK/t- en CR4/5-domeinen van hTR (DNA-uiteinde paart met de mal, het eiwit houdt het RNA vast); Kokic 2019 (PMC6599211) — "XPB and XPD bind double- and single-stranded DNA, respectively, and … XPA forms a bridge between XPB and XPD to retain the DNA at the 5′-edge of the repair bubble" (helper op de splitsing, losse streng door de opener); Appleby 2023 (PMC10192527) — recombinasen "polymerize on the single-stranded DNA … forming a helical nucleoprotein filament" en "partitioning the nucleotides into triplets" (3 letters per RAD51). Alle vier staan al in `sources`.

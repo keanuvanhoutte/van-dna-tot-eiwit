@@ -2,7 +2,7 @@
 
 Nagekeken: de zeven nieuwe knopen `sortering`, `membraan`, `lysosoom`, `mito`, `perox`, `proteasoom`, `autofagie` (graph.js, graph.en.js, shared/details/prot3.js, scènes in app/scenes/prot/) en de overgangszinnen van de verhaallijn `targeting` (app/story.js). De bestaande hoofdstukken `er`, `golgi`, `kernimport`, `ubiquitine` en `misvouwing` waren al nagekeken; daar zijn alleen klikbare verwijzingen bijgekomen.
 Methode: elke bewering in kort/what/how/facts/why, stapteksten, labels, schaal/duur en `simplified` vergeleken met de bron in `sources` (opgehaald op 05-11-2026: PubMed-abstracts via E-utilities, volledige teksten via PMC). PDB-ID's gecontroleerd via `https://data.rcsb.org/rest/v1/core/entry/<ID>` en `/polymer_entity/<ID>/<n>` (organisme per entiteit); ketens, residuen en afmetingen nagekeken in de coördinatenbestanden zelf.
-Opmerking: NCBI Bookshelf (Alberts) gaf opnieuw een reCAPTCHA. Waar een bewering alleen door het handboek gedekt is, staat ze hieronder als ⚠️.
+Opmerking: NCBI Bookshelf (Alberts) gaf opnieuw een reCAPTCHA. Beweringen die eerst alleen door het handboek gedekt waren, zijn in de bronnencontrole van 05-11-2026 met een gelezen bron bevestigd of herschreven.
 
 ## PDB-structuren
 
@@ -18,12 +18,12 @@ Kandidaten die afvielen: 5GJR (mens, 26S met twee kappen; 19 945 residuen → al
 
 ### sortering — Shao & Hegde 2011 (PMC4163802), Lange et al. 2007 (PMC4502416), Pfanner et al. 2019 (PMC6684368), Gould et al. 1988 (PMC2115268), Skowyra et al. 2024 (PMC10957506), Braulke & Bonifacino 2009 (PubMed 19046998), Khan & Tomatsu 2020 (PMC7555117)
 - ✅ ER-signaal = N-terminaal signaalpeptide met hydrofobe kern, co-translationeel herkend — Shao.
-- ✅ Klassiek NLS = basisch, herkend door importine α/β — Lange (abstract). ⚠️ "ergens in het eiwit (intern)": algemeen bekend (Alberts), in Lange alleen indirect (NLS-voorspelling in hele eiwitten).
+- ✅ Klassiek NLS = basisch, herkend door importine α/β — Lange (abstract). ✅ "ergens in het eiwit (intern)": Lu et al. 2021, *Cell Commun Signal* 19:60 (PMC8140498, volledige tekst): NLS'en "remain intact and can be located at almost any part of the protein sequence". Toegevoegd aan `sources` (bronnencontrole 05-11-2026).
 - ✅ Presequentie = N-terminale positief geladen amfipathische α-helix, herkend door Tom20/Tom22 — Pfanner.
 - ✅ PTS1 = C-terminaal Ser-Lys-Leu of variant — Gould (tripeptide S-K/H-L; SKL → SNL schakelt uit), Skowyra.
 - ✅ Lysosoom via mannose-6-fosfaat in het Golgi, M6P-receptoren — Braulke, Khan & Tomatsu.
 - ✅ "Bijna elk eiwit begint in het cytosol": 99 % van de mitochondriale eiwitten nucleair gecodeerd (MitoCarta3.0); alleen 13 door mtDNA.
-- ⚠️ "Zonder label blijft het eiwit in het cytosol": handboekregel (Alberts, Bookshelf niet leesbaar); niet letterlijk in de gelezen bronnen.
+- ✅ "Zonder label blijft het eiwit in het cytosol": Jiang et al. 2025, *Brief Bioinform* 26:bbaf436 (PMC12454934, volledige tekst): "Without targeting peptides, these proteins remain in the cytosol". Toegevoegd aan `sources` (bronnencontrole 05-11-2026).
 
 ### membraan — Shao & Hegde 2011, Itskanov et al. 2023 (PMC11458068), UniProt P61619
 - ✅ "Ideale" TMD ≈ 20 residuen α-helix, optimaal voor de ≈ 30 Å dikke ER-membraan — Shao.
@@ -31,7 +31,7 @@ Kandidaten die afvielen: 5GJR (mens, 26S met twee kappen; 19 945 residuen → al
 - ✅ Een TMD verlaat het kanaal via de laterale poort naar de lipidelaag (stop-transfer); na een geknipt signaalpeptide krijgt een intern TMD een type I-topologie (N in het lumen, C in het cytosol) — Shao.
 - ✅ Positive-inside rule — Shao.
 - ✅ Remmers binden een lipide-blootgestelde holte gevormd door de half open laterale poort en de plug — Itskanov (abstract).
-- ⚠️ Vesikels behouden de oriëntatie (lumenkant blijft binnenkant van het blaasje): handboek (Alberts), niet in de gelezen bronnen.
+- 🔧 Geschrapt/herschreven (bronnencontrole 05-11-2026): "de kant die in het ER zat, blijft binnen" (geen gelezen bron die het letterlijk zegt) → stap 6: "Hoe het in het membraan staat, werd al in het ER beslist" / uitleg: "De definitieve oriëntatie wordt in het ER bepaald" — Shao & Hegde 2011 (volledige tekst): het ER is "the site where an IMP's TMD(s) are integrated into the membrane, final topology is determined".
 - 🔧 Schaal "≈ 20 nm" (geschat) → "membraan ≈ 3 nm dik · kanaal ≈ 8 nm" (Shao + gemeten in 8DNV).
 - 🔧 Een NL-uitlegzin met een getal zonder bron ("een op de vier genen …") geschrapt.
 
@@ -76,7 +76,7 @@ Kandidaten die afvielen: 5GJR (mens, 26S met twee kappen; 19 945 residuen → al
 - ✅ Stappen opsluiten → transport → afbraak → hergebruik — Mizushima (abstract).
 - ✅ Basale autofagie ruimt voortdurend op, vooral belangrijk in zenuwcellen; Atg5-knock-out in neuronen → inclusies en neurodegeneratie — Hara (abstract).
 - ✅ Rol bij kanker en neurodegeneratie — Dikic & Elazar (abstract).
-- ⚠️ "Past niet in het proteasoom": afgeleid uit Bard (smalle poriën laten alleen uitgerolde ketens door) en Yim (macroautofagie voor materiaal dat te groot is voor andere routes).
+- ✅ "Past niet in het proteasoom": Tong et al. 2026, *Cell Mol Life Sci* 83:254 (PMC13265442, volledige tekst): autofagie breekt "protein aggregates, and damaged organelles" af, "which are often too large or complex for the proteasome"; past bij Bard (smalle poriën). Toegevoegd aan `sources` van `autofagie` (bronnencontrole 05-11-2026).
 - 🔧 Schaal "blaasje ≈ 0,5–1 µm" (geen bron) → "schematisch (een lysosoom is ≈ 0,5 µm)" (Yim); duur "minuten" → "schematisch".
 
 ### Overgangszinnen (verhaallijn `targeting`)
@@ -86,5 +86,5 @@ Kandidaten die afvielen: 5GJR (mens, 26S met twee kappen; 19 945 residuen → al
 - 🔧 `sortering.simplified` noemt "het ER-label ≈ 15–30 aminozuren". Niet in een gelezen bron → vervangen door het nagekeken voorbeeld uit de `er`-scène: "het ER-label van albumine telt 18 aminozuren" (UniProt P02768).
 
 ## Resultaat
-- 7 nieuwe knopen nagekeken; 11 correcties doorgevoerd (🔧), 4 nuances (⚠️) aanvaard (handboekkennis of afgeleid).
+- 7 nieuwe knopen nagekeken; 12 correcties doorgevoerd (🔧, waarvan 1 in de bronnencontrole); van de 4 eerder open nuances zijn er 3 met een bron bevestigd (✅) en 1 herschreven (🔧). 0 onzekere punten.
 - Status: `sortering`, `membraan`, `lysosoom`, `mito`, `perox`, `proteasoom`, `autofagie` → **nagekeken** (CHECKED in shared/graph.js).

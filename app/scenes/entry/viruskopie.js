@@ -19,7 +19,7 @@ const MX = 1270, MY = 650;                                  // plaats van de kop
 export default {
   id: 'viruskopie',
   title: L3('Het virus laat onze cel zijn RNA kopiëren', 'The virus makes our cell copy its RNA'),
-  scale: L3('genoom ≈ 30 000 letters · blaasjes ≈ 0,1–0,3 µm', 'genome ≈ 30,000 letters · vesicles ≈ 0.1–0.3 µm'),
+  scale: L3('genoom ≈ 30 000 letters · blaasjes ≈ 0,3 µm', 'genome ≈ 30,000 letters · vesicles ≈ 0.3 µm'),
   time: L3('eerste uren na de besmetting', 'first hours after infection'),
   org: L3('SARS-CoV-2 in een menselijke cel', 'SARS-CoV-2 in a human cell'),
   legend: [[C.rna, L3('RNA van het virus', 'RNA of the virus')], [C.rrna, L3('ribosoom van de cel', 'ribosome of the cell')], [C.chain, L3('lange eiwitketen en zijn stukken', 'long protein chain and its pieces')],

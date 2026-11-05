@@ -14,7 +14,7 @@ const base = [{ sel: { chain: 'A' }, style: S(ACE) }, { sel: { chain: 'E' }, sty
 export default structure3d({
   id: 'sleutel', pdb: '6M0J',
   title: L3('De sleutel past op het slot van onze cel', 'The key fits the lock on our cell'),
-  scale: L3('≈ 10 nm (RBD + ACE2)', '≈ 10 nm (RBD + ACE2)'), time: L3('binden: een fractie van een seconde', 'binding: a fraction of a second'),
+  scale: L3('≈ 10 nm (RBD + ACE2)', '≈ 10 nm (RBD + ACE2)'), time: L3('vertraagd getoond (schematisch)', 'shown slowed down (schematic)'),
   org: L3('SARS-CoV-2 op een menselijk eiwit · PDB 6M0J', 'SARS-CoV-2 on a human protein · PDB 6M0J'),
   legend: [[ACE, L3('slot: eiwit op onze cel (ACE2)', 'lock: protein on our cell (ACE2)')], [RBD, L3('sleutel: top van het virusuitsteeksel (RBD)', 'key: tip of the virus spike (RBD)')],
     [HOT, L3('bouwstenen die elkaar raken', 'building blocks that touch')]],

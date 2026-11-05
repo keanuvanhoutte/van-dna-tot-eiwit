@@ -6,6 +6,7 @@ const BURGERS = { t: 'Burgers & Kunkel (2017) Eukaryotic DNA replication fork. A
 const BLOW = { t: 'Blow & Hodgson (2002) Replication licensing — defining the proliferative state? Trends Cell Biol 12:72 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3604914/' };
 const LI = { t: 'Li et al. (2023) The human pre-replication complex is an open complex. Cell 186:98 (PubMed 36608662)', url: 'https://pubmed.ncbi.nlm.nih.gov/36608662/' };
 const KUNKEL = { t: 'Kunkel & Erie (2015) Eukaryotic mismatch repair in relation to DNA replication. Annu Rev Genet 49:291 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5439269/' };
+const GORMAN = { t: 'Gorman et al. (2007) Dynamic basis for one-dimensional DNA scanning by the mismatch repair complex Msh2-Msh6. Mol Cell 28:359 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC2953642/' };
 const WARREN = { t: 'Warren et al. (2007) Structure of the human MutSα DNA lesion recognition complex. Mol Cell 26:579 (PubMed 17531815)', url: 'https://pubmed.ncbi.nlm.nih.gov/17531815/' };
 const KROKAN = { t: 'Krokan & Bjørås (2013) Base excision repair. Cold Spring Harb Perspect Biol 5:a012583 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3683898/' };
 const PARIKH = { t: 'Parikh et al. (2000) Uracil-DNA glycosylase–DNA substrate and product structures. PNAS 97:5083 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC25785/' };
@@ -85,7 +86,7 @@ export default {
       facts: [['Errors before proofreading', '≈ 1 per 10⁴–10⁵ bases (in vitro)'], ['MMR efficiency', 'on average ≈ 99 % (≈ 100× fewer errors)'], ['Recognition', 'MutSα = MSH2 + MSH6'], ['Nicking', 'MutLα = MLH1 + PMS2, activated by PCNA'], ['Structure', 'PDB 2O8B: human MutSα on a G·T mispair (2.75 Å)']],
       why: 'Without MMR the number of mutations rises sharply, especially in repeated stretches of DNA (microsatellite instability). Inherited defects in MMR genes cause Lynch syndrome (hereditary nonpolyposis colorectal cancer, HNPCC); in about half of the known families the cause lies in MutSα.',
     },
-    sources: [KUNKEL, BURGERS, WARREN, PDB('2O8B', 'human MutSα (MSH2/MSH6) bound to ADP and a G·T mispair')],
+    sources: [KUNKEL, GORMAN, BURGERS, WARREN, PDB('2O8B', 'human MutSα (MSH2/MSH6) bound to ADP and a G·T mispair')],
   },
 
   ber: {
