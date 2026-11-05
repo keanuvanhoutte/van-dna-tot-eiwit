@@ -79,6 +79,7 @@ export default {
       { node: 'golgi', label: { nl: 'Golgi-apparaat', en: 'Golgi apparatus' }, color: C.mem },
       { node: 'glyco', label: { nl: 'Glycosylering', en: 'Glycosylation' }, color: '#4f8ff7' },
       { node: 'disulfide', label: { nl: 'Disulfidebruggen', en: 'Disulfide bonds' }, color: C.prot },
+      { node: 'membraan', label: { nl: 'Membraaneiwitten', en: 'Membrane proteins' }, color: '#ffc247' },
     ])}
     </svg>`;
   },

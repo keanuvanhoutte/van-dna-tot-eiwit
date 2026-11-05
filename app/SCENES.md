@@ -51,6 +51,8 @@ export default {
    met eigen titel en uitleg). Gebruik dit alleen als die scène het proces echt al groot en duidelijk toont.
 9. **3D-scènes** voor structuren: gebruik `structure3d()` uit `app/kit3d.js` (echte PDB-coördinaten, stappen die onderdelen
    uitlichten). Controleer elke PDB-ID via `https://data.rcsb.org/rest/v1/core/entry/<ID>` (titel moet kloppen).
+   Een 2D-scène kan in enkele stappen een echt 3D-venster tonen met `inset3d()` + `withInset()` uit `app/kit3d.js`
+   (voorbeelden: `prot/membraan.js`, `prot/mito.js`); de SVG tekent het kader en een eenvoudige plaatsvervanger.
 
 ## Registreren
 Elke stagemap heeft `app/scenes/<stage>/index.js` die de scènes van die map exporteert:

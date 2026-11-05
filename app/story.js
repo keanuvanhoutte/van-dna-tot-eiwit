@@ -84,6 +84,22 @@ const HERSTEL = [
   { id: 'mutaties', bridge: { nl: 'Einde van dit zijpad. Ga via de kaart terug naar een hoofdverhaal of kies een ander zijpad.', en: 'End of this side path. Use the map to return to a main story or pick another side path.' } },
 ];
 
+/* Zijpad 2 (05-11-2026): waar een eiwit heen gaat en hoe het verdwijnt (eiwitsortering en -afbraak). */
+const EIWITLOT = [
+  { id: 'sortering', bridge: { nl: 'We volgen eerst het vettige label vooraan: dat leidt naar het ER.', en: 'First we follow the greasy label at the start: it leads to the ER.' } },
+  { id: 'er', bridge: { nl: 'Niet elk ER-eiwit gaat helemaal naar binnen: sommige blijven in het membraan steken.', en: 'Not every ER protein goes all the way in: some get stuck in the membrane.' } },
+  { id: 'membraan', bridge: { nl: 'Vanuit het ER reizen eiwitten verder naar het Golgi, waar ze gesorteerd worden.', en: 'From the ER proteins travel on to the Golgi, where they are sorted.' } },
+  { id: 'golgi', bridge: { nl: 'In het Golgi krijgen enzymen voor het lysosoom hun eigen label.', en: 'In the Golgi, enzymes for the lysosome get their own tag.' } },
+  { id: 'lysosoom', bridge: { nl: 'Een ander label stuurt eiwitten door een poort de kern in.', en: 'Another label sends proteins through a gate into the nucleus.' } },
+  { id: 'kernimport', bridge: { nl: 'Het mitochondrion heeft twee membranen en een eigen manier van invoeren.', en: 'The mitochondrion has two membranes and its own way of importing.' } },
+  { id: 'mito', bridge: { nl: 'Het peroxisoom doet het net andersom: het neemt eiwitten gevouwen op.', en: 'The peroxisome does it the other way round: it takes proteins in folded.' } },
+  { id: 'perox', bridge: { nl: 'Elk eiwit wordt ooit afgebroken. Eerst krijgt het een afbraaklabel.', en: 'Every protein is eventually broken down. First it gets a breakdown tag.' } },
+  { id: 'ubiquitine', bridge: { nl: 'Bekijk de afbraakmachine zelf in 3D.', en: 'See the breakdown machine itself in 3D.' } },
+  { id: 'proteasoom', bridge: { nl: 'Grote brokken, zoals een kapot mitochondrion, passen niet in het proteasoom.', en: 'Big chunks, such as a damaged mitochondrion, do not fit in the proteasome.' } },
+  { id: 'autofagie', bridge: { nl: 'Wat als eiwitten verkeerd vouwen en samenklonteren?', en: 'What if proteins fold wrongly and clump together?' } },
+  { id: 'misvouwing', bridge: { nl: 'Einde van dit zijpad. Ga via de kaart terug naar een hoofdverhaal of kies een ander zijpad.', en: 'End of this side path. Use the map to return to a main story or pick another side path.' } },
+];
+
 /* Alle verhaallijnen. De engine kiest er één (?story=… of de laatst gekozen) en kan wisselen.
  * side: true = zijpad (in de kaart apart gegroepeerd; geen automatische overschakeling vanuit een andere lijn). */
 export const LINES = {
@@ -91,6 +107,7 @@ export const LINES = {
   signaal: { chapters: SIGNAAL, title: { nl: 'Verhaal 2 · Een signaal zet een gen aan', en: 'Story 2 · A signal switches on a gene' }, short: { nl: 'Verhaal 2', en: 'Story 2' } },
   bacterie: { chapters: BACTERIE, title: { nl: 'Bacterie · Van DNA tot eiwit in E. coli', en: 'Bacterium · From DNA to protein in E. coli' }, short: { nl: 'Bacterie', en: 'Bacterium' } },
   herstel: { chapters: HERSTEL, side: true, title: { nl: 'Zijpad · DNA kopiëren en herstellen', en: 'Side path · Copying and repairing DNA' }, short: { nl: 'Zijpad replicatie', en: 'Side path replication' } },
+  targeting: { chapters: EIWITLOT, side: true, title: { nl: 'Zijpad · Waar een eiwit heen gaat en hoe het verdwijnt', en: 'Side path · Where a protein goes and how it is removed' }, short: { nl: 'Zijpad eiwitlot', en: 'Side path protein fate' } },
 };
 export const LINE_KEYS = Object.keys(LINES);
 export const MAIN_KEYS = LINE_KEYS.filter(k => !LINES[k].side), SIDE_KEYS = LINE_KEYS.filter(k => LINES[k].side);

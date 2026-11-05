@@ -68,7 +68,7 @@ export default {
       `<path d="M1424,332 L1498,344 L1498,496 L1424,508 Z" fill="rgba(44,198,168,.3)" stroke="#2cc6a8" stroke-width="3"/>` +
       `<path d="M1498,300 C1560,260 1640,250 1670,300 C1700,350 1680,430 1660,470 C1640,520 1600,560 1560,572 C1530,580 1510,560 1498,540 Z" fill="rgba(44,198,168,.16)" stroke="#2cc6a8" stroke-width="3"/>`;
     return svgOpen(arrowDefs('ub', { m: C.muted, w: '#fff', y: UB, g: C.chain })) + `
-    <g id="ub-prot">
+    <g id="ub-prot" data-node="proteasoom" data-color="#2cc6a8" data-label="${T2('Het proteasoom in 3D', 'The proteasome in 3D')}">
       ${core}${cap}
       <rect x="962" y="${CH_Y - 16}" width="${1668 - 962}" height="32" fill="#070b16" opacity=".75"/>
       <g id="ub-beta"></g>
@@ -76,7 +76,7 @@ export default {
       ${T(870, 618, T2('19S-deeltje', '19S particle'), { size: 26, col: '#2cc6a8' })}
       ${T(1590, 618, T2('19S-deeltje', '19S particle'), { size: 26, col: '#2cc6a8' })}
       ${T(1240, 250, T2('26S-proteasoom', '26S proteasome'), { size: 30, col: C.text, w: 700 })}
-      <circle data-anchor="none" cx="0" cy="0" r="0"/>
+      <circle data-anchor="proteasoom" cx="1240" cy="212" r="1" fill="none"/>
     </g>
     <g id="ub-e1"></g><g id="ub-e3"></g>
     <g data-node="ptm" data-color="${C.chain}" data-label="${T2('← PTM\'s (vorig hoofdstuk)', '← PTMs (previous chapter)')}"><g id="ub-sub"></g><circle id="ub-subA" data-anchor="ptm" r="1" fill="none"/></g>

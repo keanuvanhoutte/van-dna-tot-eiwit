@@ -65,6 +65,7 @@ export default {
     <g data-node="er" data-color="${C.mem}" data-label="${T2('Ruw ER', 'Rough ER')}">${er}<circle data-anchor="er" cx="240" cy="200" r="1" fill="none"/></g>
     ${pm}
     <g data-node="endocytose" data-color="#ff8a3d" data-label="${T2('Endocytose (endosoom)', 'Endocytosis (endosome)')}">${el}<circle data-anchor="endocytose" cx="${ENDO[0] + 100}" cy="${ENDO[1] - 70}" r="1" fill="none"/></g>
+    <g data-node="lysosoom" data-color="${C.danger}" data-label="${T2('Lysosoom: het suikerlabel', 'Lysosome: the sugar tag')}"><circle cx="${LYSO[0]}" cy="${LYSO[1]}" r="56" fill="transparent"/><circle data-anchor="lysosoom" cx="${LYSO[0] + 40}" cy="${LYSO[1] - 90}" r="1" fill="none"/></g>
     <g data-node="glyco" data-color="#00A651" data-label="${T2('Glycanen bewerken', 'Processing glycans')}"><g id="go-cis"></g><circle data-anchor="glyco" cx="${X0 + 1.5 * SPC}" cy="${GY + GH + 20}" r="1" fill="none"/></g>
     <g id="go-ergic"></g>
     <g id="go-ves"></g>

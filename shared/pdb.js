@@ -80,6 +80,15 @@ const LOCAL = new Set([
   '2O8B.json',
   '2O8B.pdb',
   '7W1Y.cif',
+  /* 3D-stappen in replisoom, telomeren, ner, dsb (05-11-2026); alle vier ingekort tot CA/P-atomen */
+  '6RO4.cif',
+  '7PFO.cif',
+  '7QXA.cif',
+  '8BQ2.cif',
+  /* zijpad eiwitlot (05-11-2026); 6MSB ingekort tot CA-atomen; alle drie star gedraaid (zie kopregel van het bestand) */
+  '6MSB.cif',
+  '7CP9.pdb',
+  '8DNV.pdb',
 ]);
 const here = f => new URL(`../data/pdb/${f}`, import.meta.url).href;
 export const pdbUrl = (id, ext = 'pdb') => LOCAL.has(`${id}.${ext}`) ? here(`${id}.${ext}`) : `https://files.rcsb.org/download/${id}.${ext}`;
