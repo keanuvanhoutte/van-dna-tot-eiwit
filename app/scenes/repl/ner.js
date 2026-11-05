@@ -1,5 +1,6 @@
 import { C, BASE, COMP, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { NEW, RPA, seg, pth, endl, prot, tag, rpaRow } from './_draw.js';
+import { with3d } from './_mix3d.js';
 
 /*
  * NER (nucleotide-excisieherstel) van een UV-thyminedimeer, op één groot doek (1600 × 900).
@@ -11,9 +12,10 @@ const N = SEQ.length, BP = 54, X0 = (1600 - N * BP) / 2, Y = 470, GAP = 100, D =
 const E0 = D - 6, E1 = D + 7;                       // uitgeknipt stuk (ingekort getekend: 14 i.p.v. 24–32 nt)
 const xi = i => X0 + BP / 2 + i * BP;
 const bell = (i, c, w) => clamp(1 - Math.abs(i - c) / w) ** .7;
+const XPA_C = '#ffc247';
 const SPOT = '#5fd3e6', OPEN = C.prot, CUT = '#e0708f', POL = C.prot2, LIG = '#3fb58f';
 
-export default {
+const scene = {
   id: 'ner',
   title: { nl: 'Grote UV-schade: een stuk streng wordt vervangen', en: 'Bulky UV damage: a piece of strand is replaced' },
   scale: '≈ 10 nm',
@@ -21,13 +23,13 @@ export default {
   org: { nl: 'mens', en: 'human' },
   legend: [[C.dna, { nl: 'streng met de schade', en: 'strand with the damage' }], [C.dna2, { nl: 'andere streng (voorbeeld)', en: 'other strand (template)' }], [NEW, { nl: 'nieuw DNA', en: 'new DNA' }],
     [C.danger, { nl: 'UV-schade (TT-dimeer)', en: 'UV damage (TT dimer)' }], [SPOT, { nl: 'herkenner (XPC–RAD23B)', en: 'spotter (XPC–RAD23B)' }], [OPEN, { nl: 'opener (TFIIH)', en: 'opener (TFIIH)' }],
-    [RPA, { nl: 'beschermers (RPA)', en: 'protectors (RPA)' }], [CUT, { nl: 'scharen (ERCC1–XPF, XPG)', en: 'scissors (ERCC1–XPF, XPG)' }], [POL, { nl: 'polymerase (Pol δ/ε/κ)', en: 'polymerase (Pol δ/ε/κ)' }], [LIG, 'ligase']],
+    [RPA, { nl: 'beschermers (RPA)', en: 'protectors (RPA)' }], [CUT, { nl: 'scharen (ERCC1–XPF, XPG)', en: 'scissors (ERCC1–XPF, XPG)' }], [POL, { nl: 'polymerase (Pol δ/ε/κ)', en: 'polymerase (Pol δ/ε/κ)' }], [LIG, 'ligase'], [XPA_C, { nl: 'helper (XPA, 3D)', en: 'helper (XPA, 3D)' }]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Nucleotide-excisieherstel (NER) knipt een stuk enkelstrengig DNA met een groot letsel weg en maakt het opnieuw. In genen die net afgeschreven worden, merkt het RNA-polymerase de schade op (TC-NER); elders doet een herkenningseiwit dat (GG-NER, hier getoond).</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Nucleotide excision repair (NER) cuts out a piece of single-stranded DNA carrying a bulky lesion and makes it again. In genes being transcribed, RNA polymerase notices the damage (TC-NER); elsewhere a recognition protein does so (GG-NER, shown here).</p>' },
   simplified: {
-    nl: 'Schematisch en niet op schaal: DNA als ladder zonder draaiing, eiwitten als ovalen. Het uitgeknipte stuk is in werkelijkheid 24–32 nucleotiden en is hier ingekort tot 14 getekend. Getoond is de globale route (GG-NER); bij TC-NER herkent een vastgelopen RNA-polymerase II het letsel. Echte NER-complexen bestaan uit meer eiwitten (o.a. XPA, dat hier niet apart getekend is).',
-    en: 'Schematic and not to scale: DNA as a ladder without twist, proteins as ovals. The excised piece is really 24–32 nucleotides and is drawn shortened to 14 here. Shown is the global route (GG-NER); in TC-NER a stalled RNA polymerase II detects the lesion. Real NER complexes contain more proteins (e.g. XPA, not drawn separately here).' },
+    nl: 'Schematisch en niet op schaal: DNA als ladder zonder draaiing, eiwitten als ovalen. Het uitgeknipte stuk is in werkelijkheid 24–32 nucleotiden en is hier ingekort tot 14 getekend. Getoond is de globale route (GG-NER); bij TC-NER herkent een vastgelopen RNA-polymerase II het letsel. Echte NER-complexen bestaan uit meer eiwitten (o.a. XPA, dat alleen in de 3D-stappen te zien is). De 3D-stappen tonen PDB 6RO4 (de kern van TFIIH met XPA op DNA, cryo-EM; Kokic et al., Nat Commun 2019) met één bolletje per bouwsteen; het DNA daarin is een proefstuk zonder schade, en van het open deel is maar één streng te zien.',
+    en: 'Schematic and not to scale: DNA as a ladder without twist, proteins as ovals. The excised piece is really 24–32 nucleotides and is drawn shortened to 14 here. Shown is the global route (GG-NER); in TC-NER a stalled RNA polymerase II detects the lesion. Real NER complexes contain more proteins (e.g. XPA, which is only visible in the 3D steps). The 3D steps show PDB 6RO4 (the core of TFIIH with XPA on DNA, cryo-EM; Kokic et al., Nat Commun 2019) with one bead per building block; its DNA is a test piece without damage, and only one strand of the open part is visible.' },
   steps: [
     { dur: 7000, cam: FULL, title: { nl: 'UV-licht koppelt twee letters aan elkaar', en: 'UV light links two letters together' },
       text: { nl: 'UV-licht kan twee T’s naast elkaar aan elkaar vastmaken. Daardoor krijgt het DNA een bult.', en: 'UV light can fasten two neighbouring Ts to each other. This gives the DNA a bump.' } },
@@ -133,3 +135,33 @@ export default {
     };
   },
 };
+
+/* 3D-stappen na stap 2: PDB 6RO4, kern van TFIIH met XPA op DNA (cryo-EM 3,5 Å; Kokic et al., Nat Commun 2019).
+ * Lokale kopie data/pdb/6RO4.cif is ingekort tot CA- en P-atomen (19 827 → 2 396 atomen), daarom een bolletjesmodel.
+ * Ketens (nagekeken in het mmCIF 05-11-2026): A = XPB · B = XPD · C = p52 · D = p44 · E = p34 · F = p8 (samen kern-TFIIH) · G = XPA
+ *   · DNA: J (17–35) paart met K (15–30) tot dubbel DNA; K31–42 is enkelstrengig en loopt door XPD (contacten ≤ 3,5 Å met keten B),
+ *     XPA (keten G) raakt K27–32, precies op de splitsing. Geen schade in het proef-DNA. */
+const sp = (sel, color, radius = 2.2) => ({ sel, style: { sphere: { color, radius } } });
+const CORE = ['A', 'B', 'C', 'D', 'E', 'F'];
+const dnaN = r => [sp({ chain: 'K' }, C.dna, r), sp({ chain: 'J' }, C.dna2, r)];
+
+export default with3d(scene, {
+  models: { tfiih: { pdb: '6RO4', rotate: [['y', 180]] } },   // DNA (z ≈ 145 Å) naar voren, vóór het eiwit (z ≈ 170 Å)
+  after: {
+    2: [
+      { dur: 9000, model: 'tfiih', spin: .01, zoom: {},
+        title: { nl: 'Echt beeld: de opener op open DNA', en: 'Real image: the opener on opened DNA' },
+        text: { nl: 'Zo ziet de opener eruit in een echte meting, vastgeklemd op DNA dat al open is.', en: 'This is what the opener looks like in a real measurement, clamped onto DNA that is already open.' },
+        show: [sp({ chain: CORE }, OPEN, 1.8), sp({ chain: 'G' }, XPA_C, 1.3), ...dnaN(3.4),
+          { ...sp({ chain: 'D' }, OPEN, 1.8), label: { nl: 'opener', en: 'opener' } },
+          { ...sp({ chain: 'J', resi: 35 }, C.dna2, 3.4), label: 'DNA' }] },
+      { dur: 9000, model: 'tfiih', spin: .008, zoom: { chain: ['J', 'K', 'G'] },
+        title: { nl: 'Eén streng loopt apart door de opener', en: 'One strand runs separately through the opener' },
+        text: { nl: 'Waar het DNA splitst, zit een kleine helper; de losse streng loopt verder door de opener.', en: 'Where the DNA splits, a small helper sits; the loose strand runs on through the opener.' },
+        show: [sp({ chain: ['A', 'C', 'D', 'E', 'F'] }, '#33415c', .55), sp({ chain: 'B' }, OPEN, .9), sp({ chain: 'G' }, XPA_C, 2.4), ...dnaN(3),
+          { ...sp({ chain: 'J', resi: 27 }, C.dna2, 3), label: { nl: 'dubbel DNA', en: 'double DNA' } },
+          { ...sp({ chain: 'K', resi: 38 }, C.dna, 3), label: { nl: 'losse streng', en: 'single strand' } },
+          { ...sp({ chain: 'G', resi: 175 }, XPA_C, 2.4), label: { nl: 'helper', en: 'helper' } }] },
+    ],
+  },
+});

@@ -61,7 +61,7 @@ export default {
         'FEN1 knipt de flap met het RNA weg (RNase H2 kan ook RNA afbreken); DNA-ligase I sluit de nick.',
         "Pol δ en Pol ε lezen proef met een 3'→5'-exonuclease: een verkeerd ingebouwde base wordt meteen weggeknipt.",
       ],
-      facts: [['Okazaki-fragment', '≈ 150–200 nt (eukaryoten) vs ≈ 1–2 kb (bacteriën)'], ['Primer', '≈ 10 nt RNA + ≈ 20 nt DNA (Pol α)'], ['Leidende streng', 'vooral Pol ε'], ['Volgende streng', 'vooral Pol δ'], ['Proeflezen', 'verbetert de nauwkeurigheid ≈ 10–100×'], ['Basenselectie alleen', '≈ 1 fout per 10⁴ (Pol α, zonder proeflezen)']],
+      facts: [['Okazaki-fragment', '≈ 150–200 nt (eukaryoten) vs ≈ 1–2 kb (bacteriën)'], ['Primer', '≈ 10 nt RNA + ≈ 20 nt DNA (Pol α)'], ['Leidende streng', 'vooral Pol ε'], ['Volgende streng', 'vooral Pol δ'], ['Proeflezen', 'verbetert de nauwkeurigheid ≈ 10–100×'], ['Basenselectie alleen', '≈ 1 fout per 10⁴ (Pol α, zonder proeflezen)'], ['3D-structuur', 'PDB 7PFO: menselijk kernreplisoom (CMG, Pol ε, Timeless–Tipin, Claspin, AND-1) op een vork, cryo-EM 3,2 Å']],
       why: 'De opbouw van het replisoom verklaart waarom DNA-replicatie zo snel én nauwkeurig is, en waarom lineaire chromosomen een eindreplicatieprobleem hebben (telomeren). Veel kankermutaties (bv. in POLE) en geneesmiddelen (topo-isomeraseremmers) grijpen hier aan.',
     },
     en: {
@@ -77,7 +77,7 @@ export default {
         'FEN1 cuts off the flap containing the RNA (RNase H2 can also degrade RNA); DNA ligase I seals the nick.',
         "Pol δ and Pol ε proofread with a 3'→5' exonuclease: a wrongly inserted base is removed immediately.",
       ],
-      facts: [['Okazaki fragment', '≈ 150–200 nt (eukaryotes) vs ≈ 1–2 kb (bacteria)'], ['Primer', '≈ 10 nt RNA + ≈ 20 nt DNA (Pol α)'], ['Leading strand', 'mainly Pol ε'], ['Lagging strand', 'mainly Pol δ'], ['Proofreading', 'improves accuracy ≈ 10–100×'], ['Base selection alone', '≈ 1 error per 10⁴ (Pol α, no proofreading)']],
+      facts: [['Okazaki fragment', '≈ 150–200 nt (eukaryotes) vs ≈ 1–2 kb (bacteria)'], ['Primer', '≈ 10 nt RNA + ≈ 20 nt DNA (Pol α)'], ['Leading strand', 'mainly Pol ε'], ['Lagging strand', 'mainly Pol δ'], ['Proofreading', 'improves accuracy ≈ 10–100×'], ['Base selection alone', '≈ 1 error per 10⁴ (Pol α, no proofreading)'], ['3D structure', 'PDB 7PFO: human core replisome (CMG, Pol ε, Timeless–Tipin, Claspin, AND-1) on a fork, cryo-EM 3.2 Å']],
       why: 'The architecture of the replisome explains why DNA replication is both fast and accurate, and why linear chromosomes have an end-replication problem (telomeres). Many cancer mutations (e.g. in POLE) and drugs (topoisomerase inhibitors) act here.',
     },
     sources: [
@@ -86,6 +86,8 @@ export default {
       { t: 'Kunkel (2009) Evolving views of DNA replication (in)fidelity. Cold Spring Harb Symp Quant Biol 74:91 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3628614/' },
       ALB_REP,
       { t: 'RCSB PDB 6XTX — CryoEM structure of human CMG bound to ATPγS and DNA', url: 'https://www.rcsb.org/structure/6XTX' },
+      { t: 'Jones et al. (2021) Structure of a human replisome shows the organisation and interactions of a DNA replication machine. EMBO J 40:e108819', url: 'https://doi.org/10.15252/embj.2021108819' },
+      { t: 'RCSB PDB 7PFO — Core human replisome (3D-stappen)', url: 'https://www.rcsb.org/structure/7PFO' },
     ],
   },
 
@@ -139,7 +141,7 @@ export default {
         'CST en Pol α-primase vullen de complementaire C-rijke streng aan; er blijft een 3\'-overhang over.',
         'Shelterin (TRF1, TRF2, POT1, TIN2, TPP1, RAP1) bedekt het telomeer; met TRF2 kan de overhang een T-lus vormen, zodat het uiteinde niet als DNA-breuk wordt gezien.',
       ],
-      facts: [['Herhaling', 'TTAGGG (gewervelden)'], ['Telomerase-RNA (hTR)', '451 nt; matrijsgebied 11 nt'], ['Shelterin', '6 eiwitten'], ['Telomerase actief in', 'kiemcellen, stamcellen, de meeste kankercellen'], ['Structuren', 'PDB 7BG9 (humaan telomerase); G-quadruplex: 143D, 1KF1']],
+      facts: [['Herhaling', 'TTAGGG (gewervelden)'], ['Telomerase-RNA (hTR)', '451 nt; matrijsgebied 11 nt'], ['Shelterin', '6 eiwitten'], ['Telomerase actief in', 'kiemcellen, stamcellen, de meeste kankercellen'], ['Structuren', 'PDB 7QXA (3D-stappen: kern van humaan telomerase met telomeer-DNA en TPP1, cryo-EM 3,2 Å), 7BG9; G-quadruplex: 143D, 1KF1']],
       why: 'Telomeren bepalen hoe vaak een cel kan delen en beschermen chromosoomuiteinden tegen afbraak en fusie. Kankercellen heractiveren meestal telomerase om onbeperkt te delen; defecten in telomerase of shelterin geven ziekten zoals dyskeratosis congenita.',
     },
     en: {
@@ -154,7 +156,7 @@ export default {
         'CST and Pol α-primase fill in the complementary C-rich strand; a 3\' overhang remains.',
         'Shelterin (TRF1, TRF2, POT1, TIN2, TPP1, RAP1) coats the telomere; with TRF2 the overhang can form a t-loop, so the end is not seen as a DNA break.',
       ],
-      facts: [['Repeat', 'TTAGGG (vertebrates)'], ['Telomerase RNA (hTR)', '451 nt; template region 11 nt'], ['Shelterin', '6 proteins'], ['Telomerase active in', 'germ cells, stem cells, most cancer cells'], ['Structures', 'PDB 7BG9 (human telomerase); G-quadruplex: 143D, 1KF1']],
+      facts: [['Repeat', 'TTAGGG (vertebrates)'], ['Telomerase RNA (hTR)', '451 nt; template region 11 nt'], ['Shelterin', '6 proteins'], ['Telomerase active in', 'germ cells, stem cells, most cancer cells'], ['Structures', 'PDB 7QXA (3D steps: core of human telomerase with telomeric DNA and TPP1, cryo-EM 3.2 Å), 7BG9; G-quadruplex: 143D, 1KF1']],
       why: 'Telomeres determine how often a cell can divide and protect chromosome ends from degradation and fusion. Cancer cells usually reactivate telomerase to divide indefinitely; defects in telomerase or shelterin cause diseases such as dyskeratosis congenita.',
     },
     sources: [
@@ -163,6 +165,8 @@ export default {
       { t: 'Nguyen et al. (2018) Cryo-EM structure of substrate-bound human telomerase holoenzyme. Nature (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6223129/' },
       ALB_INIT,
       { t: 'RCSB PDB 7BG9 — catalytic core of human telomerase with telomeric DNA', url: 'https://www.rcsb.org/structure/7BG9' },
+      { t: 'Sekne et al. (2022) Structural basis of human telomerase recruitment by TPP1-POT1. Science 375:1173', url: 'https://doi.org/10.1126/science.abn6840' },
+      { t: 'RCSB PDB 7QXA — human telomerase-DNA-TPP1 complex (3D-stappen)', url: 'https://www.rcsb.org/structure/7QXA' },
     ],
   },
 

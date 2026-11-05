@@ -1,5 +1,6 @@
 import { C, BASE, COMP, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { NEW, PRIMER, ADNA, PCNA, RPA, seg, pth, endl, prot, clamp3, duplex, tag, arrow, rpaRow } from './_draw.js';
+import { with3d } from './_mix3d.js';
 
 /*
  * Replicatievork (mens). De vork beweegt naar rechts.
@@ -19,7 +20,7 @@ const bAt = x => SEQ[Math.floor(x / BP) % SEQ.length];
 
 const S = (dur, c, nl, en, tnl, ten) => ({ dur, cam: c, title: { nl, en }, text: { nl: tnl, en: ten } });
 
-export default {
+const scene = {
   id: 'replisoom',
   title: { nl: 'Het replisoom', en: 'The replisome' },
   scale: '≈ 20–50 nm',
@@ -27,13 +28,14 @@ export default {
   org: { nl: 'mens (eukaryoot replisoom)', en: 'human (eukaryotic replisome)' },
   legend: [[C.dna, { nl: 'ouderstreng (matrijs volgende streng)', en: 'parental strand (lagging template)' }], [C.dna2, { nl: 'ouderstreng (matrijs leidende streng)', en: 'parental strand (leading template)' }],
     [NEW, { nl: 'nieuw DNA', en: 'new DNA' }], [PRIMER, { nl: 'RNA-primer', en: 'RNA primer' }], [ADNA, { nl: 'DNA van Pol α', en: 'DNA made by Pol α' }],
-    [C.prot, { nl: 'enzymen', en: 'enzymes' }], [PCNA, 'PCNA'], [RPA, 'RPA']],
+    [C.prot, { nl: 'enzymen', en: 'enzymes' }], [PCNA, 'PCNA'], [RPA, 'RPA'],
+    ['#c9b8ff', { nl: 'rest van de ritsmachine (3D)', en: 'rest of the unzipper (3D)' }], ['#e0708f', { nl: 'Pol ε (3D)', en: 'Pol ε (3D)' }], ['#7f8fb0', { nl: 'hulpeiwitten (3D)', en: 'helper proteins (3D)' }]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Let op de richtingen: beide nieuwe strengen groeien 5\'→3\'. De leidende streng groeit mee met de vork; op de volgende streng wijst de groeirichting van de vork weg, daarom wordt die in stukken (Okazaki-fragmenten) gemaakt.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Watch the directions: both new strands grow 5\'→3\'. The leading strand grows along with the fork; on the lagging strand the direction of growth points away from the fork, which is why it is made in pieces (Okazaki fragments).</p>' },
   simplified: {
-    nl: '2D-schema, niet op schaal. Een Okazaki-fragment is ~200 nt, de RNA-primer ~10 nt en Pol α voegt ~20 nt DNA toe; primer en flap zijn hier groter getekend. In werkelijkheid verdringt Pol δ telkens slechts enkele nucleotiden en knipt FEN1 herhaaldelijk kleine flaps (nick-translatie). De volgende-streng-matrijs vormt in de cel waarschijnlijk een lus zodat alles bij elkaar blijft; Ctf4/AND-1, Mcm10, Tipin–Timeless en de histonchaperonnes zijn weggelaten. Echte structuren: PDB 6XTX (humaan CMG), 1AXC (humaan PCNA).',
-    en: '2D scheme, not to scale. An Okazaki fragment is ~200 nt, the RNA primer ~10 nt and Pol α adds ~20 nt of DNA; primer and flap are drawn larger here. In reality Pol δ displaces only a few nucleotides at a time and FEN1 repeatedly cuts short flaps (nick translation). In the cell the lagging-strand template probably loops so that everything stays together; Ctf4/AND-1, Mcm10, Tipin–Timeless and the histone chaperones are omitted. Real structures: PDB 6XTX (human CMG), 1AXC (human PCNA).' },
+    nl: '2D-schema, niet op schaal. Een Okazaki-fragment is ~200 nt, de RNA-primer ~10 nt en Pol α voegt ~20 nt DNA toe; primer en flap zijn hier groter getekend. In werkelijkheid verdringt Pol δ telkens slechts enkele nucleotiden en knipt FEN1 herhaaldelijk kleine flaps (nick-translatie). De volgende-streng-matrijs vormt in de cel waarschijnlijk een lus zodat alles bij elkaar blijft; Ctf4/AND-1, Mcm10, Tipin–Timeless en de histonchaperonnes zijn weggelaten. De 3D-stappen tonen PDB 7PFO (menselijk kernreplisoom, cryo-EM; Jones et al., EMBO J 2021) met één bolletje per bouwsteen; in dat model ontbreken Pol α, Pol δ, PCNA en het bouwende deel van Pol ε, en het DNA is een kort proefstuk. Andere echte structuren: PDB 6XTX (humaan CMG), 1AXC (humaan PCNA).',
+    en: '2D scheme, not to scale. An Okazaki fragment is ~200 nt, the RNA primer ~10 nt and Pol α adds ~20 nt of DNA; primer and flap are drawn larger here. In reality Pol δ displaces only a few nucleotides at a time and FEN1 repeatedly cuts short flaps (nick translation). In the cell the lagging-strand template probably loops so that everything stays together; Ctf4/AND-1, Mcm10, Tipin–Timeless and the histone chaperones are omitted. The 3D steps show PDB 7PFO (human core replisome, cryo-EM; Jones et al., EMBO J 2021) with one bead per building block; Pol α, Pol δ, PCNA and the building part of Pol ε are missing from that model, and the DNA is a short test piece. Other real structures: PDB 6XTX (human CMG), 1AXC (human PCNA).' },
   steps: [
     S(8000, cam(800, 450, 1560), 'Het DNA wordt opengeritst', 'The DNA is unzipped',
       'Een ritsmachine (helicase) trekt de twee strengen uit elkaar. Die strengen lopen in tegengestelde richting.',
@@ -279,3 +281,37 @@ export default {
     };
   },
 };
+
+/* 3D-stappen na stap 9: PDB 7PFO, menselijk kernreplisoom (cryo-EM 3,2 Å; Jones et al., EMBO J 2021).
+ * Lokale kopie data/pdb/7PFO.cif is ingekort tot CA- en P-atomen (68 517 zware atomen → 8 469), daarom een bolletjesmodel.
+ * Ketens (auth, nagekeken in het mmCIF 05-11-2026): 2–7 = MCM2–7 (ring) · C = Cdc45 · D–G = GINS (Psf1, Psf2, Psf3, Sld5)
+ *   · A = Pol ε-subeenheid 2 · B = Pol ε-katalytische subeenheid (alleen 1317–2282, het niet-katalytische deel)
+ *   · H, I, J = AND-1 · K = Timeless · L = Tipin · Q = Claspin
+ *   · DNA: M = matrijs leidende streng (M26–46 gepaard met N16–36 = ouderduplex vóór de ring; M51–61 enkelstrengig in het
+ *     kanaal van de ring, contact met alle zes MCM's) · N = andere streng (alleen het duplexdeel is gemodelleerd). */
+const RING = ['2', '3', '4', '5', '6', '7'], CG = ['C', 'D', 'E', 'F', 'G'], POLE = ['A', 'B'], HELP = ['H', 'I', 'J', 'K', 'L', 'Q'];
+const POLE_C = '#e0708f', CG_C = '#c9b8ff', HELP_C = '#7f8fb0';
+const sp = (sel, color, radius = 2.2) => ({ sel, style: { sphere: { color, radius } } });
+const dna7 = r => [sp({ chain: 'M' }, C.dna2, r), sp({ chain: 'N' }, C.dna, r)];
+const FADE = sel => sp(sel, '#33415c', .9);
+
+export default with3d(scene, {
+  models: { rep: { pdb: '7PFO', up: [{ chain: 'M', resi: [51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61] }, { chain: 'M', resi: [26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36] }] } },   // ring onder, ouderduplex erboven
+  after: {
+    9: [
+      { dur: 9000, model: 'rep', spin: .01, zoom: {},
+        title: { nl: 'De echte machine: één groot blok rond het DNA', en: 'The real machine: one big block around the DNA' },
+        text: { nl: 'Dit is een echte meting van de menselijke kopieermachine: elke kleur is een ander onderdeel.', en: 'This is a real measurement of the human copying machine: each colour is a different part.' },
+        show: [sp({ chain: RING }, C.prot), sp({ chain: CG }, CG_C), sp({ chain: POLE }, POLE_C), sp({ chain: HELP }, HELP_C), ...dna7(3.2),
+          { ...sp({ chain: '4' }, C.prot), label: { nl: 'ritsmachine', en: 'unzipper' } },
+          { ...sp({ chain: 'B' }, POLE_C), label: { nl: 'polymerase', en: 'polymerase' } },
+          { ...sp({ chain: 'M', resi: 36 }, C.dna2, 3.2), label: 'DNA' }] },
+      { dur: 9000, model: 'rep', spin: .008, zoom: { chain: [...RING, 'M', 'N'] },
+        title: { nl: 'Maar één streng past door de ring', en: 'Only one strand fits through the ring' },
+        text: { nl: 'Vóór de ring is het DNA nog dubbel; door het gat in de ring loopt maar één streng.', en: 'In front of the ring the DNA is still double; only one strand runs through the hole in the ring.' },
+        show: [FADE({ chain: [...CG, ...POLE, ...HELP] }), sp({ chain: RING }, C.prot, .9), ...dna7(3.4),
+          { ...sp({ chain: 'M', resi: 36 }, C.dna2, 3.4), label: { nl: 'dubbel DNA', en: 'double DNA' } },
+          { ...sp({ chain: 'M', resi: 57 }, C.dna2, 3.4), label: { nl: 'één streng', en: 'one strand' } }] },
+    ],
+  },
+});

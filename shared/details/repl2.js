@@ -14,6 +14,8 @@ const REARDON = { t: 'Reardon & Sancar (2002) Molecular anatomy of the human exc
 const CHANG = { t: 'Chang et al. (2017) Non-homologous DNA end joining and alternative pathways to double-strand break repair. Nat Rev Mol Cell Biol 18:495 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7062608/' };
 const MAO = { t: 'Mao et al. (2008) Comparison of nonhomologous end joining and homologous recombination in human cells. DNA Repair 7:1765 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC2695993/' };
 const SULLIVAN = { t: 'Sullivan & Bernstein (2018) RAD-ical new insights into RAD51 regulation. Genes 9:629 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6316741/' };
+const KOKIC = { t: 'Kokic et al. (2019) Structural basis of TFIIH activation for nucleotide excision repair. Nat Commun 10:2885', url: 'https://doi.org/10.1038/s41467-019-10745-5' };
+const APPLEBY = { t: 'Appleby et al. (2023) A metal ion-dependent mechanism of RAD51 nucleoprotein filament disassembly. iScience 26:106689', url: 'https://doi.org/10.1016/j.isci.2023.106689' };
 const WALKER = { t: 'Walker, Corpina & Goldberg (2001) Structure of the Ku heterodimer bound to DNA. Nature 412:607 (PubMed 11493912)', url: 'https://pubmed.ncbi.nlm.nih.gov/11493912/' };
 const GNANA = { t: 'Gnanasundram et al. (2021) p53 mRNA metabolism links with the DNA damage response. Genes 12:1446 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8465283/' };
 const OLIVIER = { t: 'Olivier, Hollstein & Hainaut (2010) TP53 mutations in human cancers: origins, consequences, and clinical use. Cold Spring Harb Perspect Biol 2:a001008 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC2827900/' };
@@ -126,7 +128,7 @@ export default {
         "Dubbele incisie: eerst knipt ERCC1–XPF aan de 5'-kant, daarna XPG aan de 3'-kant. Een stuk van 24–32 nucleotiden met het letsel komt vrij.",
         'Pol δ, Pol ε of Pol κ (met PCNA) vult het gat op met de andere streng als matrijs; ligase IIIα–XRCC1 of ligase I sluit.',
       ],
-      facts: [['Letsels', 'UV-dimeren (CPD, 6-4PP), omvangrijke adducten'], ['Uitgeknipt', '24–32 nt'], ['Herkenning', 'XPC–RAD23B (globaal) of vastgelopen RNA-pol II (transcriptie)'], ['Ziekte', 'xeroderma pigmentosum: > 2 000× meer kans op huidkanker']],
+      facts: [['Letsels', 'UV-dimeren (CPD, 6-4PP), omvangrijke adducten'], ['Uitgeknipt', '24–32 nt'], ['Herkenning', 'XPC–RAD23B (globaal) of vastgelopen RNA-pol II (transcriptie)'], ['Ziekte', 'xeroderma pigmentosum: > 2 000× meer kans op huidkanker'], ['3D-structuur', 'PDB 6RO4: kern van TFIIH (o.a. XPB en XPD) met XPA op gedeeltelijk geopend DNA, cryo-EM 3,5 Å']],
       why: 'NER is het enige herstel voor UV-schade bij de mens. Mensen met xeroderma pigmentosum (een defect in een XP-gen) zijn extreem gevoelig voor zonlicht en krijgen veel vaker huidkanker. NER verwijdert ook schade door sommige chemotherapieën.',
     },
     en: {
@@ -138,10 +140,10 @@ export default {
         "Dual incision: first ERCC1–XPF cuts on the 5' side, then XPG on the 3' side. A piece of 24–32 nucleotides carrying the lesion is released.",
         'Pol δ, Pol ε or Pol κ (with PCNA) fills the gap using the other strand as template; ligase IIIα–XRCC1 or ligase I seals.',
       ],
-      facts: [['Lesions', 'UV dimers (CPD, 6-4PP), bulky adducts'], ['Excised', '24–32 nt'], ['Recognition', 'XPC–RAD23B (global) or stalled RNA pol II (transcription)'], ['Disease', 'xeroderma pigmentosum: > 2,000× higher risk of skin cancer']],
+      facts: [['Lesions', 'UV dimers (CPD, 6-4PP), bulky adducts'], ['Excised', '24–32 nt'], ['Recognition', 'XPC–RAD23B (global) or stalled RNA pol II (transcription)'], ['Disease', 'xeroderma pigmentosum: > 2,000× higher risk of skin cancer'], ['3D structure', 'PDB 6RO4: core of TFIIH (including XPB and XPD) with XPA on partly opened DNA, cryo-EM 3.5 Å']],
       why: 'NER is the only repair for UV damage in humans. People with xeroderma pigmentosum (a defect in an XP gene) are extremely sensitive to sunlight and get skin cancer far more often. NER also removes damage caused by some chemotherapy drugs.',
     },
-    sources: [SCHARER, REARDON, ALB_REPAIR],
+    sources: [SCHARER, REARDON, ALB_REPAIR, KOKIC, PDB('6RO4', 'Structure of the core TFIIH-XPA-DNA complex (3D-stappen)')],
   },
 
   dsb: {
@@ -155,7 +157,7 @@ export default {
         'BRCA2 brengt RAD51 op het enkelstrengige DNA; het RAD51-filament zoekt de passende volgorde op de zusterchromatide en dringt binnen (D-lus).',
         'Een polymerase kopieert de ontbrekende letters van de zuster. Bij SDSA (een HR-variant waarbij maar één uiteinde binnendringt) keert de verlengde streng terug, paart met het andere uiteinde en het gat wordt opgevuld.',
       ],
-      facts: [['NHEJ', 'elke fase · ≈ 30 min · kan letters verliezen'], ['HR', 'S/G2 · ≥ 7 uur · zusterchromatide als matrijs'], ['Verhouding in S/G2', 'NHEJ : HR ≈ 4 : 1'], ['Ku', 'ring die ≈ 2 windingen DNA steunt (PDB 1JEY)'], ['HR-genen', 'BRCA1, BRCA2, RAD51']],
+      facts: [['NHEJ', 'elke fase · ≈ 30 min · kan letters verliezen'], ['HR', 'S/G2 · ≥ 7 uur · zusterchromatide als matrijs'], ['Verhouding in S/G2', 'NHEJ : HR ≈ 4 : 1'], ['Ku', 'ring die ≈ 2 windingen DNA steunt (PDB 1JEY)'], ['HR-genen', 'BRCA1, BRCA2, RAD51'], ['RAD51-draad', 'elk RAD51 houdt 3 letters vast (PDB 8BQ2, cryo-EM 3,8 Å)']],
       why: 'Eén onherstelde breuk kan een stuk chromosoom doen verdwijnen of chromosomen verkeerd doen samenkomen. Erfelijke BRCA1/2-mutaties schakelen HR uit en verhogen de kans op borst- en eierstokkanker sterk. Immuuncellen gebruiken NHEJ ook bewust om antistofgenen samen te stellen.',
     },
     en: {
@@ -168,10 +170,10 @@ export default {
         'BRCA2 brings RAD51 onto the single-stranded DNA; the RAD51 filament searches for the matching sequence on the sister chromatid and invades it (D-loop).',
         'A polymerase copies the missing letters from the sister. In SDSA (an HR variant in which only one end invades) the extended strand returns, pairs with the other end and the gap is filled in.',
       ],
-      facts: [['NHEJ', 'any phase · ≈ 30 min · may lose letters'], ['HR', 'S/G2 · ≥ 7 hours · sister chromatid as template'], ['Ratio in S/G2', 'NHEJ : HR ≈ 4 : 1'], ['Ku', 'ring that supports ≈ 2 turns of DNA (PDB 1JEY)'], ['HR genes', 'BRCA1, BRCA2, RAD51']],
+      facts: [['NHEJ', 'any phase · ≈ 30 min · may lose letters'], ['HR', 'S/G2 · ≥ 7 hours · sister chromatid as template'], ['Ratio in S/G2', 'NHEJ : HR ≈ 4 : 1'], ['Ku', 'ring that supports ≈ 2 turns of DNA (PDB 1JEY)'], ['HR genes', 'BRCA1, BRCA2, RAD51'], ['RAD51 filament', 'each RAD51 holds 3 letters (PDB 8BQ2, cryo-EM 3.8 Å)']],
       why: 'One unrepaired break can make a piece of chromosome disappear or join chromosomes the wrong way. Inherited BRCA1/2 mutations switch off HR and greatly raise the risk of breast and ovarian cancer. Immune cells also use NHEJ on purpose to assemble antibody genes.',
     },
-    sources: [CHANG, MAO, SULLIVAN, WALKER, PDB('1JEY', 'Ku heterodimer bound to DNA'), ALB_REPAIR],
+    sources: [CHANG, MAO, SULLIVAN, WALKER, PDB('1JEY', 'Ku heterodimer bound to DNA'), APPLEBY, PDB('8BQ2', 'Pre-synaptic RAD51 nucleoprotein filament (3D-stappen)'), ALB_REPAIR],
   },
 
   p53: {

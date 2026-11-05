@@ -71,3 +71,32 @@ Opmerking: NCBI Bookshelf (Alberts) gaf bij ophalen een reCAPTCHA; de Bookshelf-
 ## Resultaat
 - 6 nieuwe knopen nagekeken; 17 correcties doorgevoerd (🔧), 1 nuance (⚠️) aanvaard.
 - Status: `origins`, `mmr`, `ber`, `ner`, `dsb`, `p53` → **nagekeken** (CHECKED in shared/graph.js). `herstel` was al nagekeken.
+
+## Aanvulling 3D (05-11-2026)
+
+Vier 2D-scènes kregen echte 3D-stappen (helper `app/scenes/repl/_mix3d.js`: 3D-laag over de SVG, zacht in- en uitvloeiend; de 2D-stappen zelf zijn ongewijzigd).
+Alle ID's gecontroleerd via `https://data.rcsb.org/rest/v1/core/entry/<ID>` en de RCSB-GraphQL (organisme per entiteit, ketens, citaat); ketens, gemodelleerde residuen en contacten nagekeken in de mmCIF/PDB-bestanden zelf (afstand tussen atomen, alle atomen vóór het inkorten).
+De vier nieuwe bestanden zijn lokaal ingekort tot CA/P-atomen (alt. conformatie A, model 1), zoals 7W1Y.
+
+| ID | RCSB-titel | Methode | Organisme | Gebruik | Nagekeken in het bestand |
+|---|---|---|---|---|---|
+| 7PFO | Core human replisome | cryo-EM 3,2 Å | alle entiteiten *Homo sapiens* | `replisoom` stap 11–12 | 2–7 = MCM2–7, C = Cdc45, D–G = GINS, A/B = Pol ε (B alleen 1317–2282: het katalytische N-terminale deel is niet gemodelleerd), H–J = AND-1, K = Timeless, L = Tipin, Q = Claspin, M/N = DNA. M26–46 paart met N16–36 (ouderduplex vóór de ring); M51–61 is enkelstrengig en raakt alle zes MCM-ketens (in het kanaal van de ring). 68 517 → 8 469 atomen, 0,75 MB |
+| 7QXA | Cryo-EM map of human telomerase-DNA-TPP1 complex (sharpened) | cryo-EM 3,2 Å | *Homo sapiens* | `telomeren` stap 7–8 | A = TERT, B = hTR (26–333 van 451 nt gemodelleerd), N = telomeer-DNA (TTAGGG)5 (19–30 gemodelleerd), O = TPP1, L/M = H2A/H2B. Paring DNA-3'-uiteinde met de matrijs: G30·C50, G29·C51, G28·C52, A27·U53, T26/T25·A54/A55 (≤ 3,3 Å). Geen dyskerine/H/ACA-lob in dit model. 15 576 → 1 512 atomen, 0,13 MB |
+| 6RO4 | Structure of the core TFIIH-XPA-DNA complex | cryo-EM 3,5 Å | *Homo sapiens* | `ner` stap 4–5 | A = XPB, B = XPD, C = p52, D = p44, E = p34, F = p8, G = XPA, J/K = DNA. J17–35 paart met K15–30; K31–42 enkelstrengig en in contact met XPD (keten B); XPA raakt K27–32 op de splitsing (Trp175 bij K31/K32). Proef-DNA zonder letsel. 19 827 → 2 396 atomen, 0,20 MB |
+| 1JEY | Crystal Structure of the Ku heterodimer bound to DNA | röntgen 2,5 Å | *Homo sapiens* (eiwit) | `dsb` stap 3 (nu ook als 3D-stap) | A = Ku70, B = Ku80, C/D = DNA (bestaand bestand, volledige atomen) |
+| 8BQ2 | CryoEM structure of the pre-synaptic RAD51 nucleoprotein filament in the presence of ATP and Ca2+ | cryo-EM 3,8 Å | *Homo sapiens* | `dsb` stap 8 | A–I = 9 × RAD51 (zwaartepunten schuiven langs de draadas, A z ≈ 202 → I z ≈ 69 Å), W = ssDNA 1–30; elke RAD51-keten raakt telkens 3 opeenvolgende nucleotiden (W1–3 → I, … W28–30 → A). 22 331 → 2 820 atomen, 0,24 MB |
+
+Gekozen boven de alternatieven: 7QXA (mens, 3,2 Å, echt telomeer-DNA TTAGGG) boven 7BG9 (mens, 3,8 Å, synthetisch poly-T-DNA) en 6D6V (*Tetrahymena*, niet menselijk); 8BQ2 (9 protomeren op 30 nt) boven 5H1B (mens, maar slechts 3 protomeren op 9 nt, 4,4 Å).
+
+Bronnen: Jones et al. (2021) EMBO J 40:e108819 (doi 10.15252/embj.2021108819); Sekne et al. (2022) Science 375:1173 (doi 10.1126/science.abn6840); Kokic et al. (2019) Nat Commun 10:2885 (doi 10.1038/s41467-019-10745-5); Walker et al. (2001) Nature 412:607; Appleby et al. (2023) iScience 26:106689 (doi 10.1016/j.isci.2023.106689); plus de RCSB-pagina's van elk ID.
+
+Nieuwe beweringen (stapteksten, labels, `simplified`, details):
+- ✅ replisoom: "vóór de ring is het DNA nog dubbel; door het gat loopt maar één streng" — 7PFO-bestand (zie tabel); CMG omsluit de matrijs van de leidende streng — Burgers & Kunkel 2017.
+- ✅ replisoom: in 7PFO ontbreken Pol α, Pol δ, PCNA en het bouwende (katalytische) deel van Pol ε — entiteitenlijst + gemodelleerde residuen van keten B.
+- ✅ telomeren: "het eiwit houdt zijn lange RNA vast; het DNA-uiteinde paart met een kort stukje RNA (de mal)" — 7QXA-bestand (paring hierboven) + Sekne et al. / Ghanim et al. 2021; ongeveer de helft van hTR gemodelleerd (26–333 van 451 nt).
+- ✅ ner: "opener vastgeklemd op DNA dat al open is; waar het DNA splitst zit een kleine helper; de losse streng loopt verder door de opener" — 6RO4-bestand + Kokic et al. (abstract: in het NER-intermediair binden XPB dubbel- en XPD enkelstrengig DNA; de plaats van XPA op de splitsing is nagekeken in het bestand); XPA is een klein eiwit naast XPD (273 vs 760 aminozuren; RCSB-entiteiten).
+- ✅ dsb: "het DNA-uiteinde steekt door de ring" — Walker et al. 2001 (Ku omsluit het DNA-uiteinde).
+- ✅ dsb: "veel dezelfde eiwitten vormen een spiraal met de losse streng in het midden"; "elk RAD51 houdt 3 letters vast" — 8BQ2-bestand (9 identieke ketens, 3 nt per keten) + Appleby et al. 2023.
+- ✅ Abstracts gelezen via Europe PMC (Jones PMC8634136: CMG, Pol ε, Timeless–Tipin, Claspin en AND-1 op een vork, 3,2 Å; Sekne PMC7612489: telomerase met TPP1, 3,2 Å; Kokic PMC6599211; Appleby PMC10192527: RAD51-draad op ssDNA met ATP).
+- ⚠️ Jones et al. bepalen ook de plaats van het katalytische domein van Pol ε (abstract), maar dat domein zit niet in de coördinaten van 7PFO (keten B = 1317–2282); de tekst zegt daarom "ontbreekt in dit model".
+- ⚠️ Volledige teksten niet gelezen; de structuurdetails steunen op de coördinaten zelf.

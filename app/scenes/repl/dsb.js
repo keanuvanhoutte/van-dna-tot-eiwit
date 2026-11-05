@@ -1,5 +1,6 @@
 import { C, BASE, COMP, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { NEW, seg, pth, endl, prot, tag } from './_draw.js';
+import { with3d } from './_mix3d.js';
 
 /*
  * Dubbelstrengbreuk: twee routes naast elkaar op één doek (1600 × 900).
@@ -14,7 +15,7 @@ const XA = 100, XB = 984, BX = 542, Y2 = 640, Y3 = 790, G = 44, RES = 150;      
 const KU = '#e0708f', LIG = '#3fb58f', RAD = '#3fd0c9', POL = C.prot2;
 const camN = cam(550, 262, 1120), camH = cam(550, 650, 1120);
 
-export default {
+const scene = {
   id: 'dsb',
   title: { nl: 'Een breuk door beide strengen: snel lijmen of nauwkeurig kopiëren', en: 'A break through both strands: glue fast or copy accurately' },
   scale: '≈ 10–50 nm',
@@ -23,11 +24,11 @@ export default {
   legend: [[C.dna, { nl: 'DNA-streng', en: 'DNA strand' }], [C.dna2, { nl: 'complementaire streng', en: 'complementary strand' }], [NEW, { nl: 'nieuw DNA', en: 'new DNA' }], [C.danger, { nl: 'breuk / verloren letters', en: 'break / lost letters' }],
     [KU, { nl: 'ring (Ku70–Ku80)', en: 'ring (Ku70–Ku80)' }], [LIG, { nl: 'lijm (XRCC4–ligase IV)', en: 'glue (XRCC4–ligase IV)' }], [RAD, { nl: 'eiwitdraad (RAD51, geladen door BRCA2)', en: 'protein filament (RAD51, loaded by BRCA2)' }], [POL, 'polymerase']],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">Boven: niet-homologe eindverbinding (NHEJ). Onder: homologe recombinatie (HR), hier als SDSA. De ring Ku70–Ku80 op een DNA-uiteinde is ook als echte structuur te zien (PDB 1JEY, via de knop in de figuur).</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">Top: non-homologous end joining (NHEJ). Bottom: homologous recombination (HR), shown here as SDSA. The Ku70–Ku80 ring on a DNA end can also be viewed as a real structure (PDB 1JEY, via the button in the figure).</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">Boven: niet-homologe eindverbinding (NHEJ). Onder: homologe recombinatie (HR), hier als SDSA. De ring Ku70–Ku80 op een DNA-uiteinde (PDB 1JEY) en de RAD51-draad op een losse streng (PDB 8BQ2) zijn als echte structuur te zien in de 3D-stappen.</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">Top: non-homologous end joining (NHEJ). Bottom: homologous recombination (HR), shown here as SDSA. The Ku70–Ku80 ring on a DNA end (PDB 1JEY) and the RAD51 filament on a single strand (PDB 8BQ2) can be seen as real structures in the 3D steps.</p>' },
   simplified: {
-    nl: 'Schematisch en niet op schaal: DNA als ladder zonder draaiing, eiwitten als ovalen en ringen. Bij NHEJ ontbreken DNA-PKcs, Artemis en XLF als aparte figuren; hoeveel letters verloren gaan, verschilt per breuk (hier 2). HR is getoond als SDSA (synthese-afhankelijke strenghybridisatie); andere HR-varianten vormen Holliday-juncties. Het teruggeknipte stuk (resectie) is in werkelijkheid veel langer, en RPA bedekt de staarten eerst; RAD51 verdringt RPA daarna.',
-    en: 'Schematic and not to scale: DNA as a ladder without twist, proteins as ovals and rings. In NHEJ, DNA-PKcs, Artemis and XLF are not drawn separately; how many letters are lost differs per break (here 2). HR is shown as SDSA (synthesis-dependent strand annealing); other HR variants form Holliday junctions. The resected stretch is really much longer, and RPA coats the tails first; RAD51 then displaces RPA.' },
+    nl: 'Schematisch en niet op schaal: DNA als ladder zonder draaiing, eiwitten als ovalen en ringen. Bij NHEJ ontbreken DNA-PKcs, Artemis en XLF als aparte figuren; hoeveel letters verloren gaan, verschilt per breuk (hier 2). HR is getoond als SDSA (synthese-afhankelijke strenghybridisatie); andere HR-varianten vormen Holliday-juncties. Het teruggeknipte stuk (resectie) is in werkelijkheid veel langer, en RPA bedekt de staarten eerst; RAD51 verdringt RPA daarna. De 3D-stappen tonen PDB 1JEY (Ku70–Ku80 op een DNA-uiteinde, röntgen; Walker et al., Nature 2001) en PDB 8BQ2 (een stuk RAD51-draad op enkelstrengig DNA, cryo-EM; Appleby et al., iScience 2023, één bolletje per bouwsteen); de draad is in de cel veel langer.',
+    en: 'Schematic and not to scale: DNA as a ladder without twist, proteins as ovals and rings. In NHEJ, DNA-PKcs, Artemis and XLF are not drawn separately; how many letters are lost differs per break (here 2). HR is shown as SDSA (synthesis-dependent strand annealing); other HR variants form Holliday junctions. The resected stretch is really much longer, and RPA coats the tails first; RAD51 then displaces RPA. The 3D steps show PDB 1JEY (Ku70–Ku80 on a DNA end, X-ray; Walker et al., Nature 2001) and PDB 8BQ2 (a piece of RAD51 filament on single-stranded DNA, cryo-EM; Appleby et al., iScience 2023, one bead per building block); in the cell the filament is much longer.' },
   steps: [
     { dur: 7000, cam: FULL, title: { nl: 'Een breuk door beide strengen', en: 'A break through both strands' },
       text: { nl: 'Straling of een vastgelopen kopie kan beide strengen breken. Het DNA ligt dan in twee stukken.', en: 'Radiation or a stalled copy can break both strands. The DNA then lies in two pieces.' } },
@@ -201,3 +202,38 @@ export default {
     };
   },
 };
+
+/* 3D-stappen
+ *  na stap 1: PDB 1JEY, menselijk Ku70–Ku80 op DNA (röntgen 2,5 Å; Walker et al., Nature 2001). A = Ku70 · B = Ku80 · C, D = DNA.
+ *  na stap 5: PDB 8BQ2, menselijke RAD51-draad (presynaptisch, ATP + Ca²⁺) op 30 nt enkelstrengig DNA (cryo-EM 3,8 Å; Appleby et al., iScience 2023).
+ *    Lokale kopie data/pdb/8BQ2.cif ingekort tot CA- en P-atomen (22 331 → 2 820 atomen). A–I = 9 × RAD51 (zwaartepunten schuiven langs z:
+ *    A z ≈ 202 → I z ≈ 69 Å, dus de draadas ≈ z), W = DNA (1–30); elk RAD51 raakt telkens 3 nt (nagekeken in het mmCIF 05-11-2026). */
+const KU2 = '#f2a7bf', RAD2 = '#9be8e4';
+const sp = (sel, color, radius = 2.2) => ({ sel, style: { sphere: { color, radius } } });
+const R9 = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+
+export default with3d(scene, {
+  models: {
+    ku: { pdb: '1JEY', format: 'pdb' },
+    rad: { pdb: '8BQ2', rotate: [['x', 90]] },
+  },
+  after: {
+    1: [
+      { dur: 9000, model: 'ku', spin: .01, zoom: {},
+        title: { nl: 'Echt beeld: de ring om een DNA-uiteinde', en: 'Real image: the ring around a DNA end' },
+        text: { nl: 'Zo ziet de ring er echt uit: het DNA-uiteinde steekt erdoor, als een draad door een kraal.', en: 'This is what the ring really looks like: the DNA end pokes through it, like a thread through a bead.' },
+        show: [{ sel: { chain: 'A' }, style: { cartoon: { color: KU } } }, { sel: { chain: 'B' }, style: { cartoon: { color: KU2 } } },
+          { sel: { chain: 'C' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .2 } } },
+          { sel: { chain: 'D' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .2 } }, label: 'DNA' },
+          { sel: { chain: 'B', resi: 300 }, style: { cartoon: { color: KU2 } }, label: { nl: 'ring', en: 'ring' } }] },
+    ],
+    5: [
+      { dur: 9000, model: 'rad', spin: .01, zoom: {},
+        title: { nl: 'Echt beeld: een eiwitdraad rond de losse staart', en: 'Real image: a protein filament around the loose tail' },
+        text: { nl: 'Veel dezelfde eiwitten vormen samen een spiraal, met de losse DNA-streng in het midden.', en: 'Many copies of the same protein form a spiral, with the single DNA strand in the middle.' },
+        show: [...R9.map((ch, i) => sp({ chain: ch }, i % 2 ? RAD2 : RAD, 1.5)), sp({ chain: 'W' }, C.dna, 3.6),
+          { ...sp({ chain: 'H' }, RAD2, 1.5), label: { nl: 'één eiwit', en: 'one protein' } },
+          { ...sp({ chain: 'W', resi: 15 }, C.dna, 3.6), label: { nl: 'DNA-staart', en: 'DNA tail' } }] },
+    ],
+  },
+});

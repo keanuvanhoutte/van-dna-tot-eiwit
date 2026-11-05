@@ -1,5 +1,6 @@
 import { C, BASE, COMP, L, T2, svgOpen, txt, pill, nt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { NEW, PRIMER, seg, pth, endl, prot, tag, arrow } from './_draw.js';
+import { with3d } from './_mix3d.js';
 
 /*
  * Telomeer van een menselijk chromosoom (uiteinde rechts).
@@ -19,20 +20,20 @@ const ntL = (x, y, b, w, h, lo) => lo >= .99 ? nt(x, y, b, w, h) :
 const S = (dur, c, nl, en, tnl, ten) => ({ dur, cam: c, title: { nl, en }, text: { nl: tnl, en: ten } });
 const DNAC = { A: 'T', T: 'A', G: 'C', C: 'G' }, RNAC = { A: 'U', T: 'A', G: 'C', C: 'G' };
 
-export default {
+const scene = {
   id: 'telomeren',
   title: { nl: 'Telomeren & telomerase', en: 'Telomeres & telomerase' },
   scale: '≈ 10–30 nm',
   time: { nl: 'verkorting per celdeling; telomerase: seconden–minuten', en: 'shortening per cell division; telomerase: seconds–minutes' },
   org: { nl: 'mens', en: 'human' },
   legend: [[C.dna, { nl: 'G-rijke streng (TTAGGG)', en: 'G-rich strand (TTAGGG)' }], [C.dna2, { nl: 'C-rijke streng', en: 'C-rich strand' }], [NEW, { nl: 'nieuw DNA', en: 'new DNA' }],
-    [PRIMER, { nl: 'RNA (primer / telomerase-RNA)', en: 'RNA (primer / telomerase RNA)' }], [C.prot, { nl: 'TERT & shelterin', en: 'TERT & shelterin' }]],
+    [PRIMER, { nl: 'RNA (primer / telomerase-RNA)', en: 'RNA (primer / telomerase RNA)' }], [C.prot, { nl: 'TERT & shelterin', en: 'TERT & shelterin' }], ['#ffd9b3', { nl: 'RNA-mal (3D)', en: 'RNA template (3D)' }], ['#7f8fb0', { nl: 'andere eiwitten (3D)', en: 'other proteins (3D)' }]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">De matrijs in het telomerase-RNA is 11 nt lang: 5 nt om het DNA-uiteinde vast te houden en 6 nt die als GGTTAG worden overgeschreven. Zo ontstaat telkens een nieuwe TTAGGG-herhaling.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">The template in telomerase RNA is 11 nt long: 5 nt to hold the DNA end and 6 nt that are copied as GGTTAG. Each round therefore adds a new TTAGGG repeat.</p>' },
   simplified: {
-    nl: 'Menselijke telomeren zijn duizenden basenparen lang en de 3\'-overhang telt tientallen tot honderden nucleotiden; hier zijn maar enkele herhalingen getekend. Het eindreplicatieprobleem is vereenvoudigd tot het wegvallen van de laatste primer; ook nucleasen die het uiteinde bijwerken dragen bij. Telomerase (echte structuur: PDB 7BG9) en shelterin zijn schematisch; hTR (451 nt) heeft nog vele andere domeinen en er horen o.a. dyskerine en TCAB1 bij. Of G-quadruplexen (gestapelde G-kwartetten, gestabiliseerd door K⁺) in cellen aan telomeren een rol spelen, wordt nog onderzocht. De T-lus is ingekort getekend (echt: kilobasen).',
-    en: 'Human telomeres are thousands of base pairs long and the 3\' overhang has tens to hundreds of nucleotides; only a few repeats are drawn here. The end-replication problem is simplified to the loss of the last primer; nucleases processing the end also contribute. Telomerase (real structure: PDB 7BG9) and shelterin are schematic; hTR (451 nt) has many other domains and dyskerin and TCAB1, among others, belong to the holoenzyme. Whether G-quadruplexes (stacked G-quartets stabilised by K⁺) play a role at telomeres in cells is still being investigated. The t-loop is drawn shortened (really: kilobases).' },
+    nl: 'Menselijke telomeren zijn duizenden basenparen lang en de 3\'-overhang telt tientallen tot honderden nucleotiden; hier zijn maar enkele herhalingen getekend. Het eindreplicatieprobleem is vereenvoudigd tot het wegvallen van de laatste primer; ook nucleasen die het uiteinde bijwerken dragen bij. Telomerase en shelterin zijn in de 2D-stappen schematisch. De 3D-stappen tonen PDB 7QXA (het kerndeel van menselijke telomerase met telomeer-DNA en TPP1, cryo-EM; Sekne et al., Science 2022) met één bolletje per bouwsteen; daarin is ongeveer de helft van het RNA te zien en ontbreekt het tweede deel van het enzym (met dyskerine). Ook PDB 7BG9 toont menselijke telomerase; hTR (451 nt) heeft nog vele andere domeinen en er horen o.a. dyskerine en TCAB1 bij. Of G-quadruplexen (gestapelde G-kwartetten, gestabiliseerd door K⁺) in cellen aan telomeren een rol spelen, wordt nog onderzocht. De T-lus is ingekort getekend (echt: kilobasen).',
+    en: 'Human telomeres are thousands of base pairs long and the 3\' overhang has tens to hundreds of nucleotides; only a few repeats are drawn here. The end-replication problem is simplified to the loss of the last primer; nucleases processing the end also contribute. Telomerase and shelterin are schematic in the 2D steps. The 3D steps show PDB 7QXA (the core of human telomerase with telomeric DNA and TPP1, cryo-EM; Sekne et al., Science 2022) with one bead per building block; about half of the RNA is visible in it and the second part of the enzyme (with dyskerin) is missing. PDB 7BG9 also shows human telomerase; hTR (451 nt) has many other domains and dyskerin and TCAB1, among others, belong to the holoenzyme. Whether G-quadruplexes (stacked G-quartets stabilised by K⁺) play a role at telomeres in cells is still being investigated. The t-loop is drawn shortened (really: kilobases).' },
   steps: [
     S(8000, cam(620, 400, 1250), 'Het uiteinde van een chromosoom', 'The end of a chromosome',
       'Chromosomen eindigen in telomeren: vele herhalingen van TTAGGG. Eén streng steekt aan het eind een stukje uit.',
@@ -270,3 +271,33 @@ export default {
     };
   },
 };
+
+/* 3D-stappen na stap 5: PDB 7QXA, kerndeel van menselijke telomerase met telomeer-DNA en TPP1 (cryo-EM 3,2 Å; Sekne et al., Science 2022).
+ * Lokale kopie data/pdb/7QXA.cif is ingekort tot CA- en P-atomen (15 576 → 1 512 atomen), daarom een bolletjesmodel.
+ * Ketens (nagekeken in het mmCIF 05-11-2026): A = TERT · B = hTR (gemodelleerd 26–333 van 451 nt; matrijs 46–56)
+ *   · N = telomeer-DNA (TTAGGG)5, gemodelleerd 19–30 · O = TPP1 · L, M = histonen H2A, H2B.
+ *  - Het 3'-uiteinde van het DNA paart met de matrijs: G30·C50, G29·C51, G28·C52, A27·U53, T26/T25·A54/A55 (afstanden ≤ 3,3 Å). */
+const TPL = '#ffd9b3', OTHER = '#7f8fb0';
+const sp = (sel, color, radius = 2.2) => ({ sel, style: { sphere: { color, radius } } });
+const TPL_SEL = { chain: 'B', resi: [46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56] };
+
+export default with3d(scene, {
+  models: { tert: { pdb: '7QXA' } },
+  after: {
+    5: [
+      { dur: 9000, model: 'tert', spin: .01, zoom: {},
+        title: { nl: 'Echte telomerase: eiwit en RNA in één', en: 'Real telomerase: protein and RNA in one' },
+        text: { nl: 'Een echte meting toont het eiwit (paars) dat zijn lange RNA (oranje) vasthoudt.', en: 'A real measurement shows the protein (purple) holding its long RNA (orange).' },
+        show: [sp({ chain: 'A' }, C.prot), sp({ chain: 'B' }, PRIMER, 2.6), sp(TPL_SEL, TPL, 2.6), sp({ chain: ['O', 'L', 'M'] }, OTHER), sp({ chain: 'N' }, C.dna, 3.2),
+          { ...sp({ chain: 'A', resi: 600 }, C.prot), label: { nl: 'eiwit', en: 'protein' } },
+          { ...sp({ chain: 'B', resi: 180 }, PRIMER, 2.6), label: 'RNA' },
+          { ...sp({ chain: 'N', resi: 24 }, C.dna, 3.2), label: 'DNA' }] },
+      { dur: 9000, model: 'tert', spin: .008, zoom: { chain: 'B', resi: [40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62] },
+        title: { nl: 'Het DNA-uiteinde ligt op de RNA-mal', en: 'The DNA end lies on the RNA template' },
+        text: { nl: 'Het uiteinde van het DNA paart met een kort stukje RNA: daar komen de nieuwe letters bij.', en: 'The end of the DNA pairs with a short piece of RNA: that is where the new letters are added.' },
+        show: [sp({ chain: ['A', 'O', 'L', 'M'] }, '#33415c', .55), sp({ chain: 'B' }, PRIMER, 1.2), sp(TPL_SEL, TPL, 3), sp({ chain: 'N' }, C.dna, 3),
+          { ...sp({ chain: 'B', resi: 47 }, TPL, 3), label: { nl: 'RNA-mal', en: 'RNA template' } },
+          { ...sp({ chain: 'N', resi: 30 }, C.dna, 3), label: { nl: 'DNA-uiteinde', en: 'DNA end' } }] },
+    ],
+  },
+});
