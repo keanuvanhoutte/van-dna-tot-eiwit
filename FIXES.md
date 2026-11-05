@@ -15,3 +15,8 @@
 - [x] Kaders en tekst half buiten beeld (tools/clip-check) | pagina: bgen st. 2, 4, 5, 6; bmrna st. 3, 4 | verwacht: clip-check meldt niets voor de bacteriescènes — **na: 0 (was 26); totaal app 91 → 65, de rest zijn menselijke scènes**
 - [x] Bijna lege of plots donkere beelden bij een stapovergang (tools/blank-check) | pagina: bmrna st. 5 en 6, btrp st. 3, breplicatie st. 1–2, bgen st. 3, bterm st. 4 | verwacht: blank-check meldt niets voor de bacteriescènes (geen zwarte schermen) — **na: 0 meldingen (was 11); overige 7 zijn menselijke scènes**
 - [x] Wetenschappelijke correcties uit verificatieronde 6 nog niet zelf nagekeken | pagina: alle bacteriescènes + uitlegpaneel | verwacht: tweede, onafhankelijke controle bevestigt dat alle 23 punten juist verwerkt zijn — **na: 23/23 bevestigd; 3 restpunten (bterm.kort, bron Rho, lidwoord) ook opgelost**
+
+## Fix-ronde 05-11-2026 — zijpad replicatie en herstel (tak 1)
+- [x] Startpagina noemt nog "Fase 2" terwijl de zijpaden (fase 3) online komen | pagina: / | verwacht: fase-label klopt — **na: "Fase 3 · zijpaden in opbouw" / "Phase 3 · side paths in progress"**
+- [x] Nieuwe scènes nagekeken op pc en gsm (375 px), NL en EN: origins, mmr, ber, ner, dsb, p53, herstel | verwacht: geen console-fouten, 3D laadt, startpagina en kaart tonen het zijpad — **na: 0 console-fouten; check.html 96·96·96, PROBLEMS (0)**
+- [~] Op een gsm zijn 2D-scènes met cam: FULL (herstel, ner, dsb) klein — dat geldt app-breed voor overzichtsbeelden zonder inzoom-camera, geen fout van dit zijpad; kandidaat voor de latere aanpassingen aan doorloop/weergave
