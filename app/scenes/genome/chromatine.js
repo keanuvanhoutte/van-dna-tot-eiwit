@@ -137,7 +137,7 @@ export default {
     <!-- paneel B -->
     <g id="cr-pB">
       ${panel(560, 110, 560, 370, T2('② Lussen & TADs', '② Loops & TADs'), '#2a3a60', 21)}
-      <g data-node="genregulatie" data-color="#ff8a3d" data-label="${T2('Lussen: enhancer ↔ promoter', 'Loops: enhancer ↔ promoter')}" data-nolabel>
+      <g data-node="lussen" data-color="#ff8a3d" data-label="${T2('Lussen en buurten', 'Loops and neighbourhoods')}" data-nolabel>
         <g id="cr-fibre"></g>
       </g>
       <g id="cr-hic"></g>

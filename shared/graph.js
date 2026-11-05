@@ -98,7 +98,7 @@ const N = [
     in: ['chromatine', 'telomeren'], rel: ['replicatie'] },
   { id: 'chromatine', t: 'Chromatine', en: 'Chromatin', stage: 'genome', scale: 3, kind: 'structure',
     s: 'DNA + eiwitten. Euchromatine is open en actief, heterochromatine compact en meestal stil. Lussen en domeinen (TADs) worden o.a. door cohesine en CTCF gevormd.',
-    in: ['nucleosoom', 'histonmod', 'dnamethyl'], rel: ['genregulatie'] },
+    in: ['nucleosoom', 'histonmod', 'dnamethyl'], rel: ['genregulatie', 'remodeler', 'lussen'] },
   { id: 'nucleosoom', t: 'Nucleosoom', en: 'Nucleosome core particle', stage: 'genome', scale: 3, kind: 'structure',
     s: '~147 bp DNA in ongeveer 1,7 linkshandige superhelische windingen rond een histonoctameer (2× H2A, H2B, H3, H4). Linker-DNA en histon H1 verbinden opeenvolgende nucleosomen.',
     in: ['dnahelix', 'histonmod'], pdb: ['1KX5', '1AOI'] },
@@ -107,7 +107,23 @@ const N = [
     rel: ['genregulatie', 'ptm'] },
   { id: 'dnamethyl', t: 'DNA-methylatie', en: 'DNA methylation', stage: 'genome', scale: 4, kind: 'process',
     s: 'Bij zoogdieren vooral 5-methylcytosine in CpG-dinucleotiden. DNMT3A/B zetten nieuwe methylgroepen, DNMT1 onderhoudt het patroon na replicatie. Promotermethylatie gaat samen met uitschakeling.',
-    rel: ['genregulatie', 'replicatie'] },
+    rel: ['genregulatie', 'replicatie', 'imprinting', 'xinact'] },
+  /* zijpad epigenetica (05-11-2026): hoe de cel kiest welke genen aan staan */
+  { id: 'remodeler', t: 'Chromatine-remodeling', en: 'Chromatin remodelling', stage: 'genome', scale: 3, kind: 'process',
+    s: 'ATP-afhankelijke remodelers (families SWI/SNF, ISWI, CHD, INO80) verschuiven nucleosomen, werpen ze uit of wisselen histonen, zodat DNA toegankelijk wordt. Hun ATPase-motor verplaatst DNA vanaf een vaste plaats op het nucleosoom. Subeenheden van mSWI/SNF zijn gemuteerd in 19,6 % van de menselijke tumoren.',
+    next: ['histonmod'], rel: ['nucleosoom', 'chromatine', 'genregulatie'] },
+  { id: 'lussen', t: 'Chromatinelussen & TADs', en: 'Chromatin loops & TADs', stage: 'genome', scale: 3, kind: 'structure',
+    s: 'Volgens het lusextrusiemodel trekt cohesine (met NIPBL) DNA tot lussen, tot de ring stopt bij CTCF-plaatsen die naar elkaar wijzen (> 90 % van de lusankers convergent). Zo ontstaan contactdomeinen (TADs; mediaan ≈ 185 kb). In vitro tot 2,1 kb/s; in levende cellen zijn lussen dynamisch (volledig gesloten slechts ≈ 3–6,5 % van de tijd, gemeten op één locus).',
+    next: ['enhancer'], pdb: ['7W1M'], rel: ['chromatine', 'genregulatie'] },
+  { id: 'enhancer', t: 'Enhancers & Mediator', en: 'Enhancers & Mediator', stage: 'genome', scale: 3, kind: 'process',
+    s: 'Enhancers binden activatoren en kunnen ver van hun gen liggen (de ZRS ligt ≈ 1 Mb van SHH); een chromatinelus brengt ze bij de promoter, en Mediator geeft het signaal door aan het preinitiatiecomplex met RNA-polymerase II.',
+    next: ['xinact'], rel: ['promoter', 'genregulatie', 'lussen'] },
+  { id: 'xinact', t: 'X-inactivatie', en: 'X-chromosome inactivation', stage: 'genome', scale: 2, kind: 'process',
+    s: 'In vrouwelijke zoogdiercellen wordt vroeg in het embryo per cel willekeurig één X stilgezet; het XIST-RNA bedekt dat X, dat compact wordt (Barr-lichaampje). De keuze blijft in alle dochtercellen (mozaïek, bv. lapjeskat). ≈ 15 % van de X-genen ontsnapt, nog ≈ 10 % wisselend.',
+    next: ['imprinting'], rel: ['chromosoom', 'dnamethyl', 'histonmod'] },
+  { id: 'imprinting', t: 'Genomische imprinting', en: 'Genomic imprinting', stage: 'genome', scale: 3, kind: 'process',
+    s: 'Bij ≈ 100 genen (zoogdieren) werkt alleen de kopie van één ouder, gestuurd door methylatie van imprintingcontroleregio’s die in eicel of zaadcel gezet wordt. IGF2 vaderlijk, H19 moederlijk (CTCF-isolator op het niet-gemethyleerde moederlijke allel). Deletie 15q11–q13: vaderlijk → Prader-Willi, moederlijk → Angelman.',
+    rel: ['dnamethyl', 'enhancer', 'lussen'] },
   { id: 'gen', t: 'Architectuur van een gen', en: 'Gene structure', stage: 'genome', scale: 4, kind: 'structure',
     s: 'Promoter, 5\'-UTR, exonen en intronen, 3\'-UTR met polyadenylatiesignaal; regulerende enhancers/silencers kunnen ver weg liggen.',
     in: ['promoter'], next: ['transcriptie'], rel: ['splicing'] },
@@ -172,7 +188,7 @@ const N = [
   // ───────────── REGULATIE & TRANSCRIPTIE ─────────────
   { id: 'genregulatie', t: 'Genregulatie', en: 'Gene regulation', stage: 'txn', scale: 3, kind: 'process',
     s: 'Transcriptiefactoren binden enhancers en promoters; co-activatoren (o.a. Mediator) en chromatine-toegankelijkheid bepalen of RNA-polymerase II start.',
-    in: ['promoter', 'operon'], next: ['transcriptie'] },
+    in: ['promoter', 'operon'], next: ['transcriptie'], rel: ['enhancer'] },
   { id: 'promoter', t: 'Promoter & preinitiatiecomplex', en: 'Core promoter & PIC', stage: 'txn', scale: 3, kind: 'structure',
     s: 'Kernpromoterelementen (bv. TATA-box, Inr) binden de algemene transcriptiefactoren TFIID (met TBP), -A, -B, -E, -F, -H. TFIIH opent het DNA en fosforyleert Ser5 van de CTD.',
     next: ['transcriptie'] },
@@ -363,7 +379,7 @@ const N = [
     pdb: ['6WRF'], rel: ['ubiquitine', 'chaperones', 'misvouwing'] },
 ];
 
-const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid', 'bcel', 'bnucleoid', 'bplasmide', 'bgen', 'bpol', 'bterm', 'bmrna', 'bribosoom', 'bafbraak', 'breplicatie', 'btrp', 'bsplicing', 'bact', 'origins', 'mmr', 'ber', 'ner', 'dsb', 'p53', 'sortering', 'membraan', 'lysosoom', 'mito', 'perox', 'proteasoom', 'autofagie']); // verificatierondes 1–8 (zijpad eiwitlot: ronde 8, docs/verificatie-ronde-8-eiwittargeting.md); ronde 1–7 (zijpad replicatie & herstel: ronde 7, docs/verificatie-ronde-7-replicatie-herstel.md); (verhaallijn 2: ronde 4; bacterie: ronde 6, docs/verificatie-ronde-6-bacterie.md) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
+const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid', 'bcel', 'bnucleoid', 'bplasmide', 'bgen', 'bpol', 'bterm', 'bmrna', 'bribosoom', 'bafbraak', 'breplicatie', 'btrp', 'bsplicing', 'bact', 'origins', 'mmr', 'ber', 'ner', 'dsb', 'p53', 'sortering', 'membraan', 'lysosoom', 'mito', 'perox', 'proteasoom', 'autofagie', 'remodeler', 'lussen', 'enhancer', 'xinact', 'imprinting']); // verificatierondes 1–9 (zijpad epigenetica: ronde 9, docs/verificatie-ronde-9-epigenetica.md); (zijpad eiwitlot: ronde 8, docs/verificatie-ronde-8-eiwittargeting.md); ronde 1–7 (zijpad replicatie & herstel: ronde 7, docs/verificatie-ronde-7-replicatie-herstel.md); (verhaallijn 2: ronde 4; bacterie: ronde 6, docs/verificatie-ronde-6-bacterie.md) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
 export const NODES = Object.fromEntries(N.map(n => [n.id, { in: [], next: [], rel: [], pdb: [], status: CHECKED.has(n.id) ? 'nagekeken' : 'concept', ...n }]));
 
 /* Bereken ook de omgekeerde verbanden (wie verwijst naar mij) */

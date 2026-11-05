@@ -100,6 +100,19 @@ const EIWITLOT = [
   { id: 'misvouwing', bridge: { nl: 'Einde van dit zijpad. Ga via de kaart terug naar een hoofdverhaal of kies een ander zijpad.', en: 'End of this side path. Use the map to return to a main story or pick another side path.' } },
 ];
 
+/* Zijpad 3 (05-11-2026): hoe de cel kiest welke genen aan staan (epigenetica en 3D-genoom). */
+const EPIGEN = [
+  { id: 'chromatine', bridge: { nl: 'De kleinste verpakkingseenheid is het nucleosoom: DNA rond acht eiwitten.', en: 'The smallest packing unit is the nucleosome: DNA around eight proteins.' } },
+  { id: 'nucleosoom', bridge: { nl: 'Een nucleosoom kan een gen afdekken. Machines kunnen het opzij schuiven.', en: 'A nucleosome can cover a gene. Machines can push it aside.' } },
+  { id: 'remodeler', bridge: { nl: 'Chemische merktekens op de histonen helpen bepalen of chromatine open of dicht is.', en: 'Chemical marks on the histones help decide whether chromatin is open or closed.' } },
+  { id: 'histonmod', bridge: { nl: 'Ook het DNA zelf kan een merkteken krijgen: een methylgroep.', en: 'The DNA itself can also carry a mark: a methyl group.' } },
+  { id: 'dnamethyl', bridge: { nl: 'Op grotere schaal ligt het DNA in lussen en buurten.', en: 'On a larger scale the DNA lies in loops and neighbourhoods.' } },
+  { id: 'lussen', bridge: { nl: 'Zo’n lus kan een verre versterker naast een gen brengen.', en: 'Such a loop can bring a distant switch next to a gene.' } },
+  { id: 'enhancer', bridge: { nl: 'Soms zet de cel een heel chromosoom stil: één X bij vrouwen.', en: 'Sometimes the cell silences a whole chromosome: one X in women.' } },
+  { id: 'xinact', bridge: { nl: 'Bij sommige genen telt zelfs van welke ouder je ze kreeg.', en: 'For some genes it even matters which parent you got them from.' } },
+  { id: 'imprinting', bridge: { nl: 'Einde van dit zijpad. Ga via de kaart terug naar een hoofdverhaal of kies een ander zijpad.', en: 'End of this side path. Use the map to return to a main story or pick another side path.' } },
+];
+
 /* Alle verhaallijnen. De engine kiest er één (?story=… of de laatst gekozen) en kan wisselen.
  * side: true = zijpad (in de kaart apart gegroepeerd; geen automatische overschakeling vanuit een andere lijn). */
 export const LINES = {
@@ -108,6 +121,7 @@ export const LINES = {
   bacterie: { chapters: BACTERIE, title: { nl: 'Bacterie · Van DNA tot eiwit in E. coli', en: 'Bacterium · From DNA to protein in E. coli' }, short: { nl: 'Bacterie', en: 'Bacterium' } },
   herstel: { chapters: HERSTEL, side: true, title: { nl: 'Zijpad · DNA kopiëren en herstellen', en: 'Side path · Copying and repairing DNA' }, short: { nl: 'Zijpad replicatie', en: 'Side path replication' } },
   targeting: { chapters: EIWITLOT, side: true, title: { nl: 'Zijpad · Waar een eiwit heen gaat en hoe het verdwijnt', en: 'Side path · Where a protein goes and how it is removed' }, short: { nl: 'Zijpad eiwitlot', en: 'Side path protein fate' } },
+  epigen: { chapters: EPIGEN, side: true, title: { nl: 'Zijpad · Hoe de cel kiest welke genen aan staan', en: 'Side path · How a cell chooses which genes are on' }, short: { nl: 'Zijpad epigenetica', en: 'Side path epigenetics' } },
 };
 export const LINE_KEYS = Object.keys(LINES);
 export const MAIN_KEYS = LINE_KEYS.filter(k => !LINES[k].side), SIDE_KEYS = LINE_KEYS.filter(k => LINES[k].side);

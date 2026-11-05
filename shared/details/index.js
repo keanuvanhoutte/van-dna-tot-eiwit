@@ -2,6 +2,7 @@
 import entry from './entry.js';
 import genome from './genome.js';
 import genome2 from './genome2.js';
+import genome3 from './genome3.js';
 import repl from './repl.js';
 import repl2 from './repl2.js';
 import txn from './txn.js';
@@ -14,4 +15,4 @@ import signal1 from './signal1.js';
 import signal2 from './signal2.js';
 import bact from './bact.js';
 import bact2 from './bact2.js';
-export const DETAILS = { ...entry, ...genome, ...genome2, ...repl, ...repl2, ...txn, ...rna, ...tl, ...prot, ...prot2, ...prot3, ...signal1, ...signal2, ...bact, ...bact2 };
+export const DETAILS = { ...entry, ...genome, ...genome2, ...genome3, ...repl, ...repl2, ...txn, ...rna, ...tl, ...prot, ...prot2, ...prot3, ...signal1, ...signal2, ...bact, ...bact2 };

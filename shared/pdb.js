@@ -89,6 +89,8 @@ const LOCAL = new Set([
   '6MSB.cif',
   '7CP9.pdb',
   '8DNV.pdb',
+  /* zijpad epigenetica (05-11-2026): cohesine–NIPBL–CTCF–DNA, ingekort tot CA/P-atomen en star gedraaid */
+  '7W1M.cif',
 ]);
 const here = f => new URL(`../data/pdb/${f}`, import.meta.url).href;
 export const pdbUrl = (id, ext = 'pdb') => LOCAL.has(`${id}.${ext}`) ? here(`${id}.${ext}`) : `https://files.rcsb.org/download/${id}.${ext}`;
