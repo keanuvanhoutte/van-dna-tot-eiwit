@@ -25,3 +25,8 @@
 - [x] Tak 1 te weinig 3D | pagina: replisoom, telomeren, ner, dsb | verwacht: echte menselijke structuren — **na: 3D-stappen met 7PFO, 7QXA, 6RO4, 1JEY, 8BQ2; tak 1 nu 9/12 scènes met 3D**
 - [x] Zijpad eiwitlot gebouwd en nagekeken (pc + 375 px, NL + EN) | verwacht: check/text/clip/blank 0 — **na: check 103·103·103 PROBLEMS (0), text 0, clip 0, blank 0, 0 console-fouten; verificatieronde 8: 11 correcties**
 - [~] Drie uitspraken niet met een bron in één stuk bevestigd (geen label = cytosol; kernlabel kan overal liggen; blaasjes behouden de oriëntatie) — standaard handboekkennis, gemarkeerd ⚠️ in docs/verificatie-ronde-8-eiwittargeting.md
+
+## Fix-ronde 05-11-2026 — zijpad epigenetica (tak 3)
+- [x] Woordkeuze botste: de genregulatie-scène noemt de enhancer "versterker" en de activator "schakelaar-eiwit", de nieuwe scènes noemden de enhancer "schakelaar" | pagina: enhancer, imprinting, lussen | verwacht: overal dezelfde term — **na: "versterker" in enhancer.js, imprinting.js, lussen.js, genome3.js, story.js; 0 keer "schakelaar" voor de enhancer**
+- [x] Nieuwe scènes nagekeken | verwacht: check/text/clip/blank 0, geen console-fouten — **na: check 108·108·108 PROBLEMS (0); 0 console-fouten; verificatieronde 9 (o.a. ≈100 ingeprente genen, ≈15 % + 10 % variabel ontsnapt aan X-inactivatie)**
+- [~] Twee handboekfeiten (X-inactivatie rond innesteling, Barr-lichaampje = inactieve X) niet met een gelezen bron bevestigd — gemarkeerd ⚠️ in docs/verificatie-ronde-9-epigenetica.md
