@@ -163,6 +163,7 @@ html, body { height: 100%; overflow: hidden; }
 .linehd { font: 600 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 10px 0 6px; }
 .linehd.cur { color: #ffc247; }
 .linehd span { text-transform: none; letter-spacing: 0; font-weight: 500; }
+.sidegrp { font: 700 13px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin: 18px 0 2px; padding-top: 12px; border-top: 1px solid var(--line); }
 .storyrow { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 .storyrow button { all: unset; cursor: pointer; font-size: 12px; padding: 5px 9px; border-radius: 8px; border: 1px solid var(--line); color: var(--muted); }
 .storyrow button b { color: var(--accent); font-family: var(--mono); margin-right: 5px; }

@@ -67,13 +67,33 @@ const BACTERIE = [
   { id: 'bafbraak', bridge: { nl: 'Einde van het bacterieverhaal. Verken de zijpaden (replicatie, trp-operon, introns) via de kaart.', en: 'End of the bacterial story. Explore the side paths (replication, trp operon, introns) via the map.' } },
 ];
 
-/* Alle verhaallijnen. De engine kiest er één (?story=… of de laatst gekozen) en kan wisselen. */
+/* Zijpad 1 (05-11-2026): DNA kopiëren en herstellen. Zijpaden staan in de kaart onder de hoofdverhalen (`side: true`).
+ * Een zijpad wordt alleen gekozen via de startpagina of de kaart; een knop in een scène schakelt er niet automatisch naartoe. */
+const HERSTEL = [
+  { id: 'replicatie', bridge: { nl: 'Elke kopie begint op een startplaats die per celcyclus maar één keer mag vertrekken.', en: 'Every copy begins at a starting point that may fire only once per cell cycle.' } },
+  { id: 'origins', bridge: { nl: 'Op elke startplaats vertrekt een kopieermachine die het DNA openritst en kopieert.', en: 'At each starting point a copying machine sets off that unzips and copies the DNA.' } },
+  { id: 'replisoom', bridge: { nl: 'Achter de rits liggen losse strengen bloot: die moeten beschermd worden.', en: 'Behind the zipper single strands lie exposed: they need protection.' } },
+  { id: 'ssdna', bridge: { nl: 'Aan de uiteinden van een chromosoom loopt het kopiëren tegen een grens aan.', en: 'At the ends of a chromosome copying runs into a limit.' } },
+  { id: 'telomeren', bridge: { nl: 'Kopiëren gaat soms mis en DNA raakt ook zo beschadigd. Welke schade kan de cel herstellen?', en: 'Copying sometimes goes wrong and DNA also gets damaged. Which damage can the cell repair?' } },
+  { id: 'herstel', bridge: { nl: 'We beginnen met de kopieerfouten die aan het nalezen ontsnappen.', en: 'We start with the copying errors that escape proofreading.' } },
+  { id: 'mmr', bridge: { nl: 'Soms is er geen kopieerfout maar is één letter zelf beschadigd.', en: 'Sometimes there is no copying error, but one letter itself is damaged.' } },
+  { id: 'ber', bridge: { nl: 'UV-licht maakt grotere schade, die het DNA vervormt.', en: 'UV light causes bigger damage that bends the DNA out of shape.' } },
+  { id: 'ner', bridge: { nl: 'Een van de gevaarlijkste letsels is een breuk door beide strengen.', en: 'One of the most dangerous lesions is a break through both strands.' } },
+  { id: 'dsb', bridge: { nl: 'Wie beslist of de cel eerst herstelt, of stopt? Dat doet p53.', en: 'Who decides whether the cell repairs first, or stops? That is p53.' } },
+  { id: 'p53', bridge: { nl: 'Schade die niet hersteld wordt, kan een blijvende verandering worden: een mutatie.', en: 'Damage that is not repaired can become a permanent change: a mutation.' } },
+  { id: 'mutaties', bridge: { nl: 'Einde van dit zijpad. Ga via de kaart terug naar een hoofdverhaal of kies een ander zijpad.', en: 'End of this side path. Use the map to return to a main story or pick another side path.' } },
+];
+
+/* Alle verhaallijnen. De engine kiest er één (?story=… of de laatst gekozen) en kan wisselen.
+ * side: true = zijpad (in de kaart apart gegroepeerd; geen automatische overschakeling vanuit een andere lijn). */
 export const LINES = {
   virus: { chapters: VIRUS, title: { nl: 'Verhaal 1 · Een virus brengt DNA binnen', en: 'Story 1 · A virus brings in DNA' }, short: { nl: 'Verhaal 1', en: 'Story 1' } },
   signaal: { chapters: SIGNAAL, title: { nl: 'Verhaal 2 · Een signaal zet een gen aan', en: 'Story 2 · A signal switches on a gene' }, short: { nl: 'Verhaal 2', en: 'Story 2' } },
   bacterie: { chapters: BACTERIE, title: { nl: 'Bacterie · Van DNA tot eiwit in E. coli', en: 'Bacterium · From DNA to protein in E. coli' }, short: { nl: 'Bacterie', en: 'Bacterium' } },
+  herstel: { chapters: HERSTEL, side: true, title: { nl: 'Zijpad · DNA kopiëren en herstellen', en: 'Side path · Copying and repairing DNA' }, short: { nl: 'Zijpad replicatie', en: 'Side path replication' } },
 };
 export const LINE_KEYS = Object.keys(LINES);
+export const MAIN_KEYS = LINE_KEYS.filter(k => !LINES[k].side), SIDE_KEYS = LINE_KEYS.filter(k => LINES[k].side);
 /* standaardlijn (voor oudere code en tools) */
 export const STORY = VIRUS;
 export const STORY_IDS = STORY.map(c => c.id);

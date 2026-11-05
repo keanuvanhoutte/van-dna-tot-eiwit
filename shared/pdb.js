@@ -70,6 +70,16 @@ const LOCAL = new Set([
   '6ZTJ.cif',
   '6BNA.json',
   '6BNA.pdb',
+  /* zijpad replicatie & herstel (05-11-2026); 7W1Y ingekort tot CA/P-atomen */
+  '1EMH.json',
+  '1EMH.pdb',
+  '1JEY.json',
+  '1JEY.pdb',
+  '1TUP.json',
+  '1TUP.pdb',
+  '2O8B.json',
+  '2O8B.pdb',
+  '7W1Y.cif',
 ]);
 const here = f => new URL(`../data/pdb/${f}`, import.meta.url).href;
 export const pdbUrl = (id, ext = 'pdb') => LOCAL.has(`${id}.${ext}`) ? here(`${id}.${ext}`) : `https://files.rcsb.org/download/${id}.${ext}`;

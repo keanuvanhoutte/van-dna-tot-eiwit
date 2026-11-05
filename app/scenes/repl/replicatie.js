@@ -87,7 +87,7 @@ export default {
     <g data-node="replisoom" data-color="${C.prot}" data-label="${T2('Replicatievork → replisoom', 'Replication fork → replisome')}">
       <g id="rp-forks"></g><circle id="rp-fanchor" data-anchor="replisoom" cx="-99" cy="-99" r="1" fill="none"/>
     </g>
-    <g id="rp-prot"></g>
+    <g data-node="origins" data-color="${C.prot}" data-label="${T2('Startplaats in 3D (echte structuur)', 'Starting point in 3D (real structure)')}"><g id="rp-prot"></g><circle id="rp-oanchor" data-anchor="origins" cx="-99" cy="-99" r="1" fill="none"/></g>
     <g data-node="nucleosoom" data-color="${C.histone}" data-label="${T2('Nucleosomen', 'Nucleosomes')}"><g id="rp-nuc"></g><circle id="rp-nanchor" data-anchor="nucleosoom" cx="-99" cy="-99" r="1" fill="none"/></g>
     <g data-node="chromosoom" data-nolabel data-color="#ffc247"><g id="rp-coh"></g></g>
     <g id="rp-lbl"></g>
@@ -260,6 +260,8 @@ export default {
         if (step === 4) pr += tag(800, 330, T2('vroege origin: grote bel · latere: kleine bellen', 'early origin: large bubble · later: small bubbles'), C.text, 23, 'middle', sub(p, .1, .3));
         if (step === 5) pr += tag(800, 330, T2('vorken komen samen → terminatie', 'forks meet → termination'), C.text, 24, 'middle', sub(p, .05, .2));
         $('rp-prot').innerHTML = pr;
+        { const a = $('rp-oanchor'), on = step === 1 && p > .9;   // label naar de 3D-scène 'origins' zodra de dubbelhexameer ligt (rechtsboven de ringen, Cdt1 is dan weg)
+          a.setAttribute('cx', on ? O[1] + 110 : -99); a.setAttribute('cy', on ? CY - 70 : -99); }
 
         /* ---------- stap 6: nucleosomen en cohesine ---------- */
         let nu = '', coh = '';

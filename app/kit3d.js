@@ -9,9 +9,10 @@
  *              focus: { sel, style, label: {nl,en} } | null,     // wat deze stap uitlicht (rest wordt gedimd)
  *              zoom: sel | null,                                  // waarop inzoomen (standaard focus.sel of alles)
  *              spin: 0.02 } ],                                    // graden per ms rond de y-as
- *   hotspots: [ { node: 'histonmod', label: {nl,en}, color } ],   // klikbare knoppen links in beeld
+ *   hotspots: [ { node: 'histonmod', label: {nl,en}, color, href? } ],   // klikbare knoppen links in beeld (href: bv. '../atlas/index.html?pdb=1TUP')
  *   hide: { resn: ['HOH'] },                                      // wat te verbergen (standaard water)
  *   dimOpacity: false,                                            // optioneel: niet doorschijnend dimmen (bv. bij bolletjesmodellen)
+ *   rotate: [['x', 90]],                                          // optioneel: beginoriëntatie (draaiingen in graden, na het laden)
  * })
  */
 import { L, C, SPIN } from './kit.js';
@@ -35,7 +36,7 @@ export function structure3d(o) {
     ...o,
     kind: '3d',
     html() {
-      const hs = (o.hotspots ?? []).map(h => `<button class="h3" data-node="${h.node}" data-nolabel style="--c:${h.color ?? C.accent ?? '#7cc4ff'}">${L(h.label)}</button>`).join('');
+      const hs = (o.hotspots ?? []).map(h => `<button class="h3" data-node="${h.node}"${h.href ? ` data-href="${h.href}"` : ''} data-nolabel style="--c:${h.color ?? C.accent ?? '#7cc4ff'}">${L(h.label)}</button>`).join('');
       return `<div class="v3d"></div>
         <div class="h3wrap">${hs}</div>
         <div class="load3d">${L({ nl: `Structuur ${o.pdb} laden uit de Protein Data Bank…`, en: `Loading structure ${o.pdb} from the Protein Data Bank…` })}</div>
@@ -52,7 +53,9 @@ export function structure3d(o) {
         viewer.addModel(txt, fmt === 'cif' ? 'cif' : 'pdb');
         viewer.setStyle({}, {});
         applyBase();
-        viewer.zoomTo(); viewer.render();
+        viewer.zoomTo();
+        for (const [axis, deg] of o.rotate ?? []) viewer.rotate(deg, axis);   // optioneel: beginoriëntatie (bv. lange as verticaal)
+        viewer.render();
         layer.querySelector('.load3d')?.remove();
         ready = true; lastStep = -1;
       }).catch(e => { const l = layer.querySelector('.load3d'); if (l) l.textContent = L({ nl: `Structuur ${o.pdb} kon niet geladen worden (geen internet?)`, en: `Structure ${o.pdb} could not be loaded (offline?)` }) + ` · ${e.message}`; });

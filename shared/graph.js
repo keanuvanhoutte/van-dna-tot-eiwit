@@ -133,21 +133,41 @@ const N = [
   // ───────────── REPLICATIE & HERSTEL ─────────────
   { id: 'replicatie', t: 'DNA-replicatie', en: 'DNA replication', stage: 'repl', scale: 2, kind: 'process',
     s: 'Semi-conservatief (Meselson–Stahl, 1958). Start aan vele origins per eukaryoot chromosoom tijdens de S-fase.',
-    in: ['replisoom', 'telomeren'], rel: ['herstel', 'nucleosoom'] },
+    in: ['origins', 'replisoom', 'telomeren'], rel: ['herstel', 'nucleosoom'] },
   { id: 'replisoom', t: 'Replisoom', en: 'Replisome', stage: 'repl', scale: 3, kind: 'structure',
     s: 'Helicase CMG (Cdc45–MCM2-7–GINS), Pol α-primase, DNA-polymerasen (ε voornamelijk leidende, δ volgende streng), glijklem PCNA, RPA, ligase. De volgende streng wordt in Okazaki-fragmenten gemaakt.',
-    rel: ['ssdna', 'supercoiling'] },
+    rel: ['ssdna', 'supercoiling', 'origins', 'mmr'] },
   { id: 'ssdna', t: 'Enkelstrengig DNA', en: 'Single-stranded DNA', stage: 'repl', scale: 4, kind: 'structure',
-    s: 'Tijdelijk aanwezig bij replicatie en herstel; beschermd door bindingseiwitten (RPA bij eukaryoten, SSB bij bacteriën).' },
+    s: 'Tijdelijk aanwezig bij replicatie en herstel; beschermd door bindingseiwitten (RPA bij eukaryoten, SSB bij bacteriën).',
+    rel: ['ner', 'dsb'] },
   { id: 'telomeren', t: 'Telomeren & telomerase', en: 'Telomeres', stage: 'repl', scale: 3, kind: 'structure',
     s: 'Herhalingen (TTAGGG bij gewervelden) aan chromosoomuiteinden; telomerase is een reverse transcriptase met een eigen RNA-matrijs.',
-    rel: ['rt', 'noncanon'] },
+    rel: ['rt', 'noncanon', 'dsb'] },
   { id: 'herstel', t: 'DNA-herstel', en: 'DNA repair', stage: 'repl', scale: 3, kind: 'process',
     s: 'Base-excisie (BER), nucleotide-excisie (NER), mismatch-herstel (MMR), en voor dubbelstrengbreuken homologe recombinatie (HR) of niet-homologe eindverbinding (NHEJ).',
-    rel: ['mutaties', 'integratie'] },
+    in: ['mmr', 'ber', 'ner', 'dsb'], rel: ['p53', 'mutaties', 'integratie'] },
   { id: 'mutaties', t: 'Mutaties', en: 'Mutations', stage: 'repl', scale: 4, kind: 'process',
     s: 'Puntmutaties (stil, missense, nonsense), inserties/deleties (frameshift). Effect zichtbaar in eiwitsequentie en -structuur.',
-    rel: ['codon', 'nmd', 'aminozuren'] },
+    rel: ['codon', 'nmd', 'aminozuren', 'herstel', 'p53'] },
+  /* zijpad replicatie & herstel (05-11-2026) */
+  { id: 'origins', t: 'Startplaatsen (origins)', en: 'Replication origins', stage: 'repl', scale: 3, kind: 'structure',
+    s: 'In G1 laden ORC, Cdc6 en Cdt1 het MCM2-7-complex als inactieve dubbelhexameer rond dubbelstrengig DNA (licentie). In de S-fase zetten de kinasen DDK en CDK het met Cdc45 en GINS om in twee CMG-helicasen die uit elkaar lopen. Tijdens S/G2 kan geen nieuwe MCM geladen worden.',
+    next: ['replisoom'], pdb: ['7W1Y'], rel: ['replicatie', 'breplicatie'] },
+  { id: 'mmr', t: 'Mismatch-herstel (MMR)', en: 'Mismatch repair (MMR)', stage: 'repl', scale: 4, kind: 'process',
+    s: "Eerst leest het polymerase zelf na (3'→5'-exonuclease). Ontsnapt een fout toch, dan herkent MutSα (MSH2–MSH6) de foute paring; MutLα knipt de nieuwe streng, EXO1 verwijdert het stuk en Pol δ en ligase maken het opnieuw.",
+    next: ['ber'], pdb: ['2O8B'], rel: ['replisoom', 'mutaties'] },
+  { id: 'ber', t: 'Base-excisieherstel (BER)', en: 'Base excision repair (BER)', stage: 'repl', scale: 4, kind: 'process',
+    s: 'Eén beschadigde base (bv. uracil na deaminatie van C): een DNA-glycosylase klapt de base uit de helix en knipt ze los, APE1 knipt de ruggengraat, Pol β vult 1 nucleotide in en een ligase sluit.',
+    next: ['ner'], pdb: ['1EMH'], rel: ['mutaties', 'basenparing'] },
+  { id: 'ner', t: 'Nucleotide-excisieherstel (NER)', en: 'Nucleotide excision repair (NER)', stage: 'repl', scale: 3, kind: 'process',
+    s: 'Omvangrijke letsels zoals UV-thyminedimeren: herkenning, openen van het DNA, knippen aan beide kanten, een stuk van 24–32 nt verdwijnt en het gat wordt opgevuld.',
+    next: ['dsb'], rel: ['ssdna', 'transcriptie', 'mutaties'] },
+  { id: 'dsb', t: 'Dubbelstrengbreuk: NHEJ of HR', en: 'Double-strand break: NHEJ or HR', stage: 'repl', scale: 3, kind: 'process',
+    s: 'NHEJ (elke fase, snel, kan letters verliezen): Ku-ringen op de uiteinden, die daarna aan elkaar gezet worden. HR (S/G2): de zusterchromatide dient als matrijs, met een RAD51-filament dat BRCA2 helpt laden; nauwkeurig.',
+    next: ['p53'], pdb: ['1JEY'], rel: ['telomeren', 'ssdna', 'integratie'] },
+  { id: 'p53', t: 'p53: bewaker van het genoom', en: 'p53: guardian of the genome', stage: 'repl', scale: 3, kind: 'process',
+    s: 'Bij DNA-schade activeren de kinasen ATM/ATR p53, dat dan niet meer door MDM2 wordt afgebroken. p53 zet o.a. p21 aan: de celcyclus pauzeert voor herstel. Bij te veel schade volgt apoptose. TP53 is het vaakst gemuteerde gen in kanker.',
+    next: ['mutaties'], pdb: ['1TUP'], rel: ['herstel', 'genregulatie', 'ubiquitine'] },
 
   // ───────────── REGULATIE & TRANSCRIPTIE ─────────────
   { id: 'genregulatie', t: 'Genregulatie', en: 'Gene regulation', stage: 'txn', scale: 3, kind: 'process',
@@ -319,7 +339,7 @@ const N = [
     pdb: ['6WRF'], rel: ['ubiquitine', 'chaperones', 'misvouwing'] },
 ];
 
-const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid', 'bcel', 'bnucleoid', 'bplasmide', 'bgen', 'bpol', 'bterm', 'bmrna', 'bribosoom', 'bafbraak', 'breplicatie', 'btrp', 'bsplicing', 'bact']); // verificatierondes 1–6 (verhaallijn 2: ronde 4; bacterie: ronde 6, docs/verificatie-ronde-6-bacterie.md) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
+const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid', 'bcel', 'bnucleoid', 'bplasmide', 'bgen', 'bpol', 'bterm', 'bmrna', 'bribosoom', 'bafbraak', 'breplicatie', 'btrp', 'bsplicing', 'bact', 'origins', 'mmr', 'ber', 'ner', 'dsb', 'p53']); // verificatierondes 1–7 (zijpad replicatie & herstel: ronde 7, docs/verificatie-ronde-7-replicatie-herstel.md); (verhaallijn 2: ronde 4; bacterie: ronde 6, docs/verificatie-ronde-6-bacterie.md) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
 export const NODES = Object.fromEntries(N.map(n => [n.id, { in: [], next: [], rel: [], pdb: [], status: CHECKED.has(n.id) ? 'nagekeken' : 'concept', ...n }]));
 
 /* Bereken ook de omgekeerde verbanden (wie verwijst naar mij) */

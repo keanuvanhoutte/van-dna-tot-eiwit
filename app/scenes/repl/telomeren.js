@@ -70,7 +70,7 @@ export default {
     <g id="tl-tlp"></g>
     <g data-node="rt" data-color="${PRIMER}" data-label="${T2('Reverse transcriptase (vgl. HIV)', 'Reverse transcriptase (cf. HIV)')}"><g id="tl-rt"></g><circle id="tl-rta" data-anchor="rt" data-pos="below" cx="-99" cy="-99" r="1" fill="none"/></g>
     <g data-node="noncanon" data-color="${C.dna}" data-label="${T2('G-quadruplex', 'G-quadruplex')}"><g id="tl-g4"></g><circle id="tl-g4a" data-anchor="noncanon" cx="-99" cy="-99" r="1" fill="none"/></g>
-    <g data-node="herstel" data-color="${C.ok}" data-label="${T2('DNA-breuken → herstel (NHEJ)', 'DNA breaks → repair (NHEJ)')}"><g id="tl-hr"></g><circle id="tl-hra" data-anchor="herstel" cx="-99" cy="-99" r="1" fill="none"/></g>
+    <g data-node="dsb" data-color="${C.ok}" data-label="${T2('Echte DNA-breuken → herstel', 'Real DNA breaks → repair')}"><g id="tl-hr"></g><circle id="tl-hra" data-anchor="dsb" cx="-99" cy="-99" r="1" fill="none"/></g>
     <g data-node="chromosoom" data-color="${C.dna}" data-label="${T2('↑ Chromosoom', '↑ Chromosome')}">
       <g id="tl-chr"></g>
     </g>

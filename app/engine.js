@@ -10,7 +10,7 @@ import { L, U, statusText, langSwitch, lang } from '../shared/i18n.js';
 import { DETAILS } from '../shared/details/index.js';
 import { GLOSSARY } from '../shared/glossary.js';
 import { SCENES } from './scenes/index.js';
-import { LINES, LINE_KEYS } from './story.js';
+import { LINES, LINE_KEYS, MAIN_KEYS, SIDE_KEYS } from './story.js';
 
 /* ---------- verhaallijnen ---------- */
 const LINE_KEY = 'dna-app-story';
@@ -26,10 +26,10 @@ function setLine(k) {
   line = k; STORY = LINES[k].chapters; STORY_IDS = STORY.map(c => c.id);
   try { localStorage.setItem(LINE_KEY, k); } catch {}
 }
-/* scène die alleen in een andere lijn voorkomt → naar die lijn overschakelen */
+/* scène die alleen in een andere lijn voorkomt → naar die (hoofd)lijn overschakelen; zijpaden kies je alleen zelf (startpagina of kaart) */
 function lineFor(id) {
   if (STORY_IDS.includes(id)) return line;
-  return LINE_KEYS.find(k => LINES[k].chapters.some(c => c.id === id)) ?? line;
+  return MAIN_KEYS.find(k => LINES[k].chapters.some(c => c.id === id)) ?? line;
 }
 
 const UI2 = {
@@ -672,11 +672,13 @@ const STAGECOL = { entry: 'var(--tdna)', genome: 'var(--dna)', repl: 'var(--dna-
 function showMap() {
   const here = current.id;
   let h = `<button class="btn close" id="mClose">${V('close')} ✕</button><h2>${V('mapTitle')}</h2><p class="sub">${V('mapSub')}</p>`;
-  for (const k of LINE_KEYS) {
+  const lineRow = k => {
     const ch = LINES[k].chapters;
-    h += `<div class="linehd ${k === line ? 'cur' : ''}">${L(LINES[k].title)}${k === line ? ` <span>· ${L({ nl: 'nu gekozen', en: 'current' })}</span>` : ''}</div>`;
-    h += `<div class="storyrow">${ch.map((c, i) => `<button data-id="${c.id}" data-line="${k}" class="${c.id === here && k === line ? 'cur' : ''}"><b>${i + 1}</b>${title(NODES[c.id])}</button>`).join('')}</div>`;
-  }
+    return `<div class="linehd ${k === line ? 'cur' : ''}">${L(LINES[k].title)}${k === line ? ` <span>· ${L({ nl: 'nu gekozen', en: 'current' })}</span>` : ''}</div>` +
+      `<div class="storyrow">${ch.map((c, i) => `<button data-id="${c.id}" data-line="${k}" class="${c.id === here && k === line ? 'cur' : ''}"><b>${i + 1}</b>${title(NODES[c.id])}</button>`).join('')}</div>`;
+  };
+  h += MAIN_KEYS.map(lineRow).join('');                     // eerst de hoofdverhalen, dan de zijpaden (generiek: elk LINES-item met side: true)
+  if (SIDE_KEYS.length) h += `<div class="sidegrp">${L({ nl: 'Zijpaden', en: 'Side paths' })}</div>` + SIDE_KEYS.map(lineRow).join('');
   h += `<div style="overflow-x:auto"><div class="mgrid"><div class="hd">↓ ${L({ nl: 'zoom', en: 'zoom' })} · ${L({ nl: 'proces', en: 'process' })} →</div>`;
   h += STAGES.map(s => `<div class="hd">${stageTitle(s)}</div>`).join('');
   for (const sc of SCALES) {

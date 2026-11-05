@@ -78,7 +78,7 @@ export default {
       <g id="rs-rpa"></g>
     </g>
     <g id="rs-lag"></g><g id="rs-lead"></g><g id="rs-prot"></g><g id="rs-lbl"></g>
-    <g data-node="herstel" data-nolabel data-color="${C.ok}" data-label="${T2('Foutenherstel', 'Error repair')}"><g id="rs-herstel"></g></g>
+    <g data-node="mmr" data-nolabel data-color="${C.ok}" data-label="${T2('Kopieerfouten herstellen (MMR)', 'Repairing copying errors (MMR)')}"><g id="rs-herstel"></g></g>
     <g data-node="replicatie" data-nolabel data-color="${C.dna}" data-label="${T2('↑ Replicatie (overzicht)', '↑ Replication (overview)')}" id="rs-rep">
       <rect x="40" y="792" width="400" height="54" rx="27" fill="rgba(79,143,247,.15)" stroke="${C.dna}" stroke-width="2"/>
       ${txt(240, 827, T2('↑ replicatiebel & origins', '↑ replication bubble & origins'), C.text, 22)}
@@ -274,7 +274,7 @@ export default {
         $('rs-lbl').innerHTML = lb;
         $('rs-rep').setAttribute('opacity', big ? 1 : 0);
         $('rs-rep').style.pointerEvents = big ? '' : 'none';
-        $('rs-herstel').innerHTML = step === 9 || step === 8 ? (step === 8 ? `<g transform="translate(650 568)"><rect x="-72" y="-15" width="144" height="30" rx="15" fill="rgba(127,220,106,.14)" stroke="${C.ok}" stroke-width="1.5"/>${txt(0, 5, T2('→ DNA-herstel', '→ DNA repair'), C.text, 13)}</g>` : `<g transform="translate(1300 819)"><rect x="-140" y="-27" width="280" height="54" rx="27" fill="rgba(127,220,106,.14)" stroke="${C.ok}" stroke-width="2"/>${txt(0, 8, T2('→ DNA-herstel', '→ DNA repair'), C.text, 22)}</g>`) : '';
+        $('rs-herstel').innerHTML = step === 9 || step === 8 ? (step === 8 ? `<g transform="translate(650 568)"><rect x="-72" y="-15" width="144" height="30" rx="15" fill="rgba(127,220,106,.14)" stroke="${C.ok}" stroke-width="1.5"/>${txt(0, 5, T2('→ fouten herstellen', '→ fixing errors'), C.text, 13)}</g>` : `<g transform="translate(1300 819)"><rect x="-140" y="-27" width="280" height="54" rx="27" fill="rgba(127,220,106,.14)" stroke="${C.ok}" stroke-width="2"/>${txt(0, 8, T2('→ fouten herstellen', '→ fixing errors'), C.text, 22)}</g>`) : '';
       },
     };
   },

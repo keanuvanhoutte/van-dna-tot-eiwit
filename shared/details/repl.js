@@ -168,7 +168,7 @@ export default {
 
   herstel: {
     nl: {
-      kort: 'DNA raakt elke dag duizenden keren beschadigd, en bij het kopiëren sluipen soms fouten in. De cel heeft verschillende herstelroutes, elk voor een eigen soort schade. Werkt herstel niet, dan stapelen [[mutaties|mutatie]] zich op en stijgt de kans op kanker.',
+      kort: 'DNA raakt elke dag beschadigd, en bij het kopiëren sluipen soms fouten in. Voor elk soort schade heeft de cel een eigen herstelroute. Werkt herstel niet, dan stapelen [[mutaties|mutatie]] zich op.',
       what: 'DNA wordt voortdurend beschadigd door hydrolyse, oxidatie, alkylering, UV en straling, en de replicatie maakt af en toe fouten. Cellen hebben daarom verschillende herstelroutes, elk gespecialiseerd in een soort letsel. De onbeschadigde complementaire streng of de zusterchromatide dient als voorbeeld.',
       how: [
         "BER (één beschadigde base, bv. uracil of 8-oxoG): een DNA-glycosylase knipt de base weg → AP-plaats → APE1 knipt de ruggengraat → Pol β vult 1 nt in en verwijdert de suikerrest → ligase III–XRCC1 (of ligase I) sluit.",
@@ -182,7 +182,7 @@ export default {
       why: 'Zonder herstel zouden mutaties zich snel ophopen. Erfelijke defecten tonen het belang: xeroderma pigmentosum (NER), Lynch-syndroom (MMR) en BRCA1/2-mutaties (HR) verhogen de kans op kanker sterk. Veel kankertherapieën (bestraling, cisplatine, PARP-remmers) buiten juist hersteldefecten uit.',
     },
     en: {
-      kort: 'DNA is damaged thousands of times every day, and copying sometimes introduces errors. The cell has several repair pathways, each for its own kind of damage. When repair fails, [[mutations|mutatie]] pile up and the risk of cancer rises.',
+      kort: 'DNA is damaged every day, and copying sometimes lets errors slip in. For each kind of damage the cell has its own repair route. When repair fails, [[mutations|mutatie]] pile up.',
       what: 'DNA is damaged continuously by hydrolysis, oxidation, alkylation, UV and radiation, and replication makes occasional errors. Cells therefore have several repair pathways, each specialised in one kind of lesion. The undamaged complementary strand or the sister chromatid serves as template.',
       how: [
         'BER (one damaged base, e.g. uracil or 8-oxoG): a DNA glycosylase removes the base → AP site → APE1 cuts the backbone → Pol β fills in 1 nt and removes the sugar remnant → ligase III–XRCC1 (or ligase I) seals.',
