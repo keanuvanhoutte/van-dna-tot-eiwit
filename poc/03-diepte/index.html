@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POC 3 · Diepte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/theme.css">
+<link rel="stylesheet" href="diepte.css">
+<script src="https://cdn.jsdelivr.net/npm/3dmol@2.5.5/build/3Dmol-min.js"></script>
+</head>
+<body>
+<header class="top">
+  <a class="home" id="home" href="../../index.html"></a>
+  <div class="ttl"><b id="ttl"></b><span id="ttlSub"></span></div>
+  <div class="sp"></div>
+  <nav class="tabs" id="tabs" role="tablist">
+    <button role="tab" data-tab="a"></button>
+    <button role="tab" data-tab="b"></button>
+    <button role="tab" data-tab="c"></button>
+  </nav>
+  <div class="sp"></div>
+  <span id="langBox"></span>
+</header>
+
+<main>
+  <!-- A · echt in 3D -->
+  <section class="tab" id="tab-a" hidden>
+    <div class="intro"><h1 data-t="aH"></h1><p data-t="aP"></p></div>
+    <div class="pick"><span data-t="aPick"></span><div class="seg" id="aNodes"></div></div>
+    <div class="scene" id="aScene">
+      <div class="sbar">
+        <div class="stxt"><b id="aTitle"></b><span id="aSum"></span></div>
+        <button class="go3d" id="aOpen"></button>
+      </div>
+      <div class="s2d" id="a2d"></div>
+      <div class="ov" id="aOv" aria-hidden="true">
+        <div class="ovbar">
+          <b id="aOvT"></b>
+          <div class="seg" id="aStyle">
+            <button data-v="cartoon" aria-pressed="true">Cartoon</button>
+            <button data-v="stick" data-t="stick"></button>
+            <button data-v="sphere" data-t="sphere"></button>
+          </div>
+          <div class="sp"></div>
+          <a class="atl" id="aAtlas" target="_self"></a>
+          <button class="x" id="aClose"></button>
+        </div>
+        <div class="v3d" id="aView"></div>
+        <div class="ovfoot" id="aFoot"></div>
+      </div>
+    </div>
+    <div class="srcs" id="srcA"></div>
+  </section>
+
+  <!-- B · atoomniveau -->
+  <section class="tab" id="tab-b" hidden>
+    <div class="intro"><h1 data-t="bH"></h1><p data-t="bP"></p></div>
+    <div class="pick"><div class="seg" id="bPart">
+      <button data-v="prot" aria-pressed="true" data-t="bProt"></button>
+      <button data-v="dna" data-t="bDna"></button>
+    </div><span class="hint" id="bHint"></span></div>
+
+    <div class="bgrid" id="bProt">
+      <div class="card">
+        <div class="ch"><b data-t="b3dH"></b><span class="leg" id="ssLeg"></span></div>
+        <div class="v3d tall" id="pView"><div class="load" data-t="loading"></div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><b data-t="ramaH"></b><span class="leg" id="ramaLeg"></span></div>
+        <div id="rama"></div>
+      </div>
+      <div class="card info">
+        <div class="ch"><b data-t="resH"></b></div>
+        <div id="pInfo"></div>
+      </div>
+    </div>
+
+    <div class="bgrid dna" id="bDna" hidden>
+      <div class="card">
+        <div class="ch"><b data-t="d3dH"></b></div>
+        <div class="v3d tall" id="dView"><div class="load" data-t="loading"></div></div>
+      </div>
+      <div class="card info">
+        <div class="ch"><b data-t="dTabH"></b></div>
+        <div id="dInfo"></div>
+      </div>
+    </div>
+    <div class="srcs" id="srcB"></div>
+  </section>
+
+  <!-- C · mens ⇄ bacterie -->
+  <section class="tab" id="tab-c" hidden>
+    <div class="intro"><h1 data-t="cH"></h1><p data-t="cP"></p></div>
+    <div class="pick">
+      <div class="seg big" id="cOrg">
+        <button data-v="mens" aria-pressed="true" data-t="cMens"></button>
+        <button data-v="bact" data-t="cBact"></button>
+      </div>
+      <button class="play" id="cPlay"></button>
+      <input type="range" id="cTime" min="0" max="1000" value="0" aria-label="t">
+    </div>
+    <div class="anim"><svg id="cSvg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet"></svg></div>
+    <table class="cmp" id="cTable"></table>
+    <div class="srcs" id="srcC"></div>
+  </section>
+</main>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
