@@ -152,7 +152,7 @@ const N = [
     pdb: ['143D', '1KF1'], rel: ['telomeren', 'basenparing'] },
   { id: 'basenparing', t: 'Basenparing', en: 'Base pairing', stage: 'genome', scale: 5, kind: 'structure',
     s: 'Watson–Crick: A–T met 2 en G–C met 3 waterstofbruggen. Alternatieve paringen (Hoogsteen, wobble G–U in RNA) maken andere structuren mogelijk.',
-    rel: ['codon', 'noncanon'] },
+    rel: ['codon', 'noncanon'], pdb: ['1BNA'] },
   { id: 'nucleotide', t: 'Nucleotide', en: 'Nucleotide', stage: 'genome', scale: 5, kind: 'structure',
     s: 'Base + (deoxy)ribose + fosfaat. Purines A en G, pyrimidines C en T (U in RNA). Fosfodiësterbindingen geven de streng een 5\'→3\'-richting.',
     rel: ['rnastructuur'] },
@@ -311,10 +311,10 @@ const N = [
     course: true, in: ['aminozuren', 'peptide'], next: ['secundair'] },
   { id: 'secundair', t: 'Secundaire structuur', en: 'Secondary structure', stage: 'prot', scale: 4, kind: 'structure',
     s: 'Lokale 3D-structuur door backbone-waterstofbruggen: α-helix (i→i+4, 3,6 residu/winding), 3₁₀- en π-helix, β-strengen/-bladen (parallel, antiparallel, gemengd), lussen.',
-    course: true, in: ['ramachandran'], next: ['tertiair'] },
+    course: true, in: ['ramachandran'], next: ['tertiair'], pdb: ['1UBQ'] },
   { id: 'ramachandran', t: 'Ramachandran-plot', en: 'Ramachandran plot', stage: 'prot', scale: 5, kind: 'structure',
     s: 'Uitzetting van φ tegen ψ per residu; toont toegelaten gebieden (α-helix rond −60/−45, β rond −120/+120) en uitschieters door sterische hinder.',
-    course: true },
+    course: true, pdb: ['1UBQ'] },
   { id: 'tertiair', t: 'Tertiaire structuur & domeinen', en: 'Tertiary structure, supersecondary motifs, domains', stage: 'prot', scale: 4, kind: 'structure',
     s: 'Globale vouwing van één keten, gestabiliseerd door hydrofoob effect, H-bruggen, zoutbruggen, disulfidebruggen en liganden. Tussenniveau: supersecundaire structuren (helix-turn-helix, Greek key, Rossmann-fold…) en domeinen.',
     course: true, next: ['quaternair'], rel: ['disulfide'] },
@@ -378,7 +378,11 @@ const N = [
   // ───────────── BACTERIE (E. coli) — verhaallijn 3, POC 04-11-2026 (docs/bacterie-schema.md) ─────────────
   { id: 'bcel', t: 'Bacteriecel (E. coli)', en: 'Bacterial cell (E. coli)', stage: 'bact', scale: 1, kind: 'structure',
     s: 'E. coli heeft geen kern: het DNA ligt als nucleoïd in het cytoplasma. Eén ringvormig chromosoom (K-12: ≈ 4,6 miljoen bp, ≈ 4 300 eiwitgenen), vaak plasmiden en 70S-ribosomen.',
-    in: ['bnucleoid', 'bplasmide', 'bgen'], next: ['bnucleoid'], rel: ['cel', 'breplicatie', 'operon', 'ribosoom'] },
+    in: ['bnucleoid', 'bplasmide', 'bgen'], next: ['vergelijk'], rel: ['cel', 'breplicatie', 'operon', 'ribosoom'] },
+  /* fase 4 (06-11-2026): van gen tot eiwit bij mens en bacterie naast elkaar (uit poc/03-diepte, tab C) */
+  { id: 'vergelijk', t: 'Mens en bacterie vergeleken', en: 'Human and bacterium compared', stage: 'bact', scale: 2, kind: 'process',
+    s: 'Van gen tot eiwit bij de mens en bij E. coli. Mens: het DNA zit in een kern, het pre-mRNA krijgt een 5′-kap en een poly(A)-staart, introns worden eruit geknipt en pas na de export door een kernporie maken ribosomen het eiwit. Bacterie: geen kern, geen spliceosoom, en geen 5′-kap of beschermende poly(A)-staart zoals bij de mens; ribosomen beginnen al op het mRNA terwijl het nog gemaakt wordt, en één mRNA bevat vaak meerdere genen (operon).',
+    next: ['bnucleoid'], rel: ['cel', 'transcriptie', 'rnaprocessing', 'export', 'operon', 'bmrna'] },
   { id: 'bplasmide', t: 'Plasmide', en: 'Plasmid', stage: 'bact', scale: 2, kind: 'structure',
     s: 'Kleine, meestal ringvormige DNA-molecule naast het chromosoom, met een eigen replicatie-oorsprong (ori) die het kopieaantal mee bepaalt. Draagt vaak extra genen, zoals antibioticumresistentie; sommige plasmiden gaan via conjugatie over naar een andere bacterie.',
     next: ['bgen'], rel: ['bcel', 'breplicatie', 'replicatie', 'faag'] },
@@ -414,7 +418,7 @@ const N = [
     pdb: ['6WRF'], rel: ['ubiquitine', 'chaperones', 'misvouwing'] },
 ];
 
-const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid', 'bcel', 'bnucleoid', 'bplasmide', 'bgen', 'bpol', 'bterm', 'bmrna', 'bribosoom', 'bafbraak', 'breplicatie', 'btrp', 'bsplicing', 'bact', 'origins', 'mmr', 'ber', 'ner', 'dsb', 'p53', 'sortering', 'membraan', 'lysosoom', 'mito', 'perox', 'proteasoom', 'autofagie', 'remodeler', 'lussen', 'enhancer', 'xinact', 'imprinting', 'sleutel', 'viruskopie', 'schaar', 'assemblage', 'faag', 'crispr', 'lokalisatie', 'korrels', 'lncrna', 'riboswitch']); // verificatierondes 1–11 (zijpad RNA-lot: ronde 11, docs/verificatie-ronde-11-rna-lot.md); (zijpad virussen: ronde 10, docs/verificatie-ronde-10-virussen.md); (zijpad epigenetica: ronde 9, docs/verificatie-ronde-9-epigenetica.md); (zijpad eiwitlot: ronde 8, docs/verificatie-ronde-8-eiwittargeting.md); ronde 1–7 (zijpad replicatie & herstel: ronde 7, docs/verificatie-ronde-7-replicatie-herstel.md); (verhaallijn 2: ronde 4; bacterie: ronde 6, docs/verificatie-ronde-6-bacterie.md) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
+const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid', 'bcel', 'bnucleoid', 'bplasmide', 'bgen', 'bpol', 'bterm', 'bmrna', 'bribosoom', 'bafbraak', 'breplicatie', 'btrp', 'bsplicing', 'vergelijk', 'bact', 'origins', 'mmr', 'ber', 'ner', 'dsb', 'p53', 'sortering', 'membraan', 'lysosoom', 'mito', 'perox', 'proteasoom', 'autofagie', 'remodeler', 'lussen', 'enhancer', 'xinact', 'imprinting', 'sleutel', 'viruskopie', 'schaar', 'assemblage', 'faag', 'crispr', 'lokalisatie', 'korrels', 'lncrna', 'riboswitch']); // verificatierondes 1–11 (zijpad RNA-lot: ronde 11, docs/verificatie-ronde-11-rna-lot.md); (zijpad virussen: ronde 10, docs/verificatie-ronde-10-virussen.md); (zijpad epigenetica: ronde 9, docs/verificatie-ronde-9-epigenetica.md); (zijpad eiwitlot: ronde 8, docs/verificatie-ronde-8-eiwittargeting.md); ronde 1–7 (zijpad replicatie & herstel: ronde 7, docs/verificatie-ronde-7-replicatie-herstel.md); (verhaallijn 2: ronde 4; bacterie: ronde 6, docs/verificatie-ronde-6-bacterie.md) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
 export const NODES = Object.fromEntries(N.map(n => [n.id, { in: [], next: [], rel: [], pdb: [], status: CHECKED.has(n.id) ? 'nagekeken' : 'concept', ...n }]));
 
 /* Bereken ook de omgekeerde verbanden (wie verwijst naar mij) */

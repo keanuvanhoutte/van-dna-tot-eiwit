@@ -14,4 +14,6 @@ import bsplicing from './bsplicing.js';
 /* zijpad virussen (05-11-2026) */
 import faag from './faag.js';
 import crispr from './crispr.js';
-export default [bcel, bnucleoid, bplasmide, bgen, bpol, bterm, bmrna, bribosoom, bafbraak, breplicatie, btrp, bsplicing, faag, crispr];
+/* fase 4 (06-11-2026): mens en bacterie vergeleken */
+import vergelijk from './vergelijk.js';
+export default [bcel, bnucleoid, bplasmide, bgen, bpol, bterm, bmrna, bribosoom, bafbraak, breplicatie, btrp, bsplicing, faag, crispr, vergelijk];

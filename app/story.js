@@ -52,7 +52,8 @@ const SIGNAAL = [
 /* Verhaallijn 3 (POC 04-11-2026): een bacteriecel (E. coli) als tweede leermodel. Zie docs/bacterie-schema.md.
  * Hergebruikt de bestaande scène 'operon'; de andere hoofdstukken zijn bacteriescènes (app/scenes/bact/). */
 const BACTERIE = [
-  { id: 'bcel', bridge: { nl: 'Zoom in op de nucleoïd: hoe past zoveel DNA in zo’n kleine cel?', en: 'Zoom in on the nucleoid: how does so much DNA fit into such a small cell?' } },
+  { id: 'bcel', bridge: { nl: 'Eerst naast elkaar: hoe gaat het van gen tot eiwit bij de mens en bij deze bacterie?', en: 'First side by side: how does it go from gene to protein in humans and in this bacterium?' } },
+  { id: 'vergelijk', bridge: { nl: 'Nu stap voor stap in de bacterie. Zoom in op de nucleoïd: hoe past zoveel DNA in zo’n kleine cel?', en: 'Now step by step in the bacterium. Zoom in on the nucleoid: how does so much DNA fit into such a small cell?' } },
   { id: 'bnucleoid', bridge: { nl: 'Naast het chromosoom liggen vaak kleine extra DNA-ringen: plasmiden.', en: 'Next to the chromosome there are often small extra DNA rings: plasmids.' } },
   { id: 'bplasmide', bridge: { nl: 'Zoom in op één gen: welke onderdelen heeft het?', en: 'Zoom in on one gene: what parts does it have?' } },
   { id: 'bgen', bridge: { nl: 'Het RNA-polymerase vindt de promoter met hulp van een σ-factor.', en: 'RNA polymerase finds the promoter with the help of a σ factor.' } },

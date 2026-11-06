@@ -1,6 +1,10 @@
 /* Uitleg per knoop, bacterie-route deel 2 (volledige uitwerking 04-11-2026): nucleoïd, replicatie, terminatie, trp-operon,
  * 70S/expressoom, zelfsplicende introns, eiwitafbraak. Zie app/SCENES.md en docs/bacterie-schema.md. */
 const S = {
+  /* fase 4 (06-11-2026): mens en bacterie vergeleken */
+  alberts_rna: { t: 'Alberts et al., Molecular Biology of the Cell, 4th ed. — From DNA to RNA (NCBI Bookshelf)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK26887/' },
+  miller: { t: 'Miller, Hamkalo & Thomas (1970) Visualization of bacterial genes in action. Science 169:392 (PubMed 4915822)', url: 'https://pubmed.ncbi.nlm.nih.gov/4915822/' },
+  cahova: { t: 'Cahová et al. (2015) NAD captureSeq indicates NAD as a bacterial cap for a subset of regulatory RNAs. Nature 519:374 (PubMed 25533955)', url: 'https://pubmed.ncbi.nlm.nih.gov/25533955/' },
   dillon: { t: 'Dillon & Dorman (2010) Bacterial nucleoid-associated proteins, nucleoid structure and gene expression. Nat Rev Microbiol 8:185 (PubMed 20140026)', url: 'https://pubmed.ncbi.nlm.nih.gov/20140026/' },
   rice: { t: 'Rice et al. (1996) Crystal structure of an IHF-DNA complex: a protein-induced DNA U-turn. Cell 87:1295 (PubMed 8980235)', url: 'https://pubmed.ncbi.nlm.nih.gov/8980235/' },
   bush: { t: 'Bush, Evans-Roberts & Maxwell (2015) DNA topoisomerases. EcoSal Plus 6 (PMC11575854)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11575854/' },
@@ -237,5 +241,37 @@ export default {
       why: 'Degradation is as important as synthesis: it keeps the cell’s proteins in good shape and allows quick adjustment. The principle (unfold with ATP, cut in a chamber) is the same as for the proteasome, but the tags differ.',
     },
     sources: [S.fei2, S.pdb6wrf, S.fei, S.baker, S.gottesman, S.pearce],
+  },
+
+  vergelijk: {
+    nl: {
+      kort: 'Van gen tot eiwit gaat bij de mens en bij een bacterie volgens hetzelfde recept: DNA → RNA → eiwit. Alleen de werkplaats verschilt. De mens heeft een [[kern|kern]], werkt het RNA eerst bij en vertaalt het pas daarna. Een bacterie heeft geen kern: [[ribosomen|bribosoom]] beginnen al terwijl het mRNA nog gemaakt wordt.',
+      what: 'Bij de mens ligt het DNA in de celkern. RNA-polymerase II maakt een pre-mRNA. Dat krijgt een 5′-kap, het spliceosoom knipt de introns eruit en het 3′-uiteinde krijgt een poly(A)-staart. Pas het rijpe mRNA gaat door een kernporie naar het cytoplasma, waar ribosomen het vertalen. Bij E. coli is er geen kern: transcriptie en translatie gebeuren in dezelfde ruimte en zijn aan elkaar gekoppeld. De genen van een operon staan samen op één mRNA.',
+      how: [
+        'Mens: transcriptie in de kern; kap, splicing en poly(A)-staart gebeuren al tijdens de transcriptie.',
+        'Mens: het rijpe mRNA gaat door een kernporie naar het cytoplasma en wordt daar vertaald. Een menselijk mRNA draagt meestal één gen.',
+        'Bacterie: ribosomen binden het mRNA al terwijl het gemaakt wordt (gezien met de elektronenmicroscoop); in het expressoom zit het ribosoom vlak achter RNA-polymerase.',
+        'Bacterie: de genen van een operon worden samen op één mRNA gezet, en elk gen geeft een eigen eiwit.',
+        'Bacterie: geen spliceosoom; de zeldzame introns knippen zichzelf uit.',
+        'Bacterie: geen 5′-kap zoals bij de mens; een klein deel van de RNA’s krijgt wel een NAD-kap.',
+      ],
+      facts: [['Kern', 'mens: ja · bacterie: nee (nucleoïd)'], ['Introns', 'mens: spliceosoom · bacterie: zeldzaam, zelfsplicend'], ['5′-kap', 'mens: ja · bacterie: nee (enkele RNA’s: NAD-kap)'], ['Genen per mRNA', 'mens: meestal één · bacterie: vaak meerdere (operon)'], ['Translatie', 'mens: na de export · bacterie: al tijdens de transcriptie']],
+      why: 'Door die verschillen kan een bacterie een menselijk gen niet zomaar juist aflezen: ze kan de introns niet verwijderen. En omdat de ribosomen van bacterie en mens verschillen, kunnen sommige antibiotica de eiwitaanmaak van bacteriën remmen zonder die van onze cellen.',
+    },
+    en: {
+      kort: 'From gene to protein follows the same recipe in humans and in a bacterium: DNA → RNA → protein. Only the workshop differs. Humans have a [[nucleus|kern]], edit the RNA first and only then translate it. A bacterium has no nucleus: [[ribosomes|bribosoom]] start while the mRNA is still being made.',
+      what: 'In humans the DNA lies in the nucleus. RNA polymerase II makes a pre-mRNA. It gets a 5′ cap, the spliceosome cuts out the introns and the 3′ end gets a poly(A) tail. Only the mature mRNA passes through a nuclear pore into the cytoplasm, where ribosomes translate it. In E. coli there is no nucleus: transcription and translation take place in the same space and are coupled. The genes of an operon sit together on one mRNA.',
+      how: [
+        'Human: transcription in the nucleus; cap, splicing and poly(A) tail already happen during transcription.',
+        'Human: the mature mRNA passes through a nuclear pore into the cytoplasm and is translated there. A human mRNA usually carries one gene.',
+        'Bacterium: ribosomes bind the mRNA while it is being made (seen with the electron microscope); in the expressome the ribosome sits right behind RNA polymerase.',
+        'Bacterium: the genes of an operon are put together on one mRNA, and each gene gives its own protein.',
+        'Bacterium: no spliceosome; the rare introns cut themselves out.',
+        'Bacterium: no 5′ cap as in humans; a small fraction of RNAs does get an NAD cap.',
+      ],
+      facts: [['Nucleus', 'human: yes · bacterium: no (nucleoid)'], ['Introns', 'human: spliceosome · bacterium: rare, self-splicing'], ['5′ cap', 'human: yes · bacterium: no (a few RNAs: NAD cap)'], ['Genes per mRNA', 'human: usually one · bacterium: often several (operon)'], ['Translation', 'human: after export · bacterium: already during transcription']],
+      why: 'Because of these differences a bacterium cannot simply read a human gene correctly: it cannot remove the introns. And because bacterial and human ribosomes differ, some antibiotics can block protein synthesis in bacteria without blocking it in our cells.',
+    },
+    sources: [S.alberts_rna, S.alberts_prot, S.cooper_prok, S.miller, S.webster, S.edgell, S.cahova],
   },
 };

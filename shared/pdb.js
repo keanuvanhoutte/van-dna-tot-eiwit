@@ -43,6 +43,7 @@ const LOCAL = new Set([
   '1RNA.pdb',
   '1U6B.json',
   '1U6B.pdb',
+  '1UBQ.json',
   '1UBQ.pdb',
   '1Y26.json',
   '1Y26.pdb',
@@ -98,3 +99,5 @@ const LOCAL = new Set([
 const here = f => new URL(`../data/pdb/${f}`, import.meta.url).href;
 export const pdbUrl = (id, ext = 'pdb') => LOCAL.has(`${id}.${ext}`) ? here(`${id}.${ext}`) : `https://files.rcsb.org/download/${id}.${ext}`;
 export const rcsbEntryUrl = id => LOCAL.has(`${id}.json`) ? here(`${id}.json`) : `https://data.rcsb.org/rest/v1/core/entry/${id}`;
+/* lokale kopie van een structuur (voor 'Bekijk echt in 3D'): { url, fmt } of null als er geen lokaal bestand is */
+export const localPdb = id => { const ext = ['pdb', 'cif', 'pdb1'].find(e => LOCAL.has(`${id}.${e}`)); return ext ? { url: here(`${id}.${ext}`), fmt: ext === 'cif' ? 'cif' : 'pdb' } : null; };

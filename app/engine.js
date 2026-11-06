@@ -11,6 +11,8 @@ import { DETAILS } from '../shared/details/index.js';
 import { GLOSSARY } from '../shared/glossary.js';
 import { SCENES } from './scenes/index.js';
 import { LINES, LINE_KEYS, MAIN_KEYS, SIDE_KEYS } from './story.js';
+import { createReal3D } from './real3d.js';
+import { orgButton } from './orgswitch.js';
 
 /* ---------- verhaallijnen ---------- */
 const LINE_KEY = 'dna-app-story';
@@ -48,6 +50,7 @@ const UI2 = {
   playAuto: { nl: 'Vanzelf verder gaan (spatie)', en: 'Continue by itself (space)' }, holdStep: { nl: 'Blijf bij deze stap (spatie)', en: 'Stay on this step (space)' },
   stateAuto: { nl: '▶ gaat vanzelf verder', en: '▶ continues by itself' }, stateHold: { nl: '⏸ blijft bij deze stap (herhaalt)', en: '⏸ stays on this step (repeats)' },
   speedLbl: { nl: 'Snelheid', en: 'Speed' }, settings: { nl: 'Instellingen', en: 'Settings' }, more: { nl: 'Voor wie meer wil', en: 'Want to know more?' },
+  real3d: { nl: 'Bekijk echt in 3D', en: 'View in real 3D' },
   homeTip: { nl: 'Terug naar het begin van het verhaal', en: 'Back to the start of the story' }, upTip: { nl: 'Eén niveau uitzoomen (Esc)', en: 'Zoom out one level (Esc)' },
 };
 const V = k => L(UI2[k]);
@@ -95,6 +98,14 @@ $('langBox').append(langSwitch('btn'));
 document.title = L({ nl: 'Van DNA tot eiwit', en: 'From DNA to protein' });
 if (lang === 'en') for (const o of $('speed').options) o.textContent = o.textContent.replace(',', '.');   // 0,5× → 0.5×
 $('bAtlas').href = new URL(`../atlas/index.html?lang=${lang}`, import.meta.url).href;   // werkt ook als de pagina elders staat (online)
+/* fase 4: echte 3D-structuur over de tekening (app/real3d.js) en de schakelaar mens ⇄ bacterie (app/orgswitch.js) */
+const real3d = createReal3D({ stage, button: $('bReal3d'), pause: () => { const was = playing; setPlaying(false); return was; }, resume: () => setPlaying(true) });
+function syncOrg() {
+  const o = current && orgButton(current.id), b = $('bOrg');
+  b.hidden = !o; if (!o) return;
+  b.innerHTML = o.html; b.title = o.tip; b.dataset.target = o.target;
+}
+$('bOrg').onclick = () => { const id = $('bOrg').dataset.target; if (id && hasScene(id)) go(id, null, 'in'); };
 
 /* ---------- scène-definities ---------- */
 function resolve(id) {
@@ -448,6 +459,7 @@ const lerpBox = (a, b, k) => a.map((x, i) => x + (b[i] - x) * k);
 async function go(id, box, dir = 'in', push = true) {
   if (busy || !hasScene(id)) return id && !hasScene(id) ? showCard(id) : null;
   if (current && id === current.id) return showSelf();
+  real3d.close();
   busy = true; hideOverlays(); labelsEl.classList.add('hide'); $('nextCh').classList.remove('show');
   const old = current;
   let nxt;
@@ -642,6 +654,7 @@ function render() {
   side.scrollTop = 0;
   renderStory();
   onStep(stepInfo(t).step);
+  real3d.sync(current.id, current.is3d); syncOrg();
 }
 function chipGo(id) {
   const el = current.root.querySelector(`[data-node="${id}"]`);
@@ -704,7 +717,8 @@ $('bMap').onclick = showMap;
 
 /* ---------- toetsenbord ---------- */
 document.addEventListener('keydown', e => {
-  if (e.target.closest('select, input')) return;
+  if (e.target.closest?.('select, input')) return;
+  if (real3d.isOpen()) { if (e.key === 'Escape') real3d.close(); return; }   // het 3D-paneel heeft voorrang
   if (e.key === 'Escape') { if ($('card').classList.contains('show') || $('map').classList.contains('show')) hideOverlays(); else zoomOut(); }
   else if (e.key === ' ') { e.preventDefault(); $('tPlay').click(); }   // ▶ vanzelf verder / ⏸ blijf bij deze stap
   else if (e.key === 'ArrowRight') $('tNext').click();
