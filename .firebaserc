@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "van-dna-tot-eiwit"
-  }
+  },
+  "targets": {
+    "van-dna-tot-eiwit": {
+      "hosting": {
+        "dogma": [
+          "dogma-bio"
+        ],
+        "oud": [
+          "van-dna-tot-eiwit"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

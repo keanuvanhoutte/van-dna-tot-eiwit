@@ -1,31 +1,60 @@
 {
-  "hosting": {
-    "public": ".",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/.*/**",
-      "**/node_modules/**",
-      "**/__pycache__/**",
-      "transcripten/**",
-      "🎥*",
-      "tools/**",
-      "dist/**",
-      "dist-files.json",
-      "**/*.orig.js",
-      "README.md",
-      "FIXES.md",
-      "Start app.bat"
-    ],
-    "headers": [
-      {
-        "source": "**/*.@(js|css|html|json)",
-        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
-      },
-      {
-        "source": "data/pdb/**",
-        "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
-      }
-    ]
-  }
+  "hosting": [
+    {
+      "public": ".",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/.*/**",
+        "**/node_modules/**",
+        "**/__pycache__/**",
+        "transcripten/**",
+        "🎥*",
+        "tools/**",
+        "dist/**",
+        "dist-files.json",
+        "**/*.orig.js",
+        "README.md",
+        "FIXES.md",
+        "Start app.bat"
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(js|css|html|json)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        },
+        {
+          "source": "data/pdb/**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=86400"
+            }
+          ]
+        }
+      ],
+      "target": "dogma"
+    },
+    {
+      "target": "oud",
+      "public": "tools/redirect-site",
+      "redirects": [
+        {
+          "source": "/",
+          "destination": "https://dogma-bio.web.app/",
+          "type": 301
+        },
+        {
+          "source": "/:path*",
+          "destination": "https://dogma-bio.web.app/:path",
+          "type": 301
+        }
+      ]
+    }
+  ]
 }
