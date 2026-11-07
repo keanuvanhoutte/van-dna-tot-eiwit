@@ -1,0 +1,14 @@
+{
+  "name": "Dogma · van DNA tot eiwit",
+  "short_name": "Dogma",
+  "description": "Interactieve animaties: van een hele cel tot op de atomen, van DNA tot eiwit.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#070c18",
+  "theme_color": "#0a1128",
+  "icons": [
+    { "src": "shared/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "shared/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "shared/icons/logo.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

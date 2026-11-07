@@ -99,7 +99,7 @@ document.querySelectorAll('[data-u]').forEach(e => e.textContent = V(e.dataset.u
 $('bHome').title = V('homeTip'); $('bUp').title = V('upTip');
 $('tPrev').title = V('prevStep'); $('tNext').title = V('nextStep'); $('gearBtn').title = V('settings');
 $('langBox').append(langSwitch('btn'));
-document.title = L({ nl: 'Van DNA tot eiwit', en: 'From DNA to protein' });
+document.title = 'Dogma';
 if (lang === 'en') for (const o of $('speed').options) o.textContent = o.textContent.replace(',', '.');   // 0,5× → 0.5×
 $('bAtlas').href = new URL(`../atlas/index.html?lang=${lang}`, import.meta.url).href;   // werkt ook als de pagina elders staat (online)
 /* fase 4: echte 3D-structuur over de tekening (app/real3d.js) en de schakelaar mens ⇄ bacterie (app/orgswitch.js) */

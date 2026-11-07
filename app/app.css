@@ -17,6 +17,7 @@ html, body { height: 100%; overflow: hidden; }
 .btn:focus-visible, .tbtn:focus-visible, .sbtn:focus-visible, .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .btn em { font-style: normal; }
 .btn.icon span { font-size: 15px; line-height: 1; }
+.btn.icon .logo { width: 17px; height: 17px; border-radius: 4px; vertical-align: -4px; margin-right: 1px; }
 
 /* bovenbalk (boven de figuur, niet erover) */
 .topbar { flex: none; display: flex; flex-direction: column; gap: 6px; padding: 8px 12px 6px; background: #080d1a; border-bottom: 1px solid var(--line); z-index: 5; }

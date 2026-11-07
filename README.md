@@ -1,4 +1,4 @@
-# Van DNA tot eiwit
+# Dogma — van DNA tot eiwit
 
 Een interactieve, stap-voor-stap moleculaire animatie van een menselijke cel: van genetische informatie of een signaal dat de cel bereikt, via transcriptie, RNA-bewerking en translatie, tot eiwitvouwing, modificaties en afbraak. Gemaakt als studiehulp op bachelorniveau (structurele bio-informatica). Nederlands en Engels.
 

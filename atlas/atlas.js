@@ -199,7 +199,7 @@ const cmpIds = (q.get('cmp') || '').split(',').filter(id => BY[id] && id !== sta
 if (cmpIds.length) { state.cmp = true; state.set = [state.id, ...cmpIds]; } else state.set = [state.id];
 
 /* ---------- statische teksten ---------- */
-document.title = t('ttl');
+document.title = `${t('ttl')} · Dogma`;
 $('ttl').textContent = t('ttl'); $('ttlSub').textContent = t('ttlSub');
 $('home').textContent = t('home'); $('storyLink').textContent = t('story');
 if (FROM && /^[a-z0-9_-]+$/i.test(FROM)) { $('back').hidden = false; $('back').textContent = t('back'); $('back').href = `../app/index.html?scene=${encodeURIComponent(FROM)}`; }
