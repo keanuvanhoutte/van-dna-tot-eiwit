@@ -53,6 +53,10 @@ button { font-family: inherit; }
 /* ---------- zijbalk ---------- */
 .search input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); border-radius: 9px; padding: 6px 10px; font: 13.5px var(--font); outline: none; }
 .search input:focus { border-color: rgba(124,196,255,.6); }
+.qinfo { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.9; }
+.qinfo:empty { display: none; }
+.qinfo .qc { display: inline-block; padding: 1px 8px; margin-right: 4px; border-radius: 999px; background: rgba(124,196,255,.14); border: 1px solid rgba(124,196,255,.4); color: var(--text); line-height: 1.6; }
+.qinfo .ql { color: #ffc247; line-height: 1.4; margin-top: 2px; }
 /* filters: drie inklapbare groepen, keuzes als vinkjes onder elkaar */
 .filt { margin-top: 8px; display: flex; flex-direction: column; gap: 4px; max-height: 46vh; overflow-y: auto; flex: none; }
 .fgrp { border: 1px solid var(--line); border-radius: 9px; }

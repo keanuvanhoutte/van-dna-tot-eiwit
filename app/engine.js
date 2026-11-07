@@ -13,6 +13,10 @@ import { SCENES } from './scenes/index.js';
 import { LINES, LINE_KEYS, MAIN_KEYS, SIDE_KEYS } from './story.js';
 import { createReal3D } from './real3d.js';
 import { orgButton } from './orgswitch.js';
+import { makeSearch } from '../shared/search.js';
+import { mountSearch, whereText, lineColor } from '../shared/searchbox.js';
+import { S_EN } from '../shared/graph.en.js';
+import { LINKS } from '../shared/links.js';
 
 /* ---------- verhaallijnen ---------- */
 const LINE_KEY = 'dna-app-story';
@@ -35,9 +39,9 @@ function lineFor(id) {
 }
 
 const UI2 = {
-  home: { nl: 'Start', en: 'Start' }, zoomOut: { nl: 'Uitzoomen', en: 'Zoom out' }, whereAmI: { nl: 'Waar ben ik?', en: 'Where am I?' },
+  home: { nl: 'Startmenu', en: 'Main menu' }, zoomOut: { nl: 'Uitzoomen', en: 'Zoom out' }, whereAmI: { nl: 'Waar ben ik?', en: 'Where am I?' },
   atlas: { nl: 'DNA/RNA-atlas', en: 'DNA/RNA atlas' }, labels: { nl: 'Labels', en: 'Labels' }, captions: { nl: 'Ondertitels', en: 'Captions' }, info: { nl: 'Uitleg', en: 'Info' },
-  chapter: { nl: 'Hoofdstuk', en: 'Chapter' }, sidePath: { nl: 'Zijpad', en: 'Side path' }, backTo: { nl: '↩ terug naar het verhaal', en: '↩ back to the story' },
+  chapter: { nl: 'Hoofdstuk', en: 'Chapter' }, sidePath: { nl: 'Zijsprong', en: 'Detour' }, backTo: { nl: '↩ terug naar hoofdstuk', en: '↩ back to chapter' },
   nextChapter: { nl: 'Volgend hoofdstuk', en: 'Next chapter' }, step: { nl: 'stap', en: 'step' },
   what: { nl: 'Wat', en: 'What' }, how: { nl: 'Zo werkt het', en: 'How it works' }, facts: { nl: 'Kerncijfers', en: 'Key numbers' },
   why: { nl: 'Waarom belangrijk', en: 'Why it matters' }, sources: { nl: 'Bronnen', en: 'Sources' }, stepsHere: { nl: 'Stappen in deze animatie', en: 'Steps in this animation' },
@@ -51,7 +55,7 @@ const UI2 = {
   stateAuto: { nl: '▶ gaat vanzelf verder', en: '▶ continues by itself' }, stateHold: { nl: '⏸ blijft bij deze stap (herhaalt)', en: '⏸ stays on this step (repeats)' },
   speedLbl: { nl: 'Snelheid', en: 'Speed' }, settings: { nl: 'Instellingen', en: 'Settings' }, more: { nl: 'Voor wie meer wil', en: 'Want to know more?' },
   real3d: { nl: 'Bekijk echt in 3D', en: 'View in real 3D' },
-  homeTip: { nl: 'Terug naar het begin van het verhaal', en: 'Back to the start of the story' }, upTip: { nl: 'Eén niveau uitzoomen (Esc)', en: 'Zoom out one level (Esc)' },
+  homeTip: { nl: 'Terug naar het startmenu (kies een ander verhaal of zijpad)', en: 'Back to the main menu (pick another story or side path)' }, upTip: { nl: 'Eén niveau uitzoomen (Esc)', en: 'Zoom out one level (Esc)' },
 };
 const V = k => L(UI2[k]);
 
@@ -532,8 +536,9 @@ async function go(id, box, dir = 'in', push = true) {
   nxt.layer.style.transform = ''; nxt.layer.style.transformOrigin = ''; nxt.layer.style.opacity = '';
   current = nxt; camNow = firstCam.slice();
   t = 0; endedOnce = false; lastStep = -1; ff = null; playStep(0);
-  if (push) { const i = trail.indexOf(id); trail = i >= 0 ? trail.slice(0, i + 1) : [...trail, id]; }
   const lk = lineFor(id); if (lk !== line) { setLine(lk); lastChapter = 0; }
+  /* kruimelpad: een hoofdstuk van de gekozen lijn is altijd een nieuw begin; daaronder komen de zijsprongen */
+  if (push) { const i = trail.indexOf(id); trail = STORY_IDS.includes(id) ? [id] : i >= 0 ? trail.slice(0, i + 1) : [...trail, id]; }
   const ci = STORY_IDS.indexOf(id); if (ci >= 0) lastChapter = ci;
   render(); drawTicks();
   busy = false;
@@ -554,7 +559,7 @@ function parentOf(id) {
 }
 function zoomOut() { const p = parentOf(current.id); if (p) go(p, null, 'out'); }
 $('bUp').onclick = zoomOut;
-$('bHome').onclick = () => { trail = []; go(STORY_IDS[0] ?? 'cel', null, 'out'); };   // begin van de gekozen verhaallijn (mens: cel, bacterie: bcel)
+$('bHome').href = new URL(`../index.html?lang=${lang}`, import.meta.url).href;   // Startmenu = de startpagina (uitzoomen brengt je al terug naar de hele cel)
 
 /* ---------- verhaallijn ---------- */
 function chapterGo(i) {
@@ -567,21 +572,39 @@ function chapterGo(i) {
 }
 function renderStory() {
   const ci = STORY_IDS.indexOf(current.id);
-  const dots = STORY.map((c, i) => `<i class="${i === ci ? 'cur' : i <= lastChapter ? 'on' : ''}"></i>`).join('');
+  const dots = STORY.map((c, i) => `<button class="${i === ci ? 'cur' : i === lastChapter && ci < 0 ? 'from' : i <= lastChapter ? 'on' : ''}" data-ci="${i}" title="${V('chapter')} ${i + 1}: ${title(NODES[c.id])}"></button>`).join('');
   if (ci >= 0) {
-    $('sInfo').innerHTML = `${L(LINES[line].short)} · ${V('chapter')} <b>${ci + 1}/${STORY.length}</b><div class="dots">${dots}</div>`;
+    $('sInfo').innerHTML = `${V('chapter')} <b>${ci + 1}</b> ${L({ nl: 'van', en: 'of' })} ${STORY.length}<div class="dots">${dots}</div>`;
     const pv = STORY[ci - 1], nx = STORY[ci + 1];   // hoofdstukken enkel hier, met de naam van het vorige/volgende erbij
     $('sPrevName').textContent = pv ? title(NODES[pv.id]) : ''; $('sNextName').textContent = nx ? title(NODES[nx.id]) : '';
     $('sPrev').title = pv ? `${V('chapter')} ${ci}: ${title(NODES[pv.id])}` : ''; $('sNext').title = nx ? `${V('chapter')} ${ci + 2}: ${title(NODES[nx.id])}` : '';
     $('sPrev').disabled = !pv; $('sNext').disabled = !nx;
     $('sPrev').onclick = () => chapterGo(ci - 1); $('sNext').onclick = () => chapterGo(ci + 1);
   } else {
-    $('sInfo').innerHTML = `${V('sidePath')}<div class="dots">${dots}</div>`;
+    const deep = Math.max(1, trail.length - 1);
+    $('sInfo').innerHTML = `<span class="jumpinfo">${V('sidePath')} ${L({ nl: 'vanuit hoofdstuk', en: 'from chapter' })} <b>${lastChapter + 1}</b> · ${deep} ${L(deep === 1 ? { nl: 'niveau dieper', en: 'level deeper' } : { nl: 'niveaus dieper', en: 'levels deeper' })}</span><div class="dots">${dots}</div>`;
     $('sPrevName').textContent = ''; $('sPrev').title = ''; $('sPrev').disabled = true;
-    $('sNextName').textContent = `${V('backTo')} (${lastChapter + 1})`; $('sNext').title = title(NODES[STORY[lastChapter].id]);
+    $('sNextName').textContent = `${V('backTo')} ${lastChapter + 1}`; $('sNext').title = title(NODES[STORY[lastChapter].id]);
     $('sNext').disabled = false; $('sNext').onclick = () => chapterGo(lastChapter);
   }
   $('sNext').classList.toggle('back', ci < 0);
+  $('sInfo').querySelectorAll('.dots button').forEach(b => b.onclick = () => { const i = +b.dataset.ci; if (STORY[i].id !== current.id) { trail = []; chapterGo(i); } });
+}
+/* Waar ben ik? Kruimelpad = [gekleurde lijn] › hoofdstuk N › zijsprong › … (lange paden ingekort in het midden) */
+function renderCrumbs() {
+  const nm = id => L(SCENES[id]?.title) ?? (NODES[id] ? title(NODES[id]) : id);
+  const ln = LINES[line];
+  const items = trail.map((id, i) => {
+    const k = STORY_IDS.indexOf(id), last = i === trail.length - 1;
+    const num = k >= 0 ? `<i class="cn">${k + 1}</i>` : '';
+    const cls = k >= 0 ? 'ch' : 'jump';
+    return last ? `<b class="${cls}">${num}${nm(id)}</b>` : `<button class="${cls}" data-i="${i}" title="${nm(id)}">${num}${nm(id)}</button>`;
+  });
+  const shown = items.length > 4 ? [items[0], `<span class="more" title="${trail.slice(1, -2).map(nm).join(' › ')}">…</span>`, ...items.slice(-2)] : items;
+  $('crumbs').innerHTML = `<button class="linebadge" id="lineBadge" style="--c:${lineColor(line)}" title="${L(ln.title)} — ${L({ nl: 'klik voor het overzicht', en: 'click for the overview' })}">${L(ln.short)}</button>` +
+    shown.map(h => `<span class="sep">›</span>${h}`).join('');
+  $('crumbs').querySelectorAll('button[data-i]').forEach(b => b.onclick = () => go(trail[+b.dataset.i], null, 'out'));
+  $('lineBadge').onclick = showMap;
 }
 function showNextChapter() {
   const ci = STORY_IDS.indexOf(current.id);
@@ -624,9 +647,7 @@ function detailsHTML(id, open = true) {
 }
 function render() {
   const def = current.def, base = current.base, n = NODES[current.id];
-  $('crumbs').innerHTML = trail.map((id, i) => i === trail.length - 1 ? `<b>${L(SCENES[id].title) ?? title(NODES[id])}</b>`
-    : `<button data-i="${i}">${L(SCENES[id].title) ?? title(NODES[id])}</button><span>›</span>`).join('');
-  $('crumbs').querySelectorAll('button').forEach(b => b.onclick = () => go(trail[+b.dataset.i], null, 'out'));
+  renderCrumbs();
   const lvl = n?.scale ?? 3;
   const sc = L(def.scale ?? base.scale), tm = L(def.time ?? base.time);
   $('scalebox').innerHTML = `<span class="zoomlvl" title="${L({ nl: 'Zoomniveau: van cel (links) tot atomen (rechts)', en: 'Zoom level: from cell (left) to atoms (right)' })}">${SCALES.map(s => `<i class="${s.id <= lvl ? 'on' : ''}" title="${scaleTitle(s)}"></i>`).join('')}</span>` +
@@ -715,6 +736,31 @@ function showMap() {
 }
 $('bMap').onclick = showMap;
 
+/* ---------- zoeken (bovenbalk): kernwoorden → "Bedoel je …?" → naar die scène, met het pad vanaf het hoofdstuk ---------- */
+const SEARCH = makeSearch({ NODES, LINES, LINKS, DETAILS, S_EN, has: hasScene });
+const ctx = { NODES, LINES, L, title };
+function info(msg) {
+  let el = $('where');
+  if (!el) { el = document.createElement('div'); el.id = 'where'; el.className = 'toast info'; document.body.append(el); }
+  el.innerHTML = msg; el.classList.add('show'); clearTimeout(info.h); info.h = setTimeout(() => el.classList.remove('show'), 5200);
+}
+async function jumpTo(r) {
+  if (busy || !current) return;
+  const loc = r.loc; hideOverlays(); real3d.close();
+  if (loc.line && loc.line !== line) setLine(loc.line);
+  if (loc.ci >= 0) lastChapter = loc.ci;
+  const path = loc.path.filter(hasScene);
+  if (r.id === current.id) { trail = path; render(); }
+  else { trail = path.slice(0, -1); await go(r.id, null, 'in'); trail = path; render(); }
+  info(`📍 ${L({ nl: 'Je bent nu bij', en: 'You are now at' })} <b>${title(NODES[r.id])}</b><br><span>${whereText(loc, ctx)}</span>`);
+}
+mountSearch($('searchBox'), {
+  engine: () => SEARCH, NODES, LINES, L, title, summary, compact: true,
+  line: () => line, onPick: jumpTo,
+  atlasHref: qv => new URL(`../atlas/index.html?lang=${lang}&find=${encodeURIComponent(qv)}`, import.meta.url).href,
+});
+document.addEventListener('keydown', e => { if (e.key === '/' && !e.target.closest?.('input, select, textarea')) { e.preventDefault(); $('searchBox').querySelector('input').focus(); } });
+
 /* ---------- toetsenbord ---------- */
 document.addEventListener('keydown', e => {
   if (e.target.closest?.('select, input')) return;
@@ -735,9 +781,14 @@ const fromId = q.get('from');
 if (fromId && hasScene(fromId) && fromId !== startId) trail = [fromId];
 if (startId) {
   current = build(startId);
-  trail = [...trail, startId];
   setLine(lineFor(startId));
   const ci = STORY_IDS.indexOf(startId); if (ci >= 0) lastChapter = ci;
+  /* geen hoofdstuk van de lijn (bv. via een link of de zoekbalk op de startpagina): het pad vanaf het hoofdstuk erbij zoeken */
+  if (ci < 0 && !trail.length) {
+    const loc = SEARCH.locate(startId, line);
+    if (loc.line === line && loc.ci >= 0) { lastChapter = loc.ci; trail = loc.path.filter(hasScene).slice(0, -1); }
+  }
+  trail = ci >= 0 ? [startId] : [...trail, startId];
   camNow = (current.steps[0].cam ?? FULL).slice();
   if (q.has('t')) t = Math.min(current.total - 1, +q.get('t'));
   if (q.has('step')) { const k = Math.max(0, Math.min(current.steps.length - 1, +q.get('step') || 0)); t = stepStart(k) + (q.has('p') ? +q.get('p') * current.steps[k].dur : 1); }   // stap buiten bereik (bv. overzichtsscène) → begrenzen

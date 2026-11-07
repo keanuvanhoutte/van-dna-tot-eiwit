@@ -16,10 +16,10 @@
     <header class="topbar">
       <div class="row1">
         <div class="navbtns">
-          <button class="btn icon" id="bHome" title=""><span>⌂</span><em data-u="home"></em></button>
+          <a class="btn icon" id="bHome" href="../index.html"><span>⌂</span><em data-u="home"></em></a>
           <button class="btn icon" id="bUp" title=""><span>⤒</span><em data-u="zoomOut"></em></button>
         </div>
-        <nav class="crumbs" id="crumbs" aria-label="breadcrumbs"></nav>
+        <div class="topsearch" id="searchBox"></div>
         <div class="tools">
           <button class="btn r3btn" id="bReal3d" hidden><span>3D</span> <em data-u="real3d"></em></button>
           <button class="btn orgbtn" id="bOrg" hidden></button>
@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="row2">
-        <div class="scalebox" id="scalebox"></div>
+        <nav class="crumbs" id="crumbs" aria-label="breadcrumbs"></nav>
         <div class="story" id="story">
           <button class="sbtn" id="sPrev"><span class="arr">‹</span><span class="nm" id="sPrevName"></span></button>
           <div class="sinfo" id="sInfo"></div>
@@ -67,7 +67,7 @@
           </div>
         </details>
       </div>
-      <div class="srow"><span id="playState"></span><span class="stepno" id="stepNo"></span></div>
+      <div class="srow"><span id="playState"></span><div class="scalebox" id="scalebox"></div><span class="stepno" id="stepNo"></span></div>
     </footer>
 
     <div class="overlay" id="card"><div class="cardbox" id="cardbody"></div></div>

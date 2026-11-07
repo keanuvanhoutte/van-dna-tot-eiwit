@@ -142,16 +142,17 @@ const RNALOT = [
 ];
 
 /* Alle verhaallijnen. De engine kiest er één (?story=… of de laatst gekozen) en kan wisselen.
+ * from: hoofdstuk van verhaal 1 waar een zijpad op aansluit (getoond op de startpagina).
  * side: true = zijpad (in de kaart apart gegroepeerd; geen automatische overschakeling vanuit een andere lijn). */
 export const LINES = {
   virus: { chapters: VIRUS, title: { nl: 'Verhaal 1 · Een virus brengt DNA binnen', en: 'Story 1 · A virus brings in DNA' }, short: { nl: 'Verhaal 1', en: 'Story 1' } },
   signaal: { chapters: SIGNAAL, title: { nl: 'Verhaal 2 · Een signaal zet een gen aan', en: 'Story 2 · A signal switches on a gene' }, short: { nl: 'Verhaal 2', en: 'Story 2' } },
   bacterie: { chapters: BACTERIE, title: { nl: 'Bacterie · Van DNA tot eiwit in E. coli', en: 'Bacterium · From DNA to protein in E. coli' }, short: { nl: 'Bacterie', en: 'Bacterium' } },
-  herstel: { chapters: HERSTEL, side: true, title: { nl: 'Zijpad · DNA kopiëren en herstellen', en: 'Side path · Copying and repairing DNA' }, short: { nl: 'Zijpad replicatie', en: 'Side path replication' } },
-  targeting: { chapters: EIWITLOT, side: true, title: { nl: 'Zijpad · Waar een eiwit heen gaat en hoe het verdwijnt', en: 'Side path · Where a protein goes and how it is removed' }, short: { nl: 'Zijpad eiwitlot', en: 'Side path protein fate' } },
-  epigen: { chapters: EPIGEN, side: true, title: { nl: 'Zijpad · Hoe de cel kiest welke genen aan staan', en: 'Side path · How a cell chooses which genes are on' }, short: { nl: 'Zijpad epigenetica', en: 'Side path epigenetics' } },
-  virusroute: { chapters: VIRUSROUTE, side: true, title: { nl: 'Zijpad · Hoe een virus zichzelf laat maken', en: 'Side path · How a virus gets itself made' }, short: { nl: 'Zijpad virussen', en: 'Side path viruses' } },
-  rnalot: { chapters: RNALOT, side: true, title: { nl: 'Zijpad · Het leven van een RNA', en: 'Side path · The life of an RNA' }, short: { nl: 'Zijpad RNA-lot', en: 'Side path RNA fate' } },
+  herstel: { chapters: HERSTEL, side: true, from: 'dnahelix', title: { nl: 'Zijpad · DNA kopiëren en herstellen', en: 'Side path · Copying and repairing DNA' }, short: { nl: 'Zijpad replicatie', en: 'Side path replication' } },
+  targeting: { chapters: EIWITLOT, side: true, from: 'translatie', title: { nl: 'Zijpad · Waar een eiwit heen gaat en hoe het verdwijnt', en: 'Side path · Where a protein goes and how it is removed' }, short: { nl: 'Zijpad eiwitlot', en: 'Side path protein fate' } },
+  epigen: { chapters: EPIGEN, side: true, from: 'chromatine', title: { nl: 'Zijpad · Hoe de cel kiest welke genen aan staan', en: 'Side path · How a cell chooses which genes are on' }, short: { nl: 'Zijpad epigenetica', en: 'Side path epigenetics' } },
+  virusroute: { chapters: VIRUSROUTE, side: true, from: 'adeno', title: { nl: 'Zijpad · Hoe een virus zichzelf laat maken', en: 'Side path · How a virus gets itself made' }, short: { nl: 'Zijpad virussen', en: 'Side path viruses' } },
+  rnalot: { chapters: RNALOT, side: true, from: 'export', title: { nl: 'Zijpad · Het leven van een RNA', en: 'Side path · The life of an RNA' }, short: { nl: 'Zijpad RNA-lot', en: 'Side path RNA fate' } },
 };
 export const LINE_KEYS = Object.keys(LINES);
 export const MAIN_KEYS = LINE_KEYS.filter(k => !LINES[k].side), SIDE_KEYS = LINE_KEYS.filter(k => LINES[k].side);

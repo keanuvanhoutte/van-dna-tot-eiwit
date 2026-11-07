@@ -54,18 +54,30 @@
   .sh p { margin: 0; color: var(--muted); font-size: 15px; }
 
   .starts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-  a.start { position: relative; display: flex; flex-direction: column; text-decoration: none; background: linear-gradient(180deg, rgba(20,30,56,.9), rgba(13,20,38,.9)); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; transition: .25s; }
-  a.start:hover { border-color: var(--c); transform: translateY(-3px); box-shadow: 0 18px 40px rgba(0,0,0,.35), 0 0 0 1px var(--c) inset; }
-  a.start .art { height: 150px; display: grid; place-items: center; background: radial-gradient(260px 140px at 50% 60%, color-mix(in srgb, var(--c) 22%, transparent), transparent 70%); border-bottom: 1px solid var(--line); }
-  a.start .art svg { width: 70%; height: 120px; }
-  a.start .body { padding: 18px 20px 20px; display: flex; flex-direction: column; flex: 1; }
+  .start { position: relative; display: flex; flex-direction: column; text-decoration: none; background: linear-gradient(180deg, rgba(20,30,56,.9), rgba(13,20,38,.9)); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; transition: .25s; }
+  .start:hover { border-color: var(--c); transform: translateY(-3px); box-shadow: 0 18px 40px rgba(0,0,0,.35), 0 0 0 1px var(--c) inset; }
+  .start .art { height: 150px; display: grid; place-items: center; background: radial-gradient(260px 140px at 50% 60%, color-mix(in srgb, var(--c) 22%, transparent), transparent 70%); border-bottom: 1px solid var(--line); }
+  .start .art svg { width: 70%; height: 120px; }
+  .start .body { padding: 18px 20px 20px; display: flex; flex-direction: column; flex: 1; }
   .tag { font: 500 11px var(--mono); color: var(--c); letter-spacing: .1em; text-transform: uppercase; }
-  a.start h3 { font-size: 21px; margin: 8px 0 8px; letter-spacing: -.01em; }
-  a.start p { color: var(--muted); font-size: 14.5px; line-height: 1.55; margin: 0 0 16px; flex: 1; }
-  a.start .meta { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted); padding-top: 12px; border-top: 1px solid var(--line); }
-  a.start .meta b { color: var(--text); font-weight: 600; }
-  a.start .go { color: var(--c); font-weight: 600; transition: transform .2s; }
-  a.start:hover .go { transform: translateX(4px); }
+  .start h3 { font-size: 21px; margin: 8px 0 8px; letter-spacing: -.01em; }
+  .start p { color: var(--muted); font-size: 14.5px; line-height: 1.55; margin: 0 0 12px; }
+  .start .route { font-size: 13px; line-height: 1.5; color: #c9d2e4; margin: 0 0 14px; padding: 9px 11px; border-radius: 10px; background: rgba(255,255,255,.035); border: 1px solid var(--line); }
+  .start .route b { display: block; font: 600 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+  .start .pick { font-size: 13px; color: var(--muted); margin: 0 0 14px; flex: 1; line-height: 1.5; }
+  .start .pick em { font-style: normal; color: var(--text); }
+  .start .meta { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); }
+  a.go { display: flex; justify-content: space-between; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; font-size: 14px; padding: 10px 13px; border-radius: 11px; color: var(--c); background: color-mix(in srgb, var(--c) 12%, transparent); border: 1px solid color-mix(in srgb, var(--c) 35%, transparent); transition: .2s; }
+  a.go span { color: var(--muted); font-weight: 500; font-size: 12.5px; white-space: nowrap; }
+  a.go:hover { background: color-mix(in srgb, var(--c) 22%, transparent); transform: translateX(3px); }
+  .legend3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 18px; }
+  .legend3 > div { display: flex; gap: 11px; align-items: flex-start; padding: 12px 14px; border-radius: 14px; background: rgba(13,20,38,.6); border: 1px solid var(--line); font-size: 13.5px; line-height: 1.5; color: var(--muted); }
+  .legend3 i { font-style: normal; font-size: 18px; line-height: 1.2; }
+  .legend3 b { color: var(--text); display: block; font-size: 14.5px; margin-bottom: 2px; }
+  .hsearch { margin-top: 26px; max-width: 560px; }
+  .hsearch label { display: block; font: 500 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .hsearch .sbx input { font-size: 15.5px; padding: 14px 16px 14px 42px; border-radius: 14px; }
+  .hsearch .sbx .mg { left: 15px; width: 18px; height: 18px; }
 
   .sides { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
   a.side { display: flex; flex-direction: column; gap: 8px; text-decoration: none; background: rgba(13,20,38,.85); border: 1px solid var(--line); border-radius: 16px; padding: 16px; transition: .2s; position: relative; overflow: hidden; }
@@ -74,7 +86,11 @@
   a.side .ic { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--c); }
   a.side .ic svg { width: 22px; height: 22px; }
   a.side b { font-size: 15px; line-height: 1.3; }
-  a.side small { color: var(--muted); font-size: 13px; line-height: 1.5; flex: 1; }
+  a.side small { color: var(--muted); font-size: 13px; line-height: 1.5; }
+  a.side .rt { font-size: 12px; line-height: 1.45; color: #c9d2e4; flex: 1; }
+  a.side .rt b { display: block; font: 600 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+  a.side .fr { font-size: 12px; line-height: 1.45; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; }
+  a.side .fr b { color: var(--text); font-weight: 600; }
   a.side .n { font: 500 11.5px var(--mono); color: var(--c); }
 
   .how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; counter-reset: st; }
@@ -91,10 +107,10 @@
   @media (max-width: 900px) {
     .hero { grid-template-columns: 1fr; min-height: 0; padding-top: 10px; }
     .helix { height: 360px; min-height: 0; order: -1; }
-    .starts, .how { grid-template-columns: 1fr; }
+    .starts, .how, .legend3 { grid-template-columns: 1fr; }
     .sides { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
-  @media (prefers-reduced-motion: reduce) { a.start, a.side, .cta { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .start, a.side, .cta, a.go { transition: none; } }
 </style>
 </head>
 <body>
@@ -117,6 +133,7 @@
         <a class="cta" href="app/index.html?scene=bcel&amp;story=bacterie" id="ctaBact"></a>
         <a class="cta" href="atlas/index.html" id="ctaAtlas"></a>
       </div>
+      <div class="hsearch"><label id="hsLbl"></label><div id="homeSearch"></div></div>
       <div class="stats">
         <div class="stat"><b id="nScenes">–</b><span id="lScenes"></span></div>
         <div class="stat"><b id="nPdb">–</b><span id="lPdb"></span></div>
@@ -133,30 +150,47 @@
 
   <section class="blk">
     <div class="sh"><h2 id="startH"></h2><p id="startSub"></p></div>
+    <div class="legend3">
+      <div><i>📖</i><span><b id="lg1t"></b><span id="lg1p"></span></span></div>
+      <div><i>↗</i><span><b id="lg2t"></b><span id="lg2p"></span></span></div>
+      <div><i>🧬</i><span><b id="lg3t"></b><span id="lg3p"></span></span></div>
+    </div>
     <div class="starts">
-      <a class="start" href="app/index.html?scene=cel" style="--c:#ff8a3d">
+      <div class="start" style="--c:#ff8a3d">
         <div class="art"><svg viewBox="0 0 200 120"><ellipse cx="100" cy="60" rx="88" ry="52" fill="rgba(201,165,116,.08)" stroke="#c9a574" stroke-width="2.5"/><circle cx="92" cy="58" r="26" fill="rgba(79,143,247,.12)" stroke="#4f8ff7" stroke-width="2.5"/><circle cx="98" cy="54" r="7" fill="#9b7bff" opacity=".7"/><path d="M84 66c6-6 10 4 16-2" stroke="#9cc0ff" stroke-width="2" fill="none"/><ellipse cx="148" cy="44" rx="16" ry="8" fill="none" stroke="#2cc6a8" stroke-width="2"/><ellipse cx="146" cy="82" rx="12" ry="7" fill="none" stroke="#ff8a3d" stroke-width="2"/><circle cx="46" cy="78" r="4" fill="#2cc6a8"/><circle cx="56" cy="40" r="3" fill="#2cc6a8"/><circle cx="130" cy="96" r="3" fill="#2cc6a8"/></svg></div>
-        <div class="body"><span class="tag" id="c0tag"></span><h3 id="c0t"></h3><p id="c0p"></p><div class="meta"><span id="c0m"></span><span class="go">→</span></div></div>
-      </a>
-      <a class="start" href="app/index.html?scene=bcel&amp;story=bacterie" style="--c:#ff8f8f">
+        <div class="body"><span class="tag" id="c0tag"></span><h3 id="c0t"></h3><p id="c0p"></p>
+          <div class="route"><b id="rtLbl0"></b><span id="c0r"></span></div>
+          <div class="pick" id="c0k"></div>
+          <div class="meta">
+            <a class="go" href="app/index.html?scene=cel&amp;story=virus" id="go1"></a>
+            <a class="go" href="app/index.html?scene=cel&amp;story=signaal" id="go2"></a>
+          </div></div>
+      </div>
+      <div class="start" style="--c:#ff8f8f">
         <div class="art"><svg viewBox="0 0 200 120"><rect x="22" y="30" width="156" height="60" rx="30" fill="rgba(214,90,90,.08)" stroke="#d65a5a" stroke-width="2.5"/><path d="M60 60c10-18 26 18 40 0s28-18 40 0" stroke="#4f8ff7" stroke-width="2.4" fill="none"/><circle cx="148" cy="48" r="8" fill="none" stroke="#f06bc0" stroke-width="2"/><path d="M178 60c10 0 12 10 4 14" stroke="#d65a5a" stroke-width="1.6" fill="none"/><circle cx="52" cy="76" r="3" fill="#2cc6a8"/><circle cx="120" cy="78" r="3" fill="#2cc6a8"/></svg></div>
-        <div class="body"><span class="tag" id="c1tag"></span><h3 id="c1t"></h3><p id="c1p"></p><div class="meta"><span id="c1m"></span><span class="go">→</span></div></div>
-      </a>
-      <a class="start" href="atlas/index.html" style="--c:#7cc4ff">
+        <div class="body"><span class="tag" id="c1tag"></span><h3 id="c1t"></h3><p id="c1p"></p>
+          <div class="route"><b id="rtLbl1"></b><span id="c1r"></span></div>
+          <div class="pick" id="c1k"></div>
+          <div class="meta"><a class="go" href="app/index.html?scene=bcel&amp;story=bacterie" id="go3"></a></div></div>
+      </div>
+      <div class="start" style="--c:#7cc4ff">
         <div class="art"><svg viewBox="0 0 200 120"><g fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M40 14c0 26 30 30 30 46s-30 20-30 46" stroke="#4f8ff7"/><path d="M70 14c0 26-30 30-30 46s30 20 30 46" stroke="#9cc0ff"/><path d="M100 20c14 8 14 20 0 28s-14 20 0 28 14 20 0 28" stroke="#ff8a3d"/><rect x="128" y="24" width="22" height="22" rx="5" stroke="#ffc247"/><rect x="156" y="24" width="22" height="22" rx="5" stroke="#ffc247"/><rect x="128" y="52" width="22" height="22" rx="5" stroke="#ffc247"/><rect x="156" y="52" width="22" height="22" rx="5" stroke="#ffc247"/><path d="M132 92h42" stroke="#9b7bff"/></g></svg></div>
-        <div class="body"><span class="tag" id="c2tag"></span><h3 id="c2t"></h3><p id="c2p"></p><div class="meta"><span id="c2m"></span><span class="go">→</span></div></div>
-      </a>
+        <div class="body"><span class="tag" id="c2tag"></span><h3 id="c2t"></h3><p id="c2p"></p>
+          <div class="route"><b id="rtLbl2"></b><span id="c2r"></span></div>
+          <div class="pick" id="c2k"></div>
+          <div class="meta"><a class="go" href="atlas/index.html" id="go4"></a></div></div>
+      </div>
     </div>
   </section>
 
   <section class="blk">
     <div class="sh"><h2 id="sideH"></h2><p id="sideSub"></p></div>
     <div class="sides">
-      <a class="side" href="app/index.html?scene=replicatie&amp;story=herstel" style="--c:#4f8ff7" data-line="herstel"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3c0 6 12 6 12 9s-12 3-12 9"/><path d="M18 3c0 6-12 6-12 9"/><path d="M15 17l3 3 4-5"/></svg></span><b id="s1t"></b><small id="s1p"></small><span class="n"></span></a>
-      <a class="side" href="app/index.html?scene=sortering&amp;story=targeting" style="--c:#9b7bff" data-line="targeting"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="12" r="3"/><path d="M10 12h10M16 8l4 4-4 4"/></svg></span><b id="s2t"></b><small id="s2p"></small><span class="n"></span></a>
-      <a class="side" href="app/index.html?scene=chromatine&amp;story=epigen" style="--c:#ffc247" data-line="epigen"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="12" r="3"/><path d="M9 12h6"/><path d="M12 4v4M12 16v4"/></svg></span><b id="s3t"></b><small id="s3p"></small><span class="n"></span></a>
-      <a class="side" href="app/index.html?scene=virus&amp;story=virusroute" style="--c:#ff9d5c" data-line="virusroute"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5M5 5l3.5 3.5M15.5 15.5 19 19M19 5l-3.5 3.5M8.5 15.5 5 19"/></svg></span><b id="s4t"></b><small id="s4p"></small><span class="n"></span></a>
-      <a class="side" href="app/index.html?scene=export&amp;story=rnalot" style="--c:#2cc6a8" data-line="rnalot"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 16c3-8 6 4 9-4s6 4 9-4"/><circle cx="20" cy="18" r="2"/></svg></span><b id="s5t"></b><small id="s5p"></small><span class="n"></span></a>
+      <a class="side" href="app/index.html?scene=replicatie&amp;story=herstel" style="--c:#4f8ff7" data-line="herstel"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3c0 6 12 6 12 9s-12 3-12 9"/><path d="M18 3c0 6-12 6-12 9"/><path d="M15 17l3 3 4-5"/></svg></span><b id="s1t"></b><small id="s1p"></small><span class="rt"></span><span class="fr"></span><span class="n"></span></a>
+      <a class="side" href="app/index.html?scene=sortering&amp;story=targeting" style="--c:#9b7bff" data-line="targeting"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="12" r="3"/><path d="M10 12h10M16 8l4 4-4 4"/></svg></span><b id="s2t"></b><small id="s2p"></small><span class="rt"></span><span class="fr"></span><span class="n"></span></a>
+      <a class="side" href="app/index.html?scene=chromatine&amp;story=epigen" style="--c:#ffc247" data-line="epigen"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="12" r="3"/><path d="M9 12h6"/><path d="M12 4v4M12 16v4"/></svg></span><b id="s3t"></b><small id="s3p"></small><span class="rt"></span><span class="fr"></span><span class="n"></span></a>
+      <a class="side" href="app/index.html?scene=virus&amp;story=virusroute" style="--c:#ff9d5c" data-line="virusroute"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5M5 5l3.5 3.5M15.5 15.5 19 19M19 5l-3.5 3.5M8.5 15.5 5 19"/></svg></span><b id="s4t"></b><small id="s4p"></small><span class="rt"></span><span class="fr"></span><span class="n"></span></a>
+      <a class="side" href="app/index.html?scene=export&amp;story=rnalot" style="--c:#2cc6a8" data-line="rnalot"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 16c3-8 6 4 9-4s6 4 9-4"/><circle cx="20" cy="18" r="2"/></svg></span><b id="s5t"></b><small id="s5p"></small><span class="rt"></span><span class="fr"></span><span class="n"></span></a>
     </div>
   </section>
 
@@ -177,10 +211,14 @@
 </div>
 
 <script type="module">
-import { L, langSwitch } from './shared/i18n.js';
+import { L, langSwitch, lang } from './shared/i18n.js';
 import { NODES } from './shared/graph.js';
 import { LINES, SIDE_KEYS } from './app/story.js';
 import { ENTRIES } from './atlas/entries.js';
+import { S_EN } from './shared/graph.en.js';
+import { LINKS } from './shared/links.js';
+import { makeSearch } from './shared/search.js';
+import { mountSearch } from './shared/searchbox.js';
 
 const T = {
   brand: { nl: 'Van DNA tot eiwit', en: 'From DNA to protein' },
@@ -202,45 +240,64 @@ const T = {
   tag2: { nl: '<i>G</i>–<i>C</i> · drie waterstofbruggen', en: '<i>G</i>–<i>C</i> · three hydrogen bonds' },
   tag3: { nl: 'één draai ≈ <i>10,5</i> basenparen', en: 'one turn ≈ <i>10.5</i> base pairs' },
   startH: { nl: 'Kies waar je begint', en: 'Choose where to start' },
-  startSub: { nl: 'Drie ingangen, elk met hun eigen verhaal.', en: 'Three entrances, each with its own story.' },
-  c0tag: { nl: 'Mens', en: 'Human' },
+  startSub: { nl: 'Er zijn drie soorten ingangen. Twijfel je? Begin met Verhaal 1.', en: 'There are three kinds of entrance. Not sure? Start with Story 1.' },
+  lg1t: { nl: 'Hoofdverhaal', en: 'Main story' },
+  lg1p: { nl: 'Volgt de hele weg van DNA tot eiwit, hoofdstuk na hoofdstuk. Het speelt vanzelf af; je kan altijd pauzeren of zelf klikken.', en: 'Follows the whole way from DNA to protein, chapter by chapter. It plays by itself; you can always pause or click yourself.' },
+  lg2t: { nl: 'Zijpad', en: 'Side path' },
+  lg2p: { nl: 'Een korte uitstap rond één onderwerp. Je kan het los volgen, of als verdieping op de plek waar het op een hoofdverhaal aansluit.', en: 'A short detour around one topic. Follow it on its own, or as a deep dive where it joins a main story.' },
+  lg3t: { nl: 'DNA-bib (atlas)', en: 'DNA library (atlas)' },
+  lg3p: { nl: 'Geen verhaal: een bibliotheek met echte 3D-vormen die je zelf draait, bekijkt en vergelijkt.', en: 'No story: a library of real 3D shapes that you turn, view and compare yourself.' },
+  rtLbl: { nl: 'Wat je ziet', en: 'What you see' },
+  hsLbl: { nl: 'Of zoek meteen wat je wil zien', en: 'Or search straight for what you want to see' },
+  c0tag: { nl: 'Mens · 2 hoofdverhalen', en: 'Human · 2 main stories' },
   c0t: { nl: 'Menselijke cel', en: 'Human cell' },
-  c0p: { nl: 'Kies zelf je route: volg een virus dat DNA binnenbrengt, of een signaal dat een gen aanzet. Elke route loopt door tot een gevouwen en afgebroken eiwit.',
-         en: 'Choose your own route: follow a virus bringing in DNA, or a signal switching on a gene. Each route runs all the way to a folded and degraded protein.' },
-  c1tag: { nl: 'Bacterie', en: 'Bacterium' },
+  c0p: { nl: 'Twee hoofdverhalen over hoe een menselijke cel een gen omzet in een eiwit. Ze beginnen anders en lopen daarna samen.',
+         en: 'Two main stories about how a human cell turns a gene into a protein. They start differently and then run together.' },
+  c0r: { nl: 'cel → kern → DNA → het gen wordt afgelezen (RNA) → ribosoom → eiwit → plooien → afbraak', en: 'cell → nucleus → DNA → the gene is read (RNA) → ribosome → protein → folding → breakdown' },
+  c0k: { nl: '<em>Kies dit als</em> je voor het eerst komt of de hele weg in één keer wil zien.', en: '<em>Choose this</em> if you are new or want to see the whole way in one go.' },
+  go1: { nl: 'Verhaal 1 · een virus brengt DNA binnen', en: 'Story 1 · a virus brings in DNA' },
+  go2: { nl: 'Verhaal 2 · een signaal zet een gen aan', en: 'Story 2 · a signal switches on a gene' },
+  c1tag: { nl: 'Bacterie · hoofdverhaal', en: 'Bacterium · main story' },
   c1t: { nl: 'Bacteriecel (E. coli)', en: 'Bacterial cell (E. coli)' },
-  c1p: { nl: 'Geen kern: het DNA ligt los in de cel en kopiëren en vertalen gebeuren tegelijk. Met plasmiden, het lac-operon en een vergelijking met de mens.',
-         en: 'No nucleus: the DNA lies free in the cell, and copying and translating happen at once. With plasmids, the lac operon and a comparison with humans.' },
-  c2tag: { nl: 'Atlas', en: 'Atlas' },
+  c1p: { nl: 'Hetzelfde verhaal, maar in een bacterie: geen kern, dus het DNA ligt los en RNA maken en eiwit maken gebeuren tegelijk.',
+         en: 'The same story, but in a bacterium: no nucleus, so the DNA lies free and making RNA and making protein happen at the same time.' },
+  c1r: { nl: 'mens en bacterie naast elkaar → DNA zonder kern → plasmide → gen aan/uit (operon) → RNA en eiwit tegelijk → afbraak', en: 'human and bacterium side by side → DNA without a nucleus → plasmid → gene on/off (operon) → RNA and protein at once → breakdown' },
+  c1k: { nl: '<em>Kies dit als</em> je de verschillen met de mens wil zien, of na een hoofdverhaal van de mens.', en: '<em>Choose this</em> to see the differences with humans, or after a human main story.' },
+  go3: { nl: 'Start het bacterieverhaal', en: 'Start the bacterial story' },
+  c2tag: { nl: 'Atlas · zelf rondkijken', en: 'Atlas · explore yourself' },
   c2t: { nl: 'DNA-bib', en: 'DNA library' },
-  c2p: { nl: 'Alle soorten DNA en RNA in 3D, van de gewone helix tot quadruplexen en ribozymen. Zoek ook zelf elk eiwit of gen op, zoals TP53 of insuline.',
-         en: 'All kinds of DNA and RNA in 3D, from the ordinary helix to quadruplexes and ribozymes. Or look up any protein or gene yourself, such as TP53 or insulin.' },
+  c2p: { nl: 'Geen verhaal maar een bibliotheek: alle vormen van DNA en RNA als echte 3D-modellen, met eenvoudige uitleg erbij.',
+         en: 'Not a story but a library: every shape of DNA and RNA as a real 3D model, with a simple explanation.' },
+  c2r: { nl: 'gewone dubbele helix · drie en vier strengen · gevouwen RNA · DNA met medicijn · elk eiwit of gen zelf opzoeken (bv. TP53, insuline)', en: 'ordinary double helix · three and four strands · folded RNA · DNA with a drug · look up any protein or gene (e.g. TP53, insulin)' },
+  c2k: { nl: '<em>Kies dit als</em> je zelf wil rondkijken, vormen wil vergelijken of een bepaald eiwit zoekt.', en: '<em>Choose this</em> to look around yourself, compare shapes or find a particular protein.' },
+  go4: { nl: 'Open de DNA-bib', en: 'Open the DNA library' },
   sideH: { nl: 'Zijpaden', en: 'Side paths' },
-  sideSub: { nl: 'Korte routes die dieper ingaan op één onderwerp.', en: 'Short routes that go deeper into one topic.' },
+  sideSub: { nl: 'Korte uitstappen rond één onderwerp. Elk zijpad staat op zichzelf; onderaan zie je waar het op het hoofdverhaal aansluit.', en: 'Short detours around one topic. Each side path stands on its own; at the bottom you see where it joins the main story.' },
   s1t: { nl: 'DNA kopiëren en herstellen', en: 'Copying and repairing DNA' },
-  s1p: { nl: 'Eén keer kopiëren, fouten verbeteren, schade herstellen — en wat p53 doet als het misloopt.', en: 'Copy once, fix errors, repair damage — and what p53 does when it goes wrong.' },
+  s1p: { nl: 'Hoe de cel haar DNA precies één keer kopieert, welke fouten en schade ontstaan, hoe ze die herstelt — en wat er gebeurt als dat mislukt.', en: 'How the cell copies its DNA exactly once, which errors and damage arise, how it repairs them — and what happens when that fails.' },
   s2t: { nl: 'Waar een eiwit heen gaat', en: 'Where a protein goes' },
-  s2p: { nl: 'Adreslabels sturen eiwitten naar ER, kern of mitochondrion; het proteasoom en autofagie ruimen op.', en: 'Address labels send proteins to the ER, nucleus or mitochondrion; the proteasome and autophagy clean up.' },
+  s2p: { nl: 'Een nieuw eiwit draagt een adreslabel dat zegt waar het moet werken. Daarna: hoe oude of kapotte eiwitten worden opgeruimd.', en: 'A new protein carries an address label that says where it should work. Then: how old or broken proteins are cleared away.' },
   s3t: { nl: 'Welke genen aan staan', en: 'Which genes are on' },
-  s3p: { nl: 'Merktekens, lussen en verre versterkers — en waarom één X bij vrouwen stil ligt.', en: 'Marks, loops and distant enhancers — and why one X is silent in women.' },
+  s3p: { nl: 'Elke cel heeft hetzelfde DNA maar gebruikt er maar een deel van. Hoe merktekens, verpakking en lussen genen aan of uit zetten.', en: 'Every cell has the same DNA but uses only part of it. How marks, packing and loops switch genes on or off.' },
   s4t: { nl: 'Hoe een virus zich laat maken', en: 'How a virus gets made' },
-  s4p: { nl: 'De sleutel van het coronavirus, de schaar die een medicijn blokkeert, en CRISPR bij bacteriën.', en: 'The coronavirus key, the scissors a medicine blocks, and CRISPR in bacteria.' },
+  s4p: { nl: 'Een virus kan zichzelf niet kopiëren: het laat de cel het werk doen. Met het coronavirus, virussen van bacteriën, CRISPR en het mRNA-vaccin.', en: 'A virus cannot copy itself: it makes the cell do the work. With the coronavirus, viruses of bacteria, CRISPR and the mRNA vaccine.' },
   s5t: { nl: 'Het leven van een RNA', en: 'The life of an RNA' },
-  s5p: { nl: 'Adreslabels, druppels zonder membraan, lange RNA’s zonder eiwit en een RNA-schakelaar.', en: 'Address labels, droplets without a membrane, long RNAs without protein and an RNA switch.' },
+  s5p: { nl: 'Wat er met een mRNA gebeurt na de kern: waar het heen reist, wanneer het pauzeert of wordt afgebroken, en RNA’s die zelf werk doen.', en: 'What happens to an mRNA after the nucleus: where it travels, when it pauses or is broken down, and RNAs that do work themselves.' },
   howH: { nl: 'Zo werkt het', en: 'How it works' },
-  h1t: { nl: 'Kies een cel', en: 'Choose a cell' },
-  h1p: { nl: 'Begin in een mens- of bacteriecel en kies een route.', en: 'Start in a human or bacterial cell and pick a route.' },
+  h1t: { nl: 'Kies een verhaal of zoek', en: 'Pick a story or search' },
+  h1p: { nl: 'Begin met een hoofdverhaal of een zijpad, of typ in de zoekbalk wat je wil zien.', en: 'Start with a main story or a side path, or type what you want to see in the search bar.' },
   h2t: { nl: 'Klik op wat oplicht', en: 'Click what lights up' },
   h2p: { nl: 'Elk onderdeel dat oplicht, opent een korte animatie met uitleg.', en: 'Every part that lights up opens a short animation with an explanation.' },
-  h3t: { nl: 'Zoom tot op de atomen', en: 'Zoom down to the atoms' },
-  h3p: { nl: 'Bekijk echte structuren uit de PDB in 3D en draai ze zelf rond.', en: 'View real structures from the PDB in 3D and turn them yourself.' },
+  h3t: { nl: 'Verdwaald? Kijk bovenaan', en: 'Lost? Look at the top' },
+  h3p: { nl: 'Daar zie je altijd in welk verhaal en hoofdstuk je zit. Uitzoomen brengt je terug naar de hele cel, Startmenu naar deze pagina.', en: 'There you always see which story and chapter you are in. Zoom out takes you back to the whole cell, Main menu to this page.' },
   archT: { nl: 'Archief (goedgekeurde proofs of concept):', en: 'Archive (approved proofs of concept):' },
   c3l: { nl: 'Blueprint en roadmap', en: 'Blueprint and roadmap (in Dutch)' },
   foot: { nl: 'Alle inhoud is nagekeken tegen wetenschappelijke bronnen; die staan bij elke uitleg.', en: 'All content is checked against scientific sources; they are listed with every explanation.' },
 };
-const HTML = new Set(['tag1', 'tag2', 'tag3']);
+const HTML = new Set(['tag1', 'tag2', 'tag3', 'c0k', 'c1k', 'c2k']);
 for (const [id, v] of Object.entries(T)) { const el = document.getElementById(id); if (el) el[HTML.has(id) ? 'innerHTML' : 'textContent'] = L(v); }
 document.title = L(T.brand);
+for (const k of [0, 1, 2]) document.getElementById('rtLbl' + k).textContent = L(T.rtLbl);
 
 // cijfers rechtstreeks uit de inhoud (blijven juist als er scènes bijkomen)
 const nodes = Object.values(NODES);
@@ -250,10 +307,26 @@ count('nScenes', nodes.length);
 count('nPdb', pdb.size);
 count('nLines', Object.keys(LINES).length);
 const ch = { nl: 'hoofdstukken', en: 'chapters' };
-document.getElementById('c0m').innerHTML = `<b>${new Set([...LINES.virus.chapters, ...LINES.signaal.chapters].map(c => c.id)).size}</b> ${L(ch)} · ${L({ nl: '2 verhalen', en: '2 stories' })}`;
-document.getElementById('c1m').innerHTML = `<b>${LINES.bacterie.chapters.length}</b> ${L(ch)}`;
-document.getElementById('c2m').innerHTML = `<b>${ENTRIES.length}</b> ${L({ nl: 'structuren + zoeken in de PDB', en: 'structures + PDB search' })}`;
-for (const a of document.querySelectorAll('a.side[data-line]')) { const l = LINES[a.dataset.line]; if (l) a.querySelector('.n').textContent = `${l.chapters.length} ${L(ch)} →`; }
+const nt = id => NODES[id] ? (lang === 'en' ? NODES[id].en : NODES[id].t) : id;
+const goTxt = (id, n, unit) => { const a = document.getElementById(id); a.innerHTML = `<b></b> <span>${n} ${L(unit)} →</span>`; a.querySelector('b').textContent = L(T[id]); };
+goTxt('go1', LINES.virus.chapters.length, ch); goTxt('go2', LINES.signaal.chapters.length, ch); goTxt('go3', LINES.bacterie.chapters.length, ch);
+goTxt('go4', ENTRIES.length, { nl: 'vormen', en: 'shapes' });
+/* zijpaden: begin → midden → einde, en waar het aansluit op verhaal 1 */
+for (const a of document.querySelectorAll('a.side[data-line]')) {
+  const l = LINES[a.dataset.line]; if (!l) continue;
+  const c = l.chapters;
+  a.querySelector('.rt').innerHTML = `<b>${L({ nl: 'Route', en: 'Route' })}</b>${nt(c[0].id)} → ${nt(c[Math.floor(c.length / 2)].id)} → ${nt(c[c.length - 1].id)}`;
+  const ci = LINES.virus.chapters.findIndex(x => x.id === l.from);
+  if (ci >= 0) a.querySelector('.fr').innerHTML = `${L({ nl: 'Sluit aan bij', en: 'Joins' })} <b>${L(LINES.virus.short)} · ${L({ nl: 'hoofdstuk', en: 'chapter' })} ${ci + 1}</b> (${nt(l.from)})`;
+  a.querySelector('.n').textContent = `${c.length} ${L(ch)} →`;
+}
+/* zoeken op de startpagina: de uitgebreide uitleg pas laden bij het eerste gebruik */
+mountSearch(document.getElementById('homeSearch'), {
+  engine: async () => { const { DETAILS } = await import('./shared/details/index.js'); return makeSearch({ NODES, LINES, LINKS, DETAILS, S_EN }); },
+  NODES, LINES, L, title: n => (lang === 'en' ? n.en : n.t), summary: n => (lang === 'en' ? S_EN[n.id] ?? n.s : n.s),
+  onPick: r => { location.href = `app/index.html?scene=${encodeURIComponent(r.id)}&story=${r.loc.line}`; },
+  atlasHref: qv => `atlas/index.html?find=${encodeURIComponent(qv)}`,
+});
 document.getElementById('langBox').append(langSwitch('btn'));
 document.getElementById('home').hidden = false;
 

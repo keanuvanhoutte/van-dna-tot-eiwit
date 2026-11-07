@@ -11,6 +11,8 @@ Een interactieve, stap-voor-stap moleculaire animatie van een menselijke cel: va
   - **Verhaal 1 · Een virus brengt DNA binnen** (21 hoofdstukken): adenovirus → endocytose → kern → chromatine → transcriptie → RNA-bewerking → translatie → vouwing → afbraak.
   - **Verhaal 2 · Een signaal zet een gen aan** (17 hoofdstukken): groeifactor EGF → EGF-receptor → Ras–MAPK-cascade → het onmiddellijk-vroege gen *FOS* → … → het eiwit c-Fos. Zijpaden: adrenaline → GPCR → cAMP → CREB, en cortisol → glucocorticoïdreceptor.
 - **DNA/RNA-atlas** (`atlas/`): 34 soorten nucleïnezuren (A/B/Z-DNA, quadruplexen, tRNA, ribozymen, geneesmiddel–DNA-complexen …) in 3D uit echte PDB-structuren, met filters en vergelijkmodus.
+- **Zoeken** (`shared/search.js`, `shared/searchbox.js`): zoekbalk op de startpagina en bovenaan in de app. Kernwoorden (ook met tikfouten of gewone woorden zoals "kanker" of "vaccin") geven een lijst "Bedoel je …?" met waar elk onderdeel in de app ligt; een klik brengt je erheen, met het pad vanaf het hoofdstuk in de bovenbalk. Werkt zonder AI. De verbanden tussen scènes staan in `shared/links.js` — opnieuw maken na het toevoegen van scènes met `node tools/build-links.mjs`.
+- **Slimme atlasfilter** (`atlas/smartsearch.js`): typ bv. "mens dubbelstreng", "enkel streng", "triple helix" of een eiwitnaam.
 - **Uitleg met bronnen** (`shared/details/`): per onderwerp wat, hoe, kerncijfers, waarom belangrijk en bronnen. Verificatierapporten staan in `docs/`.
 
 ## Lokaal draaien

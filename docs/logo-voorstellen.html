@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Naam- en logovoorstellen</title>
+<style>
+  :root { --bg: #070c18; --card: #0e1630; --line: #24314d; --text: #e8eefc; --muted: #93a0bb; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 Inter, system-ui, sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 32px 20px 60px; }
+  h1 { font-size: 30px; margin: 0 0 6px; letter-spacing: -.02em; }
+  h2 { font-size: 21px; margin: 38px 0 12px; }
+  p.lead { color: var(--muted); margin: 0 0 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: .06em; }
+  td b { font-size: 16px; }
+  .rec { color: #7fdc6a; font-weight: 600; font-size: 12.5px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .logo { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px; }
+  .logo h3 { margin: 0 0 4px; font-size: 17px; }
+  .logo p { margin: 0 0 14px; color: var(--muted); font-size: 13.5px; }
+  .sizes { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+  .sizes figure { margin: 0; text-align: center; font-size: 11px; color: var(--muted); }
+  .sizes svg { display: block; margin: 0 auto 4px; }
+  .light { background: #f3f5fa; border-radius: 10px; padding: 8px; }
+  .tab { display: inline-flex; align-items: center; gap: 7px; background: #dfe3ea; color: #222; border-radius: 8px 8px 0 0; padding: 6px 12px; font-size: 12px; margin-top: 12px; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#16224a"/><stop offset="1" stop-color="#0a1128"/></linearGradient>
+    <linearGradient id="arrG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4f8ff7"/><stop offset=".5" stop-color="#ff8a3d"/><stop offset="1" stop-color="#9b7bff"/></linearGradient>
+  </defs>
+  <!-- A: helix die overgaat in een gevouwen eiwit -->
+  <symbol id="lA" viewBox="0 0 64 64">
+    <rect width="64" height="64" rx="15" fill="url(#bgG)"/>
+    <path d="M14 8c0 10 16 10 16 18s-16 8-16 16" stroke="#4f8ff7" stroke-width="4.2" fill="none" stroke-linecap="round"/>
+    <path d="M30 8c0 10-16 10-16 18s16 8 16 16" stroke="#ff8a3d" stroke-width="4.2" fill="none" stroke-linecap="round"/>
+    <path d="M17 14h10M17 38h10" stroke="#9cc0ff" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M30 42c6 6 12 0 16 4s-2 10 4 10 6-8 2-12-10 0-10-6 8-6 6-12" stroke="#9b7bff" stroke-width="4.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <!-- B: zoomlens met helix erin -->
+  <symbol id="lB" viewBox="0 0 64 64">
+    <rect width="64" height="64" rx="15" fill="url(#bgG)"/>
+    <circle cx="28" cy="27" r="17" fill="#0b1430" stroke="#7cc4ff" stroke-width="4"/>
+    <clipPath id="lensC"><circle cx="28" cy="27" r="15"/></clipPath>
+    <g clip-path="url(#lensC)" stroke-linecap="round" fill="none">
+      <path d="M14 14c8 0 8 26 28 26" stroke="#4f8ff7" stroke-width="3.6"/>
+      <path d="M14 40c8 0 8-26 28-26" stroke="#ff8a3d" stroke-width="3.6"/>
+      <path d="M20 20v14M36 20v14" stroke="#ffc247" stroke-width="2.4"/>
+    </g>
+    <path d="M41 40l12 12" stroke="#7cc4ff" stroke-width="6.5" stroke-linecap="round"/>
+  </symbol>
+  <!-- C: codon (drie letters) en een keten -->
+  <symbol id="lC" viewBox="0 0 64 64">
+    <rect width="64" height="64" rx="15" fill="url(#bgG)"/>
+    <rect x="7" y="12" width="15" height="19" rx="4" fill="#7fdc6a"/>
+    <rect x="24.5" y="12" width="15" height="19" rx="4" fill="#ff6b6b"/>
+    <rect x="42" y="12" width="15" height="19" rx="4" fill="#ffc247"/>
+    <text x="14.5" y="26.5" font-size="13" font-weight="800" text-anchor="middle" fill="#0a1128" font-family="Inter, Arial, sans-serif">A</text>
+    <text x="32" y="26.5" font-size="13" font-weight="800" text-anchor="middle" fill="#0a1128" font-family="Inter, Arial, sans-serif">U</text>
+    <text x="49.5" y="26.5" font-size="13" font-weight="800" text-anchor="middle" fill="#0a1128" font-family="Inter, Arial, sans-serif">G</text>
+    <path d="M32 33v6" stroke="#93a0bb" stroke-width="2.4" stroke-linecap="round"/>
+    <g fill="#9b7bff"><circle cx="14" cy="47" r="5"/><circle cx="25" cy="51" r="5"/><circle cx="36" cy="47" r="5"/><circle cx="47" cy="51" r="5"/></g>
+  </symbol>
+  <!-- D: ribosoom dat een mRNA leest -->
+  <symbol id="lD" viewBox="0 0 64 64">
+    <rect width="64" height="64" rx="15" fill="url(#bgG)"/>
+    <path d="M14 30c-2-12 8-20 19-20s20 8 18 20z" fill="#23a88f"/>
+    <path d="M17 35h31c0 8-7 13-15.5 13S17 43 17 35z" fill="#8df0dc"/>
+    <path d="M5 33h54" stroke="#ff8a3d" stroke-width="3.6" stroke-linecap="round"/>
+    <g fill="#9b7bff"><circle cx="35" cy="9" r="3.4"/><circle cx="41" cy="5.5" r="3"/><circle cx="47" cy="6" r="2.6"/></g>
+  </symbol>
+  <!-- E: het centrale dogma als pijl: DNA → RNA → eiwit -->
+  <symbol id="lE" viewBox="0 0 64 64">
+    <rect width="64" height="64" rx="15" fill="url(#bgG)"/>
+    <path d="M9 18c4 0 4 10 8 10s4-10 8-10" stroke="#4f8ff7" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+    <path d="M9 28c4 0 4-10 8-10s4 10 8 10" stroke="#9cc0ff" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+    <path d="M29 23h8" stroke="#93a0bb" stroke-width="3" stroke-linecap="round"/><path d="M34 19.5l3.5 3.5-3.5 3.5" stroke="#93a0bb" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40 23c3-6 6 6 9 0s6 6 9 0" stroke="#ff8a3d" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+    <path d="M49 30v6" stroke="#93a0bb" stroke-width="3" stroke-linecap="round"/><path d="M45.5 33l3.5 3.5 3.5-3.5" stroke="#93a0bb" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40 48c0-6 6-8 10-6s6 8 2 11-10 2-9-3 6-5 7-2" stroke="#9b7bff" stroke-width="3.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</svg>
+
+<main>
+  <h1>Naam- en logovoorstellen</h1>
+  <p class="lead">Voorstellen om "Van DNA tot eiwit" korter te maken, en vijf logo's die werken als snelkoppeling (app-icoon) en als icoontje in het browsertabblad / Google-resultaat (favicon, 16–32 px). Niets is al aangepast in de app: kies eerst.</p>
+
+  <h2>1 · Namen</h2>
+  <table>
+    <tr><th>Naam</th><th>Waarom</th><th>NL / EN</th></tr>
+    <tr><td><b>Dogma</b><br><span class="rec">aanrader</span></td><td>Het "centrale dogma" van de biologie is precies DNA → RNA → eiwit. Kort, vakkundig, makkelijk te onthouden.</td><td>werkt in beide talen</td></tr>
+    <tr><td><b>Genreis</b><br><span class="rec">aanrader</span></td><td>Je reist met één gen mee van DNA tot eiwit — sluit aan bij het verhaal-gevoel van de app.</td><td>EN: GeneTrip</td></tr>
+    <tr><td><b>Celzoom</b></td><td>Zegt wat je doet: van de hele cel inzoomen tot op de atomen.</td><td>EN: CellZoom</td></tr>
+    <tr><td><b>Codon</b></td><td>Het drieletterwoord dat het ribosoom leest; heel kort. Nadeel: een woord dat vaak als productnaam gebruikt wordt — eerst nagaan of het vrij is.</td><td>werkt in beide talen</td></tr>
+    <tr><td><b>Eiwitfabriek</b></td><td>Beeldend voor beginners (het ribosoom als fabriek). Wat lang, en vooral Nederlands.</td><td>EN: Protein Factory</td></tr>
+    <tr><td><b>Helix</b></td><td>Iedereen herkent het; maar zegt weinig over eiwit; ook hier eerst nagaan of de naam vrij is.</td><td>werkt in beide talen</td></tr>
+    <tr><td><b>DNA→Eiwit</b> / <b>DNA2E</b></td><td>Dichtst bij de huidige naam, maar kort genoeg voor een snelkoppeling.</td><td>EN: DNA→Protein</td></tr>
+  </table>
+
+  <h2>2 · Logo's</h2>
+  <p class="lead">Elk logo op 128, 64, 32 en 16 px (tabblad-grootte), op donker en licht. Kleuren = de kleuren van de app (DNA blauw, RNA oranje, eiwit paars).</p>
+  <div class="grid" id="grid"></div>
+</main>
+<script>
+const L = [
+  ['lA', 'A · Helix wordt eiwit', 'Een dubbele helix die onderaan overgaat in een gevouwen eiwitketen: het hele verhaal in één beeld.'],
+  ['lB', 'B · Zoomlens', 'Een vergrootglas met DNA erin: inzoomen van cel tot atoom. Blijft herkenbaar op 16 px.'],
+  ['lC', 'C · Codon', 'Drie letters (AUG, het startcodon) en daaronder de eiwitketen die ze maken.'],
+  ['lD', 'D · Ribosoom', 'De twee helften van het ribosoom lezen een mRNA (oranje); de nieuwe keten komt er bovenaan uit.'],
+  ['lE', 'E · DNA → RNA → eiwit', 'Het centrale dogma als pijl: helix → RNA-draad → gevouwen eiwit. Past goed bij de naam "Dogma".'],
+];
+const use = (id, s) => `<svg width="${s}" height="${s}"><use href="#${id}"/></svg>`;
+document.getElementById('grid').innerHTML = L.map(([id, t, p]) => `<div class="logo"><h3>${t}</h3><p>${p}</p>
+  <div class="sizes">${[128, 64, 32, 16].map(s => `<figure>${use(id, s)}${s}px</figure>`).join('')}
+  <figure class="light">${use(id, 32)}${use(id, 16)}licht</figure></div>
+  <div class="tab">${use(id, 16)} Dogma — gen tot eiwit</div></div>`).join('');
+</script>
+</body>
+</html>

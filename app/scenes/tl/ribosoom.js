@@ -1,6 +1,7 @@
 /*
  * Ribosoom — het humane 80S-ribosoom in pseudo-3D uit echte coördinaten (PDB 6Y0G, grofkorrelig: zie _ribo80s.js).
- * Elke stip = één nucleotide (P-atoom) of aminozuur (Cα) (steekproef). Draaien en uit elkaar schuiven gebeurt in update(t, s).
+ * Elke positie = één nucleotide (P-atoom) of aminozuur (Cα) (steekproef), getekend als dikke bol → samen één gesloten vorm per helft.
+ * Draaien en uit elkaar schuiven gebeurt in update(t, s).
  */
 import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, f1 } from '../../kit.js';
 import { RIBO, LM } from './_ribo80s.js';
@@ -22,12 +23,13 @@ const S0 = 2.2;                     // px per Å
 const K = {
   ang: [-.5, -.5, .35, .2, .2, .25, .3, .86, -.5],
   tilt: [.18, .18, .18, .2, .2, .12, .12, .15, .18],
-  sep: [0, 70, 0, 55, 55, 0, 0, 0, 0],
+  sep: [0, 50, 0, 55, 55, 0, 0, 0, 0],
+  split: [0, 0, 1, 0, 0, 0, 0, 0, 0],  // RNA (links) en eiwitten (rechts) naast elkaar
   pal: ['sub', 'sub', 'rp', 's40', 's60', 'sub', 'ptc', 'sub', 'sub'],
   op: [1, 1, 1, 1, 1, .2, .45, .3, 1],
   trna: [0, 0, 0, 0, 0, 1, 1, .8, 0],
   pop: [1, 1, .45, .5, .5, 1, .6, 1, 1],
-  pos: [[620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [340, 470, .72]],
+  pos: [[620, 470, 1], [620, 470, 1], [640, 450, .78], [620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [340, 470, .72]],
 };
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 
@@ -39,15 +41,15 @@ export default {
   org: { nl: 'mens (vergelijking met bacterie)', en: 'human (compared with bacteria)' },
   legend: [[C.rrna, 'rRNA'], [C.prot, { nl: 'ribosomale eiwitten', en: 'ribosomal proteins' }], ['#8df0dc', '40S'], ['#23a88f', '60S'], [C.trna, 'tRNA'], [C.rna, 'mRNA']],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">Elke stip is een echt atoom uit PDB 6Y0G (humaan 80S-ribosoom met tRNA in A- en P-plaats, cryo-EM 3,2 Å): één P-atoom per 2–3 nucleotiden en één Cα per 4 aminozuren. Flexibele rRNA-uitsteeksels die niet gemodelleerd zijn, ontbreken.</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">Every dot is a real atom from PDB 6Y0G (human 80S ribosome with tRNA in the A and P sites, cryo-EM 3.2 Å): one P atom per 2–3 nucleotides and one Cα per 4 amino acids. Flexible rRNA expansion segments that were not modelled are missing.</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">De vorm is getekend uit echte atoomposities in PDB 6Y0G (humaan 80S-ribosoom met tRNA in A- en P-plaats, cryo-EM 3,2 Å): één P-atoom per 2–3 nucleotiden en één Cα per 4 aminozuren, elk als dikke bol, zodat ze samen de buitenvorm van elke helft geven. Flexibele rRNA-uitsteeksels die niet gemodelleerd zijn, ontbreken.</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">The shape is drawn from real atom positions in PDB 6Y0G (human 80S ribosome with tRNA in the A and P sites, cryo-EM 3.2 Å): one P atom per 2–3 nucleotides and one Cα per 4 amino acids, each drawn as a thick ball so that together they give the outer shape of each half. Flexible rRNA expansion segments that were not modelled are missing.</p>' },
   simplified: {
-    nl: 'Grofkorrelig model (steekproef van de atomen, geen oppervlak). De E-plaats is in deze structuur leeg en wordt aangeduid met een label. De afstand tot de tunneluitgang is gemeten in dit model (≈ 90 Å; literatuur: ≈ 100 Å). Massa\'s en S-waarden zijn afgerond.',
-    en: 'Coarse-grained model (a sample of the atoms, no surface). The E site is empty in this structure and is marked with a label. The distance to the tunnel exit was measured in this model (≈ 90 Å; literature: ≈ 100 Å). Masses and S values are rounded.' },
+    nl: 'Grofkorrelig model (steekproef van de atomen, als gesloten vorm getekend; geen echt berekend oppervlak). De E-plaats is in deze structuur leeg en wordt aangeduid met een label. De afstand tot de tunneluitgang is gemeten in dit model (≈ 90 Å; literatuur: ≈ 100 Å). Massa\'s en S-waarden zijn afgerond.',
+    en: 'Coarse-grained model (a sample of the atoms, drawn as a closed shape; not a true computed surface). The E site is empty in this structure and is marked with a label. The distance to the tunnel exit was measured in this model (≈ 90 Å; literature: ≈ 100 Å). Masses and S values are rounded.' },
   steps: [
-    ST(8000, cam(800, 470, 1500), 'Het ribosoom van de mens', 'The human ribosome', 'De eiwitfabriek van de cel, uit RNA en ≈ 80 eiwitten. Elke stip komt uit een echte 3D-structuur.', 'The cell’s protein factory, made of RNA and ≈ 80 proteins. Every dot comes from a real 3D structure.'),
+    ST(8000, cam(800, 470, 1500), 'Het ribosoom van de mens', 'The human ribosome', 'De eiwitfabriek van de cel, uit RNA en ≈ 80 eiwitten. De vorm komt uit een echte 3D-structuur.', 'The cell’s protein factory, made of RNA and ≈ 80 proteins. The shape comes from a real 3D structure.'),
     ST(8000, cam(800, 470, 1500), 'Twee helften: klein en groot', 'Two halves: small and large', 'Een kleine (40S) en een grote helft (60S) vormen samen het 80S-ribosoom. S-getallen tellen niet zomaar op.', 'A small (40S) and a large half (60S) together form the 80S ribosome. S numbers do not simply add up.'),
-    ST(8000, cam(800, 470, 1500), 'Vooral RNA', 'Mostly RNA', 'Het RNA (turquoise) vormt het skelet en de werkende delen; de eiwitten (paars) zitten vooral buiten.', 'The RNA (turquoise) forms the frame and the working parts; the proteins (purple) sit mostly outside.'),
+    ST(8000, cam(800, 470, 1500), 'Vooral RNA', 'Mostly RNA', 'Links alleen het RNA, rechts alleen de ≈ 80 eiwitten. Het RNA heeft al bijna de hele vorm en doet het werk; de eiwitten zitten vooral aan de buitenkant.', 'Left only the RNA, right only the ≈ 80 proteins. The RNA alone already has almost the whole shape and does the work; the proteins sit mostly on the outside.'),
     ST(8500, cam(800, 560, 1400), 'De kleine helft houdt het mRNA vast', 'The small half holds the mRNA', 'De kleine helft (40S) houdt het mRNA vast en controleert of het tRNA goed past op het codon.', 'The small half (40S) holds the mRNA and checks whether the tRNA fits the codon properly.'),
     ST(8500, cam(800, 400, 1400), 'De grote helft koppelt', 'The large half does the linking', 'De grote helft (60S) bevat drie RNA’s en koppelt de aminozuren aan elkaar.', 'The large half (60S) contains three RNAs and links the amino acids together.'),
     ST(9000, cam(640, 520, 950), 'Drie plaatsen voor tRNA’s', 'Three places for tRNAs', 'A: nieuw aminozuur komt aan. P: houdt de keten vast. E: uitgang. Hier zitten tRNA’s in A en P.', 'A: a new amino acid arrives. P: holds the chain. E: exit. Here tRNAs sit in A and P.'),
@@ -59,7 +61,7 @@ export default {
     const bins = [];
     for (let b = 0; b < NB; b++) bins.push(CATS.map(c => `<path id="rb-${c}-${b}" fill="none" stroke-linecap="round"/>`).join(''));
     return svgOpen() + `
-    <g data-node="ribogenese" data-color="${C.rrna}" data-label="${T2('Hoe wordt een ribosoom gebouwd?', 'How is a ribosome built?')}"><g id="rb-body">${bins.join('')}</g>
+    <g data-node="ribogenese" data-color="${C.rrna}" data-label="${T2('Hoe wordt een ribosoom gebouwd?', 'How is a ribosome built?')}"><g id="rb-body"><path id="rb-o40" fill="none" stroke-linecap="round"/><path id="rb-o60" fill="none" stroke-linecap="round"/>${bins.join('')}</g>
       <circle id="rb-bgA" data-anchor="ribogenese" r="1" fill="none"/></g>
     <g id="rb-mg" data-node="codon" data-color="${C.rna}" data-label="${T2('mRNA · codons', 'mRNA · codons')}"><path id="rb-mrna" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle id="rb-mA" data-anchor="codon" data-pos="below" r="1" fill="none"/></g>
     <g id="rb-tg" data-node="trna" data-color="${C.trna}" data-label="tRNA"><path id="rb-tPL" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path id="rb-tP" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path id="rb-tAL" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path id="rb-tA" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle id="rb-tAnc" data-anchor="trna" r="1" fill="none"/></g>
@@ -94,21 +96,29 @@ export default {
         };
         const col = cols(s);
         // lichaam: stippen per diepte-laag
-        const d = {}; for (const c of CATS) for (let b = 0; b < NB; b++) d[c + b] = '';
+        /* Geen losse stippen meer: elke positie is een dikke bol, zodat ze samensmelten tot één gesloten vorm per helft
+         * (met een donkere omtrek eromheen). Zo blijven de buitenvorm en de twee helften leesbaar; diepte = iets donkerder. */
+        const d = {}, ol = { 40: '', 60: '' }; for (const c of CATS) for (let b = 0; b < NB; b++) d[c + b] = '';
+        const split = stepVal(K.split, s), SPL = 250 * split;
         for (const c of CATS) {
-          const dy = SUB40.has(c) ? -sep : sep;
+          const dy = SUB40.has(c) ? -sep : sep, dx = (c[0] === 'r' ? -SPL : SPL) * 1;
+          const ok = split > .5 ? (c[0] === 'r' ? 40 : 60) : (SUB40.has(c) ? 40 : 60);   // omtrek per helft, of per soort als ze naast elkaar staan
           for (const p of P[c]) {
-            const [X, Y, Z] = proj(p, dy);
+            let [X, Y, Z] = proj(p, dy); X += dx;
             const b = Math.max(0, Math.min(NB - 1, Math.floor((Z + 150) / 300 * NB)));
-            d[c + b] += `M${X.toFixed(0)},${Y.toFixed(0)}h0`;
+            const m = `M${X.toFixed(0)},${Y.toFixed(0)}h0`;
+            ol[ok] += m; d[c + b] += m;
           }
         }
+        const BW = S * 13;
+        if (split > .5) ol[60] = '';                 // eiwitten naast elkaar: als losse stukjes, zonder gesloten omtrek
+        for (const k of [40, 60]) { const el = $('rb-o' + k); el.setAttribute('d', ol[k]); el.setAttribute('stroke', '#04070f'); el.setAttribute('stroke-width', f1(BW + 7)); }
         for (const c of CATS) for (let b = 0; b < NB; b++) {
-          const el = paths[c + b], shade = .55 - .55 * b / (NB - 1);
+          const el = paths[c + b], shade = .32 - .32 * b / (NB - 1);
           el.setAttribute('d', d[c + b]);
           el.setAttribute('stroke', rgb(mix(col[c], BG, shade)));
-          el.setAttribute('stroke-width', f1(S * (c[0] === 'r' ? 7.5 : 7)));
-          el.setAttribute('stroke-opacity', c[0] === 'p' ? f1(pop) : '1');
+          el.setAttribute('stroke-width', f1(BW * (c[0] === 'p' ? .92 - .5 * split : 1)));
+          el.setAttribute('stroke-opacity', c[0] === 'p' ? f1(.35 + .65 * pop) : '1');
         }
         $('rb-body').setAttribute('opacity', f1(op));
         // tRNA's en mRNA (bovenop)
@@ -132,16 +142,17 @@ export default {
         const fade = sub(s.p, .15, .35);
         const i = s.step;
         if (i === 0) {
-          o += textBox(1010, 250, 520, [T2('4 rRNA\'s + ≈ 80 eiwitten', '4 rRNAs + ≈ 80 proteins'), T2('1 stip = 1 residu', '1 dot = 1 residue')], { title: T2('Humaan 80S', 'Human 80S'), op: fade, fs: 24 });
+          o += textBox(1010, 250, 520, [T2('4 rRNA\'s + ≈ 80 eiwitten', '4 rRNAs + ≈ 80 proteins'), T2('vorm uit PDB 6Y0G', 'shape from PDB 6Y0G')], { title: T2('Humaan 80S', 'Human 80S'), op: fade, fs: 24 });
         }
         if (i === 1) {
           const a = proj(LM.c60, sep), b = proj(LM.c40, -sep), k = i === 1 ? fade : 1;
           o += txt(a[0] + 330, a[1] - 40, T2('60S', '60S'), '#23a88f', 44, 'start', 800) + txt(a[0] + 330, a[1] - 5, T2('grote subeenheid', 'large subunit'), C.text, 21, 'start').replace('<text', `<text opacity="${f1(k)}"`);
           o += txt(b[0] + 330, b[1] + 30, T2('40S', '40S'), '#8df0dc', 44, 'start', 800) + txt(b[0] + 330, b[1] + 65, T2('kleine subeenheid', 'small subunit'), C.text, 21, 'start').replace('<text', `<text opacity="${f1(k)}"`);
-          if (i === 1) o += txt(cx, 870, T2('40S + 60S → 80S   (S-waarden tellen niet op)', '40S + 60S → 80S   (S values are not additive)'), C.muted, 24, 'middle', 600).replace('<text', `<text opacity="${f1(fade)}"`);
+          if (i === 1) o += txt(1010, 880, T2('40S + 60S → 80S   (S-waarden tellen niet op)', '40S + 60S → 80S   (S values are not additive)'), C.muted, 22, 'start', 600).replace('<text', `<text opacity="${f1(fade)}"`);
         }
         if (i === 2) {
-          o += textBox(1010, 280, 500, [T2('<tspan fill="#2cc6a8">■</tspan> rRNA: kern + actieve centra', '<tspan fill="#2cc6a8">■</tspan> rRNA: core + active centres'), T2('<tspan fill="#9b7bff">■</tspan> eiwitten: vooral oppervlak', '<tspan fill="#9b7bff">■</tspan> proteins: mostly surface')], { op: fade, fs: 24 });
+          const k = sub(s.p, .25, .45);
+          o += `<g opacity="${f1(k)}">` + txt(cx - SPL, 890, T2('alleen het RNA', 'only the RNA'), C.rrna, 26, 'middle', 700) + txt(cx + SPL, 890, T2('alleen de eiwitten', 'only the proteins'), C.prot, 26, 'middle', 700) + '</g>';
         }
         if (i === 3) {
           const dc = proj(LM.dc, -sep);

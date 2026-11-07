@@ -13,6 +13,7 @@ import { SIMPLE, EXTRA_GLOSS } from './simple.js';
 import { GLOSSARY } from '../shared/glossary.js';
 import { CODE_RE, fetchMeta, fetchCoords, coordUrl, customEntry, searchPDB } from './custom.js';
 import { fetchText, PROGRESS } from './fetchprog.js';
+import { smartFilter } from './smartsearch.js';
 
 const $ = id => document.getElementById(id);
 const BY = Object.fromEntries(ENTRIES.map(e => [e.id, e]));
@@ -50,7 +51,9 @@ const T = {
   ttlSub: { nl: 'Echte 3D-vormen van DNA en RNA, zoals onderzoekers ze gemeten hebben', en: 'Real 3D shapes of DNA and RNA, as researchers measured them' },
   back: { nl: '← terug naar de animatie', en: '← back to the animation' },
   home: { nl: 'Start', en: 'Home' }, story: { nl: 'Verhaal-app', en: 'Story app' },
-  search: { nl: 'Filter de atlas: bv. helix, ribosoom…', en: 'Filter the atlas: e.g. helix, ribosome…' },
+  search: { nl: 'Typ wat je zoekt: bv. mens dubbelstreng, enkel streng, triple helix, histon…', en: 'Type what you want: e.g. human double strand, single strand, triple helix, histone…' },
+  recog: { nl: 'Herkend:', en: 'Recognised:' }, words: { nl: 'woorden:', en: 'words:' },
+  loose: { nl: 'Niets past bij alles samen; dit komt het dichtst in de buurt.', en: 'Nothing matches everything together; these come closest.' },
   count: { nl: n => `${n} item${n === 1 ? '' : 's'}`, en: n => `${n} entr${n === 1 ? 'y' : 'ies'}` },
   reset: { nl: 'filters wissen', en: 'clear filters' },
   showOpts: { nl: 'Tonen ▾', en: 'Show ▾' },
@@ -233,18 +236,22 @@ $('filters').onchange = e => {
 };
 $('reset').onclick = () => { for (const s of Object.values(state.filt)) s.clear(); state.text = ''; $('q').value = ''; buildFilters(); renderList(); };
 $('q').oninput = e => { state.text = e.target.value.trim().toLowerCase(); renderList(); };
+/* ?find=… (vanuit de zoekbalk van de app): meteen invullen */
+if (q.get('find')) { $('q').value = q.get('find').slice(0, 60); state.text = $('q').value.trim().toLowerCase(); }
 
-const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-function matches(e) {
-  for (const [g, s] of Object.entries(state.filt)) if (s.size && !e[g].some(v => s.has(v))) return false;
-  if (!state.text) return true;
-  const sp = SIMPLE[e.id];
-  const hay = norm([e.id, e.pdb ?? '', e.name.nl, e.name.en, ...(sp ? [sp.title.nl, sp.title.en, sp.sub.nl, sp.sub.en, sp.kort.nl, sp.kort.en] : []), e.sub.nl, e.sub.en, e.what.nl, e.what.en, ...e.feat.nl, ...e.feat.en, e.cell.nl, e.cell.en, (e.org && (e.org.nl + ' ' + e.org.en)) || ''].join(' '));
-  return norm(state.text).split(/\s+/).every(w => hay.includes(w));
+const facetOk = e => Object.entries(state.filt).every(([g, f]) => !f.size || (e[g] ?? []).some(v => f.has(v)));
+/* slimme filter (atlas/smartsearch.js): "mens dubbelstreng", "enkel streng", "triple helix", eiwitnamen …, gesorteerd op hoe goed het past */
+function filtered() {
+  const all = [...CUSTOM, ...ENTRIES].filter(facetOk);
+  if (!state.text) { $('qinfo').innerHTML = ''; return all; }
+  const r = smartFilter(state.text, all, { SIMPLE });
+  const chips = r.concepts.map(c => `<span class="qc">${esc(L(c.label))}</span>`).join('') + (r.free.length ? ` <span class="qw">${t('words')} ${r.free.map(esc).join(', ')}</span>` : '');
+  $('qinfo').innerHTML = (r.concepts.length ? `<b>${t('recog')}</b> ` : '') + chips + (r.loose ? `<div class="ql">${t('loose')}</div>` : '');
+  return r.list;
 }
 const TYPECOL = { dna: COL.dna, rna: COL.rna, hybrid: '#ffc247', prot: COL.prot, drug: '#7fdc6a' };
 function renderList() {
-  const list = [...CUSTOM, ...ENTRIES].filter(matches);
+  const list = filtered();
   $('count').textContent = t('count')(list.length);
   const code = state.text.toUpperCase();
   const raw = $('q').value.trim();

@@ -22,13 +22,23 @@ html, body { height: 100%; overflow: hidden; }
 .topbar { flex: none; display: flex; flex-direction: column; gap: 6px; padding: 8px 12px 6px; background: #080d1a; border-bottom: 1px solid var(--line); z-index: 5; }
 .row1 { display: flex; gap: 8px; align-items: center; min-width: 0; }
 .row2 { display: flex; flex-wrap: wrap; row-gap: 4px; gap: 10px; align-items: center; min-width: 0; }
-.row2 .scalebox { flex-shrink: 0; max-width: 100%; }   /* past het niet naast de hoofdstukbalk, dan schuift die naar een eigen regel */
 .navbtns { display: flex; gap: 6px; flex: none; }
-.crumbs { display: flex; flex-wrap: nowrap; gap: 4px; align-items: center; font-size: 13px; overflow: hidden; min-width: 0; flex: 1; white-space: nowrap; }
+.crumbs { display: flex; flex-wrap: nowrap; gap: 6px; align-items: center; font-size: 13.5px; overflow: hidden; min-width: 0; flex: 1; white-space: nowrap; }
 .crumbs button { all: unset; cursor: pointer; color: var(--muted); }
 .crumbs button:hover { color: var(--text); }
 .crumbs b { font-weight: 600; }
-.crumbs span { color: #4a5570; }
+.crumbs .sep { color: #4a5570; }
+/* waar ben ik: gekleurde lijn › genummerd hoofdstuk › zijsprongen (geel, gestreept) */
+.crumbs .linebadge { all: unset; cursor: pointer; flex: none; font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 999px; color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); }
+.crumbs .linebadge:hover { background: color-mix(in srgb, var(--c) 28%, transparent); }
+.crumbs .cn { font: 600 10.5px var(--mono); font-style: normal; display: inline-grid; place-items: center; min-width: 17px; height: 17px; border-radius: 50%; background: rgba(124,196,255,.18); color: var(--accent); margin-right: 5px; vertical-align: 1px; }
+.crumbs .jump { padding: 1px 7px; border-radius: 6px; border: 1px dashed rgba(255,194,71,.55); color: #ffd98a; }
+.crumbs b.jump { color: #ffc247; }
+.crumbs button { max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
+.crumbs .more { color: var(--muted); cursor: help; }
+.topsearch { flex: 0 1 340px; min-width: 160px; margin-left: 8px; }
+.toast.info { background: rgba(12,24,48,.97); border-color: #7cc4ff; color: var(--text); top: 92px; text-align: center; line-height: 1.5; }
+.toast.info span { color: var(--muted); font-size: 13px; }
 .tools { margin-left: auto; display: flex; gap: 6px; flex: none; }
 @media (max-width: 1250px) { .btn em { display: none; } .btn .keep { display: inline; } }
 
@@ -37,10 +47,15 @@ html, body { height: 100%; overflow: hidden; }
   background: rgba(9,14,28,.8); border: 1px solid rgba(124,196,255,.25); border-radius: 999px; padding: 3px; }
 .sinfo { font-size: 12.5px; padding: 0 8px; color: var(--muted); white-space: nowrap; }
 .sinfo b { color: var(--text); font-weight: 600; }
-.sinfo .dots { display: flex; gap: 3px; margin-top: 3px; justify-content: center; }
-.sinfo .dots i { width: 7px; height: 3px; border-radius: 2px; background: #2a3550; }
-.sinfo .dots i.on { background: var(--accent); }
-.sinfo .dots i.cur { background: #ffc247; width: 12px; }
+.sinfo { text-align: center; }
+.sinfo .dots { display: flex; gap: 3px; margin-top: 4px; justify-content: center; }
+.sinfo .dots button { all: unset; cursor: pointer; width: 9px; height: 6px; border-radius: 2px; background: #2a3550; transition: transform .15s; }
+.sinfo .dots button:hover { transform: scaleY(1.8); background: #4a5a80; }
+.sinfo .dots button.on { background: var(--accent); }
+.sinfo .dots button.cur { background: #ffc247; width: 16px; }
+.sinfo .dots button.from { background: #ffc247; opacity: .55; width: 16px; }
+.sinfo .jumpinfo { color: #ffc247; }
+.sinfo .jumpinfo b { color: #ffc247; }
 .sinfo button.back { all: unset; cursor: pointer; color: #ffc247; }
 .sbtn { all: unset; cursor: pointer; height: 28px; display: inline-flex; align-items: center; gap: 6px; padding: 0 11px; border-radius: 999px; color: var(--text); background: rgba(124,196,255,.12); font-size: 12.5px; white-space: nowrap; }
 .sbtn .arr { font-size: 15px; line-height: 1; }
@@ -93,7 +108,8 @@ html, body { height: 100%; overflow: hidden; }
 .seg i s { background: rgba(124,196,255,.38); }                /* leespauze */
 .seg i em { background: linear-gradient(90deg, #4f8ff7, #7cc4ff); }
 .seg.done i em { background: #3f6db8; }
-.srow { display: flex; justify-content: space-between; gap: 10px; font: 500 11.5px var(--mono); color: var(--muted); padding-left: 2px; }
+.srow { display: flex; justify-content: space-between; align-items: center; gap: 10px; font: 500 11.5px var(--mono); color: var(--muted); padding-left: 2px; }
+.srow .scalebox { font: 400 12px Inter, system-ui, sans-serif; gap: 14px; flex: 0 1 auto; }
 .stepno { white-space: nowrap; }
 /* ⚙: zelden nodige instellingen (snelheid) */
 .gear { position: relative; flex: none; }
