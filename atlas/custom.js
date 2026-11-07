@@ -107,8 +107,8 @@ export function customEntry(code, m) {
       `Deze structuur heb je zelf opgezocht in de PDB, de wereldwijde databank van 3D-modellen van moleculen. Het model bevat ${join(partsL('nl'), 'nl') || 'één molecule'}${smalls.length ? `, met ${smalls.length} ${smalls.length === 1 ? 'klein molecule' : 'kleine moleculen'}` : ''}. Voor zelf opgezochte structuren is er geen uitleg op maat: de tabel naast de figuur is automatisch opgebouwd.`,
       `You looked up this structure yourself in the PDB, the worldwide database of 3D models of molecules. The model contains ${join(partsL('en'), 'en') || 'one molecule'}${smalls.length ? `, with ${smalls.length} small molecule${smalls.length === 1 ? '' : 's'}` : ''}. There is no tailored explanation for structures you look up yourself: the table next to the figure is built automatically.`),
     look: both(
-      `Kleuren: ${join(colours.nl, 'nl')}. Elke keten heeft een eigen tint. Draai de figuur met de muis en zoom met het scrolwiel.${models > 1 ? ' Dit is een NMR-structuur: je ziet enkel het eerste model.' : ''}`,
-      `Colours: ${join(colours.en, 'en')}. Each chain has its own shade. Rotate the figure with the mouse and zoom with the scroll wheel.${models > 1 ? ' This is an NMR structure: only the first model is shown.' : ''}`),
+      `Kleuren: ${join(colours.nl, 'nl')}. Elke keten heeft een eigen tint; met Kleur → Per keten krijgt elke keten een duidelijk andere kleur${count.prot > 1 ? ' (zo zie je uit hoeveel delen het eiwit bestaat)' : ''}.${count.dna || count.rna ? ' Via Tonen kan je het DNA/RNA verbergen.' : ''} Draai de figuur met de muis en zoom met het scrolwiel.${models > 1 ? ' Dit is een NMR-structuur: je ziet enkel het eerste model.' : ''}`,
+      `Colours: ${join(colours.en, 'en')}. Each chain has its own shade; Colour → By chain gives every chain a clearly different colour${count.prot > 1 ? ' (so you see how many parts the protein has)' : ''}.${count.dna || count.rna ? ' Use Show to hide the DNA/RNA.' : ''} Rotate the figure with the mouse and zoom with the scroll wheel.${models > 1 ? ' This is an NMR structure: only the first model is shown.' : ''}`),
     atoms, ligNames: Object.fromEntries(smalls.map(c => [c.id, sentence(c.name)])),
   };
 }
@@ -169,7 +169,7 @@ async function rcsbIds(query, rows) {
 }
 const QS = ids => `{entries(entry_ids:${JSON.stringify(ids)}){
   rcsb_id struct{title} exptl{method} rcsb_entry_info{resolution_combined deposited_atom_count} rcsb_accession_info{initial_release_date}
-  polymer_entities{entity_poly{type rcsb_sample_sequence_length} rcsb_polymer_entity{pdbx_description}
+  polymer_entities{entity_poly{type rcsb_sample_sequence_length pdbx_strand_id} rcsb_polymer_entity{pdbx_description}
     rcsb_polymer_entity_container_identifiers{reference_sequence_identifiers{database_name database_accession}}
     rcsb_entity_source_organism{scientific_name}}
 }}`;
@@ -179,7 +179,10 @@ export async function searchPDB(raw) {
   if (!term) return null;
   let prot = null;
   if (/^[\p{L}\p{N}.-]{2,15}$/u.test(term)) prot = await uniprotGene(term);
+  /* meerdere woorden ("tumor suppressor TP53", "het eiwit p53"): eerst het woord dat op een gennaam lijkt (cijfer of hoofdletters) */
+  if (!prot && /\s/.test(term)) for (const w of term.split(/\s+/).filter(w => /^[\p{L}\p{N}-]{2,12}$/u.test(w) && (/\d/.test(w) || (w === w.toUpperCase() && /\p{L}/u.test(w))))) { prot = await uniprotGene(w); if (prot) break; }
   if (!prot) prot = await uniprotName(term);
+  if (!prot && /\s/.test(term)) for (const w of term.split(/\s+/).filter(w => /\d/.test(w) && w.length >= 2)) { prot = await uniprotName(w); if (prot) break; }
   const byAcc = acc => ({ type: 'terminal', service: 'text', parameters: { attribute: 'rcsb_polymer_entity_container_identifiers.reference_sequence_identifiers.database_accession', operator: 'exact_match', value: acc } });
   let hits = prot ? await rcsbIds(byAcc(prot.acc), MAXHITS) : { total: 0, ids: [] };
   if (!hits.ids.length) { prot = null; hits = await rcsbIds({ type: 'terminal', service: 'full_text', parameters: { value: NL_EN[term.toLowerCase()] ?? term } }, 40); }
@@ -194,14 +197,18 @@ export async function searchPDB(raw) {
     // alle stukken van dit eiwit samen (insuline = A- en B-keten uit één gen)
     const mineAll = prot ? ents.filter(p => (p.rcsb_polymer_entity_container_identifiers?.reference_sequence_identifiers ?? []).some(x => x.database_accession === prot.acc)) : [];
     const mine = mineAll[0] ?? null;
-    const len = mineAll.reduce((n, p) => n + (p.entity_poly?.rcsb_sample_sequence_length ?? 0), 0) || undefined;
+    // stukken van één gen (insuline: A- + B-keten) optellen, maar dezelfde keten twee keer (twee kopieën als aparte entiteit) niet
+    const lens = [...new Set(mineAll.map(p => p.entity_poly?.rcsb_sample_sequence_length ?? 0))];
+    const len = lens.reduce((n, l) => n + l, 0) || undefined;
     const meth = (m.exptl?.[0]?.method ?? '').toUpperCase();
     const res = m.rcsb_entry_info?.resolution_combined?.[0] ?? null;
     return {
       code: m.rcsb_id, title: cut(sentence(m.struct?.title), 90), rank,
+      odd: /mutant|mutation|variant|analog|designed|engineered|mini-|single-chain|inhibitor|fragment|compound|small molecule|drug|\b[A-Z]\d{2,4}[A-Z]\b/i.test(m.struct?.title ?? ''),
       method: /X-RAY/.test(meth) ? 'xray' : /NMR/.test(meth) ? 'nmr' : /ELECTRON/.test(meth) ? 'em' : 'other', res,
       year: (m.rcsb_accession_info?.initial_release_date ?? '').slice(0, 4), atoms: m.rcsb_entry_info?.deposited_atom_count ?? 0,
       len, cov: prot?.len && len ? Math.min(1, len / prot.len) : null,
+      copies: mineAll.reduce((n, p) => n + ((p.entity_poly?.pdbx_strand_id ?? '').split(',').filter(Boolean).length || 1), 0),
       dna: kinds.has('dna') || kinds.has('hybrid'), rna: kinds.has('rna'), partners: ents.filter(p => !mineAll.includes(p) && KIND[p.entity_poly?.type] === 'prot').length,
       org: (mine ?? ents[0])?.rcsb_entity_source_organism?.[0]?.scientific_name ?? null,
     };
@@ -214,7 +221,8 @@ export async function searchPDB(raw) {
     const score = x => bucket(x) * 10
       + (/mutant|mutation|variant|analog|designed|engineered|mini-|single-chain|\b[A-Z]\d{2,4}[A-Z]\b/i.test(x.title) ? 3 : 0)
       + (/inhibitor|fragment|compound|small molecule|ligand \d|drug/i.test(x.title) ? 2 : 0)
-      - (x.dna || x.rna ? 2 : 0) + sharp(x);
+      - (x.dna || x.rna ? 2 : 0) + sharp(x)
+      - (+x.year && +x.year <= 2000 ? 1.5 : 0);   // de eerste structuren van een eiwit zijn meestal de bekende uit de handboeken (bv. p53 + DNA: 1TUP, 1995)
     items.sort((a, b) => score(a) - score(b) || a.year.localeCompare(b.year));
     // spreiding: een titel die (bijna) hetzelfde begint als een eerder resultaat schuift naar achteren
     const seen = new Set(), first = [], later = [];

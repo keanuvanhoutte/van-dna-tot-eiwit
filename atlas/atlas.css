@@ -37,6 +37,14 @@ button { font-family: inherit; }
 .list .fnote { font-size: 11.5px; line-height: 1.4; color: var(--muted); padding: 0 4px 6px; }
 .list .fmore { padding: 2px 4px 8px; }
 .item.res .nm { font-size: 13px; }
+.item.pick .pl { font-size: 13.5px; font-weight: 700; color: var(--text); }
+.item.pick.best { border: 1px solid rgba(255,194,71,.55); background: rgba(255,194,71,.07); }
+.item.pick.best .pl { color: #ffc247; }
+.item.pick .why { font-size: 12.5px; line-height: 1.45; color: #c9d2e4; margin: 3px 0; }
+.item.pick .sb { color: var(--text); }
+.item.pick .en { font-size: 11px; line-height: 1.35; color: var(--muted); margin-top: 3px; opacity: .8; }
+.item.pick.adv .pl { font-size: 12.5px; font-weight: 600; }
+.list .alth { padding-top: 8px; }
 .item .forget { all: unset; cursor: pointer; color: var(--muted); font-size: 16px; line-height: 1; padding: 0 4px; }
 .item .forget:hover { color: var(--text); }
 .badge.mine { background: rgba(124,196,255,.14); color: var(--accent); }

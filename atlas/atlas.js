@@ -63,7 +63,7 @@ const T = {
   cmpHint: { nl: 'Vergelijkmodus: klik items in de lijst om ze toe te voegen of te verwijderen (max. 3). De eerste bepaalt de tekst rechts.', en: 'Compare mode: click entries in the list to add or remove them (max. 3). The first one determines the text on the right.' },
   presets: { nl: 'Snel vergelijken:', en: 'Quick compare:' },
   view: { nl: 'Weergave', en: 'View' }, stick: { nl: 'Stokjes', en: 'Sticks' }, sphere: { nl: 'Ruimtevullend', en: 'Space-filling' }, trace: { nl: 'Ruggengraat', en: 'Backbone' },
-  colour: { nl: 'Kleur', en: 'Colour' }, byStrand: { nl: 'Per streng', en: 'By strand' }, byType: { nl: 'Per ketentype', en: 'By chain type' }, byBase: { nl: 'Per base', en: 'By base' }, byElem: { nl: 'Per element', en: 'By element' },
+  colour: { nl: 'Kleur', en: 'Colour' }, byStrand: { nl: 'Per streng', en: 'By strand' }, byChain: { nl: 'Per keten', en: 'By chain' }, naTog: { nl: 'DNA en RNA tonen', en: 'Show DNA and RNA' }, byType: { nl: 'Per ketentype', en: 'By chain type' }, byBase: { nl: 'Per base', en: 'By base' }, byElem: { nl: 'Per element', en: 'By element' },
   hb: { nl: 'Waterstofbruggen', en: 'Hydrogen bonds' }, synMark: { nl: 'Omgeklapte basen (syn)', en: 'Flipped bases (syn)' }, ions: { nl: 'Ionen', en: 'Ions' }, ligs: { nl: 'Medicijn / klein molecule', en: 'Drug / small molecule' },
   markT: { nl: 'Markeringen', en: 'Highlights' }, water: { nl: 'Water', en: 'Water' }, spin: { nl: 'Rondraaien', en: 'Spin' }, link: { nl: 'Samen draaien', en: 'Rotate together' },
   loading: { nl: 'Structuur laden uit de PDB…', en: 'Loading structure from the PDB…' },
@@ -148,7 +148,22 @@ const T = {
   srchGene: { nl: (g, nm, org) => `Gen ${g}: ${nm}${org ? ` (${org})` : ''}`, en: (g, nm, org) => `Gene ${g}: ${nm}${org ? ` (${org})` : ''}` },
   srchOrder: { nl: 'Bovenaan: het grootste stuk van het eiwit, het scherpst gemeten. De titels zijn Engels, zoals in de PDB.', en: 'At the top: the largest piece of the protein, measured most sharply.' },
   srchText: { nl: 'Geen gen of eiwit herkend: gewone zoekopdracht in de (Engelse) titels van de PDB.', en: 'No gene name recognised: plain search in titles and descriptions.' },
-  srchMore: { nl: n => `Toon ${n} meer`, en: n => `Show ${n} more` }, srchClose: { nl: 'Resultaten sluiten', en: 'Close the results' },
+  srchMore: { nl: n => `Toon ${n} meer`, en: n => `Show ${n} more` },
+  pickBest: { nl: 'Aanrader', en: 'Recommended' },
+  pickWhyDna: { nl: 'Een groot stuk van het eiwit, samen met het DNA dat het vastpakt: zo zie je het eiwit aan het werk.', en: 'A large piece of the protein, together with the DNA it holds: you see the protein at work.' },
+  pickWhyRna: { nl: 'Een groot stuk van het eiwit, samen met RNA: zo zie je het eiwit aan het werk.', en: 'A large piece of the protein, together with RNA: you see the protein at work.' },
+  pickWhy: { nl: 'Een groot stuk van het eiwit, scherp gemeten.', en: 'A large piece of the protein, measured sharply.' },
+  pickOld: { nl: y => ` Een van de eerste structuren van dit eiwit (${y}).`, en: y => ` One of the first structures of this protein (${y}).` },
+  altHead: { nl: 'Of kies een andere versie', en: 'Or pick another version' },
+  altNoDna: { nl: 'Het eiwit alleen (zonder DNA)', en: 'The protein on its own (without DNA)' },
+  altDna: { nl: 'Samen met DNA', en: 'Together with DNA' },
+  altBig: { nl: 'Het grootste stuk van het eiwit', en: 'The largest piece of the protein' },
+  altSharp: { nl: 'Het scherpste beeld', en: 'The sharpest image' },
+  allHead: { nl: n => `Alle ${n} structuren tonen (voor gevorderden, titels in het Engels)`, en: n => `Show all ${n} structures (advanced)` },
+  allHide: { nl: 'Lange lijst verbergen', en: 'Hide the long list' },
+  copiesOf: { nl: (n, g) => `${n} kopieën van ${g}`, en: (n, g) => `${n} copies of ${g}` },
+  pieceOf: { nl: (p, a, b) => `${p} % van het eiwit (${a} van ${b} aminozuren)`, en: (p, a, b) => `${p} % of the protein (${a} of ${b} amino acids)` },
+  withDna: { nl: 'met DNA', en: 'with DNA' }, withRna: { nl: 'met RNA', en: 'with RNA' }, srchClose: { nl: 'Resultaten sluiten', en: 'Close the results' },
   srchCov: { nl: (a, b) => `stuk: ${a} van ${b} aminozuren`, en: (a, b) => `piece: ${a} of ${b} amino acids` }, srchFull: { nl: 'heel het eiwit', en: 'the whole protein' },
   srchDna: { nl: '+ DNA', en: '+ DNA' }, srchRna: { nl: '+ RNA', en: '+ RNA' },
   srchPartners: { nl: n => `+ ${n} ander${n === 1 ? ' eiwit' : 'e eiwitten'}`, en: n => `+ ${n} other protein${n === 1 ? '' : 's'}` },
@@ -188,13 +203,13 @@ const state = {
   id: BY[q.get('id')] ? q.get('id') : 'bdna',
   cmp: false, set: [],
   filt: { type: new Set(), cls: new Set(), ctx: new Set() }, text: '',
-  found: null, foundShown: 10,
+  found: null, foundShown: 10, foundAll: false, na: true,
   style: 'cartoon', color: 'strand', hb: false, syn: false, ions: true, ligs: true, water: false, mark: true,
 };
 // optionele weergave-instellingen via de URL (deelbare links): ?style=trace&color=base&hb=1&syn=1&water=1&ions=0&ligs=0
 if (['cartoon', 'stick', 'sphere', 'trace'].includes(q.get('style'))) state.style = q.get('style');
-if (['strand', 'type', 'base', 'elem'].includes(q.get('color'))) state.color = q.get('color');
-for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'mark']) if (q.has(k)) state[k] = q.get(k) === '1';
+if (['strand', 'chain', 'type', 'base', 'elem'].includes(q.get('color'))) state.color = q.get('color');
+for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'mark', 'na']) if (q.has(k)) state[k] = q.get(k) === '1';
 const cmpIds = (q.get('cmp') || '').split(',').filter(id => BY[id] && id !== state.id).slice(0, 2);
 if (cmpIds.length) { state.cmp = true; state.set = [state.id, ...cmpIds]; } else state.set = [state.id];
 
@@ -275,6 +290,7 @@ $('list').onclick = e => {
   if (f) { e.stopPropagation(); forget(f.dataset.forget); return; }
   if (e.target.closest('[data-clear]')) { e.stopPropagation(); state.found = null; renderList(); return; }
   if (e.target.closest('[data-more]')) { state.foundShown += 10; renderList(); return; }
+  if (e.target.closest('[data-all]')) { state.foundAll = !state.foundAll; renderList(); return; }
   const li = e.target.closest('.item'); if (!li) return;
   if (li.dataset.search) runSearch(li.dataset.search); else if (li.dataset.code) openCode(li.dataset.code); else pick(li.dataset.id);
 };
@@ -284,15 +300,39 @@ function foundHTML() {
   const f = state.found; if (!f) return '';
   const p = f.prot;
   const head = `<li class="lhead found"><span>${t('srchHead')(esc(f.term), f.total)}</span><button class="forget" data-clear title="${t('srchClose')}">×</button></li>
-    <li class="fnote">${p ? `${t('srchGene')(esc(p.gene), esc(p.name), p.sci === 'Homo sapiens' ? t('srchHuman') : esc(p.sci ?? ''))}<br>${t('srchOrder')}` : t('srchText')}</li>`;
+    <li class="fnote">${p ? t('srchGene')(esc(p.gene), esc(p.name), p.sci === 'Homo sapiens' ? t('srchHuman') : esc(p.sci ?? '')) : t('srchText')}</li>`;
   const meth = x => `${t({ xray: 'mXrayS', nmr: 'mNmrS', em: 'mEmS', other: 'mOtherS' }[x.method])}${x.res ? ` ${num(x.res)} Å` : ''}`;
-  const rows = f.items.slice(0, state.foundShown).map(x => {
+  const gname = p ? esc(p.gene) : '';
+  /* eenvoudige beschrijving: hoeveel van het eiwit, hoeveel kopieën, met DNA/RNA */
+  const plain = x => [x.cov != null && p?.len ? t('pieceOf')(Math.round(x.cov * 100), x.len, p.len) : '', x.copies > 1 && gname ? t('copiesOf')(x.copies, gname) : '', x.dna ? t('withDna') : '', x.rna ? t('withRna') : ''].filter(Boolean).join(' · ');
+  const card = (x, label, why, cls) => {
     const on = state.id === 'pdb-' + x.code;
-    const bits = [meth(x), x.year, x.cov != null && p?.len ? (x.len >= p.len * .95 ? t('srchFull') : t('srchCov')(x.len, p.len)) : '', x.dna ? t('srchDna') : '', x.rna ? t('srchRna') : '', x.partners ? t('srchPartners')(x.partners) : ''].filter(Boolean);
-    return `<li class="item res ${on ? 'on' : ''}" data-code="${x.code}" tabindex="0"><span class="tx"><div class="nm">${esc(x.title)}</div><div class="sb">${bits.join(' · ')}</div></span><span class="pdb">${x.code}</span></li>`;
-  }).join('');
-  const left = f.items.length - state.foundShown;
-  return head + rows + (left > 0 ? `<li class="fmore"><button class="link" data-more>${t('srchMore')(Math.min(10, left))}</button></li>` : '') + `<li class="lhead">${t('ours')}</li>`;
+    return `<li class="item res pick ${cls} ${on ? 'on' : ''}" data-code="${x.code}" tabindex="0"><span class="tx"><div class="pl">${label}</div>${why ? `<div class="why">${why}</div>` : ''}<div class="sb">${plain(x)}</div><div class="en">${esc(x.title)} · ${meth(x)} · ${x.year}</div></span><span class="pdb">${x.code}</span></li>`;
+  };
+  if (!p || f.items.length < 3) {   // geen gen herkend of weinig treffers: gewone lijst
+    const rows = f.items.slice(0, state.foundShown).map(x => card(x, esc(x.title), '', '')).join('');
+    const left = f.items.length - state.foundShown;
+    return head + rows + (left > 0 ? `<li class="fmore"><button class="link" data-more>${t('srchMore')(Math.min(10, left))}</button></li>` : '') + `<li class="lhead">${t('ours')}</li>`;
+  }
+  const big = f.items.filter(x => (x.cov ?? 0) >= .4 && !x.odd);   // geen mutanten of medicijn-screenings als alternatief
+  const best = f.items[0];
+  const why = (best.dna ? t('pickWhyDna') : best.rna ? t('pickWhyRna') : t('pickWhy')) + (+best.year <= 2000 ? t('pickOld')(best.year) : '');
+  const used = new Set([best.code]);
+  const alts = [];
+  const add = (x, lab) => { if (x && !used.has(x.code)) { used.add(x.code); alts.push(card(x, lab, '', 'alt')); } };
+  if (best.dna) add(big.find(x => !x.dna && !x.rna && !x.partners), t('altNoDna')); else add(big.find(x => x.dna), t('altDna'));
+  const largest = [...f.items].filter(x => x.cov != null && !x.odd).sort((a, b) => b.cov - a.cov || (a.res ?? 9) - (b.res ?? 9))[0];
+  if (largest && largest.cov > (best.cov ?? 0) + .1) add(largest, t('altBig'));
+  add([...big].filter(x => x.res).sort((a, b) => a.res - b.res)[0], t('altSharp'));
+  let h = head + card(best, `★ ${t('pickBest')}`, why, 'best') + (alts.length ? `<li class="fnote alth">${t('altHead')}</li>${alts.join('')}` : '');
+  h += `<li class="fmore"><button class="link" data-all>${state.foundAll ? t('allHide') : t('allHead')(f.items.length)}</button></li>`;
+  if (state.foundAll) {
+    const rest = f.items.filter(x => !used.has(x.code)).slice(0, state.foundShown);
+    h += rest.map(x => card(x, esc(x.title), '', 'adv')).join('');
+    const left = f.items.length - used.size - state.foundShown;
+    if (left > 0) h += `<li class="fmore"><button class="link" data-more>${t('srchMore')(Math.min(10, left))}</button></li>`;
+  }
+  return h + `<li class="lhead">${t('ours')}</li>`;
 }
 let searchNo = 0;
 async function runSearch(raw) {
@@ -306,7 +346,7 @@ async function runSearch(raw) {
   if (me !== searchNo) return;
   if (!f || !f.items.length) { msg.textContent = t('srchNone')(term); msg.className = 'pdbmsg bad'; return; }
   msg.textContent = ''; msg.className = 'pdbmsg';
-  state.found = f; state.foundShown = 10; $('pdbIn').value = '';
+  state.found = f; state.foundShown = 10; state.foundAll = false; $('pdbIn').value = '';
   if (state.text) { state.text = ''; $('q').value = ''; }
   renderList(); $('list').scrollTop = 0;
 }
@@ -622,6 +662,14 @@ function chainColours(s) {
   if (s.entry.third && map[s.entry.third]) map[s.entry.third] = '#5fd3e6';
   return map;
 }
+/* per keten: elke eiwitketen een duidelijk andere kleur (zo zie je uit hoeveel delen een complex bestaat); DNA blauw, RNA oranje in tinten */
+const CHAINPAL = ['#9b7bff', '#2cc6a8', '#ffc247', '#ff6b9a', '#7fdc6a', '#5fd3e6', '#ff8a3d', '#d0a2ff', '#c3f06b', '#ff9f9f', '#8fb3ff', '#f0c27b'];
+function distinctChains(s) {
+  const map = {}, n = { dna: 0, rna: 0, prot: 0 };
+  const chains = [...new Set(s.atoms.filter(a => a.kind === 'na' || a.kind === 'prot').map(a => a.chain))];
+  for (const c of chains) { const ty = s.an.chainType[c]; map[c] = ty === 'prot' ? CHAINPAL[n.prot++ % CHAINPAL.length] : PAL[ty === 'hybrid' ? 'dna' : ty][n[ty === 'rna' ? 'rna' : 'dna']++ % 6]; }
+  return map;
+}
 /* markeringen (entry.mark): basen die het begrip tonen (mismatch, G–U, bulge, stam, lus…) krijgen een eigen kleur;
  * met entry.dim wordt de rest van het RNA grijs, zodat het gemarkeerde stuk opvalt */
 function markOf(e) {
@@ -637,6 +685,7 @@ function baseColorFn(s) {
   const cm = chainColours(s);
   const typeCol = a => a.ctype === 'rna' ? COL.rna : a.ctype === 'prot' ? (s.entry.histone ? COL.histone : COL.prot) : COL.dna;
   if (state.color === 'strand') return a => cm[a.chain] ?? '#aaa';
+  if (state.color === 'chain') { const m = distinctChains(s); return a => m[a.chain] ?? '#aaa'; }
   if (state.color === 'type') return typeCol;
   if (state.color === 'base') return a => a.kind === 'prot' ? '#5a4bb8' : BB.test(a.atom) ? '#8791a8' : BASECOL[parentBase(a.resn)] ?? '#aab';
   return null;
@@ -650,6 +699,7 @@ function render(s) {
   const col = cf ? { colorfunc: cf } : { colorscheme: 'Jmol' };
   const NA = { predicate: a => a.kind === 'na' }, PR = { predicate: a => a.kind === 'prot' };
   const heavy = !!e.heavy;
+  const naOff = !state.na && atoms.some(a => a.kind === 'prot');   // DNA/RNA verbergen (enkel zinvol als er eiwit is)
   if (state.style === 'cartoon') {
     if (heavy) viewer.setStyle(NA, { cartoon: { ...col, thickness: .5 } });
     else {
@@ -692,6 +742,7 @@ function render(s) {
     for (const [a, b] of list) viewer.addCylinder({ start: xyz(a), end: xyz(b), radius: .07, dashed, dashLength: .25, gapLength: .18, color: '#ffffff' });
   }
   if (state.syn) for (const r of s.an.synRes) viewer.setStyle({ chain: r.chain, resi: r.resi, resn: r.resn }, { stick: { color: '#f06bc0', radius: .26 } });
+  if (naOff) { viewer.setStyle(NA, {}); viewer.removeAllShapes(); }
   viewer.render();
 }
 const xyz = a => ({ x: a.x, y: a.y, z: a.z });
@@ -707,6 +758,9 @@ function legend() {
     if (hasType('dna')) sw(COL.dna, state.color === 'strand' ? `DNA (${t('strand')} 1, 2…: ${['#4f8ff7', '#9cc0ff', '#5fd3e6'].map(c => `<i style="background:${c};margin:0 2px 0 3px"></i>`).join('')})` : 'DNA');
     if (hasType('rna')) sw(COL.rna, 'RNA');
     if (hasType('prot')) { const h = shown.some(s => s.entry.histone); sw(h ? COL.histone : COL.prot, h ? (lang === 'nl' ? 'histonen' : 'histones') : t('protein')); }
+  } else if (state.color === 'chain') {
+    const s0 = shown[0];
+    if (s0) { const m = distinctChains(s0); for (const [c, col] of Object.entries(m)) { const ty = s0.an.chainType[c]; if (ty !== 'prot' && !state.na) continue; sw(col, `${ty === 'prot' ? t('protein') : ty === 'rna' ? 'RNA' : 'DNA'} · ${t('chain')} ${c}`); } }
   } else if (state.color === 'base') {
     for (const [b, c] of Object.entries({ A: BASECOL.A, 'T/U': BASECOL.T, G: BASECOL.G, C: BASECOL.C })) sw(c, b);
     sw('#8791a8', t('backbone'));
@@ -817,8 +871,8 @@ function seg(id, key) {
 }
 seg('style', 'style'); seg('color', 'color');
 for (const id of ['style', 'color']) $(id).querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === state[id]));
-for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'mark']) $(k).checked = state[k];
-for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'mark']) $(k).onchange = e => { state[k] = e.target.checked; renderAll(); legend(); };
+for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'mark', 'na']) $(k).checked = state[k];
+for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'mark', 'na']) $(k).onchange = e => { state[k] = e.target.checked; renderAll(); legend(); };
 $('spin').onchange = e => SLOTS.forEach(s => s.viewer.spin(e.target.checked ? 'y' : false, .6));
 
 /* ---------- alles bijwerken ---------- */
