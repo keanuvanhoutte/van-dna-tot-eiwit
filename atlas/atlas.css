@@ -154,6 +154,11 @@ button { font-family: inherit; }
 .hand.l { background: rgba(240,107,192,.16); color: #f06bc0; }
 .slot .sh .pdbl { margin-left: auto; font: 500 11px var(--mono); color: var(--muted); text-decoration: none; white-space: nowrap; }
 .slot .sh .pdbl:hover { color: var(--accent); }
+.slot .sh .tg { all: unset; cursor: pointer; font: 500 11.5px var(--font); color: var(--accent); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(124,196,255,.35); white-space: nowrap; }
+.slot .sh .tg:hover { background: rgba(124,196,255,.12); }
+.slot .sh .tg:focus-visible { outline: 2px solid var(--accent); }
+.slot.notbl .calcgrid { display: none; }
+.slot.notbl .sbody { grid-template-columns: 1fr; }
 .slot .sh .x { all: unset; cursor: pointer; color: var(--muted); font-size: 16px; line-height: 1; padding: 0 2px; }
 .slot .sh .x:hover { color: var(--text); }
 .stage { position: relative; overflow: hidden; height: clamp(360px, calc(100vh - 230px), 1000px); }

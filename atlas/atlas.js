@@ -150,6 +150,8 @@ const T = {
   srchText: { nl: 'Geen gen of eiwit herkend: gewone zoekopdracht in de (Engelse) titels van de PDB.', en: 'No gene name recognised: plain search in titles and descriptions.' },
   srchMore: { nl: n => `Toon ${n} meer`, en: n => `Show ${n} more` },
   pickBest: { nl: 'Aanrader', en: 'Recommended' },
+  tblHide: { nl: 'Tabel ▸', en: 'Table ▸' }, tblShow: { nl: '◂ Tabel', en: '◂ Table' },
+  tblHideTip: { nl: 'Tabel inklappen: grotere figuur', en: 'Collapse the table: larger figure' }, tblShowTip: { nl: 'Tabel met feiten en metingen tonen', en: 'Show the table with facts and measurements' },
   pickWhyDna: { nl: 'Een groot stuk van het eiwit, samen met het DNA dat het vastpakt: zo zie je het eiwit aan het werk.', en: 'A large piece of the protein, together with the DNA it holds: you see the protein at work.' },
   pickWhyRna: { nl: 'Een groot stuk van het eiwit, samen met RNA: zo zie je het eiwit aan het werk.', en: 'A large piece of the protein, together with RNA: you see the protein at work.' },
   pickWhy: { nl: 'Een groot stuk van het eiwit, scherp gemeten.', en: 'A large piece of the protein, measured sharply.' },
@@ -402,7 +404,7 @@ $('presets').onclick = e => { const b = e.target.closest('button'); if (!b) retu
 const SLOTS = [];
 for (let i = 0; i < 3; i++) {
   const el = document.createElement('div'); el.className = 'slot'; el.hidden = true;
-  el.innerHTML = `<div class="sh"><h3></h3><span class="hand"></span><a class="pdbl" target="_blank" rel="noopener"></a><button class="x" title="×">×</button></div>
+  el.innerHTML = `<div class="sh"><h3></h3><span class="hand"></span><a class="pdbl" target="_blank" rel="noopener"></a><button class="tg" type="button"></button><button class="x" title="×">×</button></div>
     <div class="sbody"><div class="sview"><div class="stage"><div class="load"></div><div class="hover"></div><div class="note3d" hidden></div><div class="diag" hidden></div></div>
     <div class="dleg" hidden></div><div class="smeta"></div></div><div class="calcgrid"></div></div>`;
   $('slots').append(el);
@@ -412,9 +414,24 @@ for (let i = 0; i < 3; i++) {
   // het vak krijgt zijn hoogte uit de lay-out (vult het scherm): de viewer schaalt mee als het vak van maat verandert
   let lastH = 0;
   new ResizeObserver(() => { const h = Math.round(stage.clientHeight); if (h && h !== lastH && !el.hidden) { lastH = h; viewer.resize(); viewer.render(); } }).observe(stage);
+  el.querySelector('.tg').onclick = () => setTable(!tableOpen);
   el.querySelector('.x').onclick = () => { if (state.set.length > 1) { state.set = state.set.filter(x => x !== s.entry?.id); state.id = state.set[0]; update(); } };
   SLOTS.push(s);
 }
+
+/* tabel naast de figuur in- en uitklappen (grotere figuur, of op kleinere schermen); keuze onthouden */
+const TBL_KEY = 'atlas-table';
+let tableOpen = (() => { try { const v = localStorage.getItem(TBL_KEY); if (v === '0' || v === '1') return v === '1'; } catch { /* geen opslag */ } return !matchMedia('(max-width: 1100px)').matches; })();
+function setTable(open) {
+  tableOpen = open; try { localStorage.setItem(TBL_KEY, open ? '1' : '0'); } catch { /* geen opslag */ }
+  for (const s of SLOTS) {
+    s.el.classList.toggle('notbl', !open);
+    const b = s.el.querySelector('.tg');
+    b.textContent = open ? t('tblHide') : t('tblShow'); b.title = open ? t('tblHideTip') : t('tblShowTip'); b.setAttribute('aria-pressed', String(open));
+  }
+  requestAnimationFrame(() => SLOTS.forEach(s => { if (!s.el.hidden) { s.viewer.resize(); s.viewer.render(); } }));
+}
+setTable(tableOpen);
 
 const cache = new Map();
 const coordCache = new Map();
