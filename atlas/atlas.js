@@ -160,7 +160,11 @@ const T = {
   altNoDna: { nl: 'Het eiwit alleen (zonder DNA)', en: 'The protein on its own (without DNA)' },
   altDna: { nl: 'Samen met DNA', en: 'Together with DNA' },
   altBig: { nl: 'Het grootste stuk van het eiwit', en: 'The largest piece of the protein' },
-  altSharp: { nl: 'Het scherpste beeld', en: 'The sharpest image' },
+  altSharp: { nl: 'Het meest gedetailleerde model', en: 'The most detailed model' },
+  whyNoDna: { nl: 'Zonder DNA of andere eiwitten: je ziet alleen de vorm van het eiwit zelf.', en: 'Without DNA or other proteins: you see only the shape of the protein itself.' },
+  whyDna: { nl: 'Het eiwit terwijl het DNA vastpakt: zo zie je wat het doet.', en: 'The protein while it holds DNA: you see what it does.' },
+  whyBig: { nl: 'Bevat het grootste deel van het eiwit; de andere tonen maar een stuk.', en: 'Contains the largest part of the protein; the others show only a piece.' },
+  whySharp: { nl: r => `Het nauwkeurigst gemeten van allemaal (${r} Å; hoe kleiner dat getal, hoe nauwkeuriger): de plaats van elk atoom is hier het best bepaald. Kies dit als je kleine details wil bekijken, zoals waar één aminozuur precies zit.`, en: r => `Measured most precisely of all (${r} Å; the smaller that number, the more precise): the position of every atom is best known here. Choose this to look at small details, such as exactly where one amino acid sits.` },
   allHead: { nl: n => `Alle ${n} structuren tonen (voor gevorderden, titels in het Engels)`, en: n => `Show all ${n} structures (advanced)` },
   allHide: { nl: 'Lange lijst verbergen', en: 'Hide the long list' },
   copiesOf: { nl: (n, g) => `${n} kopieën van ${g}`, en: (n, g) => `${n} copies of ${g}` },
@@ -321,11 +325,11 @@ function foundHTML() {
   const why = (best.dna ? t('pickWhyDna') : best.rna ? t('pickWhyRna') : t('pickWhy')) + (+best.year <= 2000 ? t('pickOld')(best.year) : '');
   const used = new Set([best.code]);
   const alts = [];
-  const add = (x, lab) => { if (x && !used.has(x.code)) { used.add(x.code); alts.push(card(x, lab, '', 'alt')); } };
-  if (best.dna) add(big.find(x => !x.dna && !x.rna && !x.partners), t('altNoDna')); else add(big.find(x => x.dna), t('altDna'));
+  const add = (x, lab, why = '') => { if (x && !used.has(x.code)) { used.add(x.code); alts.push(card(x, lab, typeof why === 'function' ? why(x) : why, 'alt')); } };
+  if (best.dna) add(big.find(x => !x.dna && !x.rna && !x.partners), t('altNoDna'), t('whyNoDna')); else add(big.find(x => x.dna), t('altDna'), t('whyDna'));
   const largest = [...f.items].filter(x => x.cov != null && !x.odd).sort((a, b) => b.cov - a.cov || (a.res ?? 9) - (b.res ?? 9))[0];
-  if (largest && largest.cov > (best.cov ?? 0) + .1) add(largest, t('altBig'));
-  add([...big].filter(x => x.res).sort((a, b) => a.res - b.res)[0], t('altSharp'));
+  if (largest && largest.cov > (best.cov ?? 0) + .1) add(largest, t('altBig'), t('whyBig'));
+  add([...big].filter(x => x.res).sort((a, b) => a.res - b.res)[0], t('altSharp'), x => t('whySharp')(num(x.res)));
   let h = head + card(best, `★ ${t('pickBest')}`, why, 'best') + (alts.length ? `<li class="fnote alth">${t('altHead')}</li>${alts.join('')}` : '');
   h += `<li class="fmore"><button class="link" data-all>${state.foundAll ? t('allHide') : t('allHead')(f.items.length)}</button></li>`;
   if (state.foundAll) {
