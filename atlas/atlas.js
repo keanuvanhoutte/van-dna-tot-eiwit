@@ -76,6 +76,7 @@ const T = {
     chain: { nl: 'elke streng of keten een eigen kleur: zo zie je uit hoeveel stukken het bestaat', en: 'each strand or chain its own colour: shows how many pieces it is made of' },
     base: { nl: 'elke letter (A, T/U, G, C) een eigen kleur; de ruggengraat grijs', en: 'each letter (A, T/U, G, C) its own colour; the backbone grey' },
     elem: { nl: 'koolstof grijs, stikstof blauw, zuurstof rood, fosfor oranje', en: 'carbon grey, nitrogen blue, oxygen red, phosphorus orange' } },
+  cartoonProt: { nl: 'eiwit als lint met spiralen (helix) en pijlen (gestrekt stuk)', en: 'protein as a ribbon with spirals (helix) and arrows (stretched piece)' },
   restGrey: { nl: 'rest', en: 'rest' }, restOf: { nl: 'rest van het', en: 'rest of the' }, protChain: { nl: 'eiwitketen', en: 'protein chain' }, moreChains: { nl: 'nog {n} ketens', en: '{n} more chains' },
   gripTip: { nl: 'Sleep om de tabel breder of smaller te maken · dubbelklik = standaardbreedte', en: 'Drag to make the table wider or narrower · double-click = default width' },
   hb: { nl: 'Waterstofbruggen', en: 'Hydrogen bonds' }, synMark: { nl: 'Omgeklapte basen (syn)', en: 'Flipped bases (syn)' }, ions: { nl: 'Ionen', en: 'Ions' }, ligs: { nl: 'Medicijn / klein molecule', en: 'Drug / small molecule' },
@@ -967,7 +968,10 @@ function syncColor() {
 }
 function showHint() {
   const sb = $('style').querySelector(`[data-v="${state.style}"]`), cb = $('color').querySelector(`[data-v="${state.color}"]`);
-  $('tHint').innerHTML = `<span><b>${sb.textContent}</b> ${L(T.hintStyle[state.style])}</span><span><b>${cb.textContent}</b> ${L(T.hintColor[state.color])}</span>`;
+  // cartoon: eiwit wordt anders getekend dan DNA/RNA — zeg het erbij als er eiwit in beeld is
+  const shown = SLOTS.filter(s => !s.el.hidden && s.an), prot = shown.some(s => s.an.prot), na = !shown.length || shown.some(s => s.an.nts);
+  const st = state.style === 'cartoon' && prot ? [na ? L(T.hintStyle.cartoon) : '', t('cartoonProt')].filter(Boolean).join('; ') : L(T.hintStyle[state.style]);
+  $('tHint').innerHTML = `<span><b>${sb.textContent}</b> ${st}</span><span><b>${cb.textContent}</b> ${L(T.hintColor[state.color])}</span>`;
 }
 
 /* Aangepaste bouwstenen (bv. de 14 chemisch aangepaste letters in tRNA, of selenomethionine in eiwitten) staan als HETATM in
