@@ -149,6 +149,9 @@ button { font-family: inherit; }
 .slot { background: var(--bg-2); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
 .slot .sh { display: flex; align-items: baseline; gap: 8px; padding: 9px 12px; border-bottom: 1px solid var(--line); }
 .slot .sh h3 { margin: 0; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* vergelijken: smalle vakken → de naam mag over twee regels in plaats van afgekapt te worden */
+.slots.n2 .slot .sh, .slots.n3 .slot .sh { flex-wrap: wrap; align-items: center; row-gap: 6px; }
+.slots.n2 .slot .sh h3, .slots.n3 .slot .sh h3 { flex: 1 1 100%; white-space: normal; line-height: 1.25; min-width: 0; }
 .slot .sh .hand { font: 500 10.5px var(--mono); padding: 2px 6px; border-radius: 5px; white-space: nowrap; }
 .hand.r { background: rgba(79,143,247,.16); color: #9cc0ff; }
 .hand.l { background: rgba(240,107,192,.16); color: #f06bc0; }
