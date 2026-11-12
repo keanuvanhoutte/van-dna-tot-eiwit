@@ -14,6 +14,7 @@ import { LINES, LINE_KEYS, MAIN_KEYS, SIDE_KEYS } from './story.js';
 import { createReal3D } from './real3d.js';
 import { orgButton } from './orgswitch.js';
 import { makeSearch } from '../shared/search.js';
+import { STEP_TAGS } from '../shared/steptags.js';
 import { mountSearch, whereText, lineColor } from '../shared/searchbox.js';
 import { S_EN } from '../shared/graph.en.js';
 import { LINKS } from '../shared/links.js';
@@ -51,8 +52,10 @@ const UI2 = {
   mapSub: { nl: 'Het hoofdverhaal (genummerd) en alle zijtakken. Geel = hier ben je. Klik om ernaartoe te gaan.', en: 'The main story (numbered) and all side paths. Yellow = you are here. Click to go there.' },
   close: { nl: 'Sluiten', en: 'Close' }, noScene: { nl: 'Voor deze knoop is nog geen animatie gebouwd.', en: 'No animation has been built for this node yet.' },
   play: { nl: 'Afspelen (spatie)', en: 'Play (space)' }, pause: { nl: 'Pauze (spatie)', en: 'Pause (space)' }, prevStep: { nl: 'Vorige stap (←)', en: 'Previous step (←)' }, nextStep: { nl: 'Volgende stap (→)', en: 'Next step (→)' }, inShort: { nl: 'In het kort', en: 'In short' },
-  playAuto: { nl: 'Vanzelf verder gaan (spatie)', en: 'Continue by itself (space)' }, holdStep: { nl: 'Blijf bij deze stap (spatie)', en: 'Stay on this step (space)' },
-  stateAuto: { nl: '▶ gaat vanzelf verder', en: '▶ continues by itself' }, stateHold: { nl: '⏸ blijft bij deze stap (herhaalt)', en: '⏸ stays on this step (repeats)' },
+  repeatOn: { nl: 'Herhalen staat aan: deze stap speelt opnieuw tot je verder klikt (klik om uit te zetten)', en: 'Repeat is on: this step replays until you click on (click to turn off)' },
+  repeatOff: { nl: 'Deze stap blijven herhalen in plaats van verder te gaan', en: 'Keep repeating this step instead of moving on' },
+  stateAuto: { nl: '▶ speelt · gaat vanzelf verder', en: '▶ playing · continues by itself' }, stateRepeat: { nl: '🔁 herhaalt deze stap', en: '🔁 repeating this step' },
+  statePaused: { nl: '⏸ gepauzeerd · ▶ of spatie om verder te kijken', en: '⏸ paused · ▶ or space to continue' },
   speedLbl: { nl: 'Snelheid', en: 'Speed' }, settings: { nl: 'Instellingen', en: 'Settings' }, more: { nl: 'Voor wie meer wil', en: 'Want to know more?' },
   real3d: { nl: 'Bekijk echt in 3D', en: 'View in real 3D' },
   homeTip: { nl: 'Terug naar het startmenu (kies een ander verhaal of zijpad)', en: 'Back to the main menu (pick another story or side path)' }, upTip: { nl: 'Eén niveau uitzoomen (Esc)', en: 'Zoom out one level (Esc)' },
@@ -212,7 +215,7 @@ function frame(now) {
     // update(t, s) is deterministisch: zelfde tijd → zelfde beeld, dus overslaan als er niets veranderd is (3D draait wel altijd)
     const key = `${s.t}|${s.step}|${s.p}`;
     let changed = false;
-    if (current.is3d || lastScene !== current.api || current.api?.__k !== key) {
+    if ((current.is3d && playing) || lastScene !== current.api || current.api?.__k !== key) {
       try { current.api?.update?.(s.t, s); } catch (e) { console.error(e); }
       if (current.api) current.api.__k = key;
       lastScene = current.api; changed = true;
@@ -272,12 +275,13 @@ function setPlaying(v) {
 }
 const stepEnd = i => stepStart(i + 1) - 1;       // net vóór het begin van de volgende stap
 const isLast = () => stepInfo(t).step >= current.steps.length - 1;
-/* Bediening als videospeler: ▶ = vanzelf verder (met leespauze), ⏸ = blijf bij deze stap (de stap herhaalt zich).
- * Het beeld zelf stilzetten gebeurt niet meer via de knop (enkel ?freeze, voor de testhulpmiddelen). */
+/* Bediening als videospeler: ▶ speelt (en gaat na een leespauze vanzelf naar de volgende stap), ⏸ zet alles meteen stil.
+ * 🔁 (aan/uit) = de huidige stap blijven herhalen in plaats van verder te gaan. */
 function syncPlayBtn() {
-  $('tPlay').textContent = auto ? '⏸' : '▶'; $('tPlay').title = V(auto ? 'holdStep' : 'playAuto');
+  $('tPlay').textContent = playing ? '⏸' : '▶'; $('tPlay').title = V(playing ? 'pause' : 'play');
   $('tPlay').setAttribute('aria-label', $('tPlay').title);
-  $('playState').textContent = V(auto ? 'stateAuto' : 'stateHold');
+  $('tRepeat').setAttribute('aria-pressed', String(!auto)); $('tRepeat').title = V(auto ? 'repeatOff' : 'repeatOn'); $('tRepeat').setAttribute('aria-label', $('tRepeat').title);
+  $('playState').textContent = V(!playing ? 'statePaused' : auto ? 'stateAuto' : 'stateRepeat');
   const last = !!current && isLast();
   $('tNext').disabled = last;
   $('tPrev').disabled = !!current && stepInfo(t).step === 0;
@@ -320,11 +324,8 @@ function prevStep() {
   playStep(Math.max(0, i), stepStart(Math.max(0, i)) + 1);
 }
 function gotoStep(i) { i = Math.max(0, Math.min(current.steps.length - 1, i)); t = stepStart(i) + 1; ff = null; playStep(i); }
-$('tPlay').onclick = () => {
-  setAuto(!auto); if (!playing) setPlaying(true);
-  // ▶ na een stap die al helemaal getoond is: meteen verder (niet eerst de herhaling uitspelen)
-  if (auto && done && current) { const i = stepInfo(t).step; if (i < current.steps.length - 1) playStep(i + 1); else { held = true; holdT = 1e9; } }
-};
+$('tPlay').onclick = () => setPlaying(!playing);
+$('tRepeat').onclick = () => setAuto(!auto);
 $('tPrev').onclick = prevStep;
 $('tNext').onclick = nextStep;
 $('speed').onchange = e => speed = +e.target.value;
@@ -336,8 +337,10 @@ function drawTicks() {
   current.steps.forEach((s, i) => {
     const b = document.createElement('button'); b.className = 'seg';
     b.title = `${i + 1}. ${L(s.title) ?? ''}`; b.setAttribute('aria-label', `${V('step')} ${b.title}`);
-    b.innerHTML = '<span class="sl"></span><i><s></s><em></em></i>';
+    b.innerHTML = '<span class="sl"></span><i><s></s><em></em></i><span class="tag"></span>';
     b.querySelector('.sl').textContent = L(s.title) ?? '';
+    const tag = STEP_TAGS[current.id]?.[i];
+    b.querySelector('.tag').textContent = tag ? (lang === 'en' ? tag[1] : tag[0]) : (L(s.title) ?? '');
     b.onclick = () => gotoStep(i);
     tr.append(b);
   });
@@ -737,7 +740,7 @@ function showMap() {
 $('bMap').onclick = showMap;
 
 /* ---------- zoeken (bovenbalk): kernwoorden → "Bedoel je …?" → naar die scène, met het pad vanaf het hoofdstuk ---------- */
-const SEARCH = makeSearch({ NODES, LINES, LINKS, DETAILS, S_EN, has: hasScene });
+const SEARCH = makeSearch({ NODES, LINES, LINKS, DETAILS, S_EN, STEPS: STEP_TAGS, has: hasScene });
 const ctx = { NODES, LINES, L, title };
 function info(msg) {
   let el = $('where');
@@ -752,6 +755,7 @@ async function jumpTo(r) {
   const path = loc.path.filter(hasScene);
   if (r.id === current.id) { trail = path; render(); }
   else { trail = path.slice(0, -1); await go(r.id, null, 'in'); trail = path; render(); }
+  if (r.step !== null && r.step !== undefined && current?.id === r.id) gotoStep(r.step);   // gevonden via een stapstitel: meteen naar die stap
   info(`📍 ${L({ nl: 'Je bent nu bij', en: 'You are now at' })} <b>${title(NODES[r.id])}</b><br><span>${whereText(loc, ctx)}</span>`);
 }
 mountSearch($('searchBox'), {

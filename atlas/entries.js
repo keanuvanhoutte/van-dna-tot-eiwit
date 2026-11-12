@@ -298,7 +298,7 @@ export const ENTRIES = [
     name: { nl: 'Stam en lus (anticodonarm van tRNA)', en: 'Stem and loop (tRNA anticodon arm)' }, sub: { nl: 'tRNA^Phe van gist, anticodonarm gemarkeerd · 1,93 Å', en: 'yeast tRNA^Phe, anticodon arm highlighted · 1.93 Å' },
     cmp: ['trna', 'tar'], scenes: ['trna', 'rnastructuur'], dim: true,
     mark: [
-      { col: '#5fd3e6', label: { nl: 'stam (5 basenparen)', en: 'stem (5 base pairs)' }, res: ['A:27', 'A:28', 'A:29', 'A:30', 'A:31', 'A:39', 'A:40', 'A:41', 'A:42', 'A:43'] },
+      { col: '#4fb0ff', label: { nl: 'stam (5 basenparen)', en: 'stem (5 base pairs)' }, res: ['A:27', 'A:28', 'A:29', 'A:30', 'A:31', 'A:39', 'A:40', 'A:41', 'A:42', 'A:43'] },
       { col: '#f06bc0', label: { nl: 'lus (7 basen)', en: 'loop (7 bases)' }, res: ['A:32', 'A:33', 'A:37', 'A:38'] },
       { col: '#ffd84d', label: { nl: 'anticodon (in de lus)', en: 'anticodon (in the loop)' }, res: ['A:34', 'A:35', 'A:36'] },
     ],
@@ -339,6 +339,13 @@ export const ENTRIES = [
     id: 'trna', pdb: '1EHZ', type: ['rna'], cls: ['folded'], ctx: ['cell'], org: { nl: 'gist (S. cerevisiae)', en: 'yeast (S. cerevisiae)' },
     name: { nl: 'tRNA (L-vorm)', en: 'tRNA (L-shape)' }, sub: { nl: 'tRNA^Phe van gist · 1,93 Å', en: 'yeast tRNA^Phe · 1.93 Å' },
     cmp: ['rnasep', 'riboswitch'], scenes: ['trna', 'aars'], ions: true,
+    mark: [
+      { col: '#ffc247', label: { nl: 'acceptorstam + CCA (hier hangt het aminozuur)', en: 'acceptor stem + CCA (carries the amino acid)' }, res: ['A:1', 'A:2', 'A:3', 'A:4', 'A:5', 'A:6', 'A:7', 'A:66', 'A:67', 'A:68', 'A:69', 'A:70', 'A:71', 'A:72', 'A:73', 'A:74', 'A:75', 'A:76'] },
+      { col: '#4fb0ff', label: { nl: 'D-arm', en: 'D arm' }, res: ['A:10', 'A:11', 'A:12', 'A:13', 'A:14', 'A:15', 'A:16', 'A:17', 'A:18', 'A:19', 'A:20', 'A:21', 'A:22', 'A:23', 'A:24', 'A:25'] },
+      { col: '#f06bc0', label: { nl: 'anticodonarm (leest het codon)', en: 'anticodon arm (reads the codon)' }, res: ['A:27', 'A:28', 'A:29', 'A:30', 'A:31', 'A:32', 'A:33', 'A:34', 'A:35', 'A:36', 'A:37', 'A:38', 'A:39', 'A:40', 'A:41', 'A:42', 'A:43'] },
+      { col: '#c9a574', label: { nl: 'variabele lus', en: 'variable loop' }, res: ['A:44', 'A:45', 'A:46', 'A:47', 'A:48'] },
+      { col: '#7fdc6a', label: { nl: 'TΨC-arm', en: 'TΨC arm' }, res: ['A:49', 'A:50', 'A:51', 'A:52', 'A:53', 'A:54', 'A:55', 'A:56', 'A:57', 'A:58', 'A:59', 'A:60', 'A:61', 'A:62', 'A:63', 'A:64', 'A:65'] },
+    ],
     what: {
       nl: 'Transfer-RNA vouwt zijn klaverbladstructuur (acceptorstam, D-arm, anticodonarm, variabele lus, TψC-arm) tot een L-vorm: de acceptorstam stapelt op de TψC-arm en de anticodonstam op de D-stam. Zo liggen het 3\'-CCA-uiteinde (met het aminozuur) en het anticodon ~75 Å uit elkaar — de afstand tussen het peptidyltransferasecentrum en het decodeercentrum van het ribosoom. Gist-tRNA^Phe was in 1974 de eerste RNA-structuur op atoomniveau; dit is de herbepaling uit 2000.',
       en: 'Transfer RNA folds its cloverleaf (acceptor stem, D arm, anticodon arm, variable loop, TψC arm) into an L-shape: the acceptor stem stacks on the TψC arm and the anticodon stem on the D stem. The 3\'-CCA end (carrying the amino acid) and the anticodon end up ~75 Å apart — the distance between the peptidyl-transferase centre and the decoding centre of the ribosome. Yeast tRNA^Phe was the first RNA structure at atomic resolution (1974); this is the 2000 redetermination.' },

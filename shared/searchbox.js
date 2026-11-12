@@ -18,7 +18,7 @@ const T = {
   none: { nl: q => `Niets gevonden voor „${q}”.`, en: q => `Nothing found for “${q}”.` },
   tryW: { nl: 'Probeer een ander woord, bv. DNA kopiëren, ribosoom, kanker of vaccin.', en: 'Try another word, e.g. copying DNA, ribosome, cancer or vaccine.' },
   atlas: { nl: q => `🧬 „${q}” zoeken in de DNA-bib (eiwitten en genen)`, en: q => `🧬 Search “${q}” in the DNA library (proteins and genes)` },
-  ch: { nl: 'hoofdstuk', en: 'chapter' },
+  ch: { nl: 'hoofdstuk', en: 'chapter' }, stepW: { nl: 'stap', en: 'step' },
   inside: { nl: 'onderdeel van', en: 'part of' },
   keys: { nl: '↑↓ kiezen · Enter openen · Esc sluiten', en: '↑↓ choose · Enter open · Esc close' },
   label: { nl: 'Zoeken in de app', en: 'Search the app' },
@@ -49,6 +49,8 @@ function addStyle() {
   .sbx .opt .bar { border-radius: 3px; background: var(--c, #7cc4ff); }
   .sbx .opt b { display: block; font-size: 15px; color: var(--text, #e8eefc); font-weight: 600; }
   .sbx .opt .where { display: block; font-size: 12.5px; color: var(--c, #7cc4ff); margin-top: 2px; }
+  .sbx .opt .stp { display: block; font-size: 12.5px; color: #ffc247; margin-top: 2px; }
+  .sbx .opt .stp b { font-weight: 700; }
   .sbx .opt .snip { display: block; font-size: 13px; color: var(--muted, #93a0bb); line-height: 1.45; margin-top: 4px; }
   .sbx .empty { padding: 10px; font-size: 14px; color: var(--muted, #93a0bb); line-height: 1.5; }
   .sbx .atl { all: unset; cursor: pointer; display: block; margin: 4px 2px 2px; padding: 9px 10px; border-radius: 10px; font-size: 13.5px; color: #7cc4ff; }
@@ -99,7 +101,7 @@ export function mountSearch(host, o) {
         let snip = (o.summary(n) ?? '').replace(/\s+/g, ' ');
         if (snip.length > 130) snip = snip.slice(0, 127).replace(/\s\S*$/, '') + '…';
         return `<button class="opt" data-i="${i}" role="option" style="--c:${lineColor(r.loc.line)}"><span class="bar"></span><span><b>${esc(o.title(n))}</b>` +
-          `<span class="where">${esc(whereText(r.loc, o))}</span><span class="snip">${esc(snip)}</span></span></button>`;
+          `<span class="where">${esc(whereText(r.loc, o))}</span>${r.stepTag ? `<span class="stp">▸ ${esc(L(T.stepW))} ${r.step + 1}: <b>${esc(L({ nl: r.stepTag[0], en: r.stepTag[1] }))}</b></span>` : ''}<span class="snip">${esc(snip)}</span></span></button>`;
       }).join('');
     } else {
       h += `<div class="empty">${esc(L(T.none)(qv))}<br>${L(T.tryW)}</div>`;

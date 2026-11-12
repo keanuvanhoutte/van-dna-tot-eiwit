@@ -79,7 +79,7 @@ function wordMatch(q, w) {
   return 0;
 }
 
-export function makeSearch({ NODES, LINES, LINKS = {}, DETAILS = null, S_EN = {}, has = () => true }) {
+export function makeSearch({ NODES, LINES, LINKS = {}, DETAILS = null, S_EN = {}, STEPS = {}, has = () => true }) {
   const docs = [];
   const byId = {};
   const LINE_KEYS = Object.keys(LINES);
@@ -96,6 +96,8 @@ export function makeSearch({ NODES, LINES, LINKS = {}, DETAILS = null, S_EN = {}
     add(n.id, 8);
     add(n.s + ' ' + (S_EN[n.id] ?? ''), 2.2);
     d.add = add;
+    // korte stapstitels (shared/steptags.js): "knippen" vindt de scène én springt naar die stap
+    (STEPS[n.id] ?? []).forEach((tg, k) => { const ws = norm(tg.join(' ')).split(' ').filter(x => x.length > 1); if (ws.length) d.fields.push({ ws: [...new Set(ws)], w: 4.5, step: k }); });
     docs.push(d); byId[n.id] = d;
   }
   // synoniemen als extra veld
@@ -157,14 +159,15 @@ export function makeSearch({ NODES, LINES, LINKS = {}, DETAILS = null, S_EN = {}
     for (const d of docs) {
       if (!has(d.id)) continue;
       const per = qs.map((q, qi) => {
-        let best = 0, m0 = 0, bw = null, title = 0;
+        let best = 0, m0 = 0, bw = null, title = 0, step = null, stepV = 0;
         for (const f of d.fields) for (const w of f.ws) {
           const m = wordMatch(q, w); if (!m) continue;
           const v = m * f.w; if (v > best) { best = v; m0 = m; bw = w; }
+          if (f.step !== undefined && m >= .6 && v > stepV) { stepV = v; step = f.step; }
           if (f.w === 10) title = Math.max(title, m);
         }
         if (best) { df[qi]++; if (m0 >= .6) exactAnywhere[qi] = true; }
-        return { best, m0, bw, title };
+        return { best, m0, bw, title, step, stepV };
       });
       if (per.some(p => p.best)) rows.push({ d, per });
     }
@@ -184,7 +187,9 @@ export function makeSearch({ NODES, LINES, LINKS = {}, DETAILS = null, S_EN = {}
       const all = hit >= toks.length;
       const bactPen = n.stage === 'bact' && !qs.some(q => BACT_WORDS.has(q)) ? .85 : 1;   // bij gewone vragen eerst de mens
       const chapter = LINE_KEYS.some(k => LINES[k].chapters.some(c => c.id === d.id));
-      return { id: d.id, score: (score * (all ? 1.5 : .5 + hit / toks.length) + 6 * cover + (qs.includes(d.id) ? 4 : 0) + (chapter ? 1 : 0)) * bactPen, all, fixed };
+      // de stap waarvan de korte titel het best overeenkomt (enkel bij een echte treffer, geen tikfout-gok)
+      let step = null, sv = 0; for (const p of per) if (p.step !== null && p.stepV > sv) { sv = p.stepV; step = p.step; }
+      return { id: d.id, score: (score * (all ? 1.5 : .5 + hit / toks.length) + 6 * cover + (qs.includes(d.id) ? 4 : 0) + (chapter ? 1 : 0)) * bactPen, all, fixed, step, stepTag: step !== null ? STEPS[d.id][step] : null };
     });
     res.sort((a, b) => (b.all - a.all) || (b.score - a.score));
     const top = res.slice(0, limit);

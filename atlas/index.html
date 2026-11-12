@@ -56,16 +56,15 @@
       </div>
       <div class="grp"><span data-t="colour"></span>
         <div class="seg" id="color">
-          <button data-v="strand" aria-pressed="true" data-t="byStrand"></button>
+          <button data-v="part" data-t="byPart"></button>
+          <button data-v="type" aria-pressed="true" data-t="byType"></button>
           <button data-v="chain" data-t="byChain"></button>
-          <button data-v="type" data-t="byType"></button>
           <button data-v="base" data-t="byBase"></button>
           <button data-v="elem" data-t="byElem"></button>
         </div>
       </div>
       <details class="opts" id="optsBox"><summary data-t="showOpts"></summary>
       <div class="togs">
-        <label class="tog" id="markTog" hidden><input type="checkbox" id="mark" checked> <span data-t="markT"></span></label>
         <label class="tog"><input type="checkbox" id="na" checked> <span data-t="naTog"></span></label>
         <label class="tog"><input type="checkbox" id="hb"> <span data-t="hb"></span></label>
         <label class="tog"><input type="checkbox" id="syn"> <span data-t="synMark"></span></label>
@@ -77,6 +76,7 @@
       </div>
       </details>
     </div>
+    <div class="thint" id="tHint"></div>
     <div class="legend" id="legend"></div>
     <div class="slots" id="slots"></div>
   </main>

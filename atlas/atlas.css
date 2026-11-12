@@ -295,3 +295,39 @@ button { font-family: inherit; }
   .slots:not(.n2):not(.n3):not(:has(.stage.dg)) .stage { height: auto; flex: 1; min-height: 220px; }
   .slots:not(.n2):not(.n3):not(:has(.stage.dg)) .calcgrid { max-height: none; }
 }
+
+/* ---------- uitleg bij de keuzes (weergave + kleur) ---------- */
+.thint { display: flex; flex-wrap: wrap; gap: 2px 18px; margin: -2px 2px 6px; font-size: 12px; color: var(--muted); line-height: 1.4; }
+.thint b { color: var(--text); font-weight: 600; margin-right: 4px; }
+.thint b::after { content: ":"; }
+
+/* ---------- tabel: breedte verslepen ---------- */
+.sbody { position: relative; grid-template-columns: minmax(0, 1fr) var(--tblw, 370px); }
+.grip { position: absolute; top: 0; bottom: 0; right: calc(var(--tblw, 370px) - 6px); width: 12px; cursor: col-resize; z-index: 4; display: grid; place-items: center; touch-action: none; }
+.grip i { width: 4px; height: 44px; border-radius: 4px; background: rgba(124,196,255,.28); transition: background .15s, height .15s; }
+.grip:hover i, .grip.on i { background: var(--accent); height: 64px; }
+.grip.shut i { background: #ff6b6b; }
+.slot.notbl .grip, .sbody:has(.calcgrid:empty) .grip, .slots.n2 .grip, .slots.n3 .grip { display: none; }
+
+/* ---------- tabellen aantrekkelijker: gekleurde kop per blok, zebra-rijen, vergelijkwaarde als label ---------- */
+.calc.easy tr:not(.sec):nth-child(even) td { background: rgba(160,180,220,.035); }
+.calc.easy tr.sec td { font-size: 11px; padding: 10px 12px 8px; border-top: 0; }
+.calc.easy tr.sec td::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; background: currentColor; }
+.calc.facts tr.sec td { color: #7cc4ff; background: linear-gradient(90deg, rgba(124,196,255,.16), rgba(124,196,255,.02)); }
+.calc.meas tr.sec td { color: #2cc6a8; background: linear-gradient(90deg, rgba(44,198,168,.16), rgba(44,198,168,.02)); }
+.calc.easy td:first-child { font-weight: 500; }
+.calc.easy td:last-child { font-weight: 500; }
+.calc.easy .ref { display: inline-block; margin-top: 3px; padding: 1px 7px; border-radius: 999px; background: rgba(160,180,220,.1); font-size: 11px; }
+
+/* ---------- infokolom: kaartjes met icoon, kleurwoorden ---------- */
+.info .card { margin: 12px 0 0; padding: 11px 14px 12px; border-radius: 12px; background: rgba(160,180,220,.05); border: 1px solid var(--line); border-left: 3px solid var(--c, var(--accent)); }
+.info .card h3 { margin: 0 0 6px; display: flex; align-items: center; gap: 8px; color: var(--c, var(--accent)); }
+.info .card h3 i { font-style: normal; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; background: color-mix(in srgb, var(--c, #7cc4ff) 22%, transparent); letter-spacing: 0; }
+.info .card p { margin: 0; font-size: 14px; }
+.info .card.look { --c: #2cc6a8; }
+.info .card.why { --c: #ffc247; }
+.info .cw { white-space: nowrap; font-weight: 600; color: color-mix(in srgb, var(--c) 75%, white); }
+.info .cw::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--c); margin-right: 4px; vertical-align: 0; box-shadow: 0 0 0 2px rgba(255,255,255,.08); }
+.info h3.sc { color: #c3b1ff; }
+.info .scenes a i { font-style: normal; font-size: 10px; width: 22px; height: 22px; flex: none; border-radius: 50%; display: grid; place-items: center; background: rgba(155,123,255,.2); color: #c3b1ff; }
+.info .scenes a:hover i { background: #9b7bff; color: #0a1224; }

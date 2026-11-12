@@ -98,7 +98,15 @@ html, body { height: 100%; overflow: hidden; }
 /* tijdlijn in stukken: één stuk per stap; de naam van een stap verschijnt erboven als je erover gaat
  * (de naam van de huidige stap staat al als titel van de ondertitel) */
 .track { flex: 1; min-width: 0; display: flex; gap: 3px; align-items: center; }
-.seg { all: unset; cursor: pointer; flex: 1 1 0; min-width: 0; padding: 12px 0; position: relative; }
+.seg { all: unset; cursor: pointer; flex: 1 1 0; min-width: 0; padding: 8px 0 2px; position: relative; display: flex; flex-direction: column; gap: 5px; }
+/* korte titel onder elk stuk (bv. "knippen", "vouwen"): zo vind je snel een bepaald moment */
+.seg .tag { display: block; font-size: 11.5px; line-height: 1.2; color: var(--muted); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; }
+.seg:hover .tag { color: var(--text); }
+.seg.cur .tag { color: var(--accent); font-weight: 600; }
+.seg.done .tag { color: #8796b4; }
+/* 🔁 herhalen: aan = gekleurd */
+.tbtn.rep { font-size: 15px; filter: grayscale(1); opacity: .65; }
+.tbtn.rep[aria-pressed=true] { filter: none; opacity: 1; background: rgba(124,196,255,.2); border-color: var(--accent); }
 .seg .sl { display: none; position: absolute; bottom: calc(100% - 4px); left: 0; font-size: 12px; color: var(--text); white-space: nowrap; background: var(--bg-2); border: 1px solid var(--line); border-radius: 7px; padding: 3px 8px; z-index: 6; pointer-events: none; }
 .seg:nth-last-child(-n+3):not(:nth-child(-n+3)) .sl { left: auto; right: 0; }
 .seg:hover .sl, .seg:focus-visible .sl { display: block; }

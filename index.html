@@ -331,9 +331,9 @@ for (const a of document.querySelectorAll('a.side[data-line]')) {
 }
 /* zoeken op de startpagina: de uitgebreide uitleg pas laden bij het eerste gebruik */
 mountSearch(document.getElementById('homeSearch'), {
-  engine: async () => { const { DETAILS } = await import('./shared/details/index.js'); return makeSearch({ NODES, LINES, LINKS, DETAILS, S_EN }); },
+  engine: async () => { const [{ DETAILS }, { STEP_TAGS }] = await Promise.all([import('./shared/details/index.js'), import('./shared/steptags.js')]); return makeSearch({ NODES, LINES, LINKS, DETAILS, S_EN, STEPS: STEP_TAGS }); },
   NODES, LINES, L, title: n => (lang === 'en' ? n.en : n.t), summary: n => (lang === 'en' ? S_EN[n.id] ?? n.s : n.s),
-  onPick: r => { location.href = `app/index.html?scene=${encodeURIComponent(r.id)}&story=${r.loc.line}`; },
+  onPick: r => { location.href = `app/index.html?scene=${encodeURIComponent(r.id)}&story=${r.loc.line}${r.step !== null && r.step !== undefined ? `&step=${r.step}` : ''}`; },
   atlasHref: qv => `atlas/index.html?find=${encodeURIComponent(qv)}`,
 });
 document.getElementById('langBox').append(langSwitch('btn'));

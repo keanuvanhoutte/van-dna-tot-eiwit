@@ -66,8 +66,8 @@ export const SIMPLE = {
       nl: 'Een [[tRNA|trna]] is een klein RNA dat een aminozuur naar het [[ribosoom|ribosoom]] brengt. Het vouwt zich als een letter L. Aan het ene uiteinde hangt het aminozuur, aan het andere zitten drie letters die de code op het mRNA lezen.',
       en: 'A [[tRNA|trna]] is a small RNA that brings an amino acid to the [[ribosome|ribosoom]]. It folds like the letter L. One end carries the amino acid, the other end has three letters that read the code on the mRNA.' },
     look: {
-      nl: 'Eén oranje streng plooit zich tot een L. De twee uiteinden van de L liggen ver uit elkaar; de bolletjes zijn metaalionen die de vorm stevig houden.',
-      en: 'One orange strand folds into an L. The two ends of the L lie far apart; the small balls are metal ions that keep the shape firm.' },
+      nl: 'Eén streng met vijf onderdelen die naadloos in elkaar overlopen. Geel is de acceptorstam, waar het aminozuur aan hangt. Roze is de anticodonarm aan het andere uiteinde. Blauw (D-arm) en groen (TΨC-arm) vormen samen de knik van de L. De bolletjes zijn metaalionen die de vorm stevig houden.',
+      en: 'One strand with five parts that flow into each other. Yellow is the acceptor stem, which carries the amino acid. Pink is the anticodon arm at the other end. Blue (D arm) and green (TΨC arm) together form the bend of the L. The small balls are metal ions that keep the shape firm.' },
     why: {
       nl: 'Zonder tRNA kan geen enkele cel eiwitten maken. Elke menselijke cel bevat tientallen soorten tRNA.',
       en: 'Without tRNA no cell can make proteins. Every human cell contains dozens of kinds of tRNA.' },
