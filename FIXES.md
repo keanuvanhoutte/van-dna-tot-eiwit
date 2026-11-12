@@ -61,3 +61,10 @@
 - [x] Schakelaar mens ⇄ bacterie (.fix-ronde/orgtest.py): 10 koppelingen springen naar de juiste tegenhanger (cel→bcel, gen→bgen, transcriptie→operon, translatie→bmrna, replicatie→breplicatie, chromatine→bnucleoid, polymerasen→bpol, ubiquitine→bafbraak, bcel→cel, operon→transcriptie); geen knop waar geen tegenhanger is (vergelijk, bterm).
 - [~] Knoptekst "⇄ Mens ⇄ Bacterie" toont het pijltje twee keer: bewust ontwerp (icoon + schakelaar met het huidige organisme vet), geen defect.
 - [x] tools/check.html: nodes 119 · scenes 119 · details 119, PROBLEMS (0).
+
+## Fix-ronde 12-11-2026 — DNA-bib (atlas), lijst zelf opgesteld na nakijken op pc (1280 en 1600 px, NL en EN)
+- [ ] "DNA en RNA tonen" staat in het Tonen-menu ook bij moleculen zonder eiwit, maar doet daar niets | pagina: /atlas/index.html?id=g4 → Tonen | verwacht: de schakelaar verschijnt enkel als er eiwit in beeld is (dan heeft hij effect)
+- [ ] Opgezocht eiwit: "Wat zit erin?" toont de Engelse databanknaam met een losse spatie, "Protein (p53 tumor suppressor )", en zegt in het Nederlands niet dat het Engels is | pagina: /atlas/index.html?pdb=1TUP | verwacht: "p53 tumor suppressor" (zonder het overbodige "Protein (…)" en zonder losse spaties), met de vermelding dat de namen Engels zijn zoals in de databank
+- [ ] Vergelijken: de naam bovenaan elk vak wordt afgekapt ("Gewone DNA-…", "Kortere, dikker…") | pagina: /atlas/index.html?id=bdna&cmp=adna,zdna | verwacht: de volledige naam is leesbaar (mag over twee regels)
+- [ ] Per onderdeel (tRNA): de legende toont naast de vijf onderdelen ook "RNA", wat onduidelijk is (het gaat om de drie verbindingsletters ertussen) | pagina: /atlas/index.html?id=trna | verwacht: een duidelijke naam, bv. "rest van het RNA"
+- [ ] Uitleg bij Cartoon zegt "de streng als lint, de letters (basen) als staafjes", ook als er eiwit in beeld is (eiwit heeft geen staafjes) | pagina: /atlas/index.html?pdb=1TUP | verwacht: de uitleg vermeldt ook hoe eiwit getekend wordt (lint met spiralen en pijlen)

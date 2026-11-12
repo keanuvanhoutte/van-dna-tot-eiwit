@@ -807,6 +807,8 @@ function legend() {
   const items = [];
   const sw = (c, txt) => items.push(`<span><i style="background:${c}"></i>${txt}</span>`);
   const shown = SLOTS.filter(s => !s.el.hidden && s.an);
+  // "DNA en RNA tonen" heeft enkel zin als er ook eiwit in beeld is (anders blijft er niets over)
+  if (shown.length) $('na').closest('label').hidden = !shown.some(s => s.an.prot);
   const hasType = ty => shown.some(s => Object.values(s.an.chainType).includes(ty));
   if (state.color === 'part') {
     // eerst de onderdelen (daar gaat het om), daarna de rest
