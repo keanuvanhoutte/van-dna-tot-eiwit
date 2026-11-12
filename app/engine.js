@@ -15,6 +15,7 @@ import { createReal3D } from './real3d.js';
 import { orgButton } from './orgswitch.js';
 import { makeSearch } from '../shared/search.js';
 import { STEP_TAGS } from '../shared/steptags.js';
+import { colourWords } from '../shared/colourwords.js';
 import { mountSearch, whereText, lineColor } from '../shared/searchbox.js';
 import { S_EN } from '../shared/graph.en.js';
 import { LINKS } from '../shared/links.js';
@@ -264,7 +265,7 @@ function fadeGhost(now) {
 function onStep(i) {
   const st = current.steps[i];
   $('capTitle').textContent = L(st.title) ?? '';
-  $('capText').textContent = L(st.text) ?? '';
+  $('capText').innerHTML = colourWords(esc(L(st.text) ?? ''));
   $('stepNo').textContent = `${V('step')} ${i + 1}/${current.steps.length}`;
   side.querySelectorAll('.stepsList li').forEach((li, k) => li.classList.toggle('cur', k === i));
   syncPlayBtn();
@@ -625,7 +626,8 @@ const chipsOf = (ids, cls) => ids.filter(i => NODES[i]).map(i => `<button class=
  * Vaktermen staan erin als [[zoals in de zin|sleutel]] → aantikbaar woord met een uitleg van één zin (shared/glossary.js). */
 const glossOf = k => { const g = GLOSSARY[k]; return g ? (g[lang] ?? g.nl) : null; };
 const termsHTML = txt => txt.replace(/\[\[([^\]|]+)\|([a-z0-9-]+)\]\]/g, (_, w, k) => glossOf(k) ? `<button class="term" data-g="${k}">${w}</button>` : w);
-const kortOf = id => { const d = DETAILS[id]; return d ? termsHTML((d[lang] ?? d.nl).kort ?? '') : ''; };
+const kortOf = id => { const d = DETAILS[id]; return d ? termsHTML(colourWords((d[lang] ?? d.nl).kort ?? '')) : ''; };
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 function showGloss(btn) {
   const box = btn.closest('.kort, .cardbox'); if (!box) return;
   const open = box.querySelector('.gloss');
@@ -663,14 +665,14 @@ function render() {
     <h1>${n ? title(n) : L(def.title)}${n ? `<span class="status ${n.status === 'nagekeken' ? 'ok' : ''}">${statusText(n.status)}</span>` : ''}</h1>
     ${n ? `<div class="en">${sub(n)}</div>${kortOf(current.id) ? `<div class="kort"><b>${V('inShort')}</b>${kortOf(current.id)}</div>` : `<p>${summary(n)}</p>`}` : ''}
     ${detailsHTML(current.id)}
-    <details class="sec" open><summary>${V('stepsHere')}</summary><ol class="stepsList">${current.steps.map((s, i) => `<li data-i="${i}">${L(s.title)}</li>`).join('')}</ol></details>
+    <details class="sec" open><summary>${V('stepsHere')}</summary><ol class="stepsList">${current.steps.map((s, i) => { const tg = STEP_TAGS[current.id]?.[i]; return `<li data-i="${i}">${tg ? `<span class="stag">${esc(lang === 'en' ? tg[1] : tg[0])}</span>` : ''}${L(s.title)}</li>`; }).join('')}</ol></details>
     ${L(def.extra ?? base.extra) ?? ''}
-    ${ups.length ? `<div class="sec"><div class="kind" style="color:var(--muted)">${V('up')}</div>${chipsOf(ups, 'up')}</div>` : ''}
-    ${n?.in.length ? `<div class="sec"><div class="kind" style="color:var(--muted)">${V('zoomIn')}</div>${chipsOf(n.in, '')}</div>` : ''}
-    ${n?.next.length ? `<div class="sec"><div class="kind" style="color:var(--muted)">${V('next')}</div>${chipsOf(n.next, 'next')}</div>` : ''}
-    ${n?.rel.length ? `<div class="sec"><div class="kind" style="color:var(--muted)">${V('side')}</div>${chipsOf(n.rel, 'rel')}</div>` : ''}
-    ${n?.pdb.length ? `<div class="sec"><div class="kind" style="color:var(--muted)">${V('struct3d')}</div>${n.pdb.map(p => `<a class="chip" href="https://www.rcsb.org/structure/${p}" target="_blank" rel="noopener">PDB ${p} ↗</a>`).join('')}</div>` : ''}
-    ${(def.legend ?? base.legend) ? `<div class="sec"><div class="kind" style="color:var(--muted)">${V('legend')}</div><div class="legend">${(def.legend ?? base.legend).map(([c, x]) => `<span><i style="background:${c}"></i>${L(x)}</span>`).join('')}</div></div>` : ''}
+    ${(def.legend ?? base.legend) ? `<div class="card c-leg"><div class="ch"><i>🎨</i>${V('legend')}</div><div class="legend">${(def.legend ?? base.legend).map(([c, x]) => `<span style="--c:${c}"><i></i>${L(x)}</span>`).join('')}</div></div>` : ''}
+    ${ups.length ? `<div class="card c-up"><div class="ch"><i>↑</i>${V('up')}</div>${chipsOf(ups, 'up')}</div>` : ''}
+    ${n?.in.length ? `<div class="card c-in"><div class="ch"><i>🔍</i>${V('zoomIn')}</div>${chipsOf(n.in, '')}</div>` : ''}
+    ${n?.next.length ? `<div class="card c-next"><div class="ch"><i>→</i>${V('next')}</div>${chipsOf(n.next, 'next')}</div>` : ''}
+    ${n?.rel.length ? `<div class="card c-rel"><div class="ch"><i>↪</i>${V('side')}</div>${chipsOf(n.rel, 'rel')}</div>` : ''}
+    ${n?.pdb.length ? `<div class="card c-pdb"><div class="ch"><i>◆</i>${V('struct3d')}</div>${n.pdb.map(p => `<a class="chip" href="https://www.rcsb.org/structure/${p}" target="_blank" rel="noopener">PDB ${p} ↗</a>`).join('')}</div>` : ''}
     <div class="simp"><b>${V('simplified')}</b><br>${L(def.simplified ?? base.simplified) ?? ''}</div>`;
   $('sheetClose').onclick = () => toggleInfo(false);
   side.querySelectorAll('.chip[data-id]').forEach(c => c.onclick = () => { if (narrow()) toggleInfo(false); chipGo(c.dataset.id); });

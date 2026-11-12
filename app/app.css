@@ -367,3 +367,22 @@ html, body { height: 100%; overflow: hidden; }
 #r3Note:empty { display: none; }
 .r3src a { color: var(--accent); text-decoration: none; }
 .r3src a:hover { text-decoration: underline; }
+
+/* ---------- uitlegpaneel in dezelfde stijl als de DNA-bib: kaartjes met icoon en eigen kleur ---------- */
+.side .card { margin-top: 12px; padding: 10px 12px 12px; border-radius: 12px; background: rgba(160,180,220,.05); border: 1px solid var(--line); border-left: 3px solid var(--c, var(--accent)); }
+.side .card .ch { display: flex; align-items: center; gap: 8px; font: 600 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--c, var(--accent)); }
+.side .card .ch i { font-style: normal; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; letter-spacing: 0; background: color-mix(in srgb, var(--c, #7cc4ff) 22%, transparent); }
+.side .card .chip { margin: 8px 5px 0 0; }
+.side .c-leg { --c: #c3b1ff; } .side .c-up { --c: #7fdc6a; } .side .c-in { --c: #7cc4ff; } .side .c-next { --c: #ff8a3d; } .side .c-rel { --c: #f06bc0; } .side .c-pdb { --c: #2cc6a8; }
+.side .card .legend span { display: flex; align-items: center; color: var(--text); }
+.side .card .legend i { width: 12px; height: 12px; border-radius: 50%; background: var(--c); flex: none; box-shadow: 0 0 0 2px rgba(255,255,255,.08); }
+/* stappenlijst: korte titel als gekleurd label */
+.stepsList li .stag { display: inline-block; margin-right: 7px; padding: 1px 7px; border-radius: 999px; font-size: 11px; font-weight: 600; color: #9fb4d8; background: rgba(124,196,255,.1); vertical-align: 1px; }
+.stepsList li.cur .stag { color: #0a1224; background: var(--accent); }
+/* kerncijfers: zebra-rijen, gewone letter */
+.facts { gap: 0; }
+.facts dt, .facts dd { padding: 5px 8px; border-top: 1px solid var(--line); }
+.facts dd { font-family: inherit; font-size: 13px; font-weight: 500; }
+/* kleurwoorden ("de blauwe streng"): bolletje in die kleur, zodat tekst en figuur bij elkaar horen */
+.cw { white-space: nowrap; font-weight: 600; color: color-mix(in srgb, var(--c) 75%, white); }
+.cw::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--c); margin-right: 4px; box-shadow: 0 0 0 2px rgba(255,255,255,.08); }

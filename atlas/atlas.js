@@ -11,6 +11,7 @@ import { preparePdb, analyse, orient, parentBase, LIGNAME, IONLABEL } from './an
 import { DIAGRAMS, diagramLegend } from './diagrams.js';
 import { SIMPLE, EXTRA_GLOSS } from './simple.js';
 import { GLOSSARY } from '../shared/glossary.js';
+import { colourWords } from '../shared/colourwords.js';
 import { CODE_RE, fetchMeta, fetchCoords, coordUrl, customEntry, searchPDB } from './custom.js';
 import { fetchText, PROGRESS } from './fetchprog.js';
 import { smartFilter } from './smartsearch.js';
@@ -851,12 +852,6 @@ document.addEventListener('click', ev => {
   el.innerHTML = '<b></b> <span></span>'; el.querySelector('b').textContent = term + ':'; el.querySelector('span').textContent = expl;
   host.after(el);
 });
-/* kleurwoorden ("blauw is de stam") krijgen een bolletje in die kleur: zo hoort de tekst zichtbaar bij de figuur */
-const CW = { blauw: '#4f8ff7', blue: '#4f8ff7', lichtblauw: '#9cc0ff', 'light blue': '#9cc0ff', oranje: '#ff8a3d', orange: '#ff8a3d', roze: '#f06bc0', pink: '#f06bc0',
-  geel: '#ffd84d', gele: '#ffd84d', yellow: '#ffd84d', grijs: '#8a93a8', grijze: '#8a93a8', grey: '#8a93a8', gray: '#8a93a8', groen: '#7fdc6a', groene: '#7fdc6a', green: '#7fdc6a',
-  paars: '#9b7bff', paarse: '#9b7bff', purple: '#9b7bff', rood: '#ff6b6b', rode: '#ff6b6b', red: '#ff6b6b', blauwe: '#4f8ff7', turquoise: '#5fd3e6', turkoois: '#5fd3e6', cyaan: '#5fd3e6', cyan: '#5fd3e6' };
-const CW_RE = new RegExp(`(^|[^\\p{L}\\[|])(${Object.keys(CW).sort((a, b) => b.length - a.length).join('|')})(?![\\p{L}\\]|])`, 'giu');
-const colourWords = txt => (txt ?? '').split(/(\[\[[^\]]*\]\])/).map((part, i) => i % 2 ? part : part.replace(CW_RE, (_, pre, w) => `${pre}<span class="cw" style="--c:${CW[w.toLowerCase()]}">${w}</span>`)).join('');
 function info(e) {
   const scenes = (e.scenes ?? []).filter(id => NODES[id]);
   const simp = simplified(e);
