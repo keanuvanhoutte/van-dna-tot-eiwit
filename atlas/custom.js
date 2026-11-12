@@ -48,13 +48,15 @@ const BORING = new Set(['HOH', 'DOD', 'GOL', 'EDO', 'SO4', 'PO4', 'ACT', 'MPD', 
 /* PDB-teksten staan vaak in HOOFDLETTERS: enkel die omzetten naar gewone zinsvorm, en afkortingen herstellen */
 const ACR = { dna: 'DNA', rna: 'RNA', trna: 'tRNA', mrna: 'mRNA', rrna: 'rRNA', snrna: 'snRNA', mirna: 'miRNA', atp: 'ATP', gtp: 'GTP', adp: 'ADP', gdp: 'GDP', nad: 'NAD', nadh: 'NADH', nadph: 'NADPH', fad: 'FAD', hiv: 'HIV', 'hiv-1': 'HIV-1', nmr: 'NMR', ii: 'II', iii: 'III', iv: 'IV' };
 const sentence = s => {
-  let x = (s ?? '').trim(); if (!x) return '';
+  let x = (s ?? '').trim().replace(/\(\s+/g, '(').replace(/\s+\)/g, ')').replace(/\s{2,}/g, ' '); if (!x) return '';
   if (x !== x.toUpperCase()) return x.charAt(0).toUpperCase() + x.slice(1);
   x = x.toLowerCase().replace(/\b[a-z0-9-]+\b/g, w => ACR[w] ?? (/^\d+s$/.test(w) ? w.toUpperCase() : w));
   return x.charAt(0).toUpperCase() + x.slice(1);
 };
 /* beschrijvingen die enkel een sequentie zijn, bv. DNA (5'-D(*CP*GP*...)-3') */
 const seqLike = d => /\*|5'-|5’-/.test(d ?? '');
+/* naam van een molecule: "PROTEIN (P53 TUMOR SUPPRESSOR )" → "p53 tumor suppressor" (het woord "protein" zegt het label al) */
+const molName = d => { const x = sentence(d), m = x.match(/^(?:protein|polypeptide)\s*\((.+)\)$/i); return m ? m[1] : x; };
 const cut = (s, n) => s.length > n ? s.slice(0, n - 1).replace(/\s+\S*$/, '') + '…' : s;
 const both = (nl, en) => ({ nl, en });
 /* organismen: Nederlandse naam voor de bekendste, anders de wetenschappelijke naam */
@@ -87,8 +89,9 @@ export function customEntry(code, m) {
     en: [count.prot && 'protein is purple', count.dna && 'DNA is blue', count.rna && 'RNA is orange', smalls.length && 'small molecules are green'].filter(Boolean),
   };
   const MAXM = 6;
-  const molRow = l => ents.slice(0, ents.length > MAXM + 1 ? MAXM : MAXM + 1).map(e => `${seqLike(e.desc) ? ({ dna: 'DNA', rna: 'RNA', hybrid: 'DNA/RNA' }[e.kind] ?? sentence(e.desc)) : cut(sentence(e.desc), 48)} <span class="ref">${{ prot: { nl: 'eiwit', en: 'protein' }, dna: { nl: 'DNA', en: 'DNA' }, rna: { nl: 'RNA', en: 'RNA' }, hybrid: { nl: 'DNA/RNA', en: 'DNA/RNA' }, other: { nl: 'ander', en: 'other' } }[e.kind][l]}${e.chains.length > 1 ? ` × ${e.chains.length}` : ''}${e.len ? ` · ${e.len} ${e.kind === 'prot' ? (l === 'nl' ? 'aminozuren' : 'amino acids') : (l === 'nl' ? 'letters' : 'letters')}` : ''}</span>`).join('<br>')
-    + (ents.length > MAXM + 1 ? `<br><span class="ref">${l === 'nl' ? `+ ${ents.length - MAXM} andere soorten moleculen` : `+ ${ents.length - MAXM} other kinds of molecules`}</span>` : '');
+  const molRow = l => ents.slice(0, ents.length > MAXM + 1 ? MAXM : MAXM + 1).map(e => `${seqLike(e.desc) ? ({ dna: 'DNA', rna: 'RNA', hybrid: 'DNA/RNA' }[e.kind] ?? sentence(e.desc)) : cut(molName(e.desc), 48)} <span class="ref">${{ prot: { nl: 'eiwit', en: 'protein' }, dna: { nl: 'DNA', en: 'DNA' }, rna: { nl: 'RNA', en: 'RNA' }, hybrid: { nl: 'DNA/RNA', en: 'DNA/RNA' }, other: { nl: 'ander', en: 'other' } }[e.kind][l]}${e.chains.length > 1 ? ` × ${e.chains.length}` : ''}${e.len ? ` · ${e.len} ${e.kind === 'prot' ? (l === 'nl' ? 'aminozuren' : 'amino acids') : (l === 'nl' ? 'letters' : 'letters')}` : ''}</span>`).join('<br>')
+    + (ents.length > MAXM + 1 ? `<br><span class="ref">${l === 'nl' ? `+ ${ents.length - MAXM} andere soorten moleculen` : `+ ${ents.length - MAXM} other kinds of molecules`}</span>` : '')
+    + (l === 'nl' && ents.some(e => !seqLike(e.desc)) ? `<br><span class="ref">(namen in het Engels, zoals in de databank)</span>` : '');
   const facts = [
     [both('Titel in de PDB', 'Title in the PDB'), both(`${title} <span class="ref">(Engels, zoals in de databank)</span>`, title)],
     [both('Wat zit erin?', 'What is in it?'), both(molRow('nl'), molRow('en'))],
