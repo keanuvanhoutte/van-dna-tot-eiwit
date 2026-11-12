@@ -76,7 +76,7 @@ const T = {
     chain: { nl: 'elke streng of keten een eigen kleur: zo zie je uit hoeveel stukken het bestaat', en: 'each strand or chain its own colour: shows how many pieces it is made of' },
     base: { nl: 'elke letter (A, T/U, G, C) een eigen kleur; de ruggengraat grijs', en: 'each letter (A, T/U, G, C) its own colour; the backbone grey' },
     elem: { nl: 'koolstof grijs, stikstof blauw, zuurstof rood, fosfor oranje', en: 'carbon grey, nitrogen blue, oxygen red, phosphorus orange' } },
-  restGrey: { nl: 'rest', en: 'rest' }, protChain: { nl: 'eiwitketen', en: 'protein chain' }, moreChains: { nl: 'nog {n} ketens', en: '{n} more chains' },
+  restGrey: { nl: 'rest', en: 'rest' }, restOf: { nl: 'rest van het', en: 'rest of the' }, protChain: { nl: 'eiwitketen', en: 'protein chain' }, moreChains: { nl: 'nog {n} ketens', en: '{n} more chains' },
   gripTip: { nl: 'Sleep om de tabel breder of smaller te maken · dubbelklik = standaardbreedte', en: 'Drag to make the table wider or narrower · double-click = default width' },
   hb: { nl: 'Waterstofbruggen', en: 'Hydrogen bonds' }, synMark: { nl: 'Omgeklapte basen (syn)', en: 'Flipped bases (syn)' }, ions: { nl: 'Ionen', en: 'Ions' }, ligs: { nl: 'Medicijn / klein molecule', en: 'Drug / small molecule' },
   markT: { nl: 'Markeringen', en: 'Highlights' }, water: { nl: 'Water', en: 'Water' }, spin: { nl: 'Rondraaien', en: 'Spin' }, link: { nl: 'Samen draaien', en: 'Rotate together' },
@@ -816,8 +816,10 @@ function legend() {
     if (shown.some(s => s.entry.mark && s.entry.dim)) sw('#5b6378', t('restGrey'));
   }
   if (state.color === 'type' || state.color === 'part') {
-    if (hasType('dna')) sw(COL.dna, 'DNA');
-    if (hasType('rna') && !(state.color === 'part' && shown.every(s => !s.entry.mark || s.entry.dim))) sw(COL.rna, 'RNA');
+    // per onderdeel: de gewone kleur toont wat níet gemarkeerd is (bv. de verbindingsletters tussen de armen van tRNA)
+    const nm = x => state.color === 'part' ? `${t('restOf')} ${x}` : x;
+    if (hasType('dna')) sw(COL.dna, nm('DNA'));
+    if (hasType('rna') && !(state.color === 'part' && shown.every(s => !s.entry.mark || s.entry.dim))) sw(COL.rna, nm('RNA'));
     if (hasType('prot')) { const h = shown.some(s => s.entry.histone); sw(h ? COL.histone : COL.prot, h ? (lang === 'nl' ? 'histonen' : 'histones') : t('protein')); }
   } else if (state.color === 'chain') {
     const s0 = shown[0];
