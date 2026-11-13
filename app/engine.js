@@ -11,7 +11,6 @@ import { DETAILS } from '../shared/details/index.js';
 import { GLOSSARY } from '../shared/glossary.js';
 import { SCENES } from './scenes/index.js';
 import { LINES, LINE_KEYS, MAIN_KEYS, SIDE_KEYS } from './story.js';
-import { createReal3D } from './real3d.js';
 import { orgButton } from './orgswitch.js';
 import { makeSearch } from '../shared/search.js';
 import { STEP_TAGS } from '../shared/steptags.js';
@@ -107,7 +106,12 @@ document.title = 'Dogma';
 if (lang === 'en') for (const o of $('speed').options) o.textContent = o.textContent.replace(',', '.');   // 0,5× → 0.5×
 $('bAtlas').href = new URL(`../atlas/index.html?lang=${lang}`, import.meta.url).href;   // werkt ook als de pagina elders staat (online)
 /* fase 4: echte 3D-structuur over de tekening (app/real3d.js) en de schakelaar mens ⇄ bacterie (app/orgswitch.js) */
-const real3d = createReal3D({ stage, button: $('bReal3d'), pause: () => { const was = playing; setPlaying(false); return was; }, resume: () => setPlaying(true) });
+/* apart geladen: lukt het 3D-paneel niet (bv. een half bijgewerkt bestand in de browsercache), dan werkt de rest van de app gewoon */
+let real3d = { sync() {}, close() {}, isOpen: () => false };
+import('./real3d.js').then(m => {
+  real3d = m.createReal3D({ stage, button: $('bReal3d'), pause: () => { const was = playing; setPlaying(false); return was; }, resume: () => setPlaying(true) });
+  if (current) real3d.sync(current.id, current.is3d);
+}).catch(e => console.warn('3D-paneel niet geladen:', e));
 function syncOrg() {
   const o = current && orgButton(current.id), b = $('bOrg');
   b.hidden = !o; if (!o) return;

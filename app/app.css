@@ -260,6 +260,9 @@ html, body { height: 100%; overflow: hidden; }
 .boot i { width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(124,196,255,.2); border-top-color: var(--accent); animation: spin 1s linear infinite; }
 .boot small { font-size: 12px; opacity: .7; }
 .boot.gone { opacity: 0; pointer-events: none; }
+.boot.fail i { display: none; }
+.boot.fail span { color: var(--text); line-height: 1.6; }
+.boot.fail button { margin-top: 12px; padding: 8px 18px; border-radius: 999px; border: 1px solid var(--accent); background: rgba(124,196,255,.15); color: inherit; font: inherit; cursor: pointer; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .boot i { animation: none; } }
 

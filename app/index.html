@@ -51,6 +51,21 @@
       <script>/* laadtekst meteen in de gekozen taal (vóór de app geladen is) */
         try { var q = new URLSearchParams(location.search).get('lang'), l = q || localStorage.getItem('dna-app-lang');
           if (l === 'en') { document.documentElement.lang = 'en'; document.querySelector('#boot span').textContent = 'Loading Dogma…'; } } catch (e) {}
+        (function () { /* loopt het laden mis (fout of na 25 s nog bezig): melding + herlaadknop in plaats van eindeloos laden */
+          var shown = false;
+          function fail() {
+            var b = document.getElementById('boot'); if (!b || shown || b.classList.contains('gone')) return; shown = true;
+            var en = document.documentElement.lang === 'en';
+            b.classList.add('fail');
+            b.querySelector('span').innerHTML = en
+              ? 'Dogma did not load properly.<br><small>Your browser may be holding an older copy of the app.</small><br><button type="button">Reload</button>'
+              : 'Dogma laadde niet goed.<br><small>Je browser heeft misschien nog een oudere versie van de app bewaard.</small><br><button type="button">Opnieuw laden</button>';
+            b.querySelector('button').onclick = function () { var u = new URL(location.href); u.searchParams.set('r', Date.now()); location.replace(u); };
+          }
+          addEventListener('error', function (e) { if (e.error instanceof SyntaxError || /module|import/i.test(e.message || '')) fail(); });
+          addEventListener('unhandledrejection', function () { fail(); });
+          setTimeout(fail, 25000);
+        })();
       </script>
     </div>
 
