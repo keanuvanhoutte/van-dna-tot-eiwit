@@ -73,6 +73,8 @@ const T = {
   hintColor: {
     part: { nl: 'de belangrijkste onderdelen hebben elk een eigen kleur', en: 'the main parts each have their own colour' },
     type: { nl: 'DNA blauw, RNA oranje, eiwit paars', en: 'DNA blue, RNA orange, protein purple' },
+    typeW: { dna: { nl: 'DNA blauw', en: 'DNA blue' }, rna: { nl: 'RNA oranje', en: 'RNA orange' }, prot: { nl: 'eiwit paars', en: 'protein purple' },
+      histone: { nl: 'histonen (eiwit) grijs', en: 'histones (protein) grey' } },
     chain: { nl: 'elke streng of keten een eigen kleur: zo zie je uit hoeveel stukken het bestaat', en: 'each strand or chain its own colour: shows how many pieces it is made of' },
     base: { nl: 'elke letter (A, T/U, G, C) een eigen kleur; de ruggengraat grijs', en: 'each letter (A, T/U, G, C) its own colour; the backbone grey' },
     elem: { nl: 'koolstof grijs, stikstof blauw, zuurstof rood, fosfor oranje', en: 'carbon grey, nitrogen blue, oxygen red, phosphorus orange' } },
@@ -971,7 +973,11 @@ function showHint() {
   // cartoon: eiwit wordt anders getekend dan DNA/RNA — zeg het erbij als er eiwit in beeld is
   const shown = SLOTS.filter(s => !s.el.hidden && s.an), prot = shown.some(s => s.an.prot), na = !shown.length || shown.some(s => s.an.nts);
   const st = state.style === 'cartoon' && prot ? [na ? L(T.hintStyle.cartoon) : '', t('cartoonProt')].filter(Boolean).join('; ') : L(T.hintStyle[state.style]);
-  $('tHint').innerHTML = `<span><b>${sb.textContent}</b> ${st}</span><span><b>${cb.textContent}</b> ${L(T.hintColor[state.color])}</span>`;
+  // per soort: enkel de soorten die in beeld zijn, met dezelfde kleuren als de figuur (bv. histonen grijs in plaats van paars)
+  const has = ty => shown.some(s => Object.values(s.an.chainType ?? {}).includes(ty)), W = T.hintColor.typeW;
+  const ty = shown.length ? [has('dna') && L(W.dna), has('rna') && L(W.rna), has('prot') && L(shown.some(s => s.entry.histone) ? W.histone : W.prot)].filter(Boolean).join(', ') : '';
+  const ct = state.color === 'type' && ty ? ty : L(T.hintColor[state.color]);
+  $('tHint').innerHTML = `<span><b>${sb.textContent}</b> ${st}</span><span><b>${cb.textContent}</b> ${ct}</span>`;
 }
 
 /* Aangepaste bouwstenen (bv. de 14 chemisch aangepaste letters in tRNA, of selenomethionine in eiwitten) staan als HETATM in
