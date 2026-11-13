@@ -52,7 +52,7 @@ const T = {
   ttlSub: { nl: 'Echte 3D-vormen van DNA en RNA, zoals onderzoekers ze gemeten hebben', en: 'Real 3D shapes of DNA and RNA, as researchers measured them' },
   back: { nl: '← terug naar de animatie', en: '← back to the animation' },
   home: { nl: 'Start', en: 'Home' }, story: { nl: 'Verhaal-app', en: 'Story app' },
-  search: { nl: 'Typ wat je zoekt: bv. mens dubbelstreng, enkel streng, triple helix, histon…', en: 'Type what you want: e.g. human double strand, single strand, triple helix, histone…' },
+  search: { nl: 'Zoek in de atlas: bv. tRNA, histon, enkel streng…', en: 'Search the atlas: e.g. tRNA, histone, single strand…' },
   recog: { nl: 'Herkend:', en: 'Recognised:' }, words: { nl: 'woorden:', en: 'words:' },
   loose: { nl: 'Niets past bij alles samen; dit komt het dichtst in de buurt.', en: 'Nothing matches everything together; these come closest.' },
   count: { nl: n => `${n} item${n === 1 ? '' : 's'}`, en: n => `${n} entr${n === 1 ? 'y' : 'ies'}` },
@@ -63,13 +63,13 @@ const T = {
   cmp: { nl: 'Vergelijken', en: 'Compare' },
   cmpHint: { nl: 'Vergelijkmodus: klik items in de lijst om ze toe te voegen of te verwijderen (max. 3). De eerste bepaalt de tekst rechts.', en: 'Compare mode: click entries in the list to add or remove them (max. 3). The first one determines the text on the right.' },
   presets: { nl: 'Snel vergelijken:', en: 'Quick compare:' },
-  view: { nl: 'Weergave', en: 'View' }, stick: { nl: 'Stokjes', en: 'Sticks' }, sphere: { nl: 'Ruimtevullend', en: 'Space-filling' }, trace: { nl: 'Ruggengraat', en: 'Backbone' },
+  view: { nl: 'Weergave', en: 'View' }, stick: { nl: 'Stokjes', en: 'Sticks' }, sphere: { nl: 'Ruimtevullend', en: 'Space-filling' }, trace: { nl: 'Ladder', en: 'Ladder' },
   colour: { nl: 'Kleur', en: 'Colour' }, byPart: { nl: 'Per onderdeel', en: 'By part' }, byChain: { nl: 'Per streng', en: 'By strand' }, naTog: { nl: 'DNA en RNA tonen', en: 'Show DNA and RNA' }, byType: { nl: 'Per soort', en: 'By kind' }, byBase: { nl: 'Per letter', en: 'By letter' }, byElem: { nl: 'Per atoom', en: 'By atom' },
   hintStyle: {
-    cartoon: { nl: 'de streng als lint, de letters (basen) als staafjes', en: 'the strand as a ribbon, the letters (bases) as sticks' },
+    cartoon: { nl: 'de streng als lint, de letters (basen) als ringetjes eraan', en: 'the strand as a ribbon, the letters (bases) as small rings on it' },
     stick: { nl: 'elke binding tussen atomen als een staafje', en: 'every bond between atoms as a stick' },
     sphere: { nl: 'elk atoom als bol op ware grootte: zo zie je hoeveel plaats het inneemt', en: 'every atom as a ball at true size: shows how much space it takes up' },
-    trace: { nl: 'enkel de ruggengraat van elke streng, als een lijn', en: 'only the backbone of each strand, as a line' } },
+    trace: { nl: 'eenvoudig: elke streng als een buis, elke letter als één sport — de vorm zonder atomen', en: 'simple: each strand as a tube, each letter as one rung — the shape without atoms' } },
   hintColor: {
     part: { nl: 'de belangrijkste onderdelen hebben elk een eigen kleur', en: 'the main parts each have their own colour' },
     type: { nl: 'DNA blauw, RNA oranje, eiwit paars', en: 'DNA blue, RNA orange, protein purple' },
@@ -79,6 +79,7 @@ const T = {
     base: { nl: 'elke letter (A, T/U, G, C) een eigen kleur; de ruggengraat grijs', en: 'each letter (A, T/U, G, C) its own colour; the backbone grey' },
     elem: { nl: 'koolstof grijs, stikstof blauw, zuurstof rood, fosfor oranje', en: 'carbon grey, nitrogen blue, oxygen red, phosphorus orange' } },
   cartoonProt: { nl: 'eiwit als lint met spiralen (helix) en pijlen (gestrekt stuk)', en: 'protein as a ribbon with spirals (helix) and arrows (stretched piece)' },
+  colours: { nl: 'Kleuren', en: 'Colours' },
   restGrey: { nl: 'rest', en: 'rest' }, restOf: { nl: 'rest van het', en: 'rest of the' }, protChain: { nl: 'eiwitketen', en: 'protein chain' }, moreChains: { nl: 'nog {n} ketens', en: '{n} more chains' },
   gripTip: { nl: 'Sleep om de tabel breder of smaller te maken · dubbelklik = standaardbreedte', en: 'Drag to make the table wider or narrower · double-click = default width' },
   hb: { nl: 'Waterstofbruggen', en: 'Hydrogen bonds' }, synMark: { nl: 'Omgeklapte basen (syn)', en: 'Flipped bases (syn)' }, ions: { nl: 'Ionen', en: 'Ions' }, ligs: { nl: 'Medicijn / klein molecule', en: 'Drug / small molecule' },
@@ -155,7 +156,9 @@ const T = {
   eChains: { nl: 'ketens', en: 'chains' }, eSS: { nl: 'Vorm van het eiwit', en: 'Shape of the protein' },
   eHelix: { nl: 'opgerold stuk (helix)', en: 'coiled piece (helix)' }, eSheet: { nl: 'gestrekt stuk (β-streng)', en: 'stretched piece (β-strand)' },
   // zelf een PDB-code opzoeken
-  pdbLbl: { nl: '🔎 Zoek elk eiwit of gen in de PDB', en: '🔎 Find any protein or gene in the PDB' }, pdbGo: { nl: 'Zoek', en: 'Search' }, pdbPh: { nl: 'bv. TP53 of 4HHB', en: 'e.g. TP53 or 4HHB' },
+  tabAtlas: { nl: n => `📚 Atlas (${n})`, en: n => `📚 Atlas (${n})` }, tabPdb: { nl: '🌐 Hele PDB', en: '🌐 Whole PDB' },
+  tipAtlas: { nl: 'Zoek tussen de moleculen van deze atlas, met uitleg en vaak ook in het verhaal.', en: 'Search the molecules of this atlas, with explanations and often also in the story.' },
+  pdbLbl: { nl: 'Zoek elk eiwit of gen in de hele PDB-databank (buiten de atlas, zonder uitleg op maat)', en: 'Find any protein or gene in the whole PDB database (outside the atlas, without tailored explanations)' }, pdbGo: { nl: 'Zoek', en: 'Search' }, pdbPh: { nl: 'bv. TP53 of 4HHB', en: 'e.g. TP53 or 4HHB' },
   pdbTip: { nl: 'Typ een gen (TP53), een eiwitnaam (insuline) of een PDB-code van 4 tekens (4HHB). De app zoekt in UniProt en de PDB-databank (rcsb.org).', en: 'Type a gene (TP53), a protein name (insulin) or a 4-character PDB code (4HHB). The app searches UniProt and the PDB database (rcsb.org).' },
   // zoeken op gen- of eiwitnaam
   srchBusy: { nl: t => `Zoeken naar ${t}…`, en: t => `Searching for ${t}…` },
@@ -198,7 +201,10 @@ const T = {
   codeOffline: { nl: 'Geen verbinding met de PDB (internet nodig).', en: 'No connection to the PDB (internet needed).' },
   lookFor: { nl: c => `🔎 PDB-code ${c} opzoeken`, en: c => `🔎 Look up PDB code ${c}` }, lookForSub: { nl: 'haalt de structuur op van rcsb.org', en: 'fetches the structure from rcsb.org' },
   lookName: { nl: c => `🔎 „${c}” zoeken in de PDB`, en: c => `🔎 Search the PDB for “${c}”` }, lookNameSub: { nl: 'als gen (TP53), eiwitnaam (insuline) of woord uit de titel', en: 'as a gene (TP53), protein name (insulin) or word from the title' },
-  mine: { nl: 'Zelf opgezocht', en: 'Looked up yourself' }, ours: { nl: 'Atlas', en: 'Atlas' }, mineBadge: { nl: 'zelf opgezocht', en: 'looked up yourself' },
+  mine: { nl: 'Zelf opgezocht', en: 'Looked up yourself' }, ours: { nl: 'Atlas', en: 'Atlas' }, mineBadge: { nl: '📌 zelf opgezocht · niet uit de atlas', en: '📌 looked up yourself · not from the atlas' },
+  mineHead: { nl: '📌 Zelf opgezocht — niet uit de atlas', en: '📌 Looked up yourself — not from the atlas' }, oursHead: { nl: '📚 Uit de atlas — met uitleg', en: '📚 From the atlas — with explanations' },
+  atlasBadge: { nl: '📚 uit de atlas', en: '📚 from the atlas' },
+  mineNote: { nl: 'Deze structuur heb je zelf opgezocht in de PDB. Ze komt niet uit de atlas: er is geen uitleg op maat en ze staat niet in het verhaal.', en: 'You looked up this structure yourself in the PDB. It is not from the atlas: there is no tailored explanation and it is not in the story.' },
   forget: { nl: 'Uit de lijst halen', en: 'Remove from the list' },
   loadingHuge: { nl: n => `zeer groot (~${n} 000 atomen), dit kan even duren`, en: n => `very large (~${n},000 atoms), this may take a while` },
   // uitlegpaneel
@@ -220,6 +226,8 @@ const BASECOL = { A: '#5ad17a', T: '#ff6b6b', U: '#ff6b6b', G: '#ffc247', C: '#4
 const IONCOL = { K: '#8f40d4', NA: '#ab5cf2', MG: '#8aff00', MN: '#9c7ac7', CA: '#3dff00', ZN: '#7d80b0', CL: '#1ff01f', SR: '#00ff27', BA: '#00c900', CS: '#57178f', CO: '#f090a0', NI: '#50d050', CD: '#ffd98f', TL: '#a6544d', IOD: '#940094', BR: '#a62929' };
 const IONRAD = { K: 1.35, NA: 1.0, MG: .72, MN: .8, CA: 1.0, ZN: .8, CL: 1.4, SR: 1.2, BA: 1.35, CS: 1.6, TL: 1.4 };
 const BB = /'|^P$|^OP|^O[123]P/;
+const SPIN = .3;   // draaisnelheid (was .6: te snel om rustig te bekijken)
+const SUGAR = new Set(["C1'", "C2'", "C3'", "C4'", "O4'", "C5'", "O5'", "O3'", 'P']);   // suikerring + fosfaatbrug: hangt de base aan het lint
 
 /* ---------- toestand ---------- */
 const state = {
@@ -243,6 +251,13 @@ $('home').textContent = t('home'); $('storyLink').textContent = t('story');
 if (FROM && /^[a-z0-9_-]+$/i.test(FROM)) { $('back').hidden = false; $('back').textContent = t('back'); $('back').href = `../app/index.html?scene=${encodeURIComponent(FROM)}`; }
 $('storyLink').href = FROM ? `../app/index.html?scene=${encodeURIComponent(FROM)}` : '../app/index.html';
 $('q').placeholder = t('search');
+$('tabAtlas').textContent = t('tabAtlas')(ENTRIES.length); $('tabPdb').textContent = t('tabPdb'); $('tipAtlas').textContent = t('tipAtlas');
+function setPane(p) {
+  for (const b of document.querySelectorAll('#stabs [role=tab]')) b.setAttribute('aria-selected', String(b.dataset.pane === p));
+  $('paneAtlas').hidden = p !== 'atlas'; $('pdbForm').hidden = p !== 'pdb';
+  (p === 'atlas' ? $('q') : $('pdbIn')).focus();
+}
+$('stabs').onclick = e => { const b = e.target.closest('[role=tab]'); if (b) setPane(b.dataset.pane); };
 $('pdbLbl').textContent = t('pdbLbl'); $('pdbGo').textContent = t('pdbGo'); $('pdbIn').placeholder = t('pdbPh'); $('pdbForm').title = t('pdbTip');
 $('reset').textContent = t('reset');
 $('cmpBtn').textContent = t('cmp');
@@ -287,7 +302,6 @@ function filtered() {
   $('qinfo').innerHTML = (r.concepts.length ? `<b>${t('recog')}</b> ` : '') + chips + (r.loose ? `<div class="ql">${t('loose')}</div>` : '');
   return r.list;
 }
-const TYPECOL = { dna: COL.dna, rna: COL.rna, hybrid: '#ffc247', prot: COL.prot, drug: '#7fdc6a' };
 function renderList() {
   const list = filtered();
   $('count').textContent = t('count')(list.length);
@@ -297,13 +311,12 @@ function renderList() {
     : raw.length >= 2 && state.found?.term.toLowerCase() !== raw.toLowerCase() ? `<li class="item lookup" data-search="${esc(raw)}" tabindex="0"><span class="tx"><div class="nm">${t('lookName')(esc(raw))}</div><div class="sb">${t('lookNameSub')}</div></span></li>` : '';
   let lastCustom = false;
   $('list').innerHTML = look + foundHTML() + (list.length ? list.map(e => {
-    const head = e.custom && !lastCustom ? `<li class="lhead">${t('mine')}</li>` : !e.custom && lastCustom ? `<li class="lhead">${t('ours')}</li>` : '';
+    const head = e.custom && !lastCustom ? `<li class="lhead mine">${t('mineHead')}</li>` : !e.custom && lastCustom ? `<li class="lhead">${t('oursHead')}</li>` : '';
     lastCustom = !!e.custom;
     const inSet = state.set.includes(e.id);
     const on = state.cmp ? inSet : e.id === state.id;
-    return head + `<li class="item ${on ? 'on' : ''} ${state.cmp && inSet && e.id !== state.set[0] ? 'cmp' : ''}" data-id="${e.id}" tabindex="0">
+    return head + `<li class="item ${e.custom ? 'mine' : ''} ${on ? 'on' : ''} ${state.cmp && inSet && e.id !== state.set[0] ? 'cmp' : ''}" data-id="${e.id}" tabindex="0">
       ${state.cmp ? `<span class="ck ${inSet ? 'on' : ''}">${inSet ? state.set.indexOf(e.id) + 1 : ''}</span>` : ''}
-      <span class="dots">${e.type.map(ty => `<i style="background:${TYPECOL[ty]}" title="${L(FILTERS.type.opts[ty])}"></i>`).join('')}</span>
       <span class="tx"><div class="nm">${listName(e)}</div><div class="sb">${listSub(e)}</div></span>
       ${e.custom ? `<button class="forget" data-forget="${e.id}" title="${t('forget')}">×</button>` : `<span class="pdb ${e.pdb ? '' : 'no'}">${e.pdb ?? t('schema')}</span>`}</li>`;
   }).join('') : (look ? '' : `<li class="sb" style="color:var(--muted);padding:10px">${t('none')}</li>`));
@@ -426,12 +439,21 @@ const SLOTS = [];
 for (let i = 0; i < 3; i++) {
   const el = document.createElement('div'); el.className = 'slot'; el.hidden = true;
   el.innerHTML = `<div class="sh"><h3></h3><span class="hand"></span><a class="pdbl" target="_blank" rel="noopener"></a><button class="tg" type="button"></button><button class="x" title="×">×</button></div>
-    <div class="sbody"><div class="sview"><div class="stage"><div class="load"></div><div class="hover"></div><div class="note3d" hidden></div><div class="diag" hidden></div></div>
+    <div class="sbody"><div class="sview"><div class="sleg" hidden></div><div class="stage"><div class="load"></div><div class="pop" role="status" hidden></div><div class="note3d" hidden></div><div class="diag" hidden></div></div>
     <div class="dleg" hidden></div><div class="smeta"></div></div><div class="grip" role="separator" aria-orientation="vertical"><i></i></div><div class="calcgrid"></div></div>`;
   $('slots').append(el);
   const stage = el.querySelector('.stage');
   const viewer = $3Dmol.createViewer(stage, { backgroundColor: CSS('--bg-2') || '#0d1426', antialias: true });
-  const s = { i, el, stage, viewer, token: 0, entry: null, atoms: null, an: null };
+  const s = { i, el, stage, viewer, token: 0, entry: null, atoms: null, an: null, down: null, popT: 0 };
+  // klikinfo: 3Dmol meldt enkel klikken óp een atoom; een klik ernaast (zonder slepen) sluit het tabje
+  stage.addEventListener('pointerdown', e => { s.down = { x: e.clientX, y: e.clientY }; });
+  stage.addEventListener('mouseup', e => {
+    const d = s.down; if (!d || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 4) return;
+    if (e.target.closest('.pop')) return;
+    // 3Dmol meldt een klik op een atoom pas iets later: verscheen er geen nieuw tabje, dan was het een klik ernaast
+    const t0 = performance.now(); setTimeout(() => { if (!(s.popT >= t0)) hidePop(s); }, 450);
+  });
+  stage.querySelector('.pop').addEventListener('click', e => { if (e.target.closest('.px')) hidePop(s); });
   // het vak krijgt zijn hoogte uit de lay-out (vult het scherm): de viewer schaalt mee als het vak van maat verandert
   let lastH = 0;
   new ResizeObserver(() => { const h = Math.round(stage.clientHeight); if (h && h !== lastH && !el.hidden) { lastH = h; viewer.resize(); viewer.render(); } }).observe(stage);
@@ -520,6 +542,7 @@ function getJson(url) { if (!cache.has(url)) cache.set(url, fetch(url).then(r =>
 
 async function loadSlot(s, e) {
   const token = ++s.token;
+  hidePop(s, false);
   s.entry = e; s.atoms = null; s.an = null;
   const el = s.el;
   el.querySelector('h3').textContent = e.custom ? `PDB ${e.pdb}` : nameOf(e);
@@ -584,17 +607,13 @@ async function loadSlot(s, e) {
       ? chains.map(c => `<code>${seq(c)}</code>`).join(' · ') + ' · ' : '';
     el.querySelector('.smeta').innerHTML = `${seqTxt ? `${t('seqLbl')} ${seqTxt}` : ''}${methodText(method)}${res ? ` · ${res} Å` : ''}`;
     el.querySelector('.calcgrid').innerHTML = factsTable(e) + measuredTable(e, an, method, res) + `<details class="allcalc"><summary>${t('allCalc')}</summary>${calcTable(e, an)}</details>`;
-    const hov = s.stage.querySelector('.hover');
-    s.viewer.setHoverable({}, true, a => {
-      const k = { na: a.ctype === 'rna' ? 'RNA' : 'DNA', prot: t('protein'), ion: IONLABEL[a.resn] ?? a.resn, lig: L(LIGNAME[a.resn] ?? { nl: 'ligand', en: 'ligand' }), water: t('water1') }[a.kind] ?? '';
-      hov.textContent = `${a.resn0 ?? a.resn} ${a.resi} · ${t('chain')} ${a.chain} · ${a.atom} (${a.elem}) · ${k}`; hov.style.opacity = 1;
-    }, () => { hov.style.opacity = 0; });
+    s.viewer.setClickable({}, true, a => showPop(s, a));
     lb.step(4, t('stDraw'), hint); await nextPaint(); if (token !== s.token) return;
     syncColor();
     render(s);
     load.textContent = '';
     s.viewer.zoomTo({ predicate: a => a.kind === 'na' || a.kind === 'prot' }); s.viewer.zoom(e.heavy ? 1.0 : 0.92); s.viewer.render();
-    if ($('spin').checked) s.viewer.spin('y', .6);
+    if ($('spin').checked) s.viewer.spin('y', SPIN);
     syncFrom(SLOTS.find(o => o !== s && o.atoms && !o.el.hidden));
   } catch (err) {
     lb.stop();
@@ -719,12 +738,12 @@ function noHelixWhy(e) {
 
 /* ---------- weergave ---------- */
 /* per keten: elke eiwitketen een duidelijk andere kleur (zo zie je uit hoeveel delen een complex bestaat); DNA blauw, RNA oranje in tinten */
-const CHAINPAL = ['#9b7bff', '#2cc6a8', '#ffc247', '#ff6b9a', '#7fdc6a', '#5fd3e6', '#ff8a3d', '#d0a2ff', '#c3f06b', '#ff9f9f', '#8fb3ff', '#f0c27b'];
+/* per streng: elke streng of keten een duidelijk andere kleur (sterk verschillende tinten, ook tussen twee DNA-strengen) */
+const CHAINPAL = ['#4f8ff7', '#ff8a3d', '#2cd3a0', '#ff5fa2', '#ffd23f', '#a77bff', '#5fd3e6', '#e8e8e8', '#7fdc6a', '#ff6b6b', '#c39b6b', '#8fb3ff'];
 function distinctChains(s) {
-  const map = {}, n = { dna: 0, rna: 0, prot: 0 };
+  const map = {};
   const chains = [...new Set(s.atoms.filter(a => a.kind === 'na' || a.kind === 'prot').map(a => a.chain))];
-  for (const c of chains) { const ty = s.an.chainType[c]; map[c] = ty === 'prot' ? CHAINPAL[n.prot++ % CHAINPAL.length] : PAL[ty === 'hybrid' ? 'dna' : ty][n[ty === 'rna' ? 'rna' : 'dna']++ % 6]; }
-  if (s.entry.third && map[s.entry.third]) map[s.entry.third] = '#5fd3e6';
+  chains.forEach((c, i) => { map[c] = CHAINPAL[i % CHAINPAL.length]; });
   return map;
 }
 /* markeringen (entry.mark): basen die het begrip tonen (mismatch, G–U, bulge, stam, lus…) krijgen een eigen kleur;
@@ -748,6 +767,7 @@ function baseColorFn(s) {
 function render(s) {
   const { viewer, atoms, entry: e } = s;
   if (!atoms) return;
+  hidePop(s, false);
   viewer.setStyle({}, {});
   viewer.removeAllShapes();
   const cf = colorFn(s);
@@ -758,8 +778,14 @@ function render(s) {
   if (state.style === 'cartoon') {
     if (heavy) viewer.setStyle(NA, { cartoon: { ...col, thickness: .5 } });
     else {
-      viewer.setStyle(NA, { cartoon: { ...col, ribbon: false, thickness: .6 }, stick: { ...col, radius: .16 } });
-      viewer.setStyle({ predicate: a => a.kind === 'na' && BB.test(a.atom) }, { cartoon: { ...col, ribbon: false, thickness: .6 } });
+      // 3Dmol tekent bij nucleïnezuren een dikke staaf van het lint naar elke base, maar enkel voor basisatomen met cartoonstijl.
+      // Daarom: lint enkel op de ruggengraat, de basen (en de suikerring die ze aan het lint hangt) als echte ringen met staafjes.
+      // Per atoom: het lint neutraal, zodat enkel de atomen kleur krijgen (geen oranje/rode vlekken op het lint).
+      const rib = state.color === 'elem' ? { color: '#8b97b3' } : col;
+      viewer.setStyle({ predicate: a => a.kind === 'na' && BB.test(a.atom) }, { cartoon: { ...rib, ribbon: false, thickness: .6 } });
+      const ring = cf && state.color !== 'base' ? { colorfunc: a => lighten(cf(a), .28) } : col;
+      viewer.setStyle({ predicate: a => a.kind === 'na' && !BB.test(a.atom) }, { stick: { ...ring, radius: .2 } });
+      viewer.addStyle({ predicate: a => a.kind === 'na' && SUGAR.has(a.atom) }, { stick: { ...ring, radius: .2 } });
     }
     viewer.setStyle(PR, { cartoon: { ...col, opacity: e.heavyish ? .9 : 1 } });
   } else if (state.style === 'stick') {
@@ -767,22 +793,37 @@ function render(s) {
   } else if (state.style === 'sphere') {
     viewer.setStyle({ predicate: a => a.kind === 'na' || a.kind === 'prot' }, { sphere: { ...col, scale: 1 } });
   } else {
-    // ruggengraat: fosforketen per streng (zigzag bij Z-DNA), eiwit als dunne trace
-    const cm = distinctChains(s);
-    if (!heavy) viewer.setStyle(NA, { stick: { ...col, radius: .08, opacity: .35 } });
-    viewer.setStyle(PR, { cartoon: { ...col, style: 'trace', thickness: .3 } });
-    const chains = [...new Set(atoms.filter(a => a.kind === 'na').map(a => a.chain))];
-    chains.forEach(ch => {
-      const ps = atoms.filter(a => a.chain === ch && a.atom === 'P' && a.kind === 'na').sort((a, b) => a.resi - b.resi);
-      const c = state.color === 'elem' ? '#ff8000' : state.color === 'chain' ? cm[ch] : (s.an.chainType[ch] === 'rna' ? COL.rna : COL.dna);
-      const pc = p => state.color === 'base' || !cf ? c : cf(p);   // per onderdeel/streng: de lijn kleurt mee
-      for (let i = 1; i < ps.length; i++) { if (ps[i].resi - ps[i - 1].resi > 1.5) continue; viewer.addCylinder({ start: xyz(ps[i - 1]), end: xyz(ps[i]), radius: heavy ? .7 : .5, color: pc(ps[i]), fromCap: 1, toCap: 1 }); }
-      if (!heavy) for (const p of ps) viewer.addSphere({ center: xyz(p), radius: .9, color: pc(p) });
-    });
+    // ladder: elke streng als een gladde buis door de ruggengraat, elke letter als één sport naar het midden (zoals in een schoolboek)
+    viewer.setStyle(PR, { cartoon: { ...col, style: 'trace', thickness: .5 } });
+    const strandCol = a => state.color === 'base' ? (s.an.chainType[a.chain] === 'rna' ? COL.rna : COL.dna) : cf ? cf(a) : '#8b97b3';
+    const byRes = new Map();
+    for (const a of atoms) if (a.kind === 'na') { const k = a.chain + ':' + a.resi; if (!byRes.has(k)) byRes.set(k, { chain: a.chain, resi: a.resi, at: {} }); byRes.get(k).at[a.atom] = a; }
+    const strands = new Map();
+    for (const r of byRes.values()) { const bb = r.at.P ?? r.at["C4'"] ?? r.at["C3'"]; /* door de fosfaten: zo zie je bv. de zigzag van Z-DNA */ if (!bb) continue; r.bb = bb; if (!strands.has(r.chain)) strands.set(r.chain, []); strands.get(r.chain).push(r); }
+    for (const rs of strands.values()) {
+      rs.sort((a, b) => a.resi - b.resi);
+      // buis: stukken van opeenvolgende letters met dezelfde kleur (een breuk in de keten = nieuwe buis)
+      let run = [];
+      const flush = () => { if (run.length > 1) viewer.addCurve({ points: run.map(r => xyz(r.bb)), radius: heavy ? .9 : .75, smooth: 8, color: strandCol(run[run.length - 1].bb), fromCap: 1, toCap: 1 }); };
+      rs.forEach((r, i) => {
+        const prev = rs[i - 1], brk = !prev || r.resi - prev.resi > 1.5 || (r.bb.x - prev.bb.x) ** 2 + (r.bb.y - prev.bb.y) ** 2 + (r.bb.z - prev.bb.z) ** 2 > 81;
+        if (brk) { flush(); run = [r]; }
+        else if (strandCol(r.bb) !== strandCol(prev.bb)) { run.push(r); flush(); run = [prev, r]; }   // kleurwissel: naadloos aansluiten
+        else run.push(r);
+      });
+      flush();
+      // sporten: van de buis naar het buitenste ringatoom van de base (N1 bij A/G, N3 bij C/T/U)
+      if (!heavy) for (const r of rs) {
+        const pb = parentBase(r.bb.resn0 ?? r.bb.resn), tip = r.at[pb === 'A' || pb === 'G' ? 'N1' : 'N3'];
+        if (!tip) continue;
+        const c = state.color === 'base' ? BASECOL[pb] ?? '#aab' : lighten(strandCol(tip), .3);
+        viewer.addCylinder({ start: xyz(r.bb), end: xyz(tip), radius: .42, color: c, fromCap: 1, toCap: 2 });
+      }
+    }
   }
-  // gemarkeerde basen dikker, zodat ze opvallen in cartoon/ruggengraat
+  // gemarkeerde basen dikker, zodat ze opvallen in cartoon (in de ladder kleuren de sporten al mee)
   const mk = markOf(e);
-  if (mk && (state.style === 'cartoon' || state.style === 'trace')) viewer.addStyle({ predicate: a => a.kind === 'na' && mk.has(a.chain + ':' + a.resi) && !BB.test(a.atom) }, { stick: { colorfunc: cf, radius: .34 } });
+  if (mk && state.style === 'cartoon') viewer.addStyle({ predicate: a => a.kind === 'na' && mk.has(a.chain + ':' + a.resi) && !BB.test(a.atom) }, { stick: { colorfunc: cf, radius: .34 } });
   // liganden, ionen, water
   if (state.ligs) {
     viewer.setStyle({ predicate: a => a.kind === 'lig' }, { stick: { colorscheme: 'greenCarbon', radius: .24 }, sphere: { colorscheme: 'greenCarbon', scale: .3 } });
@@ -802,16 +843,87 @@ function render(s) {
   viewer.render();
 }
 const xyz = a => ({ x: a.x, y: a.y, z: a.z });
+
+/* ---------- klikinfo: klein tabje naast de plek waar je klikte ---------- */
+const BASENAME = { A: { nl: 'adenine', en: 'adenine' }, T: { nl: 'thymine', en: 'thymine' }, G: { nl: 'guanine', en: 'guanine' }, C: { nl: 'cytosine', en: 'cytosine' }, U: { nl: 'uracil', en: 'uracil' } };
+const ELNAME = { C: { nl: 'koolstof', en: 'carbon' }, N: { nl: 'stikstof', en: 'nitrogen' }, O: { nl: 'zuurstof', en: 'oxygen' }, P: { nl: 'fosfor', en: 'phosphorus' }, S: { nl: 'zwavel', en: 'sulphur' }, SE: { nl: 'seleen', en: 'selenium' } };
+const AANAME = { ALA: ['alanine'], ARG: ['arginine'], ASN: ['asparagine'], ASP: ['asparaginezuur', 'aspartic acid'], CYS: ['cysteïne', 'cysteine'], GLN: ['glutamine'], GLU: ['glutaminezuur', 'glutamic acid'], GLY: ['glycine'], HIS: ['histidine'], ILE: ['isoleucine'], LEU: ['leucine'], LYS: ['lysine'], MET: ['methionine'], PHE: ['fenylalanine', 'phenylalanine'], PRO: ['proline'], SER: ['serine'], THR: ['threonine'], TRP: ['tryptofaan', 'tryptophan'], TYR: ['tyrosine'], VAL: ['valine'] };
+const PT = {
+  letter: { nl: (n, ty, c) => `letter ${n} van ${ty}-streng ${c}`, en: (n, ty, c) => `letter ${n} of ${ty} strand ${c}` },
+  aa: { nl: (n, c) => `bouwsteen ${n} van eiwitketen ${c}`, en: (n, c) => `building block ${n} of protein chain ${c}` },
+  atom: { nl: 'atoom', en: 'atom' }, inBase: { nl: 'in de base (de letter)', en: 'in the base (the letter)' }, inBb: { nl: 'in de ruggengraat (suiker-fosfaat)', en: 'in the backbone (sugar–phosphate)' },
+  mod: { nl: 'chemisch aangepaste letter', en: 'chemically modified letter' }, part: { nl: 'onderdeel', en: 'part' },
+  ion: { nl: 'ion', en: 'ion' }, water: { nl: 'watermolecule', en: 'water molecule' }, lig: { nl: 'klein molecule', en: 'small molecule' }, close: { nl: 'Sluiten', en: 'Close' },
+};
+const pt = (k, ...a) => { const v = L(PT[k]); return typeof v === 'function' ? v(...a) : v; };
+function popHTML(s, a) {
+  const el = ELNAME[a.elem?.toUpperCase()] ? `${L(ELNAME[a.elem.toUpperCase()])} (${a.atom})` : a.atom;
+  if (a.kind === 'na') {
+    const b = parentBase(a.resn0 ?? a.resn), ty = s.an.chainType[a.chain] === 'rna' ? 'RNA' : 'DNA';
+    const g = (s.entry.mark ?? []).find(m => m.res.includes(a.chain + ':' + a.resi));
+    return [`<b>${b ?? a.resn}${BASENAME[b] ? ` · ${L(BASENAME[b])}` : ''}</b>`, pt('letter', a.resi, ty, a.chain),
+      a.resn0 && a.resn0 !== a.resn ? `${pt('mod')}: ${a.resn0}` : '',
+      g && state.color === 'part' ? `${pt('part')}: <i style="--c:${g.col}">${L(g.label)}</i>` : '',
+      `${pt('atom')}: ${el} · ${BB.test(a.atom) ? pt('inBb') : pt('inBase')}`];
+  }
+  if (a.kind === 'prot') {
+    const r = a.resn0 ?? a.resn, nm = AANAME[r];
+    return [`<b>${nm ? (lang === 'nl' ? nm[0] : nm[1] ?? nm[0]) : r}</b> <small>${r}</small>`, pt('aa', a.resi, a.chain), `${pt('atom')}: ${el}`];
+  }
+  if (a.kind === 'ion') return [`<b>${IONLABEL[a.resn] ?? a.resn}</b>`, `${pt('ion')}${ION_NAME[a.resn] ? ': ' + L(ION_NAME[a.resn]) : ''}`];
+  if (a.kind === 'lig') return [`<b>${LIGNAME[a.resn] ? L(LIGNAME[a.resn]) : s.entry.ligNames?.[a.resn] ?? a.resn}</b>`, `${pt('lig')} · ${pt('atom')}: ${el}`];
+  if (a.kind === 'water') return [`<b>${pt('water')}</b>`];
+  return [`<b>${a.resn} ${a.resi}</b>`, `${pt('atom')}: ${el}`];
+}
+function showPop(s, a) {
+  const pop = s.stage.querySelector('.pop'), d = s.down;
+  pop.innerHTML = `<button class="px" title="${pt('close')}" aria-label="${pt('close')}">×</button>` + popHTML(s, a).filter(Boolean).map(x => `<div>${x}</div>`).join('');
+  pop.hidden = false; s.popT = performance.now();
+  const r = s.stage.getBoundingClientRect(), x = (d?.x ?? r.left + r.width / 2) - r.left, y = (d?.y ?? r.top + r.height / 2) - r.top;
+  const w = pop.offsetWidth, h = pop.offsetHeight;
+  // rechts naast de klik; past het niet, dan links ervan — en altijd binnen het vak
+  pop.style.left = `${Math.max(6, x + 16 + w > r.width - 6 ? x - 16 - w : x + 16)}px`;
+  pop.style.top = `${Math.max(6, Math.min(r.height - h - 6, y - 14))}px`;
+  if (s.mk) s.viewer.removeShape(s.mk);
+  s.mk = s.viewer.addSphere({ center: xyz(a), radius: a.kind === 'ion' ? 1.6 : .85, color: '#ffffff', opacity: .55 });
+  s.viewer.render();
+}
+function hidePop(s, redraw = true) {
+  const pop = s.stage.querySelector('.pop'); if (pop.hidden && !s.mk) return;
+  pop.hidden = true;
+  if (s.mk) { s.viewer.removeShape(s.mk); s.mk = null; if (redraw) s.viewer.render(); }
+}
+addEventListener('keydown', e => { if (e.key === 'Escape') SLOTS.forEach(s => hidePop(s)); });
+/* kleur iets lichter maken (meng met wit), met cache: wordt per atoom opgevraagd */
+const LIGHT = new Map();
+function lighten(hex, f) {
+  if (hex.length === 4) hex = '#' + [...hex.slice(1)].map(c => c + c).join('');
+  const k = hex + f; if (LIGHT.has(k)) return LIGHT.get(k);
+  const n = parseInt(hex.slice(1), 16), m = c => Math.round(c + (255 - c) * f);
+  const v = '#' + [m(n >> 16 & 255), m(n >> 8 & 255), m(n & 255)].map(x => x.toString(16).padStart(2, '0')).join('');
+  LIGHT.set(k, v); return v;
+}
 const renderAll = () => SLOTS.forEach(s => !s.el.hidden && s.atoms && render(s));
 
 /* ---------- legende ---------- */
+/* De legende staat per figuur vlak boven het 3D-beeld (bij vergelijken heeft elk molecule zijn eigen strengkleuren). */
 function legend() {
   if (syncColor()) renderAll();
-  const items = [];
-  const sw = (c, txt) => items.push(`<span><i style="background:${c}"></i>${txt}</span>`);
-  const shown = SLOTS.filter(s => !s.el.hidden && s.an);
+  const all = SLOTS.filter(s => !s.el.hidden && s.an);
   // "DNA en RNA tonen" heeft enkel zin als er ook eiwit in beeld is (anders blijft er niets over)
-  if (shown.length) $('na').closest('label').hidden = !shown.some(s => s.an.prot);
+  if (all.length) $('na').closest('label').hidden = !all.some(s => s.an.prot);
+  for (const s of SLOTS) {
+    const box = s.el.querySelector('.sleg');
+    if (s.el.hidden || !s.an) { box.hidden = true; continue; }
+    box.hidden = false;
+    box.innerHTML = `<b>${t('colours')}</b>` + legendItems([s]).join('');
+  }
+  $('legend').hidden = true;
+  guide();
+}
+function legendItems(shown) {
+  const items = [];
+  const sw = (c, txt) => items.push(`<span class="lc" style="--c:${c}"><i></i>${txt}</span>`);
   const hasType = ty => shown.some(s => Object.values(s.an.chainType).includes(ty));
   if (state.color === 'part') {
     // eerst de onderdelen (daar gaat het om), daarna de rest
@@ -841,7 +953,41 @@ function legend() {
   if (state.ligs && shown.some(s => Object.keys(s.an.ligs).length)) sw('#33ff33', t('lig'));
   if (state.hb) sw('#fff', `- - ${t('hbond')}`);
   if (state.syn) sw('#f06bc0', t('synConf'));
-  $('legend').innerHTML = items.join('');
+  return items;
+}
+
+/* ---------- uitleg bij de huidige weergave ("In deze weergave"): verandert mee met Weergave en Kleur ---------- */
+const G = {
+  head: { nl: 'In deze weergave', en: 'In this view' },
+  cartoonNa: { nl: 'Het lint is de ruggengraat (suiker en fosfaat) van elke streng; de ringetjes eraan zijn de basen, de letters.', en: 'The ribbon is the backbone (sugar and phosphate) of each strand; the small rings on it are the bases, the letters.' },
+  cartoonHeavy: { nl: 'Het lint is de ruggengraat van elke streng; de basen zijn weggelaten omdat de structuur zo groot is.', en: 'The ribbon is the backbone of each strand; the bases are left out because the structure is so large.' },
+  cartoonProt: { nl: 'Eiwit is een lint met spiralen (helix) en pijlen (gestrekt stuk).', en: 'Protein is a ribbon with spirals (helix) and arrows (stretched piece).' },
+  stick: { nl: 'Elke binding tussen twee atomen is een staafje: je ziet elk ringetje en elk atoom.', en: 'Every bond between two atoms is a stick: you see every ring and every atom.' },
+  sphere: { nl: 'Elk atoom is een bol op ware grootte: zo zie je hoe dicht alles op elkaar zit en hoe diep de groeven zijn.', en: 'Every atom is a ball at true size: shows how tightly everything is packed and how deep the grooves are.' },
+  traceNa: { nl: 'Elke streng is een buis door de fosfaten; elke sport is één letter. Twee sporten die elkaar raken, vormen een basenpaar.', en: 'Each strand is a tube through the phosphates; each rung is one letter. Two rungs that meet form a base pair.' },
+  traceProt: { nl: 'Eiwit is een dunne lijn door zijn bouwstenen.', en: 'Protein is a thin line through its building blocks.' },
+  colType: { nl: 'Kleur per soort:', en: 'Colour by type:' },
+  colChain: { nl: n => `Elke streng of keten heeft een eigen kleur — hier ${n}.`, en: n => `Each strand or chain has its own colour — ${n} here.` },
+  colPart: { nl: 'Elk belangrijk onderdeel heeft een eigen kleur (zie de kleuren boven de figuur).', en: 'Each important part has its own colour (see the colours above the figure).' },
+  colBase: { nl: 'Elke letter een eigen kleur: A groen, T/U rood, G geel, C blauw; de ruggengraat grijs.', en: 'Each letter its own colour: A green, T/U red, G yellow, C blue; the backbone grey.' },
+  colElem: { nl: 'Kleur volgens atoomsoort: koolstof grijs, stikstof blauw, zuurstof rood, fosfor oranje.', en: 'Colour by kind of atom: carbon grey, nitrogen blue, oxygen red, phosphorus orange.' },
+  tipPart: { nl: 'Tip: kies „Per onderdeel” om de belangrijke stukken in kleur te zien.', en: 'Tip: choose “By part” to see the important pieces in colour.' },
+  tipChain: { nl: 'Tip: kies „Per streng” om de strengen uit elkaar te houden.', en: 'Tip: choose “By strand” to tell the strands apart.' },
+};
+const g = (k, ...a) => { const v = L(G[k]); return typeof v === 'function' ? v(...a) : v; };
+function guide() {
+  const box = document.getElementById('vguide'); if (!box) return;
+  const shown = SLOTS.filter(s => !s.el.hidden && s.an); if (!shown.length) { box.innerHTML = ''; return; }
+  const prot = shown.some(s => s.an.prot), na = shown.some(s => s.an.nts) && (state.na || !prot), heavy = shown.some(s => s.entry.heavy);
+  const st = state.style === 'cartoon' ? [na && g(heavy ? 'cartoonHeavy' : 'cartoonNa'), prot && g('cartoonProt')]
+    : state.style === 'trace' ? [na && g('traceNa'), prot && g('traceProt')] : [g(state.style)];
+  const W = T.hintColor.typeW, has = ty => shown.some(s => Object.values(s.an.chainType).includes(ty));
+  const nCh = new Set(shown.flatMap(s => Object.entries(s.an.chainType).filter(([, v]) => v === 'prot' || state.na).map(([c]) => s.i + c))).size;
+  const col = { type: `${g('colType')} ${[has('dna') && L(W.dna), has('rna') && L(W.rna), has('prot') && L(shown.some(s => s.entry.histone) ? W.histone : W.prot)].filter(Boolean).join(', ')}.`,
+    chain: g('colChain', nCh), part: g('colPart'), base: g('colBase'), elem: g('colElem') }[state.color];
+  const av = colorAvail();
+  const tip = av?.has('part') && state.color !== 'part' ? g('tipPart') : av?.has('chain') && state.color === 'type' && nCh > 1 ? g('tipChain') : '';
+  box.innerHTML = `<b>${g('head')}</b><ul>${[...st.filter(Boolean), col].map(x => `<li>${colourWords(x)}</li>`).join('')}</ul>${tip ? `<div class="tip">${tip}</div>` : ''}`;
 }
 
 /* ---------- infokolom ---------- */
@@ -865,10 +1011,11 @@ function info(e) {
   const sp = SIMPLE[e.id] ?? (e.custom ? { kort: e.kort, look: e.look } : null);
   const s = [];
   s.push(e.custom ? `<h2>PDB ${e.pdb}</h2><div class="isub">${L(e.name)}</div>` : `<h2>${nameOf(e)}</h2><div class="isub">${subOf(e)}</div>`);
+  if (e.custom) s.push(`<div class="minebox">${t('mineNote')}</div>`);
   if (e.plant) s.push(`<div class="plantbox">${t('plant')}</div>`);
   if (sp) {
     s.push(`<div class="kort"><b>${t('inShort')}</b><p>${termsHTML(L(sp.kort))}</p></div>`);
-    if (sp.look) s.push(`<div class="card look"><h3><i>👁</i>${t('look')}</h3><p>${termsHTML(colourWords(L(sp.look)))}</p></div>`);
+    if (sp.look) s.push(`<div class="card look"><h3><i>👁</i>${t('look')}</h3>${e.pdb ? '<div class="vguide" id="vguide"></div>' : ''}<p>${termsHTML(colourWords(L(sp.look)))}</p></div>`);
     if (sp.why) s.push(`<div class="card why"><h3><i>★</i>${t('why')}</h3><p>${termsHTML(L(sp.why))}</p></div>`);
   }
   if (scenes.length) s.push(`<h3 class="sc">${t('scenes')}</h3><div class="scenes">${scenes.map(id => `<a href="../app/index.html?scene=${id}"><i>▶</i>${nodeTitle(NODES[id])}<span>${t('open')}</span></a>`).join('')}</div>`);
@@ -888,6 +1035,7 @@ function info(e) {
   s.push(`<details class="more" ${sp ? '' : 'open'}><summary>${t('more')}</summary><div class="morebody">${m.join('')}</div></details>`);
   $('info').innerHTML = s.join('');
   $('info').scrollTop = 0;
+  guide();
   if (e.pdb) getJson(rcsbEntryUrl(e.pdb)).then(d => {
     const el = $('structInfo'); if (!d || !el || BY[state.id] !== e) return;
     const res = d.rcsb_entry_info?.resolution_combined?.[0];
@@ -935,7 +1083,7 @@ function seg(id, key) {
   box.onclick = e => {
     const b = e.target.closest('button'); if (!b) return;
     box.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
-    if (key === 'color') { state.colorWant = b.dataset.v; syncColor(); } else state[key] = b.dataset.v;
+    if (key === 'color') { state.colorWant = b.dataset.v; syncColor(); } else { state[key] = b.dataset.v; syncColor(); }
     showHint(); renderAll(); legend();
   };
 }
@@ -945,14 +1093,14 @@ $('style').querySelectorAll('button').forEach(b => { b.title = L(T.hintStyle[b.d
 $('color').querySelectorAll('button').forEach(b => { b.title = L(T.hintColor[b.dataset.v]); });
 for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'na']) $(k).checked = state[k];
 for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'na']) $(k).onchange = e => { state[k] = e.target.checked; renderAll(); legend(); };
-$('spin').onchange = e => SLOTS.forEach(s => s.viewer.spin(e.target.checked ? 'y' : false, .6));
+$('spin').onchange = e => SLOTS.forEach(s => s.viewer.spin(e.target.checked ? 'y' : false, SPIN));
 
 /* Kleurkeuzes die bij dit molecule niets anders tonen, worden verborgen (bv. "per streng" bij één enkele RNA-streng
  * is hetzelfde als "per soort"). Wie niets koos, krijgt de nuttigste kleur: onderdelen > strengen > soort. */
 function colorAvail() {
   const shown = SLOTS.filter(s => !s.el.hidden && s.an);
   if (!shown.length) return null;
-  const av = new Set(['type', 'elem']);
+  const av = new Set(state.style === 'trace' ? ['type'] : ['type', 'elem']);
   if (shown.some(s => s.entry.mark)) av.add('part');
   if (shown.some(s => s.an.nts)) av.add('base');
   if (shown.some(s => { const c = {}; for (const v of Object.values(s.an.chainType)) c[v] = (c[v] ?? 0) + 1; return Object.values(c).some(n => n > 1); })) av.add('chain');
@@ -1013,11 +1161,10 @@ function mendPolymer(atoms) {
 function update() {
   const e = BY[state.id];
   $('eName').textContent = e.custom ? `PDB ${e.pdb}` : nameOf(e);
-  const badges = [];
+  const badges = [e.custom ? `<span class="badge mine">${t('mineBadge')}</span>` : `<span class="badge ours">${t('atlasBadge')}</span>`];
   if (e.pdb) badges.push(`<a class="badge pdbb" href="https://www.rcsb.org/structure/${e.pdb}" target="_blank" rel="noopener">PDB ${e.pdb} ↗</a>`);
   else badges.push(`<span class="badge">${t('schema')}</span>`);
   e.type.forEach(ty => badges.push(`<span class="badge t-${ty}">${L(FILTERS.type.opts[ty])}</span>`));
-  if (e.custom) badges.push(`<span class="badge mine">${t('mineBadge')}</span>`);
   e.cls.filter(c => c !== 'info').forEach(c => badges.push(`<span class="badge">${L(FILTERS.cls.opts[c])}</span>`));
   e.ctx.forEach(c => badges.push(`<span class="badge">${L(FILTERS.ctx.opts[c])}</span>`));
   if (e.plant) badges.push(`<span class="badge warn">${t('plant')}</span>`);

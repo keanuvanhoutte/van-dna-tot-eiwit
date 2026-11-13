@@ -84,10 +84,6 @@ export function customEntry(code, m) {
   const helix = naChains.length === 2 && naChains.every(x => (x.len ?? 99) <= 40) ? naChains.map(x => x.c) : undefined;
   const orgs = l => [...new Set(ents.map(e => e.org?.[l]).filter(Boolean))];
   const year = (m.rcsb_accession_info?.initial_release_date ?? '').slice(0, 4);
-  const colours = {
-    nl: [count.prot && 'eiwit is paars', count.dna && 'DNA is blauw', count.rna && 'RNA is oranje', smalls.length && 'kleine moleculen zijn groen'].filter(Boolean),
-    en: [count.prot && 'protein is purple', count.dna && 'DNA is blue', count.rna && 'RNA is orange', smalls.length && 'small molecules are green'].filter(Boolean),
-  };
   const MAXM = 6;
   const molRow = l => ents.slice(0, ents.length > MAXM + 1 ? MAXM : MAXM + 1).map(e => `${seqLike(e.desc) ? ({ dna: 'DNA', rna: 'RNA', hybrid: 'DNA/RNA' }[e.kind] ?? sentence(e.desc)) : cut(molName(e.desc), 48)} <span class="ref">${{ prot: { nl: 'eiwit', en: 'protein' }, dna: { nl: 'DNA', en: 'DNA' }, rna: { nl: 'RNA', en: 'RNA' }, hybrid: { nl: 'DNA/RNA', en: 'DNA/RNA' }, other: { nl: 'ander', en: 'other' } }[e.kind][l]}${e.chains.length > 1 ? ` × ${e.chains.length}` : ''}${e.len ? ` · ${e.len} ${e.kind === 'prot' ? (l === 'nl' ? 'aminozuren' : 'amino acids') : (l === 'nl' ? 'letters' : 'letters')}` : ''}</span>`).join('<br>')
     + (ents.length > MAXM + 1 ? `<br><span class="ref">${l === 'nl' ? `+ ${ents.length - MAXM} andere soorten moleculen` : `+ ${ents.length - MAXM} other kinds of molecules`}</span>` : '')
@@ -110,8 +106,8 @@ export function customEntry(code, m) {
       `Deze structuur heb je zelf opgezocht in de PDB, de wereldwijde databank van 3D-modellen van moleculen. Het model bevat ${join(partsL('nl'), 'nl') || 'één molecule'}${smalls.length ? `, met ${smalls.length} ${smalls.length === 1 ? 'klein molecule' : 'kleine moleculen'}` : ''}. Voor zelf opgezochte structuren is er geen uitleg op maat: de tabel naast de figuur is automatisch opgebouwd.`,
       `You looked up this structure yourself in the PDB, the worldwide database of 3D models of molecules. The model contains ${join(partsL('en'), 'en') || 'one molecule'}${smalls.length ? `, with ${smalls.length} small molecule${smalls.length === 1 ? '' : 's'}` : ''}. There is no tailored explanation for structures you look up yourself: the table next to the figure is built automatically.`),
     look: both(
-      `Kleuren: ${join(colours.nl, 'nl')}. Elke keten heeft een eigen tint; met Kleur → Per keten krijgt elke keten een duidelijk andere kleur${count.prot > 1 ? ' (zo zie je uit hoeveel delen het eiwit bestaat)' : ''}.${count.dna || count.rna ? ' Via Tonen kan je het DNA/RNA verbergen.' : ''} Draai de figuur met de muis en zoom met het scrolwiel.${models > 1 ? ' Dit is een NMR-structuur: je ziet enkel het eerste model.' : ''}`,
-      `Colours: ${join(colours.en, 'en')}. Each chain has its own shade; Colour → By chain gives every chain a clearly different colour${count.prot > 1 ? ' (so you see how many parts the protein has)' : ''}.${count.dna || count.rna ? ' Use Show to hide the DNA/RNA.' : ''} Rotate the figure with the mouse and zoom with the scroll wheel.${models > 1 ? ' This is an NMR structure: only the first model is shown.' : ''}`),
+      `${count.prot > 1 ? 'Met Kleur → Per streng krijgt elke keten een eigen kleur: zo zie je uit hoeveel delen het eiwit bestaat. ' : ''}${count.dna || count.rna ? 'Via Tonen kan je het DNA/RNA verbergen. ' : ''}${smalls.length ? 'Kleine moleculen hebben groene koolstofatomen. ' : ''}Draai de figuur met de muis, zoom met het scrolwiel en klik op een atoom om te zien wat het is.${models > 1 ? ' Dit is een NMR-structuur: je ziet enkel het eerste model.' : ''}`,
+      `${count.prot > 1 ? 'With Colour → By strand every chain gets its own colour: so you see how many parts the protein has. ' : ''}${count.dna || count.rna ? 'Use Show to hide the DNA/RNA. ' : ''}${smalls.length ? 'Small molecules have green carbon atoms. ' : ''}Rotate the figure with the mouse, zoom with the scroll wheel and click an atom to see what it is.${models > 1 ? ' This is an NMR structure: only the first model is shown.' : ''}`),
     atoms, ligNames: Object.fromEntries(smalls.map(c => [c.id, sentence(c.name)])),
   };
 }

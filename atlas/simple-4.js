@@ -7,8 +7,8 @@ export const SIMPLE = {
       nl: 'Normaal past A bij U en G bij C. Een [[mismatch|mismatch]] is een paar dat niet past, zoals A tegenover C. In RNA is dat geen fout: de helix blijft gewoon staan en krijgt zo een plekje met een eigen vorm.',
       en: 'Normally A fits with U and G with C. A [[mismatch|mismatch]] is a pair that does not fit, such as A opposite C. In RNA this is not an error: the helix stays intact and gets a spot with a shape of its own.' },
     look: {
-      nl: 'Roze zijn de mismatches (A·C en G·A), geel een G–U-paar en wit drie basen die geen partner hebben. De rest zijn gewone paren; de groene bolletjes zijn metaalionen.',
-      en: 'Pink are the mismatches (A·C and G·A), yellow is a G–U pair and white are three bases without a partner. The rest are ordinary pairs; the green balls are metal ions.' },
+      nl: 'De meeste paren zijn gewone paren. Zoek de mismatches (A·C en G·A), het G–U-paar en drie basen zonder partner. De bolletjes zijn metaalionen.',
+      en: 'Most pairs are ordinary pairs. Look for the mismatches (A·C and G·A), the G–U pair and three bases without a partner. The small balls are metal ions.' },
     why: {
       nl: 'Zulke afwijkende plekjes zijn herkenningspunten. Op dit stukje bindt het eiwit dat het SRP helpt om een ribosoom naar het ER te brengen.',
       en: 'Such unusual spots are recognition points. The protein that helps SRP bring a ribosome to the ER binds to exactly this piece.' },
@@ -27,8 +27,8 @@ export const SIMPLE = {
       nl: 'In RNA kan een G ook met een U paren. Dat paar staat een beetje scheef, alsof het wiebelt: daarom heet het een [[wobble|wobble]]-paar. Het is het meest voorkomende afwijkende paar in RNA.',
       en: 'In RNA a G can also pair with a U. That pair sits a little crooked, as if it wobbles: that is why it is called a [[wobble|wobble]] pair. It is the most common unusual pair in RNA.' },
     look: {
-      nl: 'Zoek de twee gele G–U-paren in de helix. Roze zijn G’s die met een andere G paren. De rest zijn gewone G–C- en A–U-paren.',
-      en: 'Look for the two yellow G–U pairs in the helix. Pink are G’s that pair with another G. The rest are ordinary G–C and A–U pairs.' },
+      nl: 'Zoek de twee G–U-paren in de helix, en de G’s die met een andere G paren. De rest zijn gewone G–C- en A–U-paren.',
+      en: 'Look for the two G–U pairs in the helix, and the Gs that pair with another G. The rest are ordinary G–C and A–U pairs.' },
     why: {
       nl: 'Door wobble kan één tRNA meerdere codons lezen. Zo heeft de cel minder verschillende tRNA’s nodig.',
       en: 'Thanks to wobble, one tRNA can read several codons. So the cell needs fewer different tRNAs.' },
@@ -47,8 +47,8 @@ export const SIMPLE = {
       nl: 'Een RNA-streng kan terugvouwen en met zichzelf paren, zoals een haarspeld. Het gepaarde stuk heet de [[stam|stam]], het open stukje aan het einde de [[lus|lus]].',
       en: 'An RNA strand can fold back and pair with itself, like a hairpin. The paired part is called the [[stem|stam]], the open bit at the end the [[loop|lus]].' },
     look: {
-      nl: 'Blauw is de stam (5 paren), roze de lus en geel het anticodon in die lus. De rest van het tRNA is grijs.',
-      en: 'Blue is the stem (5 pairs), pink the loop and yellow the anticodon in that loop. The rest of the tRNA is grey.' },
+      nl: 'Het stuk dat telt, is een stam van 5 paren met daarop een lus; in die lus zit het anticodon. De rest van het tRNA ligt eromheen.',
+      en: 'The piece that matters is a stem of 5 pairs with a loop on top; the anticodon sits in that loop. The rest of the tRNA lies around it.' },
     why: {
       nl: 'Stam en lus zijn de bouwstenen van elk gevouwen RNA. In de lus van tRNA zitten de drie letters die het codon op het mRNA lezen.',
       en: 'Stem and loop are the building blocks of every folded RNA. The tRNA loop holds the three letters that read the codon on the mRNA.' },

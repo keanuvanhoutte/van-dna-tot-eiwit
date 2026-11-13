@@ -68,3 +68,17 @@
 - [x] Vergelijken: de naam bovenaan elk vak wordt afgekapt ("Gewone DNA-…", "Kortere, dikker…") | pagina: /atlas/index.html?id=bdna&cmp=adna,zdna | verwacht: de volledige naam is leesbaar (mag over twee regels) — **na: 3/3 namen volledig op 1280, 1600 en 1920 px (was afgekapt); naam op een eigen regel, knoppen eronder (5968848)**
 - [x] Per onderdeel (tRNA): de legende toont naast de vijf onderdelen ook "RNA", wat onduidelijk is (het gaat om de drie verbindingsletters ertussen) | pagina: /atlas/index.html?id=trna | verwacht: een duidelijke naam, bv. "rest van het RNA" — **na: "rest van het RNA" / "rest of the RNA"; bij Per soort blijft "RNA" (413540f)**
 - [x] Uitleg bij Cartoon zegt "de streng als lint, de letters (basen) als staafjes", ook als er eiwit in beeld is (eiwit heeft geen staafjes) | pagina: /atlas/index.html?pdb=1TUP | verwacht: de uitleg vermeldt ook hoe eiwit getekend wordt (lint met spiralen en pijlen) — **na: 1TUP/nucleosoom: "…; eiwit als lint met spiralen (helix) en pijlen (gestrekt stuk)", 4HHB (enkel eiwit) enkel die zin, bdna ongewijzigd (07e8ac8)**
+
+## DNA-bib ronde 2 — 13-11-2026 (11 punten van de gebruiker)
+- [x] 1. Gekleurde bolletjes in de lijst hadden geen duidelijke functie → weggehaald (de soort staat in de ondertitel en in de filter "Soort").
+- [x] 2. Basen in Cartoon: dikke 3Dmol-staaf plus losse atoomstokjes erover → enkel het lint op de ruggengraat; basen + suiker + fosfaatbrug als echte ringen die aan het lint hangen. Waterstofbruggen lopen nu tussen echte atomen van de basen.
+- [x] 3. Per streng: tinten van blauw voor twee DNA-strengen → elke streng/keten een sterk andere kleur (blauw, oranje, groenblauw, roze, geel, paars, …).
+- [x] 4. "Ruggengraat" (lijn + bollen) → nieuwe weergave "Ladder": elke streng een gladde buis door de fosfaten, elke letter één sport (Per letter kleurt de sporten A/T/G/C); Z-DNA toont zijn zigzag. "Per atoom" verborgen in de ladder (er zijn geen atomen).
+- [x] 5. Klikinfo stond klein onderaan → klein tabje naast de aangeklikte plek (letter + naam, streng, onderdeel, atoom in gewone taal), witte markering op het atoom; sluit met ×, Esc of een klik ernaast.
+- [x] 6. Draaien trager: snelheid 0,6 → 0,3.
+- [x] 7. Cartoon + Per atoom: oranje/rode vlekken op het lint → lint neutraal grijsblauw, enkel de atomen van de basen en suikers in atoomkleuren.
+- [x] 8. "Wat zie je in de figuur?" verandert nu mee: blok "In deze weergave" (vorm + kleur, met tip) volgt Weergave en Kleur; de 29 teksten per molecule zijn herschreven zonder kleuren en vormen van één weergave ("blauwe buizen" e.d. weg); ook de tekst bij zelf opgezochte structuren.
+- [x] 9. Atlas of zelf opgezocht: aparte koppen in de lijst ("📌 Zelf opgezocht — niet uit de atlas" / "📚 Uit de atlas — met uitleg"), zelf opgezochte items met gele stippelrand, badge vooraan in de kop ("uit de atlas" of "zelf opgezocht · niet uit de atlas") en een melding bovenaan de uitleg.
+- [x] 10. Zoeken: twee tabbladen "📚 Atlas (37)" (standaard, met uitleg wat je doorzoekt) en "🌐 Hele PDB".
+- [x] 11. Legende: per figuur vlak boven het 3D-beeld, als duidelijke kleurchips (bij vergelijken elk molecule zijn eigen strengkleuren).
+- Controle: 37/37 items laden zonder fouten; 27 schermopnames (gsm, 1280, 1600 px) zonder consolefouten of horizontaal scrollen; klikinfo getest (verschijnt, sluit met klik ernaast).

@@ -7,8 +7,8 @@ export const SIMPLE = {
       nl: 'Een RNA-kopie van een gen bevat stukken die niet in het eiwit horen. Die knipt het [[spliceosoom|spliceosoom]] eruit. Dit kleine RNA zoekt het begin van zo’n stuk ([[intron|intron]]) op: het past erop als een puzzelstuk.',
       en: 'An RNA copy of a gene contains pieces that do not belong in the protein. The [[spliceosome|spliceosoom]] cuts them out. This small RNA finds the start of such a piece ([[intron|intron]]): it fits onto it like a puzzle piece.' },
     look: {
-      nl: 'Oranje: het kleine RNA en een kort stukje RNA dat het begin van een intron nabootst; waar ze tegen elkaar liggen, vormen ze basenparen. Paars: de eiwitten; zeven ervan vormen samen een ring rond het RNA.',
-      en: 'Orange: the small RNA and a short piece of RNA that mimics the start of an intron; where they meet, they form base pairs. Purple: the proteins; seven of them form a ring around the RNA.' },
+      nl: 'Het kleine RNA en een kort stukje RNA dat het begin van een intron nabootst, liggen tegen elkaar en vormen daar basenparen. Daarrond liggen de eiwitten; zeven ervan vormen samen een ring rond het RNA.',
+      en: 'The small RNA and a short piece of RNA that mimics the start of an intron lie against each other and form base pairs there. Around them lie the proteins; seven of them together form a ring around the RNA.' },
     why: {
       nl: 'Zonder deze herkenning kan de cel de overbodige stukken niet uit het RNA knippen. Dit gebeurt bij elk intron, in de celkern.',
       en: 'Without this recognition the cell cannot cut the unneeded pieces out of the RNA. It happens at every intron, in the nucleus.' },
@@ -28,8 +28,8 @@ export const SIMPLE = {
       nl: 'Het DNA in je cellen is heel lang en moet netjes opgeborgen worden. Daarom wikkelt het zich, zoals draad rond een klosje, bijna twee keer rond een bolletje van acht [[histonen|histon]]. Een rij van zulke klosjes vormt [[chromatine|chromatine]].',
       en: 'The DNA in your cells is very long and has to be stored neatly. So it wraps, like thread around a spool, almost twice around a little ball of eight [[histones|histon]]. A row of such spools forms [[chromatin|chromatine]].' },
     look: {
-      nl: 'Blauw: het DNA, dat sterk gebogen rond het eiwitblok ligt. Grijs: de acht histonen in het midden; hun losse staartjes steken naar buiten.',
-      en: 'Blue: the DNA, strongly bent around the protein block. Grey: the eight histones in the middle; their loose tails stick out.' },
+      nl: 'Het DNA ligt sterk gebogen rond een blok van acht histonen (eiwitten); hun losse staartjes steken naar buiten.',
+      en: 'The DNA lies strongly bent around a block of eight histones (proteins); their loose tails stick out.' },
     why: {
       nl: 'Hoe het DNA rond de klosjes ligt, bepaalt of de cel een gen kan aflezen. Merktekens op de histonstaartjes regelen dat mee.',
       en: 'How the DNA sits on the spools decides whether the cell can read a gene. Marks on the histone tails help control this.' },
@@ -49,8 +49,8 @@ export const SIMPLE = {
       nl: 'Als DNA gekopieerd of hersteld wordt, gaat de ladder even open. Eén losse streng is slap en kwetsbaar. Het beschermeiwit RPA legt zich er meteen op, zoals plakband over een losse draad.',
       en: 'When DNA is copied or repaired, the ladder opens for a while. A single loose strand is floppy and fragile. The guard protein RPA covers it at once, like tape over a loose wire.' },
     look: {
-      nl: 'Blauw: een kort stukje DNA met maar één streng (8 letters C), gestrekt in een groef van het eiwit. Paars: het eiwit; de basen liggen niet tegen elkaar maar tegen delen van het eiwit.',
-      en: 'Blue: a short piece of DNA with only one strand (8 letters C), stretched out in a groove of the protein. Purple: the protein; the bases rest against parts of the protein instead of against each other.' },
+      nl: 'Een kort stukje DNA met maar één streng (8 letters C) ligt gestrekt in een groef van het eiwit. De basen liggen niet tegen elkaar maar tegen delen van het eiwit.',
+      en: 'A short piece of single-stranded DNA (8 letters C) lies stretched out in a groove of the protein. The bases do not lie against each other but against parts of the protein.' },
     why: {
       nl: 'Zo blijft de losse streng heel tot ze weer gekopieerd of hersteld is. Een streng vol RPA werkt ook als alarmsignaal in de cel.',
       en: 'This keeps the loose strand intact until it is copied or repaired. A strand covered in RPA also works as an alarm signal in the cell.' },

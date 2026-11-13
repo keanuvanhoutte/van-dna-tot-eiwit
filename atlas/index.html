@@ -27,13 +27,20 @@
 
 <div class="layout">
   <aside class="side">
-    <form class="pdbform" id="pdbForm" autocomplete="off">
+    <div class="stabs" role="tablist" id="stabs">
+      <button role="tab" id="tabAtlas" data-pane="atlas" aria-selected="true"></button>
+      <button role="tab" id="tabPdb" data-pane="pdb" aria-selected="false"></button>
+    </div>
+    <div class="spane" id="paneAtlas" role="tabpanel" aria-labelledby="tabAtlas">
+      <div class="stip" id="tipAtlas"></div>
+      <div class="search"><input id="q" type="search" autocomplete="off"><div class="qinfo" id="qinfo"></div></div>
+      <div class="filt" id="filters"></div>
+    </div>
+    <form class="pdbform spane" id="pdbForm" autocomplete="off" role="tabpanel" aria-labelledby="tabPdb" hidden>
       <label for="pdbIn" id="pdbLbl"></label>
       <div class="pdbrow"><input id="pdbIn" maxlength="40" spellcheck="false"><button id="pdbGo" type="submit"></button></div>
       <div class="pdbmsg" id="pdbMsg" role="status"></div>
     </form>
-    <div class="search"><input id="q" type="search" autocomplete="off"><div class="qinfo" id="qinfo"></div></div>
-    <div class="filt" id="filters"></div>
     <div class="count"><span id="count"></span><button class="link" id="reset"></button></div>
     <ul class="list" id="list"></ul>
   </aside>
