@@ -84,8 +84,10 @@ const T = {
     base: { nl: 'elke letter (A, T/U, G, C) een eigen kleur; de ruggengraat grijs', en: 'each letter (A, T/U, G, C) its own colour; the backbone grey' },
     elem: { nl: 'koolstof grijs, stikstof blauw, zuurstof rood, fosfor oranje', en: 'carbon grey, nitrogen blue, oxygen red, phosphorus orange' } },
   cartoonProt: { nl: 'eiwit als lint met spiralen (helix) en pijlen (gestrekt stuk)', en: 'protein as a ribbon with spirals (helix) and arrows (stretched piece)' },
-  colours: { nl: 'Kleuren', en: 'Colours' }, focusHint: { nl: '👆 Klik op een kleur om enkel dat deel te zien', en: '👆 Click a colour to see only that part' },
-  clickHint: { nl: '👆 <b>Klik op de figuur</b>: wat is dit stukje? · slepen = draaien · scrollen = zoomen', en: '👆 <b>Click the figure</b>: what is this piece? · drag = rotate · scroll = zoom' },
+  sideHide: { nl: 'Lijst inklappen (meer plaats voor de figuur)', en: 'Collapse the list (more room for the figure)' }, sideShow: { nl: 'Lijst tonen', en: 'Show the list' }, sideName: { nl: 'Atlas', en: 'Atlas' },
+  infoHide: { nl: 'Uitleg inklappen (meer plaats voor de figuur)', en: 'Collapse the explanation (more room for the figure)' }, infoShow: { nl: 'Uitleg tonen', en: 'Show the explanation' }, infoName: { nl: 'Uitleg', en: 'Explanation' },
+  colours: { nl: 'Kleuren', en: 'Colours' }, focusHint: { nl: 'klik op een kleur om enkel dat deel te zien', en: 'click a colour to see only that part' },
+  clickHint: { nl: '<b>Klik op de figuur</b> om te zien wat een stukje is<span class="x"> · slepen = draaien · scrollen = zoomen</span>', en: '<b>Click the figure</b> to see what a piece is<span class="x"> · drag = rotate · scroll = zoom</span>' },
   focusAll: { nl: 'alles tonen', en: 'show all' }, legMore: { nl: n => `+${n} meer ▾`, en: n => `+${n} more ▾` }, legLess: { nl: 'minder ▴', en: 'fewer ▴' },
   legShow: { nl: n => `${n} kleuren tonen`, en: n => `show ${n} colours` }, focusOn: { nl: 'keten', en: 'chain' },
   restGrey: { nl: 'rest', en: 'rest' }, restOf: { nl: 'rest van het', en: 'rest of the' }, protChain: { nl: 'eiwitketen', en: 'protein chain' }, moreChains: { nl: 'nog {n} ketens', en: '{n} more chains' },
@@ -1040,6 +1042,19 @@ const renderAll = () => SLOTS.forEach(s => !s.el.hidden && s.atoms && render(s))
 
 /* ---------- legende ---------- */
 let clickedOnce = (() => { try { return localStorage.getItem('atlas-clicked') === '1'; } catch { return false; } })();   // hint "klik op de figuur" tot de eerste klik
+/* lijst links en uitleg rechts inklappen (kleinere schermen, vergelijken): keuze onthouden */
+const PANES = { side: { cls: 'noside', key: 'atlas-side' }, info: { cls: 'noinfo', key: 'atlas-info' } };
+function setPane2(p, shut) {
+  document.querySelector('.layout').classList.toggle(PANES[p].cls, shut);
+  try { localStorage.setItem(PANES[p].key, shut ? '0' : '1'); } catch { /* geen opslag */ }
+  requestAnimationFrame(() => SLOTS.forEach(s => { if (!s.el.hidden) { s.viewer.resize(); s.viewer.render(); } }));
+}
+for (const p of ['side', 'info']) {
+  $(p + 'Close').title = t(p + 'Hide'); $(p + 'Close').setAttribute('aria-label', t(p + 'Hide'));
+  $(p + 'Rail').title = t(p + 'Show'); $(p + 'Rail').querySelector('b').textContent = t(p + 'Name');
+  $(p + 'Close').onclick = () => setPane2(p, true); $(p + 'Rail').onclick = () => setPane2(p, false);
+  try { if (localStorage.getItem(PANES[p].key) === '0') document.querySelector('.layout').classList.add(PANES[p].cls); } catch { /* geen opslag */ }
+}
 const LEG_SHORT = 8;   // bij meer kleuren: eerst enkel de eerste 8, met "+N meer"
 let legClosed = (() => { try { return localStorage.getItem('atlas-leg') === '0'; } catch { return false; } })();
 /* De legende staat per figuur vlak boven het 3D-beeld (bij vergelijken heeft elk molecule zijn eigen strengkleuren). */
@@ -1177,7 +1192,7 @@ function info(e) {
   m.push(`<h3>${t('srcs')}</h3><ul class="src">${src.map(x => `<li><a href="${x.url}" target="_blank" rel="noopener">${x.label}</a></li>`).join('')}</ul>`);
   s.push(`<details class="more" ${sp ? '' : 'open'}><summary>${t('more')}</summary><div class="morebody">${m.join('')}</div></details>`);
   $('info').innerHTML = s.join('');
-  $('info').scrollTop = 0;
+  $('infoCol').scrollTop = 0;
   guide();
   if (e.pdb) getJson(rcsbEntryUrl(e.pdb)).then(d => {
     const el = $('structInfo'); if (!d || !el || BY[state.id] !== e) return;

@@ -29,6 +29,8 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
 
 <div class="layout">
   <aside class="side">
+    <button class="pclose" id="sideClose" type="button">«</button>
+    <button class="rail" id="sideRail" type="button"><span>»</span><b></b></button>
     <div class="stabs" role="tablist" id="stabs">
       <button role="tab" id="tabAtlas" data-pane="atlas" aria-selected="true"></button>
       <button role="tab" id="tabPdb" data-pane="pdb" aria-selected="false"></button>
@@ -95,7 +97,11 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
     <div class="slots" id="slots"></div>
   </main>
 
-  <section class="info" id="info"></section>
+  <section class="info" id="infoCol">
+    <button class="pclose" id="infoClose" type="button">»</button>
+    <button class="rail" id="infoRail" type="button"><span>«</span><b></b></button>
+    <div id="info"></div>
+  </section>
 </div>
 
 <script type="module">

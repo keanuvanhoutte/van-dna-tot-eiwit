@@ -69,7 +69,23 @@ button { font-family: inherit; }
 .side { border-right: 1px solid var(--line); padding: 12px 12px 0; background: rgba(13,20,38,.5); display: flex; flex-direction: column; overflow: hidden; }
 .side .list { flex: 1; overflow-y: auto; min-height: 120px; padding-bottom: 16px; margin: 0 -4px; padding-left: 4px; padding-right: 4px; }
 .main { padding: 12px 16px 24px; }
-.info { border-left: 1px solid var(--line); padding: 14px 18px 30px; background: rgba(13,20,38,.5); }
+.info { border-left: 1px solid var(--line); padding: 14px 18px 30px; background: rgba(13,20,38,.5); position: relative; }
+/* inklappen: knopje rechtsboven (lijst) / linksboven (uitleg); ingeklapt blijft een smalle strook met de naam */
+.side { position: relative; }
+.pclose { all: unset; cursor: pointer; position: absolute; top: 6px; z-index: 3; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; font-size: 14px; color: var(--muted); }
+.pclose:hover { color: var(--text); background: rgba(124,196,255,.12); }
+.side > .pclose { right: 4px; } .info > .pclose { left: 4px; }
+.pclose:focus-visible, .rail:focus-visible { outline: 2px solid var(--accent); }
+.rail { all: unset; cursor: pointer; display: none; flex-direction: column; align-items: center; gap: 10px; padding: 12px 0; width: 100%; height: 100%; box-sizing: border-box; color: var(--muted); font-size: 14px; }
+.rail b { writing-mode: vertical-rl; font: 600 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+.rail:hover { color: var(--text); background: rgba(124,196,255,.06); }
+.layout.noside .side, .layout.noinfo .info { padding: 0; overflow: hidden; }
+.layout.noside .side > :not(.rail), .layout.noinfo .info > :not(.rail) { display: none !important; }
+.layout.noside .side > .rail, .layout.noinfo .info > .rail { display: flex; }
+.layout.noside { grid-template-columns: 38px minmax(0, 1fr) 390px; }
+.layout.noinfo { grid-template-columns: 300px minmax(0, 1fr) 38px; }
+.layout.noside.noinfo { grid-template-columns: 38px minmax(0, 1fr) 38px; }
+.side > .stabs { margin-right: 22px; }
 
 /* ---------- zijbalk ---------- */
 .search input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); border-radius: 9px; padding: 6px 10px; font: 13.5px var(--font); outline: none; }
@@ -211,13 +227,14 @@ button { font-family: inherit; }
 .stage .pop .pdraw figcaption i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--c); margin-right: 5px; }
 .stage .pop .pchem { font-size: 11px; color: var(--muted); margin-top: 3px; word-break: break-word; }
 .stage .pop .pchem summary { cursor: pointer; }
-.stage .pop .pfocus { all: unset; cursor: pointer; display: inline-block; margin: 6px 0 2px; font-size: 12.5px; font-weight: 600; color: #0a1224; background: var(--accent); padding: 4px 11px; border-radius: 999px; }
-.stage .pop .pfocus:hover { filter: brightness(1.12); }
+.stage .pop .pfocus { all: unset; cursor: pointer; display: inline-block; margin: 5px 0 2px; font-size: 12px; font-weight: 500; color: var(--accent); padding: 2px 9px; border-radius: 999px; border: 1px solid rgba(124,196,255,.4); }
+.stage .pop .pfocus:hover { background: rgba(124,196,255,.12); }
 .stage .pop .pfocus.on { background: rgba(124,196,255,.16); color: var(--accent); box-shadow: inset 0 0 0 1px rgba(124,196,255,.5); }
 .stage .pop .pfocus:focus-visible { outline: 2px solid #fff; }
 /* hint op de figuur tot de eerste klik */
-.stage .chint { position: absolute; left: 10px; bottom: 10px; z-index: 2; pointer-events: none; font-size: 12.5px; color: var(--text); background: rgba(10,16,32,.86); border: 1px solid rgba(124,196,255,.45); padding: 5px 11px; border-radius: 999px; animation: chint 2.4s ease-in-out 3; }
-.stage .chint b { color: var(--accent); }
+.stage .chint { position: absolute; left: 10px; bottom: 10px; z-index: 2; pointer-events: none; font-size: 12px; color: var(--muted); background: rgba(10,16,32,.7); border: 1px solid var(--line); padding: 4px 10px; border-radius: 999px; animation: chint 2.4s ease-in-out 1; }
+.stage .chint b { color: #c9d6ea; font-weight: 600; }
+.slots.n2 .stage .chint .x, .slots.n3 .stage .chint .x { display: none; }
 @keyframes chint { 50% { border-color: rgba(124,196,255,.95); box-shadow: 0 0 0 4px rgba(124,196,255,.15); } }
 @media (prefers-reduced-motion: reduce) { .stage .chint { animation: none; } }
 .stage .diag { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 12px; background: var(--bg-2); z-index: 3; overflow: auto; }
@@ -290,7 +307,7 @@ button { font-family: inherit; }
 .sleg button.lc:hover { background: color-mix(in srgb, var(--c, #fff) 28%, transparent); }
 .sleg button.lc.on { background: color-mix(in srgb, var(--c, #fff) 38%, transparent); box-shadow: 0 0 0 2px var(--c, #fff); }
 .sleg button.lc:focus-visible, .sleg .lreset:focus-visible { outline: 2px solid var(--accent); }
-.sleg .lhint { font-size: 12.5px; color: var(--accent); margin-left: 6px; }
+.sleg .lhint { font-size: 12px; color: #9fb2cf; margin-left: 6px; }
 .sleg .lmore { font-size: 12px; color: var(--muted); }
 .sleg .lreset { all: unset; cursor: pointer; font-size: 12.5px; color: var(--accent); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(124,196,255,.4); margin-left: 4px; }
 /* "In deze weergave" in de uitleg rechts */
@@ -348,11 +365,18 @@ button { font-family: inherit; }
   .main, .info { min-height: auto; }
   .side { position: sticky; top: 0; height: calc(100vh - 54px); grid-row: 1 / span 2; grid-column: 1; }
   .main { grid-column: 2; grid-row: 1; overflow: visible; }
-  .info { grid-column: 2; grid-row: 2; border-left: 0; border-top: 1px solid var(--line); background: none; overflow: visible; columns: 2 320px; column-gap: 28px; }
-  .info > * { break-inside: avoid; }
+  .info { grid-column: 2; grid-row: 2; border-left: 0; border-top: 1px solid var(--line); background: none; overflow: visible; }
+  #info { columns: 2 320px; column-gap: 28px; }
+  #info > * { break-inside: avoid; }
   .stage { height: clamp(340px, 60vh, 560px); }
   .slots.n2 .stage, .slots.n3 .stage { height: clamp(280px, 48vh, 440px); }
   .slots.n3 .sh .hand { display: none; }
+  .layout.noside { grid-template-columns: 38px minmax(0, 1fr); }
+  .layout.noinfo { grid-template-columns: 270px minmax(0, 1fr); }
+  .layout.noside.noinfo { grid-template-columns: 38px minmax(0, 1fr); }
+  .layout.noinfo .info > .rail { flex-direction: row; justify-content: center; height: auto; padding: 8px 0; }
+  .layout.noinfo .info > .rail b { writing-mode: horizontal-tb; }
+  .info > .pclose { left: auto; right: 4px; top: 8px; }
 }
 
 /* brede schermen, één figuur: het hoofdpaneel vult precies de hoogte (geen scrollbalk) — 3D-beeld krijgt de rest */
@@ -411,4 +435,7 @@ button { font-family: inherit; }
   .info { columns: 1; }
   .sbody, .slot .sbody { grid-template-columns: minmax(0, 1fr); }
   .grip { display: none; }
+  .layout.noside, .layout.noinfo, .layout.noside.noinfo { grid-template-columns: minmax(0, 1fr); }
+  .layout.noside .side > .rail { flex-direction: row; justify-content: center; height: auto; padding: 8px 0; }
+  .layout.noside .side > .rail b { writing-mode: horizontal-tb; }
 }
