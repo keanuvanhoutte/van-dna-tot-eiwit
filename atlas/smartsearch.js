@@ -6,6 +6,8 @@
  * smartFilter(query, entries, { L, SIMPLE }) → { list, concepts: [{label}], loose: bool }
  *   loose = geen enkel item voldoet aan alles: dan de beste gedeeltelijke treffers.
  */
+import { variants } from '../shared/synonyms.js';
+
 const norm = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 const has = (e, k, v) => (e[k] ?? []).includes(v);
 const orgTxt = e => norm(e.org ? e.org.nl + ' ' + e.org.en : '');
@@ -95,8 +97,10 @@ export function smartFilter(query, entries, { SIMPLE = {} } = {}) {
       const h = e._hay ??= hayOf(e);
       for (const q of free) {
         let best = 0;
-        for (const w of h.strong) best = Math.max(best, wordScore(q, w) * 2);
-        if (best < 1.7) for (const w of h.weak) best = Math.max(best, wordScore(q, w));
+        // ook andere naamversies van hetzelfde begrip (bv. alkylering ↔ crosslink), enkel exact of begin van een woord
+        const alt = variants(q).slice(1), sc = w => Math.max(wordScore(q, w), ...alt.map(v => { const s = wordScore(v, w); return s >= .85 ? s * .95 : 0; }));
+        for (const w of h.strong) best = Math.max(best, sc(w) * 2);
+        if (best < 1.7) for (const w of h.weak) best = Math.max(best, sc(w));
         if (best > 0) { ok++; score += best; }
       }
     }

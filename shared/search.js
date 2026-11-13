@@ -10,6 +10,8 @@
  * DETAILS mag later bijgeladen worden met addDetails(DETAILS) (startpagina: pas bij het eerste zoeken).
  */
 
+import { variants } from './synonyms.js';
+
 export const norm = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
   .replace(/\[\[([^\]|]+)\|[^\]]+\]\]/g, '$1').replace(/<[^>]+>/g, ' ').replace(/[^a-z0-9α-ωµ]+/g, ' ').trim();
 
@@ -153,6 +155,8 @@ export function makeSearch({ NODES, LINES, LINKS = {}, DETAILS = null, S_EN = {}
     const pairs = [];
     for (let i = 0; i < raw.length - 1; i++) { const j = raw[i] + raw[i + 1]; if (SYN[j]) pairs.push(j); }
     const qs = [...toks, ...pairs];
+    // andere naamversies van hetzelfde begrip (shared/synonyms.js): enkel exacte of begin-treffers, geen tikfout-gokken
+    const QV = qs.map(q => variants(q).slice(1));
     // 1) per knoop en per zoekwoord de beste treffer
     const rows = [];
     const df = qs.map(() => 0), exactAnywhere = qs.map(() => false);
@@ -161,7 +165,9 @@ export function makeSearch({ NODES, LINES, LINKS = {}, DETAILS = null, S_EN = {}
       const per = qs.map((q, qi) => {
         let best = 0, m0 = 0, bw = null, title = 0, step = null, stepV = 0;
         for (const f of d.fields) for (const w of f.ws) {
-          const m = wordMatch(q, w); if (!m) continue;
+          let m = wordMatch(q, w);
+          if (m < .85) for (const v of QV[qi]) { const mv = wordMatch(v, w); if (mv >= .85) m = Math.max(m, mv * .95); }
+          if (!m) continue;
           const v = m * f.w; if (v > best) { best = v; m0 = m; bw = w; }
           if (f.step !== undefined && m >= .6 && v > stepV) { stepV = v; step = f.step; }
           if (f.w === 10) title = Math.max(title, m);

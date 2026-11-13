@@ -109,3 +109,6 @@
 - Controle: check.html 119·119·119, 0 problemen; text-check dezelfde 4 drukke stappen als ervoor; blank-check dezelfde 7 donkere overgangen als ervoor (codon was eenmalige ruis, 2× nagemeten); engine-test ok.
 - [x] Laatste kleine aanpassingen: grijze vergelijkingstekst in de tabel als nette blokjes (geen pil over twee regels); geen aantal meer naast "Bibliotheek"; inklapknoppen als paneel-icoon in een eigen hoek (botsten niet meer met de titel); klik-hint "ⓘ Klik op een stukje van de figuur voor uitleg" blijft altijd staan (na de eerste klik kleiner en rustiger); zoekveld "Zoek in de bibliotheek".
 - [x] Klik-hint stond in het figuurvak (neemt op kleine schermen plaats van de figuur) → eigen regel net onder de figuur, boven "Volgorde / meetmethode"; enkel bij 3D-modellen (niet bij schema's).
+
+## Zoeken op elke naamversie — 13-11-2026
+- [x] "crosslink" = "alkylering": een begrip met meerdere namen moet via elke naam te vinden zijn → shared/synonyms.js (51 groepen: NL/EN/afkortingen/vaktermen, bv. crosslink–kruisverbinding–alkylering–adduct, intercalatie–interkalatie, mRNA–boodschapper-RNA–messenger, G4–quadruplex, linkshandig–Z-DNA, eiwit–proteïne) gebruikt door de app-zoekbalk én de 3D-bibliotheek (enkel exacte of begin-treffers van een andere naam). Getest: crosslink/alkylering/kruisverbinding → cisplatine (bib) en herstel/BER/NER (app).
