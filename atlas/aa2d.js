@@ -1,5 +1,5 @@
-/* Structuurformules van de 20 aminozuren, zoals in een schoolboek: H₂N–C–COOH bovenaan (bij elk aminozuur gelijk) en
- * de zijketen naar onder, gekleurd volgens soort. Getekend met lijnen (koolstof = hoekpunt) en letters voor N, O, S.
+/* Structuurformules van de 20 aminozuren, zoals in een schoolboek: H₂N–C–COOH onderaan (bij elk aminozuur gelijk) en
+ * de zijketen (restgroep) naar boven, gekleurd volgens soort. Getekend met lijnen (koolstof = hoekpunt) en letters voor N, O, S.
  * Eenheden: één binding = 1; y groeit naar onder. */
 const S = Math.sqrt(3) / 2;
 const rot = ([x, y], deg) => { const r = deg * Math.PI / 180; return [x * Math.cos(r) - y * Math.sin(r), x * Math.sin(r) + y * Math.cos(r)]; };
@@ -74,11 +74,13 @@ function side(r) {
     }
     case 'PRO': {
       // ring N–CA–CB–CG–CD; de N heeft maar één H
-      const v = ring([-S, -0.5], [0, 0], 5, 1);
+      const v = ring([-S, 0.5], [0, 0], 5, -1);
       at('B', v[2]); at('G', v[3]); at('D', v[4]); B.length = 0; bd('CA', 'B'); bd('B', 'G'); bd('G', 'D'); bd('D', 'N');
       break;
     }
   }
+  // zijketen naar boven (zoals in een schoolboek): spiegelen over de horizontale as; proline is al goed getekend
+  if (r !== 'PRO') { for (const a of Object.values(A)) a.p = [a.p[0], -a.p[1]]; for (const b of B) if (b.inner) b.inner = [b.inner[0], -b.inner[1]]; }
   return { A, B };
 }
 
@@ -87,8 +89,8 @@ export function aaSVG(r, L) {
   const col = CLASSES[cls].col, base = '#c9d2e4';
   const { A, B } = side(r);
   const all = {
-    N: { p: [-S, -0.5], lab: r === 'PRO' ? 'HN' : 'H₂N', bb: 1 }, CA: { p: [0, 0], lab: '', bb: 1 },
-    C: { p: [S, -0.5], lab: '', bb: 1 }, O: { p: [S, -1.5], lab: 'O', bb: 1 }, OX: { p: [2 * S, 0], lab: 'OH', bb: 1 }, ...A,
+    N: { p: [-S, 0.5], lab: r === 'PRO' ? 'HN' : 'H₂N', bb: 1 }, CA: { p: [0, 0], lab: '', bb: 1 },
+    C: { p: [S, 0.5], lab: '', bb: 1 }, O: { p: [S, 1.5], lab: 'O', bb: 1 }, OX: { p: [2 * S, 0], lab: 'OH', bb: 1 }, ...A,
   };
   const bonds = [{ a: 'N', b: 'CA', bb: 1 }, { a: 'CA', b: 'C', bb: 1 }, { a: 'C', b: 'O', dbl: true, bb: 1 }, { a: 'C', b: 'OX', bb: 1 }, ...B];
   const u = 26, xs = Object.values(all).map(a => a.p[0]), ys = Object.values(all).map(a => a.p[1]);
