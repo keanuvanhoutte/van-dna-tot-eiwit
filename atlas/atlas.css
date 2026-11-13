@@ -334,3 +334,13 @@ button { font-family: inherit; }
 .info h3.sc { color: #c3b1ff; }
 .info .scenes a i { font-style: normal; font-size: 10px; width: 22px; height: 22px; flex: none; border-radius: 50%; display: grid; place-items: center; background: rgba(155,123,255,.2); color: #c3b1ff; }
 .info .scenes a:hover i { background: #9b7bff; color: #0a1224; }
+
+/* smalle schermen (gsm): alles onder elkaar in plaats van twee geperste kolommen — de uitlegregel wordt zo niet meer honderden pixels hoog */
+@media (max-width: 760px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; height: auto; max-height: 45vh; grid-row: auto; grid-column: 1; border-right: 0; border-bottom: 1px solid var(--line); }
+  .main, .info { grid-column: 1; grid-row: auto; }
+  .info { columns: 1; }
+  .sbody, .slot .sbody { grid-template-columns: minmax(0, 1fr); }
+  .grip { display: none; }
+}
