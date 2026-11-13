@@ -38,7 +38,13 @@
           ]
         }
       ],
-      "target": "dogma"
+      "target": "dogma",
+      "predeploy": [
+        "node tools/bundle.mjs"
+      ],
+      "postdeploy": [
+        "node tools/bundle.mjs --clean"
+      ]
     },
     {
       "target": "oud",

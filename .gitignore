@@ -8,3 +8,5 @@ dist-files.json
 __pycache__/
 *.orig.js
 .firebase/
+# bundels voor de online versie: worden bij elke deploy gemaakt en daarna weer verwijderd (tools/bundle.mjs)
+*.bundle.js

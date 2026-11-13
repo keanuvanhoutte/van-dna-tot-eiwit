@@ -96,6 +96,12 @@
   </main>
   <aside class="side" id="side"></aside>
 </div>
-<script type="module" src="engine.js"></script>
+<script type="module">
+  /* Online (Firebase) laadt één gebundeld bestand in plaats van alle losse modules: bij sommige browsers bleven er
+   * af en toe enkele van de ~200 verzoeken eeuwig hangen, en dan bleef het laadscherm staan (tools/bundle.mjs).
+   * Lokaal en op GitHub Pages: de losse bestanden, zoals altijd. */
+  const online = /(^|\.)(dogma-bio|van-dna-tot-eiwit)\.(web\.app|firebaseapp\.com)$/.test(location.hostname);
+  import(online ? './engine.bundle.js' : './engine.js');
+</script>
 </body>
 </html>

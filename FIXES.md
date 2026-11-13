@@ -96,3 +96,8 @@
 - [x] Legende inklapbaar: knop "Kleuren ▾/▸" (keuze onthouden); bij veel kleuren eerst 8 met "+N meer ▾". Ribosoom: 101 px kort, 214 px alles, 33 px dicht.
 - Controle: 37/37 items zonder fouten; 27 schermopnames zonder consolefouten of horizontaal scrollen; tabje getest bij serine, netropsine en cytosine.
 - [x] Letters van DNA/RNA in het klik-tabje: de base zoals in een schoolboek (purine A/G met twee ringen, pyrimidine C/T/U met één ring, NH₂/=O/NH op de klassieke plaatsen; atlas/base2d.js, nagekeken in .fix-ronde/base-test.html). Klik op de ruggengraat: de suiker in Haworth-vorm (ribose met OH, deoxyribose met H op C2; O–P naar de buren).
+
+## Laadprobleem 13-11-2026 — app blijft hangen op het laadscherm
+- Oorzaak (gemeten in de Chrome van de gebruiker): de verhaal-app vraagt bij het starten ~200 losse modules tegelijk op; telkens blijven er een paar (elke keer andere: lussen.js, bafbraak.js, supercoiling.js…) eeuwig "pending", en de app wacht op allemaal. Dezelfde bestanden laden los in 55–150 ms; server en code in orde (verse browser: 10/10 keer geladen, via HTTP/3 en HTTP/2).
+- [x] Online (Firebase) laadt nu één gebundeld bestand per pagina (tools/bundle.mjs met esbuild, automatisch bij elke deploy via predeploy, daarna weer verwijderd): verhaal-app 1 script-verzoek i.p.v. ~200, DNA-bib 1 i.p.v. ~30. Lokaal en op GitHub Pages blijven de losse bestanden. Getest met .fix-ronde/bundletest.py (verhaal-app, 3D-paneel, DNA-bib: 0 fouten) en lokaal (bootfail.py, engine-test).
+- Gezien: op de pc staat een VirtualBox-netwerkadapter met voorrang op de wifi; die staat bekend om ERR_NETWORK_CHANGED in Chrome en kan het hangen erger maken.
