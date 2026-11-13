@@ -56,7 +56,7 @@ export default {
     ${hot('mutaties', T2('Mutatie → PTC', 'Mutation → PTC'), C.danger, 'nm-hM', '', true)}
     ${hot('terminatie', T2('Ribosoom · terminatie', 'Ribosome · termination'), C.rrna, 'nm-hT')}
     ${hot('mrnaafbraak', T2('mRNA-afbraak', 'mRNA decay'), '#e0679a', 'nm-hD')}
-    ${hot('rnaprocessing', T2('mRNA-schema', 'mRNA diagram'), C.rna, 'nm-hR', '../atlas/index.html?id=mrna', true)}
+    ${hot('rnaprocessing', T2('mRNA in 3D', 'mRNA in 3D'), C.rna, 'nm-hR', '../atlas/index.html?id=mrna', true)}
     </svg>`;
   },
   init(svg) {

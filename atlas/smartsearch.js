@@ -48,7 +48,7 @@ const CONCEPTS = [
     test: e => e.hand === 'l' ? 1 : 0 },
   { label: { nl: 'rechtsom gedraaid', en: 'right-handed' }, keys: ['rechtshandig', 'rechtsdraaiend', 'rechtsom', 'right handed', 'righthanded'],
     test: e => e.hand === 'r' ? 1 : 0 },
-  { label: { nl: 'schema (geen 3D)', en: 'diagram (no 3D)' }, keys: ['schema', 'tekening', 'diagram', 'geen 3d'],
+  { label: { nl: 'met schema van het geheel', en: 'with a diagram of the whole' }, keys: ['schema', 'tekening', 'diagram'],
     test: e => has(e, 'cls', 'info') ? 1 : 0 },
 ];
 const KEYMAP = new Map();

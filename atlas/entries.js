@@ -525,9 +525,9 @@ export const ENTRIES = [
     src: [doi('10.1038/385176a0', 'Bochkarev et al. (1997) Nature 385:176')],
   },
 
-  /* ================= overzichten zonder 3D-model ================= */
+  /* ================= lange moleculen: een gemeten 3D-stuk + het schema van het geheel (knop "Schema") ================= */
   {
-    id: 'mrna', pdb: null, diagram: 'mrna', type: ['rna'], cls: ['single', 'info'], ctx: ['cell', 'lab'],
+    id: 'mrna', pdb: '1CVJ', keep: ['A', 'M'], diagram: 'mrna', type: ['rna', 'prot'], cls: ['single', 'complex', 'info'], ctx: ['cell', 'lab'], org: { nl: 'mens: PABP1 + poly(A)-RNA', en: 'human: PABP1 + poly(A) RNA' },
     name: { nl: 'Rijp mRNA', en: 'Mature mRNA' }, sub: { nl: 'cap · UTR\'s · CDS · poly(A)', en: 'cap · UTRs · CDS · poly(A)' },
     scenes: ['translatie', 'rnaprocessing', 'lnp'], cmp: ['premrna', 'mirna'],
     what: {
@@ -542,10 +542,10 @@ export const ENTRIES = [
     why3d: {
       nl: 'Een volledig mRNA heeft geen vaste 3D-structuur: het is lang, flexibel en eiwitgebonden. Enkel fragmenten (bv. de cap in eIF4E, poly(A) in PABP) zijn als structuur bepaald.',
       en: 'A complete mRNA has no fixed 3D structure: it is long, flexible and protein-bound. Only fragments (e.g. the cap in eIF4E, poly(A) in PABP) have been solved.' },
-    src: [doi('10.1093/nar/gkw551', 'Ramanathan, Robb & Chan (2016) Nucleic Acids Res 44:7511'), doi('10.1038/s41580-021-00417-y', 'Passmore & Coller (2022) Nat Rev Mol Cell Biol 23:93')],
+    src: [doi('10.1016/S0092-8674(00)81517-2', 'Deo et al. (1999) Cell 98:835 — PABP + poly(A), PDB 1CVJ'), doi('10.1093/nar/gkw551', 'Ramanathan, Robb & Chan (2016) Nucleic Acids Res 44:7511'), doi('10.1038/s41580-021-00417-y', 'Passmore & Coller (2022) Nat Rev Mol Cell Biol 23:93')],
   },
   {
-    id: 'premrna', pdb: null, diagram: 'premrna', type: ['rna'], cls: ['single', 'info'], ctx: ['cell'],
+    id: 'premrna', pdb: '1K1G', diagram: 'premrna', type: ['rna', 'prot'], cls: ['single', 'complex', 'info'], ctx: ['cell'], org: { nl: 'mens: splicingfactor SF1 + vertakkingsplaats-RNA', en: 'human: splicing factor SF1 + branch-site RNA' },
     name: { nl: 'Pre-mRNA', en: 'Pre-mRNA' }, sub: { nl: 'exonen, intronen en splicingsignalen', en: 'exons, introns and splicing signals' },
     scenes: ['splicing', 'rnaprocessing'], cmp: ['mrna', 'snrna'],
     what: {
@@ -560,10 +560,10 @@ export const ENTRIES = [
     why3d: {
       nl: 'Pre-mRNA\'s zijn tot honderden kilobasen lang en worden al tijdens de synthese door eiwitten bedekt; er bestaat geen enkelvoudige 3D-structuur.',
       en: 'Pre-mRNAs can be hundreds of kilobases long and are coated by proteins during synthesis; there is no single 3D structure.' },
-    src: [doi('10.1016/j.cell.2009.02.009', 'Wahl, Will & Lührmann (2009) Cell 136:701'), doi('10.1038/nature07509', 'Wang et al. (2008) Nature 456:470')],
+    src: [doi('10.1126/science.1064719', 'Liu et al. (2001) Science 294:1098 — SF1 + vertakkingsplaats, PDB 1K1G'), doi('10.1016/j.cell.2009.02.009', 'Wahl, Will & Lührmann (2009) Cell 136:701'), doi('10.1038/nature07509', 'Wang et al. (2008) Nature 456:470')],
   },
   {
-    id: 'mtdna', pdb: null, diagram: 'mtdna', type: ['dna'], cls: ['duplex', 'circular', 'info'], ctx: ['cell'],
+    id: 'mtdna', pdb: '3TQ6', keep: ['A', 'C', 'D'], diagram: 'mtdna', type: ['dna', 'prot'], cls: ['duplex', 'circular', 'complex', 'info'], ctx: ['cell'], org: { nl: 'mens: TFAM + mtDNA-promotor (LSP)', en: 'human: TFAM + mtDNA promoter (LSP)' },
     name: { nl: 'Mitochondriaal DNA', en: 'Mitochondrial DNA' }, sub: { nl: '16 569 bp · circulair · 37 genen', en: '16,569 bp · circular · 37 genes' },
     scenes: ['cel'], cmp: ['plasmid', 'bdna'],
     what: {
@@ -581,10 +581,10 @@ export const ENTRIES = [
     simpl: {
       nl: 'De naamgeving "H-streng-gecodeerd" is in de literatuur niet eenduidig (matrijs- of coderende streng); hier volgen we MITOMAP. tRNA-genen zijn als smalle streepjes getekend en niet allemaal gelabeld.',
       en: 'The naming "H-strand-encoded" is not used consistently in the literature (template or coding strand); here we follow MITOMAP. tRNA genes are drawn as thin ticks and not all are labelled.' },
-    src: [doi('10.1038/290457a0', 'Anderson et al. (1981) Nature 290:457'), doi('10.1038/13779', 'Andrews et al. (1999) Nat Genet 23:147 (rCRS)'), { label: 'NCBI NC_012920.1', url: 'https://www.ncbi.nlm.nih.gov/nuccore/NC_012920.1' }, { label: 'MITOMAP genome loci', url: 'https://www.mitomap.org/foswiki/bin/view/MITOMAP/GenomeLoci' }],
+    src: [doi('10.1038/nsmb.2160', 'Rubio-Cosials et al. (2011) Nat Struct Mol Biol 18:1281 — TFAM + LSP, PDB 3TQ6'), doi('10.1038/290457a0', 'Anderson et al. (1981) Nature 290:457'), doi('10.1038/13779', 'Andrews et al. (1999) Nat Genet 23:147 (rCRS)'), { label: 'NCBI NC_012920.1', url: 'https://www.ncbi.nlm.nih.gov/nuccore/NC_012920.1' }, { label: 'MITOMAP genome loci', url: 'https://www.mitomap.org/foswiki/bin/view/MITOMAP/GenomeLoci' }],
   },
   {
-    id: 'plasmid', pdb: null, diagram: 'plasmid', type: ['dna'], cls: ['duplex', 'circular', 'info'], ctx: ['lab', 'other'],
+    id: 'plasmid', pdb: '1REP', diagram: 'plasmid', type: ['dna', 'prot'], cls: ['duplex', 'circular', 'complex', 'info'], ctx: ['lab', 'other'], org: { nl: 'E. coli, mini-F-plasmide: RepE + iteron-DNA', en: 'E. coli, mini-F plasmid: RepE + iteron DNA' },
     name: { nl: 'Plasmide', en: 'Plasmid' }, sub: { nl: 'circulair DNA in bacteriën · kloneringsvector', en: 'circular DNA in bacteria · cloning vector' },
     scenes: ['operon'], cmp: ['mtdna', 'tdna'],
     what: {
@@ -599,10 +599,10 @@ export const ENTRIES = [
     why3d: {
       nl: 'Een plasmide van enkele kilobasen heeft geen vaste atomaire structuur; het diagram toont een typische vectorkaart (schematisch, niet op schaal van één bepaalde vector).',
       en: 'A plasmid of a few kilobases has no fixed atomic structure; the diagram shows a typical vector map (schematic, not to scale of any particular vector).' },
-    src: [doi('10.1128/MMBR.62.2.434-464.1998', 'del Solar et al. (1998) Microbiol Mol Biol Rev 62:434')],
+    src: [doi('10.1093/emboj/18.17.4597', 'Komori et al. (1999) EMBO J 18:4597 — RepE54 + iteron, PDB 1REP'), doi('10.1128/MMBR.62.2.434-464.1998', 'del Solar et al. (1998) Microbiol Mol Biol Rev 62:434')],
   },
   {
-    id: 'cdna', pdb: null, diagram: 'cdna', type: ['dna', 'hybrid'], cls: ['duplex', 'info'], ctx: ['lab', 'virus', 'cell'],
+    id: 'cdna', pdb: '1HYS', keep: ['A', 'B', 'E', 'F'], diagram: 'cdna', type: ['dna', 'hybrid', 'prot'], cls: ['duplex', 'complex', 'info'], ctx: ['lab', 'virus', 'cell'], org: { nl: 'HIV-1: reverse transcriptase + RNA:DNA-hybride', en: 'HIV-1: reverse transcriptase + RNA:DNA hybrid' },
     name: { nl: 'cDNA', en: 'cDNA' }, sub: { nl: 'DNA-kopie van mRNA via reverse transcriptase', en: 'DNA copy of mRNA via reverse transcriptase' },
     scenes: ['rt'], cmp: ['hybrid', 'mrna'],
     what: {
@@ -617,10 +617,10 @@ export const ENTRIES = [
     why3d: {
       nl: 'cDNA is gewoon B-DNA (dubbelstrengig) of een RNA–DNA-hybride (eerste streng): bekijk daarvoor de items B-DNA en RNA–DNA-hybride.',
       en: 'cDNA is ordinary B-DNA (double-stranded) or an RNA–DNA hybrid (first strand): see the B-DNA and RNA–DNA hybrid entries.' },
-    src: [doi('10.1038/2261211a0', 'Temin & Mizutani (1970) Nature 226:1211'), doi('10.1038/2261209a0', 'Baltimore (1970) Nature 226:1209')],
+    src: [doi('10.1093/emboj/20.6.1449', 'Sarafianos et al. (2001) EMBO J 20:1449 — HIV-1 RT + RNA:DNA, PDB 1HYS'), doi('10.1038/2261211a0', 'Temin & Mizutani (1970) Nature 226:1211'), doi('10.1038/2261209a0', 'Baltimore (1970) Nature 226:1209')],
   },
   {
-    id: 'lncrna', pdb: null, diagram: 'lncrna', type: ['rna'], cls: ['folded', 'info'], ctx: ['cell'],
+    id: 'lncrna', pdb: '4PLX', keep: ['A'], diagram: 'lncrna', type: ['rna'], cls: ['folded', 'triplex', 'info'], ctx: ['cell'], org: { nl: 'mens: uiteinde van MALAT1', en: 'human: end of MALAT1' },
     name: { nl: 'Lang niet-coderend RNA (lncRNA)', en: 'Long non-coding RNA (lncRNA)' }, sub: { nl: '> 200 nt, niet vertaald · bv. XIST', en: '> 200 nt, not translated · e.g. XIST' },
     scenes: ['genregulatie', 'dnamethyl'], cmp: ['mrna', 'snrna'],
     what: {
@@ -635,10 +635,10 @@ export const ENTRIES = [
     why3d: {
       nl: 'Voor lange lncRNA\'s bestaat geen volledige 3D-structuur; ze zijn modulair en dynamisch. Het diagram toont de belangrijkste werkingswijzen.',
       en: 'No complete 3D structure exists for long lncRNAs; they are modular and dynamic. The diagram shows the main modes of action.' },
-    src: [doi('10.1038/s41580-020-00315-9', 'Statello et al. (2021) Nat Rev Mol Cell Biol 22:96')],
+    src: [doi('10.1038/nsmb.2844', 'Brown et al. (2014) Nat Struct Mol Biol 21:633 — MALAT1-triplex, PDB 4PLX'), doi('10.1038/s41580-020-00315-9', 'Statello et al. (2021) Nat Rev Mol Cell Biol 22:96')],
   },
   {
-    id: 'tdna', pdb: null, diagram: 'tdna', type: ['dna'], cls: ['single', 'info'], ctx: ['other', 'lab'], plant: true,
+    id: 'tdna', pdb: '3BTP', diagram: 'tdna', type: ['dna', 'prot'], cls: ['single', 'complex', 'info'], ctx: ['other', 'lab'], plant: true, org: { nl: 'Agrobacterium tumefaciens: VirE2 + VirE1 (zonder DNA)', en: 'Agrobacterium tumefaciens: VirE2 + VirE1 (no DNA)' },
     name: { nl: 'T-DNA (Agrobacterium)', en: 'T-DNA (Agrobacterium)' }, sub: { nl: 'plant & biotech — niet in de menselijke cel', en: 'plant & biotech — not in the human cell' },
     scenes: ['integratie'], cmp: ['plasmid', 'cdna'],
     what: {
@@ -653,7 +653,7 @@ export const ENTRIES = [
     why3d: {
       nl: 'T-DNA is een stuk gewoon DNA van ~10–25 kb; het bijzondere zit in het transport (eiwitten), niet in een aparte 3D-vorm.',
       en: 'T-DNA is a stretch of ordinary DNA of ~10–25 kb; what is special is its transfer (proteins), not a distinct 3D shape.' },
-    src: [doi('10.1128/MMBR.67.1.16-37.2003', 'Gelvin (2003) Microbiol Mol Biol Rev 67:16')],
+    src: [doi('10.1073/pnas.0801525105', 'Dym et al. (2008) PNAS 105:11170 — VirE2–VirE1, PDB 3BTP'), doi('10.1128/MMBR.67.1.16-37.2003', 'Gelvin (2003) Microbiol Mol Biol Rev 67:16')],
   },
 ];
 
@@ -673,7 +673,7 @@ export const FILTERS = {
       triplex: { nl: 'Drie strengen', en: 'Three strands' }, junction: { nl: 'Kruispunt van strengen', en: 'Strand crossing' },
       single: { nl: 'Eén streng', en: 'One strand' }, folded: { nl: 'Gevouwen RNA', en: 'Folded RNA' },
       complex: { nl: 'Samen met eiwit', en: 'Together with protein' }, circular: { nl: 'Ringvormig', en: 'Ring-shaped' },
-      info: { nl: 'Schema (geen 3D)', en: 'Diagram (no 3D)' },
+      info: { nl: 'Met schema van het geheel', en: 'With a diagram of the whole' },
     },
   },
   ctx: {

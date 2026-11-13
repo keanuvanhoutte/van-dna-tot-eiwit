@@ -112,3 +112,10 @@
 
 ## Zoeken op elke naamversie — 13-11-2026
 - [x] "crosslink" = "alkylering": een begrip met meerdere namen moet via elke naam te vinden zijn → shared/synonyms.js (51 groepen: NL/EN/afkortingen/vaktermen, bv. crosslink–kruisverbinding–alkylering–adduct, intercalatie–interkalatie, mRNA–boodschapper-RNA–messenger, G4–quadruplex, linkshandig–Z-DNA, eiwit–proteïne) gebruikt door de app-zoekbalk én de 3D-bibliotheek (enkel exacte of begin-treffers van een andere naam). Getest: crosslink/alkylering/kruisverbinding → cisplatine (bib) en herstel/BER/NER (app).
+
+## Schema-items krijgen 3D — 13-11-2026
+- Waarom schema's: van mRNA, pre-mRNA, mtDNA, plasmide, cDNA, lncRNA en T-DNA bestaat geen gemeten 3D-structuur van het geheel (duizenden letters lang, slap, met eiwitten bedekt). Wel van karakteristieke stukken.
+- [x] Elk van de 7 heeft nu een echt gemeten 3D-stuk als hoofdfiguur (titels, organismen en ketens nagekeken via de RCSB-API; bronnen = de primaire publicatie uit de PDB-metadata, 4 DOI's die eerst uit het hoofd geschreven waren zijn zo gecorrigeerd): mRNA 1CVJ (PABP + poly(A)), pre-mRNA 1K1G (SF1 + vertakkingsplaats, NMR), mtDNA 3TQ6 (TFAM buigt de LSP), plasmide 1REP (RepE op iteron-DNA van mini-F), cDNA 1HYS (HIV-RT op RNA:DNA, zonder Fab), lncRNA 4PLX (MALAT1-triplex), T-DNA 3BTP (VirE2 + VirE1; T-DNA zelf nooit in 3D gemeten). Lokale kopieën in data/pdb.
+- [x] Het schema van het geheel blijft: knop "📄 Schema" in de kop van de figuur (en in "Wat zie je in de figuur?", met de beschrijving van het schema) legt het over de 3D-figuur; "🧬 Terug naar 3D".
+- [x] Gezien en opgelost: één losse nucleotide in een eiwitketen (1CVJ) maakte de hele keten "RNA" → ketensoort nu volgens de meerderheid (atlas/analyse.js); nucleosoom, Zα en de andere items ongewijzigd.
+- Controle: 37/37 items zonder fouten, 27 schermopnames zonder fouten, bundels getest, check.html 0 problemen.

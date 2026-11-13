@@ -90,7 +90,7 @@ export default {
     </g>
     <g id="ex-nplab"></g>
     <g id="ex-static"></g>
-    <g data-node="rnaprocessing" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-label="${T2('mRNA-schema', 'mRNA diagram')}"><g id="ex-mrna"></g><circle id="ex-mA" data-anchor="rnaprocessing" r="1" fill="none"/></g>
+    <g data-node="rnaprocessing" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-label="${T2('mRNA in 3D', 'mRNA in 3D')}"><g id="ex-mrna"></g><circle id="ex-mA" data-anchor="rnaprocessing" r="1" fill="none"/></g>
     <g data-node="capping" data-color="${C.cap}" data-nolabel><g id="ex-cap"></g></g>
     <g id="ex-prot"></g>
     <g id="ex-ejc"></g>

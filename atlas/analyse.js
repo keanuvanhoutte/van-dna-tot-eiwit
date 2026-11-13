@@ -124,12 +124,20 @@ export function classify(atoms) {
   // ketentype: DNA of RNA (meerderheid van nucleotiden met O2')
   const chainType = {};
   const tally = {};
+  // meerderheid per keten: één losse nucleotide in een eiwitketen (of omgekeerd) maakt van die keten geen RNA (bv. 1CVJ)
   for (const r of res.values()) {
-    if (r.kind === 'na') { const t = tally[r.chain] ??= { rna: 0, dna: 0 }; r.at["O2'"] ? t.rna++ : t.dna++; }
-    if (r.kind === 'prot') chainType[r.chain] = 'prot';
+    if (r.kind !== 'na' && r.kind !== 'prot') continue;
+    const t = tally[r.chain] ??= { rna: 0, dna: 0, prot: 0 };
+    if (r.kind === 'prot') t.prot++; else r.at["O2'"] ? t.rna++ : t.dna++;
   }
-  for (const [c, t] of Object.entries(tally)) chainType[c] = t.rna > t.dna ? 'rna' : 'dna';
-  for (const r of res.values()) { r.ctype = chainType[r.chain]; for (const a of r.list) a.ctype = r.kind === 'na' || r.kind === 'prot' ? chainType[r.chain] : r.kind; }
+  for (const [c, t] of Object.entries(tally)) chainType[c] = t.prot > t.rna + t.dna ? 'prot' : t.rna > t.dna ? 'rna' : 'dna';
+  const own = r => r.kind === 'prot' ? 'prot' : r.at["O2'"] ? 'rna' : 'dna';
+  for (const r of res.values()) {
+    const ct = chainType[r.chain];
+    // een bouwsteen die niet bij de rest van zijn keten past, houdt zijn eigen soort (nucleotide in een eiwitketen blijft RNA/DNA)
+    r.ctype = (r.kind === 'prot') !== (ct === 'prot') && (r.kind === 'na' || r.kind === 'prot') ? own(r) : ct;
+    for (const a of r.list) a.ctype = r.kind === 'na' || r.kind === 'prot' ? r.ctype : r.kind;
+  }
   return { res, chainType };
 }
 

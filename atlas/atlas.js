@@ -84,6 +84,9 @@ const T = {
     base: { nl: 'elke letter (A, T/U, G, C) een eigen kleur; de ruggengraat grijs', en: 'each letter (A, T/U, G, C) its own colour; the backbone grey' },
     elem: { nl: 'koolstof grijs, stikstof blauw, zuurstof rood, fosfor oranje', en: 'carbon grey, nitrogen blue, oxygen red, phosphorus orange' } },
   cartoonProt: { nl: 'eiwit als lint met spiralen (helix) en pijlen (gestrekt stuk)', en: 'protein as a ribbon with spirals (helix) and arrows (stretched piece)' },
+  schemaBtn: { nl: '📄 Schema', en: '📄 Diagram' }, schema3d: { nl: '🧬 Terug naar 3D', en: '🧬 Back to 3D' },
+  schemaTip: { nl: 'Schema van het hele molecule (in 3D zie je een gemeten stuk ervan)', en: 'Diagram of the whole molecule (in 3D you see a measured piece of it)' },
+  inSchema: { nl: 'In het schema', en: 'In the diagram' },
   sideHide: { nl: 'Lijst inklappen (meer plaats voor de figuur)', en: 'Collapse the list (more room for the figure)' }, sideShow: { nl: 'Lijst tonen', en: 'Show the list' }, sideName: { nl: 'Bibliotheek', en: 'Library' },
   infoHide: { nl: 'Uitleg inklappen (meer plaats voor de figuur)', en: 'Collapse the explanation (more room for the figure)' }, infoShow: { nl: 'Uitleg tonen', en: 'Show the explanation' }, infoName: { nl: 'Uitleg', en: 'Explanation' },
   colours: { nl: 'Kleuren', en: 'Colours' }, focusHint: { nl: 'klik op een kleur om enkel dat deel te zien', en: 'click a colour to see only that part' },
@@ -450,7 +453,7 @@ $('presets').onclick = e => { const b = e.target.closest('button'); if (!b) retu
 const SLOTS = [];
 for (let i = 0; i < 3; i++) {
   const el = document.createElement('div'); el.className = 'slot'; el.hidden = true;
-  el.innerHTML = `<div class="sh"><h3></h3><span class="hand"></span><a class="pdbl" target="_blank" rel="noopener"></a><button class="tg" type="button"></button><button class="x" title="×">×</button></div>
+  el.innerHTML = `<div class="sh"><h3></h3><span class="hand"></span><a class="pdbl" target="_blank" rel="noopener"></a><button class="schb" type="button" hidden></button><button class="tg" type="button"></button><button class="x" title="×">×</button></div>
     <div class="sbody"><div class="sview"><div class="sleg" hidden></div><div class="stage"><div class="load"></div><div class="pop" role="status" hidden></div><div class="note3d" hidden></div><div class="diag" hidden></div></div><div class="chint" hidden></div>
     <div class="dleg" hidden></div><div class="smeta"></div></div><div class="grip" role="separator" aria-orientation="vertical"><i></i></div><div class="calcgrid"></div></div>`;
   $('slots').append(el);
@@ -480,6 +483,7 @@ for (let i = 0; i < 3; i++) {
   let lastH = 0;
   new ResizeObserver(() => { const h = Math.round(stage.clientHeight); if (h && h !== lastH && !el.hidden) { lastH = h; viewer.resize(); viewer.render(); } }).observe(stage);
   el.querySelector('.tg').onclick = () => setTable(!tableOpen);
+  el.querySelector('.schb').onclick = () => showSchema(s, !s.schema);
   gripDrag(el.querySelector('.grip'), el.querySelector('.sbody'));
   el.querySelector('.x').onclick = () => { if (state.set.length > 1) { state.set = state.set.filter(x => x !== s.entry?.id); state.id = state.set[0]; update(); } };
   SLOTS.push(s);
@@ -575,6 +579,8 @@ async function loadSlot(s, e) {
   el.querySelector('.calcgrid').innerHTML = ''; el.querySelector('.smeta').innerHTML = '';
   s.viewer.clear(); s.viewer.removeAllShapes(); s.viewer.spin(false); s.viewer.render();
   n3.hidden = true;
+  s.schema = false; const sb = el.querySelector('.schb'); sb.hidden = !(e.pdb && e.diagram);
+  if (e.pdb && e.diagram) { sb.textContent = t('schemaBtn'); sb.title = t('schemaTip'); sb.setAttribute('aria-pressed', 'false'); }
   if (!e.pdb) {
     pl.textContent = ''; pl.removeAttribute('href');
     load.textContent = '';
@@ -645,6 +651,18 @@ async function loadSlot(s, e) {
     if (token !== s.token) return;
     load.textContent = t('failed') + (e.custom ? t('codeOffline') + ' (' + err.message + ')' : err.message); console.error(err);
   }
+}
+
+/* lange moleculen: het schema van het geheel over de 3D-figuur leggen (en weer weg) */
+function showSchema(s, on) {
+  const e = s.entry; if (!e?.diagram) return;
+  s.schema = on;
+  const diag = s.stage.querySelector('.diag'), dleg = s.el.querySelector('.dleg'), b = s.el.querySelector('.schb');
+  b.textContent = on ? t('schema3d') : t('schemaBtn'); b.setAttribute('aria-pressed', String(on));
+  if (on) { const d = DIAGRAMS[e.diagram](L); diag.innerHTML = d.svg; dleg.innerHTML = diagramLegend(d); }
+  diag.hidden = !on; dleg.hidden = !on; diag.classList.toggle('over', on);
+  s.el.querySelector('.chint').hidden = on || !s.atoms;   // op het schema valt niets aan te klikken
+  hidePop(s);
 }
 
 /* ---------- eenvoudige tabellen naast de figuur ----------
@@ -1171,7 +1189,7 @@ function info(e) {
   if (e.plant) s.push(`<div class="plantbox">${t('plant')}</div>`);
   if (sp) {
     s.push(`<div class="kort"><b>${t('inShort')}</b><p>${termsHTML(L(sp.kort))}</p></div>`);
-    if (sp.look) s.push(`<div class="card look"><h3><i>👁</i>${t('look')}</h3>${e.pdb ? '<div class="vguide" id="vguide"></div>' : ''}<p>${termsHTML(colourWords(L(sp.look)))}</p></div>`);
+    if (sp.look) s.push(`<div class="card look"><h3><i>👁</i>${t('look')}</h3>${e.pdb ? '<div class="vguide" id="vguide"></div>' : ''}<p>${termsHTML(colourWords(L(sp.look)))}</p>${sp.lookSchema && e.pdb ? `<div class="lschema"><button class="lsbtn" type="button">${t('schemaBtn')}</button> <b>${t('inSchema')}:</b> ${termsHTML(L(sp.lookSchema))}</div>` : ''}</div>`);
     if (sp.why) s.push(`<div class="card why"><h3><i>★</i>${t('why')}</h3><p>${termsHTML(L(sp.why))}</p></div>`);
   }
   if (scenes.length) s.push(`<h3 class="sc">${t('scenes')}</h3><div class="scenes">${scenes.map(id => `<a href="../app/index.html?scene=${id}"><i>▶</i>${nodeTitle(NODES[id])}<span>${t('open')}</span></a>`).join('')}</div>`);
@@ -1190,6 +1208,7 @@ function info(e) {
   m.push(`<h3>${t('srcs')}</h3><ul class="src">${src.map(x => `<li><a href="${x.url}" target="_blank" rel="noopener">${x.label}</a></li>`).join('')}</ul>`);
   s.push(`<details class="more" ${sp ? '' : 'open'}><summary>${t('more')}</summary><div class="morebody">${m.join('')}</div></details>`);
   $('info').innerHTML = s.join('');
+  $('info').querySelector('.lsbtn')?.addEventListener('click', () => { const sl = SLOTS.find(x => x.entry === e && !x.el.hidden); if (sl) showSchema(sl, true); });
   $('infoCol').scrollTop = 0;
   guide();
   if (e.pdb) getJson(rcsbEntryUrl(e.pdb)).then(d => {
@@ -1205,7 +1224,7 @@ function simplified(e) {
   if (!e.pdb) {
     add('Dit is een schema, niet op schaal en zonder atomaire details.', 'This is a diagram, not to scale and without atomic detail.');
   } else {
-    const nmr = ['143D', '1EL2', '1BWG', '1ANR', '1YMO'].includes(e.pdb);
+    const nmr = ['143D', '1EL2', '1BWG', '1ANR', '1YMO', '1K1G'].includes(e.pdb);
     if (nmr) add('NMR-structuur: de PDB bevat een bundel modellen; hier wordt enkel model 1 getoond. De structuur werd in oplossing bepaald.', 'NMR structure: the PDB contains a bundle of models; only model 1 is shown. The structure was determined in solution.');
     else add('Kristalstructuur: vaak een kort, ingekort of aangepast molecule in een kristalrooster; kristalcontacten kunnen de vorm licht beïnvloeden.', 'Crystal structure: often a short, truncated or engineered molecule in a crystal lattice; crystal contacts can slightly affect the shape.');
     add('Watermoleculen en kristallisatie-additieven zijn standaard verborgen; waterstofatomen worden nooit getoond. Ionen en liganden zijn aan/uit te zetten.', 'Water molecules and crystallisation additives are hidden by default; hydrogen atoms are never shown. Ions and ligands can be toggled.');

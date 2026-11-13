@@ -2,6 +2,20 @@
  * pdbUrl('1KX5', 'cif') → lokaal bestand als het in de lijst staat, anders de RCSB-download.
  * rcsbEntryUrl('1KX5')  → lokale kopie van de RCSB-metadata (JSON) of de REST-API. */
 const LOCAL = new Set([
+  '1CVJ.json',
+  '1CVJ.pdb',
+  '1K1G.json',
+  '1K1G.pdb',
+  '3TQ6.json',
+  '3TQ6.pdb',
+  '1REP.json',
+  '1REP.pdb',
+  '1HYS.json',
+  '1HYS.pdb',
+  '4PLX.json',
+  '4PLX.pdb',
+  '3BTP.json',
+  '3BTP.pdb',
   '143D.json',
   '143D.pdb',
   '1AIO.json',

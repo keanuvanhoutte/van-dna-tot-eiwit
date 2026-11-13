@@ -70,6 +70,9 @@ export const SIMPLE = {
       nl: 'mRNA is een werkkopie van één gen. Het [[ribosoom|ribosoom]] leest het middenstuk en maakt er een eiwit van. Vooraan zit een beschermkapje ([[cap|cap]]), achteraan een lange staart van A’s; samen beschermen ze het mRNA en helpen ze bij het aflezen.',
       en: 'mRNA is a working copy of one gene. The [[ribosome|ribosoom]] reads the middle part and makes a protein from it. At the front sits a protective [[cap|cap]], at the back a long tail of A’s; together they protect the mRNA and help it get read.' },
     look: {
+      nl: 'In 3D zie je een stukje van de A-staart (11 A’s) vastgehouden door het eiwit PABP. Zo’n eiwit zit om de ~27 A’s op de staart; het beschermt het mRNA en helpt bij het aflezen. Een volledig mRNA heeft geen vaste vorm: het is lang en slap.',
+      en: 'In 3D you see a piece of the A tail (11 A’s) held by the protein PABP. Such a protein sits every ~27 A’s along the tail; it protects the mRNA and helps it get read. A complete mRNA has no fixed shape: it is long and floppy.' },
+    lookSchema: {
       nl: 'Het schema leest van links (begin) naar rechts (einde): het kapje, een stuk dat niet vertaald wordt, het middenstuk met de code voor het eiwit (van AUG tot stop), weer een stuk dat niet vertaald wordt, en de A-staart.',
       en: 'The diagram reads from left (start) to right (end): the cap, a part that is not translated, the middle part with the code for the protein (from AUG to stop), another part that is not translated, and the A tail.' },
     why: {
@@ -91,6 +94,9 @@ export const SIMPLE = {
       nl: 'Een gen wordt eerst volledig naar RNA overgeschreven, ook de stukken die niet in het eiwit horen. De stukken die blijven heten [[exonen|exon]], de stukken die eruit geknipt worden [[intronen|intron]]. Daarna worden de exonen aan elkaar geplakt, zoals bij het monteren van een film.',
       en: 'A gene is first copied into RNA in full, including the pieces that do not belong in the protein. The pieces that stay are called [[exons|exon]], the pieces that are cut out [[introns|intron]]. Then the exons are joined together, like editing a film.' },
     look: {
+      nl: 'In 3D zie je het eiwit SF1 dat de vertakkingsplaats van een intron vastneemt: het stukje RNA met de A waar later het lusje (lariat) begint. Zo herkent de knipmachine waar een intron bijna eindigt.',
+      en: 'In 3D you see the protein SF1 gripping the branch site of an intron: the piece of RNA with the A where the loop (lariat) later starts. This is how the cutting machine recognises where an intron almost ends.' },
+    lookSchema: {
       nl: 'Bovenaan de ruwe kopie: oranje exonen met bruine intronen ertussen; gekleurde letters tonen waar het intron begint (GU) en eindigt (AG). Onderaan het afgewerkte mRNA met enkel de exonen, en het weggeknipte intron als een lusje.',
       en: 'At the top the raw copy: orange exons with brown introns in between; coloured letters show where the intron starts (GU) and ends (AG). At the bottom the finished mRNA with only the exons, and the cut-out intron as a small loop.' },
     why: {
@@ -112,6 +118,9 @@ export const SIMPLE = {
       nl: 'Bijna al je DNA zit in de celkern. Maar de [[mitochondriën|mitochondrion]], de energiecentrales van de cel, hebben een eigen klein DNA. Het is een ring met 37 genen, en je krijgt het enkel van je moeder.',
       en: 'Almost all your DNA is in the nucleus. But the [[mitochondria|mitochondrion]], the power plants of the cell, have their own small DNA. It is a ring with 37 genes, and you get it only from your mother.' },
     look: {
+      nl: 'In 3D zie je het eiwit TFAM op een stukje mitochondriaal DNA (de startplaats LSP). TFAM buigt het DNA in een scherpe U-bocht: zo pakt het het mtDNA in en zet het het aflezen aan.',
+      en: 'In 3D you see the protein TFAM on a piece of mitochondrial DNA (the start site LSP). TFAM bends the DNA into a sharp U-turn: this is how it packs the mtDNA and switches on its reading.' },
+    lookSchema: {
       nl: 'De twee ringen zijn de twee strengen van het DNA. Gekleurde stukken zijn genen: paars voor eiwitten, groenblauw voor rRNA, gele streepjes voor tRNA; het grijze stuk bovenaan is een regelzone zonder genen.',
       en: 'The two rings are the two strands of the DNA. Coloured pieces are genes: purple for proteins, teal for rRNA, yellow ticks for tRNA; the grey piece at the top is a control zone without genes.' },
     why: {
@@ -133,6 +142,9 @@ export const SIMPLE = {
       nl: 'Bacteriën hebben naast hun [[chromosoom|chromosoom]] soms kleine, losse DNA-ringetjes: plasmiden. In het lab steken onderzoekers er een gen in en brengen het zo in een cel binnen, zoals een USB-stick met één bestand. Menselijke cellen hebben zelf geen plasmiden.',
       en: 'Besides their [[chromosome|chromosoom]], bacteria sometimes have small, loose DNA rings: plasmids. In the lab, researchers put a gene into one and use it to bring the gene into a cell, like a USB stick with one file. Human cells have no plasmids of their own.' },
     look: {
+      nl: 'In 3D zie je waar een plasmide begint te kopiëren: het eiwit RepE (van het F-plasmide van E. coli) zit op een herhaald stukje DNA in de ori. Zo start elke nieuwe kopie van het plasmide.',
+      en: 'In 3D you see where a plasmid starts copying: the protein RepE (from the F plasmid of E. coli) sits on a repeated piece of DNA in the ori. This is how each new copy of the plasmid starts.' },
+    lookSchema: {
       nl: 'De blauwe ring is het dubbelstrengige DNA. Gekleurde stukken: de promotor (rood, de startknop), het ingevoegde gen (oranje), een gen tegen een antibioticum (paars) en de ori (groen), waar het kopiëren begint.',
       en: 'The blue ring is the double-stranded DNA. Coloured pieces: the promoter (red, the start button), the inserted gene (orange), a gene against an antibiotic (purple) and the ori (green), where copying starts.' },
     why: {
@@ -154,6 +166,9 @@ export const SIMPLE = {
       nl: 'Normaal gaat informatie van DNA naar RNA. Het enzym [[reverse transcriptase|reverse-transcriptase]] doet het omgekeerd: het maakt van een mRNA een DNA-kopie. Die kopie heeft, net als het mRNA, geen [[intronen|intron]] meer.',
       en: 'Normally information flows from DNA to RNA. The enzyme [[reverse transcriptase|reverse-transcriptase]] does the opposite: it makes a DNA copy of an mRNA. Like the mRNA, that copy no longer has any [[introns|intron]].' },
     look: {
+      nl: 'In 3D zie je het enzym reverse transcriptase van HIV aan het werk op een RNA–DNA-hybride: één RNA-streng met daartegen de nieuwe DNA-streng — de eerste stap om cDNA te maken. Het antilichaamstukje dat nodig was om te kristalliseren, is weggelaten.',
+      en: 'In 3D you see the enzyme reverse transcriptase of HIV at work on an RNA–DNA hybrid: one RNA strand with the new DNA strand against it — the first step in making cDNA. The antibody fragment needed for crystallisation is left out.' },
+    lookSchema: {
       nl: 'Vijf stappen van boven naar onder; oranje is RNA, blauw is DNA. Een DNA-streng groeit langs het mRNA, daarna wordt het RNA afgebroken en vervangen door een tweede DNA-streng (lichtblauw).',
       en: 'Five steps from top to bottom; orange is RNA, blue is DNA. A DNA strand grows along the mRNA, then the RNA is broken down and replaced by a second DNA strand (light blue).' },
     why: {
@@ -175,6 +190,9 @@ export const SIMPLE = {
       nl: 'Niet elk RNA is een bouwplan voor een eiwit. Lange niet-coderende RNA’s doen zelf iets: ze helpen bepalen welke genen aan of uit staan. Ze werken bv. als gids, als steiger die eiwitten samenbrengt, of als lokvogel die iets wegvangt.',
       en: 'Not every RNA is a blueprint for a protein. Long non-coding RNAs do something themselves: they help decide which genes are on or off. They act e.g. as a guide, as a scaffold that brings proteins together, or as a decoy that catches something away.' },
     look: {
+      nl: 'In 3D zie je het uiteinde van het lncRNA MALAT1: de A-rijke staart plooit terug in de groef van een haarspeld en vormt zo een drievoudige helix. Die ‘knoop’ beschermt het RNA tegen afbraak, ook zonder gewone A-staart.',
+      en: 'In 3D you see the end of the lncRNA MALAT1: the A-rich tail folds back into the groove of a hairpin and forms a triple helix. This ‘knot’ protects the RNA from being broken down, even without an ordinary A tail.' },
+    lookSchema: {
       nl: 'Vier vakjes tonen vier manieren van werken. De oranje golflijn is het lncRNA, paarse bollen zijn eiwitten, gele blokjes zijn wat het wegvangt, en grijze bolletjes op blauw DNA zijn opgerold DNA.',
       en: 'Four boxes show four ways of working. The orange wavy line is the lncRNA, purple balls are proteins, yellow blocks are what it catches, and grey beads on blue DNA are wound-up DNA.' },
     why: {
@@ -196,6 +214,9 @@ export const SIMPLE = {
       nl: 'De bodembacterie Agrobacterium kan een stukje van haar eigen DNA in een plantencel brengen. Dat stuk, het T-DNA, wordt ingebouwd in het DNA van de plant. Onderzoekers gebruiken dit om nieuwe genen in planten te zetten; in de mens komt het niet voor.',
       en: 'The soil bacterium Agrobacterium can bring a piece of its own DNA into a plant cell. That piece, the T-DNA, is built into the plant’s DNA. Researchers use this to put new genes into plants; it does not happen in humans.' },
     look: {
+      nl: 'In 3D zie je VirE2, het eiwit dat in de plantencel de enkele T-DNA-streng bedekt, hier samen met zijn begeleider VirE1. Het T-DNA zelf is nooit in 3D gemeten: het is een lang, slap stuk DNA.',
+      en: 'In 3D you see VirE2, the protein that coats the single T-DNA strand inside the plant cell, here together with its chaperone VirE1. The T-DNA itself has never been measured in 3D: it is a long, floppy piece of DNA.' },
+    lookSchema: {
       nl: 'Linksboven de DNA-ring van de bacterie met het roze stuk T-DNA. Dat stuk gaat als één losse streng, met een paars eiwit vooraan, naar de plantencel en wordt onderaan ingebouwd in een plantenchromosoom.',
       en: 'Top left is the bacterium’s DNA ring with the pink piece of T-DNA. That piece travels as one single strand, with a purple protein at the front, to the plant cell and is built into a plant chromosome at the bottom.' },
     why: {

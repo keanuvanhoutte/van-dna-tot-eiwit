@@ -239,6 +239,15 @@ button { font-family: inherit; }
 .chint i { font-style: normal; color: var(--accent); }
 .stage .diag { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 12px; background: var(--bg-2); z-index: 3; overflow: auto; }
 .stage .diag svg { width: 100%; height: 100%; max-height: 100%; }
+.stage .diag.over { z-index: 4; }
+.slot .sh .schb { all: unset; cursor: pointer; font: 500 11.5px var(--font); color: #ffc247; padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(255,194,71,.4); white-space: nowrap; }
+.slot .sh .schb:hover { background: rgba(255,194,71,.12); }
+.slot .sh .schb[aria-pressed=true] { background: rgba(255,194,71,.16); }
+.slot .sh .schb:focus-visible { outline: 2px solid #ffc247; }
+.info .lschema { margin-top: 9px; padding-top: 8px; border-top: 1px dashed var(--line); font-size: 13px; color: var(--muted); }
+.info .lschema b { color: var(--text); font-weight: 600; }
+.info .lsbtn { all: unset; cursor: pointer; font-size: 12px; color: #ffc247; padding: 1px 7px; border-radius: 6px; border: 1px solid rgba(255,194,71,.4); margin-right: 3px; }
+.info .lsbtn:hover { background: rgba(255,194,71,.12); }
 /* schema's: hoogte volgt de verhouding van de tekening (geen lege band), legende als gewone tekst eronder */
 .slots .stage.dg, .slots.n2 .stage.dg, .slots.n3 .stage.dg { height: auto; aspect-ratio: var(--ar, 4 / 3); max-height: clamp(300px, calc(100vh - 240px), 760px); }
 .slots:not(.n2):not(.n3) .stage.dg { max-height: clamp(300px, calc(100vh - 360px), 640px); }

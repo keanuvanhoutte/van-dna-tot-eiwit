@@ -54,7 +54,7 @@ export default {
     <g data-node="rnastructuur" data-color="${C.rna}" data-nolabel><g id="ed-ds"></g></g><g id="ed-adar"></g><g data-node="codon" data-color="${C.trna}" data-nolabel><g id="ed-code"></g></g><g data-node="editing" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-nolabel><g id="ed-apo"></g></g><g id="ed-apob"></g>
     ${hot('rnastructuur', T2('dsRNA-substraat in 3D', 'dsRNA substrate in 3D'), C.rna, 'ed-hD', '../atlas/index.html?id=dsrna', true)}
     ${hot('codon', T2('Genetische code', 'Genetic code'), C.trna, 'ed-cA')}
-    ${hot('editing', T2('apoB-mRNA: schema', 'apoB mRNA: diagram'), C.rna, 'ed-hM', '../atlas/index.html?id=mrna', true)}
+    ${hot('editing', T2('apoB-mRNA in 3D', 'apoB mRNA in 3D'), C.rna, 'ed-hM', '../atlas/index.html?id=mrna', true)}
     ${hot('splicing', T2('Editing vóór splicing', 'Editing before splicing'), C.prot, 'ed-sA', '', true)}
     </svg>`;
   },
