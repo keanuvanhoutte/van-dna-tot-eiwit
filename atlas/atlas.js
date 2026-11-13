@@ -4,6 +4,7 @@
  * URL: ?id=<item>&cmp=<id>,<id>&lang=nl|en&from=<scène-id>
  */
 import { aaSVG, AACLASS, CLASSES } from './aa2d.js';
+import { baseSVG, sugarSVG } from './base2d.js';
 import { pdbUrl, rcsbEntryUrl } from '../shared/pdb.js';
 import { lang, L, setLang } from '../shared/i18n.js';
 import { NODES, title as nodeTitle } from '../shared/content.js';
@@ -901,6 +902,10 @@ const PT = {
   aaIs: { nl: 'een aminozuur: één bouwsteen van de eiwitketen', en: 'an amino acid: one building block of the protein chain' },
   ligIs: { nl: 'een kleine stof die hier vastzit, bv. een medicijn, een vitamine of een hulpstof uit het lab', en: 'a small substance bound here, e.g. a drug, a vitamin or a helper chemical from the lab' },
   formula: { nl: 'formule', en: 'formula' }, atoms: { nl: 'atomen', en: 'atoms' }, chem: { nl: 'chemische naam', en: 'chemical name' },
+  purine: { nl: 'purine: twee ringen (A en G); hangt met de N onderaan aan de suiker', en: 'purine: two rings (A and G); attached to the sugar by the N at the bottom' },
+  pyrimidine: { nl: 'pyrimidine: één ring (C, T en U); hangt met de N onderaan aan de suiker', en: 'pyrimidine: one ring (C, T and U); attached to the sugar by the N at the bottom' },
+  sugarD: { nl: 'suiker (deoxyribose) van de ruggengraat: aan C2 enkel een H; O–P = fosfaat naar de buurletters', en: 'sugar (deoxyribose) of the backbone: only an H on C2; O–P = phosphate to the neighbouring letters' },
+  sugarR: { nl: 'suiker (ribose) van de ruggengraat: aan C2 een OH (het verschil met DNA); O–P = fosfaat naar de buurletters', en: 'sugar (ribose) of the backbone: an OH on C2 (the difference with DNA); O–P = phosphate to the neighbouring letters' },
   sideChain: { nl: 'zijketen', en: 'side chain' }, sameRest: { nl: 'de rest (grijs) is bij elk aminozuur gelijk', en: 'the rest (grey) is the same in every amino acid' },
   formulaOf: { nl: 'structuurformule van', en: 'structural formula of' }, fromPdb: { nl: 'structuurformule (bron: PDB)', en: 'structural formula (source: PDB)' },
   focusChain: { nl: c => `▸ Toon enkel keten ${c}`, en: c => `▸ Show only chain ${c}` },
@@ -926,6 +931,14 @@ function aaFig(r) {
   const svg = aaSVG(r); if (!svg) return '';
   const c = CLASSES[AACLASS[r]];
   return `<figure class="pdraw aa">${svg}<figcaption><i style="--c:${c.col}"></i>${pt('sideChain')}: <b style="color:${c.col}">${L(c)}</b><br>${pt('sameRest')}</figcaption></figure>`;
+}
+/* letter van DNA/RNA: de base zoals in een schoolboek, of — bij een klik op de ruggengraat — de suiker in Haworth-vorm */
+function naFig(b, rna, bb) {
+  if (!b) return '';
+  const col = BASECOL[b] ?? '#aab';
+  if (bb) return `<figure class="pdraw aa">${sugarSVG(rna, col)}<figcaption>${pt(rna ? 'sugarR' : 'sugarD')}</figcaption></figure>`;
+  const svg = baseSVG(b, col); if (!svg) return '';
+  return `<figure class="pdraw aa">${svg}<figcaption><i style="--c:${col}"></i>${pt('AG'.includes(b) ? 'purine' : 'pyrimidine')}</figcaption></figure>`;
 }
 function ccdFig(id) {
   if (!/^[A-Z0-9]{1,5}$/.test(id ?? '')) return '';
@@ -959,7 +972,7 @@ function popHTML(s, a) {
     return [`<b>${b ?? a.resn}${BASENAME[b] ? ` · ${L(BASENAME[b])}` : ''}</b>`, pt('letter', a.resi, ty, a.chain),
       a.resn0 && a.resn0 !== a.resn ? `${pt('mod')}: ${a.resn0}` : '',
       g && state.color === 'part' ? `${pt('part')}: <i style="--c:${g.col}">${L(g.label)}</i>` : '',
-      ccdFig(a.resn0 ?? a.resn), `${pt('atom')}: ${el} · ${BB.test(a.atom) ? pt('inBb') : pt('inBase')}`, focusBtn(s, a)];
+      naFig(b, ty === 'RNA', BB.test(a.atom)), `${pt('atom')}: ${el} · ${BB.test(a.atom) ? pt('inBb') : pt('inBase')}`, focusBtn(s, a)];
   }
   if (a.kind === 'prot') {
     const r = a.resn0 ?? a.resn, nm = AANAME[r], what = AAWHAT[r];

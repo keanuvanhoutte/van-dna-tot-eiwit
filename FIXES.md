@@ -95,3 +95,4 @@
 - [x] Klein molecule en DNA/RNA-letter: 2D-structuurformule van de PDB zelf (cdn.rcsb.org), strak bijgesneden, dikkere lijnen, kleuren voor de donkere achtergrond; lukt het laden niet, dan geen tekening.
 - [x] Legende inklapbaar: knop "Kleuren ▾/▸" (keuze onthouden); bij veel kleuren eerst 8 met "+N meer ▾". Ribosoom: 101 px kort, 214 px alles, 33 px dicht.
 - Controle: 37/37 items zonder fouten; 27 schermopnames zonder consolefouten of horizontaal scrollen; tabje getest bij serine, netropsine en cytosine.
+- [x] Letters van DNA/RNA in het klik-tabje: de base zoals in een schoolboek (purine A/G met twee ringen, pyrimidine C/T/U met één ring, NH₂/=O/NH op de klassieke plaatsen; atlas/base2d.js, nagekeken in .fix-ronde/base-test.html). Klik op de ruggengraat: de suiker in Haworth-vorm (ribose met OH, deoxyribose met H op C2; O–P naar de buren).
