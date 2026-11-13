@@ -3,6 +3,7 @@
  * Taal: shared/i18n.js (localStorage 'dna-app-lang', ?lang=nl|en).
  * URL: ?id=<item>&cmp=<id>,<id>&lang=nl|en&from=<scène-id>
  */
+import { aaSVG, AACLASS, CLASSES } from './aa2d.js';
 import { pdbUrl, rcsbEntryUrl } from '../shared/pdb.js';
 import { lang, L, setLang } from '../shared/i18n.js';
 import { NODES, title as nodeTitle } from '../shared/content.js';
@@ -83,7 +84,8 @@ const T = {
     elem: { nl: 'koolstof grijs, stikstof blauw, zuurstof rood, fosfor oranje', en: 'carbon grey, nitrogen blue, oxygen red, phosphorus orange' } },
   cartoonProt: { nl: 'eiwit als lint met spiralen (helix) en pijlen (gestrekt stuk)', en: 'protein as a ribbon with spirals (helix) and arrows (stretched piece)' },
   colours: { nl: 'Kleuren', en: 'Colours' }, focusHint: { nl: '← klik op een kleur om enkel dat deel te zien', en: '← click a colour to see only that part' },
-  focusAll: { nl: 'alles tonen', en: 'show all' }, focusOn: { nl: 'keten', en: 'chain' },
+  focusAll: { nl: 'alles tonen', en: 'show all' }, legMore: { nl: n => `+${n} meer ▾`, en: n => `+${n} more ▾` }, legLess: { nl: 'minder ▴', en: 'fewer ▴' },
+  legShow: { nl: n => `${n} kleuren tonen`, en: n => `show ${n} colours` }, focusOn: { nl: 'keten', en: 'chain' },
   restGrey: { nl: 'rest', en: 'rest' }, restOf: { nl: 'rest van het', en: 'rest of the' }, protChain: { nl: 'eiwitketen', en: 'protein chain' }, moreChains: { nl: 'nog {n} ketens', en: '{n} more chains' },
   gripTip: { nl: 'Sleep om de tabel breder of smaller te maken · dubbelklik = standaardbreedte', en: 'Drag to make the table wider or narrower · double-click = default width' },
   hb: { nl: 'Waterstofbruggen', en: 'Hydrogen bonds' }, synMark: { nl: 'Omgeklapte basen (syn)', en: 'Flipped bases (syn)' }, ions: { nl: 'Ionen', en: 'Ions' }, ligs: { nl: 'Medicijn / klein molecule', en: 'Drug / small molecule' },
@@ -452,6 +454,8 @@ for (let i = 0; i < 3; i++) {
   const viewer = $3Dmol.createViewer(stage, { backgroundColor: CSS('--bg-2') || '#0d1426', antialias: true });
   const s = { i, el, stage, viewer, token: 0, entry: null, atoms: null, an: null, down: null, popT: 0, focus: null };
   el.querySelector('.sleg').addEventListener('click', e => {
+    if (e.target.closest('[data-tog]')) { legClosed = !legClosed; try { localStorage.setItem('atlas-leg', legClosed ? '0' : '1'); } catch { /* geen opslag */ } legend(); requestAnimationFrame(() => SLOTS.forEach(o => { if (!o.el.hidden) { o.viewer.resize(); o.viewer.render(); } })); return; }
+    if (e.target.closest('[data-more]')) { s.legAll = !s.legAll; legend(); requestAnimationFrame(() => { s.viewer.resize(); s.viewer.render(); }); return; }
     const b = e.target.closest('[data-f]'); if (!b) return;
     s.focus = !b.dataset.f || s.focus === b.dataset.f ? null : b.dataset.f;
     render(s); legend();
@@ -897,7 +901,8 @@ const PT = {
   aaIs: { nl: 'een aminozuur: één bouwsteen van de eiwitketen', en: 'an amino acid: one building block of the protein chain' },
   ligIs: { nl: 'een kleine stof die hier vastzit, bv. een medicijn, een vitamine of een hulpstof uit het lab', en: 'a small substance bound here, e.g. a drug, a vitamin or a helper chemical from the lab' },
   formula: { nl: 'formule', en: 'formula' }, atoms: { nl: 'atomen', en: 'atoms' }, chem: { nl: 'chemische naam', en: 'chemical name' },
-  draw: { nl: 'plat getekend uit de echte atoomposities', en: 'drawn flat from the real atom positions' },
+  sideChain: { nl: 'zijketen', en: 'side chain' }, sameRest: { nl: 'de rest (grijs) is bij elk aminozuur gelijk', en: 'the rest (grey) is the same in every amino acid' },
+  formulaOf: { nl: 'structuurformule van', en: 'structural formula of' }, fromPdb: { nl: 'structuurformule (bron: PDB)', en: 'structural formula (source: PDB)' },
   focusChain: { nl: c => `▸ Toon enkel keten ${c}`, en: c => `▸ Show only chain ${c}` },
 };
 /* wat doet dit aminozuur? in één eenvoudige zin */
@@ -914,27 +919,35 @@ const AAWHAT = {
   LYS: { nl: 'positief geladen: trekt het negatief geladen DNA aan', en: 'positively charged: attracts the negatively charged DNA' }, ARG: { nl: 'positief geladen: trekt het negatief geladen DNA aan', en: 'positively charged: attracts the negatively charged DNA' },
   HIS: { nl: 'kan een lading opnemen en afgeven; vaak in het werkende deel van enzymen', en: 'can take up and release a charge; often in the working part of enzymes' },
 };
-/* kleine tekening van de aangeklikte bouwsteen: de echte atomen, plat gelegd langs het vlak waarin ze het meest uitgespreid liggen */
-function resSVG(s, a) {
-  let at = s.atoms.filter(x => x.chain === a.chain && x.resi === a.resi && x.resn === a.resn && x.elem !== 'H');
-  if (at.length < 3 || at.length > 90) return '';
-  const n = at.length, c = [0, 1, 2].map(k => at.reduce((t, x) => t + [x.x, x.y, x.z][k], 0) / n);
-  const P = at.map(x => [x.x - c[0], x.y - c[1], x.z - c[2]]);
-  const C = [0, 1, 2].map(i => [0, 1, 2].map(j => P.reduce((t, p) => t + p[i] * p[j], 0)));
-  const mul = v => C.map(r => r[0] * v[0] + r[1] * v[1] + r[2] * v[2]), nrm = v => { const l = Math.hypot(...v) || 1; return v.map(x => x / l); };
-  let u = nrm([1, .3, .2]); for (let k = 0; k < 40; k++) u = nrm(mul(u));
-  let v = nrm([.2, 1, .3]); for (let k = 0; k < 40; k++) { v = mul(v); const d = v[0] * u[0] + v[1] * u[1] + v[2] * u[2]; v = nrm(v.map((x, i) => x - d * u[i])); }
-  const xy = P.map(p => [p[0] * u[0] + p[1] * u[1] + p[2] * u[2], p[0] * v[0] + p[1] * v[1] + p[2] * v[2]]);
-  const xs = xy.map(p => p[0]), ys = xy.map(p => p[1]), W = 200, H = 110, pad = 12;
-  const sc = Math.min((W - 2 * pad) / (Math.max(...xs) - Math.min(...xs) || 1), (H - 2 * pad) / (Math.max(...ys) - Math.min(...ys) || 1), 26);
-  const ox = W / 2 - sc * (Math.max(...xs) + Math.min(...xs)) / 2, oy = H / 2 - sc * (Math.max(...ys) + Math.min(...ys)) / 2;
-  const X = i => (ox + sc * xy[i][0]).toFixed(1), Y = i => (oy + sc * xy[i][1]).toFixed(1);
-  const idx = new Map(at.map((x, i) => [x.index, i]));
-  let lines = '';
-  at.forEach((x, i) => (x.bonds ?? []).forEach(j => { const k = idx.get(j); if (k > i) lines += `<line x1="${X(i)}" y1="${Y(i)}" x2="${X(k)}" y2="${Y(k)}"/>`; }));
-  const dots = at.map((x, i) => { const e = x.elem?.toUpperCase(), col = ELEMCOL[e] ?? '#ff1493', r = e === 'C' ? 3.2 : 5.5;
-    return `<circle cx="${X(i)}" cy="${Y(i)}" r="${x === a ? r + 2.5 : r}" fill="${col}"${x === a ? ' stroke="#fff" stroke-width="1.6"' : ''}/>${e !== 'C' ? `<text x="${X(i)}" y="${(+Y(i) + 3).toFixed(1)}">${e[0]}${e.slice(1).toLowerCase()}</text>` : ''}`; }).join('');
-  return `<figure class="pdraw"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${pt('draw')}"><g class="b">${lines}</g>${dots}</svg><figcaption>${pt('draw')}</figcaption></figure>`;
+/* structuurformule zoals in een schoolboek:
+ * - aminozuur: eigen tekening (atlas/aa2d.js), zijketen gekleurd volgens soort
+ * - letter van DNA/RNA of klein molecule: de 2D-formule die de PDB zelf aanbiedt (cdn.rcsb.org); lukt dat niet, dan geen tekening */
+function aaFig(r) {
+  const svg = aaSVG(r); if (!svg) return '';
+  const c = CLASSES[AACLASS[r]];
+  return `<figure class="pdraw aa">${svg}<figcaption><i style="--c:${c.col}"></i>${pt('sideChain')}: <b style="color:${c.col}">${L(c)}</b><br>${pt('sameRest')}</figcaption></figure>`;
+}
+function ccdFig(id) {
+  if (!/^[A-Z0-9]{1,5}$/.test(id ?? '')) return '';
+  return `<figure class="pdraw ccd" data-ccd="${id}"><div class="cbox" role="img" aria-label="${pt('formulaOf')} ${id}"></div><figcaption>${pt('fromPdb')}</figcaption></figure>`;
+}
+/* De PDB-tekening heeft een witte achtergrond, veel marge en dunne lijnen: strak bijsnijden, lijnen dikker en kleuren voor de donkere achtergrond */
+const CCD = new Map();
+const CCDCOL = { black: '#d5dceb', blue: '#7fa8ff', red: '#ff7a7a', green: '#7fdc6a', orange: '#ffb347', yellow: '#ffd23f', purple: '#c39bff', '#808080': '#b0b8c8' };
+function fillCCD(fig) {
+  const id = fig.dataset.ccd, url = `https://cdn.rcsb.org/images/ccd/unlabeled/${id[0]}/${id}.svg`;
+  if (!CCD.has(id)) CCD.set(id, fetch(url).then(r => r.ok ? r.text() : null).catch(() => null));
+  CCD.get(id).then(txt => {
+    if (!txt || !fig.isConnected) { fig.remove(); return; }
+    let s = txt.replace(/<\?xml[^>]*>|<!DOCTYPE[^>]*>|<!--[\s\S]*?-->/g, '').replace(/<rect[^>]*\/>/g, '');
+    const xs = [...s.matchAll(/\b(?:x|x1|x2)="([\d.]+)"/g)].map(m => +m[1]), ys = [...s.matchAll(/\b(?:y|y1|y2)="([\d.]+)"/g)].map(m => +m[1]);
+    if (!xs.length) { fig.remove(); return; }
+    const x0 = Math.min(...xs) - 70, y0 = Math.min(...ys) - 90, w = Math.max(...xs) - x0 + 70, h = Math.max(...ys) - y0 + 50, sw = Math.max(10, Math.max(w, h) / 75);
+    s = s.replace(/viewBox="[^"]*"/, `viewBox="${x0.toFixed(0)} ${y0.toFixed(0)} ${w.toFixed(0)} ${h.toFixed(0)}"`)
+      .replace(/stroke-width="[\d.]+"/g, `stroke-width="${sw.toFixed(1)}"`)
+      .replace(/(stroke|fill)="(black|blue|red|green|orange|yellow|purple|#808080)"/g, (m, k, c) => `${k}="${CCDCOL[c]}"`);
+    fig.querySelector('.cbox').innerHTML = s;
+  });
 }
 const focusBtn = (s, a) => `<button class="pfocus" data-chain="${esc(a.chain)}">${pt('focusChain', a.chain)}</button>`;
 const pt = (k, ...a) => { const v = L(PT[k]); return typeof v === 'function' ? v(...a) : v; };
@@ -946,12 +959,12 @@ function popHTML(s, a) {
     return [`<b>${b ?? a.resn}${BASENAME[b] ? ` · ${L(BASENAME[b])}` : ''}</b>`, pt('letter', a.resi, ty, a.chain),
       a.resn0 && a.resn0 !== a.resn ? `${pt('mod')}: ${a.resn0}` : '',
       g && state.color === 'part' ? `${pt('part')}: <i style="--c:${g.col}">${L(g.label)}</i>` : '',
-      resSVG(s, a), `${pt('atom')}: ${el} · ${BB.test(a.atom) ? pt('inBb') : pt('inBase')}`, focusBtn(s, a)];
+      ccdFig(a.resn0 ?? a.resn), `${pt('atom')}: ${el} · ${BB.test(a.atom) ? pt('inBb') : pt('inBase')}`, focusBtn(s, a)];
   }
   if (a.kind === 'prot') {
     const r = a.resn0 ?? a.resn, nm = AANAME[r], what = AAWHAT[r];
     return [`<b>${nm ? (lang === 'nl' ? nm[0] : nm[1] ?? nm[0]) : r}</b> <small>${r}</small>`, `<span class="pw">${pt('aaIs')}</span>`,
-      what ? `<span class="pk">${L(what)}</span>` : '', pt('aa', a.resi, a.chain), resSVG(s, a), `${pt('atom')}: ${el}`, focusBtn(s, a)];
+      what ? `<span class="pk">${L(what)}</span>` : '', pt('aa', a.resi, a.chain), aaFig(r), `${pt('atom')}: ${el}`, focusBtn(s, a)];
   }
   if (a.kind === 'ion') return [`<b>${IONLABEL[a.resn] ?? a.resn}</b>`, `${pt('ion')}${ION_NAME[a.resn] ? ': ' + L(ION_NAME[a.resn]) : ''}`];
   if (a.kind === 'lig') {
@@ -962,7 +975,7 @@ function popHTML(s, a) {
     const cnt = {}; for (const x of mol) { const e = x.elem?.toUpperCase(); cnt[e] = (cnt[e] ?? 0) + 1; }
     const formula = ['C', 'N', 'O', ...Object.keys(cnt).filter(e => !'CNO'.includes(e) || e.length > 1).sort()].filter((e, i, arr) => cnt[e] && arr.indexOf(e) === i)
       .map(e => `${e[0]}${e.slice(1).toLowerCase()}${cnt[e] > 1 ? `<sub>${cnt[e]}</sub>` : ''}`).join('');
-    return [`<b>${plain ?? pt('lig')}</b> <small>${a.resn}</small>`, `<span class="pw">${pt('ligIs')}</span>`, resSVG(s, a),
+    return [`<b>${plain ?? pt('lig')}</b> <small>${a.resn}</small>`, `<span class="pw">${pt('ligIs')}</span>`, ccdFig(a.resn),
       `${pt('formula')}: ${formula} · ${mol.length} ${pt('atoms')}`, raw && !plain ? `<details class="pchem"><summary>${pt('chem')}</summary>${esc(raw)}</details>` : ''];
   }
   if (a.kind === 'water') return [`<b>${pt('water')}</b>`];
@@ -972,6 +985,7 @@ function showPop(s, a) {
   const pop = s.stage.querySelector('.pop'), d = s.down;
   pop.innerHTML = `<button class="px" title="${pt('close')}" aria-label="${pt('close')}">×</button>` + popHTML(s, a).filter(Boolean).map(x => `<div>${x}</div>`).join('');
   pop.hidden = false; s.popT = performance.now();
+  pop.querySelectorAll('[data-ccd]').forEach(fillCCD);
   const r = s.stage.getBoundingClientRect(), x = (d?.x ?? r.left + r.width / 2) - r.left, y = (d?.y ?? r.top + r.height / 2) - r.top;
   const w = pop.offsetWidth, h = pop.offsetHeight;
   // rechts naast de klik; past het niet, dan links ervan — en altijd binnen het vak
@@ -1000,6 +1014,8 @@ function lighten(hex, f) {
 const renderAll = () => SLOTS.forEach(s => !s.el.hidden && s.atoms && render(s));
 
 /* ---------- legende ---------- */
+const LEG_SHORT = 8;   // bij meer kleuren: eerst enkel de eerste 8, met "+N meer"
+let legClosed = (() => { try { return localStorage.getItem('atlas-leg') === '0'; } catch { return false; } })();
 /* De legende staat per figuur vlak boven het 3D-beeld (bij vergelijken heeft elk molecule zijn eigen strengkleuren). */
 function legend() {
   if (syncColor()) renderAll();
@@ -1010,10 +1026,13 @@ function legend() {
     const box = s.el.querySelector('.sleg');
     if (s.el.hidden || !s.an) { box.hidden = true; continue; }
     box.hidden = false;
-    const it = legendItems([s]), nF = it.filter(x => x.includes('data-f=')).length;
+    const it = legendItems([s]).map((x, i) => i >= LEG_SHORT ? x.replace('class="lc', 'class="lc x8') : x), nF = it.filter(x => x.includes('data-f=')).length;
+    const many = it.length > LEG_SHORT + 1, more = many ? `<button class="lmore2" data-more>${s.legAll ? t('legLess') : t('legMore')(it.length - LEG_SHORT)}</button>` : '';
     // uitgelicht deel dat niet in de legende staat (gekozen via het klik-tabje): als eigen chip, met ×
     const extra = s.focus && !it.some(x => x.includes(`data-f="${esc(s.focus)}"`)) ? `<button class="lc fk on" data-f="${esc(s.focus)}"><i style="background:#fff"></i>${t('focusOn')} ${esc(s.focus.slice(2))} ×</button>` : '';
-    box.innerHTML = `<b>${t('colours')}</b>` + it.join('') + extra + (s.focus ? `<button class="lreset" data-f="">${t('focusAll')}</button>` : nF > 1 ? `<span class="lhint">${t('focusHint')}</span>` : '');
+    box.classList.toggle('short', many && !s.legAll); box.classList.toggle('closed', legClosed);
+    box.innerHTML = `<button class="ltog" data-tog aria-expanded="${!legClosed}">${t('colours')} <span>${legClosed ? `▸ ${t('legShow')(it.length)}` : '▾'}</span></button>`
+      + (legClosed ? '' : it.join('') + more + extra + (s.focus ? `<button class="lreset" data-f="">${t('focusAll')}</button>` : nF > 1 ? `<span class="lhint">${t('focusHint')}</span>` : ''));
   }
   $('legend').hidden = true;
   guide();

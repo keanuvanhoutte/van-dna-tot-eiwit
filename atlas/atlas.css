@@ -201,11 +201,14 @@ button { font-family: inherit; }
 .stage .pop .pw { color: #c9d2e4; }
 .stage .pop .pk { color: #ffd98a; }
 .stage .pop sub { font-size: 9px; }
-.stage .pop .pdraw { margin: 6px 0 4px; }
-.stage .pop .pdraw svg { width: 200px; height: 110px; display: block; background: rgba(255,255,255,.03); border-radius: 8px; }
-.stage .pop .pdraw .b line { stroke: #8b97b3; stroke-width: 2.2; stroke-linecap: round; }
-.stage .pop .pdraw text { font: 700 7px var(--font); fill: #0a1224; text-anchor: middle; }
-.stage .pop .pdraw figcaption { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+.stage .pop .pdraw { margin: 7px 0 5px; }
+.stage .pop .pdraw.aa svg { display: block; max-width: 230px; height: auto; padding: 4px; background: rgba(255,255,255,.03); border-radius: 8px; }
+.stage .pop .pdraw.aa line { stroke-width: 2; stroke-linecap: round; }
+.stage .pop .pdraw.aa text { font: 600 11px var(--font); text-anchor: middle; }
+.stage .pop .pdraw.ccd .cbox { width: 230px; height: 150px; border-radius: 8px; background: rgba(255,255,255,.03); display: grid; place-items: center; }
+.stage .pop .pdraw.ccd .cbox svg { width: 100%; height: 100%; }
+.stage .pop .pdraw figcaption { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.35; }
+.stage .pop .pdraw figcaption i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--c); margin-right: 5px; }
 .stage .pop .pchem { font-size: 11px; color: var(--muted); margin-top: 3px; word-break: break-word; }
 .stage .pop .pchem summary { cursor: pointer; }
 .stage .pop .pfocus { all: unset; cursor: pointer; margin-top: 6px; font-size: 12px; color: var(--accent); }
@@ -262,7 +265,14 @@ button { font-family: inherit; }
 .allcalc[open] > summary { color: var(--accent); }
 /* legende per figuur: duidelijke kleurchips vlak boven het 3D-beeld */
 .sleg { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 7px; padding: 8px 12px; border-bottom: 1px solid var(--line); background: rgba(160,180,220,.035); }
-.sleg > b { font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-right: 4px; }
+.sleg .ltog { all: unset; cursor: pointer; font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-right: 4px; padding: 3px 4px; border-radius: 6px; }
+.sleg .ltog span { letter-spacing: 0; text-transform: none; font: 500 12px var(--font); color: var(--accent); margin-left: 3px; }
+.sleg .ltog:hover { color: var(--text); }
+.sleg .ltog:focus-visible { outline: 2px solid var(--accent); }
+.sleg.closed { padding-top: 5px; padding-bottom: 5px; }
+.sleg.short .x8 { display: none; }
+.sleg .lmore2 { all: unset; cursor: pointer; font-size: 12.5px; color: var(--accent); padding: 3px 8px; border-radius: 6px; }
+.sleg .lmore2:hover { background: rgba(124,196,255,.1); }
 .sleg .lc { display: inline-flex; align-items: center; gap: 7px; padding: 3px 10px 3px 7px; border-radius: 999px; font-size: 13px; color: var(--text);
   background: color-mix(in srgb, var(--c) 15%, transparent); border: 1px solid color-mix(in srgb, var(--c) 45%, transparent); }
 .sleg .lc i { width: 12px; height: 12px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 2px rgba(0,0,0,.25); }

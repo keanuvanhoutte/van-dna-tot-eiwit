@@ -89,3 +89,9 @@
 - [x] Weergave "Ladder" weg als aparte knop. Bij Cartoon met DNA/RNA: keuze "Basen: Ringen | Sporten" (sporten = de vroegere ladder, eiwit blijft een gewoon lint). Grote structuren (ribosoom) altijd sporten. Oude links (?style=trace) openen Cartoon met sporten.
 - [x] Grote moleculen: elke kleur in de legende is aanklikbaar → enkel dat deel in kleur, de rest donkergrijs ("alles tonen" zet terug); per streng krijgt nu ook een complex met 21 ketens 21 verschillende kleuren.
 - Controle: 37/37 items laden zonder fouten; 27 schermopnames zonder consolefouten of horizontaal scrollen; klik-tabje getest bij lysine (zalpha), netropsine en een nagebootste lange naam; uitlichten getest bij RNase P, ribosoom en nucleosoom.
+
+## DNA-bib ronde 4 — 13-11-2026
+- [x] Aminozuur in het klik-tabje: structuurformule zoals in een schoolboek (H₂N–C–COOH grijs, zijketen gekleurd volgens soort: waterafstotend, met ring, polair, negatief, positief, met zwavel, bijzonder), voor alle 20 (atlas/aa2d.js; nagekeken in .fix-ronde/aa-test.html).
+- [x] Klein molecule en DNA/RNA-letter: 2D-structuurformule van de PDB zelf (cdn.rcsb.org), strak bijgesneden, dikkere lijnen, kleuren voor de donkere achtergrond; lukt het laden niet, dan geen tekening.
+- [x] Legende inklapbaar: knop "Kleuren ▾/▸" (keuze onthouden); bij veel kleuren eerst 8 met "+N meer ▾". Ribosoom: 101 px kort, 214 px alles, 33 px dicht.
+- Controle: 37/37 items zonder fouten; 27 schermopnames zonder consolefouten of horizontaal scrollen; tabje getest bij serine, netropsine en cytosine.
