@@ -211,8 +211,15 @@ button { font-family: inherit; }
 .stage .pop .pdraw figcaption i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--c); margin-right: 5px; }
 .stage .pop .pchem { font-size: 11px; color: var(--muted); margin-top: 3px; word-break: break-word; }
 .stage .pop .pchem summary { cursor: pointer; }
-.stage .pop .pfocus { all: unset; cursor: pointer; margin-top: 6px; font-size: 12px; color: var(--accent); }
-.stage .pop .pfocus:hover { text-decoration: underline; }
+.stage .pop .pfocus { all: unset; cursor: pointer; display: inline-block; margin: 6px 0 2px; font-size: 12.5px; font-weight: 600; color: #0a1224; background: var(--accent); padding: 4px 11px; border-radius: 999px; }
+.stage .pop .pfocus:hover { filter: brightness(1.12); }
+.stage .pop .pfocus.on { background: rgba(124,196,255,.16); color: var(--accent); box-shadow: inset 0 0 0 1px rgba(124,196,255,.5); }
+.stage .pop .pfocus:focus-visible { outline: 2px solid #fff; }
+/* hint op de figuur tot de eerste klik */
+.stage .chint { position: absolute; left: 10px; bottom: 10px; z-index: 2; pointer-events: none; font-size: 12.5px; color: var(--text); background: rgba(10,16,32,.86); border: 1px solid rgba(124,196,255,.45); padding: 5px 11px; border-radius: 999px; animation: chint 2.4s ease-in-out 3; }
+.stage .chint b { color: var(--accent); }
+@keyframes chint { 50% { border-color: rgba(124,196,255,.95); box-shadow: 0 0 0 4px rgba(124,196,255,.15); } }
+@media (prefers-reduced-motion: reduce) { .stage .chint { animation: none; } }
 .stage .diag { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 12px; background: var(--bg-2); z-index: 3; overflow: auto; }
 .stage .diag svg { width: 100%; height: 100%; max-height: 100%; }
 /* schema's: hoogte volgt de verhouding van de tekening (geen lege band), legende als gewone tekst eronder */
@@ -283,7 +290,7 @@ button { font-family: inherit; }
 .sleg button.lc:hover { background: color-mix(in srgb, var(--c, #fff) 28%, transparent); }
 .sleg button.lc.on { background: color-mix(in srgb, var(--c, #fff) 38%, transparent); box-shadow: 0 0 0 2px var(--c, #fff); }
 .sleg button.lc:focus-visible, .sleg .lreset:focus-visible { outline: 2px solid var(--accent); }
-.sleg .lhint { font-size: 12px; color: var(--muted); margin-left: 4px; }
+.sleg .lhint { font-size: 12.5px; color: var(--accent); margin-left: 6px; }
 .sleg .lmore { font-size: 12px; color: var(--muted); }
 .sleg .lreset { all: unset; cursor: pointer; font-size: 12.5px; color: var(--accent); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(124,196,255,.4); margin-left: 4px; }
 /* "In deze weergave" in de uitleg rechts */

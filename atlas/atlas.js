@@ -84,7 +84,8 @@ const T = {
     base: { nl: 'elke letter (A, T/U, G, C) een eigen kleur; de ruggengraat grijs', en: 'each letter (A, T/U, G, C) its own colour; the backbone grey' },
     elem: { nl: 'koolstof grijs, stikstof blauw, zuurstof rood, fosfor oranje', en: 'carbon grey, nitrogen blue, oxygen red, phosphorus orange' } },
   cartoonProt: { nl: 'eiwit als lint met spiralen (helix) en pijlen (gestrekt stuk)', en: 'protein as a ribbon with spirals (helix) and arrows (stretched piece)' },
-  colours: { nl: 'Kleuren', en: 'Colours' }, focusHint: { nl: '← klik op een kleur om enkel dat deel te zien', en: '← click a colour to see only that part' },
+  colours: { nl: 'Kleuren', en: 'Colours' }, focusHint: { nl: '👆 Klik op een kleur om enkel dat deel te zien', en: '👆 Click a colour to see only that part' },
+  clickHint: { nl: '👆 <b>Klik op de figuur</b>: wat is dit stukje? · slepen = draaien · scrollen = zoomen', en: '👆 <b>Click the figure</b>: what is this piece? · drag = rotate · scroll = zoom' },
   focusAll: { nl: 'alles tonen', en: 'show all' }, legMore: { nl: n => `+${n} meer ▾`, en: n => `+${n} more ▾` }, legLess: { nl: 'minder ▴', en: 'fewer ▴' },
   legShow: { nl: n => `${n} kleuren tonen`, en: n => `show ${n} colours` }, focusOn: { nl: 'keten', en: 'chain' },
   restGrey: { nl: 'rest', en: 'rest' }, restOf: { nl: 'rest van het', en: 'rest of the' }, protChain: { nl: 'eiwitketen', en: 'protein chain' }, moreChains: { nl: 'nog {n} ketens', en: '{n} more chains' },
@@ -448,7 +449,7 @@ const SLOTS = [];
 for (let i = 0; i < 3; i++) {
   const el = document.createElement('div'); el.className = 'slot'; el.hidden = true;
   el.innerHTML = `<div class="sh"><h3></h3><span class="hand"></span><a class="pdbl" target="_blank" rel="noopener"></a><button class="tg" type="button"></button><button class="x" title="×">×</button></div>
-    <div class="sbody"><div class="sview"><div class="sleg" hidden></div><div class="stage"><div class="load"></div><div class="pop" role="status" hidden></div><div class="note3d" hidden></div><div class="diag" hidden></div></div>
+    <div class="sbody"><div class="sview"><div class="sleg" hidden></div><div class="stage"><div class="load"></div><div class="pop" role="status" hidden></div><div class="chint" hidden></div><div class="note3d" hidden></div><div class="diag" hidden></div></div>
     <div class="dleg" hidden></div><div class="smeta"></div></div><div class="grip" role="separator" aria-orientation="vertical"><i></i></div><div class="calcgrid"></div></div>`;
   $('slots').append(el);
   const stage = el.querySelector('.stage');
@@ -471,7 +472,7 @@ for (let i = 0; i < 3; i++) {
   });
   stage.querySelector('.pop').addEventListener('click', e => {
     if (e.target.closest('.px')) hidePop(s);
-    const f = e.target.closest('.pfocus'); if (f) { s.focus = 'c:' + f.dataset.chain; render(s); legend(); }
+    const f = e.target.closest('.pfocus'); if (f) { s.focus = f.dataset.chain ? 'c:' + f.dataset.chain : null; render(s); legend(); }
   });
   // het vak krijgt zijn hoogte uit de lay-out (vult het scherm): de viewer schaalt mee als het vak van maat verandert
   let lastH = 0;
@@ -627,6 +628,9 @@ async function loadSlot(s, e) {
     el.querySelector('.smeta').innerHTML = `${seqTxt ? `${t('seqLbl')} ${seqTxt}` : ''}${methodText(method)}${res ? ` · ${res} Å` : ''}`;
     el.querySelector('.calcgrid').innerHTML = factsTable(e) + measuredTable(e, an, method, res) + `<details class="allcalc"><summary>${t('allCalc')}</summary>${calcTable(e, an)}</details>`;
     s.viewer.setClickable({}, true, a => showPop(s, a));
+    // handje boven een atoom: zo zie je dat je erop kan klikken
+    s.viewer.setHoverable({}, true, () => { s.stage.style.cursor = 'pointer'; }, () => { s.stage.style.cursor = ''; });
+    const ch = s.stage.querySelector('.chint'); ch.innerHTML = t('clickHint'); ch.hidden = clickedOnce;
     lb.step(4, t('stDraw'), hint); await nextPaint(); if (token !== s.token) return;
     syncColor();
     render(s);
@@ -783,7 +787,9 @@ function colorFn(s) {
   // een deel uitgelicht: de rest wordt donkergrijs, zodat je het deel in een groot complex meteen terugvindt
   if (!s.focus || !cf) return cf;
   const hit = focusTest(s, s.focus);
-  return a => a.kind !== 'na' && a.kind !== 'prot' || hit(a) ? cf(a) : DIMCOL;
+  // een keten uitgelicht via het klik-tabje terwijl de kleur niet per streng is (bv. grijze histonen): geef ze haar eigen strengkleur, anders valt ze niet op
+  const own = s.focus.startsWith('c:') && state.color !== 'chain' ? distinctChains(s)[s.focus.slice(2)] : null;
+  return a => a.kind !== 'na' && a.kind !== 'prot' ? cf(a) : hit(a) ? (own && (a.kind === 'prot' || !BB.test(a.atom) || state.color !== 'base') ? own : cf(a)) : DIMCOL;
 }
 const DIMCOL = '#2f3647';
 /* sleutel van een uitgelicht deel: c:<keten>, t:<soort>, p:<onderdeel>, r (rest), b:<letter> */
@@ -908,7 +914,10 @@ const PT = {
   sugarR: { nl: 'suiker (ribose) van de ruggengraat: aan C2 een OH (het verschil met DNA); O–P = fosfaat naar de buurletters', en: 'sugar (ribose) of the backbone: an OH on C2 (the difference with DNA); O–P = phosphate to the neighbouring letters' },
   sideChain: { nl: 'zijketen', en: 'side chain' }, sameRest: { nl: 'de rest (grijs) is bij elk aminozuur gelijk', en: 'the rest (grey) is the same in every amino acid' },
   formulaOf: { nl: 'structuurformule van', en: 'structural formula of' }, fromPdb: { nl: 'structuurformule (bron: PDB)', en: 'structural formula (source: PDB)' },
-  focusChain: { nl: c => `▸ Toon enkel keten ${c}`, en: c => `▸ Show only chain ${c}` },
+  focusStrand: { nl: c => `◎ Toon enkel deze streng (${c})`, en: c => `◎ Show only this strand (${c})` },
+  focusProt: { nl: c => `◎ Toon enkel deze eiwitketen (${c})`, en: c => `◎ Show only this protein chain (${c})` },
+  focusOff: { nl: '✕ Toon weer alles', en: '✕ Show everything again' },
+  focusTip: { nl: 'De rest van de figuur wordt grijs, zodat je dit deel in het geheel terugvindt', en: 'The rest of the figure turns grey, so you can find this part in the whole' },
 };
 /* wat doet dit aminozuur? in één eenvoudige zin */
 const AAWHAT = {
@@ -962,22 +971,24 @@ function fillCCD(fig) {
     fig.querySelector('.cbox').innerHTML = s;
   });
 }
-const focusBtn = (s, a) => `<button class="pfocus" data-chain="${esc(a.chain)}">${pt('focusChain', a.chain)}</button>`;
+const focusBtn = (s, a) => s.focus === 'c:' + a.chain
+  ? `<button class="pfocus on" data-chain="">${pt('focusOff')}</button>`
+  : `<button class="pfocus" data-chain="${esc(a.chain)}" title="${pt('focusTip')}">${pt(a.kind === 'prot' ? 'focusProt' : 'focusStrand', a.chain)}</button>`;
 const pt = (k, ...a) => { const v = L(PT[k]); return typeof v === 'function' ? v(...a) : v; };
 function popHTML(s, a) {
   const el = ELNAME[a.elem?.toUpperCase()] ? `${L(ELNAME[a.elem.toUpperCase()])} (${a.atom})` : a.atom;
   if (a.kind === 'na') {
     const b = parentBase(a.resn0 ?? a.resn), ty = s.an.chainType[a.chain] === 'rna' ? 'RNA' : 'DNA';
     const g = (s.entry.mark ?? []).find(m => m.res.includes(a.chain + ':' + a.resi));
-    return [`<b>${b ?? a.resn}${BASENAME[b] ? ` · ${L(BASENAME[b])}` : ''}</b>`, pt('letter', a.resi, ty, a.chain),
+    return [`<b>${b ?? a.resn}${BASENAME[b] ? ` · ${L(BASENAME[b])}` : ''}</b>`, pt('letter', a.resi, ty, a.chain), focusBtn(s, a),
       a.resn0 && a.resn0 !== a.resn ? `${pt('mod')}: ${a.resn0}` : '',
       g && state.color === 'part' ? `${pt('part')}: <i style="--c:${g.col}">${L(g.label)}</i>` : '',
-      naFig(b, ty === 'RNA', BB.test(a.atom)), `${pt('atom')}: ${el} · ${BB.test(a.atom) ? pt('inBb') : pt('inBase')}`, focusBtn(s, a)];
+      naFig(b, ty === 'RNA', BB.test(a.atom)), `${pt('atom')}: ${el} · ${BB.test(a.atom) ? pt('inBb') : pt('inBase')}`];
   }
   if (a.kind === 'prot') {
     const r = a.resn0 ?? a.resn, nm = AANAME[r], what = AAWHAT[r];
     return [`<b>${nm ? (lang === 'nl' ? nm[0] : nm[1] ?? nm[0]) : r}</b> <small>${r}</small>`, `<span class="pw">${pt('aaIs')}</span>`,
-      what ? `<span class="pk">${L(what)}</span>` : '', pt('aa', a.resi, a.chain), aaFig(r), `${pt('atom')}: ${el}`, focusBtn(s, a)];
+      what ? `<span class="pk">${L(what)}</span>` : '', pt('aa', a.resi, a.chain), focusBtn(s, a), aaFig(r), `${pt('atom')}: ${el}`];
   }
   if (a.kind === 'ion') return [`<b>${IONLABEL[a.resn] ?? a.resn}</b>`, `${pt('ion')}${ION_NAME[a.resn] ? ': ' + L(ION_NAME[a.resn]) : ''}`];
   if (a.kind === 'lig') {
@@ -998,6 +1009,7 @@ function showPop(s, a) {
   const pop = s.stage.querySelector('.pop'), d = s.down;
   pop.innerHTML = `<button class="px" title="${pt('close')}" aria-label="${pt('close')}">×</button>` + popHTML(s, a).filter(Boolean).map(x => `<div>${x}</div>`).join('');
   pop.hidden = false; s.popT = performance.now();
+  if (!clickedOnce) { clickedOnce = true; try { localStorage.setItem('atlas-clicked', '1'); } catch { /* geen opslag */ } SLOTS.forEach(o => { o.stage.querySelector('.chint').hidden = true; }); }
   pop.querySelectorAll('[data-ccd]').forEach(fillCCD);
   const r = s.stage.getBoundingClientRect(), x = (d?.x ?? r.left + r.width / 2) - r.left, y = (d?.y ?? r.top + r.height / 2) - r.top;
   const w = pop.offsetWidth, h = pop.offsetHeight;
@@ -1027,6 +1039,7 @@ function lighten(hex, f) {
 const renderAll = () => SLOTS.forEach(s => !s.el.hidden && s.atoms && render(s));
 
 /* ---------- legende ---------- */
+let clickedOnce = (() => { try { return localStorage.getItem('atlas-clicked') === '1'; } catch { return false; } })();   // hint "klik op de figuur" tot de eerste klik
 const LEG_SHORT = 8;   // bij meer kleuren: eerst enkel de eerste 8, met "+N meer"
 let legClosed = (() => { try { return localStorage.getItem('atlas-leg') === '0'; } catch { return false; } })();
 /* De legende staat per figuur vlak boven het 3D-beeld (bij vergelijken heeft elk molecule zijn eigen strengkleuren). */
