@@ -82,3 +82,10 @@
 - [x] 10. Zoeken: twee tabbladen "📚 Atlas (37)" (standaard, met uitleg wat je doorzoekt) en "🌐 Hele PDB".
 - [x] 11. Legende: per figuur vlak boven het 3D-beeld, als duidelijke kleurchips (bij vergelijken elk molecule zijn eigen strengkleuren).
 - Controle: 37/37 items laden zonder fouten; 27 schermopnames (gsm, 1280, 1600 px) zonder consolefouten of horizontaal scrollen; klikinfo getest (verschijnt, sluit met klik ernaast).
+
+## DNA-bib ronde 3 — 13-11-2026
+- [x] Klik op een aminozuur: naast naam en plaats nu ook wat een aminozuur is, één zin over wat dít aminozuur doet (bv. proline: "stijve ring: maakt een knik in de keten") en een kleine tekening uit de echte atoomposities; ook bij letters van DNA/RNA. Knop "Toon enkel keten X".
+- [x] Klein molecule met een lange chemische naam: titel "Klein molecule" + uitleg + tekening + formule (bv. C18N10O3 · 31 atomen); de chemische naam staat ingeklapt.
+- [x] Weergave "Ladder" weg als aparte knop. Bij Cartoon met DNA/RNA: keuze "Basen: Ringen | Sporten" (sporten = de vroegere ladder, eiwit blijft een gewoon lint). Grote structuren (ribosoom) altijd sporten. Oude links (?style=trace) openen Cartoon met sporten.
+- [x] Grote moleculen: elke kleur in de legende is aanklikbaar → enkel dat deel in kleur, de rest donkergrijs ("alles tonen" zet terug); per streng krijgt nu ook een complex met 21 ketens 21 verschillende kleuren.
+- Controle: 37/37 items laden zonder fouten; 27 schermopnames zonder consolefouten of horizontaal scrollen; klik-tabje getest bij lysine (zalpha), netropsine en een nagebootste lange naam; uitlichten getest bij RNase P, ribosoom en nucleosoom.

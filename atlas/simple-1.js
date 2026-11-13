@@ -48,8 +48,8 @@ export const SIMPLE = {
       nl: 'De meeste DNA-helices draaien rechtsom, zoals een gewone schroef. Z-DNA draait linksom, en zijn ruggengraat loopt in een zigzag: vandaar de Z. Het ontstaat vooral in stukken waar C en G elkaar afwisselen.',
       en: 'Most DNA helices twist to the right, like an ordinary screw. Z-DNA twists to the left, and its backbone runs in a zigzag: hence the Z. It forms mainly in stretches where C and G alternate.' },
     look: {
-      nl: 'Volg één streng: ze slingert in een zigzag in plaats van als een gladde spiraal (het duidelijkst in de weergave Ladder). Draai de figuur en vergelijk de draairichting met gewoon B-DNA.',
-      en: 'Follow one strand: it winds in a zigzag instead of a smooth spiral (clearest in the Ladder view). Turn the figure and compare the direction of the turn with ordinary B-DNA.' },
+      nl: 'Volg één streng: ze slingert in een zigzag in plaats van als een gladde spiraal. Draai de figuur en vergelijk de draairichting met gewoon B-DNA.',
+      en: 'Follow one strand: it winds in a zigzag instead of a smooth spiral. Turn the figure and compare the direction of the turn with ordinary B-DNA.' },
     why: {
       nl: 'Z-DNA ontstaat even in de cel, net achter het enzym dat een gen afleest, waar het DNA opengedraaid wordt. Sommige eiwitten van de afweer tegen virussen herkennen deze vorm.',
       en: 'Z-DNA forms briefly in the cell, just behind the enzyme that reads a gene, where the DNA is being unwound. Some proteins of the defence against viruses recognise this shape.' },

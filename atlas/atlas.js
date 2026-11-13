@@ -63,13 +63,16 @@ const T = {
   cmp: { nl: 'Vergelijken', en: 'Compare' },
   cmpHint: { nl: 'Vergelijkmodus: klik items in de lijst om ze toe te voegen of te verwijderen (max. 3). De eerste bepaalt de tekst rechts.', en: 'Compare mode: click entries in the list to add or remove them (max. 3). The first one determines the text on the right.' },
   presets: { nl: 'Snel vergelijken:', en: 'Quick compare:' },
-  view: { nl: 'Weergave', en: 'View' }, stick: { nl: 'Stokjes', en: 'Sticks' }, sphere: { nl: 'Ruimtevullend', en: 'Space-filling' }, trace: { nl: 'Ladder', en: 'Ladder' },
+  basesLbl: { nl: 'Basen', en: 'Bases' }, rings: { nl: 'Ringen', en: 'Rings' }, rungs: { nl: 'Sporten', en: 'Rungs' },
+  ringsTip: { nl: 'elke base als echte ring van atomen aan het lint', en: 'each base as a real ring of atoms on the ribbon' },
+  rungsTip: { nl: 'eenvoudig: elke streng een gladde buis, elke letter één sport — zoals een ladder', en: 'simple: each strand a smooth tube, each letter one rung — like a ladder' },
+  view: { nl: 'Weergave', en: 'View' }, stick: { nl: 'Stokjes', en: 'Sticks' }, sphere: { nl: 'Ruimtevullend', en: 'Space-filling' },
   colour: { nl: 'Kleur', en: 'Colour' }, byPart: { nl: 'Per onderdeel', en: 'By part' }, byChain: { nl: 'Per streng', en: 'By strand' }, naTog: { nl: 'DNA en RNA tonen', en: 'Show DNA and RNA' }, byType: { nl: 'Per soort', en: 'By kind' }, byBase: { nl: 'Per letter', en: 'By letter' }, byElem: { nl: 'Per atoom', en: 'By atom' },
   hintStyle: {
     cartoon: { nl: 'de streng als lint, de letters (basen) als ringetjes eraan', en: 'the strand as a ribbon, the letters (bases) as small rings on it' },
     stick: { nl: 'elke binding tussen atomen als een staafje', en: 'every bond between atoms as a stick' },
     sphere: { nl: 'elk atoom als bol op ware grootte: zo zie je hoeveel plaats het inneemt', en: 'every atom as a ball at true size: shows how much space it takes up' },
-    trace: { nl: 'eenvoudig: elke streng als een buis, elke letter als één sport — de vorm zonder atomen', en: 'simple: each strand as a tube, each letter as one rung — the shape without atoms' } },
+  },
   hintColor: {
     part: { nl: 'de belangrijkste onderdelen hebben elk een eigen kleur', en: 'the main parts each have their own colour' },
     type: { nl: 'DNA blauw, RNA oranje, eiwit paars', en: 'DNA blue, RNA orange, protein purple' },
@@ -79,7 +82,8 @@ const T = {
     base: { nl: 'elke letter (A, T/U, G, C) een eigen kleur; de ruggengraat grijs', en: 'each letter (A, T/U, G, C) its own colour; the backbone grey' },
     elem: { nl: 'koolstof grijs, stikstof blauw, zuurstof rood, fosfor oranje', en: 'carbon grey, nitrogen blue, oxygen red, phosphorus orange' } },
   cartoonProt: { nl: 'eiwit als lint met spiralen (helix) en pijlen (gestrekt stuk)', en: 'protein as a ribbon with spirals (helix) and arrows (stretched piece)' },
-  colours: { nl: 'Kleuren', en: 'Colours' },
+  colours: { nl: 'Kleuren', en: 'Colours' }, focusHint: { nl: '← klik op een kleur om enkel dat deel te zien', en: '← click a colour to see only that part' },
+  focusAll: { nl: 'alles tonen', en: 'show all' }, focusOn: { nl: 'keten', en: 'chain' },
   restGrey: { nl: 'rest', en: 'rest' }, restOf: { nl: 'rest van het', en: 'rest of the' }, protChain: { nl: 'eiwitketen', en: 'protein chain' }, moreChains: { nl: 'nog {n} ketens', en: '{n} more chains' },
   gripTip: { nl: 'Sleep om de tabel breder of smaller te maken · dubbelklik = standaardbreedte', en: 'Drag to make the table wider or narrower · double-click = default width' },
   hb: { nl: 'Waterstofbruggen', en: 'Hydrogen bonds' }, synMark: { nl: 'Omgeklapte basen (syn)', en: 'Flipped bases (syn)' }, ions: { nl: 'Ionen', en: 'Ions' }, ligs: { nl: 'Medicijn / klein molecule', en: 'Drug / small molecule' },
@@ -222,6 +226,7 @@ const PAL = {
   prot: ['#9b7bff', '#6f5bd6', '#c3b1ff', '#5a4bb8', '#b69cff', '#8466f0', '#d8ccff', '#7e6bd0', '#a58fff', '#6a55c8'],
   histone: ['#8a93a8', '#a3abbd', '#727c93', '#b8bfcf'],
 };
+const ELEMCOL = { C: '#909090', N: '#3050f8', O: '#ff0d0d', P: '#ff8000', S: '#ffff30', SE: '#ffa100', F: '#90e050', CL: '#1ff01f', BR: '#a62929', I: '#940094', FE: '#e06633', ZN: '#7d80b0', MG: '#8aff00' };
 const BASECOL = { A: '#5ad17a', T: '#ff6b6b', U: '#ff6b6b', G: '#ffc247', C: '#4fb0ff' };
 const IONCOL = { K: '#8f40d4', NA: '#ab5cf2', MG: '#8aff00', MN: '#9c7ac7', CA: '#3dff00', ZN: '#7d80b0', CL: '#1ff01f', SR: '#00ff27', BA: '#00c900', CS: '#57178f', CO: '#f090a0', NI: '#50d050', CD: '#ffd98f', TL: '#a6544d', IOD: '#940094', BR: '#a62929' };
 const IONRAD = { K: 1.35, NA: 1.0, MG: .72, MN: .8, CA: 1.0, ZN: .8, CL: 1.4, SR: 1.2, BA: 1.35, CS: 1.6, TL: 1.4 };
@@ -235,10 +240,11 @@ const state = {
   cmp: false, set: [],
   filt: { type: new Set(), cls: new Set(), ctx: new Set() }, text: '',
   found: null, foundShown: 10, foundAll: false, na: true,
-  style: 'cartoon', color: 'type', colorWant: 'auto', hb: false, syn: false, ions: true, ligs: true, water: false,
+  style: 'cartoon', bases: 'rings', color: 'type', colorWant: 'auto', hb: false, syn: false, ions: true, ligs: true, water: false,
 };
 // optionele weergave-instellingen via de URL (deelbare links): ?style=trace&color=base&hb=1&syn=1&water=1&ions=0&ligs=0
-if (['cartoon', 'stick', 'sphere', 'trace'].includes(q.get('style'))) state.style = q.get('style');
+if (['cartoon', 'stick', 'sphere'].includes(q.get('style'))) state.style = q.get('style');
+if (q.get('style') === 'trace' || q.get('bases') === 'rungs') state.bases = 'rungs';   // oude links naar de ladder blijven werken
 if (['part', 'strand', 'chain', 'type', 'base', 'elem'].includes(q.get('color'))) state.colorWant = q.get('color') === 'strand' ? 'chain' : q.get('color');
 for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'na']) if (q.has(k)) state[k] = q.get(k) === '1';
 const cmpIds = (q.get('cmp') || '').split(',').filter(id => BY[id] && id !== state.id).slice(0, 2);
@@ -444,7 +450,12 @@ for (let i = 0; i < 3; i++) {
   $('slots').append(el);
   const stage = el.querySelector('.stage');
   const viewer = $3Dmol.createViewer(stage, { backgroundColor: CSS('--bg-2') || '#0d1426', antialias: true });
-  const s = { i, el, stage, viewer, token: 0, entry: null, atoms: null, an: null, down: null, popT: 0 };
+  const s = { i, el, stage, viewer, token: 0, entry: null, atoms: null, an: null, down: null, popT: 0, focus: null };
+  el.querySelector('.sleg').addEventListener('click', e => {
+    const b = e.target.closest('[data-f]'); if (!b) return;
+    s.focus = !b.dataset.f || s.focus === b.dataset.f ? null : b.dataset.f;
+    render(s); legend();
+  });
   // klikinfo: 3Dmol meldt enkel klikken óp een atoom; een klik ernaast (zonder slepen) sluit het tabje
   stage.addEventListener('pointerdown', e => { s.down = { x: e.clientX, y: e.clientY }; });
   stage.addEventListener('mouseup', e => {
@@ -453,7 +464,10 @@ for (let i = 0; i < 3; i++) {
     // 3Dmol meldt een klik op een atoom pas iets later: verscheen er geen nieuw tabje, dan was het een klik ernaast
     const t0 = performance.now(); setTimeout(() => { if (!(s.popT >= t0)) hidePop(s); }, 450);
   });
-  stage.querySelector('.pop').addEventListener('click', e => { if (e.target.closest('.px')) hidePop(s); });
+  stage.querySelector('.pop').addEventListener('click', e => {
+    if (e.target.closest('.px')) hidePop(s);
+    const f = e.target.closest('.pfocus'); if (f) { s.focus = 'c:' + f.dataset.chain; render(s); legend(); }
+  });
   // het vak krijgt zijn hoogte uit de lay-out (vult het scherm): de viewer schaalt mee als het vak van maat verandert
   let lastH = 0;
   new ResizeObserver(() => { const h = Math.round(stage.clientHeight); if (h && h !== lastH && !el.hidden) { lastH = h; viewer.resize(); viewer.render(); } }).observe(stage);
@@ -543,7 +557,7 @@ function getJson(url) { if (!cache.has(url)) cache.set(url, fetch(url).then(r =>
 async function loadSlot(s, e) {
   const token = ++s.token;
   hidePop(s, false);
-  s.entry = e; s.atoms = null; s.an = null;
+  s.entry = e; s.atoms = null; s.an = null; s.focus = null;
   const el = s.el;
   el.querySelector('h3').textContent = e.custom ? `PDB ${e.pdb}` : nameOf(e);
   const hand = el.querySelector('.hand'); hand.hidden = true;
@@ -740,10 +754,16 @@ function noHelixWhy(e) {
 /* per keten: elke eiwitketen een duidelijk andere kleur (zo zie je uit hoeveel delen een complex bestaat); DNA blauw, RNA oranje in tinten */
 /* per streng: elke streng of keten een duidelijk andere kleur (sterk verschillende tinten, ook tussen twee DNA-strengen) */
 const CHAINPAL = ['#4f8ff7', '#ff8a3d', '#2cd3a0', '#ff5fa2', '#ffd23f', '#a77bff', '#5fd3e6', '#e8e8e8', '#7fdc6a', '#ff6b6b', '#c39b6b', '#8fb3ff'];
+/* na de 12 vaste kleuren: telkens een tint ver van de vorige (gulden hoek), zodat ook grote complexen geen dubbele kleuren krijgen */
+function hslHex(h, s, l) {
+  s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l);
+  const f = n => Math.round(255 * (l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1))));
+  return '#' + [f(0), f(8), f(4)].map(x => x.toString(16).padStart(2, '0')).join('');
+}
 function distinctChains(s) {
   const map = {};
   const chains = [...new Set(s.atoms.filter(a => a.kind === 'na' || a.kind === 'prot').map(a => a.chain))];
-  chains.forEach((c, i) => { map[c] = CHAINPAL[i % CHAINPAL.length]; });
+  chains.forEach((c, i) => { map[c] = i < CHAINPAL.length ? CHAINPAL[i] : hslHex((i * 137.5 + 20) % 360, i % 2 ? 70 : 55, i % 3 ? 62 : 70); });
   return map;
 }
 /* markeringen (entry.mark): basen die het begrip tonen (mismatch, G–U, bulge, stam, lus…) krijgen een eigen kleur;
@@ -753,16 +773,30 @@ function markOf(e) {
   const m = new Map(); for (const g of e.mark) for (const r of g.res) m.set(r, g.col); return m;
 }
 function colorFn(s) {
-  const cf = baseColorFn(s), mk = markOf(s.entry);
-  if (!mk || !cf) return cf;
-  return a => mk.get(a.chain + ':' + a.resi) ?? (s.entry.dim && a.kind === 'na' ? '#5b6378' : cf(a));
+  const cf0 = baseColorFn(s), mk = markOf(s.entry);
+  const cf = !mk || !cf0 ? cf0 : a => mk.get(a.chain + ':' + a.resi) ?? (s.entry.dim && a.kind === 'na' ? '#5b6378' : cf0(a));
+  // een deel uitgelicht: de rest wordt donkergrijs, zodat je het deel in een groot complex meteen terugvindt
+  if (!s.focus || !cf) return cf;
+  const hit = focusTest(s, s.focus);
+  return a => a.kind !== 'na' && a.kind !== 'prot' || hit(a) ? cf(a) : DIMCOL;
+}
+const DIMCOL = '#2f3647';
+/* sleutel van een uitgelicht deel: c:<keten>, t:<soort>, p:<onderdeel>, r (rest), b:<letter> */
+function focusTest(s, k) {
+  const [kind, v] = [k.slice(0, 1), k.slice(2)];
+  if (kind === 'c') return a => a.chain === v;
+  if (kind === 't') return a => (a.kind === 'prot' ? 'prot' : s.an.chainType[a.chain] === 'rna' ? 'rna' : 'dna') === v;
+  if (kind === 'p') { const g = (s.entry.mark ?? []).find(m => L(m.label) === v), set = new Set(g?.res ?? []); return a => set.has(a.chain + ':' + a.resi); }
+  if (kind === 'r') { const set = new Set((s.entry.mark ?? []).flatMap(m => m.res)); return a => a.kind === 'na' && !set.has(a.chain + ':' + a.resi); }
+  if (kind === 'b') return a => a.kind === 'na' && !BB.test(a.atom) && (parentBase(a.resn0 ?? a.resn) === v || v === 'T/U' && ['T', 'U'].includes(parentBase(a.resn0 ?? a.resn)));
+  return () => true;
 }
 function baseColorFn(s) {
   const typeCol = a => a.ctype === 'rna' ? COL.rna : a.ctype === 'prot' ? (s.entry.histone ? COL.histone : COL.prot) : COL.dna;
   if (state.color === 'chain') { const m = distinctChains(s); return a => m[a.chain] ?? '#aaa'; }
   if (state.color === 'type' || state.color === 'part') return typeCol;
   if (state.color === 'base') return a => a.kind === 'prot' ? '#5a4bb8' : BB.test(a.atom) ? '#8791a8' : BASECOL[parentBase(a.resn0 ?? a.resn)] ?? '#aab';
-  return null;
+  return a => ELEMCOL[a.elem?.toUpperCase()] ?? '#ff1493';
 }
 function render(s) {
   const { viewer, atoms, entry: e } = s;
@@ -775,9 +809,9 @@ function render(s) {
   const NA = { predicate: a => a.kind === 'na' }, PR = { predicate: a => a.kind === 'prot' };
   const heavy = !!e.heavy;
   const naOff = !state.na && atoms.some(a => a.kind === 'prot');   // DNA/RNA verbergen (enkel zinvol als er eiwit is)
-  if (state.style === 'cartoon') {
-    if (heavy) viewer.setStyle(NA, { cartoon: { ...col, thickness: .5 } });
-    else {
+  const rungs = state.style === 'cartoon' && (state.bases === 'rungs' || heavy);
+  if (state.style === 'cartoon' && !rungs) {
+    {
       // 3Dmol tekent bij nucleïnezuren een dikke staaf van het lint naar elke base, maar enkel voor basisatomen met cartoonstijl.
       // Daarom: lint enkel op de ruggengraat, de basen (en de suikerring die ze aan het lint hangt) als echte ringen met staafjes.
       // Per atoom: het lint neutraal, zodat enkel de atomen kleur krijgen (geen oranje/rode vlekken op het lint).
@@ -788,42 +822,18 @@ function render(s) {
       viewer.addStyle({ predicate: a => a.kind === 'na' && SUGAR.has(a.atom) }, { stick: { ...ring, radius: .2 } });
     }
     viewer.setStyle(PR, { cartoon: { ...col, opacity: e.heavyish ? .9 : 1 } });
+  } else if (rungs) {
+    viewer.setStyle(PR, { cartoon: { ...col, opacity: e.heavyish ? .9 : 1 } });
+    drawRungs(s, cf, heavy);
   } else if (state.style === 'stick') {
     viewer.setStyle({ predicate: a => a.kind === 'na' || a.kind === 'prot' }, { stick: { ...col, radius: heavy ? .3 : .2 } });
   } else if (state.style === 'sphere') {
     viewer.setStyle({ predicate: a => a.kind === 'na' || a.kind === 'prot' }, { sphere: { ...col, scale: 1 } });
-  } else {
-    // ladder: elke streng als een gladde buis door de ruggengraat, elke letter als één sport naar het midden (zoals in een schoolboek)
-    viewer.setStyle(PR, { cartoon: { ...col, style: 'trace', thickness: .5 } });
-    const strandCol = a => state.color === 'base' ? (s.an.chainType[a.chain] === 'rna' ? COL.rna : COL.dna) : cf ? cf(a) : '#8b97b3';
-    const byRes = new Map();
-    for (const a of atoms) if (a.kind === 'na') { const k = a.chain + ':' + a.resi; if (!byRes.has(k)) byRes.set(k, { chain: a.chain, resi: a.resi, at: {} }); byRes.get(k).at[a.atom] = a; }
-    const strands = new Map();
-    for (const r of byRes.values()) { const bb = r.at.P ?? r.at["C4'"] ?? r.at["C3'"]; /* door de fosfaten: zo zie je bv. de zigzag van Z-DNA */ if (!bb) continue; r.bb = bb; if (!strands.has(r.chain)) strands.set(r.chain, []); strands.get(r.chain).push(r); }
-    for (const rs of strands.values()) {
-      rs.sort((a, b) => a.resi - b.resi);
-      // buis: stukken van opeenvolgende letters met dezelfde kleur (een breuk in de keten = nieuwe buis)
-      let run = [];
-      const flush = () => { if (run.length > 1) viewer.addCurve({ points: run.map(r => xyz(r.bb)), radius: heavy ? .9 : .75, smooth: 8, color: strandCol(run[run.length - 1].bb), fromCap: 1, toCap: 1 }); };
-      rs.forEach((r, i) => {
-        const prev = rs[i - 1], brk = !prev || r.resi - prev.resi > 1.5 || (r.bb.x - prev.bb.x) ** 2 + (r.bb.y - prev.bb.y) ** 2 + (r.bb.z - prev.bb.z) ** 2 > 81;
-        if (brk) { flush(); run = [r]; }
-        else if (strandCol(r.bb) !== strandCol(prev.bb)) { run.push(r); flush(); run = [prev, r]; }   // kleurwissel: naadloos aansluiten
-        else run.push(r);
-      });
-      flush();
-      // sporten: van de buis naar het buitenste ringatoom van de base (N1 bij A/G, N3 bij C/T/U)
-      if (!heavy) for (const r of rs) {
-        const pb = parentBase(r.bb.resn0 ?? r.bb.resn), tip = r.at[pb === 'A' || pb === 'G' ? 'N1' : 'N3'];
-        if (!tip) continue;
-        const c = state.color === 'base' ? BASECOL[pb] ?? '#aab' : lighten(strandCol(tip), .3);
-        viewer.addCylinder({ start: xyz(r.bb), end: xyz(tip), radius: .42, color: c, fromCap: 1, toCap: 2 });
-      }
-    }
   }
+  // (sporten: zie drawRungs)
   // gemarkeerde basen dikker, zodat ze opvallen in cartoon (in de ladder kleuren de sporten al mee)
   const mk = markOf(e);
-  if (mk && state.style === 'cartoon') viewer.addStyle({ predicate: a => a.kind === 'na' && mk.has(a.chain + ':' + a.resi) && !BB.test(a.atom) }, { stick: { colorfunc: cf, radius: .34 } });
+  if (mk && state.style === 'cartoon' && !rungs) viewer.addStyle({ predicate: a => a.kind === 'na' && mk.has(a.chain + ':' + a.resi) && !BB.test(a.atom) }, { stick: { colorfunc: cf, radius: .34 } });
   // liganden, ionen, water
   if (state.ligs) {
     viewer.setStyle({ predicate: a => a.kind === 'lig' }, { stick: { colorscheme: 'greenCarbon', radius: .24 }, sphere: { colorscheme: 'greenCarbon', scale: .3 } });
@@ -843,6 +853,36 @@ function render(s) {
   viewer.render();
 }
 const xyz = a => ({ x: a.x, y: a.y, z: a.z });
+/* Cartoon met sporten: elke streng een gladde buis door de fosfaten, elke letter één sport naar het midden (zoals een ladder).
+ * Grote structuren (ribosoom) krijgen altijd deze lichte weergave. */
+function drawRungs(s, cf, heavy) {
+  const { viewer, atoms } = s;
+    const strandCol = a => state.color === 'base' ? (s.an.chainType[a.chain] === 'rna' ? COL.rna : COL.dna) : cf ? cf(a) : '#8b97b3';
+    const byRes = new Map();
+    for (const a of atoms) if (a.kind === 'na') { const k = a.chain + ':' + a.resi; if (!byRes.has(k)) byRes.set(k, { chain: a.chain, resi: a.resi, at: {} }); byRes.get(k).at[a.atom] = a; }
+    const strands = new Map();
+    for (const r of byRes.values()) { const bb = r.at.P ?? r.at["C4'"] ?? r.at["C3'"]; /* door de fosfaten: zo zie je bv. de zigzag van Z-DNA */ if (!bb) continue; r.bb = bb; if (!strands.has(r.chain)) strands.set(r.chain, []); strands.get(r.chain).push(r); }
+    for (const rs of strands.values()) {
+      rs.sort((a, b) => a.resi - b.resi);
+      // buis: stukken van opeenvolgende letters met dezelfde kleur (een breuk in de keten = nieuwe buis)
+      let run = [];
+      const flush = () => { if (run.length > 1) viewer.addCurve({ points: run.map(r => xyz(r.bb)), radius: heavy ? .9 : .75, smooth: 8, color: strandCol(run[run.length - 1].bb), fromCap: 1, toCap: 1 }); };
+      rs.forEach((r, i) => {
+        const prev = rs[i - 1], brk = !prev || r.resi - prev.resi > 1.5 || (r.bb.x - prev.bb.x) ** 2 + (r.bb.y - prev.bb.y) ** 2 + (r.bb.z - prev.bb.z) ** 2 > 81;
+        if (brk) { flush(); run = [r]; }
+        else if (strandCol(r.bb) !== strandCol(prev.bb)) { run.push(r); flush(); run = [prev, r]; }   // kleurwissel: naadloos aansluiten
+        else run.push(r);
+      });
+      flush();
+      // sporten: van de buis naar het buitenste ringatoom van de base (N1 bij A/G, N3 bij C/T/U)
+      for (const r of rs) {
+        const pb = parentBase(r.bb.resn0 ?? r.bb.resn), tip = r.at[pb === 'A' || pb === 'G' ? 'N1' : 'N3'];
+        if (!tip) continue;
+        const c = state.color === 'base' ? BASECOL[pb] ?? '#aab' : lighten(strandCol(tip), .3);
+        viewer.addCylinder({ start: xyz(r.bb), end: xyz(tip), radius: heavy ? .28 : .42, color: c, fromCap: 1, toCap: 2 });
+      }
+    }
+}
 
 /* ---------- klikinfo: klein tabje naast de plek waar je klikte ---------- */
 const BASENAME = { A: { nl: 'adenine', en: 'adenine' }, T: { nl: 'thymine', en: 'thymine' }, G: { nl: 'guanine', en: 'guanine' }, C: { nl: 'cytosine', en: 'cytosine' }, U: { nl: 'uracil', en: 'uracil' } };
@@ -853,8 +893,50 @@ const PT = {
   aa: { nl: (n, c) => `bouwsteen ${n} van eiwitketen ${c}`, en: (n, c) => `building block ${n} of protein chain ${c}` },
   atom: { nl: 'atoom', en: 'atom' }, inBase: { nl: 'in de base (de letter)', en: 'in the base (the letter)' }, inBb: { nl: 'in de ruggengraat (suiker-fosfaat)', en: 'in the backbone (sugar–phosphate)' },
   mod: { nl: 'chemisch aangepaste letter', en: 'chemically modified letter' }, part: { nl: 'onderdeel', en: 'part' },
-  ion: { nl: 'ion', en: 'ion' }, water: { nl: 'watermolecule', en: 'water molecule' }, lig: { nl: 'klein molecule', en: 'small molecule' }, close: { nl: 'Sluiten', en: 'Close' },
+  ion: { nl: 'ion', en: 'ion' }, water: { nl: 'watermolecule', en: 'water molecule' }, lig: { nl: 'Klein molecule', en: 'Small molecule' }, close: { nl: 'Sluiten', en: 'Close' },
+  aaIs: { nl: 'een aminozuur: één bouwsteen van de eiwitketen', en: 'an amino acid: one building block of the protein chain' },
+  ligIs: { nl: 'een kleine stof die hier vastzit, bv. een medicijn, een vitamine of een hulpstof uit het lab', en: 'a small substance bound here, e.g. a drug, a vitamin or a helper chemical from the lab' },
+  formula: { nl: 'formule', en: 'formula' }, atoms: { nl: 'atomen', en: 'atoms' }, chem: { nl: 'chemische naam', en: 'chemical name' },
+  draw: { nl: 'plat getekend uit de echte atoomposities', en: 'drawn flat from the real atom positions' },
+  focusChain: { nl: c => `▸ Toon enkel keten ${c}`, en: c => `▸ Show only chain ${c}` },
 };
+/* wat doet dit aminozuur? in één eenvoudige zin */
+const AAWHAT = {
+  ALA: { nl: 'klein en waterafstotend', en: 'small and water-repelling' }, VAL: { nl: 'waterafstotend: zit graag binnenin het eiwit', en: 'water-repelling: likes to sit inside the protein' },
+  LEU: { nl: 'waterafstotend: zit graag binnenin het eiwit', en: 'water-repelling: likes to sit inside the protein' }, ILE: { nl: 'waterafstotend: zit graag binnenin het eiwit', en: 'water-repelling: likes to sit inside the protein' },
+  PHE: { nl: 'waterafstotend, met een platte ring', en: 'water-repelling, with a flat ring' }, TRP: { nl: 'de grootste, met een dubbele ring', en: 'the largest, with a double ring' },
+  TYR: { nl: 'platte ring met een OH-groep; kan een fosfaatgroep krijgen (aan/uit-schakelaar)', en: 'flat ring with an OH group; can get a phosphate group (on/off switch)' },
+  MET: { nl: 'bevat zwavel; elk eiwit begint ermee', en: 'contains sulphur; every protein starts with it' }, CYS: { nl: 'bevat zwavel; twee cysteïnes kunnen een stevige zwavelbrug vormen', en: 'contains sulphur; two cysteines can form a strong sulphur bridge' },
+  GLY: { nl: 'de kleinste, zonder zijketen: maakt de keten soepel', en: 'the smallest, without a side chain: makes the chain flexible' }, PRO: { nl: 'stijve ring: maakt een knik in de keten', en: 'stiff ring: puts a kink in the chain' },
+  SER: { nl: 'houdt van water; kan een fosfaatgroep krijgen (aan/uit-schakelaar)', en: 'likes water; can get a phosphate group (on/off switch)' }, THR: { nl: 'houdt van water; kan een fosfaatgroep krijgen (aan/uit-schakelaar)', en: 'likes water; can get a phosphate group (on/off switch)' },
+  ASN: { nl: 'houdt van water; vormt makkelijk waterstofbruggen', en: 'likes water; easily forms hydrogen bonds' }, GLN: { nl: 'houdt van water; vormt makkelijk waterstofbruggen', en: 'likes water; easily forms hydrogen bonds' },
+  ASP: { nl: 'negatief geladen', en: 'negatively charged' }, GLU: { nl: 'negatief geladen', en: 'negatively charged' },
+  LYS: { nl: 'positief geladen: trekt het negatief geladen DNA aan', en: 'positively charged: attracts the negatively charged DNA' }, ARG: { nl: 'positief geladen: trekt het negatief geladen DNA aan', en: 'positively charged: attracts the negatively charged DNA' },
+  HIS: { nl: 'kan een lading opnemen en afgeven; vaak in het werkende deel van enzymen', en: 'can take up and release a charge; often in the working part of enzymes' },
+};
+/* kleine tekening van de aangeklikte bouwsteen: de echte atomen, plat gelegd langs het vlak waarin ze het meest uitgespreid liggen */
+function resSVG(s, a) {
+  let at = s.atoms.filter(x => x.chain === a.chain && x.resi === a.resi && x.resn === a.resn && x.elem !== 'H');
+  if (at.length < 3 || at.length > 90) return '';
+  const n = at.length, c = [0, 1, 2].map(k => at.reduce((t, x) => t + [x.x, x.y, x.z][k], 0) / n);
+  const P = at.map(x => [x.x - c[0], x.y - c[1], x.z - c[2]]);
+  const C = [0, 1, 2].map(i => [0, 1, 2].map(j => P.reduce((t, p) => t + p[i] * p[j], 0)));
+  const mul = v => C.map(r => r[0] * v[0] + r[1] * v[1] + r[2] * v[2]), nrm = v => { const l = Math.hypot(...v) || 1; return v.map(x => x / l); };
+  let u = nrm([1, .3, .2]); for (let k = 0; k < 40; k++) u = nrm(mul(u));
+  let v = nrm([.2, 1, .3]); for (let k = 0; k < 40; k++) { v = mul(v); const d = v[0] * u[0] + v[1] * u[1] + v[2] * u[2]; v = nrm(v.map((x, i) => x - d * u[i])); }
+  const xy = P.map(p => [p[0] * u[0] + p[1] * u[1] + p[2] * u[2], p[0] * v[0] + p[1] * v[1] + p[2] * v[2]]);
+  const xs = xy.map(p => p[0]), ys = xy.map(p => p[1]), W = 200, H = 110, pad = 12;
+  const sc = Math.min((W - 2 * pad) / (Math.max(...xs) - Math.min(...xs) || 1), (H - 2 * pad) / (Math.max(...ys) - Math.min(...ys) || 1), 26);
+  const ox = W / 2 - sc * (Math.max(...xs) + Math.min(...xs)) / 2, oy = H / 2 - sc * (Math.max(...ys) + Math.min(...ys)) / 2;
+  const X = i => (ox + sc * xy[i][0]).toFixed(1), Y = i => (oy + sc * xy[i][1]).toFixed(1);
+  const idx = new Map(at.map((x, i) => [x.index, i]));
+  let lines = '';
+  at.forEach((x, i) => (x.bonds ?? []).forEach(j => { const k = idx.get(j); if (k > i) lines += `<line x1="${X(i)}" y1="${Y(i)}" x2="${X(k)}" y2="${Y(k)}"/>`; }));
+  const dots = at.map((x, i) => { const e = x.elem?.toUpperCase(), col = ELEMCOL[e] ?? '#ff1493', r = e === 'C' ? 3.2 : 5.5;
+    return `<circle cx="${X(i)}" cy="${Y(i)}" r="${x === a ? r + 2.5 : r}" fill="${col}"${x === a ? ' stroke="#fff" stroke-width="1.6"' : ''}/>${e !== 'C' ? `<text x="${X(i)}" y="${(+Y(i) + 3).toFixed(1)}">${e[0]}${e.slice(1).toLowerCase()}</text>` : ''}`; }).join('');
+  return `<figure class="pdraw"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${pt('draw')}"><g class="b">${lines}</g>${dots}</svg><figcaption>${pt('draw')}</figcaption></figure>`;
+}
+const focusBtn = (s, a) => `<button class="pfocus" data-chain="${esc(a.chain)}">${pt('focusChain', a.chain)}</button>`;
 const pt = (k, ...a) => { const v = L(PT[k]); return typeof v === 'function' ? v(...a) : v; };
 function popHTML(s, a) {
   const el = ELNAME[a.elem?.toUpperCase()] ? `${L(ELNAME[a.elem.toUpperCase()])} (${a.atom})` : a.atom;
@@ -864,14 +946,25 @@ function popHTML(s, a) {
     return [`<b>${b ?? a.resn}${BASENAME[b] ? ` · ${L(BASENAME[b])}` : ''}</b>`, pt('letter', a.resi, ty, a.chain),
       a.resn0 && a.resn0 !== a.resn ? `${pt('mod')}: ${a.resn0}` : '',
       g && state.color === 'part' ? `${pt('part')}: <i style="--c:${g.col}">${L(g.label)}</i>` : '',
-      `${pt('atom')}: ${el} · ${BB.test(a.atom) ? pt('inBb') : pt('inBase')}`];
+      resSVG(s, a), `${pt('atom')}: ${el} · ${BB.test(a.atom) ? pt('inBb') : pt('inBase')}`, focusBtn(s, a)];
   }
   if (a.kind === 'prot') {
-    const r = a.resn0 ?? a.resn, nm = AANAME[r];
-    return [`<b>${nm ? (lang === 'nl' ? nm[0] : nm[1] ?? nm[0]) : r}</b> <small>${r}</small>`, pt('aa', a.resi, a.chain), `${pt('atom')}: ${el}`];
+    const r = a.resn0 ?? a.resn, nm = AANAME[r], what = AAWHAT[r];
+    return [`<b>${nm ? (lang === 'nl' ? nm[0] : nm[1] ?? nm[0]) : r}</b> <small>${r}</small>`, `<span class="pw">${pt('aaIs')}</span>`,
+      what ? `<span class="pk">${L(what)}</span>` : '', pt('aa', a.resi, a.chain), resSVG(s, a), `${pt('atom')}: ${el}`, focusBtn(s, a)];
   }
   if (a.kind === 'ion') return [`<b>${IONLABEL[a.resn] ?? a.resn}</b>`, `${pt('ion')}${ION_NAME[a.resn] ? ': ' + L(ION_NAME[a.resn]) : ''}`];
-  if (a.kind === 'lig') return [`<b>${LIGNAME[a.resn] ? L(LIGNAME[a.resn]) : s.entry.ligNames?.[a.resn] ?? a.resn}</b>`, `${pt('lig')} · ${pt('atom')}: ${el}`];
+  if (a.kind === 'lig') {
+    // chemische namen zoals "N-[(1S)-1-(2-chloro-6-…)]…" zeggen een leek niets: dan een gewone omschrijving + de formule
+    const known = LIGNAME[a.resn] ? L(LIGNAME[a.resn]) : null, raw = s.entry.ligNames?.[a.resn];
+    const plain = known ?? (raw && raw.length <= 28 && !/[\[\]()0-9,]/.test(raw) ? raw : null);
+    const mol = s.atoms.filter(x => x.chain === a.chain && x.resi === a.resi && x.resn === a.resn);
+    const cnt = {}; for (const x of mol) { const e = x.elem?.toUpperCase(); cnt[e] = (cnt[e] ?? 0) + 1; }
+    const formula = ['C', 'N', 'O', ...Object.keys(cnt).filter(e => !'CNO'.includes(e) || e.length > 1).sort()].filter((e, i, arr) => cnt[e] && arr.indexOf(e) === i)
+      .map(e => `${e[0]}${e.slice(1).toLowerCase()}${cnt[e] > 1 ? `<sub>${cnt[e]}</sub>` : ''}`).join('');
+    return [`<b>${plain ?? pt('lig')}</b> <small>${a.resn}</small>`, `<span class="pw">${pt('ligIs')}</span>`, resSVG(s, a),
+      `${pt('formula')}: ${formula} · ${mol.length} ${pt('atoms')}`, raw && !plain ? `<details class="pchem"><summary>${pt('chem')}</summary>${esc(raw)}</details>` : ''];
+  }
   if (a.kind === 'water') return [`<b>${pt('water')}</b>`];
   return [`<b>${a.resn} ${a.resi}</b>`, `${pt('atom')}: ${el}`];
 }
@@ -897,6 +990,7 @@ addEventListener('keydown', e => { if (e.key === 'Escape') SLOTS.forEach(s => hi
 /* kleur iets lichter maken (meng met wit), met cache: wordt per atoom opgevraagd */
 const LIGHT = new Map();
 function lighten(hex, f) {
+  if (hex === DIMCOL) return hex;   // uitgedimde delen blijven donker (ook de sporten en ringen)
   if (hex.length === 4) hex = '#' + [...hex.slice(1)].map(c => c + c).join('');
   const k = hex + f; if (LIGHT.has(k)) return LIGHT.get(k);
   const n = parseInt(hex.slice(1), 16), m = c => Math.round(c + (255 - c) * f);
@@ -916,35 +1010,41 @@ function legend() {
     const box = s.el.querySelector('.sleg');
     if (s.el.hidden || !s.an) { box.hidden = true; continue; }
     box.hidden = false;
-    box.innerHTML = `<b>${t('colours')}</b>` + legendItems([s]).join('');
+    const it = legendItems([s]), nF = it.filter(x => x.includes('data-f=')).length;
+    // uitgelicht deel dat niet in de legende staat (gekozen via het klik-tabje): als eigen chip, met ×
+    const extra = s.focus && !it.some(x => x.includes(`data-f="${esc(s.focus)}"`)) ? `<button class="lc fk on" data-f="${esc(s.focus)}"><i style="background:#fff"></i>${t('focusOn')} ${esc(s.focus.slice(2))} ×</button>` : '';
+    box.innerHTML = `<b>${t('colours')}</b>` + it.join('') + extra + (s.focus ? `<button class="lreset" data-f="">${t('focusAll')}</button>` : nF > 1 ? `<span class="lhint">${t('focusHint')}</span>` : '');
   }
   $('legend').hidden = true;
   guide();
 }
 function legendItems(shown) {
   const items = [];
-  const sw = (c, txt) => items.push(`<span class="lc" style="--c:${c}"><i></i>${txt}</span>`);
+  const s0 = shown[0];
+  const sw = (c, txt, fk) => items.push(fk ? `<button class="lc fk ${s0.focus === fk ? 'on' : ''}" data-f="${esc(fk)}" style="--c:${c}" aria-pressed="${s0.focus === fk}"><i></i>${txt}</button>`
+    : `<span class="lc" style="--c:${c}"><i></i>${txt}</span>`);
   const hasType = ty => shown.some(s => Object.values(s.an.chainType).includes(ty));
   if (state.color === 'part') {
     // eerst de onderdelen (daar gaat het om), daarna de rest
-    const seen = new Set(); for (const s of shown) for (const g of s.entry.mark ?? []) { const lab = L(g.label); if (!seen.has(lab)) { seen.add(lab); sw(g.col, `<b>${lab}</b>`); } }
-    if (shown.some(s => s.entry.mark && s.entry.dim)) sw('#5b6378', t('restGrey'));
+    const seen = new Set(); for (const s of shown) for (const g of s.entry.mark ?? []) { const lab = L(g.label); if (!seen.has(lab)) { seen.add(lab); sw(g.col, `<b>${lab}</b>`, 'p:' + lab); } }
+    if (shown.some(s => s.entry.mark && s.entry.dim)) sw('#5b6378', t('restGrey'), 'r:');
   }
   if (state.color === 'type' || state.color === 'part') {
     // per onderdeel: de gewone kleur toont wat níet gemarkeerd is (bv. de verbindingsletters tussen de armen van tRNA)
     const nm = x => state.color === 'part' ? `${t('restOf')} ${x}` : x;
-    if (hasType('dna')) sw(COL.dna, nm('DNA'));
-    if (hasType('rna') && !(state.color === 'part' && shown.every(s => !s.entry.mark || s.entry.dim))) sw(COL.rna, nm('RNA'));
-    if (hasType('prot')) { const h = shown.some(s => s.entry.histone); sw(h ? COL.histone : COL.prot, h ? (lang === 'nl' ? 'histonen' : 'histones') : t('protein')); }
+    const P = state.color === 'part';
+    if (hasType('dna')) sw(COL.dna, nm('DNA'), P ? 'r:' : 't:dna');
+    if (hasType('rna') && !(P && shown.every(s => !s.entry.mark || s.entry.dim))) sw(COL.rna, nm('RNA'), P ? 'r:' : 't:rna');
+    if (hasType('prot')) { const h = shown.some(s => s.entry.histone); sw(h ? COL.histone : COL.prot, h ? (lang === 'nl' ? 'histonen' : 'histones') : t('protein'), 't:prot'); }
   } else if (state.color === 'chain') {
     const s0 = shown[0];
     if (s0) {
       const all = Object.entries(distinctChains(s0)).filter(([c]) => s0.an.chainType[c] === 'prot' || state.na);
-      for (const [c, col] of all.slice(0, 12)) { const ty = s0.an.chainType[c]; sw(col, `${ty === 'prot' ? t('protChain') : (ty === 'rna' ? 'RNA-' : 'DNA-') + t('strand')} ${c}`); }
-      if (all.length > 12) items.push(`<span>${t('moreChains').replace('{n}', all.length - 12)}</span>`);
+      for (const [c, col] of all.slice(0, 24)) { const ty = s0.an.chainType[c]; sw(col, `${ty === 'prot' ? t('protChain') : (ty === 'rna' ? 'RNA-' : 'DNA-') + t('strand')} ${c}`, 'c:' + c); }
+      if (all.length > 24) items.push(`<span class="lmore">${t('moreChains').replace('{n}', all.length - 24)}</span>`);
     }
   } else if (state.color === 'base') {
-    for (const [b, c] of Object.entries({ A: BASECOL.A, 'T/U': BASECOL.T, G: BASECOL.G, C: BASECOL.C })) sw(c, b);
+    for (const [b, c] of Object.entries({ A: BASECOL.A, 'T/U': BASECOL.T, G: BASECOL.G, C: BASECOL.C })) sw(c, b, 'b:' + b);
     sw('#8791a8', t('backbone'));
   } else {
     sw('#909090', 'C'); sw('#3050f8', 'N'); sw('#ff0d0d', 'O'); sw('#ff8000', 'P');
@@ -960,12 +1060,10 @@ function legendItems(shown) {
 const G = {
   head: { nl: 'In deze weergave', en: 'In this view' },
   cartoonNa: { nl: 'Het lint is de ruggengraat (suiker en fosfaat) van elke streng; de ringetjes eraan zijn de basen, de letters.', en: 'The ribbon is the backbone (sugar and phosphate) of each strand; the small rings on it are the bases, the letters.' },
-  cartoonHeavy: { nl: 'Het lint is de ruggengraat van elke streng; de basen zijn weggelaten omdat de structuur zo groot is.', en: 'The ribbon is the backbone of each strand; the bases are left out because the structure is so large.' },
   cartoonProt: { nl: 'Eiwit is een lint met spiralen (helix) en pijlen (gestrekt stuk).', en: 'Protein is a ribbon with spirals (helix) and arrows (stretched piece).' },
   stick: { nl: 'Elke binding tussen twee atomen is een staafje: je ziet elk ringetje en elk atoom.', en: 'Every bond between two atoms is a stick: you see every ring and every atom.' },
   sphere: { nl: 'Elk atoom is een bol op ware grootte: zo zie je hoe dicht alles op elkaar zit en hoe diep de groeven zijn.', en: 'Every atom is a ball at true size: shows how tightly everything is packed and how deep the grooves are.' },
   traceNa: { nl: 'Elke streng is een buis door de fosfaten; elke sport is één letter. Twee sporten die elkaar raken, vormen een basenpaar.', en: 'Each strand is a tube through the phosphates; each rung is one letter. Two rungs that meet form a base pair.' },
-  traceProt: { nl: 'Eiwit is een dunne lijn door zijn bouwstenen.', en: 'Protein is a thin line through its building blocks.' },
   colType: { nl: 'Kleur per soort:', en: 'Colour by type:' },
   colChain: { nl: n => `Elke streng of keten heeft een eigen kleur — hier ${n}.`, en: n => `Each strand or chain has its own colour — ${n} here.` },
   colPart: { nl: 'Elk belangrijk onderdeel heeft een eigen kleur (zie de kleuren boven de figuur).', en: 'Each important part has its own colour (see the colours above the figure).' },
@@ -979,8 +1077,8 @@ function guide() {
   const box = document.getElementById('vguide'); if (!box) return;
   const shown = SLOTS.filter(s => !s.el.hidden && s.an); if (!shown.length) { box.innerHTML = ''; return; }
   const prot = shown.some(s => s.an.prot), na = shown.some(s => s.an.nts) && (state.na || !prot), heavy = shown.some(s => s.entry.heavy);
-  const st = state.style === 'cartoon' ? [na && g(heavy ? 'cartoonHeavy' : 'cartoonNa'), prot && g('cartoonProt')]
-    : state.style === 'trace' ? [na && g('traceNa'), prot && g('traceProt')] : [g(state.style)];
+  const rungs = state.bases === 'rungs' || heavy;
+  const st = state.style === 'cartoon' ? [na && g(rungs ? 'traceNa' : 'cartoonNa'), prot && g('cartoonProt')] : [g(state.style)];
   const W = T.hintColor.typeW, has = ty => shown.some(s => Object.values(s.an.chainType).includes(ty));
   const nCh = new Set(shown.flatMap(s => Object.entries(s.an.chainType).filter(([, v]) => v === 'prot' || state.na).map(([c]) => s.i + c))).size;
   const col = { type: `${g('colType')} ${[has('dna') && L(W.dna), has('rna') && L(W.rna), has('prot') && L(shown.some(s => s.entry.histone) ? W.histone : W.prot)].filter(Boolean).join(', ')}.`,
@@ -1084,10 +1182,12 @@ function seg(id, key) {
     const b = e.target.closest('button'); if (!b) return;
     box.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
     if (key === 'color') { state.colorWant = b.dataset.v; syncColor(); } else { state[key] = b.dataset.v; syncColor(); }
+    SLOTS.forEach(s => { s.focus = null; });
     showHint(); renderAll(); legend();
   };
 }
-seg('style', 'style'); seg('color', 'color');
+seg('style', 'style'); seg('color', 'color'); seg('bases', 'bases');
+$('bases').querySelectorAll('button').forEach(b => { b.setAttribute('aria-pressed', String(b.dataset.v === state.bases)); b.title = t(b.dataset.v + 'Tip'); });
 for (const id of ['style', 'color']) $(id).querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === state[id]));
 $('style').querySelectorAll('button').forEach(b => { b.title = L(T.hintStyle[b.dataset.v]); });
 $('color').querySelectorAll('button').forEach(b => { b.title = L(T.hintColor[b.dataset.v]); });
@@ -1100,7 +1200,10 @@ $('spin').onchange = e => SLOTS.forEach(s => s.viewer.spin(e.target.checked ? 'y
 function colorAvail() {
   const shown = SLOTS.filter(s => !s.el.hidden && s.an);
   if (!shown.length) return null;
-  const av = new Set(state.style === 'trace' ? ['type'] : ['type', 'elem']);
+  // Basen-keuze enkel bij Cartoon en als er DNA/RNA in beeld is (niet bij grote structuren: die zijn altijd sporten)
+  $('basesGrp').hidden = !(state.style === 'cartoon' && shown.some(s => s.an.nts && !s.entry.heavy));
+  const rungs = state.style === 'cartoon' && (state.bases === 'rungs' || shown.every(s => s.entry.heavy || !s.an.nts));
+  const av = new Set(rungs && shown.every(s => !s.an.prot) ? ['type'] : ['type', 'elem']);
   if (shown.some(s => s.entry.mark)) av.add('part');
   if (shown.some(s => s.an.nts)) av.add('base');
   if (shown.some(s => { const c = {}; for (const v of Object.values(s.an.chainType)) c[v] = (c[v] ?? 0) + 1; return Object.values(c).some(n => n > 1); })) av.add('chain');
@@ -1120,7 +1223,8 @@ function showHint() {
   const sb = $('style').querySelector(`[data-v="${state.style}"]`), cb = $('color').querySelector(`[data-v="${state.color}"]`);
   // cartoon: eiwit wordt anders getekend dan DNA/RNA — zeg het erbij als er eiwit in beeld is
   const shown = SLOTS.filter(s => !s.el.hidden && s.an), prot = shown.some(s => s.an.prot), na = !shown.length || shown.some(s => s.an.nts);
-  const st = state.style === 'cartoon' && prot ? [na ? L(T.hintStyle.cartoon) : '', t('cartoonProt')].filter(Boolean).join('; ') : L(T.hintStyle[state.style]);
+  const cN = state.bases === 'rungs' || shown.every(s => s.entry.heavy) ? t('rungsTip') : L(T.hintStyle.cartoon);
+  const st = state.style === 'cartoon' ? [na ? cN : '', prot ? t('cartoonProt') : ''].filter(Boolean).join('; ') : L(T.hintStyle[state.style]);
   // per soort: enkel de soorten die in beeld zijn, met dezelfde kleuren als de figuur (bv. histonen grijs in plaats van paars)
   const has = ty => shown.some(s => Object.values(s.an.chainType ?? {}).includes(ty)), W = T.hintColor.typeW;
   const ty = shown.length ? [has('dna') && L(W.dna), has('rna') && L(W.rna), has('prot') && L(shown.some(s => s.entry.histone) ? W.histone : W.prot)].filter(Boolean).join(', ') : '';
@@ -1205,3 +1309,6 @@ requestAnimationFrame(() => {
   const li = document.querySelector('.item.on'), list = $('list');
   if (li) list.scrollTop = li.offsetTop - list.offsetTop - list.clientHeight / 2 + li.offsetHeight / 2;
 });
+
+// testhaak (enkel met ?debug=1): laat testscripts het klik-tabje rechtstreeks openen
+if (q.has('debug')) window.__atlas = { SLOTS, showPop };
