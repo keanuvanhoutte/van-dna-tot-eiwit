@@ -214,8 +214,8 @@ export const SIMPLE = {
       nl: 'De bodembacterie Agrobacterium kan een stukje van haar eigen DNA in een plantencel brengen. Dat stuk, het T-DNA, wordt ingebouwd in het DNA van de plant. Onderzoekers gebruiken dit om nieuwe genen in planten te zetten; in de mens komt het niet voor.',
       en: 'The soil bacterium Agrobacterium can bring a piece of its own DNA into a plant cell. That piece, the T-DNA, is built into the plant’s DNA. Researchers use this to put new genes into plants; it does not happen in humans.' },
     look: {
-      nl: 'In 3D zie je VirE2, het eiwit dat in de plantencel de enkele T-DNA-streng bedekt, hier samen met zijn begeleider VirE1. Het T-DNA zelf is nooit in 3D gemeten: het is een lang, slap stuk DNA.',
-      en: 'In 3D you see VirE2, the protein that coats the single T-DNA strand inside the plant cell, here together with its chaperone VirE1. The T-DNA itself has never been measured in 3D: it is a long, floppy piece of DNA.' },
+      nl: 'In 3D zie je VirE2, het eiwit dat in de plantencel de enkele T-DNA-streng bedekt, hier samen met zijn begeleider VirE1. In de PDB bestaat geen 3D-structuur van het T-DNA zelf: het is een lang, slap stuk DNA.',
+      en: 'In 3D you see VirE2, the protein that coats the single T-DNA strand inside the plant cell, here together with its chaperone VirE1. The PDB contains no 3D structure of the T-DNA itself: it is a long, floppy piece of DNA.' },
     lookSchema: {
       nl: 'Linksboven de DNA-ring van de bacterie met het roze stuk T-DNA. Dat stuk gaat als één losse streng, met een paars eiwit vooraan, naar de plantencel en wordt onderaan ingebouwd in een plantenchromosoom.',
       en: 'Top left is the bacterium’s DNA ring with the pink piece of T-DNA. That piece travels as one single strand, with a purple protein at the front, to the plant cell and is built into a plant chromosome at the bottom.' },

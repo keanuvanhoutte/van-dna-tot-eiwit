@@ -920,8 +920,8 @@ const BASENAME = { A: { nl: 'adenine', en: 'adenine' }, T: { nl: 'thymine', en: 
 const ELNAME = { C: { nl: 'koolstof', en: 'carbon' }, N: { nl: 'stikstof', en: 'nitrogen' }, O: { nl: 'zuurstof', en: 'oxygen' }, P: { nl: 'fosfor', en: 'phosphorus' }, S: { nl: 'zwavel', en: 'sulphur' }, SE: { nl: 'seleen', en: 'selenium' } };
 const AANAME = { ALA: ['alanine'], ARG: ['arginine'], ASN: ['asparagine'], ASP: ['asparaginezuur', 'aspartic acid'], CYS: ['cysteïne', 'cysteine'], GLN: ['glutamine'], GLU: ['glutaminezuur', 'glutamic acid'], GLY: ['glycine'], HIS: ['histidine'], ILE: ['isoleucine'], LEU: ['leucine'], LYS: ['lysine'], MET: ['methionine'], PHE: ['fenylalanine', 'phenylalanine'], PRO: ['proline'], SER: ['serine'], THR: ['threonine'], TRP: ['tryptofaan', 'tryptophan'], TYR: ['tyrosine'], VAL: ['valine'] };
 const PT = {
-  letter: { nl: (n, ty, c) => `letter ${n} van ${ty}-streng ${c}`, en: (n, ty, c) => `letter ${n} of ${ty} strand ${c}` },
-  aa: { nl: (n, c) => `bouwsteen ${n} van eiwitketen ${c}`, en: (n, c) => `building block ${n} of protein chain ${c}` },
+  letter: { nl: (n, ty, c) => `letter nr. ${n} van ${ty}-streng ${c}`, en: (n, ty, c) => `letter no. ${n} of ${ty} strand ${c}` },
+  aa: { nl: (n, c) => `bouwsteen nr. ${n} van eiwitketen ${c}`, en: (n, c) => `building block no. ${n} of protein chain ${c}` },
   atom: { nl: 'atoom', en: 'atom' }, inBase: { nl: 'in de base (de letter)', en: 'in the base (the letter)' }, inBb: { nl: 'in de ruggengraat (suiker-fosfaat)', en: 'in the backbone (sugar–phosphate)' },
   mod: { nl: 'chemisch aangepaste letter', en: 'chemically modified letter' }, part: { nl: 'onderdeel', en: 'part' },
   ion: { nl: 'ion', en: 'ion' }, water: { nl: 'watermolecule', en: 'water molecule' }, lig: { nl: 'Klein molecule', en: 'Small molecule' }, close: { nl: 'Sluiten', en: 'Close' },
@@ -945,7 +945,7 @@ const AAWHAT = {
   LEU: { nl: 'waterafstotend: zit graag binnenin het eiwit', en: 'water-repelling: likes to sit inside the protein' }, ILE: { nl: 'waterafstotend: zit graag binnenin het eiwit', en: 'water-repelling: likes to sit inside the protein' },
   PHE: { nl: 'waterafstotend, met een platte ring', en: 'water-repelling, with a flat ring' }, TRP: { nl: 'de grootste, met een dubbele ring', en: 'the largest, with a double ring' },
   TYR: { nl: 'platte ring met een OH-groep; kan een fosfaatgroep krijgen (aan/uit-schakelaar)', en: 'flat ring with an OH group; can get a phosphate group (on/off switch)' },
-  MET: { nl: 'bevat zwavel; elk eiwit begint ermee', en: 'contains sulphur; every protein starts with it' }, CYS: { nl: 'bevat zwavel; twee cysteïnes kunnen een stevige zwavelbrug vormen', en: 'contains sulphur; two cysteines can form a strong sulphur bridge' },
+  MET: { nl: 'bevat zwavel; bij het maken begint elk eiwit ermee (vaak later weggeknipt)', en: 'contains sulphur; every protein starts with it when it is made (often removed later)' }, CYS: { nl: 'bevat zwavel; twee cysteïnes kunnen een stevige zwavelbrug vormen', en: 'contains sulphur; two cysteines can form a strong sulphur bridge' },
   GLY: { nl: 'de kleinste, zonder zijketen: maakt de keten soepel', en: 'the smallest, without a side chain: makes the chain flexible' }, PRO: { nl: 'stijve ring: maakt een knik in de keten', en: 'stiff ring: puts a kink in the chain' },
   SER: { nl: 'houdt van water; kan een fosfaatgroep krijgen (aan/uit-schakelaar)', en: 'likes water; can get a phosphate group (on/off switch)' }, THR: { nl: 'houdt van water; kan een fosfaatgroep krijgen (aan/uit-schakelaar)', en: 'likes water; can get a phosphate group (on/off switch)' },
   ASN: { nl: 'houdt van water; vormt makkelijk waterstofbruggen', en: 'likes water; easily forms hydrogen bonds' }, GLN: { nl: 'houdt van water; vormt makkelijk waterstofbruggen', en: 'likes water; easily forms hydrogen bonds' },
@@ -1204,7 +1204,7 @@ function info(e) {
   if (!e.pdb && e.why3d) m.push(`<h3>${t('why3d')}</h3><p>${L(e.why3d)}</p>`);
   if (e.pdb) m.push(`<h3>${t('struct')}</h3><div class="struct" id="structInfo">PDB <b>${e.pdb}</b>${e.org ? ` · ${t('orgOf')}: ${L(e.org)}` : ''}</div>`);
   m.push(`<div class="simp"><b>${t('simpl')}</b><ul>${simp.map(x => `<li>${x}</li>`).join('')}</ul></div>`);
-  const src = [...(e.pdb ? [{ label: `${t('rcsb')} ${e.pdb}`, url: `https://www.rcsb.org/structure/${e.pdb}` }] : []), ...(e.src ?? [])];
+  const src = [...(e.pdb ? [{ label: `${t('rcsb')} ${e.pdb}`, url: `https://www.rcsb.org/structure/${e.pdb}` }] : []), ...(e.src ?? []), ...(e.pdb ? CLICK_SRC.map(x => ({ label: L(x.label), url: x.url })) : [])];
   m.push(`<h3>${t('srcs')}</h3><ul class="src">${src.map(x => `<li><a href="${x.url}" target="_blank" rel="noopener">${x.label}</a></li>`).join('')}</ul>`);
   s.push(`<details class="more" ${sp ? '' : 'open'}><summary>${t('more')}</summary><div class="morebody">${m.join('')}</div></details>`);
   $('info').innerHTML = s.join('');
@@ -1218,6 +1218,12 @@ function info(e) {
     el.innerHTML += `<br>${t('liveTitle')}: <span class="rt">${d.struct?.title ?? ''}</span><br>${(d.exptl?.[0]?.method ?? '').toLowerCase()}${res ? ` · ${res} Å` : ''}${c?.year ? ` · ${c.year}` : ''}`;
   });
 }
+/* bronnen voor de klik-info (aminozuren, basen, suikers, formules van kleine moleculen) */
+const CLICK_SRC = [
+  { label: { nl: 'Klik-info aminozuren: Alberts et al. (2002) Molecular Biology of the Cell, 4e druk — The Shape and Structure of Proteins (NCBI Bookshelf)', en: 'Click info amino acids: Alberts et al. (2002) Molecular Biology of the Cell, 4th ed. — The Shape and Structure of Proteins (NCBI Bookshelf)' }, url: 'https://www.ncbi.nlm.nih.gov/books/NBK26830/' },
+  { label: { nl: 'Klik-info basen en suikers: Alberts et al. (2002) — The Chemical Components of a Cell (NCBI Bookshelf)', en: 'Click info bases and sugars: Alberts et al. (2002) — The Chemical Components of a Cell (NCBI Bookshelf)' }, url: 'https://www.ncbi.nlm.nih.gov/books/NBK26883/' },
+  { label: { nl: 'Formules van kleine moleculen: PDB Chemical Component Dictionary (RCSB)', en: 'Formulas of small molecules: PDB Chemical Component Dictionary (RCSB)' }, url: 'https://www.wwpdb.org/data/ccd' },
+];
 function simplified(e) {
   const S = [];
   const add = (nl, en) => S.push(L({ nl, en }));

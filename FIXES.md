@@ -119,3 +119,10 @@
 - [x] Het schema van het geheel blijft: knop "📄 Schema" in de kop van de figuur (en in "Wat zie je in de figuur?", met de beschrijving van het schema) legt het over de 3D-figuur; "🧬 Terug naar 3D".
 - [x] Gezien en opgelost: één losse nucleotide in een eiwitketen (1CVJ) maakte de hele keten "RNA" → ketensoort nu volgens de meerderheid (atlas/analyse.js); nucleosoom, Zα en de andere items ongewijzigd.
 - Controle: 37/37 items zonder fouten, 27 schermopnames zonder fouten, bundels getest, check.html 0 problemen.
+
+## Broncontrole 13-11-2026 — "is niets zelf verzonnen?"
+- [x] Alle 66 DOI's in de app (verhaal-app, gedeelde uitleg, 3D-bibliotheek) nagekeken via Crossref (.fix-ronde/doicheck.py): alle bestaan en horen bij de vermelde publicatie. Enkel verschillen in jaar online/druk (Passmore & Coller 2021/2022, Statello 2020/2021) en auteursvolgorde bij Crossref (Su et al. 1999, 10.1038/6722) — geen fouten.
+- [x] Alle 37 PDB-structuren: titel en meetmethode passen bij het item (lokale RCSB-metadata).
+- [x] Nieuwe uitspraken van vandaag: "PABP om de ~27 A's" → bron toegevoegd (Baer & Kornberg 1983, samenvatting: "27-residue repeating structure"); klik-info aminozuren/basen/suikers → bronnen Alberts et al. 2002 (NCBI Bookshelf NBK26830, NBK26883) en de PDB Chemical Component Dictionary, bij elk 3D-item onder "Voor wie meer wil".
+- [x] Preciezer geformuleerd: "letter nr. 21" (PDB-nummer, niet noodzakelijk de 21e letter); methionine "bij het maken begint elk eiwit ermee (vaak later weggeknipt)"; T-DNA "in de PDB bestaat geen 3D-structuur van het T-DNA zelf" (zelf nagezocht) i.p.v. "nooit gemeten".
+- [x] Structuurformules: 20 aminozuren en 5 basen + ribose/deoxyribose nagekeken tegen de standaardformules (o.a. NH₂/=O/NH-posities, methyl van T, ringen van His/Trp/Pro).

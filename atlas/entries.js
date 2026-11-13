@@ -542,7 +542,7 @@ export const ENTRIES = [
     why3d: {
       nl: 'Een volledig mRNA heeft geen vaste 3D-structuur: het is lang, flexibel en eiwitgebonden. Enkel fragmenten (bv. de cap in eIF4E, poly(A) in PABP) zijn als structuur bepaald.',
       en: 'A complete mRNA has no fixed 3D structure: it is long, flexible and protein-bound. Only fragments (e.g. the cap in eIF4E, poly(A) in PABP) have been solved.' },
-    src: [doi('10.1016/S0092-8674(00)81517-2', 'Deo et al. (1999) Cell 98:835 — PABP + poly(A), PDB 1CVJ'), doi('10.1093/nar/gkw551', 'Ramanathan, Robb & Chan (2016) Nucleic Acids Res 44:7511'), doi('10.1038/s41580-021-00417-y', 'Passmore & Coller (2022) Nat Rev Mol Cell Biol 23:93')],
+    src: [doi('10.1016/S0092-8674(00)81517-2', 'Deo et al. (1999) Cell 98:835 — PABP + poly(A), PDB 1CVJ'), doi('10.1083/jcb.96.3.717', 'Baer & Kornberg (1983) J Cell Biol 96:717 — PABP om de 27 A’s'), doi('10.1093/nar/gkw551', 'Ramanathan, Robb & Chan (2016) Nucleic Acids Res 44:7511'), doi('10.1038/s41580-021-00417-y', 'Passmore & Coller (2022) Nat Rev Mol Cell Biol 23:93')],
   },
   {
     id: 'premrna', pdb: '1K1G', diagram: 'premrna', type: ['rna', 'prot'], cls: ['single', 'complex', 'info'], ctx: ['cell'], org: { nl: 'mens: splicingfactor SF1 + vertakkingsplaats-RNA', en: 'human: splicing factor SF1 + branch-site RNA' },
