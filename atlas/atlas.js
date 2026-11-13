@@ -451,7 +451,7 @@ const SLOTS = [];
 for (let i = 0; i < 3; i++) {
   const el = document.createElement('div'); el.className = 'slot'; el.hidden = true;
   el.innerHTML = `<div class="sh"><h3></h3><span class="hand"></span><a class="pdbl" target="_blank" rel="noopener"></a><button class="tg" type="button"></button><button class="x" title="×">×</button></div>
-    <div class="sbody"><div class="sview"><div class="sleg" hidden></div><div class="stage"><div class="load"></div><div class="pop" role="status" hidden></div><div class="chint" hidden></div><div class="note3d" hidden></div><div class="diag" hidden></div></div>
+    <div class="sbody"><div class="sview"><div class="sleg" hidden></div><div class="stage"><div class="load"></div><div class="pop" role="status" hidden></div><div class="note3d" hidden></div><div class="diag" hidden></div></div><div class="chint" hidden></div>
     <div class="dleg" hidden></div><div class="smeta"></div></div><div class="grip" role="separator" aria-orientation="vertical"><i></i></div><div class="calcgrid"></div></div>`;
   $('slots').append(el);
   const stage = el.querySelector('.stage');
@@ -565,7 +565,7 @@ function getJson(url) { if (!cache.has(url)) cache.set(url, fetch(url).then(r =>
 async function loadSlot(s, e) {
   const token = ++s.token;
   hidePop(s, false);
-  s.entry = e; s.atoms = null; s.an = null; s.focus = null;
+  s.entry = e; s.atoms = null; s.an = null; s.focus = null; s.el.querySelector('.chint').hidden = true;
   const el = s.el;
   el.querySelector('h3').textContent = e.custom ? `PDB ${e.pdb}` : nameOf(e);
   const hand = el.querySelector('.hand'); hand.hidden = true;
@@ -632,7 +632,7 @@ async function loadSlot(s, e) {
     s.viewer.setClickable({}, true, a => showPop(s, a));
     // handje boven een atoom: zo zie je dat je erop kan klikken
     s.viewer.setHoverable({}, true, () => { s.stage.style.cursor = 'pointer'; }, () => { s.stage.style.cursor = ''; });
-    const ch = s.stage.querySelector('.chint'); ch.innerHTML = t('clickHint'); ch.hidden = false; ch.classList.toggle('mini', clickedOnce);
+    const ch = s.el.querySelector('.chint'); ch.innerHTML = t('clickHint'); ch.hidden = false;
     lb.step(4, t('stDraw'), hint); await nextPaint(); if (token !== s.token) return;
     syncColor();
     render(s);
@@ -1011,7 +1011,6 @@ function showPop(s, a) {
   const pop = s.stage.querySelector('.pop'), d = s.down;
   pop.innerHTML = `<button class="px" title="${pt('close')}" aria-label="${pt('close')}">×</button>` + popHTML(s, a).filter(Boolean).map(x => `<div>${x}</div>`).join('');
   pop.hidden = false; s.popT = performance.now();
-  if (!clickedOnce) { clickedOnce = true; try { localStorage.setItem('atlas-clicked', '1'); } catch { /* geen opslag */ } SLOTS.forEach(o => { o.stage.querySelector('.chint').classList.add('mini'); }); }
   pop.querySelectorAll('[data-ccd]').forEach(fillCCD);
   const r = s.stage.getBoundingClientRect(), x = (d?.x ?? r.left + r.width / 2) - r.left, y = (d?.y ?? r.top + r.height / 2) - r.top;
   const w = pop.offsetWidth, h = pop.offsetHeight;
@@ -1041,7 +1040,6 @@ function lighten(hex, f) {
 const renderAll = () => SLOTS.forEach(s => !s.el.hidden && s.atoms && render(s));
 
 /* ---------- legende ---------- */
-let clickedOnce = (() => { try { return localStorage.getItem('atlas-clicked') === '1'; } catch { return false; } })();   // hint "klik op de figuur" tot de eerste klik
 /* lijst links en uitleg rechts inklappen (kleinere schermen, vergelijken): keuze onthouden */
 const PANES = { side: { cls: 'noside', key: 'atlas-side' }, info: { cls: 'noinfo', key: 'atlas-info' } };
 function setPane2(p, shut) {

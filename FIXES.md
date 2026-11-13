@@ -108,3 +108,4 @@
 - [x] Gezien bij het hernoemen: "rRNA in de atlas" (ribosoom, ribogenese) wees naar een onbestaand item (id=rrna) en opende B-DNA → wijst nu naar het ribosoom.
 - Controle: check.html 119·119·119, 0 problemen; text-check dezelfde 4 drukke stappen als ervoor; blank-check dezelfde 7 donkere overgangen als ervoor (codon was eenmalige ruis, 2× nagemeten); engine-test ok.
 - [x] Laatste kleine aanpassingen: grijze vergelijkingstekst in de tabel als nette blokjes (geen pil over twee regels); geen aantal meer naast "Bibliotheek"; inklapknoppen als paneel-icoon in een eigen hoek (botsten niet meer met de titel); klik-hint "ⓘ Klik op een stukje van de figuur voor uitleg" blijft altijd staan (na de eerste klik kleiner en rustiger); zoekveld "Zoek in de bibliotheek".
+- [x] Klik-hint stond in het figuurvak (neemt op kleine schermen plaats van de figuur) → eigen regel net onder de figuur, boven "Volgorde / meetmethode"; enkel bij 3D-modellen (niet bij schema's).
