@@ -2,7 +2,7 @@
 
 Een interactieve, stap-voor-stap moleculaire animatie van een menselijke cel: van genetische informatie of een signaal dat de cel bereikt, via transcriptie, RNA-bewerking en translatie, tot eiwitvouwing, modificaties en afbraak. Gemaakt als studiehulp op bachelorniveau (structurele bio-informatica). Nederlands en Engels.
 
-**Openen:** https://dogma-bio.web.app (Firebase; het oude adres van-dna-tot-eiwit.web.app stuurt automatisch door) · ook op https://keanuvanhoutte.github.io/van-dna-tot-eiwit/
+**Openen:** https://dogma-bio.web.app (Firebase; het oude adres van-dna-tot-eiwit.web.app stuurt automatisch door) · de GitHub Pages-kopie (keanuvanhoutte.github.io/van-dna-tot-eiwit) stuurt ook door
 
 **Online zetten (Firebase):** `firebase deploy --only hosting` (project `van-dna-tot-eiwit`, twee sites: `dogma` = dogma-bio, de app zelf; `oud` = van-dna-tot-eiwit, enkel een doorverwijzing via `tools/redirect-site/`; cursusmateriaal, `tools/` en lokale bestanden worden uitgesloten in `firebase.json`).
 
