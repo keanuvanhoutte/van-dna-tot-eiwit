@@ -162,7 +162,7 @@ const T = {
   eChains: { nl: 'ketens', en: 'chains' }, eSS: { nl: 'Vorm van het eiwit', en: 'Shape of the protein' },
   eHelix: { nl: 'opgerold stuk (helix)', en: 'coiled piece (helix)' }, eSheet: { nl: 'gestrekt stuk (β-streng)', en: 'stretched piece (β-strand)' },
   // zelf een PDB-code opzoeken
-  tabAtlas: { nl: n => `📚 Atlas (${n})`, en: n => `📚 Atlas (${n})` }, tabPdb: { nl: '🌐 Hele PDB', en: '🌐 Whole PDB' },
+  tabAtlas: { nl: n => `📚 Atlas (${n})`, en: n => `📚 Atlas (${n})` }, tabPdb: { nl: '🌐 PDB‑databank', en: '🌐 PDB database' },
   tipAtlas: { nl: 'Zoek tussen de moleculen van deze atlas, met uitleg en vaak ook in het verhaal.', en: 'Search the molecules of this atlas, with explanations and often also in the story.' },
   pdbLbl: { nl: 'Zoek elk eiwit of gen in de hele PDB-databank (buiten de atlas, zonder uitleg op maat)', en: 'Find any protein or gene in the whole PDB database (outside the atlas, without tailored explanations)' }, pdbGo: { nl: 'Zoek', en: 'Search' }, pdbPh: { nl: 'bv. TP53 of 4HHB', en: 'e.g. TP53 or 4HHB' },
   pdbTip: { nl: 'Typ een gen (TP53), een eiwitnaam (insuline) of een PDB-code van 4 tekens (4HHB). De app zoekt in UniProt en de PDB-databank (rcsb.org).', en: 'Type a gene (TP53), a protein name (insulin) or a 4-character PDB code (4HHB). The app searches UniProt and the PDB database (rcsb.org).' },

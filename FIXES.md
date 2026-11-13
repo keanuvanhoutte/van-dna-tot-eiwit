@@ -79,7 +79,7 @@
 - [x] 7. Cartoon + Per atoom: oranje/rode vlekken op het lint → lint neutraal grijsblauw, enkel de atomen van de basen en suikers in atoomkleuren.
 - [x] 8. "Wat zie je in de figuur?" verandert nu mee: blok "In deze weergave" (vorm + kleur, met tip) volgt Weergave en Kleur; de 29 teksten per molecule zijn herschreven zonder kleuren en vormen van één weergave ("blauwe buizen" e.d. weg); ook de tekst bij zelf opgezochte structuren.
 - [x] 9. Atlas of zelf opgezocht: aparte koppen in de lijst ("📌 Zelf opgezocht — niet uit de atlas" / "📚 Uit de atlas — met uitleg"), zelf opgezochte items met gele stippelrand, badge vooraan in de kop ("uit de atlas" of "zelf opgezocht · niet uit de atlas") en een melding bovenaan de uitleg.
-- [x] 10. Zoeken: twee tabbladen "📚 Atlas (37)" (standaard, met uitleg wat je doorzoekt) en "🌐 Hele PDB".
+- [x] 10. Zoeken: twee tabbladen "📚 Atlas (37)" (standaard, met uitleg wat je doorzoekt) en "🌐 PDB-databank" (eerst "Hele PDB").
 - [x] 11. Legende: per figuur vlak boven het 3D-beeld, als duidelijke kleurchips (bij vergelijken elk molecule zijn eigen strengkleuren).
 - Controle: 37/37 items laden zonder fouten; 27 schermopnames (gsm, 1280, 1600 px) zonder consolefouten of horizontaal scrollen; klikinfo getest (verschijnt, sluit met klik ernaast).
 
