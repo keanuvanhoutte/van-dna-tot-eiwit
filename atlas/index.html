@@ -29,8 +29,8 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
 
 <div class="layout">
   <aside class="side">
-    <button class="pclose" id="sideClose" type="button">«</button>
-    <button class="rail" id="sideRail" type="button"><span>»</span><b></b></button>
+    <button class="pclose" id="sideClose" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2"/><path d="M6 2.5v11M11 6 9 8l2 2"/></svg></button>
+    <button class="rail" id="sideRail" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2"/><path d="M10 2.5v11M5 6l2 2-2 2"/></svg><b></b></button>
     <div class="stabs" role="tablist" id="stabs">
       <button role="tab" id="tabAtlas" data-pane="atlas" aria-selected="true"></button>
       <button role="tab" id="tabPdb" data-pane="pdb" aria-selected="false"></button>
@@ -98,8 +98,8 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
   </main>
 
   <section class="info" id="infoCol">
-    <button class="pclose" id="infoClose" type="button">»</button>
-    <button class="rail" id="infoRail" type="button"><span>«</span><b></b></button>
+    <button class="pclose" id="infoClose" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2"/><path d="M10 2.5v11M5 6l2 2-2 2"/></svg></button>
+    <button class="rail" id="infoRail" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2"/><path d="M6 2.5v11M11 6 9 8l2 2"/></svg><b></b></button>
     <div id="info"></div>
   </section>
 </div>

@@ -72,9 +72,11 @@ button { font-family: inherit; }
 .info { border-left: 1px solid var(--line); padding: 14px 18px 30px; background: rgba(13,20,38,.5); position: relative; }
 /* inklappen: knopje rechtsboven (lijst) / linksboven (uitleg); ingeklapt blijft een smalle strook met de naam */
 .side { position: relative; }
-.pclose { all: unset; cursor: pointer; position: absolute; top: 6px; z-index: 3; width: 22px; height: 22px; display: grid; place-items: center; border-radius: 6px; font-size: 14px; color: var(--muted); }
-.pclose:hover { color: var(--text); background: rgba(124,196,255,.12); }
-.side > .pclose { right: 4px; } .info > .pclose { left: 4px; }
+.pclose { all: unset; cursor: pointer; position: absolute; top: 8px; z-index: 3; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 7px; color: var(--muted); border: 1px solid transparent; }
+.pclose:hover { color: var(--text); background: rgba(124,196,255,.1); border-color: var(--line); }
+.pclose svg, .rail svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.side > .pclose { right: 6px; } .info > .pclose { right: 8px; }
+.info h2 { padding-right: 30px; }
 .pclose:focus-visible, .rail:focus-visible { outline: 2px solid var(--accent); }
 .rail { all: unset; cursor: pointer; display: none; flex-direction: column; align-items: center; gap: 10px; padding: 12px 0; width: 100%; height: 100%; box-sizing: border-box; color: var(--muted); font-size: 14px; }
 .rail b { writing-mode: vertical-rl; font: 600 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
@@ -85,7 +87,7 @@ button { font-family: inherit; }
 .layout.noside { grid-template-columns: 38px minmax(0, 1fr) 390px; }
 .layout.noinfo { grid-template-columns: 300px minmax(0, 1fr) 38px; }
 .layout.noside.noinfo { grid-template-columns: 38px minmax(0, 1fr) 38px; }
-.side > .stabs { margin-right: 22px; }
+.side > .stabs { margin-right: 30px; }
 
 /* ---------- zijbalk ---------- */
 .search input { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--text); border-radius: 9px; padding: 6px 10px; font: 13.5px var(--font); outline: none; }
@@ -235,6 +237,10 @@ button { font-family: inherit; }
 .stage .chint { position: absolute; left: 10px; bottom: 10px; z-index: 2; pointer-events: none; font-size: 12px; color: var(--muted); background: rgba(10,16,32,.7); border: 1px solid var(--line); padding: 4px 10px; border-radius: 999px; animation: chint 2.4s ease-in-out 1; }
 .stage .chint b { color: #c9d6ea; font-weight: 600; }
 .slots.n2 .stage .chint .x, .slots.n3 .stage .chint .x { display: none; }
+.stage .chint i { font-style: normal; color: var(--accent); }
+.stage .chint.mini { animation: none; font-size: 11.5px; padding: 3px 9px; background: rgba(10,16,32,.55); }
+.stage .chint.mini .x { display: none; }
+.stage .chint.mini b { font-weight: 500; }
 @keyframes chint { 50% { border-color: rgba(124,196,255,.95); box-shadow: 0 0 0 4px rgba(124,196,255,.15); } }
 @media (prefers-reduced-motion: reduce) { .stage .chint { animation: none; } }
 .stage .diag { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 12px; background: var(--bg-2); z-index: 3; overflow: auto; }
@@ -376,7 +382,6 @@ button { font-family: inherit; }
   .layout.noside.noinfo { grid-template-columns: 38px minmax(0, 1fr); }
   .layout.noinfo .info > .rail { flex-direction: row; justify-content: center; height: auto; padding: 8px 0; }
   .layout.noinfo .info > .rail b { writing-mode: horizontal-tb; }
-  .info > .pclose { left: auto; right: 4px; top: 8px; }
 }
 
 /* brede schermen, één figuur: het hoofdpaneel vult precies de hoogte (geen scrollbalk) — 3D-beeld krijgt de rest */
@@ -412,7 +417,7 @@ button { font-family: inherit; }
 .calc.meas tr.sec td { color: #2cc6a8; background: linear-gradient(90deg, rgba(44,198,168,.16), rgba(44,198,168,.02)); }
 .calc.easy td:first-child { font-weight: 500; }
 .calc.easy td:last-child { font-weight: 500; }
-.calc.easy .ref { display: inline-block; margin-top: 3px; padding: 1px 7px; border-radius: 999px; background: rgba(160,180,220,.1); font-size: 11px; }
+.calc.easy .ref { display: block; width: fit-content; max-width: 100%; box-sizing: border-box; margin-top: 3px; padding: 2px 7px; border-radius: 6px; background: rgba(160,180,220,.1); font-size: 11px; line-height: 1.35; }
 
 /* ---------- infokolom: kaartjes met icoon, kleurwoorden ---------- */
 .info .card { margin: 12px 0 0; padding: 11px 14px 12px; border-radius: 12px; background: rgba(160,180,220,.05); border: 1px solid var(--line); border-left: 3px solid var(--c, var(--accent)); }

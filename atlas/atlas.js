@@ -54,7 +54,7 @@ const T = {
   ttlSub: { nl: 'Echte 3D-vormen van DNA, RNA, eiwitten en hun partners, zoals onderzoekers ze gemeten hebben', en: 'Real 3D shapes of DNA, RNA, proteins and their partners, as researchers measured them' },
   back: { nl: '← terug naar de animatie', en: '← back to the animation' },
   home: { nl: 'Start', en: 'Home' }, story: { nl: 'Verhaal-app', en: 'Story app' },
-  search: { nl: 'Zoek in de atlas: bv. tRNA, histon, enkel streng…', en: 'Search the atlas: e.g. tRNA, histone, single strand…' },
+  search: { nl: 'Zoek in de bibliotheek: bv. tRNA, histon…', en: 'Search the library: e.g. tRNA, histone…' },
   recog: { nl: 'Herkend:', en: 'Recognised:' }, words: { nl: 'woorden:', en: 'words:' },
   loose: { nl: 'Niets past bij alles samen; dit komt het dichtst in de buurt.', en: 'Nothing matches everything together; these come closest.' },
   count: { nl: n => `${n} item${n === 1 ? '' : 's'}`, en: n => `${n} entr${n === 1 ? 'y' : 'ies'}` },
@@ -87,7 +87,7 @@ const T = {
   sideHide: { nl: 'Lijst inklappen (meer plaats voor de figuur)', en: 'Collapse the list (more room for the figure)' }, sideShow: { nl: 'Lijst tonen', en: 'Show the list' }, sideName: { nl: 'Bibliotheek', en: 'Library' },
   infoHide: { nl: 'Uitleg inklappen (meer plaats voor de figuur)', en: 'Collapse the explanation (more room for the figure)' }, infoShow: { nl: 'Uitleg tonen', en: 'Show the explanation' }, infoName: { nl: 'Uitleg', en: 'Explanation' },
   colours: { nl: 'Kleuren', en: 'Colours' }, focusHint: { nl: 'klik op een kleur om enkel dat deel te zien', en: 'click a colour to see only that part' },
-  clickHint: { nl: '<b>Klik op de figuur</b> om te zien wat een stukje is<span class="x"> · slepen = draaien · scrollen = zoomen</span>', en: '<b>Click the figure</b> to see what a piece is<span class="x"> · drag = rotate · scroll = zoom</span>' },
+  clickHint: { nl: '<i>ⓘ</i> <b>Klik op een stukje van de figuur</b> voor uitleg', en: '<i>ⓘ</i> <b>Click a piece of the figure</b> for an explanation' },
   focusAll: { nl: 'alles tonen', en: 'show all' }, legMore: { nl: n => `+${n} meer ▾`, en: n => `+${n} more ▾` }, legLess: { nl: 'minder ▴', en: 'fewer ▴' },
   legShow: { nl: n => `${n} kleuren tonen`, en: n => `show ${n} colours` }, focusOn: { nl: 'keten', en: 'chain' },
   restGrey: { nl: 'rest', en: 'rest' }, restOf: { nl: 'rest van het', en: 'rest of the' }, protChain: { nl: 'eiwitketen', en: 'protein chain' }, moreChains: { nl: 'nog {n} ketens', en: '{n} more chains' },
@@ -166,7 +166,7 @@ const T = {
   eChains: { nl: 'ketens', en: 'chains' }, eSS: { nl: 'Vorm van het eiwit', en: 'Shape of the protein' },
   eHelix: { nl: 'opgerold stuk (helix)', en: 'coiled piece (helix)' }, eSheet: { nl: 'gestrekt stuk (β-streng)', en: 'stretched piece (β-strand)' },
   // zelf een PDB-code opzoeken
-  tabAtlas: { nl: n => `📚 Bibliotheek (${n})`, en: n => `📚 Library (${n})` }, tabPdb: { nl: '🌐 PDB‑databank', en: '🌐 PDB database' },
+  tabAtlas: { nl: '📚 Bibliotheek', en: '📚 Library' }, tabPdb: { nl: '🌐 PDB‑databank', en: '🌐 PDB database' },
   tipAtlas: { nl: 'Zoek tussen de moleculen van deze bibliotheek, met uitleg en vaak ook in het verhaal.', en: 'Search the molecules of this library, with explanations and often also in the story.' },
   pdbLbl: { nl: 'Zoek elk eiwit of gen in de hele PDB-databank (buiten de bibliotheek, zonder uitleg op maat)', en: 'Find any protein or gene in the whole PDB database (outside the library, without tailored explanations)' }, pdbGo: { nl: 'Zoek', en: 'Search' }, pdbPh: { nl: 'bv. TP53 of 4HHB', en: 'e.g. TP53 or 4HHB' },
   pdbTip: { nl: 'Typ een gen (TP53), een eiwitnaam (insuline) of een PDB-code van 4 tekens (4HHB). De app zoekt in UniProt en de PDB-databank (rcsb.org).', en: 'Type a gene (TP53), a protein name (insulin) or a 4-character PDB code (4HHB). The app searches UniProt and the PDB database (rcsb.org).' },
@@ -263,7 +263,7 @@ $('home').textContent = t('home'); $('storyLink').textContent = t('story');
 if (FROM && /^[a-z0-9_-]+$/i.test(FROM)) { $('back').hidden = false; $('back').textContent = t('back'); $('back').href = `../app/index.html?scene=${encodeURIComponent(FROM)}`; }
 $('storyLink').href = FROM ? `../app/index.html?scene=${encodeURIComponent(FROM)}` : '../app/index.html';
 $('q').placeholder = t('search');
-$('tabAtlas').textContent = t('tabAtlas')(ENTRIES.length); $('tabPdb').textContent = t('tabPdb'); $('tipAtlas').textContent = t('tipAtlas');
+$('tabAtlas').textContent = t('tabAtlas'); $('tabPdb').textContent = t('tabPdb'); $('tipAtlas').textContent = t('tipAtlas');
 function setPane(p) {
   for (const b of document.querySelectorAll('#stabs [role=tab]')) b.setAttribute('aria-selected', String(b.dataset.pane === p));
   $('paneAtlas').hidden = p !== 'atlas'; $('pdbForm').hidden = p !== 'pdb';
@@ -632,7 +632,7 @@ async function loadSlot(s, e) {
     s.viewer.setClickable({}, true, a => showPop(s, a));
     // handje boven een atoom: zo zie je dat je erop kan klikken
     s.viewer.setHoverable({}, true, () => { s.stage.style.cursor = 'pointer'; }, () => { s.stage.style.cursor = ''; });
-    const ch = s.stage.querySelector('.chint'); ch.innerHTML = t('clickHint'); ch.hidden = clickedOnce;
+    const ch = s.stage.querySelector('.chint'); ch.innerHTML = t('clickHint'); ch.hidden = false; ch.classList.toggle('mini', clickedOnce);
     lb.step(4, t('stDraw'), hint); await nextPaint(); if (token !== s.token) return;
     syncColor();
     render(s);
@@ -1011,7 +1011,7 @@ function showPop(s, a) {
   const pop = s.stage.querySelector('.pop'), d = s.down;
   pop.innerHTML = `<button class="px" title="${pt('close')}" aria-label="${pt('close')}">×</button>` + popHTML(s, a).filter(Boolean).map(x => `<div>${x}</div>`).join('');
   pop.hidden = false; s.popT = performance.now();
-  if (!clickedOnce) { clickedOnce = true; try { localStorage.setItem('atlas-clicked', '1'); } catch { /* geen opslag */ } SLOTS.forEach(o => { o.stage.querySelector('.chint').hidden = true; }); }
+  if (!clickedOnce) { clickedOnce = true; try { localStorage.setItem('atlas-clicked', '1'); } catch { /* geen opslag */ } SLOTS.forEach(o => { o.stage.querySelector('.chint').classList.add('mini'); }); }
   pop.querySelectorAll('[data-ccd]').forEach(fillCCD);
   const r = s.stage.getBoundingClientRect(), x = (d?.x ?? r.left + r.width / 2) - r.left, y = (d?.y ?? r.top + r.height / 2) - r.top;
   const w = pop.offsetWidth, h = pop.offsetHeight;
