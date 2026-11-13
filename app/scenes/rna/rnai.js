@@ -70,9 +70,9 @@ export default {
     ${note(MEM - 40, 220, T2('kern', 'nucleus'), C.muted, 20, 'end')}${note(MEM + 40, 220, T2('cytoplasma', 'cytoplasm'), C.muted, 20, 'start')}
     <g data-node="dnahelix" data-color="${C.dna}" data-nolabel><g id="ri-dna"></g></g><g data-node="gen" data-color="${C.dna}" data-nolabel><g id="ri-gen"></g></g><g data-node="rnapol" data-color="${C.prot}" data-nolabel><g id="ri-pol"></g></g><g data-node="rnastructuur" data-color="${C.rna}" data-nolabel><g id="ri-hp"></g></g><g id="ri-enz"></g><g id="ri-ago"></g><g data-node="translatie" data-color="${C.rna}" data-nolabel><g id="ri-tgt"></g></g><g data-node="ribosoom" data-color="${C.rrna}" data-nolabel><g id="ri-rib"></g></g><g data-node="mrnaafbraak" data-color="#8a5a3a" data-nolabel><g id="ri-dec"></g></g>
     ${hot('rnapol', T2('RNA-polymerase II', 'RNA polymerase II'), C.prot, 'ri-hP')}
-    ${hot('rnastructuur', T2('dsRNA-stam (atlas)', 'dsRNA stem (atlas)'), C.rna, 'ri-hA', '../atlas/index.html?id=dsrna')}
+    ${hot('rnastructuur', T2('dsRNA-stam in 3D', 'dsRNA stem in 3D'), C.rna, 'ri-hA', '../atlas/index.html?id=dsrna')}
     ${hot('mrnaafbraak', T2('→ mRNA-afbraak', '→ mRNA decay'), '#8a5a3a', 'ri-tA')}
-    ${hot('rnai', T2('miRNA in AGO2 (atlas)', 'miRNA in AGO2 (atlas)'), '#e0679a', 'ri-gA', '../atlas/index.html?id=mirna')}
+    ${hot('rnai', T2('miRNA in AGO2 in 3D', 'miRNA in AGO2 in 3D'), '#e0679a', 'ri-gA', '../atlas/index.html?id=mirna')}
     </svg>`;
   },
   init(svg) {

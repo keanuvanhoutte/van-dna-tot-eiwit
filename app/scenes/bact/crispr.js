@@ -54,7 +54,7 @@ export default {
     <g id="cr-lab" opacity="0"></g>
     ${btn('faag', 60, 230, T2('↑ fagen', '↑ phages'), '#c7d2e8')}
     ${btn('dsb', 310, 400, T2('hoe de cel een knip herstelt', 'how the cell repairs a cut'), C.dna)}
-    ${hbtn('crispr', 1100, 460, T2('de echte schaar in 3D (atlas) ↗', 'the real scissors in 3D (atlas) ↗'), CAS, '../atlas/index.html?pdb=4OO8')}
+    ${hbtn('crispr', 1100, 460, T2('de echte schaar in 3D ↗', 'the real scissors in 3D ↗'), CAS, '../atlas/index.html?pdb=4OO8')}
     </svg>`;
   },
   init(svg) {

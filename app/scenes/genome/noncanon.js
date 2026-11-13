@@ -41,7 +41,7 @@ const STEPS = [
   ST(9000, FULL, 'DNA vouwt op zichzelf terug', 'DNA folds back on itself', 'Bij een gespiegelde herhaling kan een stuk streng terugvouwen in de groef ernaast. Het stuk ertegenover blijft los.', 'At a mirror repeat, part of one strand can fold back into the groove next to it. The opposite stretch stays loose.'),
   ST(9000, FULL, 'Een kruis van DNA', 'A cross made of DNA', 'Een stuk dat op beide strengen hetzelfde leest, kan in elke streng een haarspeld vormen: samen een kruis.', 'A stretch that reads the same on both strands can form a hairpin in each strand. Together they look like a cross.'),
   ST(8000, cam(800, 420, 1000), 'Het i-motief', 'The i-motif', 'De C-rijke tegenstreng kan ook vouwen: de C’s paren en schuiven in elkaar. Dat lukt in licht zuur milieu.', 'The C-rich opposite strand can fold too: its C’s pair up and slot together. This works when slightly acidic.'),
-  ST(7000, FULL, 'Verder verkennen', 'Explore further', 'Bekijk deze vormen in 3D in de atlas, of ga naar telomeren en basenparing.', 'Explore these shapes in 3D in the atlas, or continue to telomeres and base pairing.'),
+  ST(7000, FULL, 'Verder verkennen', 'Explore further', 'Bekijk deze vormen in de 3D-bibliotheek, of ga naar telomeren en basenparing.', 'Explore these shapes in the 3D library, or continue to telomeres and base pairing.'),
 ];
 
 export default {

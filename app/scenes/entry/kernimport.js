@@ -82,7 +82,7 @@ export default {
       <g data-node="rnapol" data-color="${C.prot}" data-nolabel><g id="ki-pol"></g></g>
       <g id="ki-txn-body"></g>
     </g>
-    <g data-node="dnahelix" data-href="../atlas/index.html?id=bdna" data-color="${PINK}" data-label="${T2('Viraal dsDNA — atlas', 'Viral dsDNA — atlas')}" id="ki-epi" opacity="0">
+    <g data-node="dnahelix" data-href="../atlas/index.html?id=bdna" data-color="${PINK}" data-label="${T2('Viraal dsDNA — in 3D', 'Viral dsDNA — in 3D')}" id="ki-epi" opacity="0">
       <circle data-anchor="dnahelix" cx="760" cy="640" r="1" fill="none"/>
       <g id="ki-epi-body"></g>
     </g>

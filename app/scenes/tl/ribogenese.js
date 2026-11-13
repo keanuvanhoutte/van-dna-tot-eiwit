@@ -63,7 +63,7 @@ export default {
     ${hud('rg-hud', [
       { node: 'translatie', label: { nl: '↩ Translatie (hoofdverhaal)', en: '↩ Translation (main story)' }, color: C.rrna },
       { node: 'ribosoom', label: { nl: 'Ribosoom (structuur)', en: 'Ribosome (structure)' }, color: C.rrna },
-      { node: 'rnastructuur', label: { nl: 'rRNA in de atlas', en: 'rRNA in the atlas' }, color: C.rrna, href: '../atlas/index.html?id=rrna' },
+      { node: 'rnastructuur', label: { nl: 'rRNA in 3D', en: 'rRNA in 3D' }, color: C.rrna, href: '../atlas/index.html?id=ribosome' },
     ])}
     </svg>`;
   },

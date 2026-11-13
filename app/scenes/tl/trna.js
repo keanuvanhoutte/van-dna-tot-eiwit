@@ -82,7 +82,7 @@ export default {
     ${hud('tr-hud', [
       { node: 'translatie', label: { nl: '↩ Translatie (hoofdverhaal)', en: '↩ Translation (main story)' }, color: C.rrna },
       { node: 'aars', label: { nl: 'tRNA laden (aaRS)', en: 'Charging tRNA (aaRS)' }, color: C.trna },
-      { node: 'rnastructuur', label: { nl: 'tRNA in de atlas', en: 'tRNA in the atlas' }, color: C.trna, href: '../atlas/index.html?id=trna' },
+      { node: 'rnastructuur', label: { nl: 'tRNA in 3D', en: 'tRNA in 3D' }, color: C.trna, href: '../atlas/index.html?id=trna' },
     ], { row: true })}
     </svg>`;
   },

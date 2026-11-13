@@ -50,8 +50,8 @@ const FROM = q.get('from');
 
 /* ---------- interfaceteksten ---------- */
 const T = {
-  ttl: { nl: 'DNA- en RNA-atlas', en: 'DNA and RNA atlas' },
-  ttlSub: { nl: 'Echte 3D-vormen van DNA en RNA, zoals onderzoekers ze gemeten hebben', en: 'Real 3D shapes of DNA and RNA, as researchers measured them' },
+  ttl: { nl: '3D-bibliotheek', en: '3D library' },
+  ttlSub: { nl: 'Echte 3D-vormen van DNA, RNA, eiwitten en hun partners, zoals onderzoekers ze gemeten hebben', en: 'Real 3D shapes of DNA, RNA, proteins and their partners, as researchers measured them' },
   back: { nl: '← terug naar de animatie', en: '← back to the animation' },
   home: { nl: 'Start', en: 'Home' }, story: { nl: 'Verhaal-app', en: 'Story app' },
   search: { nl: 'Zoek in de atlas: bv. tRNA, histon, enkel streng…', en: 'Search the atlas: e.g. tRNA, histone, single strand…' },
@@ -84,7 +84,7 @@ const T = {
     base: { nl: 'elke letter (A, T/U, G, C) een eigen kleur; de ruggengraat grijs', en: 'each letter (A, T/U, G, C) its own colour; the backbone grey' },
     elem: { nl: 'koolstof grijs, stikstof blauw, zuurstof rood, fosfor oranje', en: 'carbon grey, nitrogen blue, oxygen red, phosphorus orange' } },
   cartoonProt: { nl: 'eiwit als lint met spiralen (helix) en pijlen (gestrekt stuk)', en: 'protein as a ribbon with spirals (helix) and arrows (stretched piece)' },
-  sideHide: { nl: 'Lijst inklappen (meer plaats voor de figuur)', en: 'Collapse the list (more room for the figure)' }, sideShow: { nl: 'Lijst tonen', en: 'Show the list' }, sideName: { nl: 'Atlas', en: 'Atlas' },
+  sideHide: { nl: 'Lijst inklappen (meer plaats voor de figuur)', en: 'Collapse the list (more room for the figure)' }, sideShow: { nl: 'Lijst tonen', en: 'Show the list' }, sideName: { nl: 'Bibliotheek', en: 'Library' },
   infoHide: { nl: 'Uitleg inklappen (meer plaats voor de figuur)', en: 'Collapse the explanation (more room for the figure)' }, infoShow: { nl: 'Uitleg tonen', en: 'Show the explanation' }, infoName: { nl: 'Uitleg', en: 'Explanation' },
   colours: { nl: 'Kleuren', en: 'Colours' }, focusHint: { nl: 'klik op een kleur om enkel dat deel te zien', en: 'click a colour to see only that part' },
   clickHint: { nl: '<b>Klik op de figuur</b> om te zien wat een stukje is<span class="x"> · slepen = draaien · scrollen = zoomen</span>', en: '<b>Click the figure</b> to see what a piece is<span class="x"> · drag = rotate · scroll = zoom</span>' },
@@ -166,9 +166,9 @@ const T = {
   eChains: { nl: 'ketens', en: 'chains' }, eSS: { nl: 'Vorm van het eiwit', en: 'Shape of the protein' },
   eHelix: { nl: 'opgerold stuk (helix)', en: 'coiled piece (helix)' }, eSheet: { nl: 'gestrekt stuk (β-streng)', en: 'stretched piece (β-strand)' },
   // zelf een PDB-code opzoeken
-  tabAtlas: { nl: n => `📚 Atlas (${n})`, en: n => `📚 Atlas (${n})` }, tabPdb: { nl: '🌐 PDB‑databank', en: '🌐 PDB database' },
-  tipAtlas: { nl: 'Zoek tussen de moleculen van deze atlas, met uitleg en vaak ook in het verhaal.', en: 'Search the molecules of this atlas, with explanations and often also in the story.' },
-  pdbLbl: { nl: 'Zoek elk eiwit of gen in de hele PDB-databank (buiten de atlas, zonder uitleg op maat)', en: 'Find any protein or gene in the whole PDB database (outside the atlas, without tailored explanations)' }, pdbGo: { nl: 'Zoek', en: 'Search' }, pdbPh: { nl: 'bv. TP53 of 4HHB', en: 'e.g. TP53 or 4HHB' },
+  tabAtlas: { nl: n => `📚 Bibliotheek (${n})`, en: n => `📚 Library (${n})` }, tabPdb: { nl: '🌐 PDB‑databank', en: '🌐 PDB database' },
+  tipAtlas: { nl: 'Zoek tussen de moleculen van deze bibliotheek, met uitleg en vaak ook in het verhaal.', en: 'Search the molecules of this library, with explanations and often also in the story.' },
+  pdbLbl: { nl: 'Zoek elk eiwit of gen in de hele PDB-databank (buiten de bibliotheek, zonder uitleg op maat)', en: 'Find any protein or gene in the whole PDB database (outside the library, without tailored explanations)' }, pdbGo: { nl: 'Zoek', en: 'Search' }, pdbPh: { nl: 'bv. TP53 of 4HHB', en: 'e.g. TP53 or 4HHB' },
   pdbTip: { nl: 'Typ een gen (TP53), een eiwitnaam (insuline) of een PDB-code van 4 tekens (4HHB). De app zoekt in UniProt en de PDB-databank (rcsb.org).', en: 'Type a gene (TP53), a protein name (insulin) or a 4-character PDB code (4HHB). The app searches UniProt and the PDB database (rcsb.org).' },
   // zoeken op gen- of eiwitnaam
   srchBusy: { nl: t => `Zoeken naar ${t}…`, en: t => `Searching for ${t}…` },
@@ -211,10 +211,10 @@ const T = {
   codeOffline: { nl: 'Geen verbinding met de PDB (internet nodig).', en: 'No connection to the PDB (internet needed).' },
   lookFor: { nl: c => `🔎 PDB-code ${c} opzoeken`, en: c => `🔎 Look up PDB code ${c}` }, lookForSub: { nl: 'haalt de structuur op van rcsb.org', en: 'fetches the structure from rcsb.org' },
   lookName: { nl: c => `🔎 „${c}” zoeken in de PDB`, en: c => `🔎 Search the PDB for “${c}”` }, lookNameSub: { nl: 'als gen (TP53), eiwitnaam (insuline) of woord uit de titel', en: 'as a gene (TP53), protein name (insulin) or word from the title' },
-  mine: { nl: 'Zelf opgezocht', en: 'Looked up yourself' }, ours: { nl: 'Atlas', en: 'Atlas' }, mineBadge: { nl: '📌 zelf opgezocht · niet uit de atlas', en: '📌 looked up yourself · not from the atlas' },
-  mineHead: { nl: '📌 Zelf opgezocht — niet uit de atlas', en: '📌 Looked up yourself — not from the atlas' }, oursHead: { nl: '📚 Uit de atlas — met uitleg', en: '📚 From the atlas — with explanations' },
-  atlasBadge: { nl: '📚 uit de atlas', en: '📚 from the atlas' },
-  mineNote: { nl: 'Deze structuur heb je zelf opgezocht in de PDB. Ze komt niet uit de atlas: er is geen uitleg op maat en ze staat niet in het verhaal.', en: 'You looked up this structure yourself in the PDB. It is not from the atlas: there is no tailored explanation and it is not in the story.' },
+  mine: { nl: 'Zelf opgezocht', en: 'Looked up yourself' }, ours: { nl: 'Bibliotheek', en: 'Library' }, mineBadge: { nl: '📌 zelf opgezocht · niet uit de bibliotheek', en: '📌 looked up yourself · not from the library' },
+  mineHead: { nl: '📌 Zelf opgezocht — niet uit de bibliotheek', en: '📌 Looked up yourself — not from the library' }, oursHead: { nl: '📚 Uit de bibliotheek — met uitleg', en: '📚 From the library — with explanations' },
+  atlasBadge: { nl: '📚 uit de bibliotheek', en: '📚 from the library' },
+  mineNote: { nl: 'Deze structuur heb je zelf opgezocht in de PDB. Ze komt niet uit de bibliotheek: er is geen uitleg op maat en ze staat niet in het verhaal.', en: 'You looked up this structure yourself in the PDB. It is not from the library: there is no tailored explanation and it is not in the story.' },
   forget: { nl: 'Uit de lijst halen', en: 'Remove from the list' },
   loadingHuge: { nl: n => `zeer groot (~${n} 000 atomen), dit kan even duren`, en: n => `very large (~${n},000 atoms), this may take a while` },
   // uitlegpaneel

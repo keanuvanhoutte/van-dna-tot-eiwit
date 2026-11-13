@@ -143,7 +143,7 @@ export default {
       <rect x="1100" y="176" width="260" height="46" rx="12" fill="rgba(255,194,71,.08)" stroke="${C.trna}" stroke-dasharray="6 5"/>
       ${txt(1230, 206, T2('Baltimore-klasse VI', 'Baltimore class VI'), C.trna, 18)}
     </g>
-    <g id="rt-trna" data-node="trna" data-href="../atlas/index.html?id=trna" data-color="${C.trna}" data-label="${T2('tRNA — atlas', 'tRNA — atlas')}">
+    <g id="rt-trna" data-node="trna" data-href="../atlas/index.html?id=trna" data-color="${C.trna}" data-label="${T2('tRNA — in 3D', 'tRNA — in 3D')}">
       <circle data-anchor="trna" data-pos="below" cx="${SEG.PBS[1] - 40}" cy="${440 + 60}" r="1" fill="none"/>
       <rect x="${SEG.PBS[1] - 80}" y="${440 - 20}" width="90" height="56" fill="transparent"/>
     </g>

@@ -22,7 +22,7 @@ const T = {
   open: { nl: 'Bekijk echt in 3D', en: 'View in real 3D' },
   openTip: { nl: 'Leg het echte molecuul (PDB) over de tekening', en: 'Lay the real molecule (PDB) over the drawing' },
   close: { nl: 'Sluiten', en: 'Close' }, closeTip: { nl: 'Terug naar de tekening (Esc)', en: 'Back to the drawing (Esc)' },
-  atlas: { nl: 'Verder in de atlas →', en: 'More in the atlas →' },
+  atlas: { nl: 'Verder in de 3D-bibliotheek →', en: 'More in the 3D library →' },
   cartoon: { nl: 'Cartoon', en: 'Cartoon' }, stick: { nl: 'Stokjes', en: 'Sticks' }, sphere: { nl: 'Bolletjes', en: 'Spheres' },
   styleLbl: { nl: 'Weergave', en: 'Style' },
   atomic: { nl: 'Atoomniveau', en: 'Atomic level' },
@@ -34,7 +34,7 @@ const T = {
   coarse: { nl: 'Ingekorte kopie: één bolletje per bouwsteen (alleen de Cα- en P-atomen).', en: 'Trimmed copy: one bead per building block (only the Cα and P atoms).' },
   noCoarse: { nl: 'Deze kopie bevat alleen de Cα- en P-atomen (ingekort voor snelheid): te weinig om waterstofbruggen te berekenen.', en: 'This copy only contains the Cα and P atoms (trimmed for speed): too few to compute hydrogen bonds.' },
   noBig: { nl: `De eiwitketen is te groot (meer dan ${MAX_RES} bouwstenen) om hier snel door te rekenen.`, en: `The protein chain is too large (more than ${MAX_RES} building blocks) to compute here quickly.` },
-  noRna: { nl: 'Voor RNA rekent de app geen bruggen uit: RNA vouwt op zichzelf met veel soorten paren. Bekijk het in de atlas.', en: 'The app does not compute bonds for RNA: RNA folds onto itself with many kinds of pairs. Look at it in the atlas.' },
+  noRna: { nl: 'Voor RNA rekent de app geen bruggen uit: RNA vouwt op zichzelf met veel soorten paren. Bekijk het in de 3D-bibliotheek.', en: 'The app does not compute bonds for RNA: RNA folds onto itself with many kinds of pairs. Look at it in the 3D library.' },
   noOther: { nl: 'Atoomniveau werkt voor eiwitten en voor gewone DNA-dubbelhelices. Deze structuur is geen van beide.', en: 'The atomic level works for proteins and for ordinary DNA double helices. This structure is neither.' },
   modeProt: { nl: 'Eiwit', en: 'Protein' }, modeDna: { nl: 'DNA', en: 'DNA' },
   /* eiwit */

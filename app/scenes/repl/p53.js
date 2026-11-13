@@ -58,6 +58,6 @@ export default structure3d({
     { node: 'herstel', label: L3('↑ Overzicht herstel', '↑ Repair overview'), color: C.ok },
     { node: 'dsb', label: L3('← Breuk in het DNA', '← Break in the DNA'), color: '#ff8a3d' },
     { node: 'mutaties', label: L3('Mutaties →', 'Mutations →'), color: C.danger },
-    { node: 'p53', href: '../atlas/index.html?pdb=1TUP', label: L3('Bekijk p53 in de atlas ↗', 'View p53 in the atlas ↗'), color: '#7cc4ff' },
+    { node: 'p53', href: '../atlas/index.html?pdb=1TUP', label: L3('Bekijk p53 in 3D ↗', 'View p53 in 3D ↗'), color: '#7cc4ff' },
   ],
 });

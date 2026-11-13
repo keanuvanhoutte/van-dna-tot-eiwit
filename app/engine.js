@@ -41,7 +41,7 @@ function lineFor(id) {
 
 const UI2 = {
   home: { nl: 'Startmenu', en: 'Main menu' }, zoomOut: { nl: 'Uitzoomen', en: 'Zoom out' }, whereAmI: { nl: 'Waar ben ik?', en: 'Where am I?' },
-  atlas: { nl: 'DNA/RNA-atlas', en: 'DNA/RNA atlas' }, labels: { nl: 'Labels', en: 'Labels' }, captions: { nl: 'Ondertitels', en: 'Captions' }, info: { nl: 'Uitleg', en: 'Info' },
+  atlas: { nl: '3D-bibliotheek', en: '3D library' }, labels: { nl: 'Labels', en: 'Labels' }, captions: { nl: 'Ondertitels', en: 'Captions' }, info: { nl: 'Uitleg', en: 'Info' },
   chapter: { nl: 'Hoofdstuk', en: 'Chapter' }, sidePath: { nl: 'Zijsprong', en: 'Detour' }, backTo: { nl: '↩ terug naar hoofdstuk', en: '↩ back to chapter' },
   nextChapter: { nl: 'Volgend hoofdstuk', en: 'Next chapter' }, step: { nl: 'stap', en: 'step' },
   what: { nl: 'Wat', en: 'What' }, how: { nl: 'Zo werkt het', en: 'How it works' }, facts: { nl: 'Kerncijfers', en: 'Key numbers' },

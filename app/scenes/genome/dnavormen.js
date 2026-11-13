@@ -19,7 +19,7 @@ const STEPS = [
   ST(8500, cam(800, 430, 1300), 'Langs de as bekeken', 'Looking down the axis', 'In A-DNA liggen de basenparen naast de as, met een gat in het midden. In B-DNA loopt de as er dwars door.', 'In A-DNA the base pairs lie beside the axis, leaving a hole in the middle. In B-DNA the axis runs right through them.'),
   ST(9500, FULL, 'De verschillen op een rij', 'The differences side by side', 'In A-DNA is de suikerring anders geplooid. Daardoor liggen de fosfaten van een streng dichter bij elkaar.', 'In A-DNA the sugar ring is folded differently. This brings the phosphates of a strand closer together.'),
   ST(8500, FULL, 'Waar komt welke vorm voor?', 'Where does each form occur?', 'B: bijna al het DNA. A: dubbel RNA, of RNA gepaard aan DNA. Z: bepaalde CG-reeksen, in speciale omstandigheden.', 'B: almost all DNA. A: double RNA, or RNA paired with DNA. Z: certain CG stretches, under special conditions.'),
-  ST(7000, FULL, 'Bekijk ze in 3D', 'Explore them in 3D', 'Open de atlas om de echte structuren zelf te draaien en te meten.', 'Open the atlas to rotate and measure the real structures yourself.'),
+  ST(7000, FULL, 'Bekijk ze in 3D', 'Explore them in 3D', 'Open de 3D-bibliotheek om de echte structuren zelf te draaien en te meten.', 'Open the 3D library to rotate and measure the real structures yourself.'),
 ];
 
 export default {

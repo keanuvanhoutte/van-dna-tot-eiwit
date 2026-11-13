@@ -130,7 +130,7 @@ export default {
       <circle id="bal-a5b" data-anchor="integratie" data-pos="below" cx="${XM + 275}" cy="${rowY(5) + 26}" r="1" fill="none"/>
       <rect x="${XM + 180}" y="${rowY(5) - 24}" width="120" height="48" fill="transparent"/>
     </g>
-    <g data-node="rnastructuur" data-href="../atlas/index.html?id=dsrna" data-color="${C.rna}" data-label="${T2('dsRNA — atlas', 'dsRNA — atlas')}">
+    <g data-node="rnastructuur" data-href="../atlas/index.html?id=dsrna" data-color="${C.rna}" data-label="${T2('dsRNA — in 3D', 'dsRNA — in 3D')}">
       <circle id="bal-a2" data-anchor="rnastructuur" cx="${XG + WG / 2}" cy="${rowY(2) - 50}" r="1" fill="none"/>
       <rect x="${XG}" y="${rowY(2) - 20}" width="${WG}" height="40" fill="transparent"/>
     </g>

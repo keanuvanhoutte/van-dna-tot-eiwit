@@ -73,7 +73,7 @@ export default {
       { node: 'translatie', label: { nl: '↩ Translatie (hoofdverhaal)', en: '↩ Translation (main story)' }, color: C.rrna },
       { node: 'trna', label: { nl: 'tRNA-structuur', en: 'tRNA structure' }, color: C.trna },
       { node: 'seleno', label: { nl: 'Sec & Pyl (21e/22e aa)', en: 'Sec & Pyl (21st/22nd aa)' }, color: C.danger },
-      { node: 'rnastructuur', label: { nl: 'mRNA in de atlas', en: 'mRNA in the atlas' }, color: C.rna, href: '../atlas/index.html?id=mrna' },
+      { node: 'rnastructuur', label: { nl: 'mRNA-schema', en: 'mRNA diagram' }, color: C.rna, href: '../atlas/index.html?id=mrna' },
     ], { row: true })}
     </svg>`;
   },

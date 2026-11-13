@@ -58,7 +58,7 @@ const scene = {
     ${btn('ds-up', 'herstel', 40, 14, 250, T2('↑ overzicht herstel', '↑ repair overview'), C.ok)}
     ${btn('ds-ner', 'ner', 304, 14, 250, T2('← grote UV-schade', '← bulky UV damage'), '#ffc247')}
     ${btn('ds-p53', 'p53', 568, 14, 250, T2('wie beslist? p53 →', 'who decides? p53 →'), C.prot)}
-    ${btn('ds-ku', 'dsb', 832, 14, 230, T2('3D-ring (atlas) ↗', '3D ring (atlas) ↗'), KU, '../atlas/index.html?pdb=1JEY')}
+    ${btn('ds-ku', 'dsb', 832, 14, 230, T2('3D-ring ↗', '3D ring ↗'), KU, '../atlas/index.html?pdb=1JEY')}
     <g data-node="telomeren" data-color="${C.dna2}" data-label="${T2('Chromosoomuiteinden: geen breuk', 'Chromosome ends: not a break')}"><circle id="ds-tea" data-anchor="telomeren" cx="-99" cy="-99" r="1" fill="none"/><rect id="ds-ter" x="-99" y="-99" width="1" height="1" fill="transparent"/></g>
     </svg>`;
   },

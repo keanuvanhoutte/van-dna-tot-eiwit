@@ -59,7 +59,7 @@ export default {
     <g id="dh-hs-forms" data-node="dnavormen" data-color="${C.dna2}" data-label="${T2('B-vorm · ook A- en Z-DNA', 'B form · also A- and Z-DNA')}"><circle id="dh-a-forms" data-anchor="dnavormen" r="30" fill="transparent"/></g>
     <g id="dh-hs-atlas" data-node="dnavormen" data-href="../atlas/index.html?id=bdna" data-nolabel>
       <rect x="1080" y="150" width="330" height="50" rx="25" fill="#0d1426" stroke="#7cc4ff" stroke-width="2.5"/>
-      ${txt(1245, 183, T2('B-DNA in 3D (atlas) ↗', 'B-DNA in 3D (atlas) ↗'), '#7cc4ff', 23)}
+      ${txt(1245, 183, T2('B-DNA in 3D ↗', 'B-DNA in 3D ↗'), '#7cc4ff', 23)}
     </g>
     <g id="dh-menu">
       ${menu(420, 150, 'nucleotide', 'Nucleotide', 'Nucleotide', '#c9a574')}

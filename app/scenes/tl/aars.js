@@ -50,7 +50,7 @@ export default {
       { node: 'translatie', label: { nl: '↩ Translatie (hoofdverhaal)', en: '↩ Translation (main story)' }, color: C.rrna },
       { node: 'trna', label: { nl: 'tRNA-structuur', en: 'tRNA structure' }, color: C.trna },
       { node: 'codon', label: { nl: 'Genetische code', en: 'Genetic code' }, color: C.rna },
-      { node: 'rnastructuur', label: { nl: 'tRNA in de atlas', en: 'tRNA in the atlas' }, color: C.trna, href: '../atlas/index.html?id=trna' },
+      { node: 'rnastructuur', label: { nl: 'tRNA in 3D', en: 'tRNA in 3D' }, color: C.trna, href: '../atlas/index.html?id=trna' },
     ])}
     </svg>`;
   },

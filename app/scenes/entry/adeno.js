@@ -89,7 +89,7 @@ export default {
         ${txt(60, 652, T2('dsDNA-virus · klasse I', 'dsDNA virus · class I'), PINK, 21)}
       </g>
       <g id="ad-anat-body"></g>
-      <g data-node="dnahelix" data-href="../atlas/index.html?id=bdna" data-color="${PINK}" data-label="${T2('dsDNA ≈ 36 kb — atlas', 'dsDNA ≈ 36 kb — atlas')}" id="ad-anat-dna" opacity="0">
+      <g data-node="dnahelix" data-href="../atlas/index.html?id=bdna" data-color="${PINK}" data-label="${T2('dsDNA ≈ 36 kb — in 3D', 'dsDNA ≈ 36 kb — in 3D')}" id="ad-anat-dna" opacity="0">
         <circle data-anchor="dnahelix" cx="${AX}" cy="${AY - 40}" r="1" fill="none"/>
         <g id="ad-anat-dna-body"></g>
       </g>

@@ -21,8 +21,8 @@ export default {
   legend: [[C.dna, { nl: 'DNA / chromatinevezel', en: 'DNA / chromatin fibre' }], [C.histone, { nl: 'nucleosoom (histonkern)', en: 'nucleosome (histone core)' }],
     ['#ff8a3d', 'CTCF'], ['#ffc247', { nl: 'cohesine', en: 'cohesin' }], [C.chain, { nl: 'acetylatie (Ac)', en: 'acetylation (Ac)' }], [C.danger, { nl: 'H3K9me3 / 5mC', en: 'H3K9me3 / 5mC' }], ['#f06bc0', 'HP1'], [C.prot, 'RNA-pol II']],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">Meer over het DNA rond een nucleosoom in de <a href="../atlas/index.html?id=nucleosome&lang=nl">DNA/RNA-atlas: nucleosoom</a>.</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">More about the DNA around a nucleosome in the <a href="../atlas/index.html?id=nucleosome&lang=en">DNA/RNA atlas: nucleosome</a>.</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">Meer over het DNA rond een nucleosoom in de <a href="../atlas/index.html?id=nucleosome&lang=nl">3D-bibliotheek: nucleosoom</a>.</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">More about the DNA around a nucleosome in the <a href="../atlas/index.html?id=nucleosome&lang=en">3D library: nucleosome</a>.</p>' },
   simplified: {
     nl: 'Niets is op schaal: een territorium is enkele µm, een lus ~50 kb–1 Mb, een nucleosoom ~11 nm. De kleuren van de territoria volgen "chromosome painting" (FISH). Lusextrusie is getekend met één cohesinering; het exacte mechanisme (één of twee ringen, hoe CTCF de ring stopt) wordt nog onderzocht. De Hi-C-kaart is een schets, geen echte data. De klassieke 30 nm-vezel is in vitro gezien; in de meeste levende cellen vindt men vooral een onregelmatige 5–24 nm-keten.',
     en: 'Nothing is to scale: a territory is a few µm, a loop ~50 kb–1 Mb, a nucleosome ~11 nm. Territory colours mimic chromosome painting (FISH). Loop extrusion is drawn with one cohesin ring; the exact mechanism (one or two rings, how CTCF stops the ring) is still being studied. The Hi-C map is a sketch, not real data. The classical 30 nm fibre was seen in vitro; in most living cells mainly an irregular 5–24 nm chain is found.' },

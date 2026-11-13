@@ -47,7 +47,7 @@ export default {
     <g id="ln-mem">${bilayer(`M620,${MEM} L2000,${MEM}`)}</g>
     <text x="1400" y="${MEM - 30}" font-size="17" fill="${C.muted}" font-family="Inter" opacity=".6">${T2('extracellulair', 'extracellular')}</text>
     <g id="ln-anat"></g>
-    <g data-node="mrnaafbraak" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-label="${T2('mRNA — atlas', 'mRNA — atlas')}" id="ln-mrna" opacity="0">
+    <g data-node="mrnaafbraak" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-label="${T2('mRNA — schema', 'mRNA — diagram')}" id="ln-mrna" opacity="0">
       <circle data-anchor="mrnaafbraak" cx="${AX + 260}" cy="${AY + 180}" r="1" fill="none"/>
       <g id="ln-mrna-body"></g>
     </g>

@@ -46,7 +46,7 @@ export default {
   svg() {
     return svgOpen() + `
     <g data-node="mrnaafbraak" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-nolabel><g id="md-mrna"></g></g><g data-node="initiatie" data-color="#3fb6c9" data-nolabel><g id="md-tli"></g></g><g data-node="ribosoom" data-color="${C.rrna}" data-nolabel><g id="md-rib"></g></g><g id="md-fac"></g><g data-node="rnai" data-color="#e0679a" data-nolabel><g id="md-mi"></g></g><g data-node="nmd" data-color="#e0679a" data-nolabel><g id="md-nmd"></g></g>
-    ${hot('mrnaafbraak', T2('mRNA (atlas)', 'mRNA (atlas)'), C.rna, 'md-mA', '../atlas/index.html?id=mrna', true)}
+    ${hot('mrnaafbraak', T2('mRNA-schema', 'mRNA diagram'), C.rna, 'md-mA', '../atlas/index.html?id=mrna', true)}
     ${hot('rnai', T2('miRNA → CCR4–NOT', 'miRNA → CCR4–NOT'), '#e0679a', 'md-iA')}
     ${hot('nmd', T2('NMD: snelle route', 'NMD: fast route'), '#e0679a', 'md-nA')}
     ${hot('korrels', T2('Druppels bij stress →', 'Droplets under stress →'), '#5fd3e6', 'md-kA')}

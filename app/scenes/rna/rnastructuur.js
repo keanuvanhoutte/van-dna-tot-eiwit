@@ -109,12 +109,12 @@ export default {
     return svgOpen() + `
     <g id="rs-hp"></g><g id="rs-tar"></g><g id="rs-r2">${r2}</g><g id="rs-pk"></g><g><g data-node="dnavormen" data-color="${C.dna}" data-nolabel>${r4b}</g><g data-node="dnavormen" data-color="${C.rna}" data-nolabel>${r4a}</g></g><g data-node="trna" data-color="${C.trna}" data-nolabel><g id="rs-trna"></g></g><g id="rs-hh"></g><g id="rs-oth"></g><g data-node="ribosoom" data-color="${C.rrna}" data-nolabel><g id="rs-ribo"></g></g><g data-node="splicing" data-color="${C.prot}" data-nolabel><g id="rs-spl"></g></g>
     ${hot('nucleotide', T2('Nucleotide: ribose met 2\'-OH', 'Nucleotide: ribose with 2\'-OH'), C.rna, 'rs-nA')}
-    ${hot('rt', T2('Pseudoknoop (atlas)', 'Pseudoknot (atlas)'), '#ffd36b', 'rs-pA', '../atlas/index.html?id=pseudoknot')}
+    ${hot('rt', T2('Pseudoknoop in 3D', 'Pseudoknot in 3D'), '#ffd36b', 'rs-pA', '../atlas/index.html?id=pseudoknot')}
     ${hot('dnavormen', T2('DNA-vormen A, B, Z', 'A-, B-, Z-DNA'), C.dna, 'rs-bA')}
-    ${hot('baltimore', T2('dsRNA (atlas)', 'dsRNA (atlas)'), C.rna, 'rs-dA', '../atlas/index.html?id=dsrna')}
+    ${hot('baltimore', T2('dsRNA in 3D', 'dsRNA in 3D'), C.rna, 'rs-dA', '../atlas/index.html?id=dsrna')}
     ${hot('trna', 'tRNA', C.trna, 'rs-tA')}
-    ${hot('codon', T2('tRNA in de atlas (1EHZ)', 'tRNA in the atlas (1EHZ)'), C.trna, 'rs-t2', '../atlas/index.html?id=trna')}
-    ${hot('rnastructuur', T2('Hammerhead-ribozym (atlas)', 'Hammerhead ribozyme (atlas)'), '#ffd36b', 'rs-hA', '../atlas/index.html?id=hammerhead')}
+    ${hot('codon', T2('tRNA in 3D (1EHZ)', 'tRNA in 3D (1EHZ)'), C.trna, 'rs-t2', '../atlas/index.html?id=trna')}
+    ${hot('rnastructuur', T2('Hammerhead-ribozym in 3D', 'Hammerhead ribozyme in 3D'), '#ffd36b', 'rs-hA', '../atlas/index.html?id=hammerhead')}
     ${hot('ribosoom', T2('Ribosoom = ribozym', 'Ribosome = ribozyme'), C.rrna, 'rs-rA', '', true)}
     ${hot('splicing', T2('Spliceosoom (U2/U6)', 'Spliceosome (U2/U6)'), C.prot, 'rs-sA', '', true)}
     ${hot('riboswitch', T2('Kruispunt als schakelaar (3D)', 'Junction as a switch (3D)'), '#ffd36b', 'rs-wA')}
