@@ -58,7 +58,7 @@ function addStyle() {
   document.head.append(s);
 }
 
-const LINECOL = { virus: '#ff8a3d', signaal: '#7fdc6a', bacterie: '#ff8f8f', herstel: '#4f8ff7', targeting: '#9b7bff', epigen: '#ffc247', virusroute: '#ff9d5c', rnalot: '#2cc6a8' };
+const LINECOL = { virus: '#ff8a3d', signaal: '#7fdc6a', bacterie: '#ff8f8f', herstel: '#4f8ff7', targeting: '#9b7bff', epigen: '#ffc247', virusroute: '#ff9d5c', rnalot: '#2cc6a8', antibiotica: '#e8a23a' };
 export const lineColor = k => LINECOL[k] ?? '#7cc4ff';
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 

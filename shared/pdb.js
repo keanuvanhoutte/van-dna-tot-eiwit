@@ -1,7 +1,7 @@
 /* Lokale kopieën van PDB-bestanden (data/pdb/), zodat de app ook zonder toegang tot RCSB werkt (bv. online gepubliceerd).
  * pdbUrl('1KX5', 'cif') → lokaal bestand als het in de lijst staat, anders de RCSB-download.
  * rcsbEntryUrl('1KX5')  → lokale kopie van de RCSB-metadata (JSON) of de REST-API. */
-const LOCAL = new Set([
+export const LOCAL = new Set([
   '1CVJ.json',
   '1CVJ.pdb',
   '1K1G.json',
@@ -109,6 +109,9 @@ const LOCAL = new Set([
   /* zijpad virussen (05-11-2026): spike-RBD–ACE2 (CA-atomen, star gedraaid) en Mpro-dimeer met nirmatrelvir (CA + His41/Cys145 + ligand) */
   '6M0J.cif',
   '7RFW.cif',
+  /* bacterie (14-11-2026): 70S–EF-Tu–tRNA met kirromycine (ribosoom CA/P, tRNA's/mRNA/EF-Tu/liganden volledig) en RNA-polymerase met rifampicine (één holo-enzym) */
+  '5AFI.cif',
+  '5UAC.cif',
 ]);
 const here = f => new URL(`../data/pdb/${f}`, import.meta.url).href;
 export const pdbUrl = (id, ext = 'pdb') => LOCAL.has(`${id}.${ext}`) ? here(`${id}.${ext}`) : `https://files.rcsb.org/download/${id}.${ext}`;

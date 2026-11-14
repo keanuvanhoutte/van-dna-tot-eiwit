@@ -17,7 +17,7 @@ export default {
         'Ubiquitinering (op Lys) markeert eiwitten o.a. voor afbraak door het proteasoom.',
       ],
       facts: [['Eiwitkinasen in het menselijk genoom', '518 (Manning et al., 2002)'], ['Gefosforyleerde residuen', 'Ser, Thr, Tyr (in eukaryoten)'], ['Lading fosfoserine bij pH 7', '≈ 2−'], ['Collageen-herhaling', 'Gly–X–Y (X vaak Pro, Y vaak Hyp)'], ['Tekort aan vitamine C', 'scheurbuik (onstabiel collageen)']],
-      why: 'Eén gen kan zo vele functionele varianten van een eiwit opleveren. PTM\'s zijn de snelle schakelaars van celsignalering, bepalen waar een eiwit naartoe gaat en hoe lang het leeft. In de cursus worden ze genoemd als manier om de chemische eigenschappen van aminozuren uit te breiden (bv. hydroxyproline in collageen).',
+      why: 'Eén gen kan zo vele functionele varianten van een eiwit opleveren. PTM\'s zijn de snelle schakelaars van celsignalering, bepalen waar een eiwit naartoe gaat en hoe lang het leeft. Ze breiden ook de chemie van de 20 aminozuren uit (bv. hydroxyproline in collageen).',
     },
     en: {
       kort: 'After a protein has been made, enzymes can still attach small chemical groups or cut off pieces. Such a change can switch a protein on or off, send it somewhere or mark it for breakdown. A well-known example is [[phosphorylation|fosforylatie]]: a [[kinase|kinase]] attaches a phosphate group that acts as an on-off switch.',
@@ -33,7 +33,7 @@ export default {
         'Ubiquitination (on Lys) tags proteins, among other things, for degradation by the proteasome.',
       ],
       facts: [['Protein kinases in the human genome', '518 (Manning et al., 2002)'], ['Phosphorylated residues', 'Ser, Thr, Tyr (in eukaryotes)'], ['Charge of phosphoserine at pH 7', '≈ 2−'], ['Collagen repeat', 'Gly–X–Y (X often Pro, Y often Hyp)'], ['Vitamin C deficiency', 'scurvy (unstable collagen)']],
-      why: 'One gene can thus give rise to many functional variants of a protein. PTMs are the fast switches of cell signalling and decide where a protein goes and how long it lives. The course mentions them as a way to extend the chemical properties of amino acids (e.g. hydroxyproline in collagen).',
+      why: 'One gene can thus give rise to many functional variants of a protein. PTMs are the fast switches of cell signalling and decide where a protein goes and how long it lives. They also extend the chemistry of the 20 amino acids (e.g. hydroxyproline in collagen).',
     },
     sources: [
       { t: 'Alberts et al., Molecular Biology of the Cell 4e — Protein Function (NCBI Bookshelf)', url: ALB('NBK26911') },
@@ -178,7 +178,7 @@ export default {
         'Het ER-lumen is oxiderend (GSH:GSSG ongeveer 1:1 tot 3:1), het cytosol sterk reducerend (voor de hele cel ~30:1 tot 100:1).',
       ],
       facts: [['Lengte S–S-binding', '≈ 2,05 Å'], ['PDI', '4 thioredoxinedomeinen a–b–b′–a′, 2 × CGHC'], ['GSH:GSSG in het ER', '≈ 1:1 – 3:1'], ['GSH:GSSG in de cel', '≈ 30:1 – 100:1'], ['Insuline', '3 bruggen: A6–A11, A7–B7, A20–B19']],
-      why: 'Disulfidebruggen stabiliseren vooral eiwitten die de cel verlaten (hormonen, antilichamen, verteringsenzymen). De cursus vermeldt ze als de enige veelvoorkomende covalente interactie tussen zijketens in de tertiaire en quaternaire structuur; niet elke Cys vormt echter een brug.',
+      why: 'Disulfidebruggen stabiliseren vooral eiwitten die de cel verlaten (hormonen, antilichamen, verteringsenzymen). Niet elke Cys vormt echter een brug.',
     },
     en: {
       kort: 'A disulfide bridge is a strong link between two [[cysteines|cysteine]] that folding has brought next to each other. It works like a staple that locks the shape. Such bridges form mainly in the [[ER|er]] and mostly reinforce proteins that leave the cell.',
@@ -192,7 +192,7 @@ export default {
         'The ER lumen is oxidising (GSH:GSSG roughly 1:1 to 3:1), the cytosol strongly reducing (whole cell ~30:1 to 100:1).',
       ],
       facts: [['S–S bond length', '≈ 2.05 Å'], ['PDI', '4 thioredoxin domains a–b–b′–a′, 2 × CGHC'], ['GSH:GSSG in the ER', '≈ 1:1 – 3:1'], ['GSH:GSSG in the cell', '≈ 30:1 – 100:1'], ['Insulin', '3 bonds: A6–A11, A7–B7, A20–B19']],
-      why: 'Disulfide bonds mainly stabilise proteins that leave the cell (hormones, antibodies, digestive enzymes). The course mentions them as the only common covalent interaction between side chains in tertiary and quaternary structure; not every Cys forms a bond, however.',
+      why: 'Disulfide bonds mainly stabilise proteins that leave the cell (hormones, antibodies, digestive enzymes). Not every Cys forms a bond, however.',
     },
     sources: [
       { t: 'Alberts et al., Molecular Biology of the Cell 4e — The Endoplasmic Reticulum (NCBI Bookshelf)', url: ALB('NBK26841') },
@@ -280,7 +280,7 @@ export default {
   idp: {
     nl: {
       kort: 'Niet elk eiwit heeft één vaste vorm: sommige eiwitten of stukken ervan blijven los en beweeglijk. Ze krijgen vaak pas een vorm wanneer ze aan een partner binden. Dat maakt ze handig voor signalen die snel aan en uit moeten kunnen.',
-      what: 'Intrinsiek ongeordende eiwitten (IDP\'s) of regio\'s (IDR\'s) hebben in oplossing geen vaste 3D-structuur maar vormen een snel wisselend ensemble van conformaties. Ze krijgen pas (gedeeltelijk) structuur bij binding aan een partner of onder bepaalde condities. De cursus behandelt ze in het laatste hoofdstuk: orde en wanorde zijn geen twee strikt gescheiden werelden.',
+      what: 'Intrinsiek ongeordende eiwitten (IDP\'s) of regio\'s (IDR\'s) hebben in oplossing geen vaste 3D-structuur maar vormen een snel wisselend ensemble van conformaties. Ze krijgen pas (gedeeltelijk) structuur bij binding aan een partner of onder bepaalde condities. Orde en wanorde zijn geen twee strikt gescheiden werelden.',
       how: [
         'IDR\'s zijn arm aan grote hydrofobe residuen en rijk aan geladen en polaire residuen, Pro, Gly en Ser; er is geen hydrofobe kern om rond te vouwen.',
         'Zet je gemiddelde netto lading uit tegen gemiddelde hydropathie, dan liggen veel IDP\'s boven de grenslijn van Uversky (lage hydrofobiciteit, hoge netto lading).',
@@ -294,7 +294,7 @@ export default {
     },
     en: {
       kort: 'Not every protein has one fixed shape: some proteins or parts of them stay loose and flexible. They often only take a shape when they bind a partner. That makes them useful for signals that must switch on and off quickly.',
-      what: 'Intrinsically disordered proteins (IDPs) or regions (IDRs) have no fixed 3D structure in solution but form a rapidly changing ensemble of conformations. They only gain (partial) structure upon binding a partner or under certain conditions. The course covers them in its last chapter: order and disorder are not two strictly separate worlds.',
+      what: 'Intrinsically disordered proteins (IDPs) or regions (IDRs) have no fixed 3D structure in solution but form a rapidly changing ensemble of conformations. They only gain (partial) structure upon binding a partner or under certain conditions. Order and disorder are not two strictly separate worlds.',
       how: [
         'IDRs are poor in large hydrophobic residues and rich in charged and polar residues, Pro, Gly and Ser; there is no hydrophobic core to fold around.',
         'When mean net charge is plotted against mean hydropathy, many IDPs lie above Uversky\'s boundary line (low hydrophobicity, high net charge).',

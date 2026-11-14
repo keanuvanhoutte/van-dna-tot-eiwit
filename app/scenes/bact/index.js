@@ -16,4 +16,11 @@ import faag from './faag.js';
 import crispr from './crispr.js';
 /* fase 4 (06-11-2026): mens en bacterie vergeleken */
 import vergelijk from './vergelijk.js';
-export default [bcel, bnucleoid, bplasmide, bgen, bpol, bterm, bmrna, bribosoom, bafbraak, breplicatie, btrp, bsplicing, faag, crispr, vergelijk];
+/* 14-11-2026: 70S-ribosoom met EF-Tu (3D) en zijpad antibiotica */
+import beftu from './beftu.js';
+import antibiotica from './antibiotica.js';
+import rifampicine from './rifampicine.js';
+import ribosoomremmers from './ribosoomremmers.js';
+import gyraseremmers from './gyraseremmers.js';
+import resistentie from './resistentie.js';
+export default [bcel, bnucleoid, bplasmide, bgen, bpol, bterm, bmrna, bribosoom, bafbraak, breplicatie, btrp, bsplicing, faag, crispr, vergelijk, beftu, antibiotica, rifampicine, ribosoomremmers, gyraseremmers, resistentie];

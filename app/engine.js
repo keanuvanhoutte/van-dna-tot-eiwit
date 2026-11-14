@@ -16,7 +16,8 @@ import { makeSearch } from '../shared/search.js';
 import { STEP_TAGS } from '../shared/steptags.js';
 import { colourWords } from '../shared/colourwords.js';
 import { mountSearch, whereText, lineColor } from '../shared/searchbox.js';
-import { S_EN } from '../shared/graph.en.js';
+import { S_EN, SCALES_EN } from '../shared/graph.en.js';
+import { mountMap } from '../shared/contentmap.js';
 import { LINKS } from '../shared/links.js';
 
 /* ---------- verhaallijnen ---------- */
@@ -49,7 +50,7 @@ const UI2 = {
   up: { nl: 'Uitzoomen naar', en: 'Zoom out to' }, zoomIn: { nl: 'Inzoomen', en: 'Zoom in' }, next: { nl: 'Volgende stap →', en: 'Next step →' }, side: { nl: 'Zijsprongen', en: 'Side paths' },
   legend: { nl: 'Legende', en: 'Legend' }, simplified: { nl: 'Wat is hier vereenvoudigd?', en: 'What is simplified here?' },
   struct3d: { nl: '3D-structuren (PDB)', en: '3D structures (PDB)' }, mapTitle: { nl: 'Waar ben ik?', en: 'Where am I?' },
-  mapSub: { nl: 'Het hoofdverhaal (genummerd) en alle zijtakken. Geel = hier ben je. Klik om ernaartoe te gaan.', en: 'The main story (numbered) and all side paths. Yellow = you are here. Click to go there.' },
+  mapSub: { nl: 'Alle verhalen, zijpaden en onderwerpen. Geel omrand = hier ben je. Klik op een onderwerp voor uitleg, en open dan de animatie.', en: 'All stories, side paths and topics. Yellow outline = you are here. Click a topic for an explanation, then open the animation.' },
   close: { nl: 'Sluiten', en: 'Close' }, noScene: { nl: 'Voor deze knoop is nog geen animatie gebouwd.', en: 'No animation has been built for this node yet.' },
   play: { nl: 'Afspelen (spatie)', en: 'Play (space)' }, pause: { nl: 'Pauze (spatie)', en: 'Pause (space)' }, prevStep: { nl: 'Vorige stap (←)', en: 'Previous step (←)' }, nextStep: { nl: 'Volgende stap (→)', en: 'Next step (→)' }, inShort: { nl: 'In het kort', en: 'In short' },
   repeatOn: { nl: 'Herhalen staat aan: deze stap speelt opnieuw tot je verder klikt (klik om uit te zetten)', en: 'Repeat is on: this step replays until you click on (click to turn off)' },
@@ -713,35 +714,19 @@ function showCard(id) {
 }
 const STAGECOL = { entry: 'var(--tdna)', genome: 'var(--dna)', repl: 'var(--dna-2)', txn: 'var(--prot)', rna: 'var(--rna)', tl: 'var(--rrna)', prot: 'var(--chain)', bact: '#d65a5a' };
 function showMap() {
-  const here = current.id;
-  let h = `<button class="btn close" id="mClose">${V('close')} ✕</button><h2>${V('mapTitle')}</h2><p class="sub">${V('mapSub')}</p>`;
-  const lineRow = k => {
-    const ch = LINES[k].chapters;
-    return `<div class="linehd ${k === line ? 'cur' : ''}">${L(LINES[k].title)}${k === line ? ` <span>· ${L({ nl: 'nu gekozen', en: 'current' })}</span>` : ''}</div>` +
-      `<div class="storyrow">${ch.map((c, i) => `<button data-id="${c.id}" data-line="${k}" class="${c.id === here && k === line ? 'cur' : ''}"><b>${i + 1}</b>${title(NODES[c.id])}</button>`).join('')}</div>`;
-  };
-  h += MAIN_KEYS.map(lineRow).join('');                     // eerst de hoofdverhalen, dan de zijpaden (generiek: elk LINES-item met side: true)
-  if (SIDE_KEYS.length) h += `<div class="sidegrp">${L({ nl: 'Zijpaden', en: 'Side paths' })}</div>` + SIDE_KEYS.map(lineRow).join('');
-  h += `<div style="overflow-x:auto"><div class="mgrid"><div class="hd">↓ ${L({ nl: 'zoom', en: 'zoom' })} · ${L({ nl: 'proces', en: 'process' })} →</div>`;
-  h += STAGES.map(s => `<div class="hd">${stageTitle(s)}</div>`).join('');
-  for (const sc of SCALES) {
-    h += `<div class="rh">${sc.id}. ${scaleTitle(sc)}<br><span style="font:400 10px var(--mono)">${sc.range}</span></div>`;
-    for (const st of STAGES) {
-      h += `<div class="cell">` + Object.values(NODES).filter(n => n.stage === st.id && n.scale === sc.id).map(n => {
-        const ch = STORY_IDS.indexOf(n.id);
-        return `<button class="n ${n.id === here ? 'here' : ''} ${ch >= 0 ? 'story' : ''} ${hasScene(n.id) ? '' : 'noscene'}" data-ch="${ch + 1}" data-id="${n.id}" style="--c:${STAGECOL[n.stage]}">${title(n)}</button>`;
-      }).join('') + `</div>`;
-    }
-  }
-  h += `</div></div>`;
-  $('mapbody').innerHTML = h;
+  $('mapbody').innerHTML = `<button class="btn close" id="mClose">${V('close')} ✕</button><h2>${V('mapTitle')}</h2><p class="sub">${V('mapSub')}</p><div id="cmapHost"></div>`;
+  mountMap($('cmapHost'), {
+    NODES, STAGES, SCALES, SCALES_EN, LINES, MAIN_KEYS, SIDE_KEYS, DETAILS, S_EN, lang, L, here: current.id, line,
+    engine: async () => SEARCH,
+    onOpen: (id, k) => {
+      hideOverlays();
+      if (k && k !== line) { setLine(k); lastChapter = Math.max(0, STORY_IDS.indexOf(id)); if (id === current.id) { render(); return; } }
+      if (id === current.id) return;
+      chipGo(id);
+    },
+  });
   $('map').classList.add('show');
   $('mClose').onclick = hideOverlays;
-  $('mapbody').querySelectorAll('[data-id]').forEach(b => b.onclick = () => {
-    hideOverlays();
-    if (b.dataset.line && b.dataset.line !== line) { setLine(b.dataset.line); lastChapter = Math.max(0, STORY_IDS.indexOf(b.dataset.id)); if (b.dataset.id === current.id) { render(); return; } }
-    chipGo(b.dataset.id);
-  });
 }
 $('bMap').onclick = showMap;
 

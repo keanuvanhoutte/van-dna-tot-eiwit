@@ -84,6 +84,7 @@ Verhaallijn `bacterie` (13 hoofdstukken), met 3D waar het kan en hergebruik van 
 | 7 | `bterm` | 2D | intrinsieke terminator en Rho, polariteit |
 | 8 | `bmrna` | 2D | gekoppeld, Shine-Dalgarno, fMet, 70S, vergelijkingstabel |
 | 9 | `bribosoom` | **3D** 6ZTJ | 70S-ribosoom + RNA-polymerase (expressoom), NusG-brug |
+| 9b | `beftu` | **3D** 5AFI | EF-Tu brengt het tRNA, codon UUC/anticodon GAA, GTP → GDP, kirromycine (toegevoegd 14-11-2026) |
 | 10 | `codon` | hergebruik | genetische code (bij E. coli dezelfde) |
 | 11 | `vouwing` | hergebruik | eiwitvouwing |
 | 12 | `chaperones` | hergebruik | o.a. GroEL–GroES (bacterieel) |
@@ -93,4 +94,8 @@ Zijpaden: `breplicatie` (2D: oriC, twee vorken, ter/Tus), `btrp` (2D: trp-repres
 
 Lokale structuurbestanden in `data/pdb`: 1IHF, 1U6B, 6OUL volledig; 6ZTJ (alleen CA/P, bolletjesmodel) en 6WRF (alleen ruggengraat) ingekort zodat ze snel laden.
 
-Nog mogelijk in een volgende ronde: antibiotica als zijpad (rifampicine, aminoglycosiden, gyraseremmers), het 70S-ribosoom met EF-Tu in 3D, en fagen (bacterievirussen) als tegenhanger van het adenovirus-verhaal.
+Uitgebreid na deze ronde (alles gebouwd en nagekeken):
+- Fagen en CRISPR: `faag` en `crispr` in het zijpad virussen (05-11-2026, verificatieronde 10).
+- Het 70S-ribosoom met EF-Tu in 3D: `beftu` (**3D** PDB 5AFI, E. coli 70S–EF-Tu–tRNA met kirromycine), in het bacterieverhaal tussen `bribosoom` en `codon` (14-11-2026).
+- Zijpad antibiotica (`antibiotica`, 14-11-2026): `bcel` → `antibiotica` (vier doelwitten, waarom onze cellen gespaard blijven) → `rifampicine` (**3D** PDB 5UAC) → `ribosoomremmers` (tetracycline, aminoglycosiden, macroliden, kirromycine) → `beftu` → `gyraseremmers` (fluorochinolonen) → `resistentie` (doelwit, β-lactamase, porines, pompen, plasmiden). Uitleg en bronnen in `shared/details/bact3.js`, verificatieronde 12 (`docs/verificatie-ronde-12-antibiotica.md`).
+- Lokale structuurbestanden: 5AFI (ribosoom alleen CA/P; tRNA's, mRNA, EF-Tu en liganden volledig) en 5UAC (één holo-enzym + rifampicine + Mg²⁺ van de actieve plek).

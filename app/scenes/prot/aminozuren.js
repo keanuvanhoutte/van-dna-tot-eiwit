@@ -1,7 +1,7 @@
 import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, clamp, lerp, f1, CLASSCOL, THREE } from '../../kit.js';
 import { at, bd, wedge, ACOL } from './_a_chem.js';
 
-/* De 20 standaard-aminozuren, gegroepeerd zoals in de cursus (BIT 03, deel 1). */
+/* De 20 standaard-aminozuren, gegroepeerd naar de eigenschap van de zijketen (zoals in Alberts, MBoC). */
 const NAME = {
   G: ['Glycine', 'Glycine'], A: ['Alanine', 'Alanine'], V: ['Valine', 'Valine'], L: ['Leucine', 'Leucine'], I: ['Isoleucine', 'Isoleucine'],
   M: ['Methionine', 'Methionine'], F: ['Fenylalanine', 'Phenylalanine'], W: ['Tryptofaan', 'Tryptophan'], P: ['Proline', 'Proline'],
@@ -51,14 +51,14 @@ export default {
   org: { nl: 'alle organismen (standaardset)', en: 'all organisms (standard set)' },
   legend: [[CLASSCOL.h, { nl: 'hydrofoob', en: 'hydrophobic' }], [CLASSCOL.s, { nl: 'hydrofoob, speciaal (Gly, Pro)', en: 'hydrophobic, special (Gly, Pro)' }], [CLASSCOL.p, { nl: 'polair', en: 'polar' }], [CLASSCOL['+'], { nl: 'positief geladen', en: 'positively charged' }], [CLASSCOL['-'], { nl: 'negatief geladen', en: 'negatively charged' }]],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb"><b>Examenstof</b> (cursus): volledige naam, drielettercode, éénlettercode en de biochemische eigenschap (hydrofoob, polair, geladen). Structuurformules tekenen hoeft niet. Dezelfde kleuren worden in de hele app gebruikt (translatie, hemoglobine, Ramachandran).</p>',
-    en: '<p style="font-size:13px;color:#93a0bb"><b>Exam material</b> (course): full name, three-letter code, one-letter code and the biochemical property (hydrophobic, polar, charged). You do not need to draw the structures. The same colours are used throughout the app (translation, haemoglobin, Ramachandran).</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb"><b>Handig om te kennen:</b> van elk aminozuur de volledige naam, de drielettercode, de éénlettercode en de eigenschap van de zijketen (hydrofoob, polair, geladen). Dezelfde kleuren worden in de hele app gebruikt (translatie, hemoglobine, Ramachandran).</p>',
+    en: '<p style="font-size:13px;color:#93a0bb"><b>Useful to know:</b> for each amino acid the full name, the three-letter code, the one-letter code and the property of the side chain (hydrophobic, polar, charged). The same colours are used throughout the app (translation, haemoglobin, Ramachandran).</p>' },
   simplified: {
-    nl: 'De indeling volgt de cursus; handboeken verschillen in de details (bv. Gly, Cys, Tyr, Trp en His worden soms anders ingedeeld). Ladingen gelden rond pH 7; His (pKa van de zijketen ≈ 6) is dan maar gedeeltelijk geladen. De structuurformules zijn 2D-schetsen.',
-    en: 'The grouping follows the course; textbooks differ in the details (e.g. Gly, Cys, Tyr, Trp and His are sometimes grouped differently). Charges apply around pH 7; His (side-chain pKa ≈ 6) is then only partly charged. The structural formulas are 2D sketches.' },
+    nl: 'De indeling in groepen is een keuze; handboeken verschillen in de details (bv. Gly, Cys, Tyr, Trp en His worden soms anders ingedeeld). Ladingen gelden rond pH 7; His (pKa van de zijketen ≈ 6) is dan maar gedeeltelijk geladen. De structuurformules zijn 2D-schetsen.',
+    en: 'The grouping is a choice; textbooks differ in the details (e.g. Gly, Cys, Tyr, Trp and His are sometimes grouped differently). Charges apply around pH 7; His (side-chain pKa ≈ 6) is then only partly charged. The structural formulas are 2D sketches.' },
   steps: [
     ST(8000, cam(800, 450, 1250), 'Bouwsteen: het aminozuur', 'Building block: the amino acid', 'Rond een centraal koolstofatoom zitten steeds dezelfde groepen plus één zijketen (R). Alleen R verschilt.', 'Around a central carbon atom sit always the same groups plus one side chain (R). Only R differs.'),
-    ST(8000, FULL, 'De 20 standaard-aminozuren', 'The 20 standard amino acids', 'Alle levende wezens gebruiken dezelfde 20. Leer van elk de naam, de codes en de eigenschap: dat is examenstof.', 'All living things use the same 20. Learn each one’s name, codes and property: that is exam material.'),
+    ST(8000, FULL, 'De 20 standaard-aminozuren', 'The 20 standard amino acids', 'Alle levende wezens gebruiken dezelfde 20. Elk heeft een naam, twee korte codes en een eigen eigenschap.', 'All living things use the same 20. Each has a name, two short codes and its own property.'),
     ST(7500, FULL, 'Waterschuw (hydrofoob)', 'Water-avoiding (hydrophobic)', 'Deze zijketens mijden water (hydrofoob) en zitten meestal binnenin het eiwit. Gly en Pro (geel) zijn apart.', 'These side chains avoid water (hydrophobic) and usually sit inside the protein. Gly and Pro (yellow) are special.'),
     ST(7500, FULL, 'Waterminnend (polair)', 'Water-loving (polar)', 'Deze zijketens binden graag aan water. Daarom zitten ze meestal aan de buitenkant van het eiwit.', 'These side chains like to bind water. That is why they usually sit on the outside of the protein.'),
     ST(8000, cam(468, 545, 1000), 'Geladen: + en −', 'Charged: + and −', 'Lys en Arg zijn positief, Asp en Glu negatief. His wordt positief in een zure omgeving.', 'Lys and Arg are positive, Asp and Glu negative. His becomes positive in an acidic environment.'),

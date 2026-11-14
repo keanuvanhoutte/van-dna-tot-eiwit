@@ -61,11 +61,23 @@ const BACTERIE = [
   { id: 'operon', bridge: { nl: 'Aan het einde van het operon moet het kopiëren weer stoppen.', en: 'At the end of the operon, copying has to stop again.' } },
   { id: 'bterm', bridge: { nl: 'Het mRNA is al klaar om vertaald te worden, zelfs terwijl het nog gemaakt wordt.', en: 'The mRNA is ready to be translated, even while it is still being made.' } },
   { id: 'bmrna', bridge: { nl: 'Bekijk het 70S-ribosoom en het RNA-polymerase ervoor in 3D.', en: 'See the 70S ribosome and the RNA polymerase in front of it in 3D.' } },
-  { id: 'bribosoom', bridge: { nl: 'Het ribosoom leest het mRNA per drie letters: bij E. coli is de genetische code dezelfde als bij ons.', en: 'The ribosome reads the mRNA three letters at a time: in E. coli the genetic code is the same as ours.' } },
+  { id: 'bribosoom', bridge: { nl: 'Hoe komt elk nieuw tRNA bij het ribosoom? Een helper, EF-Tu, brengt het. Bekijk het in 3D.', en: 'How does each new tRNA reach the ribosome? A helper, EF-Tu, brings it. See it in 3D.' } },
+  { id: 'beftu', bridge: { nl: 'Het ribosoom leest het mRNA per drie letters: bij E. coli is de genetische code dezelfde als bij ons.', en: 'The ribosome reads the mRNA three letters at a time: in E. coli the genetic code is the same as ours.' } },
   { id: 'codon', bridge: { nl: 'De nieuwe keten moet zijn 3D-vorm vinden; dat gaat bij bacteriën net zo.', en: 'The new chain has to find its 3D shape; this works the same way in bacteria.' } },
   { id: 'vouwing', bridge: { nl: 'Soms is hulp nodig: chaperonnes zoals GroEL–GroES (een bacterieel voorbeeld).', en: 'Sometimes help is needed: chaperones such as GroEL–GroES (a bacterial example).' } },
   { id: 'chaperones', bridge: { nl: 'Eiwitten die fout of overbodig zijn, worden afgebroken, maar zonder ubiquitine.', en: 'Proteins that are faulty or no longer needed are broken down, but without ubiquitin.' } },
-  { id: 'bafbraak', bridge: { nl: 'Einde van het bacterieverhaal. Verken de zijpaden (replicatie, trp-operon, introns) via de kaart.', en: 'End of the bacterial story. Explore the side paths (replication, trp operon, introns) via the map.' } },
+  { id: 'bafbraak', bridge: { nl: 'Einde van het bacterieverhaal. Verken de zijpaden (antibiotica, replicatie, trp-operon, introns) via de kaart.', en: 'End of the bacterial story. Explore the side paths (antibiotics, replication, trp operon, introns) via the map.' } },
+];
+
+/* Zijpad 6 (14-11-2026): hoe antibiotica een bacterie stilleggen en hoe bacteriën zich verweren (verificatieronde 12). */
+const ANTIBIOTICA = [
+  { id: 'bcel', bridge: { nl: 'Antibiotica maken gebruik van wat een bacterie anders doet dan wij. Waar grijpen ze aan?', en: 'Antibiotics exploit what a bacterium does differently from us. Where do they strike?' } },
+  { id: 'antibiotica', bridge: { nl: 'Eerst het RNA-polymerase: bekijk rifampicine in een echte 3D-structuur.', en: 'First RNA polymerase: see rifampicin in a real 3D structure.' } },
+  { id: 'rifampicine', bridge: { nl: 'Het ribosoom is het doelwit van nog meer antibiotica.', en: 'The ribosome is the target of even more antibiotics.' } },
+  { id: 'ribosoomremmers', bridge: { nl: 'Kirromycine zet de helper EF-Tu vast. Dat moment is in 3D vastgelegd.', en: 'Kirromycin locks the helper EF-Tu. That moment was captured in 3D.' } },
+  { id: 'beftu', bridge: { nl: 'Andere antibiotica raken het DNA: ze zetten gyrase vast.', en: 'Other antibiotics hit the DNA: they lock gyrase.' } },
+  { id: 'gyraseremmers', bridge: { nl: 'Bacteriën verweren zich. Hoe worden ze resistent?', en: 'Bacteria fight back. How do they become resistant?' } },
+  { id: 'resistentie', bridge: { nl: 'Einde van dit zijpad. Ga via de kaart terug naar een hoofdverhaal of kies een ander zijpad.', en: 'End of this side path. Use the map to return to a main story or pick another side path.' } },
 ];
 
 /* Zijpad 1 (05-11-2026): DNA kopiëren en herstellen. Zijpaden staan in de kaart onder de hoofdverhalen (`side: true`).
@@ -153,6 +165,7 @@ export const LINES = {
   epigen: { chapters: EPIGEN, side: true, from: 'chromatine', title: { nl: 'Zijpad · Hoe de cel kiest welke genen aan staan', en: 'Side path · How a cell chooses which genes are on' }, short: { nl: 'Zijpad epigenetica', en: 'Side path epigenetics' } },
   virusroute: { chapters: VIRUSROUTE, side: true, from: 'adeno', title: { nl: 'Zijpad · Hoe een virus zichzelf laat maken', en: 'Side path · How a virus gets itself made' }, short: { nl: 'Zijpad virussen', en: 'Side path viruses' } },
   rnalot: { chapters: RNALOT, side: true, from: 'export', title: { nl: 'Zijpad · Het leven van een RNA', en: 'Side path · The life of an RNA' }, short: { nl: 'Zijpad RNA-lot', en: 'Side path RNA fate' } },
+  antibiotica: { chapters: ANTIBIOTICA, side: true, from: 'bcel', title: { nl: 'Zijpad · Hoe antibiotica bacteriën stilleggen', en: 'Side path · How antibiotics stop bacteria' }, short: { nl: 'Zijpad antibiotica', en: 'Side path antibiotics' } },
 };
 export const LINE_KEYS = Object.keys(LINES);
 export const MAIN_KEYS = LINE_KEYS.filter(k => !LINES[k].side), SIDE_KEYS = LINE_KEYS.filter(k => LINES[k].side);

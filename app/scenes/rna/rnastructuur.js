@@ -2,7 +2,7 @@ import { C, BASE, RNA_PAIR, L, T2, svgOpen, cam, FULL, sub, ease, lerp, clamp, f
 import { prot, note, arrow, ntBox, hb, npairs, snip, hot, setHot } from './_rna.js';
 
 /*
- * RNA-structuur (cursus BIT 03): enkelstrengig maar vouwt. Elke stap heeft een eigen gebied op een groot canvas:
+ * RNA-structuur: enkelstrengig maar vouwt. Elke stap heeft een eigen gebied op een groot canvas:
  *   R0 haarspeld (800,450) · R1 HIV-1 TAR-bulge (2000,450) · R2 lussen & juncties (3200,450)
  *   R3 pseudoknoop (800,1350) · R4 A-vorm vs B-vorm (2000,1350) · R5 tRNA (3200,1350) · R6 ribozymen (2000,2250)
  */
@@ -39,8 +39,8 @@ export default {
   org: { nl: 'algemeen (voorbeelden: mens, HIV-1, gist-tRNA)', en: 'general (examples: human, HIV-1, yeast tRNA)' },
   legend: [[BASE.A, 'A'], [BASE.U, 'U'], [BASE.G, 'G'], [BASE.C, 'C'], [C.rna, { nl: 'RNA-ruggengraat', en: 'RNA backbone' }], [C.dna, 'DNA'], ['#ffd36b', { nl: 'G·U-wobble / nadruk', en: 'G·U wobble / highlight' }]],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">Examenrelevant (cursus): dsRNA is vrijwel altijd <b>A-vorm</b> (≈ 11 bp/winding, C3\'-endo; de 2\'-OH verhindert C2\'-endo en dus B-vorm). Vergelijk met B-DNA (≈ 10–10,5 bp, C2\'-endo) en Z-DNA (linkshandig). Echte structuren: tRNA<sup>Phe</sup> van gist <b>1EHZ</b>, HIV-1 TAR <b>1ANR</b>, pseudoknoop (MMTV) <b>1RNK</b>, hammerhead-ribozym <b>2OEU</b>, humaan 80S-ribosoom <b>4UG0</b>.</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">Exam-relevant (course): dsRNA is almost always <b>A-form</b> (≈ 11 bp/turn, C3\'-endo; the 2\'-OH disfavours C2\'-endo and hence B-form). Compare B-DNA (≈ 10–10.5 bp, C2\'-endo) and Z-DNA (left-handed). Real structures: yeast tRNA<sup>Phe</sup> <b>1EHZ</b>, HIV-1 TAR <b>1ANR</b>, pseudoknot (MMTV) <b>1RNK</b>, hammerhead ribozyme <b>2OEU</b>, human 80S ribosome <b>4UG0</b>.</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">Belangrijk verschil met DNA: dsRNA is vrijwel altijd <b>A-vorm</b> (≈ 11 bp/winding, C3\'-endo; de 2\'-OH verhindert C2\'-endo en dus B-vorm). Vergelijk met B-DNA (≈ 10–10,5 bp, C2\'-endo) en Z-DNA (linkshandig). Echte structuren: tRNA<sup>Phe</sup> van gist <b>1EHZ</b>, HIV-1 TAR <b>1ANR</b>, pseudoknoop (MMTV) <b>1RNK</b>, hammerhead-ribozym <b>2OEU</b>, humaan 80S-ribosoom <b>4UG0</b>.</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">Key difference from DNA: dsRNA is almost always <b>A-form</b> (≈ 11 bp/turn, C3\'-endo; the 2\'-OH disfavours C2\'-endo and hence B-form). Compare B-DNA (≈ 10–10.5 bp, C2\'-endo) and Z-DNA (left-handed). Real structures: yeast tRNA<sup>Phe</sup> <b>1EHZ</b>, HIV-1 TAR <b>1ANR</b>, pseudoknot (MMTV) <b>1RNK</b>, hammerhead ribozyme <b>2OEU</b>, human 80S ribosome <b>4UG0</b>.</p>' },
   simplified: {
     nl: 'Alle structuren zijn 2D-schema\'s: helices als ladders, lussen als cirkels. De haarspeld is een voorbeeldsequentie (met de bekende, zeer stabiele cUUCGg-tetralus). TAR is de echte HIV-1-sequentie (nt 17–45), maar Tat en cycline T1 zijn als blob getekend. De A/B-helices zijn zijaanzichten van een ideaal model, niet op exacte schaal. De tRNA-L-vorm is een projectie van de 3D-structuur (1EHZ). Het hammerhead-ribozym is als klassieke Y-vorm getekend zonder de tertiaire lus-lusinteractie van de volledige structuur.',
     en: 'All structures are 2D schemes: helices as ladders, loops as circles. The hairpin is an example sequence (with the well-known, very stable cUUCGg tetraloop). TAR is the real HIV-1 sequence (nt 17–45), but Tat and cyclin T1 are drawn as blobs. The A/B helices are side views of an ideal model, not exactly to scale. The tRNA L shape is a projection of the 3D structure (1EHZ). The hammerhead ribozyme is drawn as the classic Y shape without the tertiary loop–loop interaction of the full-length structure.' },

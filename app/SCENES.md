@@ -79,7 +79,7 @@ export default {
   },
 };
 ```
-Bachelorniveau (cursus BIT 03 Structural bioinformatics, Howest). Elke bewering moet door een bron gedekt zijn.
+Doelpubliek: secundair onderwijs (wetenschappen) en beginnende bachelors. Eerst de eenvoudige laag (`kort`), de diepgang onder "Voor wie meer wil". Elke bewering moet door een gelezen bron gedekt zijn.
 
 
 ## Afspelen: automatisch verder (standaard) of zelf klikken

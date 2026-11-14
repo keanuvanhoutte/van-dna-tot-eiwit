@@ -67,7 +67,7 @@ export default structure3d({
   ],
   hotspots: [
     { node: 'bmrna', label: L3('← mRNA & 70S-start', '← mRNA & 70S start'), color: C.rna },
-    { node: 'codon', label: L3('Codons lezen →', 'Reading codons →'), color: C.trna },
+    { node: 'beftu', label: L3('EF-Tu brengt een tRNA →', 'EF-Tu brings a tRNA →'), color: C.trna },
     { node: 'ribosoom', label: L3('Vergelijk: 80S (mens)', 'Compare: 80S (human)'), color: C.rrna },
   ],
 });

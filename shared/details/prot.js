@@ -58,7 +58,7 @@ export default {
         'Het patroon van hydrofobe, polaire en geladen residuen bepaalt waar helices, strengen en de kern komen.',
         'Eén mutatie kan de functie veranderen: in sikkelcelhemoglobine is Glu6 van de β-keten een Val.',
       ],
-      facts: [['β-globine (mens)', '146 residuen (UniProt P68871 telt 147 met start-Met)'], ['Peptide vs. eiwit', 'tot ± 50 residuen peptide, langer polypeptide/eiwit (cursus)'], ['Sikkelcel', 'GAG → GTG, Glu6Val in β-globine'], ['Leesrichting', 'N-terminus → C-terminus']],
+      facts: [['β-globine (mens)', '146 residuen (UniProt P68871 telt 147 met start-Met)'], ['Sikkelcel', 'GAG → GTG, Glu6Val in β-globine'], ['Leesrichting', 'N-terminus → C-terminus']],
       why: 'Sanger toonde dat elk eiwit een eigen, vaste sequentie heeft. Omdat de sequentie de structuur bepaalt, is ze het startpunt van elke structuuranalyse en -voorspelling.',
     },
     en: {
@@ -71,7 +71,7 @@ export default {
         'The pattern of hydrophobic, polar and charged residues determines where helices, strands and the core end up.',
         'A single mutation can change function: in sickle-cell haemoglobin Glu6 of the β chain is a Val.',
       ],
-      facts: [['β-globin (human)', '146 residues (UniProt P68871 counts 147 with start Met)'], ['Peptide vs protein', 'up to ± 50 residues peptide, longer polypeptide/protein (course)'], ['Sickle cell', 'GAG → GTG, Glu6Val in β-globin'], ['Reading direction', 'N-terminus → C-terminus']],
+      facts: [['β-globin (human)', '146 residues (UniProt P68871 counts 147 with start Met)'], ['Sickle cell', 'GAG → GTG, Glu6Val in β-globin'], ['Reading direction', 'N-terminus → C-terminus']],
       why: 'Sanger showed that each protein has its own fixed sequence. Because the sequence determines the structure, it is the starting point of every structure analysis and prediction.',
     },
     sources: [SP_PRIM, UNIPROT, MOTM, ALBERTS],
@@ -79,7 +79,7 @@ export default {
   aminozuren: {
     nl: {
       kort: 'Aminozuren zijn de bouwstenen van eiwitten, met 20 standaardsoorten. Ze hebben allemaal hetzelfde basisstuk en verschillen alleen in hun [[zijketen|zijketen]]. Of die water mijdt, water opzoekt of geladen is, bepaalt waar het aminozuur in het eiwit terechtkomt.',
-      what: 'Eiwitten zijn opgebouwd uit 20 standaard-aminozuren. Elk heeft een centraal Cα-atoom met een aminogroep, een carboxylgroep, een H-atoom en een zijketen (R) die de eigenschappen bepaalt. Examenstof: volledige naam, drie- en éénlettercode en eigenschap (hydrofoob, polair, geladen).',
+      what: 'Eiwitten zijn opgebouwd uit 20 standaard-aminozuren. Elk heeft een centraal Cα-atoom met een aminogroep, een carboxylgroep, een H-atoom en een zijketen (R) die de eigenschappen bepaalt. Elk aminozuur heeft een volledige naam, een drie- en een éénlettercode.',
       how: [
         'Hydrofoob: Gly (G), Ala (A), Val (V), Leu (L), Ile (I), Met (M), Phe (F), Trp (W), Pro (P) — meestal in de kern.',
         'Polair: Ser (S), Thr (T), Cys (C), Asn (N), Gln (Q), Tyr (Y) — meestal aan het oppervlak.',
@@ -94,7 +94,7 @@ export default {
     },
     en: {
       kort: 'Amino acids are the building blocks of proteins, with 20 standard kinds. They all share the same core and differ only in their [[side chain|zijketen]]. Whether it avoids water, likes water or is charged decides where the amino acid ends up in the protein.',
-      what: 'Proteins are built from 20 standard amino acids. Each has a central Cα atom with an amino group, a carboxyl group, an H atom and a side chain (R) that determines its properties. Exam material: full name, three- and one-letter code and property (hydrophobic, polar, charged).',
+      what: 'Proteins are built from 20 standard amino acids. Each has a central Cα atom with an amino group, a carboxyl group, an H atom and a side chain (R) that determines its properties. Each amino acid has a full name, a three-letter and a one-letter code.',
       how: [
         'Hydrophobic: Gly (G), Ala (A), Val (V), Leu (L), Ile (I), Met (M), Phe (F), Trp (W), Pro (P) — mostly in the core.',
         'Polar: Ser (S), Thr (T), Cys (C), Asn (N), Gln (Q), Tyr (Y) — mostly at the surface.',
@@ -117,7 +117,7 @@ export default {
         'Condensatie: COOH van residu i + NH₂ van residu i+1 → C(O)–NH + H₂O (in de cel gekatalyseerd door het ribosoom).',
         'Het vrije elektronenpaar van N delokaliseert naar C=O: twee resonantievormen.',
         'Gevolg: C–N is korter dan een enkele binding en draait niet vrij (ω ≈ 180°, trans).',
-        'Zes atomen (Cα, C, O, N, H, Cα) liggen in één vlak — het "blad papier" uit de cursus.',
+        'Zes atomen (Cα, C, O, N, H, Cα) liggen in één vlak — als een stijf "blad papier".',
         'φ = draaiing rond N–Cα, ψ = draaiing rond Cα–C ("phi heeft de N, psi heeft de C").',
         'Sterische botsingen maken veel φ/ψ-combinaties onmogelijk → Ramachandran-plot.',
       ],
@@ -131,7 +131,7 @@ export default {
         'Condensation: COOH of residue i + NH₂ of residue i+1 → C(O)–NH + H₂O (in the cell catalysed by the ribosome).',
         'The lone pair of N delocalises towards C=O: two resonance forms.',
         'Result: C–N is shorter than a single bond and cannot rotate freely (ω ≈ 180°, trans).',
-        'Six atoms (Cα, C, O, N, H, Cα) lie in one plane — the "sheet of paper" from the course.',
+        'Six atoms (Cα, C, O, N, H, Cα) lie in one plane — like a stiff "sheet of paper".',
         'φ = rotation about N–Cα, ψ = rotation about Cα–C ("phi has the N, psi has the C").',
         'Steric clashes make many φ/ψ combinations impossible → Ramachandran plot.',
       ],

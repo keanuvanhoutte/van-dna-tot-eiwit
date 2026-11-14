@@ -13,7 +13,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const JOBS = [['app/engine.js', 'app/engine.bundle.js'], ['atlas/atlas.js', 'atlas/atlas.bundle.js']];
+const JOBS = [['app/engine.js', 'app/engine.bundle.js'], ['atlas/atlas.js', 'atlas/atlas.bundle.js'], ['docs/over.js', 'docs/over.bundle.js']];
 
 if (process.argv.includes('--clean')) {
   for (const [, out] of JOBS) rmSync(join(ROOT, out), { force: true });

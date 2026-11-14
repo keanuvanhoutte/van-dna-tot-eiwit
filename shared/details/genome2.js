@@ -52,7 +52,7 @@ export default {
         'Omstandigheden: A bij weinig water en in dsRNA/hybriden; Z bij alternerende (CG)n, hoog zout of negatieve supercoiling.',
       ],
       facts: [['B-DNA', '≈ 10,5 bp/winding, rechts'], ['A-DNA', '≈ 11 bp/winding, rechts'], ['Z-DNA', '12 bp/winding, links'], ['Puckering', "B: C2′-endo · A: C3′-endo · Z: afwisselend"], ['Structuren', 'PDB 440D (A), 1BNA (B), 1DCG (Z)']],
-      why: 'Examenstof: de vormen verschillen in bp per winding, stijging, draairichting, groeven en suikerpuckering. RNA-duplexen zijn (vrijwel) altijd A-vorm, wat hun herkenning door eiwitten bepaalt; Z-DNA kan tijdelijk ontstaan achter RNA-polymerase (negatieve supercoiling) en wordt herkend door Zα-domeinen (bv. ADAR1).',
+      why: 'De vormen verschillen in bp per winding, stijging, draairichting, groeven en suikerpuckering. RNA-duplexen zijn (vrijwel) altijd A-vorm, wat hun herkenning door eiwitten bepaalt; Z-DNA kan tijdelijk ontstaan achter RNA-polymerase (negatieve supercoiling) en wordt herkend door Zα-domeinen (bv. ADAR1).',
     },
     en: {
       kort: 'The DNA double helix can take on different shapes. In the cell almost all DNA has the usual B form. The wider A form is seen in double RNA and in RNA paired with DNA; the left-handed Z form only in certain pieces of DNA under special conditions.',
@@ -66,7 +66,7 @@ export default {
         'Conditions: A at low water activity and in dsRNA/hybrids; Z in alternating (CG)n, at high salt or under negative supercoiling.',
       ],
       facts: [['B-DNA', '≈ 10.5 bp/turn, right'], ['A-DNA', '≈ 11 bp/turn, right'], ['Z-DNA', '12 bp/turn, left'], ['Sugar pucker', "B: C2′-endo · A: C3′-endo · Z: alternating"], ['Structures', 'PDB 440D (A), 1BNA (B), 1DCG (Z)']],
-      why: 'Exam material: the forms differ in bp per turn, rise, handedness, grooves and sugar pucker. RNA duplexes are (almost) always A-form, which determines how proteins recognise them; Z-DNA can form transiently behind RNA polymerase (negative supercoiling) and is recognised by Zα domains (e.g. ADAR1).',
+      why: 'The forms differ in bp per turn, rise, handedness, grooves and sugar pucker. RNA duplexes are (almost) always A-form, which determines how proteins recognise them; Z-DNA can form transiently behind RNA polymerase (negative supercoiling) and is recognised by Zα domains (e.g. ADAR1).',
     },
     sources: [ALBERTS_DNA, DREW, { t: 'Wang et al. (1979) Molecular structure of a left-handed double helical DNA fragment at atomic resolution. Nature 282:680', url: 'https://pubmed.ncbi.nlm.nih.gov/514347/' }, { t: 'Rich & Zhang (2003) Z-DNA: the long road to biological function. Nat Rev Genet 4:566', url: 'https://pubmed.ncbi.nlm.nih.gov/12838348/' }, { t: 'RCSB PDB — 440D: A-DNA crystal structure of d(AGGGGCCCCT)', url: 'https://www.rcsb.org/structure/440D' }],
   },

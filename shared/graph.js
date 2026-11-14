@@ -4,7 +4,7 @@
  * Eén node = één structuur of proces dat een eigen animatie/scène kan krijgen.
  *
  *   id      unieke sleutel
- *   t       titel (NL)          en   vakterm (EN, zoals in de cursus)
+ *   t       titel (NL)          en   vakterm (EN)
  *   stage   kolom in de kaart (zie STAGES)
  *   scale   zoomniveau (zie SCALES)
  *   kind    'structure' | 'process'
@@ -14,7 +14,6 @@
  *   rel     zijsprongen / kruisverbanden
  *   pdb     echte structuren (RCSB PDB) voor 3D-weergave
  *   status  'concept' -> 'nagekeken' -> 'gevalideerd' (zie verificatieprotocol)
- *   course  true = expliciet behandeld in BIT 03 "Fundamentals of protein structure"
  *
  * Alle inhoud staat op 'concept' tot ze tegen een primaire bron is nagekeken.
  */
@@ -294,33 +293,33 @@ const N = [
     next: ['vouwing'] },
   { id: 'seleno', t: 'Selenocysteïne & pyrrolysine', en: '21st & 22nd amino acid', stage: 'tl', scale: 4, kind: 'process',
     s: 'Hercodering van stopcodons: UGA → selenocysteïne dankzij een SECIS-element (bij eukaryoten en archaea in de 3\'-UTR, bij bacteriën net achter het UGA); UAG → pyrrolysine in sommige archaea (methanogenen) en enkele bacteriën.',
-    course: true, rel: ['aminozuren', 'codon'] },
+    rel: ['aminozuren', 'codon'] },
   { id: 'er', t: 'Ruw ER & SRP-route', en: 'Co-translational targeting', stage: 'tl', scale: 2, kind: 'process',
     s: 'Een N-terminaal signaalpeptide wordt door SRP herkend; het ribosoom koppelt aan het Sec61-translocon en het eiwit wordt tijdens translatie het ER in of het membraan in gebracht.',
     next: ['golgi'], rel: ['glyco', 'disulfide', 'membraan', 'sortering'] },
 
   // ───────────── EIWITSTRUCTUUR & -LOT ─────────────
   { id: 'aminozuren', t: 'De 20 aminozuren', en: 'Standard amino acids', stage: 'prot', scale: 5, kind: 'structure',
-    s: 'Cα met aminogroep, carboxylgroep, H en variabele zijketen (R). Groepering: hydrofoob, polair/hydrofiel, geladen (+/−). Naam + drie- en éénlettercode zijn examenstof.',
-    course: true, rel: ['peptide', 'seleno'] },
+    s: 'Cα met aminogroep, carboxylgroep, H en variabele zijketen (R). Groepering: hydrofoob, polair/hydrofiel, geladen (+/−). Elk heeft een naam en een drie- en éénlettercode.',
+    rel: ['peptide', 'seleno'] },
   { id: 'peptide', t: 'Peptidebinding & φ/ψ', en: 'Peptide bond & dihedral angles', stage: 'prot', scale: 5, kind: 'structure',
     s: 'Amidebinding (condensatie, water vrij). Vlak (planair) en star; draaiing kan enkel rond N–Cα (φ) en Cα–C (ψ). Glycine (achiraal) en proline (cyclisch) zijn uitzonderingen.',
-    course: true, next: ['secundair'], rel: ['ramachandran'] },
+    next: ['secundair'], rel: ['ramachandran'] },
   { id: 'primair', t: 'Primaire structuur', en: 'Primary structure', stage: 'prot', scale: 4, kind: 'structure',
     s: 'De aminozuursequentie van N- naar C-terminus; bepaalt uiteindelijk de 3D-structuur.',
-    course: true, in: ['aminozuren', 'peptide'], next: ['secundair'] },
+    in: ['aminozuren', 'peptide'], next: ['secundair'] },
   { id: 'secundair', t: 'Secundaire structuur', en: 'Secondary structure', stage: 'prot', scale: 4, kind: 'structure',
     s: 'Lokale 3D-structuur door backbone-waterstofbruggen: α-helix (i→i+4, 3,6 residu/winding), 3₁₀- en π-helix, β-strengen/-bladen (parallel, antiparallel, gemengd), lussen.',
-    course: true, in: ['ramachandran'], next: ['tertiair'], pdb: ['1UBQ'] },
+    in: ['ramachandran'], next: ['tertiair'], pdb: ['1UBQ'] },
   { id: 'ramachandran', t: 'Ramachandran-plot', en: 'Ramachandran plot', stage: 'prot', scale: 5, kind: 'structure',
     s: 'Uitzetting van φ tegen ψ per residu; toont toegelaten gebieden (α-helix rond −60/−45, β rond −120/+120) en uitschieters door sterische hinder.',
-    course: true, pdb: ['1UBQ'] },
+    pdb: ['1UBQ'] },
   { id: 'tertiair', t: 'Tertiaire structuur & domeinen', en: 'Tertiary structure, supersecondary motifs, domains', stage: 'prot', scale: 4, kind: 'structure',
     s: 'Globale vouwing van één keten, gestabiliseerd door hydrofoob effect, H-bruggen, zoutbruggen, disulfidebruggen en liganden. Tussenniveau: supersecundaire structuren (helix-turn-helix, Greek key, Rossmann-fold…) en domeinen.',
-    course: true, next: ['quaternair'], rel: ['disulfide'] },
+    next: ['quaternair'], rel: ['disulfide'] },
   { id: 'quaternair', t: 'Quaternaire structuur', en: 'Quaternary structure', stage: 'prot', scale: 3, kind: 'structure',
-    s: 'Meerdere ketens (protomeren) samen: homo- of heteromeer. Voorbeeld uit de cursus: hemoglobine, een α2β2-heterotetrameer.',
-    course: true, pdb: ['1BBB', '2HHB'] },
+    s: 'Meerdere ketens (protomeren) samen: homo- of heteromeer. Voorbeeld: hemoglobine, een α2β2-heterotetrameer.',
+    pdb: ['1BBB', '2HHB'] },
   { id: 'vouwing', t: 'Eiwitvouwing', en: 'Protein folding', stage: 'prot', scale: 4, kind: 'process',
     s: 'De sequentie bevat de informatie voor de natieve structuur (Anfinsen). Vouwing verloopt via een energietrechter, vaak al co-translationeel, in µs tot s (Levinthal-paradox).',
     in: ['primair', 'secundair', 'tertiair', 'chaperones'], next: ['ptm', 'er'], rel: ['idp', 'misvouwing'] },
@@ -328,12 +327,11 @@ const N = [
     s: 'Hsp70 (en trigger factor bij bacteriën) beschermt ontstaande ketens; chaperonines (GroEL/GroES, TRiC/CCT) bieden een afgesloten vouwkamer.' },
   { id: 'ptm', t: 'Post-translationele modificaties', en: 'Post-translational modifications', stage: 'prot', scale: 4, kind: 'process',
     s: 'Fosforylatie (Ser/Thr/Tyr), glycosylatie, methylatie, acetylatie, ubiquitinering, hydroxylering (bv. hydroxyproline in collageen).',
-    course: true, in: ['glyco', 'disulfide'], rel: ['histonmod', 'ubiquitine'] },
+    in: ['glyco', 'disulfide'], rel: ['histonmod', 'ubiquitine'] },
   { id: 'glyco', t: 'N-glycosylatie', en: 'N-linked glycosylation', stage: 'prot', scale: 4, kind: 'process',
     s: 'Oligosaccharyltransferase zet in het ER een voorgevormde suikerboom op Asn in het motief N-X-S/T (X ≠ Pro); in het Golgi verder bewerkt.' },
   { id: 'disulfide', t: 'Disulfidebruggen', en: 'Disulfide bonds', stage: 'prot', scale: 5, kind: 'process',
-    s: 'Covalente S–S-binding tussen twee cysteïnes, gevormd in de oxiderende omgeving van het ER met hulp van PDI.',
-    course: true },
+    s: 'Covalente S–S-binding tussen twee cysteïnes, gevormd in de oxiderende omgeving van het ER met hulp van PDI.' },
   { id: 'golgi', t: 'Golgi & secretie', en: 'Secretory pathway', stage: 'prot', scale: 2, kind: 'process',
     s: 'Vesikels van ER naar Golgi; sortering naar plasmamembraan, secretie of lysosoom.',
     rel: ['lysosoom', 'membraan'] },
@@ -344,8 +342,7 @@ const N = [
     s: 'Verkeerd gevouwen eiwitten kunnen aggregeren tot amyloïdfibrillen (cross-β); betrokken bij o.a. Alzheimer en Parkinson.',
     rel: ['ubiquitine', 'chaperones'] },
   { id: 'idp', t: 'Intrinsiek ongeordende eiwitten', en: 'Intrinsically disordered proteins', stage: 'prot', scale: 4, kind: 'structure',
-    s: 'Eiwitten of regio\'s zonder vaste structuur die pas ordenen bij binding of onder bepaalde condities (laatste hoofdstuk van de cursus).',
-    course: true },
+    s: 'Eiwitten of regio\'s zonder vaste structuur die pas ordenen bij binding of onder bepaalde condities.' },
   /* zijpad eiwitlot (05-11-2026): waar een eiwit heen gaat en hoe het verdwijnt */
   { id: 'sortering', t: 'Eiwitsortering (adreslabels)', en: 'Protein sorting signals', stage: 'prot', scale: 1, kind: 'process',
     s: 'Sorteersignalen in de keten bepalen de bestemming: geen signaal = cytosol; N-terminaal hydrofoob signaalpeptide = ER (en verder via het Golgi); basisch NLS = kern; N-terminale presequentie (positief geladen amfipathische helix) = mitochondrion; C-terminaal PTS1 (Ser-Lys-Leu) = peroxisoom; mannose-6-fosfaat (aangebracht in het Golgi) = lysosoom.',
@@ -378,7 +375,7 @@ const N = [
   // ───────────── BACTERIE (E. coli) — verhaallijn 3, POC 04-11-2026 (docs/bacterie-schema.md) ─────────────
   { id: 'bcel', t: 'Bacteriecel (E. coli)', en: 'Bacterial cell (E. coli)', stage: 'bact', scale: 1, kind: 'structure',
     s: 'E. coli heeft geen kern: het DNA ligt als nucleoïd in het cytoplasma. Eén ringvormig chromosoom (K-12: ≈ 4,6 miljoen bp, ≈ 4 300 eiwitgenen), vaak plasmiden en 70S-ribosomen.',
-    in: ['bnucleoid', 'bplasmide', 'bgen'], next: ['vergelijk'], rel: ['cel', 'breplicatie', 'operon', 'ribosoom'] },
+    in: ['bnucleoid', 'bplasmide', 'bgen'], next: ['vergelijk'], rel: ['cel', 'breplicatie', 'operon', 'ribosoom', 'antibiotica'] },
   /* fase 4 (06-11-2026): van gen tot eiwit bij mens en bacterie naast elkaar (uit poc/03-diepte, tab C) */
   { id: 'vergelijk', t: 'Mens en bacterie vergeleken', en: 'Human and bacterium compared', stage: 'bact', scale: 2, kind: 'process',
     s: 'Van gen tot eiwit bij de mens en bij E. coli. Mens: het DNA zit in een kern, het pre-mRNA krijgt een 5′-kap en een poly(A)-staart, introns worden eruit geknipt en pas na de export door een kernporie maken ribosomen het eiwit. Bacterie: geen kern, geen spliceosoom, en geen 5′-kap of beschermende poly(A)-staart zoals bij de mens; ribosomen beginnen al op het mRNA terwijl het nog gemaakt wordt, en één mRNA bevat vaak meerdere genen (operon).',
@@ -409,16 +406,35 @@ const N = [
     rel: ['operon', 'bterm', 'bmrna'] },
   { id: 'bribosoom', t: '70S-ribosoom & expressoom', en: '70S ribosome & expressome', stage: 'bact', scale: 4, kind: 'structure',
     s: '70S = 30S (16S-rRNA + 21 eiwitten) + 50S (23S- en 5S-rRNA + ruim 30 eiwitten). In het expressoom zit RNA-polymerase vlak voor het ribosoom; NusG verbindt beide.',
-    next: ['codon'], pdb: ['6ZTJ', '4YBB'], rel: ['ribosoom', 'trna', 'codon', 'elongatie'] },
+    next: ['beftu'], pdb: ['6ZTJ', '4YBB'], rel: ['ribosoom', 'trna', 'codon', 'elongatie'] },
   { id: 'bsplicing', t: 'Zelfsplicende introns & inteïnes', en: 'Self-splicing introns & inteins', stage: 'bact', scale: 4, kind: 'structure',
     s: 'Bacteriën hebben geen spliceosoom. Zeldzame groep I- en groep II-introns zijn ribozymen die zichzelf uitknippen; inteïnes knippen zichzelf uit een eiwit. Voorbeeld: het groep I-intron uit een tRNA-Ile-gen van Azoarcus.',
     pdb: ['1U6B'], rel: ['splicing', 'bgen', 'rnastructuur'] },
   { id: 'bafbraak', t: 'Eiwitafbraak: ClpXP & Lon', en: 'Protein degradation: ClpXP & Lon', stage: 'bact', scale: 4, kind: 'process',
     s: 'E. coli heeft geen ubiquitine of 26S-proteasoom. AAA+-proteasen zoals ClpXP en Lon ontvouwen eiwitten met ATP en knippen ze in een afgesloten kamer. Het ssrA-label (van tmRNA) markeert eiwitten van vastgelopen ribosomen.',
     pdb: ['6WRF'], rel: ['ubiquitine', 'chaperones', 'misvouwing'] },
+  /* 14-11-2026: 70S-ribosoom met EF-Tu in 3D (bacterieverhaal) en zijpad antibiotica (verificatieronde 12) */
+  { id: 'beftu', t: 'EF-Tu brengt het volgende tRNA', en: 'EF-Tu delivers aminoacyl-tRNA', stage: 'bact', scale: 4, kind: 'structure',
+    s: 'EF-Tu brengt een aminoacyl-tRNA naar de A-plaats van het 70S-ribosoom. Past het anticodon op het codon, dan zet EF-Tu zijn GTP om in GDP en laat het tRNA los. Het antibioticum kirromycine houdt EF-Tu·GDP op het ribosoom vast. Bij de mens doet eEF1A dit werk.',
+    next: ['codon'], pdb: ['5AFI'], rel: ['bribosoom', 'elongatie', 'ribosoomremmers', 'trna'] },
+  { id: 'antibiotica', t: 'Waar antibiotica aangrijpen', en: 'How antibiotics work', stage: 'bact', scale: 1, kind: 'process',
+    s: 'De meeste bacteriedodende antibiotica remmen de aanmaak van de celwand (β-lactams), het DNA (fluorochinolonen via gyrase), het RNA (rifampicine) of het eiwit (ribosoomremmers). Onze cellen hebben geen peptidoglycaan, en ons topoisomerase II, RNA-polymerase en ribosoom verschillen net op de plekken waar die middelen binden.',
+    in: ['rifampicine', 'ribosoomremmers', 'gyraseremmers'], next: ['rifampicine'], rel: ['bcel', 'resistentie', 'bplasmide'] },
+  { id: 'rifampicine', t: 'Rifampicine en het RNA-polymerase', en: 'Rifampicin and RNA polymerase', stage: 'bact', scale: 4, kind: 'structure',
+    s: 'Rifampicine bindt een holte in de β-subeenheid van het bacteriële RNA-polymerase, meer dan 12 Å van de actieve plek, en blokkeert het RNA zodra dat 2–3 nucleotiden lang is. Resistentie komt vooral door mutaties in die holte (in E. coli-nummering S531L, H526Y en D516V).',
+    next: ['ribosoomremmers'], pdb: ['5UAC'], rel: ['bpol', 'antibiotica', 'resistentie'] },
+  { id: 'ribosoomremmers', t: 'Antibiotica op het ribosoom', en: 'Ribosome-targeting antibiotics', stage: 'bact', scale: 3, kind: 'process',
+    s: 'Tetracycline houdt de A-plaats van de 30S bezet; aminoglycosiden binden het 16S-rRNA van de leesplek en veroorzaken leesfouten; macroliden binden in de uitgangstunnel van de 50S. Ons cytosolisch ribosoom heeft op twee sleutelplaatsen een G (1408 en 2058, E. coli-nummering), wat mee verklaart waarom aminoglycosiden en macroliden er niet op werken.',
+    next: ['beftu'], rel: ['bribosoom', 'beftu', 'antibiotica', 'ribosoom'] },
+  { id: 'gyraseremmers', t: 'Fluorochinolonen en gyrase', en: 'Fluoroquinolones and gyrase', stage: 'bact', scale: 3, kind: 'process',
+    s: 'Fluorochinolonen (bv. ciprofloxacine) zetten DNA-gyrase en topoisomerase IV vast op het geknipte DNA. Botsingen met replicatievorken maken er blijvende dubbelstrengsbreuken van. Het medicijn hecht via een water–Mg²⁺-brug aan een serine en een zuur aminozuur, die het menselijke topoisomerase II mist; mutaties op die plaatsen geven resistentie.',
+    next: ['resistentie'], rel: ['bnucleoid', 'breplicatie', 'antibiotica', 'dsb'] },
+  { id: 'resistentie', t: 'Antibioticaresistentie', en: 'Antibiotic resistance', stage: 'bact', scale: 2, kind: 'process',
+    s: 'Bacteriën worden resistent door mutaties of door genen van andere bacteriën over te nemen (vooral via plasmiden en conjugatie). Mechanismen: het doelwit verandert, enzymen zoals β-lactamase breken het antibioticum af, minder poorten (porines) laten minder binnen en pompen werken het weer naar buiten.',
+    rel: ['bplasmide', 'antibiotica', 'rifampicine', 'gyraseremmers'] },
 ];
 
-const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid', 'bcel', 'bnucleoid', 'bplasmide', 'bgen', 'bpol', 'bterm', 'bmrna', 'bribosoom', 'bafbraak', 'breplicatie', 'btrp', 'bsplicing', 'vergelijk', 'bact', 'origins', 'mmr', 'ber', 'ner', 'dsb', 'p53', 'sortering', 'membraan', 'lysosoom', 'mito', 'perox', 'proteasoom', 'autofagie', 'remodeler', 'lussen', 'enhancer', 'xinact', 'imprinting', 'sleutel', 'viruskopie', 'schaar', 'assemblage', 'faag', 'crispr', 'lokalisatie', 'korrels', 'lncrna', 'riboswitch']); // verificatierondes 1–11 (zijpad RNA-lot: ronde 11, docs/verificatie-ronde-11-rna-lot.md); (zijpad virussen: ronde 10, docs/verificatie-ronde-10-virussen.md); (zijpad epigenetica: ronde 9, docs/verificatie-ronde-9-epigenetica.md); (zijpad eiwitlot: ronde 8, docs/verificatie-ronde-8-eiwittargeting.md); ronde 1–7 (zijpad replicatie & herstel: ronde 7, docs/verificatie-ronde-7-replicatie-herstel.md); (verhaallijn 2: ronde 4; bacterie: ronde 6, docs/verificatie-ronde-6-bacterie.md) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
+const CHECKED = new Set(['entry', 'genome', 'repl', 'txn', 'rna', 'tl', 'prot', 'cel', 'virus', 'adeno', 'lnp', 'endocytose', 'baltimore', 'rt', 'integratie', 'kernimport', 'kern', 'nucleolus', 'chromosoom', 'chromatine', 'nucleosoom', 'histonmod', 'dnamethyl', 'gen', 'dnahelix', 'dnavormen', 'noncanon', 'basenparing', 'nucleotide', 'supercoiling', 'replicatie', 'replisoom', 'ssdna', 'telomeren', 'herstel', 'mutaties', 'genregulatie', 'promoter', 'transcriptie', 'rnapol', 'operon', 'polymerasen', 'rnaprocessing', 'capping', 'splicing', 'polya', 'editing', 'export', 'nmd', 'rnai', 'mrnaafbraak', 'rnastructuur', 'translatie', 'ribosoom', 'ribogenese', 'codon', 'trna', 'aars', 'initiatie', 'elongatie', 'terminatie', 'seleno', 'er', 'aminozuren', 'peptide', 'primair', 'secundair', 'ramachandran', 'tertiair', 'quaternair', 'vouwing', 'chaperones', 'ptm', 'glyco', 'disulfide', 'golgi', 'ubiquitine', 'misvouwing', 'idp', 'signaal', 'rtk', 'mapk', 'srf', 'gpcr', 'steroid', 'bcel', 'bnucleoid', 'bplasmide', 'bgen', 'bpol', 'bterm', 'bmrna', 'bribosoom', 'bafbraak', 'breplicatie', 'btrp', 'bsplicing', 'vergelijk', 'bact', 'origins', 'mmr', 'ber', 'ner', 'dsb', 'p53', 'sortering', 'membraan', 'lysosoom', 'mito', 'perox', 'proteasoom', 'autofagie', 'remodeler', 'lussen', 'enhancer', 'xinact', 'imprinting', 'sleutel', 'viruskopie', 'schaar', 'assemblage', 'faag', 'crispr', 'lokalisatie', 'korrels', 'lncrna', 'riboswitch', 'beftu', 'antibiotica', 'rifampicine', 'ribosoomremmers', 'gyraseremmers', 'resistentie']); // ronde 12 (14-11-2026): EF-Tu in 3D + zijpad antibiotica, docs/verificatie-ronde-12-antibiotica.md; // verificatierondes 1–11 (zijpad RNA-lot: ronde 11, docs/verificatie-ronde-11-rna-lot.md); (zijpad virussen: ronde 10, docs/verificatie-ronde-10-virussen.md); (zijpad epigenetica: ronde 9, docs/verificatie-ronde-9-epigenetica.md); (zijpad eiwitlot: ronde 8, docs/verificatie-ronde-8-eiwittargeting.md); ronde 1–7 (zijpad replicatie & herstel: ronde 7, docs/verificatie-ronde-7-replicatie-herstel.md); (verhaallijn 2: ronde 4; bacterie: ronde 6, docs/verificatie-ronde-6-bacterie.md) (docs/verificatie-ronde-*.md); rnapol: residubereiken 5FLM nagekeken via alignering met gist-Rpb1 (29-09-2026)
 export const NODES = Object.fromEntries(N.map(n => [n.id, { in: [], next: [], rel: [], pdb: [], status: CHECKED.has(n.id) ? 'nagekeken' : 'concept', ...n }]));
 
 /* Bereken ook de omgekeerde verbanden (wie verwijst naar mij) */

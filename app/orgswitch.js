@@ -19,6 +19,7 @@ const TO_BACT = {
 const TO_HUMAN = {
   bcel: 'cel', bnucleoid: 'chromatine', bgen: 'gen', bpol: 'rnapol', operon: 'transcriptie', breplicatie: 'replicatie',
   bsplicing: 'splicing', bmrna: 'translatie', bribosoom: 'ribosoom', bafbraak: 'proteasoom',
+  beftu: 'elongatie',   // EF-Tu ↔ eEF1A brengt het tRNA aan (verlenging); omgekeerd blijft elongatie → bmrna niet ingesteld
 };
 export const COUNTERPART = { ...TO_BACT, ...TO_HUMAN };
 export const isBact = id => id in TO_HUMAN;
