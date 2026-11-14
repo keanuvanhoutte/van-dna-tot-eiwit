@@ -44,6 +44,9 @@ export default {
       BURGERS,
       { t: 'Marks, Fu & Aladjem (2017) Regulation of replication origins. Adv Exp Med Biol 1042:43 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6622447/' },
       { t: 'BioNumbers BNID 111770 — speed of the replication fork (Méchali 2010)', url: 'https://bionumbers.hms.harvard.edu/bionumber.aspx?s=n&v=0&id=111770' },
+      { t: 'Greenberg & Simon (2022) S phase duration is determined by local rate and global organization of replication. Biology (Basel) 11:718 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC9139170/' },
+      { t: 'Jones, Reynolds-Winczura & Gambus (2024) A decade of discovery — eukaryotic replisome disassembly at replication termination. Biology (Basel) 13:233 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11048390/' },
+      { t: 'Bell & Labib (2016) Chromosome duplication in Saccharomyces cerevisiae. Genetics 203:1027 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4937469/' },
     ],
   },
 
@@ -142,7 +145,7 @@ export default {
         'Shelterin (TRF1, TRF2, POT1, TIN2, TPP1, RAP1) bedekt het telomeer; met TRF2 kan de overhang een T-lus vormen, zodat het uiteinde niet als DNA-breuk wordt gezien.',
       ],
       facts: [['Herhaling', 'TTAGGG (gewervelden)'], ['Telomerase-RNA (hTR)', '451 nt; matrijsgebied 11 nt'], ['Shelterin', '6 eiwitten'], ['Telomerase actief in', 'kiemcellen, stamcellen, de meeste kankercellen'], ['Structuren', 'PDB 7QXA (3D-stappen: kern van humaan telomerase met telomeer-DNA en TPP1, cryo-EM 3,2 Å), 7BG9; G-quadruplex: 143D, 1KF1']],
-      why: 'Telomeren bepalen hoe vaak een cel kan delen en beschermen chromosoomuiteinden tegen afbraak en fusie. Kankercellen heractiveren meestal telomerase om onbeperkt te delen; defecten in telomerase of shelterin geven ziekten zoals dyskeratosis congenita.',
+      why: 'Telomeren bepalen hoe vaak een cel kan delen en beschermen chromosoomuiteinden tegen afbraak en fusie. Kankercellen heractiveren meestal telomerase om onbeperkt te delen; defecten in telomerase geven ziekten zoals dyskeratosis congenita.',
     },
     en: {
       kort: 'Telomeres are the ends of our [[chromosomes|chromosoom]]: long runs of the same short DNA repeat. They get a little shorter with every division, unless the enzyme telomerase lengthens them. A protein cap makes sure the cell does not see them as DNA breaks.',
@@ -157,7 +160,7 @@ export default {
         'Shelterin (TRF1, TRF2, POT1, TIN2, TPP1, RAP1) coats the telomere; with TRF2 the overhang can form a t-loop, so the end is not seen as a DNA break.',
       ],
       facts: [['Repeat', 'TTAGGG (vertebrates)'], ['Telomerase RNA (hTR)', '451 nt; template region 11 nt'], ['Shelterin', '6 proteins'], ['Telomerase active in', 'germ cells, stem cells, most cancer cells'], ['Structures', 'PDB 7QXA (3D steps: core of human telomerase with telomeric DNA and TPP1, cryo-EM 3.2 Å), 7BG9; G-quadruplex: 143D, 1KF1']],
-      why: 'Telomeres determine how often a cell can divide and protect chromosome ends from degradation and fusion. Cancer cells usually reactivate telomerase to divide indefinitely; defects in telomerase or shelterin cause diseases such as dyskeratosis congenita.',
+      why: 'Telomeres determine how often a cell can divide and protect chromosome ends from degradation and fusion. Cancer cells usually reactivate telomerase to divide indefinitely; defects in telomerase cause diseases such as dyskeratosis congenita.',
     },
     sources: [
       { t: 'de Lange (2009) How telomeres solve the end-protection problem. Science 326:948 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC2819049/' },
@@ -167,6 +170,8 @@ export default {
       { t: 'RCSB PDB 7BG9 — catalytic core of human telomerase with telomeric DNA', url: 'https://www.rcsb.org/structure/7BG9' },
       { t: 'Sekne et al. (2022) Structural basis of human telomerase recruitment by TPP1-POT1. Science 375:1173', url: 'https://doi.org/10.1126/science.abn6840' },
       { t: 'RCSB PDB 7QXA — human telomerase-DNA-TPP1 complex (3D-stappen)', url: 'https://www.rcsb.org/structure/7QXA' },
+      { t: 'Shay (2016) Role of telomeres and telomerase in aging and cancer. Cancer Discov 6:584 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4893918/' },
+      { t: 'Kim et al. (1994) Specific association of human telomerase activity with immortal cells and cancer. Science 266:2011 (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/7605428/' },
     ],
   },
 
@@ -204,6 +209,7 @@ export default {
       ALB_REPAIR,
       { t: 'Reardon & Sancar (2002) Molecular anatomy of the human excision nuclease assembled at sites of DNA damage (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC133982/' },
       { t: 'Walker, Corpina & Goldberg (2001) Structure of the Ku heterodimer bound to DNA. Nature — PDB 1JEY', url: 'https://www.rcsb.org/structure/1JEY' },
+      { t: 'Sullivan & Bernstein (2018) RAD-ical new insights into RAD51 regulation. Genes 9:629 (PMC) — o.a. PARP-remmers bij HR-defecte tumoren', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6316741/' },
     ],
   },
 

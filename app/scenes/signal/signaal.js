@@ -56,7 +56,7 @@ const CELL_TOP = 460 - 360 * (1 + .06 * Math.sin(810 * Math.PI / 180) + .03 * Ma
 export default {
   id: 'signaal',
   title: { nl: 'Signaalmolecule & receptor', en: 'Cell signalling' },
-  scale: { nl: 'cel ≈ 20 µm → membraan ≈ 5 nm dik', en: 'cell ≈ 20 µm → membrane ≈ 5 nm thick' },
+  scale: { nl: 'cel ≈ 20 µm → membraan ≈ 4 nm dik', en: 'cell ≈ 20 µm → membrane ≈ 4 nm thick' },
   time: { nl: 'seconden (receptor) tot minuten (genen aan)', en: 'seconds (receptor) to minutes (genes on)' },
   org: { nl: 'menselijke epitheelcel', en: 'human epithelial cell' },
   legend: [[EGFC, { nl: 'EGF (groeifactor, peptide)', en: 'EGF (growth factor, peptide)' }], [ADRC, 'adrenaline'], [CORTC, { nl: 'cortisol (steroïdhormoon)', en: 'cortisol (steroid hormone)' }],
@@ -77,8 +77,8 @@ export default {
       'Het membraan is een dubbele laag vetachtige moleculen. Of een signaal erdoor kan, bepaalt hoe het werkt.',
       'The membrane is a double layer of fatty molecules. Whether a signal can cross it decides how it works.'),
     ST(8000, cam(560, 420, 1200), 'Sommige signalen blijven buiten', 'Some signals stay outside',
-      'EGF en adrenaline kunnen niet door het membraan. Ze binden een ontvanger (receptor) aan de buitenkant.',
-      'EGF and adrenaline cannot cross the membrane. They bind a receiver (receptor) on the outside.'),
+      'EGF en adrenaline kunnen nauwelijks door het membraan. Ze binden een ontvanger (receptor) aan de buitenkant.',
+      'EGF and adrenaline can hardly cross the membrane. They bind a receiver (receptor) on the outside.'),
     ST(8000, cam(1150, 440, 1150), 'Cortisol glipt erdoorheen', 'Cortisol slips through',
       'Cortisol lost op in vet en glipt door het membraan. Binnen in de cel wacht zijn receptor.',
       'Cortisol dissolves in fat and slips through the membrane. Its receptor waits inside the cell.'),
@@ -231,11 +231,11 @@ export default {
         let lb = '';
         const l1 = K(g, 1.8, 1.97) * (1 - K(g, 2.0, 2.15));
         if (l1 > .01) lb += T(580, 424, T2('plasmamembraan', 'plasma membrane'), { size: 28, col: C.mem, op: l1 }) +
-          T(580, 458, T2('lipidendubbellaag, ≈ 5 nm', 'lipid bilayer, ≈ 5 nm'), { size: 24, col: C.muted, op: l1, w: 500 });
+          T(580, 458, T2('lipidendubbellaag, ≈ 4 nm', 'lipid bilayer, ≈ 4 nm'), { size: 24, col: C.muted, op: l1, w: 500 });
         const l2 = K(g, 2.25, 2.55) * (1 - K(g, 3.02, 3.2));
         if (l2 > .01) {
           lb += T(XA, 160, 'EGF', { size: 26, col: EGFC, op: l2 }) + T(XB + 80, 244, 'adrenaline', { size: 26, col: ADRC, op: l2, anchor: 'start' });
-          lb += T(565, 110, T2('hydrofiel: kan niet door de bilaag', 'hydrophilic: cannot cross the bilayer'), { size: 26, col: C.text, op: l2 });
+          lb += T(565, 110, T2('hydrofiel: kan nauwelijks door de bilaag', 'hydrophilic: can hardly cross the bilayer'), { size: 26, col: C.text, op: l2 });
           lb += T(565, 520, T2('receptoren op het celoppervlak', 'receptors on the cell surface'), { size: 26, col: C.prot, op: l2 });
           const xk = K(g, 2.35, 2.5);
           lb += `<g opacity="${f1(xk * l2)}" stroke="#ff6b6b" stroke-width="5" stroke-linecap="round"><path d="M563,${MY - 22}l24,-24M563,${MY - 46}l24,24"/></g>`;

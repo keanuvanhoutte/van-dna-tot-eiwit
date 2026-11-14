@@ -248,7 +248,7 @@ export default {
       kort: 'Van gen tot eiwit gaat bij de mens en bij een bacterie volgens hetzelfde recept: DNA → RNA → eiwit. Alleen de werkplaats verschilt. De mens heeft een [[kern|kern]], werkt het RNA eerst bij en vertaalt het pas daarna. Een bacterie heeft geen kern: [[ribosomen|bribosoom]] beginnen al terwijl het mRNA nog gemaakt wordt.',
       what: 'Bij de mens ligt het DNA in de celkern. RNA-polymerase II maakt een pre-mRNA. Dat krijgt een 5′-kap, het spliceosoom knipt de introns eruit en het 3′-uiteinde krijgt een poly(A)-staart. Pas het rijpe mRNA gaat door een kernporie naar het cytoplasma, waar ribosomen het vertalen. Bij E. coli is er geen kern: transcriptie en translatie gebeuren in dezelfde ruimte en zijn aan elkaar gekoppeld. De genen van een operon staan samen op één mRNA.',
       how: [
-        'Mens: transcriptie in de kern; kap, splicing en poly(A)-staart gebeuren al tijdens de transcriptie.',
+        'Mens: transcriptie in de kern; kap, splicing en poly(A)-staart beginnen al tijdens de transcriptie.',
         'Mens: het rijpe mRNA gaat door een kernporie naar het cytoplasma en wordt daar vertaald. Een menselijk mRNA draagt meestal één gen.',
         'Bacterie: ribosomen binden het mRNA al terwijl het gemaakt wordt (gezien met de elektronenmicroscoop); in het expressoom zit het ribosoom vlak achter RNA-polymerase.',
         'Bacterie: de genen van een operon worden samen op één mRNA gezet, en elk gen geeft een eigen eiwit.',
@@ -262,7 +262,7 @@ export default {
       kort: 'From gene to protein follows the same recipe in humans and in a bacterium: DNA → RNA → protein. Only the workshop differs. Humans have a [[nucleus|kern]], edit the RNA first and only then translate it. A bacterium has no nucleus: [[ribosomes|bribosoom]] start while the mRNA is still being made.',
       what: 'In humans the DNA lies in the nucleus. RNA polymerase II makes a pre-mRNA. It gets a 5′ cap, the spliceosome cuts out the introns and the 3′ end gets a poly(A) tail. Only the mature mRNA passes through a nuclear pore into the cytoplasm, where ribosomes translate it. In E. coli there is no nucleus: transcription and translation take place in the same space and are coupled. The genes of an operon sit together on one mRNA.',
       how: [
-        'Human: transcription in the nucleus; cap, splicing and poly(A) tail already happen during transcription.',
+        'Human: transcription in the nucleus; cap, splicing and poly(A) tail already start during transcription.',
         'Human: the mature mRNA passes through a nuclear pore into the cytoplasm and is translated there. A human mRNA usually carries one gene.',
         'Bacterium: ribosomes bind the mRNA while it is being made (seen with the electron microscope); in the expressome the ribosome sits right behind RNA polymerase.',
         'Bacterium: the genes of an operon are put together on one mRNA, and each gene gives its own protein.',
@@ -272,6 +272,6 @@ export default {
       facts: [['Nucleus', 'human: yes · bacterium: no (nucleoid)'], ['Introns', 'human: spliceosome · bacterium: rare, self-splicing'], ['5′ cap', 'human: yes · bacterium: no (a few RNAs: NAD cap)'], ['Genes per mRNA', 'human: usually one · bacterium: often several (operon)'], ['Translation', 'human: after export · bacterium: already during transcription']],
       why: 'Because of these differences a bacterium cannot simply read a human gene correctly: it cannot remove the introns. And because bacterial and human ribosomes differ, some antibiotics can block protein synthesis in bacteria without blocking it in our cells.',
     },
-    sources: [S.alberts_rna, S.alberts_prot, S.cooper_prok, S.miller, S.webster, S.edgell, S.cahova],
+    sources: [S.alberts_rna, S.alberts_prot, S.cooper_prok, { t: 'Hsin & Manley (2012) The RNA polymerase II CTD coordinates transcription and RNA processing. Genes Dev 26:2119 (PMC3465734)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3465734/' }, S.miller, S.webster, S.edgell, S.cahova],
   },
 };

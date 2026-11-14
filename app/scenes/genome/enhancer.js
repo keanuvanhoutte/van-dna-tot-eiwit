@@ -19,7 +19,7 @@ const blob = (x, y, rx, ry, col, lab, op = 1, fs = 22) => op <= .01 ? '' : `<ell
 export default {
   id: 'enhancer',
   title: L3('Een verre versterker komt dichtbij via een lus', 'A distant switch comes close through a loop'),
-  scale: L3('versterker tot ≈ 1 miljoen basenparen van het gen (schematisch)', 'switch up to ≈ 1 million base pairs from the gene (schematic)'),
+  scale: L3('versterker soms ≈ 1 miljoen basenparen van het gen (schematisch)', 'switch sometimes ≈ 1 million base pairs from the gene (schematic)'),
   time: L3('minuten (vertraagd)', 'minutes (slowed down)'),
   org: L3('mens', 'human'),
   legend: [[C.dna, L3('DNA', 'DNA')], [ENH, L3('versterker (enhancer)', 'switch (enhancer)')], [GENE, L3('gen met zijn startplaats', 'gene with its start site')], [ACT, L3('activator', 'activator')],
@@ -29,9 +29,9 @@ export default {
     en: 'Schematic: the loop is drawn much shorter than in reality, and only one activator and one switch are shown. A gene often has several switches, and one switch can control more than one gene. How often and for how long switch and start site touch is still being studied.' },
   steps: [
     { dur: 7500, cam: FULL, title: L3('Een gen begint bij een startplaats', 'A gene begins at a start site'),
-      text: L3('Vlak voor een gen ligt de startplaats. Daar kan het afleesapparaat beginnen, maar alleen gaat dat traag.', 'Just before a gene lies the start site. The reading machine can begin there, but on its own that is slow.') },
+      text: L3('Aan het begin van een gen ligt de startplaats. Daar kan het afleesapparaat beginnen, maar alleen gaat dat traag.', 'At the beginning of a gene lies the start site. The reading machine can begin there, but on its own that is slow.') },
     { dur: 8000, cam: FULL, title: L3('Een versterker kan ver weg liggen', 'A switch can lie far away'),
-      text: L3('Een versterker is een stukje DNA dat een gen sterker aanzet. Hij kan tot een miljoen letters verder liggen.', 'A switch is a piece of DNA that turns a gene on more strongly. It can lie up to a million letters away.') },
+      text: L3('Een versterker is een stukje DNA dat een gen sterker aanzet. Hij kan wel een miljoen letters verder liggen.', 'A switch is a piece of DNA that turns a gene on more strongly. It can lie as much as a million letters away.') },
     { dur: 7500, cam: FULL, title: L3('Activatoren gaan op de versterker zitten', 'Activators sit down on the switch'),
       text: L3('Eiwitten die het gen willen aanzetten, activatoren, binden aan de versterker.', 'Proteins that want to switch the gene on, activators, bind to the switch.') },
     { dur: 9000, cam: FULL, title: L3('Een lus brengt de versterker naar het gen', 'A loop brings the switch to the gene'),
@@ -39,7 +39,7 @@ export default {
     { dur: 9000, cam: FULL, title: L3('Een brug zet het aflezen in gang', 'A bridge gets reading started'),
       text: L3('Een groot brugcomplex verbindt de activatoren met het afleesapparaat. Dan wordt het gen volop afgelezen.', 'A large bridge complex connects the activators with the reading machine. Then the gene is read in full.') },
     { dur: 9000, cam: FULL, title: L3('Een fout in een verre versterker telt ook', 'A fault in a distant switch matters too'),
-      text: L3('Een versterker voor de groei van vingers ligt een miljoen letters van zijn gen. Een fout erin kan een extra vinger geven.', 'A switch for finger growth lies a million letters from its gene. A fault in it can cause an extra finger.') },
+      text: L3('Een versterker voor de aanleg van vingers ligt een miljoen letters van zijn gen. Een fout erin kan een extra vinger geven.', 'A switch for forming fingers lies a million letters from its gene. A fault in it can cause an extra finger.') },
   ],
   svg() {
     return svgOpen() + `
@@ -77,7 +77,7 @@ export default {
         if (kE > .01 && kL < .99) {
           const o = kE * (1 - kL);
           fx += `<g opacity="${f1(o)}"><path d="M${E0[0]},${Y + 100} L${E0[0]},${Y + 130} L${P0[0]},${Y + 130} L${P0[0]},${Y + 100}" stroke="${C.muted}" stroke-width="3" fill="none"/></g>` +
-            T((E0[0] + P0[0]) / 2, Y + 172, T2('tot ≈ 1 miljoen letters', 'up to ≈ 1 million letters'), { size: 26, col: C.text, op: o });
+            T((E0[0] + P0[0]) / 2, Y + 172, T2('soms ≈ 1 miljoen letters', 'sometimes ≈ 1 million letters'), { size: 26, col: C.text, op: o });
         }
         // activatoren: vallen op de versterker en reizen mee
         for (let k = 0; k < 2; k++) {

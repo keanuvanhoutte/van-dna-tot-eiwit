@@ -49,8 +49,8 @@ export default {
       text: L3('Het zuur zet de enzymen aan. Ze knippen grote moleculen in bouwstenen die de cel opnieuw gebruikt.', 'The acid switches the enzymes on. They cut large molecules into building blocks the cell reuses.') },
     { dur: 9000, cam: FULL, title: L3('Zonder label raken de enzymen kwijt', 'Without the tag the enzymes get lost'),
       text: L3('Bij I-celziekte ontbreekt het label. De enzymen belanden buiten de cel en het lysosoom raakt vol afval.', 'In I-cell disease the tag is missing. The enzymes end up outside the cell and the lysosome fills with waste.') },
-    { dur: 9000, cam: FULL, title: L3('Eén enzym kwijt: de ziekte van Pompe', 'One enzyme missing: Pompe disease'),
-      text: L3('Soms ontbreekt maar één enzym. Bij de ziekte van Pompe blijft een opslagsuiker (glycogeen) in het lysosoom liggen.', 'Sometimes only one enzyme is missing. In Pompe disease a storage sugar (glycogen) stays behind in the lysosome.') },
+    { dur: 9000, cam: FULL, title: L3('Eén enzym te weinig: de ziekte van Pompe', 'Too little of one enzyme: Pompe disease'),
+      text: L3('Soms werkt maar één enzym te weinig. Bij de ziekte van Pompe blijft een opslagsuiker (glycogeen) in het lysosoom liggen.', 'Sometimes just one enzyme works too little. In Pompe disease a storage sugar (glycogen) stays behind in the lysosome.') },
   ],
   svg() {
     let golgi = '';

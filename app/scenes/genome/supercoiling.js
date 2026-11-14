@@ -105,7 +105,7 @@ export default {
   id: 'supercoiling',
   title: { nl: 'Supercoiling & topo-isomerasen', en: 'Supercoiling & topoisomerases' },
   scale: { nl: '≈ 40 nm (126 bp)', en: '≈ 40 nm (126 bp)' },
-  time: { nl: 'topo-isomerasecyclus: ms – s', en: 'topoisomerase cycle: ms – s' },
+  time: { nl: 'spanning ontstaat bij transcriptie en replicatie', en: 'strain arises during transcription and replication' },
   org: { nl: 'mens (TOP1, TOP2A/B)', en: 'human (TOP1, TOP2A/B)' },
   legend: [[C.dna, { nl: 'streng 1', en: 'strand 1' }], [C.dna2, { nl: 'streng 2', en: 'strand 2' }], [C.prot, { nl: 'enzymen', en: 'enzymes' }], [C.histone, { nl: 'vast punt / histonen', en: 'anchor / histones' }]],
   extra: {
@@ -176,13 +176,13 @@ export default {
           ann += `<g opacity="${f1(ease(sub(p, .7, .85)))}">${txt(430, 250, T2('plectoneem', 'plectoneme'), '#ffc247', 30)}${txt(430, 284, T2('2 kruisingen → Wr ≈ −2', '2 crossings → Wr ≈ −2'), C.muted, 22)}${txt(430, 314, T2('(rechtshandig gewonden)', '(right-handed interwound)'), C.muted, 20)}</g>`;
         }
         if (step === 4) {
-          ann += `<g opacity="${f1(ease(sub(p, .05, .25)))}">${box(130, 580, 560, 130)}${txt(410, 628, 'σ = ΔLk / Lk₀', '#fff', 32, 'middle', 800, 'JetBrains Mono')}${txt(410, 675, T2('hier −2/12 ≈ −0,17 · cel ≈ −0,06', 'here −2/12 ≈ −0.17 · cell ≈ −0.06'), C.muted, 24)}</g>`;
+          ann += `<g opacity="${f1(ease(sub(p, .05, .25)))}">${box(130, 580, 560, 130)}${txt(410, 628, 'σ = ΔLk / Lk₀', '#fff', 32, 'middle', 800, 'JetBrains Mono')}${txt(410, 675, T2('hier −2/12 ≈ −0,17 · cel ≈ −0,05', 'here −2/12 ≈ −0.17 · cell ≈ −0.05'), C.muted, 24)}</g>`;
           // nucleosoom als toroïdale (linkshandige) supercoil
           const k = ease(sub(p, .35, .6));
           nucOp = k;   // opacity op de hotspotgroep zelf, zodat de engine hem pas klikbaar maakt als hij zichtbaar is
           nucpic += `<g>${box(960, 580, 480, 130)}<ellipse cx="1060" cy="645" rx="55" ry="45" fill="${C.histone}" opacity=".6"/>
             <path d="M985,630 C1000,580 1120,580 1125,630 C1130,680 1000,695 995,655 C990,615 1100,600 1135,615" stroke="${C.dna}" stroke-width="7" fill="none"/>
-            ${txt(1150, 632, T2('nucleosoom', 'nucleosome'), '#fff', 26, 'start', 700)}${txt(1150, 672, T2('linkshandig · ΔLk ≈ −1', 'left-handed · ΔLk ≈ −1'), C.muted, 24, 'start')}</g>`;
+            ${txt(1150, 632, T2('nucleosoom', 'nucleosome'), '#fff', 26, 'start', 700)}${txt(1150, 672, T2('linkshandig gewonden', 'left-handed wrap'), C.muted, 24, 'start')}</g>`;
         }
         if (step === 5) {
           const xs = X0 + (X1 - X0) * st.sp;
@@ -208,7 +208,7 @@ export default {
           // enzym op de onderste kruising van de plectoneem
           const cy = Y0 - PH * .25, on = ease(sub(p, .05, .2)) * (1 - ease(sub(p, .9, 1)));
           enz += `<g opacity="${f1(on)}"><ellipse cx="${XM - 60}" cy="${f1(cy)}" rx="60" ry="80" fill="rgba(111,91,214,.3)" stroke="${C.prot2}" stroke-width="3"/><ellipse cx="${XM + 60}" cy="${f1(cy)}" rx="60" ry="80" fill="rgba(111,91,214,.3)" stroke="${C.prot2}" stroke-width="3"/>
-            ${txt(XM, f1(cy + 115), T2('TOP2 (dimeer)', 'TOP2 (dimer)'), '#fff', 22)}${pill(XM - 110, cy - 95, 60, 26, 'ATP', '#c9a027', sub(p, .15, .25) * (1 - sub(p, .55, .65)), 14)}${pill(XM + 110, cy - 95, 60, 26, 'ATP', '#c9a027', sub(p, .15, .25) * (1 - sub(p, .55, .65)), 14)}</g>`;
+            ${txt(XM, f1(cy + 115), T2('TOP2', 'TOP2'), '#fff', 22)}${pill(XM - 110, cy - 95, 60, 26, 'ATP', '#c9a027', sub(p, .15, .25) * (1 - sub(p, .55, .65)), 14)}${pill(XM + 110, cy - 95, 60, 26, 'ATP', '#c9a027', sub(p, .15, .25) * (1 - sub(p, .55, .65)), 14)}</g>`;
           const k1 = ease(sub(p, .2, .35)), k2 = ease(sub(p, .35, .5));
           if (p > .2 && p < .5) ann += `<g opacity="${f1(k1)}"><path d="M${XM - 30},${f1(cy - 20)} L${XM + 30},${f1(cy + 20)}" stroke="#ff6b6b" stroke-width="5"/><path d="M${XM - 30},${f1(cy + 20)} L${XM + 30},${f1(cy - 20)}" stroke="#ff6b6b" stroke-width="5"/>${txt(XM + 150, f1(cy - 130), T2('dubbelstrengbreuk (G-segment)', 'double-strand break (G segment)'), '#ff6b6b', 22, 'start')}
             <path d="M${XM},${f1(cy - 60)} V${f1(cy + 60 * k2)}" stroke="#ffc247" stroke-width="4" marker-end="url(#arrow)" opacity="${f1(k2)}"/>${txt(XM + 150, f1(cy - 100), T2('T-segment gaat erdoor', 'T segment passes through'), '#ffc247', 22, 'start')}</g>`;

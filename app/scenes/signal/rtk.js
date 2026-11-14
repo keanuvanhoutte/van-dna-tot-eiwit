@@ -129,7 +129,7 @@ function egf(x, y, op = 1) {
 const SCENE = {
   id: 'rtk',
   title: { nl: 'Receptortyrosinekinase (EGFR)', en: 'Receptor tyrosine kinase (EGFR)' },
-  scale: { nl: 'niet op schaal (plasmamembraan ≈ 5 nm dik)', en: 'not to scale (plasma membrane ≈ 5 nm thick)' },
+  scale: { nl: 'niet op schaal (plasmamembraan ≈ 4 nm dik)', en: 'not to scale (plasma membrane ≈ 4 nm thick)' },
   time: { nl: 'seconden tot minuten na EGF', en: 'seconds to minutes after EGF' },
   org: { nl: 'mens (bv. epitheelcel)', en: 'human (e.g. epithelial cell)' },
   legend: [[K.egf, 'EGF'], [K.rec, { nl: 'EGF-receptor (EGFR)', en: 'EGF receptor (EGFR)' }], [PHOS, { nl: 'fosfaat (P-Tyr)', en: 'phosphate (P-Tyr)' }],

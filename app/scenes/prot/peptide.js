@@ -72,7 +72,7 @@ const PX = 1010, CX = 480, CY = 450;
 export default {
   id: 'peptide',
   title: { nl: 'Peptidebinding & φ/ψ', en: 'Peptide bond & φ/ψ' },
-  scale: { nl: '≈ 0,1–1 nm', en: '≈ 0.1–1 nm' }, time: { nl: 'in het ribosoom ≈ 5–6 bindingen/s (mens)', en: 'in the ribosome ≈ 5–6 bonds/s (human)' },
+  scale: { nl: '≈ 0,1–1 nm', en: '≈ 0.1–1 nm' }, time: { nl: 'in het ribosoom ≈ 6 bindingen/s (zoogdiercel)', en: 'in the ribosome ≈ 6 bonds/s (mammalian cell)' },
   org: { nl: 'alle organismen', en: 'all organisms' },
   legend: [[ACOL.N, 'N'], [ACOL.O, 'O'], [ACOL.C, 'C, Cα'], [EL.H, 'H'], [EL.CB, { nl: 'Cβ (zijketen)', en: 'Cβ (side chain)' }], ['#5fd3e6', { nl: 'peptidevlak', en: 'peptide plane' }], [C.chain, 'φ (N–Cα)'], [C.trna, 'ψ (Cα–C)']],
   extra: {
@@ -224,7 +224,7 @@ export default {
           d2 = txt(800, 175, T2('twee resonantievormen van dezelfde binding', 'two resonance forms of the same bond'), C.muted, 22) +
             band(430) + band(1170) +
             peptideUnit(430, 440, false) + peptideUnit(1170, 440, true) + txt(800, 452, '⟷', '#fff', 60) +
-            `<g opacity="${f1(ease(sub(p, .1, .35)))}">` + txt(800, 640, T2('C–N ≈ 1,32 Å: tussen een enkele (≈ 1,47 Å) en een dubbele binding (≈ 1,27 Å)', 'C–N ≈ 1.32 Å: between a single (≈ 1.47 Å) and a double bond (≈ 1.27 Å)'), C.text, 22) +
+            `<g opacity="${f1(ease(sub(p, .1, .35)))}">` + txt(800, 640, T2('C–N ≈ 1,32 Å: korter dan een enkele binding (N–Cα ≈ 1,47 Å)', 'C–N ≈ 1.32 Å: shorter than a single bond (N–Cα ≈ 1.47 Å)'), C.text, 22) +
             txt(800, 680, T2('→ geen vrije draaiing rond de C–N-binding', '→ no free rotation about the C–N bond'), C.chain, 22) + '</g>';
         } else if (step === 4) {
           // het vlak staat er van bij het begin (sluit aan op de band O–C–N van de vorige stap) en wordt dan duidelijker

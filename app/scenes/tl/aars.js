@@ -12,21 +12,21 @@ const E2 = (a, b, k) => [lerp(a[0], b[0], k), lerp(a[1], b[1], k)];
 export default {
   id: 'aars',
   title: { nl: 'Aminoacyl-tRNA-synthetase', en: 'Aminoacyl-tRNA synthetase' },
-  scale: '≈ 10 nm', time: { nl: 'milliseconden per lading (vertraagd)', en: 'milliseconds per charging event (slowed down)' },
+  scale: '≈ 10 nm', time: { nl: 'snel (hier sterk vertraagd)', en: 'fast (strongly slowed down here)' },
   org: { nl: 'alle levensvormen (hier IleRS)', en: 'all domains of life (here IleRS)' },
   legend: [[C.prot, { nl: 'synthetase (IleRS)', en: 'synthetase (IleRS)' }], [C.trna, 'tRNA-Ile'], ['#ff8a3d', 'ATP / AMP / PPi'], ['#7fdc6a', { nl: 'hydrofoob aminozuur', en: 'hydrophobic amino acid' }]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Proef (Chapeville e.a., 1962): Cys-tRNA-Cys werd chemisch omgezet in Ala-tRNA-Cys; daarna verscheen Ala op Cys-codons. Het ribosoom controleert dus het anticodon, niet het aminozuur.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Experiment (Chapeville et al., 1962): Cys-tRNA-Cys was chemically converted into Ala-tRNA-Cys; Ala then appeared at Cys codons. So the ribosome checks the anticodon, not the amino acid.</p>' },
   simplified: {
-    nl: 'Het enzym is een schematische vorm (echte IleRS: ≈ 1000 aminozuren, PDB 1FFY). Het tRNA is een vereenvoudigde L-vorm. Proeflezen gebeurt zowel vóór (aa-AMP) als na de overdracht (aa-tRNA); hier tonen we de post-transfer-route. Klasse-I-enzymen laden meestal de 2\'-OH, klasse II de 3\'-OH (uitzondering: PheRS, klasse II, 2\'-OH).',
-    en: 'The enzyme is a schematic shape (real IleRS: ≈ 1000 amino acids, PDB 1FFY). The tRNA is a simplified L shape. Editing happens both before (aa-AMP) and after transfer (aa-tRNA); here we show the post-transfer route. Class I enzymes usually charge the 2\'-OH, class II the 3\'-OH (exception: PheRS, class II, 2\'-OH).' },
+    nl: 'Het enzym is een schematische vorm (echte IleRS: ≈ 900–1300 aminozuren; PDB 1FFY = IleRS van S. aureus, 917 aminozuren). Het tRNA is een vereenvoudigde L-vorm. Proeflezen gebeurt zowel vóór (aa-AMP) als na de overdracht (aa-tRNA); hier tonen we de post-transfer-route. Klasse-I-enzymen laden meestal de 2\'-OH, klasse II de 3\'-OH (uitzondering: PheRS, klasse II, 2\'-OH).',
+    en: 'The enzyme is a schematic shape (real IleRS: ≈ 900–1300 amino acids; PDB 1FFY = S. aureus IleRS, 917 amino acids). The tRNA is a simplified L shape. Editing happens both before (aa-AMP) and after transfer (aa-tRNA); here we show the post-transfer route. Class I enzymes usually charge the 2\'-OH, class II the 3\'-OH (exception: PheRS, class II, 2\'-OH).' },
   steps: [
     ST(8000, cam(820, 470, 1500), 'Een eigen enzym per aminozuur', 'Its own enzyme for each amino acid', 'Elk aminozuur heeft een eigen enzym dat het aan de juiste tRNA’s hangt. Hier wordt de code echt vertaald.', 'Each amino acid has its own enzyme that attaches it to the right tRNAs. This is where the code is really translated.'),
     ST(9000, cam(900, 460, 1000), 'Stap 1: het aminozuur klaarmaken', 'Step 1: getting the amino acid ready', 'Het enzym activeert het aminozuur (isoleucine) met energie uit ATP.', 'The enzyme activates the amino acid (isoleucine) with energy from ATP.'),
     ST(9000, cam(800, 560, 1250), 'Het enzym herkent zijn tRNA', 'The enzyme recognises its tRNA', 'Het enzym herkent ‘zijn’ tRNA aan vaste kenmerken, vooral het anticodon en de stam waar het aminozuur komt.', 'The enzyme recognises ‘its’ tRNA by fixed features, mainly the anticodon and the stem where the amino acid goes.'),
     ST(8500, cam(840, 430, 900), 'Stap 2: het tRNA wordt geladen', 'Step 2: the tRNA is loaded', 'Het aminozuur gaat naar de laatste A van het CCA-uiteinde. Het tRNA is nu geladen.', 'The amino acid moves to the last A of the CCA end. The tRNA is now loaded.'),
-    ST(9000, FULL, 'Twee families van enzymen', 'Two families of enzymes', 'Er zijn twee groepen van zo’n 10 enzymen, apart ontstaan. Ze grijpen het tRNA elk langs een andere kant.', 'There are two groups of about 10 enzymes, which arose separately. Each grips the tRNA from a different side.'),
+    ST(9000, FULL, 'Twee families van enzymen', 'Two families of enzymes', 'Er zijn twee groepen van zo’n 10 enzymen, elk met een eigen bouw. Ze grijpen het tRNA elk langs een andere kant.', 'There are two groups of about 10 enzymes, each with its own build. Each grips the tRNA from a different side.'),
     ST(9000, cam(960, 440, 1250), 'Probleem: valine lijkt op isoleucine', 'Problem: valine looks like isoleucine', 'Fenylalanine is te groot en past niet. Maar valine is net iets kleiner dan isoleucine en past wel: een fout.', 'Phenylalanine is too big and does not fit. But valine is just slightly smaller than isoleucine and does fit: a mistake.'),
     ST(9500, cam(980, 420, 1150), 'Nalezen: een tweede zeef', 'Checking: a second sieve', 'Een tweede, kleinere holte controleert. Valine past daar wel en wordt eraf geknipt; isoleucine niet.', 'A second, smaller pocket checks. Valine fits there and is cut off again; isoleucine does not.'),
     ST(8500, cam(820, 470, 1500), 'Naar het ribosoom', 'Off to the ribosome', 'Een hulpeiwit brengt het geladen tRNA naar het ribosoom. Dat controleert alleen het codon, niet het aminozuur.', 'A helper protein brings the loaded tRNA to the ribosome. It checks only the codon, not the amino acid.'),
@@ -153,7 +153,7 @@ export default {
           tr = trna(0, 0, tipSyn, kv > .98 ? { a: 'V', dx: 30, dy: -26 } : null, 1);
           if (kv <= .98) amino += aa(val[0], val[1], 'V', 24);
           ov += `<g opacity="${f1(sub(p, .75, .9))}">` + txt(tipSyn[0] + 40, tipSyn[1] + 100, T2('Val-tRNA-Ile: fout!', 'Val-tRNA-Ile: wrong!'), C.danger, 24, 'start', 800) + '</g>';
-          ov += `<g opacity="${f1(sub(p, .05, .2))}">` + textBox(1180, 540, 360, [T2('Ile  C₆: past', 'Ile  C₆: fits'), T2('Val  C₅: past ook', 'Val  C₅: also fits'), T2('Leu, Phe: passen niet', 'Leu, Phe: do not fit')], { title: T2('1e zeef: synthese-plaats', '1st sieve: synthetic site'), col: C.prot, fs: 20 }) + '</g>';
+          ov += `<g opacity="${f1(sub(p, .05, .2))}">` + textBox(1180, 540, 360, [T2('Ile  C₆: past', 'Ile  C₆: fits'), T2('Val  C₅: past ook', 'Val  C₅: also fits'), T2('Met, Phe: passen niet', 'Met, Phe: do not fit')], { title: T2('1e zeef: synthese-plaats', '1st sieve: synthetic site'), col: C.prot, fs: 20 }) + '</g>';
         }
         if (i === 6) {
           const sw = ease(sub(p, .08, .4)), hyd = sub(p, .45, .6), out = ease(sub(p, .6, .95));

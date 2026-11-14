@@ -13,8 +13,8 @@ const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }
 export default {
   id: 'chaperones',
   title: { nl: 'Chaperones', en: 'Molecular chaperones' },
-  scale: { nl: '≈ 10–15 nm', en: '≈ 10–15 nm' },
-  time: { nl: 'Hsp70: seconden · GroEL-cyclus ≈ 10 s', en: 'Hsp70: seconds · GroEL cycle ≈ 10 s' },
+  scale: { nl: '≈ 5–20 nm (GroEL–GroES ≈ 14 × 19 nm)', en: '≈ 5–20 nm (GroEL–GroES ≈ 14 × 19 nm)' },
+  time: { nl: 'GroEL-kooi ≈ 10 s per ronde · vouwen met Hsp70 (proefbuis): minuten of langer', en: 'GroEL cage ≈ 10 s per round · folding with Hsp70 (test tube): minutes or longer' },
   org: { nl: 'mens (Hsp70, Hsp90, TRiC); GroEL–GroES als bacterieel model', en: 'human (Hsp70, Hsp90, TRiC); GroEL–GroES as bacterial model' },
   legend: [[C.chain, { nl: 'nieuwe polypeptideketen', en: 'new polypeptide chain' }], [HYD, { nl: 'hydrofoob segment', en: 'hydrophobic segment' }], [C.prot, 'Hsp70 · GroEL'], [C.prot2, { nl: 'co-chaperones (Hsp40, NEF) · GroES', en: 'co-chaperones (Hsp40, NEF) · GroES' }], [ATPC, 'ATP / ADP'], [C.rrna, { nl: 'ribosoom', en: 'ribosome' }]],
   extra: {
@@ -159,7 +159,7 @@ export default {
           ag += chain([[1250, 640], [1300, 600], [1280, 560], [1340, 540], [1330, 600], [1390, 620]], { col: '#8fbf86', w: 7, op: .8 }) + chain([[1270, 540], [1320, 580], [1370, 560], [1360, 500], [1410, 520]], { col: '#6f9a68', w: 7, op: .8 }) +
             chain([[1230, 590], [1290, 620], [1350, 640], [1400, 580]], { col: '#a3c79b', w: 7, op: .8 });
           ag += T(1320, 700, T2('aggregaat', 'aggregate'), { size: 22, col: C.danger, op: k });
-          ag += T(760, 800, T2('cytosol: ~300–400 g/L macromoleculen', 'cytosol: ~300–400 g/L macromolecules'), { size: 24, col: C.muted, op: k });
+          ag += T(760, 800, T2('zeer vol: in E. coli ~300–400 g/L macromoleculen', 'very crowded: in E. coli ~300–400 g/L macromolecules'), { size: 24, col: C.muted, op: k });
         }
         $('ch-agg').innerHTML = ag;
 

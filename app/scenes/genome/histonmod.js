@@ -16,13 +16,13 @@ export default {
   id: 'histonmod',
   title: { nl: 'Histonmodificaties', en: 'Histone modifications' },
   scale: { nl: '≈ 1–10 nm', en: '≈ 1–10 nm' },
-  time: { nl: 'acetylatie: minuten; methylatie: uren tot celgeneraties', en: 'acetylation: minutes; methylation: hours to cell generations' },
+  time: { nl: 'acetylatie: snel omkeerbaar; methylatie: stabieler, deels doorgegeven bij celdeling', en: 'acetylation: quickly reversible; methylation: more stable, partly passed on at cell division' },
   org: { nl: 'mens (histon H3.1)', en: 'human (histone H3.1)' },
   legend: [[HC.H3, 'H3'], [HC.H4, 'H4'], [HC.H2A, 'H2A'], [HC.H2B, 'H2B'], [CLASSCOL['+'], { nl: 'lysine (K, positief)', en: 'lysine (K, positive)' }],
     [COLS.ac, { nl: 'acetyl (ac)', en: 'acetyl (ac)' }], [COLS.act, { nl: 'activerende methylatie', en: 'activating methylation' }], [COLS.rep, { nl: 'onderdrukkende methylatie', en: 'repressive methylation' }], [C.prot, { nl: 'schrijvers / wissers / lezers', en: 'writers / erasers / readers' }]],
   simplified: {
-    nl: 'Alleen de eerste 30 residuen van één H3-staart zijn getekend; er zijn acht staarten per nucleosoom en nog veel meer modificaties (fosforylatie, ubiquitinering, …), ook in de bolvormige kern. Dat acetylatie de staart "loslaat" van het DNA is een vereenvoudiging: het verzwakt vooral elektrostatische contacten en creëert bindingsplaatsen voor lezers. De combinaties in beeld zijn voorbeelden; een lysine draagt nooit tegelijk acetyl en methyl.',
-    en: 'Only the first 30 residues of one H3 tail are drawn; there are eight tails per nucleosome and many more modifications (phosphorylation, ubiquitination, …), also in the globular core. That acetylation "releases" the tail from the DNA is a simplification: it mainly weakens electrostatic contacts and creates binding sites for readers. The combinations shown are examples; a lysine never carries acetyl and methyl at the same time.' },
+    nl: 'Alleen de eerste 30 residuen van één H3-staart zijn getekend; er zijn per nucleosoom acht N-terminale staarten (plus twee C-terminale staarten van H2A) en nog veel meer modificaties (fosforylatie, ubiquitinering, …), ook in de bolvormige kern. Dat acetylatie de staart "loslaat" van het DNA is een vereenvoudiging: het verzwakt vooral elektrostatische contacten en creëert bindingsplaatsen voor lezers. De combinaties in beeld zijn voorbeelden.',
+    en: 'Only the first 30 residues of one H3 tail are drawn; each nucleosome has eight N-terminal tails (plus two C-terminal tails of H2A) and many more modifications (phosphorylation, ubiquitination, …), also in the globular core. That acetylation "releases" the tail from the DNA is a simplification: it mainly weakens electrostatic contacts and creates binding sites for readers. The combinations shown are examples.' },
   steps: [
     ST(7500, cam(390, 440, 900), 'Staarten voor merktekens', 'Tails for marks',
       'Elk histon heeft een soepele staart die uitsteekt. Daar komen de meeste chemische merktekens op.',
@@ -68,9 +68,9 @@ export default {
 
     // lezer-tabel
     const rows = [
-      [T2('bromodomein', 'bromodomain'), 'K-ac', COLS.ac, T2('bv. BRD4, in veel HATs en remodelers', 'e.g. BRD4, in many HATs and remodellers')],
+      [T2('bromodomein', 'bromodomain'), 'K-ac', COLS.ac, T2('o.a. in HATs en remodelers', 'e.g. in HATs and remodellers')],
       [T2('chromodomein', 'chromodomain'), 'K9me3 / K27me3', COLS.rep, T2('HP1 (K9me3), Polycomb-CBX (K27me3)', 'HP1 (K9me3), Polycomb CBX (K27me3)')],
-      [T2('PHD-vinger', 'PHD finger'), 'K4me3', COLS.act, T2('bv. TAF3 (TFIID), ING-eiwitten', 'e.g. TAF3 (TFIID), ING proteins')],
+      [T2('PHD-vinger', 'PHD finger'), 'K4me3', COLS.act, T2('bv. ING-eiwitten', 'e.g. ING proteins')],
     ];
     let tab = `<rect x="690" y="560" width="850" height="270" rx="18" fill="rgba(13,20,38,.6)" stroke="#2a3a60" stroke-width="2"/>` +
       txt(715, 598, T2('Lezerdomeinen', 'Reader domains'), '#c9d2e4', 20, 'start', 700);
@@ -84,7 +84,7 @@ export default {
     <g id="hm-nuc" data-node="nucleosoom" data-color="${HC.H3}" data-nolabel>
       ${tl}${nu.svg}
       <path id="hm-h3link" stroke="${HC.H3}" stroke-width="7" fill="none" stroke-linecap="round"/>
-      <g id="hm-nuclab">${txt(NX[0], NX[1] + NR + 66, T2('nucleosoom met 8 staarten', 'nucleosome with 8 tails'), '#c9d2e4', 20).replace('<text', '<text stroke="#0a1224" stroke-width="6" paint-order="stroke"')}</g>
+      <g id="hm-nuclab">${txt(NX[0], NX[1] + NR + 66, T2('nucleosoom met 8 N-staarten', 'nucleosome with 8 N-tails'), '#c9d2e4', 20).replace('<text', '<text stroke="#0a1224" stroke-width="6" paint-order="stroke"')}</g>
     </g>
     <g data-node="nucleosoom" data-color="${HC.H3}" data-label="${T2('← Nucleosoom', '← Nucleosome')}" data-nolabel><circle cx="${NX[0]}" cy="${NX[1]}" r="${NR * .8}" fill="transparent"/></g>
     <g id="hm-dna" data-node="dnahelix" data-color="${C.dna}" data-nolabel>${dna}</g>
@@ -156,7 +156,7 @@ export default {
         const enz = (x, y, label, op, col = C.prot) => op < .01 ? '' : `<g opacity="${f1(op)}"><ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${14 + label.length * 5.2}" ry="28" fill="rgba(155,123,255,.3)" stroke="${col}" stroke-width="3"/>${txt(x, y + 6, label, '#fff', 17, 'middle', 700)}</g>`;
         if (step === 2) { const k = ease(sub(p, 0, .3)); e += enz(lerp(1650, rx(14), k), TY + 100, 'HAT', 1 - sub(p, .8, 1)); }
         if (step === 3) { const k = ease(sub(p, 0, .3)); e += enz(lerp(1650, rx(18), k), TY + 100, 'HDAC', 1 - sub(p, .8, 1)); }
-        if (step === 4) e += enz(rx(4) - 30, TY + 100, T2('KMT (SET1/MLL)', 'KMT (SET1/MLL)'), sub(p, 0, .2) * (1 - sub(p, .85, 1)));
+        if (step === 4) e += enz(rx(4) - 30, TY + 100, T2('KMT (bv. SET1)', 'KMT (e.g. SET1)'), sub(p, 0, .2) * (1 - sub(p, .85, 1)));
         if (step === 5) { e += enz(rx(9), TY + 100, 'SUV39H1', sub(p, 0, .2)); e += enz(rx(27), TY + 100, 'PRC2 (EZH2)', sub(p, .2, .4)); }
         if (step === 6) {
           // lezers dokken op hun merkteken

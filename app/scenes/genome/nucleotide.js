@@ -48,8 +48,8 @@ export default {
   org: { nl: 'alle organismen', en: 'all organisms' },
   legend: [['#c9a574', { nl: 'suiker (2′-deoxyribose)', en: 'sugar (2′-deoxyribose)' }], ['#ff9f43', { nl: 'fosfaat', en: 'phosphate' }], [BASE.A, 'adenine'], [BASE.G, 'guanine'], [BASE.C, 'cytosine'], [BASE.T, 'thymine / uracil'], [ELCOL.N, 'N'], [ELCOL.O, 'O']],
   simplified: {
-    nl: 'De suikerring is als vlakke vijfhoek getekend (behalve in de puckering-stap); bindingshoeken zijn schematisch en H-atomen op koolstof zijn weggelaten. Fosfaatladingen gelden bij pH ≈ 7. De P–P-afstanden (≈ 7,0 Å voor C2′-endo, ≈ 5,9 Å voor C3′-endo) zijn typische waarden tussen opeenvolgende fosfaten in dezelfde streng (Saenger 1984).',
-    en: 'The sugar ring is drawn as a flat pentagon (except in the pucker step); bond angles are schematic and hydrogens on carbon are omitted. Phosphate charges apply at pH ≈ 7. The P–P distances (≈ 7.0 Å for C2′-endo, ≈ 5.9 Å for C3′-endo) are typical values between successive phosphates in the same strand (Saenger 1984).' },
+    nl: 'De suikerring is als vlakke vijfhoek getekend (behalve in de puckering-stap); bindingshoeken zijn schematisch en H-atomen op koolstof zijn weggelaten. Fosfaatladingen gelden bij pH ≈ 7. De P–P-afstanden zijn gemiddelden tussen opeenvolgende fosfaten in dezelfde streng, zelf gemeten in kristalstructuren: ≈ 6,7 Å in B-DNA (PDB 1BNA, vooral C2′-endo-achtig) en ≈ 6,0 Å in A-DNA (PDB 440D, C3′-endo).',
+    en: 'The sugar ring is drawn as a flat pentagon (except in the pucker step); bond angles are schematic and hydrogens on carbon are omitted. Phosphate charges apply at pH ≈ 7. The P–P distances are averages between successive phosphates in the same strand, measured by us in crystal structures: ≈ 6.7 Å in B-DNA (PDB 1BNA, mostly C2′-endo-like) and ≈ 6.0 Å in A-DNA (PDB 440D, C3′-endo).' },
   steps: STEPS,
   svg() {
     const menu = (x, y, node, nl, en, col) => `<g data-node="${node}" data-nolabel><rect x="${x - 170}" y="${y - 28}" width="340" height="56" rx="28" fill="#0d1426" stroke="${col}" stroke-width="3"/><circle cx="${x - 142}" cy="${y}" r="8" fill="${col}"/><text x="${x + 10}" y="${y + 8}" font-size="22" text-anchor="middle" fill="#e8edf7" font-family="Inter" font-weight="600">${T2(nl, en)}</text></g>`;
@@ -233,7 +233,7 @@ export default {
           ann += txt(420, 215, "C2′-endo (South)", '#fff', 32) + txt(420, 252, T2('B-DNA', 'B-DNA'), C.dna, 26);
           ann += txt(1180, 215, "C3′-endo (North)", '#fff', 32) + txt(1180, 252, T2('A-DNA, RNA', 'A-DNA, RNA'), C.rna, 26);
           const k = ease(sub(p, .55, .75));
-          ann += `<g opacity="${f1(k)}">${ppbar(420, 650, 7.0)}${ppbar(1180, 650, 5.9)}</g>`;
+          ann += `<g opacity="${f1(k)}">${ppbar(420, 650, 6.7)}${ppbar(1180, 650, '6.0')}</g>`;
           ann += `<g opacity="${f1(ease(sub(p, .1, .3)))}">${txt(800, 145, T2('endo = aan de kant van C5′', 'endo = on the side of C5′'), C.muted, 26)}</g>`;
         } else if (step === 8) {
           // anti ↔ syn

@@ -3,7 +3,9 @@ import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, sugar, panel, SNFG } fr
 
 /* ER-membraan horizontaal (cytosol boven, lumen onder); rechts (x 1700–2600) het Golgi */
 const MEM = 380, MEMH = 44;
-const SEQ = ['S', 'A', 'V', 'L', 'N', 'L', 'T', 'E', 'K', 'G'];   // N-L-T = sequon (N op index 4)
+/* De keten komt links uit het translocon; het N-uiteinde loopt voorop (rechts). Van N naar C lees je dus van rechts naar links:
+ * G-S-L-A-V-N-L-T-E-K, met het sequon N-L-T (N op index 4, S/T twee plaatsen verder richting C = index 2). */
+const SEQ = ['K', 'E', 'T', 'L', 'N', 'V', 'A', 'L', 'S', 'G'];
 const ASN = 4, BX0 = 380, BDX = 52, BY = 510;
 const DOL = [1000, MEM + MEMH / 2 + 12];
 const FOLD = [1010, 640], FASN = [1098, 610];                      // gevouwen glycoproteïne rechts in het lumen
@@ -50,7 +52,7 @@ export default {
   id: 'glyco',
   title: { nl: 'N-glycosylatie', en: 'N-linked glycosylation' },
   scale: '≈ 5–20 nm',
-  time: { nl: 'overdracht tijdens de translatie; kwaliteitscontrole minuten', en: 'transfer during translation; quality control minutes' },
+  time: { nl: 'overdracht meestal tijdens de translatie; tot het eiwit de cel verlaat: ~20 min tot enkele uren', en: 'transfer usually during translation; until the protein leaves the cell: ~20 min to a few hours' },
   org: { nl: 'mens (ER-lumen en Golgi)', en: 'human (ER lumen and Golgi)' },
   legend: [[SNFG.GlcNAc, 'GlcNAc ■'], [SNFG.Man, 'Man ●'], [SNFG.Glc, 'Glc ●'], [SNFG.Gal, 'Gal ●'], [SNFG.Sia, 'Sia (Neu5Ac) ◆'], [SNFG.Fuc, 'Fuc ▲'], [C.chain, { nl: 'nieuwe keten', en: 'new chain' }], [C.prot, { nl: 'enzymen en lectinen', en: 'enzymes and lectins' }], [C.mem, { nl: 'ER-membraan', en: 'ER membrane' }]],
   extra: {
@@ -82,8 +84,8 @@ export default {
       'Goed gevouwen: door naar het Golgi. Blijft het fout, dan gaat het eiwit uit het ER en wordt het afgebroken.',
       'Folded correctly: on to the Golgi. If it stays wrong, the protein leaves the ER and is broken down.'),
     ST(9000, cam(2160, 480, 1150), 'In het Golgi: andere suikers', 'In the Golgi: other sugars',
-      'In het Golgi gaan suikers eraf en komen andere erop. Suikers op Ser of Thr komen pas hier.',
-      'In the Golgi, sugars are removed and others added. Sugars on Ser or Thr are only added here.'),
+      'In het Golgi gaan suikers eraf en komen andere erop. De meeste suikers op Ser of Thr komen pas hier.',
+      'In the Golgi, sugars are removed and others added. Most sugars on Ser or Thr are only added here.'),
   ],
   svg() {
     // membraan (twee lagen) over de hele breedte van het ER-deel
@@ -137,16 +139,20 @@ export default {
           let line = [];
           for (let i = SEQ.length - 1; i >= 0; i--) { const x = BX0 + (SEQ.length - 1 - i) * 0 + i * BDX + slide; if (x >= BX0 - 5) line.push([x, BY]); }
           cs += `<line x1="${BX0}" y1="${BY}" x2="${f1(BX0 + (SEQ.length - 1) * BDX + slide)}" y2="${BY}" stroke="${C.chain}" stroke-width="7"/>`;
-          SEQ.forEach((a, i) => { const x = BX0 + i * BDX + slide; if (x >= BX0 - 5) cs += bead(x, BY, a, step >= 1 && i >= ASN && i <= ASN + 2); });
+          SEQ.forEach((a, i) => { const x = BX0 + i * BDX + slide; if (x >= BX0 - 5) cs += bead(x, BY, a, step >= 1 && i >= ASN - 2 && i <= ASN); });
           if (step >= 1 && step <= 2) {
             const k = step === 1 ? sub(p, .1, .3) : 1;
-            const x0 = BX0 + ASN * BDX, x2 = x0 + 2 * BDX;
-            cs += `<path d="M${x0 - 22},${BY + 34} v12 H${x2 + 22} v-12" stroke="#fff" stroke-width="3" fill="none" opacity="${f1(k)}"/>`;
-            cs += T(x0 + BDX, BY + 80, step === 1 ? 'N – X – S/T' : 'sequon', { size: step === 1 ? 26 : 20, font: 'JetBrains Mono', w: 800, op: k });
+            const x0 = BX0 + ASN * BDX, x2 = x0 - 2 * BDX;           // x0 = Asn, x2 = Ser/Thr (twee plaatsen verder richting C)
+            cs += `<path d="M${x2 - 22},${BY + 34} v12 H${x0 + 22} v-12" stroke="#fff" stroke-width="3" fill="none" opacity="${f1(k)}"/>`;
             if (step === 1) {
-              cs += T(x0 + BDX, BY + 112, T2('(X ≠ Pro)', '(X ≠ Pro)'), { size: 20, col: '#ffc247', op: sub(p, .3, .45) });
-              const k2 = sub(p, .5, .7), y2 = BY + 180, xs = x0 - 20;
-              ['N', 'P', 'T'].forEach((a, j) => cs += `<g opacity="${f1(k2)}">${bead(xs + j * BDX, y2, a)}</g>`);
+              [[x0, 'N'], [x0 - BDX, 'X'], [x2, 'S/T']].forEach(([x, l]) => cs += T(x, BY + 80, l, { size: 24, font: 'JetBrains Mono', w: 800, op: k }));
+              cs += arr(x0 + 10, BY + 104, x2 - 10, BY + 104, C.muted, 'gl-m', { w: 3, op: k }) + T(x0 + 22, BY + 110, 'N', { size: 17, col: C.muted, anchor: 'start', op: k }) + T(x2 - 22, BY + 110, 'C', { size: 17, col: C.muted, anchor: 'end', op: k });
+            } else cs += T(x0 + 14, BY + 80, 'sequon',   // rechts van het midden: blijft in beeld bij de camera van stap 3
+              { size: 20, font: 'JetBrains Mono', w: 800, op: k });
+            if (step === 1) {
+              cs += T(x0 - BDX, BY + 140, T2('(X ≠ Pro)', '(X ≠ Pro)'), { size: 20, col: '#ffc247', op: sub(p, .3, .45) });
+              const k2 = sub(p, .5, .7), y2 = BY + 190, xs = x2;
+              ['T', 'P', 'N'].forEach((a, j) => cs += `<g opacity="${f1(k2)}">${bead(xs + j * BDX, y2, a)}</g>`);
               cs += T(xs + 3 * BDX + 10, y2 + 8, T2('✗ geen suiker: Pro past niet', '✗ no sugar: Pro does not fit'), { size: 20, col: C.danger, anchor: 'start', op: k2 });
             }
           }

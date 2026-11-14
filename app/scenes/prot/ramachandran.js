@@ -44,7 +44,7 @@ export default {
     ST(8000, FULL, 'De grote wolk: spiralen', 'The big cloud: spirals', 'Hemoglobine bestaat vooral uit spiralen (helices). Daarom liggen de meeste punten in het helixgebied.', 'Haemoglobin is mostly made of spirals (helices). That is why most points lie in the helix region.'),
     ST(8000, FULL, 'Het gebied van gestrekte stukken', 'The region of stretched-out parts', 'Gestrekte aminozuren liggen linksboven. Hemoglobine heeft geen β-bladen: deze punten zitten in lussen.', 'Stretched-out amino acids lie at the top left. Haemoglobin has no β-sheets: these points are in loops.'),
     ST(8500, FULL, 'Glycine: de uitzondering', 'Glycine: the exception', 'Glycine heeft maar een H als zijketen en botst dus minder. Het mag ook in ‘verboden’ gebieden liggen.', 'Glycine has only an H as side chain, so it bumps less. It can also lie in ‘forbidden’ regions.'),
-    ST(8000, FULL, 'Proline zit vast', 'Proline is locked', 'De ring van proline zit vast aan zijn eigen stikstof. Daardoor kan φ bijna niet draaien (rond −65°).', 'Proline’s ring is attached to its own nitrogen. So φ can hardly rotate (around −65°).'),
+    ST(8000, FULL, 'Proline zit vast', 'Proline is locked', 'De ring van proline zit vast aan zijn eigen stikstof. Daardoor kan φ bijna niet draaien (rond −60°).', 'Proline’s ring is attached to its own nitrogen. So φ can hardly rotate (around −60°).'),
     ST(8500, FULL, 'Een kwaliteitscontrole', 'A quality check', 'Punten in verboden gebieden wijzen op fouten. In een goed model ligt > 98 % in de gunstige gebieden.', 'Points in forbidden regions point to errors. In a good model > 98 % lie in the favoured regions.'),
   ],
   svg() {
@@ -179,8 +179,8 @@ export default {
               7: [T2('Uitschieters (zonder Gly)', 'Outliers (Gly excluded)'), `${cnt(r => r.resn !== 'GLY' && !allowed(r))}`],
             }[step];
             info = box(390, lines[2] ? 200 : 140) + title(lines[0]) + big(lines[1], hcol) + (lines[2] ? small(lines[2]) : '');
-            if (step === 6) hi += `<line x1="${f1(X(-65))}" y1="${Y0}" x2="${f1(X(-65))}" y2="${Y0 + S}" stroke="#7fdc6a" stroke-width="2.5" stroke-dasharray="8 6" opacity=".9"/>` +
-              `<text x="${f1(X(-65) + 12)}" y="${Y0 + 40}" font-size="25" fill="#7fdc6a" font-family="Inter" font-weight="700" paint-order="stroke" stroke="#0b1224" stroke-width="5">φ ≈ −65°</text>`;
+            if (step === 6) hi += `<line x1="${f1(X(-60))}" y1="${Y0}" x2="${f1(X(-60))}" y2="${Y0 + S}" stroke="#7fdc6a" stroke-width="2.5" stroke-dasharray="8 6" opacity=".9"/>` +
+              `<text x="${f1(X(-60) + 12)}" y="${Y0 + 40}" font-size="25" fill="#7fdc6a" font-family="Inter" font-weight="700" paint-order="stroke" stroke="#0b1224" stroke-width="5">φ ≈ −60°</text>`;
             if (step === 7) data.filter(r => r.resn !== 'GLY' && !allowed(r)).forEach(r => { hi += `<circle cx="${f1(X(r.phi))}" cy="${f1(Y(r.psi))}" r="12" fill="none" stroke="${C.danger}" stroke-width="2.5"/>`; });
           }
         }

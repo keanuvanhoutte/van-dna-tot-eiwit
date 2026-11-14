@@ -17,12 +17,12 @@ export default {
   id: 'golgi',
   title: { nl: 'Golgi & secretie', en: 'Golgi & secretory pathway' },
   scale: { nl: '≈ 1–5 µm (Golgi-stapel ≈ 1 µm)', en: '≈ 1–5 µm (Golgi stack ≈ 1 µm)' },
-  time: { nl: 'ER → plasmamembraan: typisch tientallen minuten', en: 'ER → plasma membrane: typically tens of minutes' },
+  time: { nl: 'door de Golgi-stapel: ~2 tot ~15 min, afhankelijk van het eiwit', en: 'through the Golgi stack: ~2 to ~15 min, depending on the protein' },
   org: { nl: 'mens (secretoire cel)', en: 'human (secretory cell)' },
   legend: [[C.mem, { nl: 'ER, Golgi-cisternen, membranen', en: 'ER, Golgi cisternae, membranes' }], [COPII, { nl: 'COPII-vesikel (ER → Golgi)', en: 'COPII vesicle (ER → Golgi)' }], [COPI, { nl: 'COPI-vesikel (terug)', en: 'COPI vesicle (back)' }], [CLATH, { nl: 'clathrinevesikel', en: 'clathrin vesicle' }], [CARGO, { nl: 'vrachteiwit (cargo)', en: 'cargo protein' }], [C.prot, { nl: 'ER-/Golgi-residente eiwitten', en: 'ER/Golgi resident proteins' }], [GRAN, { nl: 'secretiegranule', en: 'secretory granule' }]],
   simplified: {
-    nl: 'Sterk geschematiseerd: een echte Golgi-stapel telt vaak 4–8 cisternen en de ER–Golgi-afstand is niet op schaal. Het cisternale-rijpingsmodel wordt getoond (de huidige consensus voor veel cargo), maar ook transport via vesikels tussen cisternen komt voor. Coatonderdelen (Sar1, Sec23/24, Sec13/31, ARF1, coatomeer, adaptines) zijn niet afzonderlijk getekend. De vrachttijd ER → membraan varieert sterk per eiwit.',
-    en: 'Strongly schematic: a real Golgi stack often has 4–8 cisternae and the ER–Golgi distance is not to scale. The cisternal maturation model is shown (the current consensus for much cargo), but vesicle transport between cisternae also occurs. Coat components (Sar1, Sec23/24, Sec13/31, ARF1, coatomer, adaptins) are not drawn separately. The transit time ER → membrane varies strongly per protein.' },
+    nl: 'Sterk geschematiseerd: een echte Golgi-stapel in zoogdiercellen telt 4 tot 11 cisternen en de ER–Golgi-afstand is niet op schaal. Het cisternale-rijpingsmodel wordt getoond: volgens Glick & Luini (2011) de beste kandidaat voor het kernmechanisme, maar er is nog geen volledige consensus en ook transport via buisjes of blaasjes tussen cisternen wordt voorgesteld. Coatonderdelen (Sar1, Sec23/24, Sec13/31, ARF1, coatomeer, adaptines) zijn niet afzonderlijk getekend. De doorlooptijd varieert sterk per eiwit (bv. albumine < 2 min, VSV-G ~15 min door de stapel).',
+    en: 'Strongly schematic: a real Golgi stack in mammalian cells has 4 to 11 cisternae and the ER–Golgi distance is not to scale. The cisternal maturation model is shown: according to Glick & Luini (2011) the best candidate for the core mechanism, but there is no full consensus yet and transport via tubules or vesicles between cisternae is also proposed. Coat components (Sar1, Sec23/24, Sec13/31, ARF1, coatomer, adaptins) are not drawn separately. Transit time varies strongly per protein (e.g. albumin < 2 min, VSV-G ~15 min through the stack).' },
   steps: [
     ST(7500, FULL, 'De weg naar buiten', 'The way out',
       'Eiwitten uit het ER reizen via het Golgi naar het celmembraan, naar buiten of naar het lysosoom.',
@@ -58,7 +58,7 @@ export default {
     // plasmamembraan
     const pm = `<path d="M${PMX},60 Q${PMX + 40},450 ${PMX},840" stroke="${C.mem}" stroke-width="16" fill="none" opacity=".6"/>` + TL(PMX + 70, 250, [T2('buiten', 'outside'), T2('de cel', 'the cell')], { size: 22, col: C.muted });
     // endosoom en lysosoom
-    const el = `<circle cx="${ENDO[0]}" cy="${ENDO[1]}" r="46" fill="rgba(255,138,61,.12)" stroke="#ff8a3d" stroke-width="3"/>` + `<g id="go-ell1">` + TL(ENDO[0], ENDO[1] + 78, [T2('endosoom', 'endosome'), 'pH ≈ 6'], { size: 22, col: '#ff8a3d' }) + '</g>' +
+    const el = `<circle cx="${ENDO[0]}" cy="${ENDO[1]}" r="46" fill="rgba(255,138,61,.12)" stroke="#ff8a3d" stroke-width="3"/>` + `<g id="go-ell1">` + TL(ENDO[0], ENDO[1] + 78, [T2('endosoom', 'endosome'), T2('pH ≈ 5,5–6,5', 'pH ≈ 5.5–6.5')], { size: 22, col: '#ff8a3d' }) + '</g>' +
       `<circle cx="${LYSO[0]}" cy="${LYSO[1]}" r="56" fill="rgba(214,90,90,.15)" stroke="${C.bact}" stroke-width="3"/>` + `<g id="go-ell2">` + TL(LYSO[0], LYSO[1] + 88, [T2('lysosoom', 'lysosome'), T2('pH ≈ 4,5–5', 'pH ≈ 4.5–5')], { size: 22, col: C.danger }) + '</g>';
     return svgOpen(arrowDefs('go', { m: C.muted, o: COPII, b: COPI, g: C.ok })) + `
     <g data-node="kern" data-color="${C.dna}" data-nolabel>${nuc}</g>

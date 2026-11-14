@@ -13,7 +13,7 @@ const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
 export default molScene({
   id: 'quaternair', pdb: '1BBB',
   title: { nl: 'Quaternaire structuur', en: 'Quaternary structure' },
-  scale: { nl: '≈ 6,5 nm', en: '≈ 6.5 nm' }, time: { nl: 'assemblage na (of tijdens) de vouwing', en: 'assembly after (or during) folding' },
+  scale: { nl: '≈ 6,5 nm', en: '≈ 6.5 nm' }, time: { nl: 'geen tijdsas (stilstaande structuur)', en: 'no time axis (static structure)' },
   org: { nl: 'mens (hemoglobine A, PDB 1BBB)', en: 'human (haemoglobin A, PDB 1BBB)' },
   legend: [[CH.A[1], 'α1 (A)'], [CH.B[1], 'β1 (B)'], [CH.C[1], 'α2 (C)'], [CH.D[1], 'β2 (D)'], ['#ff8a3d', { nl: 'heem', en: 'haem' }], [CLASSCOL['+'], { nl: 'positief', en: 'positive' }], [CLASSCOL['-'], { nl: 'negatief', en: 'negative' }]],
   extra: {
@@ -91,7 +91,7 @@ export default molScene({
         [T2('1 keten  → monomeer', '1 chain  → monomer'), C.text], [T2('2 ketens → dimeer', '2 chains → dimer'), C.text], [T2('3 ketens → trimeer', '3 chains → trimer'), C.text],
         [T2('4 ketens → tetrameer', '4 chains → tetramer'), C.text], [T2('5, 6 … → pentameer, hexameer …', '5, 6 … → pentamer, hexamer …'), C.text]]),
     }),
-    ST(8500, 'Een stevig contactvlak', 'A firm contact surface', 'Waar α en β elkaar raken, ligt een contactvlak. Dit vlak (α1β1) is groot en houdt elk paar stevig samen.', 'Where α and β touch is a contact surface. This one (α1β1) is large and holds each pair firmly together.', {
+    ST(8500, 'Een stevig contactvlak', 'A firm contact surface', 'Waar α en β elkaar raken, ligt een contactvlak. Dit vlak (α1β1) is groot: veel contacten houden α en β samen.', 'Where α and β touch is a contact surface. This one (α1β1) is large: many contacts hold α and β together.', {
       show(c) {
         c.style({}, cart('#343d57')); c.style({ chain: 'A' }, cart(CH.A[1])); c.style({ chain: 'B' }, cart(CH.B[1]));
         if (c.data.ab) { c.style({ chain: 'A', resi: c.data.ab.A }, { sphere: { color: CH.A[1] } }); c.style({ chain: 'B', resi: c.data.ab.B }, { sphere: { color: CH.B[1] } }); }

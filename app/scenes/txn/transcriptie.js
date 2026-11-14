@@ -10,15 +10,15 @@ const POL = [START, START, START, START, 400, 700, 760, 860, 1050, 1250];
 export default {
   id: 'transcriptie',
   title: { nl: 'Transcriptie', en: 'Transcription' },
-  scale: '≈ 25 nm', time: { nl: '≈ 30 nt/s ≈ 2–3 kb/min (hier sterk vertraagd)', en: '≈ 30 nt/s ≈ 2–3 kb/min (strongly slowed down here)' },
+  scale: '≈ 25 nm', time: { nl: '≈ 30–40 nt/s ≈ 2 kb/min (hier sterk vertraagd)', en: '≈ 30–40 nt/s ≈ 2 kb/min (strongly slowed down here)' },
   org: { nl: 'mens (RNA-polymerase II)', en: 'human (RNA polymerase II)' },
   legend: [[C.dna, { nl: 'coderende streng', en: 'coding strand' }], [C.dna2, { nl: 'matrijsstreng', en: 'template strand' }], [C.rna, 'pre-mRNA'], [C.prot, { nl: 'Pol II & factoren', en: 'Pol II & factors' }], [BASE.A, 'A'], [BASE.T, 'T / U'], [BASE.G, 'G'], [BASE.C, 'C']],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Kijk naar de kleuren: de RNA-basen in de RNA–DNA-hybride zijn complementair aan de matrijsstreng en dus gelijk aan de coderende streng (U in plaats van T).</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Look at the colours: the RNA bases in the RNA–DNA hybrid are complementary to the template strand and therefore identical to the coding strand (U instead of T).</p>' },
   simplified: {
-    nl: 'De dubbelhelix is als platte golf getekend (~10,5 bp per winding klopt). Bel (~13 bp) en RNA–DNA-hybride (~8 bp) zijn op schaal; de vormen van Pol II en de factoren zijn schematisch (echte structuren: PDB 5FLM, 1I6H). Mediator, activatoren en nucleosomen zijn weggelaten. Pol II is hier ~100× trager dan in de cel.',
-    en: 'The double helix is drawn as a flat wave (~10.5 bp per turn is correct). The bubble (~13 bp) and RNA–DNA hybrid (~8 bp) are to scale; Pol II and the factors are schematic (real structures: PDB 5FLM, 1I6H). Mediator, activators and nucleosomes are omitted. Pol II moves ~100× slower here than in the cell.' },
+    nl: 'De dubbelhelix is als platte golf getekend (~10,5 bp per winding klopt). Bel (~13 bp) en RNA–DNA-hybride (~8 bp) zijn op schaal; de vormen van Pol II en de factoren zijn schematisch (echte structuren: PDB 5FLM, 1I6H). Mediator, activatoren en nucleosomen zijn weggelaten. Pol II is hier tientallen keren trager dan in de cel.',
+    en: 'The double helix is drawn as a flat wave (~10.5 bp per turn is correct). The bubble (~13 bp) and RNA–DNA hybrid (~8 bp) are to scale; Pol II and the factors are schematic (real structures: PDB 5FLM, 1I6H). Mediator, activators and nucleosomes are omitted. Pol II moves tens of times slower here than in the cell.' },
   steps: [
     { dur: 7000, cam: cam(300, 470, 760), title: { nl: 'Het startpunt van het gen', en: 'The start of the gene' },
       text: { nl: 'Vóór het gen ligt de startplek (promoter). Een hulpeiwit herkent daar het stukje DNA ‘TATAAAA’.', en: 'In front of the gene lies the start site (promoter). A helper protein recognises the DNA stretch ‘TATAAAA’ there.' } },
@@ -33,8 +33,8 @@ export default {
     { dur: 8000, cam: cam(800, 440, 520), title: { nl: 'Elke RNA-base past bij het DNA', en: 'Each RNA base matches the DNA' },
       text: { nl: 'Elke nieuwe base past bij de matrijs: A met U, G met C. Alleen de laatste ~8 basen blijven aan het DNA vast.', en: 'Each new base matches the template: A with U, G with C. Only the last ~8 bases stay attached to the DNA.' } },
     { dur: 8000, cam: cam(633, 410, 1066), title: { nl: 'Het RNA krijgt een kapje', en: 'The RNA gets a cap' },
-      text: { nl: 'Zodra ~20–30 basen RNA uit het enzym steken, krijgt het begin van het RNA een beschermend kapje (cap).', en: 'Once ~20–30 bases of RNA stick out of the enzyme, the start of the RNA gets a protective cap.' } },
-    { dur: 8000, cam: cam(960, 520, 1200), title: { nl: 'Het DNA raakt in de knoop', en: 'The DNA gets tangled' },
+      text: { nl: 'Als het RNA ~20–30 basen lang is, krijgt het begin van het RNA een beschermend kapje (cap).', en: 'When the RNA is ~20–30 bases long, the start of the RNA gets a protective cap.' } },
+    { dur: 8000, cam: cam(960, 520, 1200), title: { nl: 'Spanning in het DNA', en: 'Tension in the DNA' },
       text: { nl: 'Het DNA draait strakker op voor het enzym, zoals een telefoonsnoer. Speciale enzymen knippen het even door en zetten het weer losser.', en: 'The DNA twists up tighter ahead of the enzyme, like a phone cord. Special enzymes briefly cut it and loosen it again.' } },
     { dur: 8000, cam: cam(930, 440, 1300), title: { nl: 'Tot het einde van het gen', en: 'To the end of the gene' },
       text: { nl: 'Het enzym leest door tot voorbij het einde van het gen. Intussen wordt het RNA al bijgewerkt → volgend hoofdstuk.', en: 'The enzyme keeps reading past the end of the gene. Meanwhile the RNA is already being processed → next chapter.' } },

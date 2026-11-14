@@ -19,7 +19,7 @@ const P40 = [400, 500], P60 = [640, 500];                        // plaats van p
 export default {
   id: 'ribogenese',
   title: { nl: 'Ribosoombiogenese', en: 'Ribosome biogenesis' },
-  scale: '≈ 1–5 µm', time: { nl: 'minuten tot ≈ een uur per ribosoom', en: 'minutes to ≈ an hour per ribosome' },
+  scale: '≈ 1–5 µm', time: { nl: 'sterk versneld getoond', en: 'shown greatly sped up' },
   org: { nl: 'mens', en: 'human' },
   legend: [[C.dna, 'rDNA'], ['#8df0dc', '18S (→ 40S)'], [C.rrna, { nl: '5,8S + 28S (→ 60S)', en: '5.8S + 28S (→ 60S)' }], ['#6b7894', { nl: 'spacers (worden afgebroken)', en: 'spacers (degraded)' }], [C.prot, { nl: 'r-eiwitten / factoren', en: 'r-proteins / factors' }], ['#c3f06b', '5S rRNA'], ['#ffc247', 'snoRNA']],
   extra: {

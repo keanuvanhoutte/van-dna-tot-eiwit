@@ -20,7 +20,7 @@ export default {
     { dur: 7000, cam: cam(420, 430, 700), title: { nl: 'Poorten in de kernwand', en: 'Gates in the nuclear wall' },
       text: { nl: 'Twee membranen omhullen de kern. Bijna alles gaat in en uit via kleine poorten: de kernporiën.', en: 'Two membranes surround the nucleus. Almost everything goes in and out through small gates: the nuclear pores.' } },
     { dur: 7000, cam: cam(620, 560, 820), title: { nl: 'DNA verpakt met eiwitten', en: 'DNA packed with proteins' },
-      text: { nl: 'DNA met eiwitten heet chromatine. Open stukken worden afgelezen; compacte stukken liggen vooral aan de rand.', en: 'DNA plus proteins is called chromatin. Open parts are read; compact parts lie mostly at the edge.' } },
+      text: { nl: 'DNA met eiwitten heet chromatine. Open stukken worden afgelezen; compacte stukken liggen vaak aan de rand.', en: 'DNA plus proteins is called chromatin. Open parts are read; compact parts often lie at the edge.' } },
     { dur: 6500, cam: cam(715, 440, 560), title: { nl: 'Hier worden ribosomen gebouwd', en: 'Ribosomes are built here' },
       text: { nl: 'In de nucleolus wordt het meeste RNA voor ribosomen gemaakt. Ook de twee delen van het ribosoom ontstaan hier.', en: 'In the nucleolus most of the RNA for ribosomes is made. The two parts of the ribosome are also put together here.' } },
     { dur: 7500, cam: cam(955, 320, 560), title: { nl: 'Eén gen, veel kopieën tegelijk', en: 'One gene, many copies at once' },

@@ -48,15 +48,15 @@ export default {
   id: 'noncanon',
   title: { nl: 'Niet-canonieke structuren', en: 'Non-canonical structures' },
   scale: { nl: '≈ 1–5 nm', en: '≈ 1–5 nm' },
-  time: { nl: 'vormen en ontvouwen: ms – min', en: 'form and unfold: ms – min' },
+  time: { nl: 'tijdelijk, o.a. tijdens transcriptie en replicatie', en: 'transient, e.g. during transcription and replication' },
   org: { nl: 'mens (telomeren, promoters)', en: 'human (telomeres, promoters)' },
   legend: [[BASE.G, 'guanine'], [BASE.A, 'adenine'], [BASE.T, 'thymine'], [BASE.C, 'cytosine'], ['#b78cff', 'K⁺'], [C.dna, { nl: 'purinestreng', en: 'purine strand' }], [C.dna2, { nl: 'pyrimidinestreng', en: 'pyrimidine strand' }], ['#fff', { nl: '- - - waterstofbrug', en: '- - - hydrogen bond' }]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Het G-kwartet, het T·A–T-triplet en het C·C⁺-paar zijn berekend: het programma zoekt de ligging waarbij de H-brugpartners ≈ 2,9 Å van elkaar liggen zonder botsingen. Echte structuren: PDB 1KF1 (K⁺, parallel), 143D (Na⁺, mand), 1D3X (intramoleculaire triplex).</p>',
     en: '<p style="font-size:13px;color:#93a0bb">The G-quartet, the T·A–T triplet and the C·C⁺ pair are computed: the program searches the placement in which H-bond partners lie ≈ 2.9 Å apart without clashes. Real structures: PDB 1KF1 (K⁺, parallel), 143D (Na⁺, basket), 1D3X (intramolecular triplex).</p>' },
   simplified: {
-    nl: 'Topologieën zijn schematisch (echte lussen en groeven niet op schaal). Naast parallel en mand bestaan ook hybride (3+1) G-quadruplexen, die in K⁺-oplossing voor de telomeerherhaling vaak overheersen. H-DNA is getoond in de pyrimidine-vorm (Hoogsteen); er bestaat ook een purine-vorm (reverse Hoogsteen). Hoe vaak deze structuren in levende cellen voorkomen is nog onderwerp van onderzoek.',
-    en: 'Topologies are schematic (real loops and grooves not to scale). Besides parallel and basket, hybrid (3+1) G-quadruplexes exist and often dominate for the telomeric repeat in K⁺ solution. H-DNA is shown in the pyrimidine form (Hoogsteen); a purine form (reverse Hoogsteen) also exists. How often these structures occur in living cells is still being researched.' },
+    nl: 'Topologieën zijn schematisch (echte lussen en groeven niet op schaal). Naast parallel en mand bestaan nog andere vouwingen, bv. hybride G-quadruplexen. H-DNA is getoond in de pyrimidine-vorm (Hoogsteen); er bestaat ook een purine-vorm (reverse Hoogsteen). Hoe vaak deze structuren in levende cellen voorkomen is nog onderwerp van onderzoek.',
+    en: 'Topologies are schematic (real loops and grooves not to scale). Besides parallel and basket, other folds exist, e.g. hybrid G-quadruplexes. H-DNA is shown in the pyrimidine form (Hoogsteen); a purine form (reverse Hoogsteen) also exists. How often these structures occur in living cells is still being researched.' },
   steps: STEPS,
   svg() {
     const btn = (x, y, node, href, nl, en, col) => `<g data-node="${node}" ${href ? `data-href="${href}"` : ''} data-nolabel><rect x="${x - 170}" y="${y - 28}" width="340" height="56" rx="28" fill="#0d1426" stroke="${col}" stroke-width="3"/><text x="${x}" y="${y + 8}" font-size="22" text-anchor="middle" fill="${col}" font-family="Inter" font-weight="700">${T2(nl, en)}</text></g>`;
@@ -151,7 +151,7 @@ export default {
             m += '</g>';
             if (i < 2) m += kion(cx + 20, cy + (.5 - i) * gap * (0.4 + .6 * k1) - 10, 24, k2);
           }
-          ann += `<g opacity="${f1(k1)}"><path d="M${cx + 420},${cy + gap + 30} V${cy + 30}" stroke="#fff" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)"/>${txt(cx + 440, cy + gap / 2 + 38, '≈ 3,3 Å'.replace(',', L({ nl: ',', en: '.' })), '#fff', 24, 'start', 700)}</g>`;
+          ann += `<g opacity="${f1(k1)}"><path d="M${cx + 420},${cy + gap + 30} V${cy + 30}" stroke="#fff" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)"/>${txt(cx + 440, cy + gap / 2 + 38, '≈ 3,4 Å'.replace(',', L({ nl: ',', en: '.' })), '#fff', 24, 'start', 700)}</g>`;
           ann += `<g opacity="${f1(ease(sub(p, .6, .8)))}">${txt(800, 210, T2('K⁺ tussen twee lagen (8 × O6)', 'K⁺ between two layers (8 × O6)'), '#fff', 28)}</g>`;
         } else if (step === 3) {
           const k1 = ease(sub(p, .05, .5)), k2 = ease(sub(p, .3, .75));
@@ -169,7 +169,7 @@ export default {
           // context vanaf p = 0: het chromosoom met zijn twee telomeren, en de sequentie van de overhang
           chr = `<g><rect x="190" y="232" width="200" height="36" rx="18" fill="${C.dna}" fill-opacity=".3" stroke="${C.dna}" stroke-width="2.5"/><rect x="410" y="232" width="330" height="36" rx="18" fill="${C.dna}" fill-opacity=".3" stroke="${C.dna}" stroke-width="2.5"/><circle cx="400" cy="250" r="9" fill="${C.histone}"/><path d="M190,250 a18,18 0 0 1 18,-18 h14 v36 h-14 a18,18 0 0 1 -18,-18 Z M740,250 a18,18 0 0 0 -18,-18 h-14 v36 h14 a18,18 0 0 0 18,-18 Z" fill="#ffc247"/><path d="M708,272 L150,405 M740,262 L900,405" stroke="#ffc247" stroke-width="1.5" stroke-dasharray="6 6" opacity=".55"/>${txt(465, 212, T2('chromosoom: telomeer aan elk uiteinde', 'chromosome: a telomere at each end'), '#ffc247', 22)}</g>`;
           m += txt(1080, 585, 'TTAGGG TTAGGG TTAGGG TTAGGG', C.dna, 22, 'middle', 700, 'JetBrains Mono');
-          ann += `<rect x="150" y="530" width="610" height="16" rx="8" fill="${C.histone}" opacity=".3"/>` + txt(455, 580, T2('dubbelstrengig telomeer-DNA: ≈ 5–15 kb TTAGGG', 'double-stranded telomeric DNA: ≈ 5–15 kb TTAGGG'), C.muted, 22);
+          ann += `<rect x="150" y="530" width="610" height="16" rx="8" fill="${C.histone}" opacity=".3"/>` + txt(455, 580, T2('dubbelstrengig telomeer-DNA: ≈ 10–15 kb TTAGGG', 'double-stranded telomeric DNA: ≈ 10–15 kb TTAGGG'), C.muted, 22);
           ann += `<g opacity="${f1(k2)}">${txt(1080, 640, T2('overhang ≈ 50–300 nt', 'overhang ≈ 50–300 nt'), '#fff', 22)}</g>`;
         } else if (step === 5) {
           const v = { S: 34, ox: 700, oy: 470 };
@@ -222,7 +222,7 @@ export default {
           m += hbond(hOf(pC2, 'N3', pC1.A.N3), pC1.A.N3, v, hk) + hbond(hOf(pC1, 'N4', pC2.A.O2), pC2.A.O2, v, hk) + hbond(hOf(pC2, 'N4', pC1.A.O2), pC1.A.O2, v, hk);
           const h = hOf(pC2, 'N3', pC1.A.N3);
           ann += `<g opacity="${f1(hk)}">${txt(X(v, h), Y(v, h) - 26, '+', '#ffc247', 34, 'middle', 800)}</g>`;
-          ann += `<g opacity="${f1(ease(sub(p, .45, .65)))}">${txt(800, 672, T2('C·C⁺: extra H⁺ op N3 → 3 H-bruggen', 'C·C⁺: extra H⁺ on N3 → 3 H-bonds'), '#fff', 26)}</g>`;
+          ann += `<g opacity="${f1(ease(sub(p, .45, .65)))}">${txt(800, 672, T2('C·C⁺: half-geprotoneerd paar', 'C·C⁺: hemiprotonated pair'), '#fff', 26)}</g>`;
         }
         $('nc-main').innerHTML = m; $('nc-chr').innerHTML = chr; $('nc-ann').innerHTML = ann;
         vis('nc-hs-tel', step === 4 ? sub(p, .8, .9) : 0);

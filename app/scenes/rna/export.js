@@ -32,8 +32,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">Richting komt niet van RanGTP maar van de ATPase DDX19 aan de cytoplasmatische kant: die haalt NXF1 van het mRNA, zodat het niet meer terug kan glijden. Vergelijk met <b>Exportine-5</b> (pre-miRNA) en CRM1, die wél RanGTP gebruiken.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Directionality does not come from RanGTP but from the ATPase DDX19 on the cytoplasmic side: it strips NXF1 off the mRNA so it cannot slide back. Compare <b>Exportin-5</b> (pre-miRNA) and CRM1, which do use RanGTP.</p>' },
   simplified: {
-    nl: 'Niet op schaal: de kernporie is ≈ 120 nm breed (≈ 110 MDa, ≈ 30 soorten nucleoporines in 8-voudige symmetrie), een mRNP is veel langer en dichter bepakt dan getekend. Slechts enkele kopieën van NXF1–NXT1, EJC en PABP zijn getoond; SR-eiwitten, THOC5, CHTOP en andere adaptoren zijn weggelaten. Of IP6 nodig is voor de activatie van menselijk DDX19 is minder duidelijk dan in gist. De EJC\'s worden pas door het eerste ribosoom verwijderd; de volgorde van de CBC→eIF4E-wissel ten opzichte van die eerste ronde is vereenvoudigd.',
-    en: 'Not to scale: the nuclear pore is ≈ 120 nm wide (≈ 110 MDa, ≈ 30 kinds of nucleoporins in 8-fold symmetry), and an mRNP is much longer and more densely packed than drawn. Only a few copies of NXF1–NXT1, EJC and PABP are shown; SR proteins, THOC5, CHTOP and other adaptors are omitted. Whether IP6 is needed to activate human DDX19 is less clear than in yeast. EJCs are only removed by the first ribosome; the timing of the CBC→eIF4E exchange relative to that first round is simplified.' },
+    nl: 'Niet op schaal: de kernporie is ≈ 120 nm breed (≈ 110 MDa, ≈ 30 soorten nucleoporines in 8-voudige symmetrie), een mRNP is veel langer en dichter bepakt dan getekend. Slechts enkele eiwitten zijn getoond; SR-eiwitten, THOC5, CHTOP en andere adaptoren zijn weggelaten. IP6 is getekend zoals bij gist; menselijk DDX19 heeft het niet nodig om actief te worden. De richting waarin het mRNA door de porie gaat (hier kapje voorop) is een voorbeeld. De EJC\'s worden pas door het eerste ribosoom verwijderd; de volgorde van de CBC→eIF4E-wissel ten opzichte van die eerste ronde is vereenvoudigd.',
+    en: 'Not to scale: the nuclear pore is ≈ 120 nm wide (≈ 110 MDa, ≈ 30 kinds of nucleoporins in 8-fold symmetry), and an mRNP is much longer and more densely packed than drawn. Only a few proteins are shown; SR proteins, THOC5, CHTOP and other adaptors are omitted. IP6 is drawn as in yeast; human DDX19 does not need it to become active. The direction in which the mRNA passes the pore (here cap first) is an example. EJCs are only removed by the first ribosome; the timing of the CBC→eIF4E exchange relative to that first round is simplified.' },
   steps: [
     ST(7000, cam(520, 690, 1050), "Het rijpe mRNA in de kern", "The mature mRNA in the nucleus",
       "Het rijpe mRNA is ingepakt met eiwitten: op het kapje, bij elke naad tussen exonen en op de staart.",
@@ -48,8 +48,8 @@ export default {
       "Het mRNA meert aan bij een kernporie: een reusachtig kanaal in de kernwand, vol losse eiwitdraden.",
       "The mRNA docks at a nuclear pore: a huge channel in the nuclear envelope, full of loose protein strands."),
     ST(8500, cam(960, 505, 1000), "Door de poort", "Through the gate",
-      "Het transporteiwit grijpt telkens even die draden vast. Zo glipt het mRNA erdoor, kapje voorop.",
-      "The transport protein keeps briefly grabbing those strands. So the mRNA slips through, cap first."),
+      "Het transporteiwit grijpt telkens even die draden vast. Zo glipt het mRNA erdoor.",
+      "The transport protein keeps briefly grabbing those strands. So the mRNA slips through."),
     ST(8500, cam(960, 330, 900), "Geen weg terug", "No way back",
       "Buiten de kern trekt een enzym, met energie uit ATP, het transporteiwit los. Het mRNA kan niet meer terug.",
       "Outside the nucleus an enzyme, using energy from ATP, pulls the transport protein off. The mRNA cannot go back."),
@@ -201,7 +201,7 @@ export default {
         pr += `<g opacity="${ddxOp}"><circle cx="${PX - 150}" cy="${Y_OUT - 86}" r="${f1(34 + 6 * pulse)}" fill="none" stroke="#ffd36b" stroke-width="2" opacity="${f1(pulse * .8)}"/></g>`;
         pr += prot(PX - 150, Y_OUT - 86, 94, 36, 'DDX19', '#b8862a', ddxOp, 19);
         pr += prot(PX - 170, Y_OUT - 42, 86, 34, 'Gle1', '#8c6a2a', ddxOp, 19);
-        pr += note(PX - 214, Y_OUT - 36, 'IP6', '#ffd36b', 19, 'end', ddxOp);
+        pr += note(PX - 214, Y_OUT - 36, T2('IP6 (gist)', 'IP6 (yeast)'), '#ffd36b', 19, 'end', ddxOp);
         if (step === 5) pr += note(PX - 150, Y_OUT - 124, 'ATP → ADP + Pᵢ', '#ffd36b', 18, 'middle', sub(p, .15, .35));
         if (step === 4) pr += note(PX + 150, Y_IN + 70, T2('geen RanGTP nodig', 'no RanGTP needed'), C.muted, 18, 'start', sub(p, .2, .4));
         $('ex-prot').innerHTML = pr;

@@ -15,7 +15,7 @@ const RSITE = [[PKX - 15, PKY - 22], [PKX - 15, PKY + 22], [PKX + 15, PKY - 22],
 export default {
   id: 'gpcr',
   title: { nl: 'G-eiwitgekoppelde receptor (cAMP)', en: 'G protein-coupled receptor (cAMP)' },
-  scale: { nl: 'receptor ≈ 5 nm; beeld ≈ 100 nm (niet op schaal)', en: 'receptor ≈ 5 nm; view ≈ 100 nm (not to scale)' },
+  scale: { nl: 'membraan ≈ 4 nm dik; niet op schaal', en: 'membrane ≈ 4 nm thick; not to scale' },
   time: { nl: 'cAMP stijgt binnen seconden; CREB-genen na minuten', en: 'cAMP rises within seconds; CREB genes after minutes' },
   org: { nl: 'mens (bv. luchtweg-epitheel, gladde spiercel)', en: 'human (e.g. airway epithelium, smooth muscle cell)' },
   legend: [[ADRC, 'adrenaline'], [C.prot, { nl: 'β2-adrenerge receptor · PKA-C', en: 'β2-adrenergic receptor · PKA-C' }], [GAC, 'Gαs'], [GBC, 'Gβγ'], [GTPC, 'GTP · GDP · ATP · cAMP'],

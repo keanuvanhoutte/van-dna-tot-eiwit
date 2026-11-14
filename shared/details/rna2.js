@@ -2,7 +2,7 @@
  * Nagekeken in docs/verificatie-ronde-11-rna-lot.md. */
 const S = (ref, nl, en, url) => ({ t: { nl: `${ref} — ${nl}`, en: `${ref} — ${en}` }, url });
 const PM = id => `https://pubmed.ncbi.nlm.nih.gov/${id}/`, PMC = id => `https://pmc.ncbi.nlm.nih.gov/articles/${id}/`;
-const KISL = S('Kislauskis, Zhu & Singer (1994) J Cell Biol 127:441', 'het adreslabel van 54 letters in het β-actine-mRNA (kippenembryocellen)', 'the 54-letter address label in β-actin mRNA (chicken embryo cells)', 'https://rupress.org/jcb/article/127/2/441/20281/');
+const KISL = S('Kislauskis, Zhu & Singer (1994) J Cell Biol 127:441', 'het adreslabel van 54 letters in het β-actine-mRNA (kippenembryocellen)', 'the 54-letter address label in β-actin mRNA (chicken embryo cells)', 'https://pubmed.ncbi.nlm.nih.gov/7929587/');
 const HUTT = S('Hüttelmaier et al. (2005) Nature 438:512 (PubMed 16306994)', 'ZBP1 houdt de translatie tegen tot het aan de rand loslaat', 'ZBP1 holds back translation until it lets go at the edge', PM(16306994));
 const LION = S('Lionnet et al. (2011) Nat Methods 8:165 (PMC)', 'muis met gemerkt β-actine-mRNA; losse mRNA’s in zenuwcellen gevolgd', 'mouse with labelled β-actin mRNA; single mRNAs followed in nerve cells', PMC('PMC3076588'));
 const MART = S('Martin & Ephrussi (2009) Cell 136:719 (PMC)', 'overzicht: adreslabels, lezende eiwitten, motoren en sporen', 'review: address labels, reader proteins, motors and tracks', PMC('PMC2819924'));
@@ -20,6 +20,7 @@ const GENC = S('GENCODE, menselijke release 50 (statistieken)', '35 885 genen vo
 const SERG = S('Serganov et al. (2004) Chem Biol 11:1729 (PubMed 15610857)', 'structuur van de adenine-schakelaar (1Y26)', 'structure of the adenine switch (1Y26)', PM(15610857));
 const P1Y26 = { t: { nl: 'RCSB PDB 1Y26 — vanggedeelte van de adenine-schakelaar (Vibrio vulnificus) met adenine, röntgen 2,1 Å', en: 'RCSB PDB 1Y26 — catching part of the adenine switch (Vibrio vulnificus) with adenine, X-ray 2.1 Å' }, url: 'https://www.rcsb.org/structure/1Y26' };
 const LEMAY = S('Lemay et al. (2011) PLoS Genet 7:e1001278 (PMC)', 'add-schakelaar van V. vulnificus werkt op de translatie', 'add switch of V. vulnificus acts on translation', PMC('PMC3024265'));
+const BLECH = S('Blechar et al. (2024) ACS Chem Biol 19:607 (PubMed 38412235)', 'add-schakelaar van V. vulnificus: ribosoomeiwit S1 helpt het RNA open te vouwen', 'add switch of V. vulnificus: ribosomal protein S1 helps unfold the RNA', PM(38412235));
 const MCC = S('McCown et al. (2017) RNA 23:995 (PMC)', 'overzicht van alle bekende soorten schakelaars en waar ze voorkomen', 'overview of all known kinds of switches and where they occur', PMC('PMC5473149'));
 
 export default {
@@ -54,7 +55,7 @@ export default {
   },
   korrels: {
     nl: {
-      kort: 'Bij stress, zoals hitte, stopt de cel even met eiwitten maken. De vrije mRNA’s klonteren met eiwitten samen in druppels zonder membraan. Na de stress lossen die weer op. Andere druppels, P-bodies, zijn er altijd.',
+      kort: 'Bij stress, zoals hitte, maakt de cel even veel minder eiwitten. De vrije mRNA’s klonteren met eiwitten samen in druppels zonder membraan. Na de stress lossen die weer op. Andere druppels, P-bodies, zijn er altijd.',
       what: 'Stressgranules zijn druppels zonder membraan in het cytoplasma. Ze bevatten mRNA’s die niet vertaald worden, vastgelopen startcomplexen van de translatie en RNA-bindende eiwitten zoals G3BP1 en TIA-1. P-bodies zijn verwante druppels die ook zonder stress bestaan, met eiwitten van de mRNA-afbraak (zoals DCP2 en XRN1) en mRNA’s die niet vertaald worden.',
       how: [
         'Stress (hitte, oxidatie, een virus) remt de start van de translatie. De ribosomen lopen van de mRNA’s af.',
@@ -67,7 +68,7 @@ export default {
       why: 'Zo kan een cel snel omschakelen: bij stress worden gewone eiwitten even niet gemaakt, terwijl de mRNA’s vermoedelijk bewaard blijven voor later. Bij ALS vindt men eiwitten uit deze druppels (TDP-43, FUS) terug in klonters in de zenuwcellen die afsterven; of blijvende druppels die klonters veroorzaken, wordt nog onderzocht.',
     },
     en: {
-      kort: 'Under stress, such as heat, the cell briefly stops making proteins. The free mRNAs clump together with proteins in droplets without a membrane. After the stress these dissolve again. Other droplets, P-bodies, are always there.',
+      kort: 'Under stress, such as heat, the cell briefly makes far fewer proteins. The free mRNAs clump together with proteins in droplets without a membrane. After the stress these dissolve again. Other droplets, P-bodies, are always there.',
       what: 'Stress granules are droplets without a membrane in the cytoplasm. They contain mRNAs that are not being translated, stalled translation start complexes and RNA-binding proteins such as G3BP1 and TIA-1. P-bodies are related droplets that also exist without stress, with proteins of mRNA decay (such as DCP2 and XRN1) and mRNAs that are not being translated.',
       how: [
         'Stress (heat, oxidation, a virus) blocks the start of translation. The ribosomes run off the mRNAs.',
@@ -137,6 +138,6 @@ export default {
       facts: [['Structure', 'PDB 1Y26, X-ray 2.1 Å'], ['Organism', 'Vibrio vulnificus (bacterium)'], ['Catching part', '71 letters + adenine + 5 Mg²⁺'], ['Recognition', 'adenine pairs with U74'], ['Where', 'mainly bacteria; TPP switch also in plants, fungi, algae; not known in humans']],
       why: 'Riboswitches show that RNA itself can sense and decide, without a protein. Because bacteria use them for important building blocks and humans do not have them (as far as we know), they are a possible target for new antibiotics.',
     },
-    sources: [SERG, P1Y26, LEMAY, MCC],
+    sources: [SERG, P1Y26, LEMAY, BLECH, MCC],
   },
 };

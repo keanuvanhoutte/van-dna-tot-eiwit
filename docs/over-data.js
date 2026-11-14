@@ -337,6 +337,21 @@ export const VERIF = {
      "en": "The second tRNA in structure 5AFI was first shown without a site. Our own measurement shows it lies 3.1 Å from the codon before the start codon: in the E site; the figure now says so."
     }
    ]
+  },
+  {
+   "nr": "13",
+   "date": "2026-11-14",
+   "scope": {
+    "nl": "Onafhankelijke diepe controle van de hele app: alle verhalen en zijpaden, alle uitlegpanelen, de woordenlijst, de startpagina, deze pagina en de volledige 3D-bibliotheek.",
+    "en": "Independent in-depth check of the whole app: all stories and side paths, all explanation panels, the glossary, the home page, this page and the complete 3D library."
+   },
+   "method": {
+    "nl": "Twaalf afzonderlijke controleurs, die de teksten niet zelf schreven, legden elk een afgebakend deel zin per zin (NL en EN) opnieuw tegen de bronnen. Ze lazen samenvattingen via PubMed en volledige teksten via PubMed Central en Europe PMC, controleerden elke bronvermelding via Crossref, elke PDB-code via de RCSB-databank, en maten afstanden en residuen zelf na in de structuurbestanden. Ze lazen de eerdere verslagen pas na hun eigen controle. Wat niet in een gelezen bron stond, werd herschreven of geschrapt.",
+    "en": "Twelve separate reviewers, who did not write the texts, each re-checked a defined part sentence by sentence (Dutch and English) against the sources. They read abstracts via PubMed and full texts via PubMed Central and Europe PMC, checked every reference via Crossref and every PDB code via the RCSB database, and measured distances and residues themselves in the structure files. They read the earlier reports only after their own check. What was not in a source that was read was rewritten or removed."
+   },
+   "checked": null,
+   "corrections": null,
+   "examples": []
   }
  ],
  "rejected": [
@@ -399,6 +414,198 @@ export const VERIF = {
   {
    "nl": "Een PDB-code die niet paste werd niet gebruikt: 193D (intercalator) stond als G-quadruplex. Ook 3D-kandidaten vielen af als ze niet toonden wat de tekst beweert (6WG3 en 6YUF bevatten geen CTCF) of niet uit de geciteerde publicatie kwamen (7SI9 en 7VH8 ten voordele van 7RFW).",
    "en": "A PDB code that did not fit was not used: 193D (an intercalator) was listed as a G-quadruplex. 3D candidates were also dropped if they did not show what the text claims (6WG3 and 6YUF contain no CTCF) or did not come from the cited publication (7SI9 and 7VH8 in favour of 7RFW)."
+  },
+  {
+   "nl": "De uitspraak 'zo komt HIV-1 binnen' bij het versmelten met het celmembraan is verzacht tot 'zo kan HIV-1 binnenkomen': binnenkomst via een blaasje is voor HIV-1 ook beschreven, dus de stellige vorm was niet gedekt.",
+   "en": "The statement 'this is how HIV-1 gets in' about fusing with the cell membrane was softened to 'this is one way HIV-1 can get in': entry through a vesicle has also been described for HIV-1, so the definite wording was not covered."
+  },
+  {
+   "nl": "De zin dat coronavirussen de cel via lysosomen verlaten, is als vaststaand feit verworpen: dat werk (Ghosh, 2020) is in gekweekte cellen gedaan. De stap zegt dat er nu bij.",
+   "en": "The sentence that coronaviruses leave the cell via lysosomes was rejected as settled fact: that work (Ghosh, 2020) was done in cultured cells. The step now says so."
+  },
+  {
+   "nl": "'Alle uridines vervangen door m1Psi' gold als algemene regel voor mRNA-vaccins. Dat klopt voor de covidvaccins, niet voor elk mRNA-vaccin; de regel is nu tot de covidvaccins beperkt.",
+   "en": "'Every uridine replaced by m1Psi' stood as a general rule for mRNA vaccines. That holds for the COVID vaccines, not for every mRNA vaccine; the statement is now limited to the COVID vaccines."
+  },
+  {
+   "nl": "'De toppen staan afwisselend omhoog of omlaag' suggereerde een vaste beurtrol bij het coronavirus-uitsteeksel. De stand wisselt toevallig, dus de formulering is aangepast.",
+   "en": "'The tips are alternately up or down' suggested a fixed turn-taking for the coronavirus spike. The position changes at random, so the wording was adjusted."
+  },
+  {
+   "nl": "Het handboek van Alberts en de Endotext-pagina waren niet leesbaar door een captcha en tellen niet als bewijs. Wat eerst alleen daarop steunde, kreeg een gelezen bron of werd herschreven. Een voorbeeld: de membraandikte ging van ≈ 5 naar ≈ 4 nm, naar de meting van Mitra et al. (2004).",
+   "en": "The Alberts textbook and the Endotext page could not be read (captcha), so they do not count as evidence. Everything that rested only on them now has a source we read or was rewritten, e.g. the membrane thickness went from ≈ 5 to ≈ 4 nm after the measurement of Mitra et al. (2004)."
+  },
+  {
+   "nl": "Een enhancer werd voorgesteld als 'tot 1 miljoen basenparen' van zijn gen. Dat maximum werd verworpen: de bron (Lettice et al., 2003) geeft 1 miljoen als voorbeeld van de ZRS, niet als grens.",
+   "en": "Describing an enhancer as lying 'up to 1 million base pairs' from its gene was rejected: the source (Lettice et al., 2003) gives 1 million as an example (the ZRS), not as a limit."
+  },
+  {
+   "nl": "Het klassieke beeld 'cortisol bindt en de helper-eiwitten laten meteen los' is niet de enige versie. Davies et al. (2002) tonen dat Hsp90 kan meegaan tot in de kern. Daarom staat er nu een korte nuancering bij.",
+   "en": "The classic picture 'cortisol binds and the helper proteins let go at once' is not the only version: Davies et al. (2002) show that Hsp90 can travel along into the nucleus, so a short caveat was added."
+  },
+  {
+   "nl": "'Peptiden en adrenaline kunnen niet door het membraan' was te absoluut. De gelezen bronnen spreken van een slechte doorlaatbaarheid, dus nu staat er 'nauwelijks'.",
+   "en": "'Peptides and adrenaline cannot cross the membrane' was too absolute: the sources we read speak of poor permeability, so the text now says 'can hardly'."
+  },
+  {
+   "nl": "Een eerdere ronde noemde '70–80 % van de CpG's gemethyleerd' bevestigd via een bron die niet in de app staat en die we niet konden lezen. We schreven het om naar wat een gelezen review zegt: de meeste CpG's, behalve in CpG-eilanden.",
+   "en": "An earlier round called '70–80% of CpGs methylated' confirmed through a source that is not in the app and that we could not read. We rewrote it to what a review we did read says: most CpGs, except in CpG islands."
+  },
+  {
+   "nl": "Volgens een eerdere ronde stond 'Hoogsteen-paar: C1′–C1′ ≈ 8,5 Å' in Nikolova et al. 2011. In de volledige tekst staat dat getal niet. Het is daarom geschrapt.",
+   "en": "An earlier round said 'Hoogsteen pair: C1′–C1′ ≈ 8.5 Å' came from Nikolova et al. 2011. The number is not in the full text, so it was removed."
+  },
+  {
+   "nl": "De waarden σ ≈ −0,06 en '−1 per nucleosoom' hadden geen gelezen bron. Een recente review geeft −0,05 als fysiologische waarde. Die staat er nu, en het tweede getal is geschrapt.",
+   "en": "σ ≈ −0.06 and '−1 per nucleosome' had no source we could read. A recent review gives −0.05 as the physiological value; that is used now and the second number was removed."
+  },
+  {
+   "nl": "De voorbeelden BRD4 en TAF3 als 'lezers' en Mediator bij enhancerlussen stonden niet in de gelezen bronnen. Ze zijn geschrapt; de voorbeelden die de bronnen wel noemen, bleven staan.",
+   "en": "BRD4 and TAF3 as example 'readers', and Mediator in enhancer loops, were not in the sources we read; they were removed and the sourced examples kept."
+  },
+  {
+   "nl": "Een eerdere ronde koppelde 'NHEJ : HR ≈ 4 : 1 in S/G2' aan Mao et al. (2008), maar Mao meet 3 : 1 in delende cellen in het algemeen. De uitspraak blijft staan omdat ze letterlijk in Chang et al. (2017) staat.",
+   "en": "An earlier round linked 'NHEJ : HR ≈ 4 : 1 in S/G2' to Mao et al. (2008), but Mao measures 3 : 1 in dividing cells in general. The statement stays because it appears verbatim in Chang et al. (2017)."
+  },
+  {
+   "nl": "Uitspraken die geen gelezen bron hadden, zijn herschreven of geschrapt: 'RPA bindt in milliseconden', 'telomerase werkt in seconden tot minuten', de lengte van de telomeer-overhang, 'T-lus: kilobasen' en 'origins 30–300 kb uit elkaar'.",
+   "en": "Statements without a source we had read were rewritten or removed: 'RPA binds within milliseconds', 'telomerase works in seconds to minutes', the length of the telomere overhang, 't-loop: kilobases' and 'origins 30–300 kb apart'."
+  },
+  {
+   "nl": "'NER is het enige herstel voor UV-schade bij de mens' werd verworpen: Schärer (2013) noemt NER de belangrijkste route, en Chatterjee & Walker (2017) noemen ook andere manieren om met UV-schade om te gaan. Nu staat er dat NER de belangrijkste route is, omdat de mens geen fotolyase heeft.",
+   "en": "'NER is the only repair for UV damage in humans' was rejected: Schärer (2013) calls NER the main pathway, and Chatterjee & Walker (2017) also list other ways of dealing with UV damage. It now says NER is the main route, because humans lack photolyase."
+  },
+  {
+   "nl": "Het verwijzingslabel 'Virussen gebruiken breukherstel' werd verworpen: bij hiv-integratie knipt het virale enzym zelf, en de cel vult daarna alleen kleine gaatjes op.",
+   "en": "The link label 'Viruses use break repair' was rejected: in HIV integration the viral enzyme does the cutting itself, and the cell then only fills in small gaps."
+  },
+  {
+   "nl": "Het getal 80° voor de knik door TBP staat niet in het abstract van Kim et al. 1993; we gebruiken daarvoor Wu et al. 2001, die zegt dat het om kristalstructuren gaat.",
+   "en": "The 80° bend by TBP is not in the abstract of Kim et al. 1993; we now cite Wu et al. 2001 for it, which says it applies to crystal structures."
+  },
+  {
+   "nl": "Dat mitochondriaal RNA-polymerase uit één subeenheid bestaat en dat planten Pol IV en Pol V hebben, stond in geen gelezen bron; die zinnen zijn verzacht of geschrapt.",
+   "en": "That mitochondrial RNA polymerase is a single subunit and that plants have Pol IV and Pol V was not in any source we read; those sentences were softened or removed."
+  },
+  {
+   "nl": "'Bij deze riboswitch helpt het ribosoom zelf mee' had geen bron; het werd vervangen door wat Blechar et al. 2024 echt aantonen: een ribosoomeiwit (S1) helpt het RNA open te vouwen.",
+   "en": "'For this riboswitch the ribosome itself helps' had no source; it was replaced by what Blechar et al. 2024 actually show: a ribosomal protein (S1) helps unfold the RNA."
+  },
+  {
+   "nl": "Alberts, Molecular Biology of the Cell (NCBI Bookshelf) kon niet gelezen worden (captcha); uitspraken die enkel daarop steunden, zijn opnieuw gestaafd met gelezen artikels.",
+   "en": "Alberts, Molecular Biology of the Cell (NCBI Bookshelf) could not be read (captcha); claims that relied only on it were re-sourced with articles we did read."
+  },
+  {
+   "nl": "Eerdere rondes keurden 'tRNA^Phe = eerste RNA-kristalstructuur' goed zonder gelezen bron; de bron over 1EHZ zegt alleen 'klassieke structuur'. Het woord 'eerste' is verwijderd.",
+   "en": "Earlier rounds accepted 'tRNA^Phe = first RNA crystal structure' without a source we could read; the source on 1EHZ only says 'classic structure'. The word 'first' was removed."
+  },
+  {
+   "nl": "De bron Chester et al. 2004 (APOBEC1) dekt de details over C6666, codon 2153 en de mooring-sequentie niet; die zijn nu gestaafd met Wang & Cheng 2024 en UniProt P04114.",
+   "en": "The source Chester et al. 2004 (APOBEC1) does not cover C6666, codon 2153 or the mooring sequence; these are now backed by Wang & Cheng 2024 and UniProt P04114."
+  },
+  {
+   "nl": "'Een mRNP draagt meerdere kopieën van NXF1' en 'IRE1 knipt mRNA' stonden in geen gelezen bron en zijn geschrapt.",
+   "en": "'An mRNP carries several copies of NXF1' and 'IRE1 cuts mRNA' were not in any source we read and were removed."
+  },
+  {
+   "nl": "Henras e.a. (2015) werd niet aanvaard als bron voor 'meer dan 200 assemblagefactoren': het getal 200 in dat artikel gaat over snoRNP's. Vervangen door Tafforeau e.a. (2013, 286 factoren).",
+   "en": "Henras et al. (2015) was not accepted as the source for 'more than 200 assembly factors': the number 200 in that article refers to snoRNPs. Replaced by Tafforeau et al. (2013, 286 factors)."
+  },
+  {
+   "nl": "'Twee families van synthetasen, apart ontstaan' werd verworpen: de gelezen review bespreekt juist de hypothese dat beide uit één gen komen.",
+   "en": "'Two families of synthetases that arose separately' was rejected: the review we read discusses the hypothesis that both come from a single gene."
+  },
+  {
+   "nl": "Tijdschalen zonder gelezen bron ('milliseconden per lading', 'minuten tot een uur per ribosoom') en 'selenol is reactiever' werden geschrapt of herschreven.",
+   "en": "Time scales without a source we read ('milliseconds per charging event', 'minutes to an hour per ribosome') and 'the selenol is more reactive' were removed or rewritten."
+  },
+  {
+   "nl": "Het NCBI-boek (Alberts) gaf een captcha; elke uitspraak die erop steunde kreeg een gelezen open bron (o.a. Mohanty 2020 voor de suikerketen in het ER).",
+   "en": "The NCBI Bookshelf (Alberts) returned a captcha; every statement that relied on it got an open source we read (e.g. Mohanty 2020 for the sugar chain in the ER)."
+  },
+  {
+   "nl": "De originele artikels van Chapeville (1962, enkel een scan) en Crick (1966, niet vrij toegankelijk) werden uit de bronnenlijst gehaald; de uitspraken steunen nu op gelezen reviews (Shandell 2021, Agris 2018, Lei & Burton 2022).",
+   "en": "The original papers by Chapeville (1962, scan only) and Crick (1966, not freely available) were removed from the source list; the statements now rest on reviews we read (Shandell 2021, Agris 2018, Lei & Burton 2022)."
+  },
+  {
+   "nl": "De wobble-regel 'A paart alleen met U' werd verworpen: een gelezen review beschrijft een tRNA met A op die plaats dat ook C leest. Nu staat er dat A daar zeldzaam is en meestal tot inosine wordt omgezet.",
+   "en": "The wobble rule 'A pairs only with U' was rejected: a review we read describes a tRNA with A at that position that also reads C. It now says A is rare there and is usually converted to inosine."
+  },
+  {
+   "nl": "Vorige rondes keurden lusgroottes (haarspeld minstens 4–5, omega-lus 6–16, random coil > 16), 4,4 residuen per π-winding en β-strengen van 5–8 residuen goed op basis van de cursus. Dat is geen publieke bron en we vonden deze getallen niet in gelezen literatuur. Ze zijn herschreven of vervangen door eigen metingen.",
+   "en": "Earlier rounds approved loop sizes (hairpin at least 4–5, omega loop 6–16, random coil > 16), 4.4 residues per π turn and β-strands of 5–8 residues on the basis of the course. That is not a public source, and we did not find these numbers in literature we read. They were rewritten or replaced by our own measurements."
+  },
+  {
+   "nl": "Lovell e.a. (2003) stond als bron voor '> 98 % in de voorkeursgebieden', maar de samenvatting noemt dat getal niet. Chen e.a. (2010, MolProbity) zegt het wel en is als bron toegevoegd.",
+   "en": "Lovell et al. (2003) was cited for '> 98 % in the favoured regions', but its abstract does not give that number. Chen et al. (2010, MolProbity) does and was added as a source."
+  },
+  {
+   "nl": "'Dubbele C=N-binding ≈ 1,27 Å' en 'His63 stabiliseert O₂' stonden in geen enkele gelezen bron. Het eerste is vervangen door gemeten bindingslengtes, het tweede door wat de structuur toont (His63 ligt aan de kant waar O₂ bindt).",
+   "en": "'C=N double bond ≈ 1.27 Å' and 'His63 stabilises O₂' were not in any source we read. The first was replaced by measured bond lengths, the second by what the structure shows (His63 sits on the side where O₂ binds)."
+  },
+  {
+   "nl": "Vier basisfeiten (Arg is positief, de codes U en O, His is aromatisch, wat een domein is) steunden enkel op handboeken die we deze ronde niet konden openen. We lieten ze niet zomaar staan: elk kreeg een gelezen open bron (Fitch 2015, UniProt-help, Liao 2013, Jakubec 2018). De domeindefinitie werd voorzichtiger: een domein vouwt 'meestal' zelfstandig.",
+   "en": "Four basic facts (Arg is positive, the codes U and O, His is aromatic, what a domain is) rested only on textbooks we could not open this round. We did not simply leave them: each got a read open source (Fitch 2015, UniProt help, Liao 2013, Jakubec 2018). The domain definition was made more careful: a domain 'usually' folds on its own."
+  },
+  {
+   "nl": "'Tetra-ubiquitine is het minimale afbraaksignaal' niet langer als harde regel gebruikt: nieuwere metingen tonen dat meerdere korte ketens even goed of beter werken (Lu 2015; Swatek & Komander 2016).",
+   "en": "'Tetra-ubiquitin is the minimal degradation signal' is no longer used as a strict rule: newer measurements show that several short chains work as well or better (Lu 2015; Swatek & Komander 2016)."
+  },
+  {
+   "nl": "Een review als bron voor '300–400 g/L in het menselijk cytosol' verworpen: het getal komt uit metingen in E. coli.",
+   "en": "A review as the source for '300–400 g/L in the human cytosol' was rejected: the value comes from measurements in E. coli."
+  },
+  {
+   "nl": "Uitspraken zonder gelezen bron geschrapt of herschreven: 'fibril tot µm lang', 'monomeer ≈ 3 nm', 'ongeordende stukken rijk aan Pro, Gly en Ser', 'Hsp70 werkt in seconden' (de bron zegt minuten of langer).",
+   "en": "Statements without a source we could read were removed or rewritten: 'fibril up to µm long', 'monomer ≈ 3 nm', 'disordered regions rich in Pro, Gly and Ser', 'Hsp70 works in seconds' (the source says minutes or longer)."
+  },
+  {
+   "nl": "Het getal '1 op 50 000 geboorten' werd voorgesteld als frequentie van het Zellweger-spectrum; de bron (Braverman et al. 2016) geeft het voor alle peroxisoom-bouwziekten samen. Het label is aangepast.",
+   "en": "The figure '1 in 50,000 births' was presented as the frequency of the Zellweger spectrum; the source (Braverman et al. 2016) gives it for all peroxisome biogenesis disorders together. The label was adjusted."
+  },
+  {
+   "nl": "'Met hulp van tientallen eiwitten' (autofagie) stond in geen enkele gelezen bron als aantal; vervangen door 'veel eiwitten'.",
+   "en": "'With the help of dozens of proteins' (autophagy) appeared as a number in none of the sources read; replaced by 'many proteins'."
+  },
+  {
+   "nl": "De schaal 'kanaal ≈ 8 nm' klopte niet met een eigen meting in 8DNV: in het membraanvlak is het kanaal ongeveer 6 à 7 nm breed (8 nm is de hoogte). Nu '≈ 7 nm breed'.",
+   "en": "The scale 'channel ≈ 8 nm' did not match our own measurement in 8DNV: in the plane of the membrane the channel is about 6–7 nm wide (8 nm is its height). Now '≈ 7 nm wide'."
+  },
+  {
+   "nl": "'Een kernlabel mag overal in het eiwit liggen' was te stellig; de bron (Lu et al. 2021) zegt 'bijna overal'.",
+   "en": "'A nuclear label can lie anywhere in the protein' was too absolute; the source (Lu et al. 2021) says 'almost anywhere'."
+  },
+  {
+   "nl": "De uitspraak dat de kleine groef van RNA–DNA-hybriden smaller is dan in RNA werd geschrapt: het bijbehorende artikel (Xiong & Sundaralingam 2000) vond in dit kristal net een brede groef.",
+   "en": "The claim that the minor groove of RNA–DNA hybrids is narrower than in RNA was removed: the matching paper (Xiong & Sundaralingam 2000) found a wide groove in this very crystal."
+  },
+  {
+   "nl": "'G·U is het meest voorkomende afwijkende paar' werd niet gevonden in de gelezen overzichtsbron (Varani & McClain 2000); vervangen door wat die bron wel zegt: het komt in bijna elke soort RNA voor.",
+   "en": "'G·U is the most common unusual pair' was not found in the review we read (Varani & McClain 2000); replaced by what that source does say: it occurs in nearly every kind of RNA."
+  },
+  {
+   "nl": "Het overzicht van Ghosh & Bansal (2003) over DNA-vormen kon niet gelezen worden (geen toegang); de helixwaarden van A-, B- en Z-DNA werden daarom zelf gemeten in de structuurbestanden.",
+   "en": "The review by Ghosh & Bansal (2003) on DNA forms could not be read (no access); the helix values of A-, B- and Z-DNA were therefore measured directly in the structure files."
+  },
+  {
+   "nl": "'Ti-plasmide ~200 kb' en 'GENCODE ~20 000 lncRNA-genen' kwamen niet overeen met de gelezen bronnen (Gelvin 2003: 200–800 kb; Statello 2021: meer dan 16 000) en zijn aangepast.",
+   "en": "'Ti plasmid ~200 kb' and 'GENCODE ~20,000 lncRNA genes' did not match the sources read (Gelvin 2003: 200–800 kb; Statello 2021: more than 16,000) and were corrected."
+  },
+  {
+   "nl": "Enkele handboekuitspraken zonder leesbare bron werden geschrapt in plaats van behouden: nucleosomen 'om de ~200 bp', snRNA-lengtes, daunorubicine 'tegen leukemie' en de EJC-vermelding in de schema's. De oude vertakkingsconsensus YNYURAY werd vervangen door de gemeten menselijke consensus yUnAy (Gao et al. 2008).",
+   "en": "Some textbook claims without a readable source were removed rather than kept: nucleosomes 'every ~200 bp', snRNA lengths, daunorubicin 'against leukaemia' and the EJC mention in the diagrams. The old branch-point consensus YNYURAY was replaced by the measured human consensus yUnAy (Gao et al. 2008)."
+  },
+  {
+   "nl": "De uitspraak 'alle 66 DOI's in de app zijn nagekeken' werd niet overgenomen, omdat er na die controle bronnen bijkwamen. Alle 68 DOI's zijn opnieuw via Crossref opgevraagd; één bronlabel had een verkeerd jaartal (PNAS 2023 in plaats van 2024).",
+   "en": "The statement 'all 66 DOIs in the app were checked' was not kept, because sources were added after that check. All 68 DOIs were looked up again via Crossref; one source label had the wrong year (PNAS 2023 instead of 2024)."
+  },
+  {
+   "nl": "Een teller '125/125 onderwerpen met bronnen' werd niet echt geteld maar stond vast in de code. Hij telt nu echt hoeveel onderwerpen bronnen hebben.",
+   "en": "A counter '125/125 topics with sources' was not actually counted but fixed in the code. It now really counts how many topics have sources."
+  },
+  {
+   "nl": "'Dat doet p53' (p53 beslist of de cel herstelt of stopt) werd afgewezen als te stellig: p53 speelt een sleutelrol, maar beslist niet alleen.",
+   "en": "'That is p53' (p53 decides whether the cell repairs or stops) was rejected as too strong: p53 plays a key role but does not decide alone."
   }
  ],
  "principles": [
@@ -415,8 +622,8 @@ export const VERIF = {
    "en": "For every source, authors, title, journal, volume and pages are checked against the database, and every source URL is opened; a link that refuses a script (HTTP 403) is distinguished from a dead link."
   },
   {
-   "nl": "Alle 66 DOI's in de app zijn via Crossref nagekeken: ze bestaan en horen bij de vermelde publicatie.",
-   "en": "All 66 DOIs in the app were checked via Crossref: they exist and belong to the publication cited."
+   "nl": "De DOI's in de bronvermeldingen zijn via Crossref nagekeken: 66 op 13-11-2026 en opnieuw alle 68 op 14-11-2026. Ze bestaan en horen bij de vermelde publicatie.",
+   "en": "The DOIs in the source references were checked via Crossref: 66 on 13-11-2026 and all 68 again on 14-11-2026. They exist and belong to the publication cited."
   },
   {
    "nl": "Elke PDB-ID wordt via de RCSB-API gecontroleerd (titel, meetmethode, resolutie, organisme per keten, primaire publicatie), en ketens, residuen en afstanden worden zelf nagemeten in het coördinatenbestand.",
@@ -463,14 +670,14 @@ export const VERIF = {
    "en": "Open points that could not be decided by the reviewer are listed separately in the report instead of being changed silently."
   },
   {
-   "nl": "Een controle door de bouwer zelf volstaat niet: nieuwe onderdelen krijgen daarna een onafhankelijke controle die het bouwverslag pas na de eigen controle leest.",
-   "en": "A check by the builder alone is not enough: new parts then get an independent check that reads the build report only after its own check."
+   "nl": "Een controle door de bouwer zelf volstaat niet: sinds ronde 12 krijgen nieuwe onderdelen daarna ook een onafhankelijke controle die het bouwverslag pas na de eigen controle leest.",
+   "en": "A check by the builder alone is not enough: since round 12, new parts then also get an independent check that reads the build report only after its own check."
   }
  ],
  "totals": {
   "rounds": 12,
-  "corrections": 216,
-  "dois_checked": 66,
+  "corrections": 235,
+  "dois_checked": 68,
   "pdb_checked": 37
  }
 };

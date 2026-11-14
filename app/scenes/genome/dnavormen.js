@@ -26,12 +26,12 @@ export default {
   id: 'dnavormen',
   title: { nl: 'DNA-conformaties A, B, Z', en: 'A-, B- and Z-DNA' },
   scale: { nl: '≈ 2 nm breed · 16 bp', en: '≈ 2 nm wide · 16 bp' },
-  time: { nl: 'overgangen B ↔ Z/A: ms – min', en: 'B ↔ Z/A transitions: ms – min' },
+  time: { nl: 'overgangen zijn omkeerbaar (bv. B ↔ Z bij hoog zout)', en: 'transitions are reversible (e.g. B ↔ Z at high salt)' },
   org: { nl: 'alle organismen (in vitro gedefinieerd)', en: 'all organisms (defined in vitro)' },
   legend: [[C.dna, { nl: 'streng I', en: 'strand I' }], [C.dna2, { nl: 'streng II', en: 'strand II' }], ['#ff9f43', { nl: 'fosfaat', en: 'phosphate' }], ['#c9a574', { nl: 'suiker', en: 'sugar' }], [BASE.A, 'A'], [BASE.T, 'T'], [BASE.G, 'G'], [BASE.C, 'C']],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">De drie modellen zijn berekend, niet getekend: basenpaarhoogte, twist, verplaatsing van de basenparen, inclinatie en de ligging van fosfaat en C1′ zijn afgeleid uit de kristalstructuren 440D (A), 1BNA (B) en 1DCG (Z) en afgerond naar handboekwaarden. Handboekwaarden variëren licht tussen bronnen (bv. A-DNA 2,3–2,6 Å/bp, 23–26 Å breed).</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">The three models are computed, not drawn: base-pair rise, twist, base-pair displacement, inclination and the positions of phosphate and C1′ were derived from the crystal structures 440D (A), 1BNA (B) and 1DCG (Z) and rounded to textbook values. Textbook values differ slightly between sources (e.g. A-DNA 2.3–2.6 Å/bp, 23–26 Å wide).</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">De drie modellen zijn berekend, niet getekend: basenpaarhoogte, twist, verplaatsing van de basenparen, inclinatie en de ligging van fosfaat en C1′ zijn afgeleid uit de kristalstructuren 440D (A), 1BNA (B) en 1DCG (Z) en afgerond naar handboekwaarden. Handboekwaarden variëren licht tussen bronnen en hangen af van hoe je de breedte meet.</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">The three models are computed, not drawn: base-pair rise, twist, base-pair displacement, inclination and the positions of phosphate and C1′ were derived from the crystal structures 440D (A), 1BNA (B) and 1DCG (Z) and rounded to textbook values. Textbook values differ slightly between sources and depend on how the width is measured.</p>' },
   simplified: {
     nl: 'Geïdealiseerde, rechte helices met gemiddelde parameters; basen als staafjes. Z-DNA is sterk vereenvoudigd: de zigzag wordt benaderd door afwisselend −9° en −51° twist en twee fosfaatposities per dinucleotide. In cellen zijn A- en Z-vormen lokaal en tijdelijk; de kristalstructuren zijn korte stukjes (6–12 bp).',
     en: 'Idealised straight helices with average parameters; bases as bars. Z-DNA is strongly simplified: the zigzag is approximated by alternating −9° and −51° twist and two phosphate positions per dinucleotide. In cells A and Z forms are local and transient; the crystal structures are short pieces (6–12 bp).' },

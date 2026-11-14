@@ -65,7 +65,7 @@ export default {
     { dur: 7500, cam: FULL, title: { nl: 'Een plus-spiraal vooraan: naar het mitochondrion', en: 'A plus spiral at the start: to the mitochondrion' },
       text: { nl: 'Een spiraaltje met plusladingen aan het begin stuurt het eiwit naar het mitochondrion, de energiecentrale.', en: 'A little spiral with plus charges at the start sends the protein to the mitochondrion, the power plant.' } },
     { dur: 7500, cam: FULL, title: { nl: 'Drie letters op het einde: naar het peroxisoom', en: 'Three letters at the end: to the peroxisome' },
-      text: { nl: 'Eindigt het eiwit op S-K-L, dan gaat het naar het peroxisoom, een klein afbraakblaasje.', en: 'If the protein ends in S-K-L, it goes to the peroxisome, a small breakdown vesicle.' } },
+      text: { nl: 'Eindigt het eiwit op S-K-L, dan gaat het naar het peroxisoom, een klein blaasje dat o.a. vetzuren afbreekt.', en: 'If the protein ends in S-K-L, it goes to the peroxisome, a small vesicle that breaks down fatty acids, among other things.' } },
     { dur: 8000, cam: FULL, title: { nl: 'Een suikerlabel stuurt het door naar het lysosoom', en: 'A sugar tag sends it on to the lysosome' },
       text: { nl: 'Sommige eiwitten gaan eerst naar het ER en het Golgi. Daar krijgen ze een suikerlabel voor het lysosoom.', en: 'Some proteins first go to the ER and the Golgi. There they get a sugar tag for the lysosome.' } },
     { dur: 8000, cam: FULL, title: { nl: 'Het label is het adres', en: 'The label is the address' },

@@ -46,7 +46,7 @@ export default {
     en: 'Scaffold, guide and decoy are three simple roles; many long RNAs combine them or work in still other ways, for instance because the act of copying itself does something. The shapes and proteins are made up. The number of genes depends on the count (here GENCODE, release 50); it shifts with every new release. The grid in the last step is schematic, not a real ratio.' },
   steps: [
     { dur: 8000, cam: FULL, title: L3('Niet elk RNA wordt een eiwit', 'Not every RNA becomes a protein'),
-      text: L3('Sommige genen maken een lang RNA dat nooit vertaald wordt. Het RNA zelf doet dan het werk.', 'Some genes make a long RNA that is never translated. The RNA itself then does the work.') },
+      text: L3('Sommige genen maken een lang RNA dat niet vertaald wordt. Het RNA zelf doet dan het werk.', 'Some genes make a long RNA that is not translated. The RNA itself then does the work.') },
     { dur: 8000, cam: FULL, title: L3('Er zijn meer van zulke genen dan eiwitgenen', 'There are more such genes than protein genes'),
       text: L3('Ons DNA telt ongeveer 36 000 genen voor lange RNA’s, tegenover net geen 20 000 eiwitgenen.', 'Our DNA counts about 36,000 genes for long RNAs, against just under 20,000 protein genes.') },
     { dur: 8000, cam: FULL, title: L3('Werk 1: een steiger', 'Job 1: a scaffold'),

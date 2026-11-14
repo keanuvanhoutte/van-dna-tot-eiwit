@@ -42,7 +42,7 @@ export default {
     { dur: 7500, cam: cam(520, 470, 900), title: L3('Drie letters op het einde zijn het adres', 'Three letters at the end are the address'),
       text: L3('Helemaal aan het einde van het eiwit staan drie bouwstenen: S, K en L. Dat is het adres.', 'At the very end of the protein are three building blocks: S, K and L. That is the address.') },
     { dur: 8000, cam: cam(520, 440, 1000), title: L3('Een drager grijpt het label', 'A carrier grabs the label'),
-      text: L3('In het cytosol grijpt een drager het label vast. Het eiwit is dan al helemaal opgevouwen.', 'In the cytosol a carrier grabs the label. By then the protein is already fully folded.') },
+      text: L3('In het cytosol grijpt een drager het label vast. Het eiwit mag dan al opgevouwen zijn.', 'In the cytosol a carrier grabs the label. By then the protein may already be folded.') },
     { dur: 9000, cam: FULL, title: L3('Gevouwen mee naar binnen', 'Taken inside still folded'),
       text: L3('De drager brengt het eiwit door het membraan zonder het uit te rollen. Zelfs een groepje eiwitten samen kan erin.', 'The carrier brings the protein through the membrane without unrolling it. Even a group of proteins together can get in.') },
     { dur: 8000, cam: FULL, title: L3('De drager gaat terug', 'The carrier goes back'),
@@ -50,7 +50,7 @@ export default {
     { dur: 8500, cam: FULL, title: L3('Anders dan het ER en het mitochondrion', 'Unlike the ER and the mitochondrion'),
       text: L3('Het ER en het mitochondrion laten alleen uitgerolde ketens door. Het peroxisoom neemt ook gevouwen eiwitten op.', 'The ER and the mitochondrion only let unrolled chains through. The peroxisome also takes up folded proteins.') },
     { dur: 9500, cam: FULL, title: L3('Zonder werkende peroxisomen: het Zellweger-spectrum', 'Without working peroxisomes: the Zellweger spectrum'),
-      text: L3('Werkt een bouwgen van het peroxisoom niet, dan stapelen zeer lange vetzuren op. Dat is vaak al bij baby’s ernstig.', 'If a building gene of the peroxisome fails, very long fatty acids pile up. This is often already severe in babies.') },
+      text: L3('Werkt een bouwgen van het peroxisoom niet, dan stapelen zeer lange vetzuren op. Dat kan al bij baby’s ernstig zijn.', 'If a building gene of the peroxisome fails, very long fatty acids pile up. This can already be severe in babies.') },
   ],
   svg() {
     let mem = `<circle cx="${PC[0]}" cy="${PC[1]}" r="${PR}" fill="rgba(95,211,230,.07)" stroke="${PX}" stroke-width="16" stroke-opacity=".35"/>` +

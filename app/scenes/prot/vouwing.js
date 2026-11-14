@@ -225,7 +225,7 @@ export default {
           bg += blobN(cols[0], 1) + txt(cols[0], y - 170, T2('natief · actief', 'native · active'), C.ok, 26) + lab(cols[0], y + 170, T2('4 S–S-bruggen', '4 S–S bridges'), '#ffd84a');
           bg += `<g opacity="${f1(k1)}"><path d="M${cols[0] + 165},${y} H${cols[1] - 225}" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/>` + lab((cols[0] + cols[1]) / 2 - 10, y - 104, T2('+ ureum (8 M)', '+ urea (8 M)')) + lab((cols[0] + cols[1]) / 2 - 10, y - 74, '+ β-mercapto-ethanol') +
             coil(cols[1], 1) + txt(cols[1], y - 170, T2('ontvouwen · inactief', 'unfolded · inactive'), C.danger, 26) + lab(cols[1], y + 170, T2('S–S verbroken → 8 × SH', 'S–S broken → 8 × SH'), '#ffd84a') + '</g>';
-          bg += `<g opacity="${f1(k2)}"><path d="M${cols[1] + 225},${y} H${cols[2] - 165}" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/>` + lab((cols[1] + cols[2]) / 2 + 10, y - 104, T2('stoffen weg (dialyse)', 'remove them (dialysis)')) + lab((cols[1] + cols[2]) / 2 + 10, y - 74, T2('+ O₂ (lucht)', '+ O₂ (air)')) +
+          bg += `<g opacity="${f1(k2)}"><path d="M${cols[1] + 225},${y} H${cols[2] - 165}" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/>` + lab((cols[1] + cols[2]) / 2 + 10, y - 104, T2('stoffen weg', 'remove them')) + lab((cols[1] + cols[2]) / 2 + 10, y - 74, T2('S–S terug (oxidatie)', 'S–S re-formed (oxidation)')) +
             blobN(cols[2], 1) + txt(cols[2], y - 170, T2('opnieuw natief · actief', 'native again · active'), C.ok, 26) + lab(cols[2], y + 170, T2('zelfde 4 S–S-bruggen', 'same 4 S–S bridges'), '#ffd84a') + '</g>';
           ssg = bg; bg = '';
           over += txt(800, 140, T2('Ribonuclease A (124 residuen) · Anfinsen', 'Ribonuclease A (124 residues) · Anfinsen'), C.text, 26);
@@ -234,7 +234,7 @@ export default {
           // een kader loopt ze één voor één af ("alles uitproberen"). Rechts: de getallen.
           const k = ease(sub(p, 0, .1)), k2 = ease(sub(p, .4, .65));
           over += `<rect x="200" y="160" width="1200" height="520" rx="20" fill="#0d1426" stroke="#2a3550" stroke-width="2"/>`;
-          over += txt(800, 225, T2('Gedachte-experiment (Levinthal, 1969)', 'Thought experiment (Levinthal, 1969)'), C.text, 28);
+          over += txt(800, 225, T2('Gedachte-experiment (Levinthal)', 'Thought experiment (Levinthal)'), C.text, 28);
           const cur = Math.min(LEV.length - 1, Math.floor(clamp(p / .85) * LEV.length));
           LEV.forEach((m, i) => {
             const x = 232 + (i % 3) * 204, y = 258 + Math.floor(i / 3) * 134, on = i === cur;

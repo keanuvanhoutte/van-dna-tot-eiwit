@@ -144,7 +144,7 @@ export default {
           for (let j = 0; j < 3; j++) tr += `<line x1="${x0 + j * dx}" y1="${y - 4}" x2="${x0 + j * dx}" y2="${y + 18}" stroke="#fff" stroke-width="3" ${j === 2 ? 'stroke-dasharray="4 4"' : ''} opacity="${f1(k)}"/>`;
           tr += txt(x0 + 2 * dx + 42, y + 12, 'wobble', '#fff', 20, 'start', 800).replace('<text', `<text opacity="${f1(k)}"`);
           $('cd-tA').setAttribute('cx', f1(x0 + dx)); $('cd-tA').setAttribute('cy', f1(y - 190));
-          ov += textBox(1170, 425, 400, [T2('G → C of U', 'G → C or U'), T2('U → A of G', 'U → A or G'), T2('I (inosine) → U, C of A', 'I (inosine) → U, C or A'), T2('C → alleen G', 'C → G only'), T2('A → alleen U (zeldzaam)', 'A → U only (rare)')], { title: T2('Base 34 (anticodon) paart met:', 'Base 34 (anticodon) pairs with:'), col: C.trna, fs: 20, op: 1 });
+          ov += textBox(1170, 425, 400, [T2('G → C of U', 'G → C or U'), T2('U → A of G', 'U → A or G'), T2('I (inosine) → U, C of A', 'I (inosine) → U, C or A'), T2('C → alleen G', 'C → G only'), T2('A: zeldzaam (wordt meestal I)', 'A: rare (usually becomes I)')], { title: T2('Base 34 (anticodon) paart met:', 'Base 34 (anticodon) pairs with:'), col: C.trna, fs: 20, op: 1 });
         } else $('cd-tA').setAttribute('cx', '-9999');
         if (i === 5) {
           const x0 = 1050, dx = 34, y = 330, frames = [0, 1, 2];

@@ -16,12 +16,12 @@ const hemeStyle = { stick: { colorscheme: 'orangeCarbon', radius: .22 } };
 export default molScene({
   id: 'tertiair', pdb: '1BBB',
   title: { nl: 'Tertiaire structuur & domeinen', en: 'Tertiary structure & domains' },
-  scale: '≈ 5 nm', time: { nl: 'vouwing: µs–s (hier stilstaand)', en: 'folding: µs–s (static here)' },
+  scale: '≈ 4 nm', time: { nl: 'vouwing: µs–s (hier stilstaand)', en: 'folding: µs–s (static here)' },
   org: { nl: 'mens (β-globine uit hemoglobine, PDB 1BBB)', en: 'human (β-globin from haemoglobin, PDB 1BBB)' },
   legend: [[CLASSCOL.h, { nl: 'hydrofoob', en: 'hydrophobic' }], [CLASSCOL.p, { nl: 'polair', en: 'polar' }], [CLASSCOL['+'], { nl: 'positief (Lys, Arg, His)', en: 'positive (Lys, Arg, His)' }], [CLASSCOL['-'], { nl: 'negatief (Asp, Glu)', en: 'negative (Asp, Glu)' }], ['#ff8a3d', { nl: 'heem (Fe)', en: 'haem (Fe)' }]],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">De helixgrenzen A–H komen uit de 1BBB-records van keten B. De zoutbruggen worden in de browser berekend (N van Lys/Arg binnen 4 Å van O van Asp/Glu). Niet-eiwitmoleculen en metaalionen (heem, Zn²⁺ in een zinkvinger) helpen structuur én functie. Hemoglobine hoort bij de globinevouw, dezelfde vouw als myoglobine (de eerste opgeloste eiwitstructuur, 1958).</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">The helix boundaries A–H come from the 1BBB records of chain B. Salt bridges are computed in the browser (N of Lys/Arg within 4 Å of O of Asp/Glu). Non-protein molecules and metal ions (haem, Zn²⁺ in a zinc finger) support structure and function. Haemoglobin has the globin fold, the same fold as myoglobin (the first protein structure solved, 1958).</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">De helixgrenzen A–H komen uit de 1BBB-records van keten B. De zoutbruggen worden in de browser berekend (N van Lys/Arg binnen 4 Å van O van Asp/Glu). Niet-eiwitmoleculen en metaalionen (heem, Zn²⁺ in een zinkvinger) helpen structuur én functie. Hemoglobine hoort bij de globinevouw, dezelfde vouw als myoglobine, waarvan Kendrew en collega\'s in 1958 een eerste 3D-model publiceerden.</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">The helix boundaries A–H come from the 1BBB records of chain B. Salt bridges are computed in the browser (N of Lys/Arg within 4 Å of O of Asp/Glu). Non-protein molecules and metal ions (haem, Zn²⁺ in a zinc finger) support structure and function. Haemoglobin has the globin fold, the same fold as myoglobin, of which Kendrew and colleagues published a first 3D model in 1958.</p>' },
   simplified: {
     nl: 'Getoond is één keten (β) uit het tetrameer; in de cel vouwt β-globine niet los van de α-keten en het heem. 1BBB bevat CO in plaats van O₂ (zelfde bindingsplaats). Waterstoffen en watermoleculen zijn verborgen; de hydrofobe/polaire indeling volgt de cursus (Gly en Pro bij hydrofoob).',
     en: 'One chain (β) of the tetramer is shown; in the cell β-globin does not fold separately from the α chain and the haem. 1BBB contains CO instead of O₂ (same binding site). Hydrogens and water molecules are hidden; the hydrophobic/polar grouping follows the course (Gly and Pro counted as hydrophobic).' },
@@ -131,7 +131,7 @@ export default molScene({
       zoom: { chain: 'B', within: { distance: 9, sel: { chain: 'B', resn: 'HEM' } } }, spin: .018,
       panel: () => phead(T2('Liganden stabiliseren de vouw', 'Ligands stabilise the fold')) + plines(222, [
         [T2('Heem = protoporfyrine IX + Fe²⁺', 'Haem = protoporphyrin IX + Fe²⁺'), C.text, 23, 700], '',
-        T2('• His92 (F8) bindt het Fe²⁺', '• His92 (F8) binds the Fe²⁺'), T2('• O₂ bindt aan de andere kant', '• O₂ binds on the other side'), T2('• His63 (E7) stabiliseert O₂', '• His63 (E7) stabilises O₂')]),
+        T2('• His92 (F8) bindt het Fe²⁺', '• His92 (F8) binds the Fe²⁺'), T2('• O₂ bindt aan de andere kant', '• O₂ binds on the other side'), T2('• His63 (E7) ligt aan de O₂-kant', '• His63 (E7) sits on the O₂ side')]),
     }),
     ST(8500, 'Bruggen houden de vouw vast', 'Bonds hold the fold in place', 'Plus- en mingeladen zijketens trekken elkaar aan, en andere vormen waterstofbruggen. Zo blijft de vouw vast.', 'Plus and minus charged side chains attract each other, and others form hydrogen bonds. This holds the fold.', {
       show(c) {
@@ -201,7 +201,7 @@ function motifs() {
     [T2('β-sandwich', 'β-sandwich'), (x, y) => [0, 1, 2, 3].map(i => st(x + 40 + i * 24, i % 2 ? y + T : y + 62, i % 2 ? y + 62 : y + T, '#9c6f25')).join('') + [0, 1, 2, 3].map(i => st(x + 16 + i * 24, i % 2 ? y + 28 : y + Bm, i % 2 ? y + Bm : y + 28)).join(''), 'β'],
     [T2('β-barrel', 'β-barrel'), (x, y) => `<ellipse cx="${x + 62}" cy="${y + 48}" rx="50" ry="38" fill="none" stroke="#ffc247" stroke-width="12" stroke-dasharray="16 7"/>`, 'β'],
     [T2('Rossmann-vouw (βαβαβ)', 'Rossmann fold (βαβαβ)'), (x, y) => st(x + 10, y + Bm, y + T) + hx(x + 26, y + 26, 20, 56) + st(x + 62, y + Bm, y + T) + hx(x + 78, y + 26, 20, 56) + st(x + 114, y + Bm, y + T), 'α/β'],
-    [T2('hoefijzer (LRR)', 'horseshoe (LRR)'), (x, y) => `<path d="M${x + 20},${y + Bm} A44,44 0 1,1 ${x + 108},${y + Bm}" fill="none" stroke="#ffc247" stroke-width="11"/><path d="M${x},${y + Bm} A64,64 0 0,1 ${x + 128},${y + Bm}" fill="none" stroke="#9b7bff" stroke-width="9" stroke-dasharray="24 9"/>`, 'α/β'],
+    [T2('hoefijzer (LRR)', 'horseshoe (LRR)'), (x, y) => `<path d="M${x + 20},${y + Bm} A44,44 0 1,1 ${x + 108},${y + Bm}" fill="none" stroke="#ffc247" stroke-width="11"/><path d="M${x},${y + Bm} A64,64 0 0,1 ${x + 128},${y + Bm}" fill="none" stroke="#9b7bff" stroke-width="9" stroke-dasharray="24 9"/>`, ''],
   ];
   return items.map(([name, draw, cls], i) => {
     const col = i % 2, row = Math.floor(i / 2), x = PX + col * 262, y = 188 + row * 130;

@@ -27,6 +27,10 @@ const KISSELEV = { t: 'Kisselev et al. (1999) The sizes of peptides generated fr
 const MIZU = { t: 'Mizushima (2007) Autophagy: process and function. Genes Dev 21:2861 (PubMed 18006683)', url: 'https://pubmed.ncbi.nlm.nih.gov/18006683/' };
 const DIKIC = { t: 'Dikic & Elazar (2018) Mechanism and medical implications of mammalian autophagy. Nat Rev Mol Cell Biol 19:349 (PubMed 29618831)', url: 'https://pubmed.ncbi.nlm.nih.gov/29618831/' };
 const HARA = { t: 'Hara et al. (2006) Suppression of basal autophagy in neural cells causes neurodegenerative disease in mice. Nature 441:885 (PubMed 16625204)', url: 'https://pubmed.ncbi.nlm.nih.gov/16625204/' };
+const UNI_ALB = { t: 'UniProt P02768 — ALB, serumalbumine (signaalpeptide 1–18)', url: 'https://www.uniprot.org/uniprotkb/P02768/entry' };
+const HIRN = { t: 'Hirn, Fajardo-Callejón & Winter (2025) Proteomics insights into lysosome biogenesis and maturation. Proteomics 25:6–24 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC12645810/' };
+const VIGN = { t: 'Vigneron & Van den Eynde (2014) Proteasome subtypes and regulators in the processing of antigenic peptides presented by class I molecules of the major histocompatibility complex. Biomolecules 4:994–1025 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4279167/' };
+const KIS21 = { t: 'Kisselev (2021) Site-specific proteasome inhibitors. Biomolecules 12:54 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8773591/' };
 const PDB = (id, t) => ({ t: `RCSB PDB ${id} — ${t}`, url: `https://www.rcsb.org/structure/${id}` });
 
 export default {
@@ -36,7 +40,7 @@ export default {
       what: 'Sorteersignalen zijn korte stukken aminozuurvolgorde die door receptoren herkend worden. Elk organel heeft zijn eigen soort signaal en zijn eigen invoermachine. Het lysosoom vormt een uitzondering: zijn enzymen gaan eerst via het ER en het Golgi en krijgen daar een suikerlabel.',
       how: [
         'ER: een N-terminaal signaalpeptide met een hydrofobe kern wordt tijdens de translatie herkend (SRP); het eiwit gaat het ER in of in het ER-membraan.',
-        'Kern: een klassiek NLS (korte basische stukjes, rijk aan lysine en arginine) wordt herkend door importine α/β; het mag overal in het eiwit liggen.',
+        'Kern: een klassiek NLS (korte basische stukjes, rijk aan lysine en arginine) wordt herkend door importine α/β; het kan bijna overal in het eiwit liggen.',
         'Mitochondrion: een N-terminale presequentie vormt een positief geladen amfipathische helix, herkend door Tom20 en Tom22.',
         'Peroxisoom: PTS1 = de laatste drie aminozuren Ser-Lys-Leu (of een variant), herkend door de receptor PEX5.',
         'Lysosoom: zure hydrolasen krijgen in het Golgi een mannose-6-fosfaat op hun suikerboom en worden door M6P-receptoren weggebracht.',
@@ -49,7 +53,7 @@ export default {
       what: 'Sorting signals are short stretches of amino-acid sequence that are recognised by receptors. Each organelle has its own kind of signal and its own import machine. The lysosome is an exception: its enzymes first go via the ER and the Golgi, where they get a sugar tag.',
       how: [
         'ER: an N-terminal signal peptide with a hydrophobic core is recognised during translation (SRP); the protein enters the ER or the ER membrane.',
-        'Nucleus: a classical NLS (short basic stretches, rich in lysine and arginine) is recognised by importin α/β; it can lie anywhere in the protein.',
+        'Nucleus: a classical NLS (short basic stretches, rich in lysine and arginine) is recognised by importin α/β; it can lie almost anywhere in the protein.',
         'Mitochondrion: an N-terminal presequence forms a positively charged amphipathic helix, recognised by Tom20 and Tom22.',
         'Peroxisome: PTS1 = the last three amino acids Ser-Lys-Leu (or a variant), recognised by the receptor PEX5.',
         'Lysosome: acid hydrolases get a mannose 6-phosphate on their sugar tree in the Golgi and are carried off by M6P receptors.',
@@ -57,7 +61,7 @@ export default {
       facts: [['ER signal', 'N-terminal, hydrophobic'], ['NLS', 'basic, may be internal'], ['Presequence', 'N-terminal, positive, amphipathic'], ['PTS1', 'C-terminal S-K-L'], ['Lysosome', 'mannose 6-phosphate (Golgi)']],
       why: 'A protein only works in the right place. Sorting errors cause diseases, such as I-cell disease (lysosomal enzymes without a tag) or the Zellweger spectrum (no working peroxisomes).',
     },
-    sources: [SHAO, LANGE, LU, JIANG, PFANNER, GOULD, RAPP, BRAULKE, MLREV],
+    sources: [SHAO, LANGE, LU, JIANG, PFANNER, GOULD, RAPP, BRAULKE, MLREV, UNI_ALB],
   },
   membraan: {
     nl: {
@@ -70,7 +74,7 @@ export default {
         'Ook de flankerende ladingen spelen mee: positieve ladingen liggen meestal aan de cytosolkant (positive-inside rule).',
         'De definitieve oriëntatie wordt in het ER bepaald; daarna nemen blaasjes het eiwit mee naar het Golgi.',
       ],
-      facts: [['TMD', '≈ 20 aminozuren, α-helix'], ['Membraandikte', '≈ 30 Å (3 nm)'], ['Laterale poort', 'helix 2 en 7 van Sec61α'], ['Structuur', 'PDB 8DNV: menselijk Sec61, cryo-EM 3,03 Å']],
+      facts: [['TMD', '≈ 20 aminozuren, α-helix'], ['Membraandikte', '≈ 30 Å (3 nm)'], ['Laterale poort', 'helix 2 en 7 van Sec61α'], ['Structuur', 'PDB 8DNV: menselijk Sec61 (twee korte lussen van gist), cryo-EM 3,03 Å']],
       why: 'Receptoren, kanalen en transporters zijn membraaneiwitten, en hun oriëntatie bepaalt welke kant naar buiten wijst. De laterale poort is ook een doelwit voor geneesmiddelen: verschillende natuurlijke remmers binden precies daar.',
     },
     en: {
@@ -83,7 +87,7 @@ export default {
         'Flanking charges also matter: positive charges usually lie on the cytosolic side (positive-inside rule).',
         'The final orientation is decided in the ER; vesicles then carry the protein on to the Golgi.',
       ],
-      facts: [['TMD', '≈ 20 amino acids, α-helix'], ['Membrane thickness', '≈ 30 Å (3 nm)'], ['Lateral gate', 'helix 2 and 7 of Sec61α'], ['Structure', 'PDB 8DNV: human Sec61, cryo-EM 3.03 Å']],
+      facts: [['TMD', '≈ 20 amino acids, α-helix'], ['Membrane thickness', '≈ 30 Å (3 nm)'], ['Lateral gate', 'helix 2 and 7 of Sec61α'], ['Structure', 'PDB 8DNV: human Sec61 (two short loops from yeast), cryo-EM 3.03 Å']],
       why: 'Receptors, channels and transporters are membrane proteins, and their orientation decides which side faces outwards. The lateral gate is also a drug target: several natural inhibitors bind right there.',
     },
     sources: [SHAO, ITSK, UNI_SEC61, PDB('8DNV', 'human Sec61 complex, partially open apo state')],
@@ -99,8 +103,8 @@ export default {
         'Een V-ATPase pompt protonen in het lysosoom: het zure milieu (pH 4,5–5) activeert de hydrolasen.',
         'Andere lysosoomeiwitten gebruiken andere ontvangers (bv. LIMP-2, sortiline) of signalen in hun cytosolstaart.',
       ],
-      facts: [['pH binnen', '4,5–5,0'], ['Hydrolasen', '> 60 soorten'], ['Label', 'mannose-6-fosfaat'], ['Mucolipidose II', 'GlcNAc-1-fosfotransferase defect → enzymen uitgescheiden'], ['Pompe', 'zure α-glucosidase (GAA) ontbreekt → glycogeen']],
-      why: 'Bij mucolipidose II (I-celziekte) ontbreekt het label: de enzymen worden de cel uit gestuurd (in het bloed zijn ze sterk verhoogd) en lysosomen vullen zich met onverteerd materiaal. Bij de ziekte van Pompe ontbreekt één enzym en blijft glycogeen in de lysosomen liggen; enzymvervangingstherapie is daar een behandeling.',
+      facts: [['pH binnen', '4,5–5,0'], ['Hydrolasen', '> 60 soorten'], ['Label', 'mannose-6-fosfaat'], ['Mucolipidose II', 'GlcNAc-1-fosfotransferase defect → enzymen uitgescheiden'], ['Pompe', 'te weinig zure α-glucosidase (GAA) → glycogeen']],
+      why: 'Bij mucolipidose II (I-celziekte) ontbreekt het label: de enzymen worden de cel uit gestuurd (in het bloed zijn ze sterk verhoogd) en lysosomen vullen zich met onverteerd materiaal. Bij de ziekte van Pompe werkt één enzym (zure α-glucosidase) te weinig en blijft glycogeen in de lysosomen liggen; enzymvervangingstherapie is daar een behandeling.',
     },
     en: {
       kort: 'The lysosome is the cell’s digestive vesicle, full of cutting enzymes and acidic (pH 4.5–5). The enzymes find their way thanks to a sugar tag they get in the Golgi. If that tag is missing, the lysosome clogs up.',
@@ -112,15 +116,15 @@ export default {
         'A V-ATPase pumps protons into the lysosome: the acidic environment (pH 4.5–5) activates the hydrolases.',
         'Other lysosomal proteins use other receivers (e.g. LIMP-2, sortilin) or signals in their cytosolic tail.',
       ],
-      facts: [['pH inside', '4.5–5.0'], ['Hydrolases', '> 60 kinds'], ['Tag', 'mannose 6-phosphate'], ['Mucolipidosis II', 'GlcNAc-1-phosphotransferase defect → enzymes secreted'], ['Pompe', 'acid α-glucosidase (GAA) missing → glycogen']],
-      why: 'In mucolipidosis II (I-cell disease) the tag is missing: the enzymes are sent out of the cell (they are strongly raised in the blood) and lysosomes fill with undigested material. In Pompe disease one enzyme is missing and glycogen stays in the lysosomes; enzyme replacement therapy is a treatment there.',
+      facts: [['pH inside', '4.5–5.0'], ['Hydrolases', '> 60 kinds'], ['Tag', 'mannose 6-phosphate'], ['Mucolipidosis II', 'GlcNAc-1-phosphotransferase defect → enzymes secreted'], ['Pompe', 'too little acid α-glucosidase (GAA) → glycogen']],
+      why: 'In mucolipidosis II (I-cell disease) the tag is missing: the enzymes are sent out of the cell (they are strongly raised in the blood) and lysosomes fill with undigested material. In Pompe disease one enzyme (acid α-glucosidase) works too little and glycogen stays in the lysosomes; enzyme replacement therapy is a treatment there.',
     },
-    sources: [BRAULKE, MLREV, MINDELL, YIM, POMPE],
+    sources: [BRAULKE, MLREV, MINDELL, YIM, POMPE, HIRN],
   },
   mito: {
     nl: {
-      kort: 'Het mitochondrion maakt zelf maar 13 eiwitten; meer dan duizend andere komen uit het cytosol. Een plus-spiraal vooraan leidt ze uitgerold door een poort in elk van de twee membranen. Binnen gaat het label eraf en vouwt het eiwit op.',
-      what: 'Het menselijke mtDNA (16 569 bp) codeert 13 eiwitten, alle onderdelen van de ademhalingsketen of ATP-synthase. De rest van het mitochondriale proteoom (MitoCarta3.0: 1 136 menselijke genen) wordt in de kern gecodeerd, in het cytosol gemaakt en geïmporteerd. De presequentieroute vervoert ongeveer 60 % van die eiwitten.',
+      kort: 'Het mitochondrion maakt zelf maar 13 eiwitten; meer dan duizend andere komen uit het cytosol. De meeste leidt een plus-spiraal vooraan uitgerold door een poort in elk van de twee membranen. Binnen gaat het label eraf en vouwt het eiwit op.',
+      what: 'Het menselijke mtDNA (16 569 bp) codeert 13 eiwitten, alle onderdelen van de ademhalingsketen of ATP-synthase. MitoCarta3.0 telt in totaal 1 136 menselijke genen voor mitochondriale eiwitten; op die 13 na worden ze in de kern gecodeerd, in het cytosol gemaakt en geïmporteerd. De presequentieroute vervoert ongeveer 60 % van die eiwitten.',
       how: [
         'De presequentie is een N-terminale, positief geladen amfipathische α-helix; Tom20 en Tom22 herkennen ze aan de buitenkant.',
         'Het eiwit gaat ontvouwen door het kanaal van Tom40 (TOM-complex, buitenmembraan); TOM40 is een β-ton.',
@@ -128,12 +132,12 @@ export default {
         'De motor PAM met mtHsp70 trekt met ATP de rest van de keten de matrix in.',
         'MPP (mitochondrial processing peptidase) knipt de presequentie af; mtHsp70 en Hsp60–Hsp10 helpen het eiwit vouwen.',
       ],
-      facts: [['mtDNA', '16 569 bp, 13 eiwitten'], ['Geïmporteerd', 'MitoCarta3.0: 1 136 genen (mens)'], ['Presequentieroute', '≈ 60 % van de mitochondriale eiwitten'], ['Structuur', 'PDB 7CP9: menselijk TOM-kerncomplex, cryo-EM 3,0 Å']],
+      facts: [['mtDNA', '16 569 bp, 13 eiwitten'], ['Proteoom', 'MitoCarta3.0: 1 136 genen (mens), waarvan 13 in het mtDNA'], ['Presequentieroute', '≈ 60 % van de mitochondriale eiwitten'], ['Structuur', 'PDB 7CP9: menselijk TOM-kerncomplex, cryo-EM 3,0 Å']],
       why: 'Daalt de membraanpotentiaal, bv. bij ziekten van de ademhalingsketen, dan stokt de invoer. Zo is import een gevoelige meter voor de gezondheid van het mitochondrion; beschadigde mitochondriën worden via mitofagie (een vorm van autofagie) opgeruimd.',
     },
     en: {
-      kort: 'The mitochondrion makes only 13 proteins itself; more than a thousand others come from the cytosol. A plus spiral at the start leads them, unrolled, through a gate in each of the two membranes. Inside, the label comes off and the protein folds.',
-      what: 'Human mtDNA (16,569 bp) encodes 13 proteins, all parts of the respiratory chain or ATP synthase. The rest of the mitochondrial proteome (MitoCarta3.0: 1,136 human genes) is encoded in the nucleus, made in the cytosol and imported. The presequence pathway carries about 60 % of those proteins.',
+      kort: 'The mitochondrion makes only 13 proteins itself; more than a thousand others come from the cytosol. Most are led, unrolled, by a plus spiral at the start through a gate in each of the two membranes. Inside, the label comes off and the protein folds.',
+      what: 'Human mtDNA (16,569 bp) encodes 13 proteins, all parts of the respiratory chain or ATP synthase. MitoCarta3.0 lists 1,136 human genes for mitochondrial proteins in total; apart from those 13 they are encoded in the nucleus, made in the cytosol and imported. The presequence pathway carries about 60 % of those proteins.',
       how: [
         'The presequence is an N-terminal, positively charged amphipathic α-helix; Tom20 and Tom22 recognise it on the outside.',
         'The protein passes unfolded through the Tom40 channel (TOM complex, outer membrane); TOM40 is a β-barrel.',
@@ -141,14 +145,14 @@ export default {
         'The PAM motor with mtHsp70 uses ATP to pull the rest of the chain into the matrix.',
         'MPP (mitochondrial processing peptidase) cuts off the presequence; mtHsp70 and Hsp60–Hsp10 help the protein fold.',
       ],
-      facts: [['mtDNA', '16,569 bp, 13 proteins'], ['Imported', 'MitoCarta3.0: 1,136 genes (human)'], ['Presequence pathway', '≈ 60 % of mitochondrial proteins'], ['Structure', 'PDB 7CP9: human TOM core complex, cryo-EM 3.0 Å']],
+      facts: [['mtDNA', '16,569 bp, 13 proteins'], ['Proteome', 'MitoCarta3.0: 1,136 genes (human), 13 of them in mtDNA'], ['Presequence pathway', '≈ 60 % of mitochondrial proteins'], ['Structure', 'PDB 7CP9: human TOM core complex, cryo-EM 3.0 Å']],
       why: 'When the membrane potential drops, e.g. in respiratory-chain diseases, import stalls. Import is thus a sensitive gauge of mitochondrial health; damaged mitochondria are cleared by mitophagy (a form of autophagy).',
     },
     sources: [PFANNER, MITOCARTA, ANDERSON, GUAN, RAPP, PDB('7CP9', 'human mitochondrial TOM complex, 3.0 Å')],
   },
   perox: {
     nl: {
-      kort: 'Een peroxisoom is een klein blaasje dat o.a. zeer lange vetzuren afbreekt. Zijn eiwitten dragen drie letters op het einde: S-K-L. Anders dan het ER en het mitochondrion neemt het peroxisoom eiwitten gevouwen op.',
+      kort: 'Een peroxisoom is een klein blaasje dat o.a. zeer lange vetzuren afbreekt. De meeste van zijn eiwitten dragen drie letters op het einde, zoals S-K-L. Anders dan het ER en het mitochondrion neemt het peroxisoom eiwitten gevouwen op.',
       what: 'De meeste peroxisomale matrixeiwitten dragen het signaal PTS1 aan hun C-uiteinde: Ser-Lys-Leu of een variant. De oplosbare receptor PEX5 herkent het in het cytosol en brengt het eiwit naar binnen. Ook gevouwen eiwitten, met disulfidebruggen vastgezette eiwitten en zelfs complexen worden geïmporteerd.',
       how: [
         'Het TPR-domein van PEX5 bindt het PTS1-peptide in het cytosol.',
@@ -157,11 +161,11 @@ export default {
         'Daarna keert PEX5 terug naar het cytosol; daarvoor wordt het gemonoubiquitineerd op een cysteïne.',
         'Een tweede, zeldzamer signaal (PTS2, vooraan) wordt herkend door de adapter PEX7.',
       ],
-      facts: [['PTS1', 'C-terminaal Ser-Lys-Leu (SKL) of variant'], ['Receptor', 'PEX5 (TPR-domein)'], ['Import', 'gevouwen, ook complexen'], ['Zellweger-spectrum', 'PEX-genen; PEX1 ≈ 70 % van de gevallen'], ['Frequentie', '≈ 1 op 50 000 geboorten (Noord-Amerika, schatting)']],
+      facts: [['PTS1', 'C-terminaal Ser-Lys-Leu (SKL) of variant'], ['Receptor', 'PEX5 (TPR-domein)'], ['Import', 'gevouwen, ook complexen'], ['Zellweger-spectrum', 'PEX-genen; PEX1 ≈ 70 % van de gevallen'], ['Frequentie', '≈ 1 op 50 000 geboorten, alle peroxisoom-bouwziekten samen (Noord-Amerika, schatting)']],
       why: 'Bij fouten in een van de PEX-genen worden peroxisomen niet goed gebouwd (Zellweger-spectrum). Zeer lange vetzuren (24 koolstofatomen of meer) stapelen op; het beeld gaat van ernstige neurologische problemen bij pasgeborenen tot een langzaam verlopende ziekte bij volwassenen.',
     },
     en: {
-      kort: 'A peroxisome is a small vesicle that, among other things, breaks down very long fatty acids. Its proteins carry three letters at the end: S-K-L. Unlike the ER and the mitochondrion, the peroxisome takes up proteins folded.',
+      kort: 'A peroxisome is a small vesicle that, among other things, breaks down very long fatty acids. Most of its proteins carry three letters at the end, such as S-K-L. Unlike the ER and the mitochondrion, the peroxisome takes up proteins folded.',
       what: 'Most peroxisomal matrix proteins carry the signal PTS1 at their C terminus: Ser-Lys-Leu or a variant. The soluble receptor PEX5 recognises it in the cytosol and brings the protein inside. Folded proteins, proteins locked by disulfide bonds and even complexes are imported.',
       how: [
         'The TPR domain of PEX5 binds the PTS1 peptide in the cytosol.',
@@ -170,7 +174,7 @@ export default {
         'Then PEX5 returns to the cytosol; for this it is monoubiquitinated on a cysteine.',
         'A second, rarer signal (PTS2, at the start) is recognised by the adapter PEX7.',
       ],
-      facts: [['PTS1', 'C-terminal Ser-Lys-Leu (SKL) or variant'], ['Receptor', 'PEX5 (TPR domain)'], ['Import', 'folded, complexes too'], ['Zellweger spectrum', 'PEX genes; PEX1 ≈ 70 % of cases'], ['Frequency', '≈ 1 in 50,000 births (North America, estimate)']],
+      facts: [['PTS1', 'C-terminal Ser-Lys-Leu (SKL) or variant'], ['Receptor', 'PEX5 (TPR domain)'], ['Import', 'folded, complexes too'], ['Zellweger spectrum', 'PEX genes; PEX1 ≈ 70 % of cases'], ['Frequency', '≈ 1 in 50,000 births, all peroxisome biogenesis disorders together (North America, estimate)']],
       why: 'When one of the PEX genes is faulty, peroxisomes are not built properly (Zellweger spectrum). Very long fatty acids (24 carbons or more) pile up; the picture ranges from severe neurological problems in newborns to a slowly progressing disease in adults.',
     },
     sources: [GOULD, RAPP, WALTON, THOMS, BRAV],
@@ -202,7 +206,7 @@ export default {
       facts: [['Mass', '≈ 2.5 MDa'], ['20S core', '28 subunits: α7β7β7α7'], ['Active sites', '6 (β1, β2, β5 ×2), Thr1'], ['Products', '3–22 amino acids'], ['Structure', 'PDB 6MSB: human, cryo-EM 3.0 Å']],
       why: 'The proteasome sets the lifetime of countless proteins, from cell-cycle regulators to misfolded proteins. Because it is so central, its many steps (recognition, deubiquitination, unfolding) are tightly controlled before it commits to degradation.',
     },
-    sources: [BARD, DONG, KISSELEV, PDB('6MSB', 'substrate-engaged human 26S proteasome')],
+    sources: [BARD, DONG, KISSELEV, VIGN, KIS21, PDB('6MSB', 'substrate-engaged human 26S proteasome')],
   },
   autofagie: {
     nl: {

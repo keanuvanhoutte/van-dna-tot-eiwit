@@ -76,7 +76,7 @@ function double(op) {
 export default {
   id: 'lussen',
   title: L3('Een eiwitring vouwt het DNA in lussen', 'A protein ring folds the DNA into loops'),
-  scale: L3('lussen van ≈ 50 000 tot 1 miljoen basenparen (schematisch)', 'loops of ≈ 50,000 to 1 million base pairs (schematic)'),
+  scale: L3('lussen meestal ≈ 40 000 tot 2 miljoen basenparen (schematisch)', 'loops mostly ≈ 40,000 to 2 million base pairs (schematic)'),
   time: L3('in de proefbuis tot ≈ 2000 basenparen per seconde', 'in the test tube up to ≈ 2,000 base pairs per second'),
   org: L3('mens · PDB 7W1M', 'human · PDB 7W1M'),
   legend: [[C.dna, L3('DNA', 'DNA')], [RING, L3('eiwitring die lussen trekt', 'protein ring that pulls loops')], [STOP, L3('stop-eiwit (wijst in een richting)', 'stop protein (points one way)')],
@@ -85,8 +85,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">Stap 3 en 5 tonen de echte cryo-EM-structuur van de menselijke ring met zijn helper, het stop-eiwit en DNA (Zhang et al., <i>Mol Cell</i> 2023). Elk bolletje is één aminozuur of één DNA-letter.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Steps 3 and 5 show the real cryo-EM structure of the human ring with its helper, the stop protein and DNA (Zhang et al., <i>Mol Cell</i> 2023). Each bead is one amino acid or one DNA letter.</p>' },
   simplified: {
-    nl: 'Schematisch: echte lussen zijn tienduizenden tot een miljoen basenparen lang en zitten vol nucleosomen. Dit is het huidige model (lusextrusie): het is in de proefbuis rechtstreeks gezien en verklaart veel metingen in cellen, maar hoe het in levende cellen precies verloopt, wordt nog onderzocht (in levende cellen zijn lussen beweeglijk en vaak maar half af). In de 3D-structuur zijn van de lange armen van de ring vooral de koppen te zien.',
-    en: 'Schematic: real loops are tens of thousands to a million base pairs long and full of nucleosomes. This is the current model (loop extrusion): it has been seen directly in the test tube and explains many measurements in cells, but exactly how it works in living cells is still being studied (in living cells loops are dynamic and often only partly formed). In the 3D structure mainly the heads of the ring’s long arms are visible.' },
+    nl: 'Schematisch: echte lussen zijn tienduizenden tot ongeveer twee miljoen basenparen lang en zitten vol nucleosomen. Dit is het huidige model (lusextrusie): het is in de proefbuis rechtstreeks gezien en verklaart veel metingen in cellen, maar hoe het in levende cellen precies verloopt, wordt nog onderzocht (in levende cellen zijn lussen beweeglijk en vaak maar half af). In de 3D-structuur zijn van de lange armen van de ring vooral de koppen te zien.',
+    en: 'Schematic: real loops are tens of thousands to about two million base pairs long and full of nucleosomes. This is the current model (loop extrusion): it has been seen directly in the test tube and explains many measurements in cells, but exactly how it works in living cells is still being studied (in living cells loops are dynamic and often only partly formed). In the 3D structure mainly the heads of the ring’s long arms are visible.' },
   steps: [
     { dur: 7500, cam: FULL, title: L3('Het DNA ligt in lussen', 'The DNA lies in loops'),
       text: L3('In de kern ligt het DNA niet gestrekt, maar in lussen. Hoe ontstaat zo’n lus?', 'In the nucleus the DNA is not stretched out but lies in loops. How does such a loop form?') },

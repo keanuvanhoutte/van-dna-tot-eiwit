@@ -18,7 +18,7 @@ export default {
   id: 'nucleolus',
   title: { nl: 'Nucleolus', en: 'Nucleolus' },
   scale: { nl: '≈ 1–5 µm', en: '≈ 1–5 µm' },
-  time: { nl: 'van rDNA tot subeenheid in het cytoplasma: ~30–60 min', en: 'from rDNA to subunit in the cytoplasm: ~30–60 min' },
+  time: { nl: 'groeiende cel: ~10 000 subeenheden per minuut', en: 'growing cell: ~10,000 subunits per minute' },
   org: { nl: 'mens', en: 'human' },
   legend: [[C.rrna, 'rRNA / rDNA'], ['#9fb3d9', { nl: 'fibrillair centrum (FC)', en: 'fibrillar centre (FC)' }], ['#5a6f9e', { nl: 'dicht fibrillair component (DFC)', en: 'dense fibrillar component (DFC)' }], ['#2a3d63', { nl: 'granulair component (GC)', en: 'granular component (GC)' }], [C.prot, { nl: 'RNA-polymerase I', en: 'RNA polymerase I' }], [C.trna, 'snoRNP'], [C.dna, { nl: 'acrocentrisch chromosoom', en: 'acrocentric chromosome' }]],
   simplified: {
@@ -32,8 +32,8 @@ export default {
       'De nucleolus heeft drie zones in elkaar. Het RNA ontstaat binnenin en schuift naar buiten terwijl het rijpt.',
       'The nucleolus has three zones nested inside each other. The RNA is made inside and moves outwards as it matures.'),
     ST(8000, cam(1170, 240, 860), 'Honderden kopieën van één gen', 'Hundreds of copies of one gene',
-      'De genen voor ribosoom-RNA liggen in honderden kopieën achter elkaar. De tussenstukken worden niet afgelezen.',
-      'The genes for ribosomal RNA lie one after another in hundreds of copies. The spacers are not read.'),
+      'De genen voor ribosoom-RNA liggen in honderden kopieën achter elkaar. De tussenstukken worden geen ribosoom-RNA.',
+      'The genes for ribosomal RNA lie one after another in hundreds of copies. The spacers do not become ribosomal RNA.'),
     ST(9000, cam(1030, 290, 760), 'Kerstbomen van RNA', 'Christmas trees of RNA',
       'Tientallen enzymen lezen tegelijk één gen af. Verderop is hun RNA langer: zo lijkt het op een kerstboom.',
       'Dozens of enzymes read one gene at the same time. Further along, their RNA is longer: it looks like a Christmas tree.'),
@@ -89,7 +89,7 @@ export default {
     });
     mil += `<path d="M${TREE.x0},${TREE.y + 30} v10 H${TREE.x1} v-10" stroke="${C.rrna}" stroke-width="2" fill="none"/>` + txt((TREE.x0 + TREE.x1) / 2, TREE.y + 62, T2('getranscribeerde eenheid ~13 kb', 'transcribed unit ~13 kb'), C.rrna, 16);
     mil += `<path d="M${TREE.x1 + 4},${TREE.y + 30} v10 H1296 v-10" stroke="${C.muted}" stroke-width="2" fill="none"/>` + txt((TREE.x1 + 1296) / 2, TREE.y + 62, T2('spacer (IGS) ~30 kb', 'spacer (IGS) ~30 kb'), C.muted, 16);
-    mil += `<path d="M${TREE.x0},${TREE.y + 86} v10 H1296 v-10" stroke="#fff" stroke-width="2" fill="none"/>` + txt((TREE.x0 + 1296) / 2, TREE.y + 118, T2('één herhaling ≈ 43 kb · honderden kopieën', 'one repeat ≈ 43 kb · hundreds of copies'), '#fff', 16);
+    mil += `<path d="M${TREE.x0},${TREE.y + 86} v10 H1296 v-10" stroke="#fff" stroke-width="2" fill="none"/>` + txt((TREE.x0 + 1296) / 2, TREE.y + 118, T2('één herhaling ≈ 43–45 kb · honderden kopieën', 'one repeat ≈ 43–45 kb · hundreds of copies'), '#fff', 16);
     mil += `<path d="M${TREE.x0 - 4},${TREE.y - 20} v-24 h40" stroke="#fff" stroke-width="3" fill="none" marker-end="url(#arrow)"/>` + txt(TREE.x0 - 8, TREE.y - 62, T2('promoter', 'promoter'), '#fff', 15, 'start');
 
     // --- 47S-paneel ---

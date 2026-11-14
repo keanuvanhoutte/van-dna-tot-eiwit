@@ -28,23 +28,23 @@ export const ENTRIES = [
     name: { nl: 'B-DNA', en: 'B-DNA' }, sub: { nl: 'Dickerson-dodecameer d(CGCGAATTCGCG)', en: 'Dickerson dodecamer d(CGCGAATTCGCG)' },
     helix: ['A', 'B'], hand: 'r', cmp: ['adna', 'zdna'], scenes: ['dnahelix', 'dnavormen'],
     what: {
-      nl: 'De klassieke Watson–Crick-helix en de standaardvorm van DNA in de cel: rechtshandig, ~10,5 bp per winding in oplossing, basenparen bijna loodrecht op de as en gecentreerd. De suikers staan in C2\'-endo. Een brede grote groef en een smalle kleine groef maken de randen van de basen bereikbaar voor eiwitten.',
-      en: 'The classic Watson–Crick helix and the standard form of DNA in the cell: right-handed, ~10.5 bp per turn in solution, base pairs almost perpendicular to the axis and centred on it. The sugars are C2\'-endo. A wide major groove and a narrow minor groove expose the edges of the bases to proteins.' },
+      nl: 'De klassieke Watson–Crick-helix en de standaardvorm van DNA in de cel: rechtshandig, ~10,4 bp per winding in oplossing, basenparen bijna loodrecht op de as en gecentreerd. De suikers staan in C2\'-endo. Een brede grote groef en een smalle kleine groef maken de randen van de basen bereikbaar voor eiwitten.',
+      en: 'The classic Watson–Crick helix and the standard form of DNA in the cell: right-handed, ~10.4 bp per turn in solution, base pairs almost perpendicular to the axis and centred on it. The sugars are C2\'-endo. A wide major groove and a narrow minor groove expose the edges of the bases to proteins.' },
     feat: {
       nl: ['twist ~+34–36° per bp, stijging ~3,4 Å', 'diameter ~20 Å', 'suikers C2\'-endo (South), basen anti', 'dit kristal is licht gebogen (~19°) en heeft een smalle kleine groef in het AATT-centrum, bezet door een "hydratatieruggengraat" van watermoleculen'],
       en: ['twist ~+34–36° per bp, rise ~3.4 Å', 'diameter ~20 Å', 'sugars C2\'-endo (South), bases anti', 'this crystal is slightly bent (~19°) and has a narrow minor groove in the AATT centre, occupied by a "spine of hydration" of water molecules'] },
     cell: {
       nl: 'Vrijwel al het genomische DNA (in chromatine, rond nucleosomen gewonden) is B-vormig. Transcriptiefactoren lezen de sequentie vooral via de grote groef; sommige eiwitten herkennen de vorm en breedte van de kleine groef.',
       en: 'Practically all genomic DNA (in chromatin, wrapped around nucleosomes) is B-form. Transcription factors read the sequence mainly through the major groove; some proteins recognise the shape and width of the minor groove.' },
-    src: [doi('10.1073/pnas.78.4.2179', 'Drew et al. (1981) PNAS 78:2179')],
+    src: [doi('10.1073/pnas.78.4.2179', 'Drew et al. (1981) PNAS 78:2179'), doi('10.1016/0022-2836(85)90171-8', 'Kopka et al. (1985) J Mol Biol 183:553 — hydratatieruggengraat in de kleine groef / spine of hydration'), doi('10.1073/pnas.76.1.200', 'Wang (1979) PNAS 76:200 — 10,4 bp per winding / 10.4 bp per turn')],
   },
   {
     id: 'adna', pdb: '440D', type: ['dna'], cls: ['duplex'], ctx: ['lab'], org: { nl: 'synthetisch', en: 'synthetic' },
     name: { nl: 'A-DNA', en: 'A-DNA' }, sub: { nl: 'd(AGGGGCCCCT) · model voor poly(dG)·poly(dC)', en: 'd(AGGGGCCCCT) · model for poly(dG)·poly(dC)' },
     helix: ['A', 'B'], hand: 'r', cmp: ['bdna', 'zdna'], scenes: ['dnavormen'],
     what: {
-      nl: 'Rechtshandige dubbelhelix met ~11 bp per winding. De suikers staan in C3\'-endo, waardoor opeenvolgende fosfaten dichter bij elkaar liggen (~5,9 i.p.v. ~7 Å) en de basenparen sterk gekanteld en van de as weggeschoven zijn: langs de as ontstaat een hol kanaal. De grote groef is smal en diep, de kleine groef breed en ondiep.',
-      en: 'Right-handed double helix with ~11 bp per turn. The sugars are C3\'-endo, so consecutive phosphates are closer together (~5.9 instead of ~7 Å) and the base pairs are strongly inclined and displaced from the axis: a hollow channel runs along the axis. The major groove is narrow and deep, the minor groove wide and shallow.' },
+      nl: 'Rechtshandige dubbelhelix met ~11 bp per winding. De suikers staan in C3\'-endo, waardoor opeenvolgende fosfaten dichter bij elkaar liggen (gemeten: ~6,1 Å hier tegenover ~6,7 Å in B-DNA, 1BNA) en de basenparen sterk gekanteld en van de as weggeschoven zijn: langs de as ontstaat een hol kanaal. De grote groef is smal en diep, de kleine groef breed en ondiep.',
+      en: 'Right-handed double helix with ~11 bp per turn. The sugars are C3\'-endo, so consecutive phosphates are closer together (measured: ~6.1 Å here versus ~6.7 Å in B-DNA, 1BNA) and the base pairs are strongly inclined and displaced from the axis: a hollow channel runs along the axis. The major groove is narrow and deep, the minor groove wide and shallow.' },
     feat: {
       nl: ['twist ~+33° per bp, ~11 bp/winding', 'stijging ~2,6 Å per bp; diameter ~23 Å', 'suikers C3\'-endo (North), basen anti', 'basenparen ~20° gekanteld t.o.v. de as'],
       en: ['twist ~+33° per bp, ~11 bp/turn', 'rise ~2.6 Å per bp; diameter ~23 Å', 'sugars C3\'-endo (North), bases anti', 'base pairs inclined ~20° to the axis'] },
@@ -66,7 +66,7 @@ export const ENTRIES = [
     cell: {
       nl: 'Z-DNA ontstaat tijdelijk achter een transcriberend RNA-polymerase, waar negatieve supercoiling de helix ontwindt, vooral in (CG)n- of (CA)n-herhalingen. Eiwitten met een Zα-domein (ADAR1, ZBP1) herkennen Z-DNA en Z-RNA; ZBP1 speelt een rol in de afweer tegen virussen en in geprogrammeerde celdood.',
       en: 'Z-DNA forms transiently behind a transcribing RNA polymerase, where negative supercoiling unwinds the helix, especially in (CG)n or (CA)n repeats. Proteins with a Zα domain (ADAR1, ZBP1) recognise Z-DNA and Z-RNA; ZBP1 has a role in antiviral defence and programmed cell death.' },
-    src: [pubmed('2722771', 'Gessner et al. (1989) J Biol Chem 264:7921'), doi('10.1038/282680a0', 'Wang et al. (1979) Nature 282:680 — eerste Z-DNA / first Z-DNA')],
+    src: [pubmed('2722771', 'Gessner et al. (1989) J Biol Chem 264:7921'), doi('10.1038/282680a0', 'Wang et al. (1979) Nature 282:680 — eerste Z-DNA / first Z-DNA'), doi('10.1038/nrg1115', 'Rich & Zhang (2003) Nat Rev Genet 4:566 — Z-DNA door transcriptie / Z-DNA by transcription'), doi('10.4049/jimmunol.1701538', 'Kuriakose et al. (2018) J Immunol 200:1489 — ZBP1, afweer en celdood / ZBP1, defence and cell death')],
   },
   {
     id: 'zalpha', pdb: '1QBJ', type: ['dna', 'prot'], cls: ['duplex', 'complex'], ctx: ['cell'], org: { nl: 'mens (Zα van ADAR1)', en: 'human (Zα of ADAR1)' },
@@ -100,9 +100,9 @@ export const ENTRIES = [
       nl: 'Menselijke telomeren eindigen op een enkelstrengige 3\'-overhang van TTAGGG-herhalingen die G-quadruplexen kan vormen; ook in promotoren (bv. MYC) en in RNA komen ze voor. Met het antilichaam BG4 zijn ze in menselijke celkernen zichtbaar gemaakt. Liganden die G4 stabiliseren remmen telomerase in het lab en worden onderzocht als antikankerstrategie.',
       en: 'Human telomeres end in a single-stranded 3\' overhang of TTAGGG repeats that can form G-quadruplexes; they also occur in promoters (e.g. MYC) and in RNA. The antibody BG4 has visualised them in human cell nuclei. Ligands that stabilise G4 inhibit telomerase in the lab and are being studied as an anticancer strategy.' },
     simpl: {
-      nl: 'De topologie hangt af van de omstandigheden: in K⁺-oplossing vormt deze sequentie vooral "hybride" (3+1)-vormen; de volledig parallelle vorm werd in het kristal (en onder moleculaire crowding) gezien. Het K⁺-ion aan het uiteinde van de stapel wordt in het kristal gedeeld met een naburig molecule; daarom liggen maar 4 van zijn O6-liganden in deze kopie.',
-      en: 'The topology depends on conditions: in K⁺ solution this sequence mainly forms "hybrid" (3+1) folds; the fully parallel form was seen in the crystal (and under molecular crowding). The K⁺ ion at the end of the stack is shared with a neighbouring molecule in the crystal, so only 4 of its O6 ligands belong to this copy.' },
-    src: [doi('10.1038/nature755', 'Parkinson et al. (2002) Nature 417:876'), doi('10.1038/nchem.1548', 'Biffi et al. (2013) Nat Chem 5:182 — G4 in menselijke cellen / in human cells')],
+      nl: 'De topologie hangt af van de omstandigheden: in K⁺-oplossing vormt de menselijke telomeersequentie vooral "hybride" (3+1)-vormen met gemengd parallelle en antiparallelle strengen; de volledig parallelle vorm werd in dit kristal gezien. Het K⁺-ion aan het uiteinde van de stapel wordt in het kristal gedeeld met een naburig molecule; daarom liggen maar 4 van zijn O6-liganden in deze kopie.',
+      en: 'The topology depends on conditions: in K⁺ solution the human telomeric sequence mainly forms "hybrid" (3+1) folds with mixed parallel and antiparallel strands; the fully parallel form was seen in this crystal. The K⁺ ion at the end of the stack is shared with a neighbouring molecule in the crystal, so only 4 of its O6 ligands belong to this copy.' },
+    src: [doi('10.1038/nature755', 'Parkinson et al. (2002) Nature 417:876'), doi('10.1038/nchem.1548', 'Biffi et al. (2013) Nat Chem 5:182 — G4 in menselijke cellen / in human cells'), doi('10.1093/nar/gkl348', 'Ambrus et al. (2006) Nucleic Acids Res 34:2723 — hybride vorm in K⁺ / hybrid fold in K⁺')],
   },
   {
     id: 'g4basket', pdb: '143D', type: ['dna'], cls: ['quad'], ctx: ['lab'], org: { nl: 'menselijke telomeersequentie', en: 'human telomeric sequence' },
@@ -128,8 +128,8 @@ export const ENTRIES = [
       nl: 'Een vierstrengige structuur van cytosinerijk DNA: twee parallelle duplexen met hemigeprotoneerde C·C⁺-paren (drie waterstofbruggen) schuiven antiparallel in elkaar ("intercalated motif"). Omdat één cytosine per paar aan N3 geprotoneerd is, is licht zure pH nodig. Dit NMR-model is een fragment van de complementaire (C-rijke) streng van de menselijke telomeer, d(CCCTAA)₃CCCT, met één 5-methylcytosine en één uracil als stabiliserende modificaties.',
       en: 'A four-stranded structure of cytosine-rich DNA: two parallel duplexes with hemiprotonated C·C⁺ pairs (three hydrogen bonds) slide into each other antiparallel ("intercalated motif"). Because one cytosine per pair is protonated at N3, slightly acidic pH is needed. This NMR model is a fragment of the complementary (C-rich) strand of the human telomere, d(CCCTAA)₃CCCT, with one 5-methylcytosine and one uracil as stabilising modifications.' },
     feat: {
-      nl: ['C·C⁺-paren: hieronder geteld uit de N3–N3- en N4–O2-afstanden', 'zeer smalle groeven, basenparen van beide duplexen afwisselend gestapeld', 'stabiel bij pH < ~6,5'],
-      en: ['C·C⁺ pairs: counted below from N3–N3 and N4–O2 distances', 'very narrow grooves, base pairs of both duplexes alternately stacked', 'stable at pH < ~6.5'] },
+      nl: ['C·C⁺-paren: hieronder geteld uit de N3–N3- en N4–O2-afstanden', 'zeer smalle groeven, basenparen van beide duplexen afwisselend gestapeld', 'stabieler naarmate de pH lager (zuurder) is'],
+      en: ['C·C⁺ pairs: counted below from N3–N3 and N4–O2 distances', 'very narrow grooves, base pairs of both duplexes alternately stacked', 'more stable the lower (more acidic) the pH'] },
     cell: {
       nl: 'i-motieven kunnen zich vormen in de C-rijke streng van telomeren en promotoren, tegenover G-quadruplexen. In 2018 werden ze met het antilichaam iMab in menselijke celkernen gedetecteerd, afhankelijk van de celcyclusfase.',
       en: 'i-Motifs can form in the C-rich strand of telomeres and promoters, opposite G-quadruplexes. In 2018 they were detected in human cell nuclei with the antibody iMab, depending on the cell-cycle phase.' },
@@ -162,9 +162,9 @@ export const ENTRIES = [
       nl: ['4 strengen, 4 armen (kleur per streng)', 'gestapelde-X-vorm, gestabiliseerd door kationen; zonder kationen opent de junctie tot een vlak vierkant', 'helixparameters niet zinvol: vier korte armen met een knik'],
       en: ['4 strands, 4 arms (colour by strand)', 'stacked-X form, stabilised by cations; without cations the junction opens into a square-planar form', 'helix parameters not meaningful: four short arms with a kink'] },
     cell: {
-      nl: 'Ontstaat bij homologe recombinatie (meiose, herstel van dubbelstrengbreuken, herstart van replicatievorken). Wordt verwerkt door resolvasen (GEN1, SLX1–SLX4–MUS81) of "ontbonden" door het BLM–TOPOIIIα–RMI-complex.',
-      en: 'Forms during homologous recombination (meiosis, double-strand break repair, restart of replication forks). It is processed by resolvases (GEN1, SLX1–SLX4–MUS81) or "dissolved" by the BLM–TOPOIIIα–RMI complex.' },
-    src: [doi('10.1073/pnas.97.8.3971', 'Eichman et al. (2000) PNAS 97:3971')],
+      nl: 'Ontstaat bij homologe recombinatie (meiose, herstel van dubbelstrengbreuken, herstart van replicatievorken). Wordt verwerkt door resolvasen (GEN1, MUS81–EME1, SLX1–SLX4) of "ontbonden" door het BLM–TOPOIIIα–RMI1/2-complex.',
+      en: 'Forms during homologous recombination (meiosis, double-strand break repair, restart of replication forks). It is processed by resolvases (GEN1, MUS81–EME1, SLX1–SLX4) or "dissolved" by the BLM–TOPOIIIα–RMI1/2 complex.' },
+    src: [doi('10.1073/pnas.97.8.3971', 'Eichman et al. (2000) PNAS 97:3971'), doi('10.1101/cshperspect.a023192', 'Wyatt & West (2014) Cold Spring Harb Perspect Biol 6:a023192')],
   },
 
   /* ================= geneesmiddel–DNA ================= */
@@ -179,9 +179,9 @@ export const ENTRIES = [
       nl: ['groefbinding: sterk sequentiespecifiek (AT-rijk)', 'G·C-paren zijn ongunstig: de NH₂ van guanine steekt in de kleine groef', 'verdringt de "hydratatieruggengraat" van 1BNA', 'zet "liganden" aan; vergelijk de helixparameters met 1BNA'],
       en: ['groove binding: highly sequence-specific (AT-rich)', 'G·C pairs are unfavourable: the guanine NH₂ protrudes into the minor groove', 'displaces the "spine of hydration" of 1BNA', 'switch on "ligands"; compare the helix parameters with 1BNA'] },
     cell: {
-      nl: 'Kleine-groefbinders zoals netropsine en distamycine zijn de prototypes van sequentiespecifieke DNA-liganden (bv. pyrrool–imidazool-polyamiden). Ook de fluorescente DNA-kleurstoffen Hoechst 33258 en DAPI binden in de AT-rijke kleine groef.',
-      en: 'Minor-groove binders such as netropsin and distamycin are the prototypes of sequence-specific DNA ligands (e.g. pyrrole–imidazole polyamides). The fluorescent DNA stains Hoechst 33258 and DAPI also bind in the AT-rich minor groove.' },
-    src: [doi('10.1016/0022-2836(85)90171-8', 'Kopka et al. (1985) J Mol Biol 183:553')],
+      nl: 'Kleine-groefbinders zoals netropsine en distamycine zijn de prototypes van sequentiespecifieke DNA-liganden (bv. pyrrool–imidazool-polyamiden). Ook de fluorescente DNA-kleurstof Hoechst 33258 bindt in de AT-rijke kleine groef, en DAPI is eveneens een kleine-groefbinder.',
+      en: 'Minor-groove binders such as netropsin and distamycin are the prototypes of sequence-specific DNA ligands (e.g. pyrrole–imidazole polyamides). The fluorescent DNA stain Hoechst 33258 also binds in the AT-rich minor groove, and DAPI is a minor-groove binder too.' },
+    src: [doi('10.1016/0022-2836(85)90171-8', 'Kopka et al. (1985) J Mol Biol 183:553'), doi('10.1016/0022-2836(87)90123-9', 'Pjura, Grzeskowiak & Dickerson (1987) J Mol Biol 197:257 — Hoechst 33258'), doi('10.1021/bi951027b', 'Barcellona & Gratton (1996) Biochemistry 35:321 — DAPI')],
   },
   {
     id: 'intercalator', pdb: '1D11', type: ['dna', 'drug'], cls: ['duplex'], ctx: ['drug'], org: { nl: 'synthetisch + natuurstof', en: 'synthetic + natural product' },
@@ -194,12 +194,12 @@ export const ENTRIES = [
       nl: ['intercalatie: zie "stijging per stap" (~7 Å op de intercalatieplaatsen)', 'lokale ontwinding: lagere twist op die stappen', 'aminosuiker in de kleine groef', 'duplex opgebouwd uit de biologische assemblage (kristal: 1 streng + 1 geneesmiddel)'],
       en: ['intercalation: see "rise per step" (~7 Å at the intercalation sites)', 'local unwinding: lower twist at those steps', 'amino sugar in the minor groove', 'duplex built from the biological assembly (crystal: 1 strand + 1 drug)'] },
     cell: {
-      nl: 'Antracyclines (daunorubicine, doxorubicine) zijn chemotherapeutica, o.a. tegen leukemie en borstkanker. Ze werken niet alleen door intercalatie: ze "vergiftigen" topo-isomerase II, dat dan covalent aan geknipt DNA blijft hangen → dubbelstrengbreuken. Een klassieke labintercalator is ethidiumbromide.',
-      en: 'Anthracyclines (daunorubicin, doxorubicin) are chemotherapy drugs, e.g. against leukaemia and breast cancer. They act not only by intercalation: they "poison" topoisomerase II, which stays covalently attached to cut DNA → double-strand breaks. A classic lab intercalator is ethidium bromide.' },
+      nl: 'Antracyclines (daunorubicine, doxorubicine) zijn chemotherapeutica, o.a. tegen borstkanker. Ze werken niet alleen door intercalatie: ze "vergiftigen" topo-isomerase II, dat dan covalent aan geknipt DNA blijft hangen → dubbelstrengbreuken. Een klassieke labintercalator is ethidiumbromide.',
+      en: 'Anthracyclines (daunorubicin, doxorubicin) are chemotherapy drugs, e.g. against breast cancer. They act not only by intercalation: they "poison" topoisomerase II, which stays covalently attached to cut DNA → double-strand breaks. A classic lab intercalator is ethidium bromide.' },
     bentNote: {
       nl: 'Slechts 6 bp met twee intercalatieplaatsen: de gemiddelden worden sterk door de uiteinden beïnvloed; kijk vooral naar de waarden per stap.',
       en: 'Only 6 bp with two intercalation sites: the means are strongly affected by the ends; look mainly at the per-step values.' },
-    src: [doi('10.1021/bi00378a025', 'Wang et al. (1987) Biochemistry 26:1152')],
+    src: [doi('10.1021/bi00378a025', 'Wang et al. (1987) Biochemistry 26:1152'), doi('10.1038/nrc2607', 'Nitiss (2009) Nat Rev Cancer 9:338 — antracyclines als topo-II-gif / anthracyclines as topo II poisons')],
   },
   {
     id: 'cisplatin', pdb: '1AIO', type: ['dna', 'drug'], cls: ['duplex'], ctx: ['drug'], org: { nl: 'synthetisch', en: 'synthetic' },
@@ -218,7 +218,7 @@ export const ENTRIES = [
     bentNote: {
       nl: 'Sterk geknikte helix: één rechte cilinder past slecht, dus twist, stijging en diameter zijn ruwe schattingen. Het kristal bevat twee duplexen; hier wordt er één getoond.',
       en: 'Strongly kinked helix: a single straight cylinder fits poorly, so twist, rise and diameter are rough estimates. The crystal contains two duplexes; one is shown here.' },
-    src: [doi('10.1038/377649a0', 'Takahara et al. (1995) Nature 377:649'), doi('10.1021/ja9625079', 'Takahara et al. (1996) J Am Chem Soc 118:12309'), doi('10.1021/bi973176v', 'Gelasco & Lippard (1998) Biochemistry 37:9230 (NMR)')],
+    src: [doi('10.1016/j.ejphar.2014.07.025', 'Dasari & Tchounwou (2014) Eur J Pharmacol 740:364 — gebruik tegen kanker / use against cancer'), doi('10.1038/377649a0', 'Takahara et al. (1995) Nature 377:649'), doi('10.1021/ja9625079', 'Takahara et al. (1996) J Am Chem Soc 118:12309'), doi('10.1021/bi973176v', 'Gelasco & Lippard (1998) Biochemistry 37:9230 (NMR)')],
   },
 
   /* ================= RNA en hybriden ================= */
@@ -242,38 +242,37 @@ export const ENTRIES = [
     name: { nl: 'RNA–DNA-hybride', en: 'RNA–DNA hybrid' }, sub: { nl: 'r(GAAGAAGAG) · d(CTCTTCTTC)', en: 'r(GAAGAAGAG) · d(CTCTTCTTC)' },
     helix: ['A', 'B'], hand: 'r', cmp: ['dsrna', 'bdna', 'adna'], scenes: ['replicatie', 'rt'],
     what: {
-      nl: 'Een purinerijke RNA-streng gepaard met een complementaire DNA-streng. De hybride is A-achtig omdat de RNA-suikers C3\'-endo blijven. De DNA-streng is flexibeler: in oplossing (NMR) vertonen de DNA-suikers vaak tussenvormen (O4\'-endo), maar in dit kristal staan ze eveneens C3\'-endo (zie de suikertelling per streng hieronder). De kleine groef van hybriden is doorgaans smaller dan in zuiver A-RNA, een kenmerk dat RNase H gebruikt om ze te herkennen.',
-      en: 'A purine-rich RNA strand paired with a complementary DNA strand. The hybrid is A-like because the RNA sugars stay C3\'-endo. The DNA strand is more flexible: in solution (NMR) its sugars often show intermediate puckers (O4\'-endo), but in this crystal they are C3\'-endo as well (see the per-strand sugar counts below). The minor groove of hybrids is usually narrower than in pure A-RNA, a feature RNase H uses to recognise them.' },
+      nl: 'Een purinerijke RNA-streng gepaard met een complementaire DNA-streng. De hybride is A-achtig omdat de RNA-suikers C3\'-endo blijven. In dit kristal staan ook alle DNA-suikers C3\'-endo (zie de suikertelling per streng hieronder): een standaard A-vorm. RNase H, dat het RNA in hybriden afbreekt, leest onder meer de breedte van de kleine groef.',
+      en: 'A purine-rich RNA strand paired with a complementary DNA strand. The hybrid is A-like because the RNA sugars stay C3\'-endo. In this crystal all DNA sugars are C3\'-endo as well (see the per-strand sugar counts below): a standard A-form. RNase H, which degrades the RNA in hybrids, reads among other things the width of the minor groove.' },
     feat: {
       nl: ['kleur per streng of per ketentype: DNA blauw, RNA oranje', 'suikerpuckering per streng: hieronder berekend', 'in dit kristal vrijwel zuivere A-vorm (~11 bp per winding)'],
       en: ['colour by strand or chain type: DNA blue, RNA orange', 'sugar pucker per strand: computed below', 'in this crystal essentially pure A-form (~11 bp per turn)'] },
     cell: {
       nl: 'RNA–DNA-hybriden komen voor als RNA-primers van Okazaki-fragmenten, in R-lussen tijdens transcriptie en als tussenstap van reverse transcriptie (retrovirussen, telomerase, retrotransposons). RNase H1 en H2 breken het RNA in hybriden af.',
       en: 'RNA–DNA hybrids occur as the RNA primers of Okazaki fragments, in R-loops during transcription and as an intermediate of reverse transcription (retroviruses, telomerase, retrotransposons). RNase H1 and H2 degrade the RNA in hybrids.' },
-    src: [doi('10.1093/nar/28.10.2171', 'Xiong & Sundaralingam (2000) Nucleic Acids Res 28:2171')],
+    src: [doi('10.1093/nar/28.10.2171', 'Xiong & Sundaralingam (2000) Nucleic Acids Res 28:2171'), doi('10.1093/emboj/20.6.1449', 'Sarafianos et al. (2001) EMBO J 20:1449 — RNase H en de kleine groef / RNase H and the minor groove')],
   },
   {
     id: 'mismatch', pdb: '1LNT', type: ['rna'], cls: ['duplex'], ctx: ['cell', 'other'], org: { nl: 'E. coli-SRP-RNA (synthetisch fragment)', en: 'E. coli SRP RNA (synthetic fragment)' },
     name: { nl: 'Mismatches in een RNA-helix (SRP)', en: 'Mismatches in an RNA helix (SRP)' }, sub: { nl: 'inwendige lus van SRP-RNA domein IV · 1,7 Å', en: 'internal loop of SRP RNA domain IV · 1.7 Å' },
     helix: ['A', 'B'], hand: 'r', cmp: ['wobble', 'dsrna'], scenes: ['rnastructuur', 'er'],
     mark: [
-      { col: '#f06bc0', label: { nl: 'mismatch (A·C, G·A)', en: 'mismatch (A·C, G·A)' }, res: ['A:6', 'B:19', 'A:8', 'B:17'], pairs: true },
+      { col: '#f06bc0', label: { nl: 'mismatch (2× A·C, G·G, G·A)', en: 'mismatch (2× A·C, G·G, G·A)' }, res: ['A:5', 'B:20', 'A:6', 'B:19', 'A:7', 'B:18', 'A:8', 'B:17'], pairs: true },
       { col: '#ffd84d', label: { nl: 'G–U-paar (wobble)', en: 'G–U pair (wobble)' }, res: ['A:4', 'B:21'], pairs: true },
-      { col: '#f2f4f8', label: { nl: 'base zonder partner', en: 'base without partner' }, res: ['A:5', 'B:18', 'B:20'], tag: { nl: 'geen partner', en: 'no partner' } },
     ], dim: true,
     what: {
-      nl: 'Dubbelstrengig RNA-dodecameer met het sterk geconserveerde stuk van domein IV van het 4.5S-RNA van het bacteriële signal recognition particle (SRP). Tussen gewone Watson–Crick-paren zit een inwendige lus met niet-canonieke paren: een A·C- en een G·A-mismatch, een G·U-wobblepaar, en drie nucleotiden (C5, G18, A20) die in dit model geen eigen paringspartner hebben (minder dan twee waterstofbruggen naar een andere base; berekend uit de coördinaten). Twee cytidines zijn 5-broomcytidine (hulpmiddel voor de kristallografie).',
-      en: 'Double-stranded RNA dodecamer containing the highly conserved part of domain IV of the 4.5S RNA of the bacterial signal recognition particle (SRP). Between ordinary Watson–Crick pairs lies an internal loop with non-canonical pairs: an A·C and a G·A mismatch, a G·U wobble pair, and three nucleotides (C5, G18, A20) that have no pairing partner of their own in this model (fewer than two hydrogen bonds to another base; computed from the coordinates). Two cytidines are 5-bromocytidine (an aid for crystallography).' },
+      nl: 'Dubbelstrengig RNA-dodecameer met het sterk geconserveerde stuk van domein IV van het 4.5S-RNA van het bacteriële signal recognition particle (SRP). Tussen gewone Watson–Crick-paren zit een symmetrische inwendige lus (CAGG/AGCA) van vier niet-canonieke paren: twee A·C-mismatches (C5·A20 en A6·C19, elk in een andere vorm), een "schuin" (sheared) G·G-paar (G7·G18) en een G·A-paar (G8·A17). Ernaast ligt een G·U-wobblepaar (U4·G21). Twee cytidines zijn 5-broomcytidine (hulpmiddel voor de kristallografie).',
+      en: 'Double-stranded RNA dodecamer containing the highly conserved part of domain IV of the 4.5S RNA of the bacterial signal recognition particle (SRP). Between ordinary Watson–Crick pairs lies a symmetric internal loop (CAGG/AGCA) of four non-canonical pairs: two A·C mismatches (C5·A20 and A6·C19, each in a different form), a sheared G·G pair (G7·G18) and a G·A pair (G8·A17). Next to it lies a G·U wobble pair (U4·G21). Two cytidines are 5-bromocytidine (an aid for crystallography).' },
     feat: {
-      nl: ['mismatch = twee basen tegenover elkaar die niet complementair zijn (geen A–U of G–C)', 'gemarkeerd in de figuur: mismatches roze, G–U geel, basen zonder partner wit', 'de helix blijft rechtshandig en A-vormig ondanks de afwijkende paren', 'RNA verdraagt zulke paren veel beter dan DNA: ze zijn stabiel en vormen herkenningsplaatsen voor eiwitten'],
-      en: ['mismatch = two bases facing each other that are not complementary (not A–U or G–C)', 'highlighted in the figure: mismatches pink, G–U yellow, bases without a partner white', 'the helix stays right-handed and A-form despite the unusual pairs', 'RNA tolerates such pairs much better than DNA: they are stable and form recognition sites for proteins'] },
+      nl: ['mismatch = twee basen tegenover elkaar die niet complementair zijn (geen A–U of G–C)', 'gemarkeerd in de figuur: mismatches roze, G–U geel', 'de helix blijft rechtshandig en A-vormig ondanks de afwijkende paren', 'in RNA zijn zulke paren een vast deel van de vouwing; volgens de auteurs zijn vooral de A·C-paren plaatsen waar eiwitten binden'],
+      en: ['mismatch = two bases facing each other that are not complementary (not A–U or G–C)', 'highlighted in the figure: mismatches pink, G–U yellow', 'the helix stays right-handed and A-form despite the unusual pairs', 'in RNA such pairs are a fixed part of the fold; according to the authors the A·C pairs in particular are sites where proteins bind'] },
     cell: {
-      nl: 'Het SRP herkent de signaalsequentie van een eiwit in aanmaak en brengt het ribosoom naar het ER-membraan. In de bacterie bindt het Ffh-eiwit precies op deze inwendige lus van domein IV; het menselijke SRP-RNA (7SL-RNA) heeft een overeenkomstig geconserveerd deel. Mismatches en bulges komen in alle grote RNA’s voor (tRNA, mRNA, rRNA) en geven RNA zijn veelzijdige 3D-vormen.',
-      en: 'SRP recognises the signal sequence of a protein being made and brings the ribosome to the ER membrane. In bacteria the Ffh protein binds exactly at this internal loop of domain IV; the human SRP RNA (7SL RNA) has a corresponding conserved part. Mismatches and bulges occur in all large RNAs (tRNA, mRNA, rRNA) and give RNA its versatile 3D shapes.' },
+      nl: 'Het SRP herkent de signaalsequentie van een eiwit in aanmaak en brengt het ribosoom naar het ER-membraan (bij bacteriën: het celmembraan). In de bacterie bindt het SRP-eiwit Ffh op domein IV van dit RNA, in een vervormde kleine groef; het menselijke SRP-RNA (7SL-RNA) heeft een overeenkomstig geconserveerd deel. Mismatches en bulges komen in alle grote RNA’s voor (tRNA, mRNA, rRNA) en geven RNA zijn veelzijdige 3D-vormen.',
+      en: 'SRP recognises the signal sequence of a protein being made and brings the ribosome to the ER membrane (in bacteria: the cell membrane). In bacteria the SRP protein Ffh binds domain IV of this RNA, in a distorted minor groove; the human SRP RNA (7SL RNA) has a corresponding conserved part. Mismatches and bulges occur in all large RNAs (tRNA, mRNA, rRNA) and give RNA its versatile 3D shapes.' },
     simpl: {
-      nl: 'Of een base "gepaard" is, wordt hier eenvoudig bepaald: minstens twee waterstofbruggen (N/O op 2,6–3,3 Å) met één andere base. Basen met één brug of in een basentriplet tellen dus als "zonder partner".',
-      en: 'Whether a base is "paired" is decided simply here: at least two hydrogen bonds (N/O at 2.6–3.3 Å) with one other base. Bases with a single bond or in a base triple therefore count as "without partner".' },
-    src: [doi('10.1107/S0907444903006747', 'Deng et al. (2003) Acta Cryst D 59:1004')],
+      nl: 'Of een base "gepaard" is, wordt hier eenvoudig bepaald: minstens twee waterstofbruggen (N/O op 2,6–3,3 Å) met één andere base. Daardoor mist de telling hieronder sommige "schuine" paren met maar één brug, zoals C5·A20 en G7·G18, die de auteurs wel als paren beschrijven.',
+      en: 'Whether a base is "paired" is decided simply here: at least two hydrogen bonds (N/O at 2.6–3.3 Å) with one other base. The count below therefore misses some sheared pairs with only one bond, such as C5·A20 and G7·G18, which the authors do describe as pairs.' },
+    src: [doi('10.1107/S0907444903006747', 'Deng et al. (2003) Acta Cryst D 59:1004'), doi('10.1126/science.287.5456.1232', 'Batey et al. (2000) Science 287:1232 — Ffh op SRP-RNA domein IV / Ffh on SRP RNA domain IV')],
   },
   {
     id: 'wobble', pdb: '1D4R', type: ['rna'], cls: ['duplex'], ctx: ['cell'], org: { nl: 'mens (SRP-RNA, synthetisch fragment)', en: 'human (SRP RNA, synthetic fragment)' },
@@ -284,18 +283,18 @@ export const ENTRIES = [
       { col: '#f06bc0', label: { nl: 'G·G-paren (mismatch)', en: 'G·G pairs (mismatch)' }, res: ['A:12', 'A:13', 'A:16', 'B:13', 'B:16'], tag: { nl: 'G·G', en: 'G·G' } },
     ], dim: true,
     what: {
-      nl: 'Een 29-nucleotide-fragment van helix 6 van het menselijke SRP-RNA (7SL-RNA). In het kristal paren twee kopieën tot een lange dubbelhelix. Naast gewone G–C- en A–U-paren bevat ze twee G·U-wobbleparen: de U schuift een halve plaats op t.o.v. een gewone Watson–Crick-positie en vormt twee waterstofbruggen (G O6–U N3 en G N1–U O2). In het midden liggen bovendien G·G-paren.',
-      en: 'A 29-nucleotide fragment of helix 6 of the human SRP RNA (7SL RNA). In the crystal two copies pair into a long double helix. Besides ordinary G–C and A–U pairs it contains two G·U wobble pairs: the U is shifted by half a position relative to a normal Watson–Crick position and forms two hydrogen bonds (G O6–U N3 and G N1–U O2). In the middle there are also G·G pairs.' },
+      nl: 'Een 29-nucleotide-fragment van helix 6 van het menselijke SRP-RNA (7SL-RNA). In het kristal paren twee kopieën tot een lange dubbelhelix. Naast gewone G–C- en A–U-paren bevat ze G·U-wobbleparen: twee in het midden (U8·G21, gemarkeerd) en twee aan de uiteinden (G1·U28). De U schuift een halve plaats op t.o.v. een gewone Watson–Crick-positie en vormt twee waterstofbruggen (G O6–U N3 en G N1–U O2). In het midden liggen bovendien G·G-paren.',
+      en: 'A 29-nucleotide fragment of helix 6 of the human SRP RNA (7SL RNA). In the crystal two copies pair into a long double helix. Besides ordinary G–C and A–U pairs it contains G·U wobble pairs: two in the middle (U8·G21, highlighted) and two at the ends (G1·U28). The U is shifted by half a position relative to a normal Watson–Crick position and forms two hydrogen bonds (G O6–U N3 and G N1–U O2). In the middle there are also G·G pairs.' },
     feat: {
-      nl: ['G·U is het meest voorkomende niet-Watson–Crick-paar in RNA', 'twee waterstofbruggen, zoals A–U, maar verschoven ("wobble")', 'gemarkeerd: G–U geel, G·G-paren roze', 'de verschuiving geeft een plaatselijk andere groef, die eiwitten en ionen kunnen herkennen'],
-      en: ['G·U is the most common non-Watson–Crick pair in RNA', 'two hydrogen bonds, like A–U, but shifted ("wobble")', 'highlighted: G–U yellow, G·G pairs pink', 'the shift gives a locally different groove that proteins and ions can recognise'] },
+      nl: ['G·U komt voor in bijna elke soort RNA, in alle drie de domeinen van het leven, en kan vaak een G–C- of A–U-paar vervangen', 'twee waterstofbruggen, zoals A–U, maar verschoven ("wobble")', 'gemarkeerd: de twee middelste G–U-paren geel, G·G-paren roze', 'de verschuiving geeft een plaatselijk andere groef, die eiwitten en ionen kunnen herkennen'],
+      en: ['G·U occurs in nearly every class of RNA, in all three domains of life, and can often replace a G–C or A–U pair', 'two hydrogen bonds, like A–U, but shifted ("wobble")', 'highlighted: the two middle G–U pairs yellow, G·G pairs pink', 'the shift gives a locally different groove that proteins and ions can recognise'] },
     cell: {
       nl: 'G·U-paren komen overal in cellulair RNA voor. Bij de translatie maakt hetzelfde wobble-principe het mogelijk dat één tRNA meerdere codons leest (wobble op de derde codonpositie). Helix 6 van het menselijke SRP-RNA is de bindingsplaats van het eiwit SRP19.',
       en: 'G·U pairs occur everywhere in cellular RNA. In translation the same wobble principle allows one tRNA to read several codons (wobble at the third codon position). Helix 6 of the human SRP RNA is the binding site of the protein SRP19.' },
     simpl: {
       nl: 'Het fragment is synthetisch; in het kristal vormen twee kopieën samen één helix (hier ketens A en B; een derde kopie is weggelaten). Het 5’-uiteinde draagt een extra fosfaat (GDP).',
       en: 'The fragment is synthetic; in the crystal two copies together form one helix (chains A and B here; a third copy is left out). The 5’ end carries an extra phosphate (GDP).' },
-    src: [doi('10.1016/S0969-2126(00)80024-6', 'Wild et al. (1999) Structure 7:1345')],
+    src: [doi('10.1016/S0969-2126(00)80024-6', 'Wild et al. (1999) Structure 7:1345'), doi('10.1093/embo-reports/kvd001', 'Varani & McClain (2000) EMBO Rep 1:18 — het G·U-paar / the G·U pair')],
   },
   {
     id: 'stemloop', pdb: '1EHZ', type: ['rna'], cls: ['folded'], ctx: ['cell'], org: { nl: 'gist (S. cerevisiae)', en: 'yeast (S. cerevisiae)' },
@@ -335,9 +334,9 @@ export const ENTRIES = [
       nl: ['bulge = ongepaarde nucleotiden in één streng van een helix', 'de bulge verbreedt de grote groef, zodat het virale Tat-eiwit (arginine) kan binden', 'NMR: model 1 van 20'],
       en: ['bulge = unpaired nucleotides in one strand of a helix', 'the bulge widens the major groove so the viral Tat protein (arginine) can bind', 'NMR: model 1 of 20'] },
     cell: {
-      nl: 'In een geïnfecteerde menselijke cel bindt Tat de bulge en rekruteert het P-TEFb-complex (cycline T1–CDK9), dat RNA-polymerase II fosforyleert zodat de transcriptie van het provirus doorloopt. TAR is daarom een doelwit voor antivirale RNA-liganden.',
-      en: 'In an infected human cell Tat binds the bulge and recruits the P-TEFb complex (cyclin T1–CDK9), which phosphorylates RNA polymerase II so that transcription of the provirus continues. TAR is therefore a target for antiviral RNA ligands.' },
-    src: [doi('10.1093/nar/24.20.3974', 'Aboul-ela, Karn & Varani (1996) Nucleic Acids Res 24:3974')],
+      nl: 'In een geïnfecteerde menselijke cel bindt Tat de bulge en brengt samen met cycline T (die ook de lus van TAR nodig heeft) het kinase CDK9 naar RNA-polymerase II, zodat de transcriptie van het provirus doorloopt. TAR is daarom een doelwit voor antivirale RNA-liganden.',
+      en: 'In an infected human cell Tat binds the bulge and, together with cyclin T (which also needs the TAR loop), brings the kinase CDK9 to RNA polymerase II, so that transcription of the provirus continues. TAR is therefore a target for antiviral RNA ligands.' },
+    src: [doi('10.1093/nar/24.20.3974', 'Aboul-ela, Karn & Varani (1996) Nucleic Acids Res 24:3974'), doi('10.1016/S0092-8674(00)80939-3', 'Wei et al. (1998) Cell 92:451 — Tat, cycline T en CDK9 / Tat, cyclin T and CDK9')],
   },
   {
     id: 'trna', pdb: '1EHZ', type: ['rna'], cls: ['folded'], ctx: ['cell'], org: { nl: 'gist (S. cerevisiae)', en: 'yeast (S. cerevisiae)' },
@@ -402,9 +401,9 @@ export const ENTRIES = [
       nl: ['ribozym = katalytisch RNA', 'drie helices + kern; tertiair contact stam I–stam II', 'Mn²⁺ gebonden in het actieve centrum (zet "ionen" aan)', 'twee ketens: enzymstreng + substraatstreng'],
       en: ['ribozyme = catalytic RNA', 'three helices + core; stem I–stem II tertiary contact', 'Mn²⁺ bound at the active site (switch on "ions")', 'two chains: enzyme strand + substrate strand'] },
     cell: {
-      nl: 'Hammerhead-ribozymen werden ontdekt in viroïden en satelliet-RNA\'s van planten, waar ze de multimere replicatieproducten knippen. Het motief komt ook voor in genomen van dieren, waaronder zoogdieren; zijn functie daar is grotendeels onbekend. Het is een modelsysteem voor RNA-katalyse.',
-      en: 'Hammerhead ribozymes were discovered in plant viroids and satellite RNAs, where they cleave the multimeric replication products. The motif also occurs in animal genomes, including mammals; its function there is largely unknown. It is a model system for RNA catalysis.' },
-    src: [doi('10.1016/j.chembiol.2008.03.010', 'Martick et al. (2008) Chem Biol 15:332'), doi('10.1016/j.cell.2006.06.036', 'Martick & Scott (2006) Cell 126:309')],
+      nl: 'Hammerhead-ribozymen werden ontdekt in viroïden en satelliet-RNA\'s van planten, waar ze de multimere replicatieproducten knippen. Het motief komt ook voor in genomen van bacteriën, planten en dieren; in mRNA\'s van knaagdieren kan het de eiwitproductie verlagen. Het is een modelsysteem voor RNA-katalyse.',
+      en: 'Hammerhead ribozymes were discovered in plant viroids and satellite RNAs, where they cleave the multimeric replication products. The motif also occurs in the genomes of bacteria, plants and animals; in rodent mRNAs it can lower protein production. It is a model system for RNA catalysis.' },
+    src: [doi('10.1016/j.chembiol.2008.03.010', 'Martick et al. (2008) Chem Biol 15:332'), doi('10.1016/j.cell.2006.06.036', 'Martick & Scott (2006) Cell 126:309'), doi('10.1261/rna.2130310', 'de la Peña & García-Robles (2010) RNA 16:1943 — overal in de levensboom / across the tree of life'), doi('10.1038/nature07117', 'Martick et al. (2008) Nature 454:899 — in een zoogdier-mRNA / in a mammalian mRNA')],
   },
   {
     id: 'groupi', pdb: '1U6B', type: ['rna', 'prot'], cls: ['folded'], ctx: ['other'], org: { nl: 'Azoarcus (bacterie)', en: 'Azoarcus (bacterium)' },
@@ -426,15 +425,15 @@ export const ENTRIES = [
     name: { nl: 'RNase P + tRNA', en: 'RNase P + tRNA' }, sub: { nl: 'bacterieel holo-enzym · 3,8 Å', en: 'bacterial holoenzyme · 3.8 Å' },
     cmp: ['trna', 'hammerhead'], scenes: ['trna'], heavyish: true,
     what: {
-      nl: 'RNase P knipt de 5\'-leader van pre-tRNA\'s af. Het is een ribozym: in bacteriën voert de RNA-component (~350–400 nt) de katalyse uit, geholpen door één klein eiwit. Deze structuur toont het holo-enzym met een tRNA (het product): het RNA herkent de "elleboog" en de acceptorstam van het tRNA, zoals ook het ribosoom doet.',
-      en: 'RNase P removes the 5\' leader of pre-tRNAs. It is a ribozyme: in bacteria the RNA component (~350–400 nt) performs catalysis, helped by one small protein. This structure shows the holoenzyme with a tRNA (the product): the RNA recognises the "elbow" and acceptor stem of the tRNA.' },
+      nl: 'RNase P knipt de 5\'-leader van pre-tRNA\'s af. Het is een ribozym: in bacteriën voert de RNA-component (~350–400 nt) de katalyse uit, geholpen door één klein eiwit. Deze structuur toont het holo-enzym met een tRNA (het product): het RNA herkent de "elleboog" en de acceptorstam van het tRNA, vooral via hun vorm, aangevuld met enkele specifieke contacten en basenparen.',
+      en: 'RNase P removes the 5\' leader of pre-tRNAs. It is a ribozyme: in bacteria the RNA component (~350–400 nt) performs catalysis, helped by one small protein. This structure shows the holoenzyme with a tRNA (the product): the RNA recognises the "elbow" and acceptor stem of the tRNA, mainly through their shape, supplemented by a few specific contacts and base pairs.' },
     feat: {
-      nl: ['RNase P-RNA (ketentype RNA) + eiwit (paars) + tRNA', 'katalyse door het RNA, met Mg²⁺', 'herkenning van de tRNA-vorm, niet van de sequentie'],
-      en: ['RNase P RNA (chain type RNA) + protein (purple) + tRNA', 'catalysis by the RNA, with Mg²⁺', 'recognition of tRNA shape, not sequence'] },
+      nl: ['RNase P-RNA (ketentype RNA) + eiwit (paars) + tRNA', 'katalyse door het RNA, met metaalionen', 'herkenning vooral via de vorm van het tRNA, plus enkele basenparen'],
+      en: ['RNase P RNA (chain type RNA) + protein (purple) + tRNA', 'catalysis by the RNA, with metal ions', 'recognition mainly through tRNA shape, plus a few base pairs'] },
     cell: {
-      nl: 'Menselijke kern-RNase P bestaat uit het H1-RNA plus ~10 eiwitten; in mitochondriën doet een eiwitenzym (PRORP, zonder RNA) hetzelfde werk. Samen met het ribosoom is RNase P het bekendste universele ribozym.',
-      en: 'Human nuclear RNase P consists of H1 RNA plus ~10 proteins; in mitochondria a protein-only enzyme (PRORP) does the same job. Together with the ribosome, RNase P is the best-known universal ribozyme.' },
-    src: [doi('10.1038/NATURE09516', 'Reiter et al. (2010) Nature 468:784')],
+      nl: 'Menselijke kern-RNase P bestaat uit het H1-RNA plus ~10 eiwitten; in mitochondriën doet een enzym uit drie eiwitten, zonder RNA (met PRORP), hetzelfde werk. Samen met het ribosoom is RNase P het bekendste universele ribozym.',
+      en: 'Human nuclear RNase P consists of H1 RNA plus ~10 proteins; in mitochondria an enzyme made of three proteins and no RNA (including PRORP) does the same job. Together with the ribosome, RNase P is the best-known universal ribozyme.' },
+    src: [doi('10.1038/NATURE09516', 'Reiter et al. (2010) Nature 468:784'), doi('10.1016/j.cell.2008.09.013', 'Holzmann et al. (2008) Cell 135:462 — RNase P zonder RNA / RNase P without RNA'), doi('10.1261/rna.079475.122', 'Jarrous & Liu (2023) RNA 29:300 — menselijk RNase P / human RNase P')],
   },
   {
     id: 'riboswitch', pdb: '1Y26', type: ['rna'], cls: ['folded'], ctx: ['other'], org: { nl: 'Vibrio vulnificus (bacterie)', en: 'Vibrio vulnificus (bacterium)' },
@@ -471,11 +470,11 @@ export const ENTRIES = [
     name: { nl: 'miRNA in Argonaute-2', en: 'miRNA in Argonaute-2' }, sub: { nl: 'humaan AGO2 + 21-nt gids-RNA · 2,9 Å', en: 'human AGO2 + 21-nt guide RNA · 2.9 Å' },
     cmp: ['dsrna', 'ssdna'], scenes: ['rnai'],
     what: {
-      nl: 'Argonaute-2 (AGO2) is de kern van het RNA-geïnduceerde silencingcomplex (RISC). Het houdt een ~21-nt gids-RNA (miRNA of siRNA) vast met beide uiteinden verankerd: het 5\'-fosfaat in de MID-domeinpocket, het 3\'-uiteinde in het PAZ-domein. Nucleotiden 2–8 (de "seed") liggen voorgevormd in een A-achtige halve helix, klaar om met een doel-mRNA te paren.',
-      en: 'Argonaute-2 (AGO2) is the core of the RNA-induced silencing complex (RISC). It holds a ~21-nt guide RNA (miRNA or siRNA) with both ends anchored: the 5\' phosphate in the MID-domain pocket, the 3\' end in the PAZ domain. Nucleotides 2–8 (the "seed") are pre-arranged in an A-like half-helix, ready to pair with a target mRNA.' },
+      nl: 'Argonaute-2 (AGO2) is de kern van het RNA-geïnduceerde silencingcomplex (RISC). Het houdt een ~21-nt gids-RNA (miRNA of siRNA) vast met beide uiteinden verankerd: het 5\'-fosfaat in de MID-domeinpocket, het 3\'-uiteinde in het PAZ-domein. Nucleotiden 2–6 liggen voorgevormd in een A-achtige halve helix; na nt 6 maakt het RNA een knik. Een doel-mRNA paart eerst met nt 2–5, daarna komt de hele "seed" (nt 2–8) vrij.',
+      en: 'Argonaute-2 (AGO2) is the core of the RNA-induced silencing complex (RISC). It holds a ~21-nt guide RNA (miRNA or siRNA) with both ends anchored: the 5\' phosphate in the MID-domain pocket, the 3\' end in the PAZ domain. Nucleotides 2–6 are pre-arranged in an A-like half-helix; after nt 6 the RNA is kinked. A target mRNA first pairs with nt 2–5, after which the whole "seed" (nt 2–8) becomes available.' },
     feat: {
-      nl: ['eiwit (N, PAZ, MID, PIWI) + enkelstrengig gids-RNA', 'seed-regio (nt 2–8) blootgesteld', 'PIWI = RNase H-achtig domein: bij perfecte paring knipt AGO2 het doel ("slicing")', 'niet het hele gids-RNA is geordend in het kristal'],
-      en: ['protein (N, PAZ, MID, PIWI) + single-stranded guide RNA', 'seed region (nt 2–8) exposed', 'PIWI = RNase H-like domain: with perfect pairing AGO2 cleaves the target ("slicing")', 'not the whole guide RNA is ordered in the crystal'] },
+      nl: ['eiwit (N, PAZ, MID, PIWI) + enkelstrengig gids-RNA', 'seed-regio (nt 2–8): eerst liggen enkel nt 2–5 bloot', 'PIWI = RNase H-achtig domein: bij perfecte paring knipt AGO2 het doel ("slicing")', 'niet het hele gids-RNA is geordend in het kristal'],
+      en: ['protein (N, PAZ, MID, PIWI) + single-stranded guide RNA', 'seed region (nt 2–8): at first only nt 2–5 are exposed', 'PIWI = RNase H-like domain: with perfect pairing AGO2 cleaves the target ("slicing")', 'not the whole guide RNA is ordered in the crystal'] },
     cell: {
       nl: 'miRNA\'s worden als pri-miRNA door Pol II gemaakt, door Drosha–DGCR8 (kern) en Dicer (cytoplasma) versneden en in AGO geladen. Via de seed herkent RISC doelsequenties (meestal in 3\'-UTR\'s), onderdrukt de translatie en bevordert de afbraak van het mRNA. siRNA-geneesmiddelen gebruiken dezelfde machinerie.',
       en: 'miRNAs are made by Pol II as pri-miRNAs, trimmed by Drosha–DGCR8 (nucleus) and Dicer (cytoplasm) and loaded into AGO. Through the seed, RISC recognises target sequences (mostly in 3\' UTRs), represses translation and promotes mRNA decay. siRNA drugs use the same machinery.' },
@@ -486,15 +485,15 @@ export const ENTRIES = [
     name: { nl: 'snRNA: U1 snRNP', en: 'snRNA: U1 snRNP' }, sub: { nl: 'U1-snRNA + Sm-ring + U1-70K + U1-C · 3,3 Å', en: 'U1 snRNA + Sm ring + U1-70K + U1-C · 3.3 Å' },
     keep: ['1', 'X', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'K', 'L'], cmp: ['premrna', 'groupi'], scenes: ['splicing'],
     what: {
-      nl: 'Het U1 snRNP herkent de 5\'-splicingsite van elk intron. Deze kristalstructuur toont een ingekort, deels aangepast menselijk U1-snRNA met de zevenledige Sm-eiwitring (SmB, D1, D2, D3, E, F, G) en de U1-specifieke eiwitten U1-70K en U1-C. Het 5\'-uiteinde van het snRNA paart met een RNA-oligo dat een 5\'-splicingsite nabootst (AG|GUAAGU); U1-C stabiliseert die korte duplex.',
-      en: 'The U1 snRNP recognises the 5\' splice site of every intron. This crystal structure shows a shortened, partly engineered human U1 snRNA with the seven-membered Sm protein ring (SmB, D1, D2, D3, E, F, G) and the U1-specific proteins U1-70K and U1-C. The 5\' end of the snRNA pairs with an RNA oligo mimicking a 5\' splice site (AG|GUAAGU); U1-C stabilises this short duplex.' },
+      nl: 'Het U1 snRNP herkent de 5\'-splicingsite van de gewone (U2-type) intronen, meer dan 99,5% van alle intronen; de zeldzame U12-type intronen gebruiken U11. Deze kristalstructuur toont een ingekort, deels aangepast menselijk U1-snRNA met de zevenledige Sm-eiwitring (SmB, D1, D2, D3, E, F, G) en de U1-specifieke eiwitten U1-70K en U1-C. Het 5\'-uiteinde van het snRNA paart met een RNA-oligo dat een 5\'-splicingsite nabootst (AG|GUAAGU); U1-C stabiliseert die korte duplex.',
+      en: 'The U1 snRNP recognises the 5\' splice site of the ordinary (U2-type) introns, more than 99.5% of all introns; the rare U12-type introns use U11. This crystal structure shows a shortened, partly engineered human U1 snRNA with the seven-membered Sm protein ring (SmB, D1, D2, D3, E, F, G) and the U1-specific proteins U1-70K and U1-C. The 5\' end of the snRNA pairs with an RNA oligo mimicking a 5\' splice site (AG|GUAAGU); U1-C stabilises this short duplex.' },
     feat: {
       nl: ['RNA–eiwitcomplex (kleur per ketentype)', 'Sm-ring rond de Sm-plaats van het snRNA', 'basenparing snRNA ↔ 5\'-splicingsite', 'één van de kopieën uit de asymmetrische eenheid'],
       en: ['RNA–protein complex (colour by chain type)', 'Sm ring around the Sm site of the snRNA', 'base pairing snRNA ↔ 5\' splice site', 'one of the copies in the asymmetric unit'] },
     cell: {
-      nl: 'snRNA\'s (U1, U2, U4, U5, U6 en de minor U11, U12, U4atac, U6atac) zijn korte (~100–190 nt), uridinerijke niet-coderende RNA\'s in de kern. Samen met eiwitten vormen ze het spliceosoom, dat intronen uit pre-mRNA verwijdert; U2 en U6 vormen het katalytische RNA-centrum.',
-      en: 'snRNAs (U1, U2, U4, U5, U6 and the minor U11, U12, U4atac, U6atac) are short (~100–190 nt), uridine-rich non-coding RNAs in the nucleus. Together with proteins they form the spliceosome, which removes introns from pre-mRNA; U2 and U6 form the catalytic RNA centre.' },
-    src: [doi('10.7554/eLife.04986', 'Kondo et al. (2015) eLife 4:e04986')],
+      nl: 'snRNA\'s (U1, U2, U4, U5, U6 en de minor U11, U12, U4atac, U6atac) zijn korte niet-coderende RNA\'s in de kern. Samen met eiwitten vormen ze het spliceosoom, dat intronen uit pre-mRNA verwijdert; U2 en U6 vormen het katalytische RNA-centrum.',
+      en: 'snRNAs (U1, U2, U4, U5, U6 and the minor U11, U12, U4atac, U6atac) are short non-coding RNAs in the nucleus. Together with proteins they form the spliceosome, which removes introns from pre-mRNA; U2 and U6 form the catalytic RNA centre.' },
+    src: [doi('10.7554/eLife.04986', 'Kondo et al. (2015) eLife 4:e04986'), doi('10.1002/wrna.1141', 'Turunen et al. (2013) WIREs RNA 4:61 — U12-type intronen < 0,5% / U12-type introns < 0.5%')],
   },
 
   /* ================= DNA–eiwit ================= */
@@ -509,9 +508,9 @@ export const ENTRIES = [
       nl: ['147 bp (menselijke α-satellietsequentie) + histonen (grijs)', '~1,65 superhelixwindingen, linkshandig', 'per nucleotide: vrijwel B-vorm (suikers berekend)', 'helixparameters niet zinvol: de as is zelf een superhelix'],
       en: ['147 bp (human α-satellite sequence) + histones (grey)', '~1.65 superhelical turns, left-handed', 'per nucleotide: essentially B-form (sugars computed)', 'helix parameters not meaningful: the axis itself is a superhelix'] },
     cell: {
-      nl: 'Chromatine bestaat uit nucleosomen om de ~200 bp, verbonden door linker-DNA waaraan histon H1 bindt. Nucleosoompositie en histonmodificaties bepalen of transcriptiefactoren en RNA-polymerase het DNA kunnen bereiken.',
-      en: 'Chromatin consists of nucleosomes every ~200 bp, connected by linker DNA to which histone H1 binds. Nucleosome positioning and histone modifications determine whether transcription factors and RNA polymerase can reach the DNA.' },
-    src: [doi('10.1016/S0022-2836(02)00386-8', 'Davey et al. (2002) J Mol Biol 319:1097'), doi('10.1038/38444', 'Luger et al. (1997) Nature 389:251')],
+      nl: 'Chromatine bestaat uit een rij nucleosomen, verbonden door linker-DNA; histon H1 bindt telkens kort aan het nucleosoom waar het DNA in- en uitgaat. Nucleosoompositie en histonmodificaties bepalen of transcriptiefactoren en RNA-polymerase het DNA kunnen bereiken.',
+      en: 'Chromatin consists of a row of nucleosomes connected by linker DNA; histone H1 binds briefly to the nucleosome where the DNA enters and leaves. Nucleosome positioning and histone modifications determine whether transcription factors and RNA polymerase can reach the DNA.' },
+    src: [doi('10.1016/S0022-2836(02)00386-8', 'Davey et al. (2002) J Mol Biol 319:1097'), doi('10.1038/38444', 'Luger et al. (1997) Nature 389:251'), doi('10.1016/j.bbagrm.2015.10.005', 'Flanagan & Brown (2016) Biochim Biophys Acta 1859:468 — histon H1 / histone H1')],
   },
   {
     id: 'ssdna', pdb: '1JMC', type: ['dna', 'prot'], cls: ['single', 'complex'], ctx: ['cell'], org: { nl: 'mens (RPA70)', en: 'human (RPA70)' },
@@ -526,7 +525,7 @@ export const ENTRIES = [
     cell: {
       nl: 'RPA (RPA70–RPA32–RPA14) beschermt ssDNA bij replicatie (o.a. op de achterblijvende streng), herstel (resectie van breuken) en recombinatie, en is een platform: RPA-bedekt ssDNA activeert de checkpointkinase ATR.',
       en: 'RPA (RPA70–RPA32–RPA14) protects ssDNA during replication (e.g. on the lagging strand), repair (resection of breaks) and recombination, and acts as a platform: RPA-coated ssDNA activates the checkpoint kinase ATR.' },
-    src: [doi('10.1038/385176a0', 'Bochkarev et al. (1997) Nature 385:176')],
+    src: [doi('10.1038/385176a0', 'Bochkarev et al. (1997) Nature 385:176'), doi('10.1126/science.1083430', 'Zou & Elledge (2003) Science 300:1542 — RPA-ssDNA trekt ATR aan / RPA-ssDNA recruits ATR')],
   },
 
   /* ================= lange moleculen: een gemeten 3D-stuk + het schema van het geheel (knop "Schema") ================= */
@@ -538,33 +537,33 @@ export const ENTRIES = [
       nl: 'Het rijpe eukaryote mRNA is een enkelstrengig RNA met een vaste opbouw: 5\'-cap (7-methylguanosine via een 5\'–5\'-trifosfaatbrug), 5\'-UTR, de coderende sequentie (CDS, van AUG tot stopcodon), 3\'-UTR en een poly(A)-staart. Het is geen gestrekte draad: het vouwt lokaal tot haarspelden en is in de cel altijd met eiwitten bedekt (mRNP).',
       en: 'The mature eukaryotic mRNA is a single-stranded RNA with a fixed layout: 5\' cap (7-methylguanosine via a 5\'–5\' triphosphate bridge), 5\' UTR, the coding sequence (CDS, from AUG to stop codon), 3\' UTR and a poly(A) tail. It is not an extended thread: it folds locally into hairpins and in the cell it is always coated with proteins (mRNP).' },
     feat: {
-      nl: ['cap: m⁷GpppN; bij mensen is nt 1 ook 2\'-O-gemethyleerd (cap 1)', '5\'-UTR: het 43S-complex scant naar het startcodon (Kozak-context gccRccAUGG)', '3\'-UTR: plaatsen voor miRNA\'s en regulerende eiwitten; AAUAAA-signaal voor de 3\'-knip', 'poly(A): ~200–250 A bij synthese in de kern, daarna geleidelijk ingekort; gebonden door PABP'],
-      en: ['cap: m⁷GpppN; in humans nt 1 is also 2\'-O-methylated (cap 1)', '5\' UTR: the 43S complex scans to the start codon (Kozak context gccRccAUGG)', '3\' UTR: sites for miRNAs and regulatory proteins; AAUAAA signal for 3\' cleavage', 'poly(A): ~200–250 A when made in the nucleus, then gradually shortened; bound by PABP'] },
+      nl: ['cap: m⁷GpppN; bij mensen is nt 1 ook 2\'-O-gemethyleerd (cap 1)', '5\'-UTR: het 43S-complex scant naar het startcodon (Kozak-context gccRccAUGG)', '3\'-UTR: plaatsen voor miRNA\'s en regulerende eiwitten; AAUAAA-signaal voor de 3\'-knip', 'poly(A): ~250 A bij synthese in de kern (zoogdieren), daarna geleidelijk ingekort; gebonden door PABP'],
+      en: ['cap: m⁷GpppN; in humans nt 1 is also 2\'-O-methylated (cap 1)', '5\' UTR: the 43S complex scans to the start codon (Kozak context gccRccAUGG)', '3\' UTR: sites for miRNAs and regulatory proteins; AAUAAA signal for 3\' cleavage', 'poly(A): ~250 A when made in the nucleus (mammals), then gradually shortened; bound by PABP'] },
     cell: {
       nl: 'Gemaakt in de kern door RNA-polymerase II; cotranscriptioneel gecapt, gespliced en gepolyadenyleerd, daarna via de kernporie geëxporteerd. Cap en poly(A)-staart (via eIF4E–eIF4G–PABP) bevorderen translatie en beschermen tegen afbraak. mRNA-vaccins bootsen deze opbouw na (met gemodificeerde uridines).',
       en: 'Made in the nucleus by RNA polymerase II; capped, spliced and polyadenylated co-transcriptionally, then exported through the nuclear pore. The cap and poly(A) tail (via eIF4E–eIF4G–PABP) promote translation and protect against decay. mRNA vaccines mimic this layout (with modified uridines).' },
     why3d: {
       nl: 'Een volledig mRNA heeft geen vaste 3D-structuur: het is lang, flexibel en eiwitgebonden. Enkel fragmenten (bv. de cap in eIF4E, poly(A) in PABP) zijn als structuur bepaald.',
       en: 'A complete mRNA has no fixed 3D structure: it is long, flexible and protein-bound. Only fragments (e.g. the cap in eIF4E, poly(A) in PABP) have been solved.' },
-    src: [doi('10.1016/S0092-8674(00)81517-2', 'Deo et al. (1999) Cell 98:835 — PABP + poly(A), PDB 1CVJ'), doi('10.1083/jcb.96.3.717', 'Baer & Kornberg (1983) J Cell Biol 96:717 — PABP om de 27 A’s'), doi('10.1093/nar/gkw551', 'Ramanathan, Robb & Chan (2016) Nucleic Acids Res 44:7511'), doi('10.1038/s41580-021-00417-y', 'Passmore & Coller (2022) Nat Rev Mol Cell Biol 23:93')],
+    src: [doi('10.1016/S0092-8674(00)81517-2', 'Deo et al. (1999) Cell 98:835 — PABP + poly(A), PDB 1CVJ'), doi('10.1083/jcb.96.3.717', 'Baer & Kornberg (1983) J Cell Biol 96:717 — PABP om de 27 A’s'), doi('10.1093/nar/gkw551', 'Ramanathan, Robb & Chan (2016) Nucleic Acids Res 44:7511'), doi('10.1038/s41580-021-00417-y', 'Passmore & Coller (2022) Nat Rev Mol Cell Biol 23:93'), doi('10.1093/nar/15.20.8125', 'Kozak (1987) Nucleic Acids Res 15:8125 — Kozak-context / Kozak context'), doi('10.1074/jbc.M109.018226', 'Kühn et al. (2009) J Biol Chem 284:22803 — ~250 A, AAUAAA')],
   },
   {
     id: 'premrna', pdb: '1K1G', diagram: 'premrna', type: ['rna', 'prot'], cls: ['single', 'complex', 'info'], ctx: ['cell'], org: { nl: 'mens: splicingfactor SF1 + vertakkingsplaats-RNA', en: 'human: splicing factor SF1 + branch-site RNA' },
     name: { nl: 'Pre-mRNA', en: 'Pre-mRNA' }, sub: { nl: 'exonen, intronen en splicingsignalen', en: 'exons, introns and splicing signals' },
     scenes: ['splicing', 'rnaprocessing'], cmp: ['mrna', 'snrna'],
     what: {
-      nl: 'Het primaire transcript van RNA-polymerase II bevat naast de exonen ook intronen, die bij mensen meestal veel langer zijn dan de exonen. Intronen beginnen bijna altijd met GU en eindigen op AG; een vertakkingspunt-A ligt ~20–50 nt stroomopwaarts van het 3\'-splicingsite, gevolgd door een polypyrimidinetraject.',
-      en: 'The primary transcript of RNA polymerase II contains introns besides the exons; in humans introns are usually much longer than exons. Introns almost always start with GU and end with AG; a branch-point A lies ~20–50 nt upstream of the 3\' splice site, followed by a polypyrimidine tract.' },
+      nl: 'Het primaire transcript van RNA-polymerase II bevat naast de exonen ook intronen, die bij mensen veel langer kunnen zijn dan de exonen. Intronen beginnen bijna altijd met GU en eindigen op AG; een vertakkingspunt-A ligt meestal ~21–34 nt stroomopwaarts van het 3\'-splicingsite, gevolgd door een polypyrimidinetraject.',
+      en: 'The primary transcript of RNA polymerase II contains introns besides the exons; in humans introns can be much longer than exons. Introns almost always start with GU and end with AG; a branch-point A usually lies ~21–34 nt upstream of the 3\' splice site, followed by a polypyrimidine tract.' },
     feat: {
-      nl: ['5\'-splicingsite: exon…AG|GURAGU…', 'vertakkingspunt: …YNYURAY… (de A valt de 5\'-splicingsite aan → lariat)', '3\'-splicingsite: polypyrimidinetraject …YAG|exon', 'menselijk gen: gemiddeld ~9 exonen van ~150 nt; intronen vaak kilobasen lang'],
-      en: ['5\' splice site: exon…AG|GURAGU…', 'branch point: …YNYURAY… (its A attacks the 5\' splice site → lariat)', '3\' splice site: polypyrimidine tract …YAG|exon', 'human gene: on average ~9 exons of ~150 nt; introns often kilobases long'] },
+      nl: ['5\'-splicingsite: exon…AG|GURAGU…', 'vertakkingspunt bij de mens: …yUnAy… (de A valt de 5\'-splicingsite aan → lariat)', '3\'-splicingsite: polypyrimidinetraject …YAG|exon', 'menselijk gen: gemiddeld ~9 exonen, ~80% korter dan 200 nt; sommige intronen zijn langer dan 11 000 nt'],
+      en: ['5\' splice site: exon…AG|GURAGU…', 'human branch point: …yUnAy… (its A attacks the 5\' splice site → lariat)', '3\' splice site: polypyrimidine tract …YAG|exon', 'human gene: on average ~9 exons, ~80% shorter than 200 nt; some introns are longer than 11,000 nt'] },
     cell: {
       nl: 'Splicing gebeurt in de kern door het spliceosoom (U1, U2, U4/U6, U5 snRNP + >100 eiwitten), grotendeels tijdens de transcriptie. Door alternatieve splicing codeert één gen voor meerdere eiwitten: dat gebeurt bij >90% van de menselijke genen met meerdere exonen.',
       en: 'Splicing takes place in the nucleus by the spliceosome (U1, U2, U4/U6, U5 snRNPs + >100 proteins), largely during transcription. Through alternative splicing one gene encodes several proteins: this happens for >90% of human multi-exon genes.' },
     why3d: {
-      nl: 'Pre-mRNA\'s zijn tot honderden kilobasen lang en worden al tijdens de synthese door eiwitten bedekt; er bestaat geen enkelvoudige 3D-structuur.',
-      en: 'Pre-mRNAs can be hundreds of kilobases long and are coated by proteins during synthesis; there is no single 3D structure.' },
-    src: [doi('10.1126/science.1064719', 'Liu et al. (2001) Science 294:1098 — SF1 + vertakkingsplaats, PDB 1K1G'), doi('10.1016/j.cell.2009.02.009', 'Wahl, Will & Lührmann (2009) Cell 136:701'), doi('10.1038/nature07509', 'Wang et al. (2008) Nature 456:470')],
+      nl: 'Pre-mRNA\'s kunnen meer dan 10 000 nucleotiden lang zijn en worden al tijdens de synthese door eiwitten bedekt; er bestaat geen enkelvoudige 3D-structuur.',
+      en: 'Pre-mRNAs can be more than 10,000 nucleotides long and are coated by proteins during synthesis; there is no single 3D structure.' },
+    src: [doi('10.1126/science.1064719', 'Liu et al. (2001) Science 294:1098 — SF1 + vertakkingsplaats, PDB 1K1G'), doi('10.1016/j.cell.2009.02.009', 'Wahl, Will & Lührmann (2009) Cell 136:701'), doi('10.1038/nature07509', 'Wang et al. (2008) Nature 456:470'), doi('10.1093/nar/gkn073', 'Gao et al. (2008) Nucleic Acids Res 36:2257 — vertakkingspunt yUnAy / branch point yUnAy'), pubmed('15217358', 'Sakharkar, Chow & Kangueane (2004) In Silico Biol 4:387 — exonen en intronen / exons and introns')],
   },
   {
     id: 'mtdna', pdb: '3TQ6', keep: ['A', 'C', 'D'], diagram: 'mtdna', type: ['dna', 'prot'], cls: ['duplex', 'circular', 'complex', 'info'], ctx: ['cell'], org: { nl: 'mens: TFAM + mtDNA-promotor (LSP)', en: 'human: TFAM + mtDNA promoter (LSP)' },
@@ -631,15 +630,15 @@ export const ENTRIES = [
       nl: 'Lange niet-coderende RNA\'s zijn transcripten van meer dan 200 nt die niet voor een eiwit coderen. Veel worden net als mRNA door Pol II gemaakt, gecapt, gespliced en gepolyadenyleerd, maar ze zijn minder geconserveerd, vaak laag en celtypespecifiek tot expressie gebracht. Hun werking hangt af van hun vouwing en van de eiwitten die ze binden.',
       en: 'Long non-coding RNAs are transcripts longer than 200 nt that do not code for a protein. Many are made like mRNA by Pol II — capped, spliced and polyadenylated — but they are less conserved and often expressed at low levels and cell-type-specifically. Their action depends on their folding and on the proteins they bind.' },
     feat: {
-      nl: ['XIST (~17 kb): bedekt één X-chromosoom in vrouwelijke cellen en zet het stil', 'NEAT1: steiger van paraspeckles; MALAT1: in nuclear speckles', 'werkingswijzen: gids (chromatine-enzymen naar een locus), steiger, lokvogel (decoy) voor eiwitten of miRNA\'s, of via de transcriptie zelf', 'GENCODE telt bij de mens ~20 000 lncRNA-genen'],
-      en: ['XIST (~17 kb): coats one X chromosome in female cells and silences it', 'NEAT1: scaffold of paraspeckles; MALAT1: in nuclear speckles', 'modes of action: guide (chromatin enzymes to a locus), scaffold, decoy for proteins or miRNAs, or through the act of transcription', 'GENCODE counts ~20,000 lncRNA genes in humans'] },
+      nl: ['XIST (~17 kb): bedekt één X-chromosoom in vrouwelijke cellen en zet het stil', 'NEAT1: steiger van paraspeckles; MALAT1: in nuclear speckles', 'werkingswijzen: gids (chromatine-enzymen naar een locus), steiger, lokvogel (decoy) voor eiwitten of miRNA\'s, of via de transcriptie zelf', 'GENCODE telt bij de mens meer dan 16 000 lncRNA-genen; andere schattingen liggen veel hoger'],
+      en: ['XIST (~17 kb): coats one X chromosome in female cells and silences it', 'NEAT1: scaffold of paraspeckles; MALAT1: in nuclear speckles', 'modes of action: guide (chromatin enzymes to a locus), scaffold, decoy for proteins or miRNAs, or through the act of transcription', 'GENCODE counts more than 16,000 lncRNA genes in humans; other estimates are much higher'] },
     cell: {
       nl: 'Vooral in de kern, sommige in het cytoplasma. Slechts voor een minderheid is de functie experimenteel aangetoond: een actief onderzoeksveld.',
       en: 'Mainly in the nucleus, some in the cytoplasm. Function has been demonstrated experimentally for only a minority: an active research field.' },
     why3d: {
       nl: 'Voor lange lncRNA\'s bestaat geen volledige 3D-structuur; ze zijn modulair en dynamisch. Het diagram toont de belangrijkste werkingswijzen.',
       en: 'No complete 3D structure exists for long lncRNAs; they are modular and dynamic. The diagram shows the main modes of action.' },
-    src: [doi('10.1038/nsmb.2844', 'Brown et al. (2014) Nat Struct Mol Biol 21:633 — MALAT1-triplex, PDB 4PLX'), doi('10.1038/s41580-020-00315-9', 'Statello et al. (2021) Nat Rev Mol Cell Biol 22:96')],
+    src: [doi('10.1038/nsmb.2844', 'Brown et al. (2014) Nat Struct Mol Biol 21:633 — MALAT1-triplex, PDB 4PLX'), doi('10.1038/s41580-020-00315-9', 'Statello et al. (2021) Nat Rev Mol Cell Biol 22:96'), doi('10.1016/0092-8674(92)90520-M', 'Brown et al. (1992) Cell 71:527 — XIST, 17 kb')],
   },
   {
     id: 'tdna', pdb: '3BTP', diagram: 'tdna', type: ['dna', 'prot'], cls: ['single', 'complex', 'info'], ctx: ['other', 'lab'], plant: true, org: { nl: 'Agrobacterium tumefaciens: VirE2 + VirE1 (zonder DNA)', en: 'Agrobacterium tumefaciens: VirE2 + VirE1 (no DNA)' },
@@ -655,8 +654,8 @@ export const ENTRIES = [
       nl: 'Komt niet voor in menselijke cellen: dit is plantenbiologie en biotechnologie (genetisch gewijzigde planten). In deze app krijgt vreemd DNA (T-DNA, viraal) de roze kleur; het menselijke tegenstuk is de integratie van een retroviraal provirus (HIV).',
       en: 'Does not occur in human cells: this is plant biology and biotechnology (genetically modified plants). In this app foreign DNA (T-DNA, viral) is pink; the human counterpart is the integration of a retroviral provirus (HIV).' },
     why3d: {
-      nl: 'T-DNA is een stuk gewoon DNA van ~10–25 kb; het bijzondere zit in het transport (eiwitten), niet in een aparte 3D-vorm.',
-      en: 'T-DNA is a stretch of ordinary DNA of ~10–25 kb; what is special is its transfer (proteins), not a distinct 3D shape.' },
+      nl: 'T-DNA is een stuk gewoon DNA van ~10–30 kb; het bijzondere zit in het transport (eiwitten), niet in een aparte 3D-vorm.',
+      en: 'T-DNA is a stretch of ordinary DNA of ~10–30 kb; what is special is its transfer (proteins), not a distinct 3D shape.' },
     src: [doi('10.1073/pnas.0801525105', 'Dym et al. (2008) PNAS 105:11170 — VirE2–VirE1, PDB 3BTP'), doi('10.1128/MMBR.67.1.16-37.2003', 'Gelvin (2003) Microbiol Mol Biol Rev 67:16')],
   },
 ];

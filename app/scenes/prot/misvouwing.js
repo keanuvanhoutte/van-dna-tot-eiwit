@@ -14,8 +14,8 @@ const misf = (x, y, s = 1, op = 1, rot = 0) => `<g opacity="${f1(op)}" transform
 export default {
   id: 'misvouwing',
   title: { nl: 'Misvouwing & aggregatie', en: 'Misfolding & aggregation' },
-  scale: { nl: 'monomeer ≈ 3 nm · fibril ≈ 10 nm breed, µm lang', en: 'monomer ≈ 3 nm · fibril ≈ 10 nm wide, µm long' },
-  time: { nl: 'uren tot jaren (in weefsels)', en: 'hours to years (in tissues)' },
+  scale: { nl: 'fibril ≈ 7,5–10 nm breed, lang en onvertakt · strengen 4,7 Å uit elkaar', en: 'fibril ≈ 7.5–10 nm wide, long and unbranched · strands 4.7 Å apart' },
+  time: { nl: 'jaren: bij erfelijke Alzheimer is amyloïd ~15 jaar vóór de klachten meetbaar', en: 'years: in inherited Alzheimer’s, amyloid is detectable ~15 years before symptoms' },
   org: { nl: 'mens', en: 'human' },
   legend: [[C.chain, { nl: 'eiwit (natief)', en: 'protein (native)' }], [HYD, { nl: 'blootgesteld hydrofoob stuk', en: 'exposed hydrophobic stretch' }], [BAD, { nl: 'amyloïd / β-rijk', en: 'amyloid / β-rich' }], [C.prot, { nl: 'chaperones, sensoren', en: 'chaperones, sensors' }], ['#ffd166', 'ubiquitine'], [C.mem, { nl: 'ER-membraan', en: 'ER membrane' }]],
   extra: {

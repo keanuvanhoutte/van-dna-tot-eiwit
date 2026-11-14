@@ -14,8 +14,8 @@ const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }
 export default {
   id: 'disulfide',
   title: { nl: 'Disulfidebruggen', en: 'Disulfide bonds' },
-  scale: { nl: 'S–S-binding ≈ 2,05 Å · PDI ≈ 10 nm', en: 'S–S bond ≈ 2.05 Å · PDI ≈ 10 nm' },
-  time: { nl: 'seconden tot minuten (tijdens en na de translatie)', en: 'seconds to minutes (during and after translation)' },
+  scale: { nl: 'S–S-binding ≈ 2,05 Å · PDI ≈ 9 nm', en: 'S–S bond ≈ 2.05 Å · PDI ≈ 9 nm' },
+  time: { nl: 'begint al tijdens de translatie; tot insuline de cel verlaat: ~35 min', en: 'starts during translation; until insulin leaves the cell: ~35 min' },
   org: { nl: 'mens (ER-lumen)', en: 'human (ER lumen)' },
   legend: [[C.chain, { nl: 'polypeptideketen', en: 'polypeptide chain' }], [SS, { nl: 'Cys / disulfidebrug', en: 'Cys / disulfide bond' }], [C.prot, 'PDI (a–b–b′–a′)'], [C.prot2, 'Ero1 (FAD)'], ['#5fd3e6', { nl: 'elektronen (e⁻)', en: 'electrons (e⁻)' }]],
   simplified: {

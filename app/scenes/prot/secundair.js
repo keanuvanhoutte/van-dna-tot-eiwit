@@ -17,7 +17,7 @@ const ST = (dur, nl, en, tnl, ten, camv = FULL) => ({ dur, cam: camv, title: { n
 export default {
   id: 'secundair',
   title: { nl: 'Secundaire structuur', en: 'Secondary structure' },
-  scale: '≈ 1–3 nm', time: { nl: 'helices vormen zich in ~µs (hier stilstaand)', en: 'helices form within ~µs (static here)' },
+  scale: '≈ 1–3 nm', time: { nl: 'geen tijdsas (stilstaande structuur)', en: 'no time axis (static structure)' },
   org: { nl: 'mens (ubiquitine, PDB 1UBQ)', en: 'human (ubiquitin, PDB 1UBQ)' },
   legend: [[C.prot, 'α-helix'], ['#e07bff', { nl: '3₁₀-helix', en: '3₁₀ helix' }], [C.trna, { nl: 'β-streng', en: 'β-strand' }], ['#6b7590', { nl: 'lus / coil', en: 'loop / coil' }], [EL.N, 'N'], [EL.O, 'O'], [EL.C, 'C, Cα'], [EL.H, { nl: 'H (berekend)', en: 'H (computed)' }], [EL.CB, { nl: 'Cβ (begin zijketen)', en: 'Cβ (start of side chain)' }], ['#ffc247', { nl: 'H-brug (gestreept)', en: 'H-bond (dashed)' }]],
   extra: {
@@ -131,9 +131,9 @@ export default {
             });
             return s;
           })() : head(T2('Drie soorten lussen', 'Three kinds of loops')) +
-            T(225, T2('haarspeld: min. 4–5 res., vaak Gly/Pro', 'hairpin: min. 4–5 res., often Gly/Pro')) +
-            T(275, T2('omega-lus: ± 6–16 res. (Ω-vorm)', 'omega loop: ± 6–16 res. (Ω shape)')) +
-            T(325, T2('random coil: > 16 res., ongeordend', 'random coil: > 16 res., disordered')) +
+            T(225, T2('haarspeld: korte bocht (hier 7–10)', 'hairpin: short turn (here 7–10)')) +
+            T(275, T2('omega-lus: Ω-vormig en compact', 'omega loop: Ω-shaped and compact')) +
+            T(325, T2('lange lus: onregelmatig ("random coil")', 'long loop: irregular ("random coil")')) +
             T(400, T2('Ubiquitine: enkel korte lussen', 'Ubiquitin: only short loops'), C.muted, 22));
         } else if (step >= 1 && step <= 3) {
           const endOn = step === 3 ? ease(sub(p, .1, .6)) * Math.PI / 2 : 0;
@@ -224,13 +224,13 @@ export default {
           lab += tag((a[0] + b[0]) / 2, 190, T2('3₁₀-helix: O(i) ··· H–N(i+3)', '3₁₀ helix: O(i) ··· H–N(i+3)'), '#e07bff', 25);
           panel('g' + L({ nl: 1, en: 2 }), () => {
             let s = head(T2('Drie soorten helices', 'Three kinds of helix'));
-            const rows = [['3₁₀', 3, '3,0', '3.0', '#e07bff', T2('korter, strakker', 'shorter, tighter')], ['α', 4, '3,6', '3.6', C.prot, T2('veruit het meest', 'by far the most common')], ['π', 5, '4,4', '4.4', '#5fd3e6', T2('zeldzaam, breder', 'rare, wider')]];
+            const rows = [['3₁₀', 3, '', '', '#e07bff', T2('korter, strakker', 'shorter, tighter')], ['α', 4, '3,6', '3.6', C.prot, T2('veruit het meest', 'by far the most common')], ['π', 5, '', '', '#5fd3e6', T2('zeldzaam, breder', 'rare, wider')]];
             rows.forEach(([nm, k, nlv, env, col, note], r) => {
               const y = 262 + r * 150, x0 = PX + 150, dx = 36;
               s += txt(PX + 40, y + 8, nm, col, 32, 'start', 700);
               for (let i = 0; i < 9; i++) s += `<circle cx="${x0 + i * dx}" cy="${y}" r="10" fill="#8a96b3"/>`;
               for (let i = 0; i + k < 9; i++) s += `<path d="M${x0 + i * dx},${y - 12} C${x0 + i * dx},${y - 60} ${x0 + (i + k) * dx},${y - 60} ${x0 + (i + k) * dx},${y - 12}" fill="none" stroke="${col}" stroke-width="2.5" stroke-dasharray="5 4" opacity=".75"/>`;
-              s += txt(PX + 150, y + 44, `i → i+${k} · ${L({ nl: nlv, en: env })} ${T2('res./winding', 'res./turn')}`, '#c3cde2', 22, 'start', 600) + txt(PX + 150, y + 74, note, C.muted, 21, 'start', 600);
+              s += txt(PX + 150, y + 44, `${T2('H-brug', 'H-bond')} i → i+${k}` + (nlv ? ` · ${L({ nl: nlv, en: env })} ${T2('res./winding', 'res./turn')}` : ''), '#c3cde2', 22, 'start', 600) + txt(PX + 150, y + 74, note, C.muted, 21, 'start', 600);
             });
             return s;
           });
@@ -262,8 +262,8 @@ export default {
           } else if (p > .6) lab += tag(CX, 170, T2('zijaanzicht: Cβ boven / onder', 'side view: Cβ above / below'), C.chain, 25);
           const k = L({ nl: 1, en: 2 });
           if (step === 5) panel('b5' + k, () => head(T2('β-streng', 'β-strand')) +
-            T(220, T2('• bijna gestrekt', '• almost fully extended')) + T(262, T2('• ± 3,5 Å per residu', '• ± 3.5 Å per residue')) +
-            T(304, T2('• vaak 5–8 residuen', '• often 5–8 residues')) + T(346, T2('• getekend als pijl (N → C)', '• drawn as an arrow (N → C)')));
+            T(220, T2('• bijna gestrekt', '• almost fully extended')) + T(262, T2('• ≈ 3,3 Å per residu', '• ≈ 3.3 Å per residue')) +
+            T(304, T2('• hier 3 tot 9 residuen lang', '• here 3 to 9 residues long')) + T(346, T2('• getekend als pijl (N → C)', '• drawn as an arrow (N → C)')));
           if (step === 6 || step === 7) panel('b' + step + k, () => {
             const par = step === 7;
             let s = head(par ? T2('Parallel: zelfde richting', 'Parallel: same direction') : T2('Antiparallel: tegengesteld', 'Antiparallel: opposite'));
@@ -280,7 +280,7 @@ export default {
           });
           if (step === 8) panel('b8' + k, () => {
             let s = head(T2('Twist en β-bulge', 'Twist and β-bulge'));
-            s += T(220, T2('• zijketens boven/onder', '• side chains above/below')) + T(262, T2('• rechtshandige twist', '• right-handed twist'));
+            s += T(220, T2('• zijketens boven/onder', '• side chains above/below')) + T(262, T2('• meestal rechtshandig gedraaid', '• usually right-handed twist'));
             const x0 = PX + 70, dx = 62, y1 = 470, y2 = 560;
             s += T(410, T2('β-bulge: één extra residu', 'β-bulge: one extra residue'), '#c3cde2', 23);
             for (let i = 0; i < 7; i++) s += `<circle cx="${x0 + i * dx}" cy="${y2}" r="10" fill="#c9d2e4"/>`;

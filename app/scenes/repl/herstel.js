@@ -21,7 +21,7 @@ function mini(kind, y) {
   let s = '', fx = '';
   const top = SEQ.split(''), bot = top.map(b => COMP[b]);
   let skip = -1;
-  if (kind === 'mmr') bot[5] = 'G';                   // G tegenover T (T op positie 5 bovenaan)
+  if (kind === 'mmr') bot[5] = 'T';                   // T (fout, in de nieuwe streng) tegenover G: G·T, zoals in de MMR-scène
   if (kind === 'ber') top[4] = 'U';                   // C → U
   if (kind === 'ner') { top[4] = 'T'; top[5] = 'T'; bot[4] = 'A'; bot[5] = 'A'; }
   if (kind === 'dsb') skip = 5;                       // breuk tussen 4 en 5
@@ -112,7 +112,7 @@ export default {
       <g data-node="p53" data-nolabel data-color="${C.prot}"><rect x="1225" y="668" width="320" height="58" rx="29" fill="rgba(155,123,255,.16)" stroke="${C.prot}" stroke-width="2"/>${txt(1385, 706, T2('bewaker p53 →', 'guardian p53 →'), C.text, 24, 'middle', 700)}</g>
     </g>
     <g data-node="replisoom" data-color="${C.prot}" data-label="${T2('Eerst: de polymerase leest zelf na', 'First: the polymerase proofreads itself')}"><circle id="hr-rpa" data-anchor="replisoom" cx="-99" cy="-99" r="1" fill="none"/><rect id="hr-rpr" x="-99" y="-99" width="1" height="1" fill="transparent"/></g>
-    <g data-node="integratie" data-color="${C.tdna}" data-label="${T2('Virussen gebruiken breukherstel', 'Viruses use break repair')}"><circle id="hr-ina" data-anchor="integratie" cx="-99" cy="-99" r="1" fill="none"/><rect id="hr-inr" x="-99" y="-99" width="1" height="1" fill="transparent"/></g>
+    <g data-node="integratie" data-color="${C.tdna}" data-label="${T2('Ingebouwd virus: de cel dicht de gaatjes', 'Integrated virus: the cell fills the gaps')}"><circle id="hr-ina" data-anchor="integratie" cx="-99" cy="-99" r="1" fill="none"/><rect id="hr-inr" x="-99" y="-99" width="1" height="1" fill="transparent"/></g>
     </svg>`;
   },
   init(svg) {

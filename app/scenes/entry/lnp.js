@@ -110,7 +110,7 @@ export default {
         $('ln-mrna-body').innerHTML = mOn > .01
           ? `<g>${mrnaGlyph(AX - 280, AY + 190, 520)}
              ${txt(AX + 20, AY + 285, T2('alle U → m1Ψ (N1-methylpseudouridine)', 'every U → m1Ψ (N1-methylpseudouridine)'), '#ff9d5c', 22)}
-             ${txt(AX + 20, AY + 315, T2('minder alarm bij de cel, meer eiwit', 'less innate alarm, more protein'), C.muted, 20)}</g>` : '';
+             ${txt(AX + 20, AY + 315, T2('minder alarm bij de cel, stabieler mRNA', 'less innate alarm, more stable mRNA'), C.muted, 20)}</g>` : '';
         if (step === 1) lab += `<g opacity="${f1(ease(sub(p, .05, .3)))}"><line x1="${AX}" y1="${AY + AR + 10}" x2="${AX}" y2="${AY + 180}" stroke="${C.rna}" stroke-width="2" stroke-dasharray="6 5"/></g>`;
 
         /* route rechts */

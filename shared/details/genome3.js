@@ -101,7 +101,7 @@ export default {
         'Mediator geeft het signaal van de activatoren door aan de algemene transcriptiefactoren en RNA-polymerase II.',
         'Het preinitiatiecomplex wordt sneller opgebouwd en het gen wordt vaker afgelezen.',
       ],
-      facts: [['Afstand', 'kan groot zijn: tot ≈ 1 Mb'], ['Voorbeeld', 'ZRS ligt 1 Mb van SHH (in een intron van LMBR1)'], ['Ziekte', 'ZRS-mutaties → preaxiale polydactylie (extra vinger aan de duimkant)'], ['Doorgever', 'Mediator']],
+      facts: [['Afstand', 'kan groot zijn, bv. ≈ 1 Mb'], ['Voorbeeld', 'ZRS ligt 1 Mb van SHH (in een intron van LMBR1)'], ['Ziekte', 'ZRS-mutaties → preaxiale polydactylie (extra vinger aan de duimkant)'], ['Doorgever', 'Mediator']],
       why: 'Enhancers bepalen in welk weefsel en op welk moment een gen aan gaat. Omdat ze ver weg kunnen liggen, kan een fout ver van een gen dat gen toch verstoren, zoals bij de ZRS en extra vingers.',
     },
     en: {
@@ -113,7 +113,7 @@ export default {
         'Mediator passes the activators’ signal on to the general transcription factors and RNA polymerase II.',
         'The preinitiation complex assembles faster and the gene is read more often.',
       ],
-      facts: [['Distance', 'can be large: up to ≈ 1 Mb'], ['Example', 'ZRS lies 1 Mb from SHH (in an intron of LMBR1)'], ['Disease', 'ZRS mutations → preaxial polydactyly (extra digit on the thumb side)'], ['Relay', 'Mediator']],
+      facts: [['Distance', 'can be large, e.g. ≈ 1 Mb'], ['Example', 'ZRS lies 1 Mb from SHH (in an intron of LMBR1)'], ['Disease', 'ZRS mutations → preaxial polydactyly (extra digit on the thumb side)'], ['Relay', 'Mediator']],
       why: 'Enhancers decide in which tissue and at what moment a gene switches on. Because they can lie far away, a fault far from a gene can still disturb that gene, as with the ZRS and extra fingers.',
     },
     sources: [SOUT, SCHOEN, LETTICE, RAO14, JANG],

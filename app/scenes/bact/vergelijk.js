@@ -20,7 +20,7 @@ const TX = {
   nucleoid: { nl: 'nucleoïd: DNA los in het cytoplasma', en: 'nucleoid: DNA free in the cytoplasm' },
   gene: { nl: 'gen', en: 'gene' }, exon: { nl: 'exon', en: 'exon' },
   coupled: { nl: 'ribosomen op een mRNA dat nog gemaakt wordt', en: 'ribosomes on an mRNA still being made' },
-  none: { nl: 'geen kern · geen splicing · geen kap', en: 'no nucleus · no splicing · no cap' },
+  none: { nl: 'geen kern · geen spliceosoom · geen kap zoals bij de mens', en: 'no nucleus · no spliceosome · no cap as in humans' },
   human: { nl: 'MENS · menselijke cel', en: 'HUMAN · human cell' }, bact: { nl: 'BACTERIE · E. coli', en: 'BACTERIUM · E. coli' },
 };
 const lbl = (x, y, s, a, o = {}) => a < .01 ? '' : `<text x="${n1(x)}" y="${n1(y)}" font-size="${o.size ?? 28}" font-weight="${o.w ?? 600}" fill="${o.fill ?? C.text}" text-anchor="${o.anchor ?? 'middle'}" opacity="${a.toFixed(3)}" font-family="Inter" paint-order="stroke" stroke="#0d1426" stroke-width="6">${s}</text>`;
@@ -156,7 +156,7 @@ function draw(hp, bp, sw) {
 const ROWS = [
   [{ nl: 'Kern', en: 'Nucleus' }, { nl: 'ja', en: 'yes' }, 'kern', { nl: 'nee: nucleoïd', en: 'no: nucleoid' }, 'bnucleoid'],
   [{ nl: 'Introns eruit knippen', en: 'Cutting out introns' }, { nl: 'ja, spliceosoom', en: 'yes, spliceosome' }, 'splicing', { nl: 'geen spliceosoom', en: 'no spliceosome' }, 'bsplicing'],
-  [{ nl: '5′-kap en staart', en: '5′ cap and tail' }, { nl: 'ja, allebei', en: 'yes, both' }, 'capping', { nl: 'geen kap zoals bij de mens', en: 'no cap as in humans' }, 'bmrna'],
+  [{ nl: '5′-kap', en: '5′ cap' }, { nl: 'ja', en: 'yes' }, 'capping', { nl: 'geen kap zoals bij de mens', en: 'no cap as in humans' }, 'bmrna'],
   [{ nl: 'Genen per mRNA', en: 'Genes per mRNA' }, { nl: 'meestal één', en: 'usually one' }, 'gen', { nl: 'vaak meerdere (operon)', en: 'often several (operon)' }, 'operon'],
   [{ nl: 'Wanneer vertalen?', en: 'When translated?' }, { nl: 'na de export', en: 'after export' }, 'translatie', { nl: 'al tijdens het maken', en: 'while being made' }, 'bribosoom'],
 ];
@@ -218,8 +218,8 @@ export default {
   legend: [[C.dna, 'DNA'], [C.rna, { nl: 'mRNA (exons)', en: 'mRNA (exons)' }], [K.intron, 'intron'], [K.pol, { nl: 'RNA-polymerase', en: 'RNA polymerase' }],
     [K.cap, { nl: '5′-kap en poly(A)-staart', en: '5′ cap and poly(A) tail' }], [K.rib, { nl: 'ribosoom', en: 'ribosome' }], [PROT[0], { nl: 'eiwitketen', en: 'protein chain' }]],
   simplified: {
-    nl: 'Niet op schaal: een menselijke cel is ongeveer tien keer zo groot als E. coli, en de genen zijn hier heel kort. Echte genen van de mens hebben vaak veel meer en langere introns. Bij de mens gebeuren kap, splicing en staart al tijdens de transcriptie; hier staan ze na elkaar om ze apart te tonen. Op één mRNA zitten in beide cellen vaak veel meer ribosomen tegelijk dan getekend.',
-    en: 'Not to scale: a human cell is about ten times the size of E. coli, and the genes here are very short. Real human genes often have many more and longer introns. In humans, cap, splicing and tail already happen during transcription; here they are shown one after the other to show them separately. In both cells, one mRNA often carries many more ribosomes at once than drawn.' },
+    nl: 'Niet op schaal: een menselijke cel is ongeveer tien keer zo groot als E. coli, en de genen zijn hier heel kort. Echte genen van de mens hebben vaak veel meer en langere introns. Bij de mens beginnen kap, splicing en staart al tijdens de transcriptie; hier staan ze na elkaar om ze apart te tonen. Op één mRNA zitten in beide cellen vaak veel meer ribosomen tegelijk dan getekend.',
+    en: 'Not to scale: a human cell is about ten times the size of E. coli, and the genes here are very short. Real human genes often have many more and longer introns. In humans, cap, splicing and tail already start during transcription; here they are shown one after the other to show them separately. In both cells, one mRNA often carries many more ribosomes at once than drawn.' },
   steps: [
     { dur: 8000, title: { nl: 'Mens: het gen wordt in de kern gekopieerd', en: 'Human: the gene is copied inside the nucleus' },
       text: { nl: 'RNA-polymerase leest het gen en maakt een pre-mRNA. Dat gebeurt binnen de celkern.', en: 'RNA polymerase reads the gene and makes a pre-mRNA. This happens inside the nucleus.' } },
@@ -230,7 +230,7 @@ export default {
     { dur: 8000, title: { nl: 'Mens: ribosomen maken het eiwit', en: 'Human: ribosomes make the protein' },
       text: { nl: 'Pas in het cytoplasma lezen ribosomen het mRNA. Een menselijk mRNA draagt meestal één gen.', en: 'Only in the cytoplasm do ribosomes read the mRNA. A human mRNA usually carries one gene.' } },
     { dur: 7000, title: { nl: 'Nu de bacterie: er is geen kern', en: 'Now the bacterium: there is no nucleus' },
-      text: { nl: 'Het DNA blijft, maar de kern verdwijnt. Een bacterie is één ruimte zonder kern.', en: 'The DNA stays, but the nucleus disappears. A bacterium is one space without a nucleus.' } },
+      text: { nl: 'In de tekening blijft het DNA, maar de kern verdwijnt. Een bacterie heeft geen kern: het DNA ligt in het cytoplasma.', en: 'In the drawing the DNA stays, but the nucleus disappears. A bacterium has no nucleus: the DNA lies in the cytoplasm.' } },
     { dur: 8000, title: { nl: 'Bacterie: de ribosomen beginnen meteen', en: 'Bacterium: the ribosomes start right away' },
       text: { nl: 'RNA-polymerase kopieert de genen. Ribosomen beginnen al op het mRNA terwijl het nog groeit.', en: 'RNA polymerase copies the genes. Ribosomes already start on the mRNA while it is still growing.' } },
     { dur: 8000, title: { nl: 'Bacterie: één mRNA, drie eiwitten', en: 'Bacterium: one mRNA, three proteins' },

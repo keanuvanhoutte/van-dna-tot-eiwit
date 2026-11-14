@@ -41,7 +41,7 @@ export default structure3d({
       text: L3('Het enzym klapt de U helemaal uit de dubbele helix. De andere letters blijven op hun plaats.', 'The enzyme flips the U right out of the double helix. The other letters stay in place.') },
     { dur: 9000, title: L3('Een holte waar alleen U in past', 'A pocket that only fits U'), zoom: { chain: 'A', resi: [140, 141, 142, 143, 144, 145, 146, 147, 148, 155, 156, 157, 158, 159, 160, 165, 166, 167, 168, 169, 170, 200, 202, 204, 206, 266, 268, 270] }, spin: .005,
       focus: [GREY, { sel: { chain: ['B', 'C'] }, style: { cartoon: { color: '#3c5a99', opacity: .55 } } }, { sel: POCKET, style: { stick: { color: '#c9b8ff', radius: .25 } }, label: L3('holte', 'pocket') }, U],
-      text: L3('De U komt in een holte die precies bij U past, niet bij T of C. Daar knipt het enzym de U los.', 'The U lands in a pocket that fits U exactly, not T or C. There the enzyme cuts the U loose.') },
+      text: L3('De U komt in een holte die precies bij U past; een T past er niet in. Daar knipt het enzym de U los.', 'The U lands in a pocket that fits U exactly; a T does not fit. There the enzyme cuts the U loose.') },
     { dur: 9000, title: L3('Drie helpers maken het af', 'Three helpers finish the job'), zoom: { chain: ['B', 'C'] }, spin: .006,
       focus: [GREY, { sel: { chain: 'B' }, style: { cartoon: { color: C.ok }, stick: { color: C.ok, radius: .25 } }, label: L3('hersteld', 'repaired') }, { sel: { chain: 'C' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .2 } } }],
       text: L3('Een tweede enzym knipt de streng open, een polymerase zet de juiste letter terug en een ligase plakt dicht.', 'A second enzyme cuts the strand open, a polymerase puts back the right letter and a ligase seals it.') },

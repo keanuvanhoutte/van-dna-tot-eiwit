@@ -10,19 +10,33 @@ const S = {
   khatter: { t: 'Khatter et al. (2015) Structure of the human 80S ribosome. Nature 520:640–645 (PDB 4UG0; PubMed 25901680)', url: 'https://pubmed.ncbi.nlm.nih.gov/25901680/' },
   pdb6y0g: { t: 'RCSB PDB 6Y0G — Structure of human ribosome in classical-PRE state (cryo-EM 3.2 Å)', url: 'https://www.rcsb.org/structure/6Y0G' },
   nissen: { t: 'Ban et al. (2000) The complete atomic structure of the large ribosomal subunit at 2.4 Å resolution. Science 289:905–920 (PubMed 10937989)', url: 'https://pubmed.ncbi.nlm.nih.gov/10937989/' },
-  pelletier: { t: 'Gilles et al. (2020) Targeting the human 80S ribosome in cancer: from structure to function and drug design. Int J Mol Sci 21:1829 (PMC7140421)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7140421/' },
+  pelletier: { t: 'Gilles et al. (2020) Targeting the human 80S ribosome in cancer: from structure to function and drug design for innovative adjuvant therapeutic strategies. Cells 9:629 (PMC7140421)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7140421/' },
   motmTrna: { t: 'PDB-101 Molecule of the Month: Transfer RNA', url: 'https://pdb101.rcsb.org/motm/15' },
   shi: { t: 'Shi & Moore (2000) The crystal structure of yeast phenylalanine tRNA at 1.93 Å resolution: a classic structure revisited. RNA 6:1091–1105 (PDB 1EHZ; PMC1369984)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC1369984/' },
   giege: { t: 'Giegé et al., Aminoacylation and identity of tRNAs — Madame Curie Bioscience Database (NCBI Bookshelf)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK6236/' },
   motmAars: { t: 'PDB-101 Molecule of the Month: Aminoacyl-tRNA Synthetases', url: 'https://pdb101.rcsb.org/motm/16' },
   ibba: { t: 'Rubio Gomez & Ibba (2020) Aminoacyl-tRNA synthetases. RNA 26:910–936 (PMC7373986)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7373986/' },
-  crick: { t: 'Crick (1966) Codon–anticodon pairing: the wobble hypothesis. J Mol Biol 19:548–555 (PubMed 5969078)', url: 'https://pubmed.ncbi.nlm.nih.gov/5969078/' },
+  agris: { t: 'Agris et al. (2018) Celebrating wobble decoding: half a century and still much is new. RNA Biol 15:537–553 (PMC6103715)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6103715/' },
+  leiBurton: { t: 'Lei & Burton (2022) "Superwobbling" and tRNA-34 wobble and tRNA-37 anticodon loop modifications in evolution and devolution of the genetic code. Life 12:252 (PMC8879553)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8879553/' },
   ncbiCode: { t: { nl: 'NCBI — The Genetic Codes (translatietabellen 1 en 2)', en: 'NCBI — The Genetic Codes (translation tables 1 and 2)' }, url: 'https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi' },
   henras: { t: 'Henras et al. (2015) An overview of pre-ribosomal RNA processing in eukaryotes. WIREs RNA 6:225–242 (PMC4361047)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4361047/' },
   labunskyy: { t: 'Labunskyy, Hatfield & Gladyshev (2014) Selenoproteins: molecular pathways and physiological roles. Physiol Rev 94:739–777 (PMC4101630)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4101630/' },
   pyl: { t: 'Longstaff et al. (2007) A natural genetic code expansion cassette enables transmissible biosynthesis and genetic encoding of pyrrolysine. PNAS 104:1021–1026 (PMC1783357)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC1783357/' },
   akopian: { t: 'Akopian et al. (2013) Signal recognition particle: an essential protein-targeting machine. Annu Rev Biochem 82:693–721 (PMC3805129)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3805129/' },
   uniAlb: { t: 'UniProt P02768 — Albumin (Homo sapiens): signaalpeptide 1–18, propeptide 19–24', url: 'https://www.uniprot.org/uniprotkb/P02768/entry' },
+  ingolia: { t: 'Ingolia, Lareau & Weissman (2011) Ribosome profiling of mouse embryonic stem cells reveals the complexity and dynamics of mammalian proteomes. Cell 147:789–802 (PMC3225288)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3225288/' },
+  kozak: { t: "Kozak (1987) An analysis of 5'-noncoding sequences from 699 vertebrate messenger RNAs. Nucleic Acids Res 15:8125–8148 (PubMed 3313277)", url: 'https://pubmed.ncbi.nlm.nih.gov/3313277/' },
+  daoduc: { t: 'Dao Duc et al. (2019) Differences in the path to exit the ribosome across the three domains of life. Nucleic Acids Res 47:4198–4210 (PMC6486554)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6486554/' },
+  refseqRrna: { t: { nl: 'NCBI RefSeq — humane rRNA\'s: NR_003286 (18S, 1869 nt), NR_003287 (28S, 5070 nt), NR_003285 (5,8S, 157 nt), NR_023363 (5S, 121 nt)', en: 'NCBI RefSeq — human rRNAs: NR_003286 (18S, 1869 nt), NR_003287 (28S, 5070 nt), NR_003285 (5.8S, 157 nt), NR_023363 (5S, 121 nt)' }, url: 'https://www.ncbi.nlm.nih.gov/nuccore/NR_003287' },
+  berg: { t: 'Berg & Brandl (2021) Transfer RNAs: diversity in form and function. RNA Biol 18:316–339 (PMC7954030)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7954030/' },
+  shandell: { t: 'Shandell, Tan & Cornish (2021) Genetic code expansion: a brief history and perspective. Biochemistry 60:3455–3469 (PMC8613843)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8613843/' },
+  mohanty: { t: 'Mohanty, Chaudhary & Zoetewey (2020) Structural insight into the mechanism of N-linked glycosylation by oligosaccharyltransferase. Biomolecules 10:624 (PMC7226087)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7226087/' },
+  rdna: { t: { nl: 'GenBank U13369 — volledige humane rDNA-herhaling (getranscribeerd deel 5\'-ETS → 3\'-ETS: nt 1–13314)', en: 'GenBank U13369 — complete human rDNA repeat (transcribed part 5\' ETS → 3\' ETS: nt 1–13314)' }, url: 'https://www.ncbi.nlm.nih.gov/nuccore/U13369' },
+  sloan: { t: 'Sloan et al. (2017) Tuning the ribosome: the influence of rRNA modification on eukaryotic ribosome biogenesis and function. RNA Biol 14:1138–1152 (PMC5699541)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5699541/' },
+  tafforeau: { t: 'Tafforeau et al. (2013) The complexity of human ribosome biogenesis revealed by systematic nucleolar screening of pre-rRNA processing factors. Mol Cell 51:539–551 (PubMed 23973377)', url: 'https://pubmed.ncbi.nlm.nih.gov/23973377/' },
+  gaston: { t: 'Gaston et al. (2011) The complete biosynthesis of the genetically encoded amino acid pyrrolysine from lysine. Nature 471:647–650 (PubMed 21455182)', url: 'https://pubmed.ncbi.nlm.nih.gov/21455182/' },
+  zhangSP: { t: 'Zhang et al. (2025) Signal peptides: from molecular mechanisms to applications in protein and vaccine engineering. Biomolecules 15:897 (PMC12190922)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC12190922/' },
+  brennan: { t: 'Brennan & Nakayama (1994) Furin has the proalbumin substrate specificity and serpin inhibitory properties of an in situ hepatic convertase. FEBS Lett 338:147–151 (PubMed 8307172)', url: 'https://pubmed.ncbi.nlm.nih.gov/8307172/' },
 };
 
 export default {
@@ -55,7 +69,7 @@ export default {
       facts: [['Speed (eukaryote)', '≈ 5–6 amino acids per second'], ['Direction', "mRNA 5'→3', protein N→C"], ['tRNA sites', 'A (aminoacyl), P (peptidyl), E (exit)'], ['Energy', 'GTP hydrolysis by eEF1A and eEF2 per elongation cycle, plus 2 phosphoanhydride bonds of ATP to charge each tRNA'], ['Polysome', 'several ribosomes at once on one mRNA']],
       why: 'This is where genetic information finally becomes function: the amino-acid order determines how the protein folds (primary → tertiary structure). Many antibiotics work by inhibiting the bacterial ribosome, and mRNA vaccines use exactly this machinery.',
     },
-    sources: [S.albertsTl, S.hinnebusch, S.dever, S.motmRibo],
+    sources: [S.albertsTl, S.hinnebusch, S.dever, S.ingolia, S.motmRibo],
   },
 
   initiatie: {
@@ -87,7 +101,7 @@ export default {
       facts: [['Start codon', 'AUG (Met); formyl-Met in bacteria'], ['Kozak consensus', 'GCC(A/G)CC-AUG-G'], ['Cap', 'm⁷G, bound by eIF4E'], ['Bacteria', 'Shine–Dalgarno pairs with the 3\' end of 16S rRNA; IF1, IF2, IF3']],
       why: 'Initiation is the main control point of translation (e.g. phosphorylation of eIF2 under stress). A wrong start codon would produce a wrong or shortened protein.',
     },
-    sources: [S.hinnebusch, S.albertsTl, S.dever],
+    sources: [S.hinnebusch, S.kozak, S.albertsTl, S.dever],
   },
 
   elongatie: {
@@ -101,7 +115,7 @@ export default {
         'eEF2·GTP (bacterie: EF-G) verschuift mRNA en tRNA\'s één codon: het tRNA in P gaat naar E, dat in A naar P.',
         'Het lege tRNA verlaat de E-plaats; de A-plaats is vrij voor het volgende codon.',
       ],
-      facts: [['Snelheid', '≈ 5–6 aa/s (eukaryoot)'], ['Foutkans', 'ordegrootte 1 per 10³–10⁴ aminozuren'], ['Factoren', 'eEF1A (EF-Tu), eEF2 (EF-G)'], ['Katalyse', 'door rRNA (ribozym), niet door eiwit']],
+      facts: [['Snelheid', '≈ 5–6 aa/s (eukaryoot)'], ['Foutkans', 'geschat tot ≈ 1 per 10³–10⁴ aminozuren (verschilt per aminozuur)'], ['Factoren', 'eEF1A (EF-Tu), eEF2 (EF-G)'], ['Katalyse', 'door rRNA (ribozym), niet door eiwit']],
       why: 'De nauwkeurigheid komt uit twee controles: het laden van de tRNA\'s (aaRS) en de decodering in het ribosoom. Antibiotica als tetracycline (A-plaats) en erytromycine (uitgangstunnel) grijpen hier in bij bacteriën.',
     },
     en: {
@@ -114,10 +128,10 @@ export default {
         'eEF2·GTP (bacteria: EF-G) shifts mRNA and tRNAs by one codon: the P-site tRNA moves to E, the A-site tRNA to P.',
         'The empty tRNA leaves the E site; the A site is free for the next codon.',
       ],
-      facts: [['Speed', '≈ 5–6 aa/s (eukaryote)'], ['Error rate', 'order of 1 per 10³–10⁴ amino acids'], ['Factors', 'eEF1A (EF-Tu), eEF2 (EF-G)'], ['Catalysis', 'by rRNA (ribozyme), not protein']],
+      facts: [['Speed', '≈ 5–6 aa/s (eukaryote)'], ['Error rate', 'estimated up to ≈ 1 per 10³–10⁴ amino acids (varies per amino acid)'], ['Factors', 'eEF1A (EF-Tu), eEF2 (EF-G)'], ['Catalysis', 'by rRNA (ribozyme), not protein']],
       why: 'Accuracy comes from two checks: charging of the tRNAs (aaRS) and decoding in the ribosome. Antibiotics such as tetracycline (A site) and erythromycin (exit tunnel) act here in bacteria.',
     },
-    sources: [S.dever, S.albertsTl, S.nissen],
+    sources: [S.dever, S.ingolia, S.ibba, S.albertsTl, S.nissen],
   },
 
   terminatie: {
@@ -159,10 +173,10 @@ export default {
         'De 60S-subeenheid (28S, 5,8S en 5S rRNA + 47 eiwitten) bevat het peptidyltransferasecentrum (PTC).',
         'Tussen beide subeenheden liggen de A-, P- en E-plaats voor tRNA\'s.',
         'Het PTC bestaat uit rRNA; eiwitten zitten vooral aan het oppervlak en stabiliseren het rRNA.',
-        'De nieuwe keten verlaat het ribosoom via een tunnel van ≈ 100 Å door de grote subeenheid.',
+        'De nieuwe keten verlaat het ribosoom via een tunnel van ≈ 80–100 Å door de grote subeenheid.',
         'S-waarden (Svedberg) meten de sedimentatiesnelheid en tellen niet op: 40S + 60S = 80S, 30S + 50S = 70S.',
       ],
-      facts: [['Humaan 80S', '≈ 4 MDa, ≈ 80 eiwitten, 4 rRNA\'s'], ['rRNA-lengtes (mens)', '18S ≈ 1870 · 28S ≈ 5070 · 5,8S ≈ 157 · 5S ≈ 121 nt'], ['Bacterieel 70S', '≈ 2,5 MDa; 16S (≈ 1500 nt), 23S (≈ 2900 nt), 5S'], ['Uitgangstunnel', '≈ 100 Å lang, gemiddeld ≈ 15 Å breed'], ['3D-structuren', 'PDB 4UG0 / 6Y0G (mens), 4V6F (bacterie)']],
+      facts: [['Humaan 80S', '≈ 4 MDa, ≈ 80 eiwitten, 4 rRNA\'s'], ['rRNA-lengtes (mens)', '18S ≈ 1870 · 28S ≈ 5070 · 5,8S ≈ 157 · 5S ≈ 121 nt'], ['Bacterieel 70S', '≈ 2,3 MDa; 16S (≈ 1500 nt), 23S (≈ 2900 nt), 5S'], ['Uitgangstunnel', '≈ 80–100 Å lang, gemiddeld ≈ 10 Å breed'], ['3D-structuren', 'PDB 4UG0 / 6Y0G (mens), 4V6F (bacterie)']],
       why: 'Het ribosoom is het bewijs dat RNA zowel informatie kan dragen als katalyseren (RNA-wereldhypothese). Door de verschillen tussen 70S en 80S kunnen antibiotica selectief bacteriën remmen; 16S rRNA wordt gebruikt om bacteriën te identificeren (metagenomics).',
     },
     en: {
@@ -173,13 +187,13 @@ export default {
         'The 60S subunit (28S, 5.8S and 5S rRNA + 47 proteins) contains the peptidyl transferase centre (PTC).',
         'The A, P and E sites for tRNAs lie between the two subunits.',
         'The PTC is made of rRNA; proteins sit mainly on the surface and stabilise the rRNA.',
-        'The new chain leaves through a ≈ 100 Å tunnel in the large subunit.',
+        'The new chain leaves through a ≈ 80–100 Å tunnel in the large subunit.',
         'S values (Svedberg) measure sedimentation rate and are not additive: 40S + 60S = 80S, 30S + 50S = 70S.',
       ],
-      facts: [['Human 80S', '≈ 4 MDa, ≈ 80 proteins, 4 rRNAs'], ['rRNA lengths (human)', '18S ≈ 1870 · 28S ≈ 5070 · 5.8S ≈ 157 · 5S ≈ 121 nt'], ['Bacterial 70S', '≈ 2.5 MDa; 16S (≈ 1500 nt), 23S (≈ 2900 nt), 5S'], ['Exit tunnel', '≈ 100 Å long, on average ≈ 15 Å wide'], ['3D structures', 'PDB 4UG0 / 6Y0G (human), 4V6F (bacterial)']],
+      facts: [['Human 80S', '≈ 4 MDa, ≈ 80 proteins, 4 rRNAs'], ['rRNA lengths (human)', '18S ≈ 1870 · 28S ≈ 5070 · 5.8S ≈ 157 · 5S ≈ 121 nt'], ['Bacterial 70S', '≈ 2.3 MDa; 16S (≈ 1500 nt), 23S (≈ 2900 nt), 5S'], ['Exit tunnel', '≈ 80–100 Å long, on average ≈ 10 Å wide'], ['3D structures', 'PDB 4UG0 / 6Y0G (human), 4V6F (bacterial)']],
       why: 'The ribosome proves that RNA can both carry information and catalyse (RNA-world hypothesis). The differences between 70S and 80S let antibiotics inhibit bacteria selectively; 16S rRNA is used to identify bacteria (metagenomics).',
     },
-    sources: [S.khatter, S.pelletier, S.nissen, S.motmRibo, S.pdb6y0g],
+    sources: [S.khatter, S.pelletier, S.refseqRrna, S.nissen, S.daoduc, S.motmRibo, S.pdb6y0g],
   },
 
   trna: {
@@ -194,7 +208,7 @@ export default {
         'In de elleboog houden D- en T-lus elkaar vast met tertiaire contacten (o.a. G18–Ψ55, G19–C56).',
         'Gemodificeerde basen (D, Ψ, T, m⁷G, wybutosine, …) stabiliseren de vouwing en verfijnen de decodering.',
       ],
-      facts: [['Lengte', '≈ 76 nt (70–90)'], ['Anticodon ↔ CCA', '≈ 75 Å (1EHZ: ≈ 72 Å tussen C4\' van 35 en 76)'], ['Eerste RNA-structuur', 'gist-tRNA-Phe (1974); PDB 1EHZ op 1,93 Å'], ['Modificaties tRNA-Phe (gist)', 'o.a. m²G10, D16/17, m²₂G26, Cm32, Gm34, yW37, Ψ39, m⁷G46, T54, Ψ55, m¹A58']],
+      facts: [['Lengte', 'meestal 76 nt (76–90)'], ['Anticodon ↔ CCA', '≈ 75 Å (1EHZ: ≈ 72 Å tussen C4\' van 35 en 76)'], ['Eerste RNA-structuur', 'gist-tRNA-Phe (1974); PDB 1EHZ op 1,93 Å'], ['Modificaties tRNA-Phe (gist)', 'o.a. m²G10, D16/17, m²₂G26, Cm32, Gm34, yW37, Ψ39, m⁷G46, T54, Ψ55, m¹A58']],
       why: 'De L-vorm legt precies de afstand tussen het decodeercentrum (40S) en het peptidyltransferasecentrum (60S) af. tRNA was ook de eerste grote RNA-structuur die liet zien dat RNA complexe 3D-vormen aanneemt.',
     },
     en: {
@@ -208,10 +222,10 @@ export default {
         'In the elbow the D and T loops hold each other through tertiary contacts (e.g. G18–Ψ55, G19–C56).',
         'Modified bases (D, Ψ, T, m⁷G, wybutosine, …) stabilise the fold and fine-tune decoding.',
       ],
-      facts: [['Length', '≈ 76 nt (70–90)'], ['Anticodon ↔ CCA', '≈ 75 Å (1EHZ: ≈ 72 Å between C4\' of 35 and 76)'], ['First RNA structure', 'yeast tRNA-Phe (1974); PDB 1EHZ at 1.93 Å'], ['Modifications of yeast tRNA-Phe', 'e.g. m²G10, D16/17, m²₂G26, Cm32, Gm34, yW37, Ψ39, m⁷G46, T54, Ψ55, m¹A58']],
+      facts: [['Length', 'usually 76 nt (76–90)'], ['Anticodon ↔ CCA', '≈ 75 Å (1EHZ: ≈ 72 Å between C4\' of 35 and 76)'], ['First RNA structure', 'yeast tRNA-Phe (1974); PDB 1EHZ at 1.93 Å'], ['Modifications of yeast tRNA-Phe', 'e.g. m²G10, D16/17, m²₂G26, Cm32, Gm34, yW37, Ψ39, m⁷G46, T54, Ψ55, m¹A58']],
       why: 'The L shape spans exactly the distance between the decoding centre (40S) and the peptidyl transferase centre (60S). tRNA was also the first large RNA structure showing that RNA adopts complex 3D shapes.',
     },
-    sources: [S.shi, S.motmTrna, S.giege, S.albertsTl],
+    sources: [S.shi, S.berg, S.motmTrna, S.giege, S.albertsTl],
   },
 
   aars: {
@@ -241,12 +255,12 @@ export default {
       facts: [['Reaction', 'aa + ATP + tRNA → aa-tRNA + AMP + PPi'], ['Class I', 'Rossmann fold, HIGH/KMSKS motifs (e.g. IleRS, ValRS, LeuRS, MetRS, TyrRS)'], ['Class II', 'antiparallel β-sheet, motifs 1–3 (e.g. SerRS, ThrRS, AlaRS, HisRS, PheRS)'], ['Identity example', 'tRNA-Ala: G3·U70 wobble pair in the acceptor stem'], ['Chapeville (1962)', 'chemically converted Cys-tRNA-Cys → Ala-tRNA-Cys: Ala is inserted at Cys codons']],
       why: 'Errors made by aaRS are no longer caught by the ribosome, so proofreading is crucial. Mutations in (mitochondrial) aaRS cause neurological diseases; bacterial aaRS are antibiotic targets (e.g. mupirocin on IleRS).',
     },
-    sources: [S.ibba, S.giege, S.motmAars, S.albertsTl],
+    sources: [S.ibba, S.motmAars, S.berg, S.shandell, S.giege, S.albertsTl],
   },
 
   codon: {
     nl: {
-      kort: 'De genetische code is de woordenlijst die zegt welk aminozuur bij elk [[codon|codon]] (drie letters) hoort. Er is één startcodon en er zijn drie stopcodons; de meeste aminozuren hebben meerdere codons. Bijna alle levende wezens gebruiken dezelfde code.',
+      kort: 'De genetische code is de woordenlijst die zegt welk aminozuur bij elk [[codon|codon]] (drie letters) hoort. Er is één gewoon startcodon (AUG) en er zijn drie stopcodons; de meeste aminozuren hebben meerdere codons. Bijna alle levende wezens gebruiken dezelfde code.',
       what: 'De genetische code koppelt elk triplet van nucleotiden (codon) aan een aminozuur of een stopsignaal. Met 4 basen zijn er 4³ = 64 codons: 61 coderen voor de 20 aminozuren, 3 zijn stopcodons.',
       how: [
         'Het mRNA wordt 5\'→3\' in niet-overlappende tripletten gelezen, zonder scheidingstekens.',
@@ -256,11 +270,11 @@ export default {
         'Wobble: base 34 van het anticodon paart losser met de 3e codonbase (G·U; inosine paart met U, C of A), zodat één tRNA meerdere codons leest.',
         'Een insertie of deletie van 1 of 2 nt verschuift het leesraam (frameshift).',
       ],
-      facts: [['Codons', '64 = 61 zinvol + 3 stop'], ['1 codon', 'Met (AUG), Trp (UGG)'], ['6 codons', 'Leu, Ser, Arg'], ['Wobble-regels (Crick)', 'G→C/U · U→A/G · I→U/C/A · C→G · A→U'], ['Afwijkingen', 'mitochondriën mens: UGA = Trp, AUA = Met; UGA = Sec, UAG = Pyl (hercodering)']],
+      facts: [['Codons', '64 = 61 zinvol + 3 stop'], ['1 codon', 'Met (AUG), Trp (UGG)'], ['6 codons', 'Leu, Ser, Arg'], ['Wobble-regels (Crick)', 'G→C/U · U→A/G · I→U/C/A · C→G · A zeldzaam (wordt meestal I)'], ['Afwijkingen', 'mitochondriën mens: UGA = Trp, AUA = Met; UGA = Sec, UAG = Pyl (hercodering)']],
       why: 'De code is (bijna) universeel, wat gemeenschappelijke afstamming aantoont en genetische technologie mogelijk maakt. De degeneratie buffert mutaties: veel 3e-positiemutaties zijn stil.',
     },
     en: {
-      kort: 'The genetic code is the dictionary that says which amino acid belongs to each [[codon|codon]] (three letters). There is one start codon and there are three stop codons; most amino acids have several codons. Almost all living things use the same code.',
+      kort: 'The genetic code is the dictionary that says which amino acid belongs to each [[codon|codon]] (three letters). There is one usual start codon (AUG) and there are three stop codons; most amino acids have several codons. Almost all living things use the same code.',
       what: 'The genetic code links each nucleotide triplet (codon) to an amino acid or a stop signal. With 4 bases there are 4³ = 64 codons: 61 encode the 20 amino acids, 3 are stop codons.',
       how: [
         'The mRNA is read 5\'→3\' in non-overlapping triplets, without punctuation.',
@@ -270,10 +284,10 @@ export default {
         'Wobble: anticodon base 34 pairs more loosely with the 3rd codon base (G·U; inosine pairs with U, C or A), so one tRNA reads several codons.',
         'An insertion or deletion of 1 or 2 nt shifts the reading frame (frameshift).',
       ],
-      facts: [['Codons', '64 = 61 sense + 3 stop'], ['1 codon', 'Met (AUG), Trp (UGG)'], ['6 codons', 'Leu, Ser, Arg'], ['Wobble rules (Crick)', 'G→C/U · U→A/G · I→U/C/A · C→G · A→U'], ['Deviations', 'human mitochondria: UGA = Trp, AUA = Met; UGA = Sec, UAG = Pyl (recoding)']],
+      facts: [['Codons', '64 = 61 sense + 3 stop'], ['1 codon', 'Met (AUG), Trp (UGG)'], ['6 codons', 'Leu, Ser, Arg'], ['Wobble rules (Crick)', 'G→C/U · U→A/G · I→U/C/A · C→G · A rare (usually becomes I)'], ['Deviations', 'human mitochondria: UGA = Trp, AUA = Met; UGA = Sec, UAG = Pyl (recoding)']],
       why: 'The code is (nearly) universal, which shows common descent and makes genetic technology possible. Degeneracy buffers mutations: many 3rd-position mutations are silent.',
     },
-    sources: [S.albertsTl, S.crick, S.ncbiCode],
+    sources: [S.ncbiCode, S.agris, S.leiBurton, S.berg, S.albertsTl],
   },
 
   ribogenese: {
@@ -305,7 +319,7 @@ export default {
       facts: [['47S pre-rRNA', '≈ 13 kb (Pol I)'], ['Modifications', '≈ 100 2\'-O-methylations and ≈ 100 pseudouridines in human rRNA'], ['Assembly factors', 'more than 200'], ['5S rRNA', 'separate gene, RNA polymerase III']],
       why: 'A growing cell devotes a large share of its transcription to rRNA. Defects in ribosome biogenesis cause "ribosomopathies" (e.g. Diamond–Blackfan anaemia), and the nucleolus acts as a sensor of cell stress.',
     },
-    sources: [S.henras, S.albertsNuc, S.motmSub],
+    sources: [S.henras, S.rdna, S.sloan, S.tafforeau, S.albertsNuc, S.motmSub],
   },
 
   seleno: {
@@ -319,7 +333,7 @@ export default {
         'SBP2 rekruteert eEFSec·GTP met Sec-tRNA-Sec, dat bij een UGA in de A-plaats wordt afgeleverd (in plaats van terminatie).',
         'Pyl (methanogene archaea zoals Methanosarcina, enkele bacteriën) wordt uit 2 lysines gemaakt en door PylRS rechtstreeks op tRNA-Pyl (anticodon CUA) gezet.',
       ],
-      facts: [['Mens', '25 selenoproteïnen (bv. glutathionperoxidasen, thioredoxinereductasen, deiodinasen)'], ['Sec vs Cys', 'Se in plaats van S; selenol is reactiever'], ['SECIS-positie', 'eukaryoten en archaea: 3\'-UTR · bacteriën: net na het UGA'], ['Pyl', 'UAG; o.a. in methylamine-methyltransferasen']],
+      facts: [['Mens', '25 selenoproteïnen (bv. glutathionperoxidasen, thioredoxinereductasen, deiodinasen)'], ['Sec vs Cys', 'Se in plaats van S; Sec zit meestal in het actieve centrum van het enzym'], ['SECIS-positie', 'eukaryoten en archaea: 3\'-UTR · bacteriën: net na het UGA'], ['Pyl', 'UAG; o.a. in methylamine-methyltransferasen']],
       why: 'Selenoproteïnen zijn belangrijk voor de redoxbalans en het schildklierhormoon; seleniumtekort of mutaties in SECISBP2 of tRNA-Sec geven ziekte. Het laat zien dat de genetische code niet volledig vastligt.',
     },
     en: {
@@ -332,10 +346,10 @@ export default {
         'SBP2 recruits eEFSec·GTP carrying Sec-tRNA-Sec, which is delivered at a UGA in the A site (instead of termination).',
         'Pyl (methanogenic archaea such as Methanosarcina, a few bacteria) is made from 2 lysines and loaded directly onto tRNA-Pyl (anticodon CUA) by PylRS.',
       ],
-      facts: [['Human', '25 selenoproteins (e.g. glutathione peroxidases, thioredoxin reductases, deiodinases)'], ['Sec vs Cys', 'Se instead of S; the selenol is more reactive'], ['SECIS position', 'eukaryotes and archaea: 3\' UTR · bacteria: just after the UGA'], ['Pyl', 'UAG; e.g. in methylamine methyltransferases']],
+      facts: [['Human', '25 selenoproteins (e.g. glutathione peroxidases, thioredoxin reductases, deiodinases)'], ['Sec vs Cys', 'Se instead of S; Sec usually sits in the active site of the enzyme'], ['SECIS position', 'eukaryotes and archaea: 3\' UTR · bacteria: just after the UGA'], ['Pyl', 'UAG; e.g. in methylamine methyltransferases']],
       why: 'Selenoproteins are important for redox balance and thyroid hormone; selenium deficiency or mutations in SECISBP2 or tRNA-Sec cause disease. It shows that the genetic code is not completely fixed.',
     },
-    sources: [S.labunskyy, S.pyl, S.albertsTl],
+    sources: [S.labunskyy, S.pyl, S.gaston, S.albertsTl],
   },
 
   er: {
@@ -367,6 +381,6 @@ export default {
       facts: [['Example', 'prepro-albumin: signal MKWVTFISLLFLFSSAYS (1–18), propeptide RGVFRR'], ['SRP', '7SL RNA (≈ 300 nt) + SRP9/14/19/54/68/72'], ['Translocon', 'Sec61αβγ (bacteria: SecYEG)'], ['N-glycosylation', 'OST, sequon N-X-S/T (X ≠ Pro)']],
       why: 'Roughly a third of human proteins go through the ER (secreted and membrane proteins). The ER is also where folding with chaperones, disulfide bond formation and quality control happen before proteins move on to the Golgi.',
     },
-    sources: [S.akopian, S.albertsER, S.uniAlb],
+    sources: [S.akopian, S.zhangSP, S.mohanty, S.uniAlb, S.brennan, S.albertsER],
   },
 };

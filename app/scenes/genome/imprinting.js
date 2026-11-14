@@ -36,7 +36,7 @@ export default {
     { dur: 8500, cam: FULL, title: L3('Bij sommige genen werkt maar één kopie', 'For some genes only one copy works'),
       text: L3('Bij ongeveer honderd genen werkt alleen de kopie van de moeder, of alleen die van de vader.', 'For about a hundred genes only the mother’s copy works, or only the father’s.') },
     { dur: 8500, cam: FULL, title: L3('Het merkteken komt uit de eicel of de zaadcel', 'The mark comes from the egg or the sperm'),
-      text: L3('In de zaadcel of de eicel krijgt een stukje DNA methylgroepen. Dat merkteken blijft in elke cel van het kind.', 'In the sperm or the egg a piece of DNA gets methyl groups. That mark stays in every cell of the child.') },
+      text: L3('In de zaadcel of de eicel krijgt een stukje DNA methylgroepen. Dat merkteken blijft in de lichaamscellen van het kind.', 'In the sperm or the egg a piece of DNA gets methyl groups. That mark stays in the body cells of the child.') },
     { dur: 9500, cam: FULL, title: L3('Het merkteken bepaalt welk gen de versterker bereikt', 'The mark decides which gene the switch reaches'),
       text: L3('Bij de vader houdt het merkteken een stop-eiwit weg. Zo bereikt de versterker daar het groeigen.', 'On the father’s copy the mark keeps a stop protein away. So there the switch reaches the growth gene.') },
     { dur: 9500, cam: FULL, title: L3('Hetzelfde stukje kwijt, twee ziektes', 'The same piece lost, two disorders'),

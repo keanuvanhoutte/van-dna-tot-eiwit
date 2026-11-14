@@ -143,7 +143,7 @@ export default {
             for (const [b, [x, y]] of Object.entries(P)) ex += nt(x, y - 20, b, 44, 40);
             ex += '</g>';
             ex += tag(780, 690, T2('4 transities', '4 transitions'), C.ok, 17, 'start', ts) + tag(780, 720, T2('8 transversies', '8 transversions'), '#ffc247', 17, 'start', tv);
-            ex += tag(780, 770, T2('transities komen vaker voor,', 'transitions are more common,'), C.muted, 16, 'start', sub(p, .75, .9)) + tag(780, 796, T2('bv. C→T na deaminatie', 'e.g. C→T after deamination'), C.muted, 16, 'start', sub(p, .75, .9));
+            ex += tag(780, 770, T2('vaak bij ziekten: C→T bij CpG,', 'common in disease: C→T at CpG,'), C.muted, 16, 'start', sub(p, .75, .9)) + tag(780, 796, T2('na deaminatie van gemethyleerd C', 'after deamination of methylated C'), C.muted, 16, 'start', sub(p, .75, .9));
           }
         } else if (step >= 2 && step <= 4) {
           const key = ['silent', 'missense', 'nonsense'][step - 2];

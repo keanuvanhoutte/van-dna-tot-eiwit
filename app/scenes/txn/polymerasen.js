@@ -14,8 +14,8 @@ export default {
   org: { nl: 'mens (eukaryoot)', en: 'human (eukaryote)' },
   legend: [[PC[0], 'Pol I (13)'], [PC[1], 'Pol II (12)'], [PC[2], 'Pol III (17)'], [C.histone, { nl: 'gedeelde subeenheden', en: 'shared subunits' }], [C.rna, 'RNA'], [C.dna, 'DNA'], ['#ffc247', { nl: 'promoterelement', en: 'promoter element' }]],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">Mitochondriën hebben nog een vierde, totaal ander RNA-polymerase (POLRMT, één subeenheid, verwant aan dat van bacteriofaag T7). Planten hebben daarnaast Pol IV en Pol V.</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">Mitochondria have yet a fourth, completely different RNA polymerase (POLRMT, a single subunit related to that of bacteriophage T7). Plants additionally have Pol IV and Pol V.</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">Mitochondriën hebben nog een vierde, heel ander RNA-polymerase (POLRMT), in de verte verwant aan dat van bacteriofaag T7.</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">Mitochondria have yet a fourth, very different RNA polymerase (POLRMT), distantly related to that of bacteriophage T7.</p>' },
   simplified: {
     nl: 'De enzymen zijn symbolen, niet op schaal. De productlijsten zijn niet volledig (Pol III maakt o.a. ook RNase P-RNA, Y-RNA\'s en vault-RNA\'s). Promoterposities zijn schematisch; de α-amanitinewaarden gelden voor gezuiverde enzymen uit humane KB-cellen en verschillen tussen organismen.',
     en: 'The enzymes are symbols, not to scale. The product lists are incomplete (Pol III also makes e.g. RNase P RNA, Y RNAs and vault RNAs). Promoter positions are schematic; the α-amanitin values apply to purified enzymes from human KB cells and differ between organisms.' },
@@ -25,7 +25,7 @@ export default {
     { dur: 8000, cam: cam(290, 410, 1060), title: { nl: 'Pol I: RNA voor ribosomen', en: 'Pol I: RNA for ribosomes' },
       text: { nl: 'Pol I maakt de grote RNA’s van het ribosoom als één lange streng. Die wordt in drie stukken geknipt.', en: 'Pol I makes the large RNAs of the ribosome as one long strand. It is cut into three pieces.' } },
     { dur: 7000, cam: cam(800, 410, 1060), title: { nl: 'Pol II: mRNA en meer', en: 'Pol II: mRNA and more' },
-      text: { nl: 'Pol II maakt het mRNA van alle eiwitgenen en veel ander RNA. Alleen Pol II heeft een lange staart.', en: 'Pol II makes the mRNA of all protein genes and many other RNAs. Only Pol II has a long tail.' } },
+      text: { nl: 'Pol II maakt het mRNA van alle eiwitgenen in de kern en veel ander RNA. Alleen Pol II heeft een lange staart.', en: 'Pol II makes the mRNA of all protein genes in the nucleus and many other RNAs. Only Pol II has a long tail.' } },
     { dur: 8000, cam: cam(1310, 410, 1060), title: { nl: 'Pol III: korte RNA’s', en: 'Pol III: short RNAs' },
       text: { nl: 'Pol III maakt korte RNA’s, zoals tRNA (brengt aminozuren aan). Ook het adenovirus uit ons verhaal gebruikt Pol III.', en: 'Pol III makes short RNAs, such as tRNA (which brings amino acids). The adenovirus from our story uses Pol III too.' } },
     { dur: 10000, cam: cam(800, 610, 1500), title: { nl: 'Pol III: startsignaal in het gen', en: 'Pol III: start signal in the gene' },
@@ -62,7 +62,7 @@ export default {
     const item = (x, y, text, col = C.rna) => `<rect x="${x - 150}" y="${y - 7}" width="26" height="8" rx="4" fill="${col}"/>` + txt(x - 112, y + 2, text, C.text, 17, 'start');
     const PROD = [
       [],
-      [T2('mRNA (alle eiwitgenen)', 'mRNA (all protein genes)'), T2('snRNA\'s U1, U2, U4, U5', 'snRNAs U1, U2, U4, U5'), T2('pri-miRNA\'s', 'pri-miRNAs'), T2('lncRNA\'s', 'lncRNAs')],
+      [T2('mRNA (eiwitgenen in de kern)', 'mRNA (nuclear protein genes)'), T2('snRNA\'s U1, U2, U4, U5', 'snRNAs U1, U2, U4, U5'), T2('pri-miRNA\'s', 'pri-miRNAs'), T2('lncRNA\'s', 'lncRNAs')],
       [T2('tRNA\'s', 'tRNAs'), '5S rRNA', 'U6 snRNA', T2('7SL-RNA (SRP)', '7SL RNA (SRP)'), T2('7SK-RNA', '7SK RNA')],
     ];
     return {

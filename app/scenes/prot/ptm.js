@@ -25,7 +25,7 @@ export default {
   id: 'ptm',
   title: { nl: 'Post-translationele modificaties', en: 'Post-translational modifications' },
   scale: { nl: '≈ 5–10 nm (eiwit) · 300 nm (collageen)', en: '≈ 5–10 nm (protein) · 300 nm (collagen)' },
-  time: { nl: 'ms (fosforylatie) tot min (cascade)', en: 'ms (phosphorylation) to min (cascade)' },
+  time: { nl: 'minuten: na de groeifactor EGF piekt actief ERK na ~5 min (gekweekte cellen)', en: 'minutes: after the growth factor EGF, active ERK peaks at ~5 min (cultured cells)' },
   org: { nl: 'mens', en: 'human' },
   legend: [[C.chain, { nl: 'doeleiwit (keten)', en: 'target protein (chain)' }], [C.prot, { nl: 'kinasen', en: 'kinases' }], [C.prot3, { nl: 'fosfatase', en: 'phosphatase' }], [PHOS, { nl: 'fosfaatgroep (2−)', en: 'phosphate group (2−)' }], [ATPC, 'ATP / ADP'], [CLASSCOL['+'], { nl: 'positief geladen residu (Arg/Lys)', en: 'positively charged residue (Arg/Lys)' }], ['#ffd166', { nl: 'ubiquitine', en: 'ubiquitin' }]],
   extra: {

@@ -31,8 +31,8 @@ export default {
   org: { nl: 'HIV-1 in CD4⁺-T-cellen en macrofagen', en: 'HIV-1 in CD4⁺ T cells and macrophages' },
   legend: [[RNAC, { nl: 'viraal (+)RNA', en: 'viral (+)RNA' }], [DNAC, 'DNA'], [TRC, 'tRNA-Lys3'], [C.prot, { nl: 'reverse transcriptase / RNase H', en: 'reverse transcriptase / RNase H' }]],
   simplified: {
-    nl: 'Het genoom is als één rechte lijn getekend; in werkelijkheid zijn er twee RNA-kopieën per virusdeeltje en gebeurt dit grotendeels binnen het capside in het cytoplasma. De genen (gag, pol, env en de regulatorgenen) zijn samengevat in één blok, en RT wordt maar op enkele plaatsen getoond — in werkelijkheid doet hetzelfde enzym alle syntheses en alle RNase H-knippen.',
-    en: 'The genome is drawn as a single straight line; in reality there are two RNA copies per virion and most of this happens inside the capsid in the cytoplasm. The genes (gag, pol, env and the regulatory genes) are summarised in one block, and RT is shown only at a few places — in reality the same enzyme performs every synthesis and every RNase H cut.' },
+    nl: 'Het genoom is als één rechte lijn getekend; in werkelijkheid zijn er twee RNA-kopieën per virusdeeltje en gebeurt dit grotendeels binnen het capside. De genen (gag, pol, env en de regulatorgenen) zijn samengevat in één blok, en RT wordt maar op enkele plaatsen getoond — in werkelijkheid doet hetzelfde enzym alle syntheses en alle RNase H-knippen.',
+    en: 'The genome is drawn as a single straight line; in reality there are two RNA copies per virion and most of this happens inside the capsid. The genes (gag, pol, env and the regulatory genes) are summarised in one block, and RT is shown only at a few places — in reality the same enzyme performs every synthesis and every RNase H cut.' },
   steps: [
     ST(7000, cam(870, 440, 1240), 'HIV-1 draagt RNA', 'HIV-1 carries RNA',
       'HIV-1 draagt twee kopieën van zijn RNA. Het enzym reverse transcriptase (RT) maakt er DNA van.',

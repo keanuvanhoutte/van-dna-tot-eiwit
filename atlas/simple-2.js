@@ -66,8 +66,8 @@ export const SIMPLE = {
       nl: 'Een [[tRNA|trna]] is een klein RNA dat een aminozuur naar het [[ribosoom|ribosoom]] brengt. Het vouwt zich als een letter L. Aan het ene uiteinde hangt het aminozuur, aan het andere zitten drie letters die de code op het mRNA lezen.',
       en: 'A [[tRNA|trna]] is a small RNA that brings an amino acid to the [[ribosome|ribosoom]]. It folds like the letter L. One end carries the amino acid, the other end has three letters that read the code on the mRNA.' },
     look: {
-      nl: 'Eén streng met vijf onderdelen die naadloos in elkaar overlopen: de acceptorstam, waar het aminozuur aan hangt; de anticodonarm aan het andere uiteinde; en de D-arm en de TΨC-arm, die samen de knik van de L vormen. De bolletjes zijn metaalionen die de vorm stevig houden.',
-      en: 'One strand with five parts that flow seamlessly into each other: the acceptor stem, where the amino acid hangs; the anticodon arm at the other end; and the D arm and the TΨC arm, which together form the bend of the L. The small balls are metal ions that hold the shape firmly.' },
+      nl: 'Eén streng met vijf onderdelen die naadloos in elkaar overlopen: de acceptorstam, waar het aminozuur aan hangt; de anticodonarm aan het andere uiteinde; de D-arm en de TΨC-arm, die samen de knik van de L vormen; en een kleine variabele lus. De bolletjes zijn metaalionen die de vorm stevig houden.',
+      en: 'One strand with five parts that flow seamlessly into each other: the acceptor stem, where the amino acid hangs; the anticodon arm at the other end; the D arm and the TΨC arm, which together form the bend of the L; and a small variable loop. The small balls are metal ions that hold the shape firmly.' },
     why: {
       nl: 'Zonder tRNA kan geen enkele cel eiwitten maken. Elke menselijke cel bevat tientallen soorten tRNA.',
       en: 'Without tRNA no cell can make proteins. Every human cell contains dozens of kinds of tRNA.' },
@@ -174,9 +174,9 @@ export const SIMPLE = {
     facts: [
       [{ nl: 'Wat doet het?', en: 'What does it do?' }, { nl: 'knipt het voorstuk van nieuwe tRNA’s af', en: 'cuts the leader off new tRNAs' }],
       [{ nl: 'Wie knipt?', en: 'Who cuts?' }, { nl: 'het RNA (met magnesium); het eiwit helpt', en: 'the RNA (with magnesium); the protein helps' }],
-      [{ nl: 'Herkent', en: 'Recognises' }, { nl: 'de vorm van het tRNA, niet de letters', en: 'the shape of the tRNA, not the letters' }],
+      [{ nl: 'Herkent', en: 'Recognises' }, { nl: 'vooral de vorm van het tRNA', en: 'mainly the shape of the tRNA' }],
       [{ nl: 'Bij de mens', en: 'In humans' }, { nl: 'één RNA + ongeveer 10 eiwitten, in de kern', en: 'one RNA + about 10 proteins, in the nucleus' }],
-      [{ nl: 'In mitochondriën', en: 'In mitochondria' }, { nl: 'een eiwit zonder RNA doet hetzelfde werk', en: 'a protein without RNA does the same job' }],
+      [{ nl: 'In mitochondriën', en: 'In mitochondria' }, { nl: 'drie eiwitten zonder RNA doen hetzelfde werk', en: 'three proteins without RNA do the same job' }],
     ],
   },
   riboswitch: {
@@ -223,8 +223,8 @@ export const SIMPLE = {
     title: { nl: 'Kort RNA als zoekgids (miRNA)', en: 'Short RNA as a search guide (miRNA)' },
     sub: { nl: 'voorbeeld: menselijk, vast in een eiwit', en: 'example: human, held by a protein' },
     kort: {
-      nl: 'Een [[miRNA|mirna]] is een heel kort RNA dat vastzit in het eiwit [[Argonaute|argonaute]]. Een stukje van 7 letters ligt klaar om op een passend mRNA te plakken. Dat mRNA wordt dan minder gebruikt of afgebroken.',
-      en: 'A [[miRNA|mirna]] is a very short RNA held inside the protein [[Argonaute|argonaute]]. A stretch of 7 letters lies ready to stick to a matching mRNA. That mRNA is then used less or broken down.' },
+      nl: 'Een [[miRNA|mirna]] is een heel kort RNA dat vastzit in het eiwit [[Argonaute|argonaute]]. Vooral een stukje van 7 letters (de seed) zoekt een passend mRNA; de eerste letters daarvan liggen al klaar. Dat mRNA wordt dan minder gebruikt of afgebroken.',
+      en: 'A [[miRNA|mirna]] is a very short RNA held inside the protein [[Argonaute|argonaute]]. Mainly a stretch of 7 letters (the seed) looks for a matching mRNA; its first letters already lie ready. That mRNA is then used less or broken down.' },
     look: {
       nl: 'Het grote eiwit omklemt een korte RNA-streng. Beide uiteinden van het RNA zitten vast in een zakje van het eiwit; niet het hele RNA is zichtbaar.',
       en: 'The large protein clasps a short RNA strand. Both ends of the RNA are held in a pocket of the protein; not all of the RNA is visible.' },

@@ -42,7 +42,7 @@ export default {
     ST(15000, cam(800, 395, 1400), 'De keten groeit verder (versneld)', 'The chain keeps growing (fast-forward)', 'Zo worden alle codons gelezen. De keten komt via een tunnel uit het ribosoom en begint al te vouwen.', 'This is how all codons are read. The chain leaves the ribosome through a tunnel and already starts to fold.'),
     ST(8500, cam(930, 375, 1350), 'Een stopsein: geen tRNA past', 'A stop signal: no tRNA fits', 'Op een stopcodon past geen tRNA. Een stopeiwit dat op een tRNA lijkt, neemt plaats A in.', 'No tRNA fits a stop codon. A stop protein that looks like a tRNA takes site A instead.'),
     ST(8500, cam(840, 300, 1350), 'Het eiwit komt los', 'The protein comes free', 'Het stopeiwit laat water de keten loshalen van het laatste tRNA. Het eiwit komt vrij en vouwt.', 'The stop protein lets water cut the chain free from the last tRNA. The protein is released and folds.'),
-    ST(7500, FULL, 'Het ribosoom valt uit elkaar', 'The ribosome comes apart', 'Een ander eiwit haalt het ribosoom uit elkaar. De helften beginnen opnieuw, vaak op hetzelfde mRNA.', 'Another protein splits the ribosome. The halves start again, often on the same mRNA.'),
+    ST(7500, FULL, 'Het ribosoom valt uit elkaar', 'The ribosome comes apart', 'Een ander eiwit haalt het ribosoom uit elkaar. De helften kunnen daarna aan een nieuwe ronde beginnen.', 'Another protein splits the ribosome. The halves can then start a new round.'),
   ],
   svg() {
     return svgOpen() + `

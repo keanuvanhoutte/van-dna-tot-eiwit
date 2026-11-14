@@ -27,10 +27,10 @@ const SITES = [['N', 1], ['O', 1], ['R', 1], ['n', 1], ['o', 1], ['r', 1]];
 export default structure3d({
   id: 'proteasoom', pdb: '6MSB',
   title: L3('Een afgesloten buis knipt eiwitten in stukjes', 'A closed tube cuts proteins into pieces'),
-  scale: { nl: '≈ 30 nm lang · ≈ 2,5 MDa', en: '≈ 30 nm long · ≈ 2.5 MDa' }, time: L3('doorlopend, in elke cel', 'continuously, in every cell'),
+  scale: { nl: '≈ 30 nm lang · ≈ 2,5 MDa', en: '≈ 30 nm long · ≈ 2.5 MDa' }, time: L3('doorlopend, in onze cellen', 'continuously, in our cells'),
   org: L3('mens · PDB 6MSB', 'human · PDB 6MSB'),
   legend: [[COL.a, L3('buitenringen (α)', 'outer rings (α)')], [COL.b, L3('binnenringen (β)', 'inner rings (β)')], [COL.site, L3('knipplekken (Thr1)', 'cutting sites (Thr1)')], [COL.atp, L3('motorring (6 ATPasen)', 'motor ring (6 ATPases)')],
-    [COL.basex, L3('basis: ontvangers', 'base: receivers')], [COL.lid, L3('deksel', 'lid')], [COL.rpn11, L3('label-knipper (Rpn11)', 'tag cutter (Rpn11)')], [COL.ub, L3('ubiquitine (label)', 'ubiquitin (tag)')]],
+    [COL.basex, L3('basis: o.a. ontvangers', 'base: incl. receivers')], [COL.lid, L3('deksel', 'lid')], [COL.rpn11, L3('label-knipper (Rpn11)', 'tag cutter (Rpn11)')], [COL.ub, L3('ubiquitine (label)', 'ubiquitin (tag)')]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Echte cryo-EM-structuur van het menselijke 26S-proteasoom (Dong et al., <i>Nature</i> 2019). Om snel te laden toont de figuur één bolletje per aminozuur. Sleep om te draaien, scroll om te zoomen.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Real cryo-EM structure of the human 26S proteasome (Dong et al., <i>Nature</i> 2019). To load quickly, the figure shows one bead per amino acid. Drag to rotate, scroll to zoom.</p>' },

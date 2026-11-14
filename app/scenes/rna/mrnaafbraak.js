@@ -15,11 +15,11 @@ export default {
   org: { nl: 'mens (cytoplasma)', en: 'human (cytoplasm)' },
   legend: [[C.rna, 'mRNA'], [C.cap, { nl: 'm⁷G-cap / poly(A)', en: 'm⁷G cap / poly(A)' }], ['#3fb6c9', { nl: 'translatiefactoren, PABPC1', en: 'translation factors, PABPC1' }], ['#8a5a3a', { nl: 'nucleasen & afbraakfactoren', en: 'nucleases & decay factors' }], [C.rrna, { nl: 'ribosoom', en: 'ribosome' }]],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">Afbraak is net zo belangrijk als transcriptie voor de hoeveelheid van een mRNA: kortlevende mRNA\'s (met AU-rijke elementen, bv. voor cytokines) laten de cel snel reageren. Gespecialiseerde routes: <b>NMD</b> (vroegtijdig stopcodon) en <b>miRNA\'s</b> (via CCR4–NOT).</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">Decay matters as much as transcription for how much of an mRNA there is: short-lived mRNAs (with AU-rich elements, e.g. for cytokines) let the cell respond quickly. Specialised routes: <b>NMD</b> (premature stop codon) and <b>miRNAs</b> (via CCR4–NOT).</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">Naast transcriptie bepaalt ook afbraak hoeveel er van een mRNA is (halfwaardetijd van minuten tot vele uren): kortlevende mRNA\'s (met AU-rijke elementen, bv. voor cytokines) laten de cel snel reageren. Gespecialiseerde routes: <b>NMD</b> (vroegtijdig stopcodon) en <b>miRNA\'s</b> (via CCR4–NOT).</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">Besides transcription, decay also sets how much of an mRNA there is (half-life from minutes to many hours): short-lived mRNAs (with AU-rich elements, e.g. for cytokines) let the cell respond quickly. Specialised routes: <b>NMD</b> (premature stop codon) and <b>miRNAs</b> (via CCR4–NOT).</p>' },
   simplified: {
-    nl: 'Niet op schaal; de poly(A)-staart (≈ 200–250 nt bij de start) en het aantal PABPC1-kopieën zijn ingekort. Deadenylatie gebeurt in twee fasen (eerst PAN2–PAN3, dan CCR4–NOT) maar is hier één vloeiende inkorting. De decapping-activatoren (DCP1, EDC3/4, DDX6 …) zijn samengevat. Endonucleolytische routes (bv. via SMG6 of IRE1) zijn weggelaten.',
-    en: 'Not to scale; the poly(A) tail (≈ 200–250 nt at the start) and the number of PABPC1 copies are shortened. Deadenylation occurs in two phases (first PAN2–PAN3, then CCR4–NOT) but is shown here as one smooth shortening. The decapping activators (DCP1, EDC3/4, DDX6 …) are summarised. Endonucleolytic routes (e.g. via SMG6 or IRE1) are omitted.' },
+    nl: 'Niet op schaal; de poly(A)-staart (≈ 250 nt bij de start) en het aantal PABPC1-kopieën zijn ingekort. Deadenylatie gebeurt in twee fasen (eerst PAN2–PAN3, dan CCR4–NOT) maar is hier één vloeiende inkorting. De decapping-activatoren (DCP1, EDC3/4, DDX6 …) zijn samengevat. Endonucleolytische routes (bv. via SMG6) zijn weggelaten.',
+    en: 'Not to scale; the poly(A) tail (≈ 250 nt at the start) and the number of PABPC1 copies are shortened. Deadenylation occurs in two phases (first PAN2–PAN3, then CCR4–NOT) but is shown here as one smooth shortening. The decapping activators (DCP1, EDC3/4, DDX6 …) are summarised. Endonucleolytic routes (e.g. via SMG6) are omitted.' },
   steps: [
     ST(7500, cam(800, 440, 1450), "Een mRNA in gebruik", "An mRNA in use",
       "Een mRNA in gebruik vormt een lus: eiwitten verbinden kapje en staart. Zo zijn beide uiteinden beschermd.",
@@ -114,7 +114,7 @@ export default {
           fa += debris(x + 160, X.pa[0] + 40) + note(Math.max(x + 250, 800), Y + 110, T2('losse nucleotiden (NMP)', 'free nucleotides (NMPs)'), C.muted, 19, 'middle', sub(p, .3, .45));
           fa += `<g opacity="${f1(eo)}"><path d="M${f1(x + 10)},${Y - 42} h116 a18,18 0 0 1 18,18 v48 a18,18 0 0 1 -18,18 h-116 z" fill="#8a5a3a" fill-opacity=".85" stroke="#0a1224" stroke-width="1.5"/>` +
             `<text x="${f1(x + 76)}" y="${Y + 7}" font-size="20" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">${T2('exosoom', 'exosome')}</text></g>`;
-          fa += prot(x + 64, Y - 70, 139, 36, 'SKI2·3·8', '#6b4a33', eo * (1 - sub(p, .76, .84)), 19);
+          fa += prot(x + 64, Y - 70, 139, 36, T2('SKI-complex', 'SKI complex'), '#6b4a33', eo * (1 - sub(p, .76, .84)), 19);
           fa += note(x + 64, Y + 70, "3' → 5'", '#e0b089', 19, 'middle', sub(p, .04, .12) * (1 - sub(p, .8, .87)));
           if (p > .8) {
             fa += prot(X.cap + 30, Y - 64, 81, 36, 'DcpS', '#8a5a3a', sub(p, .8, .88), 19);

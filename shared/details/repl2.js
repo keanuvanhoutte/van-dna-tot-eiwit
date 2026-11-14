@@ -29,7 +29,7 @@ const PDB = (id, t) => ({ t: `RCSB PDB ${id} — ${t}`, url: `https://www.rcsb.o
 export default {
   origins: {
     nl: {
-      kort: 'Het DNA van een mens wordt op duizenden plaatsen tegelijk gekopieerd. Op elke startplaats ligt eerst een slapende kopieermachine klaar. Die mag maar één keer per celcyclus vertrekken, zodat geen stuk DNA twee keer gekopieerd wordt.',
+      kort: 'Het DNA van een mens wordt bij elke deling vanuit tienduizenden startplaatsen gekopieerd. Op elke startplaats ligt eerst een slapende kopieermachine klaar. Die mag maar één keer per celcyclus vertrekken, zodat geen stuk DNA twee keer gekopieerd wordt.',
       what: 'Eukaryote chromosomen hebben vele replicatie-origins. Een origin wordt in twee gescheiden stappen gebruikt: in G1 krijgt ze een "licentie" (het helicasecomplex MCM2-7 wordt geladen, maar blijft inactief) en pas in de S-fase "vuurt" ze (het helicase wordt actief). Omdat laden en activeren in verschillende fasen gebeuren, wordt elk stuk DNA maar één keer per celcyclus gekopieerd.',
       how: [
         'Late mitose en G1 (lage CDK-activiteit): het origin-herkenningscomplex ORC bindt het DNA en werkt samen met Cdc6 en Cdt1.',
@@ -43,7 +43,7 @@ export default {
       why: 'Als een stuk DNA twee keer gekopieerd zou worden, krijgt de cel extra kopieën van genen en ontstaan breuken: genoominstabiliteit. De scheiding tussen licentie (G1) en vuren (S) is daarom een van de belangrijkste veiligheden van de celcyclus.',
     },
     en: {
-      kort: 'Human DNA is copied at thousands of places at the same time. At each starting point a sleeping copying machine is first put in place. It may set off only once per cell cycle, so no piece of DNA is copied twice.',
+      kort: 'At every division, human DNA is copied from tens of thousands of starting points. At each starting point a sleeping copying machine is first put in place. It may set off only once per cell cycle, so no piece of DNA is copied twice.',
       what: 'Eukaryotic chromosomes have many replication origins. An origin is used in two separate steps: in G1 it is "licensed" (the helicase complex MCM2-7 is loaded but stays inactive) and only in S phase does it "fire" (the helicase becomes active). Because loading and activation happen in different phases, each piece of DNA is copied only once per cell cycle.',
       how: [
         'Late mitosis and G1 (low CDK activity): the origin recognition complex ORC binds the DNA and works together with Cdc6 and Cdt1.',
@@ -56,7 +56,8 @@ export default {
       facts: [['Licensing', 'late mitosis + G1'], ['Firing', 'S phase (DDK + CDK)'], ['MCM2-7', 'ring of 6 different proteins; loaded as a double hexamer'], ['Active helicase', "CMG = Cdc45 + MCM2-7 + GINS, moves 3'→5'"], ['Structure', 'PDB 7W1Y: human MCM double hexamer on DNA (cryo-EM 2.59 Å)']],
       why: 'If a piece of DNA were copied twice, the cell would gain extra copies of genes and breaks would arise: genome instability. Separating licensing (G1) from firing (S) is therefore one of the most important safeguards of the cell cycle.',
     },
-    sources: [BLOW, BURGERS, LI, PDB('7W1Y', 'human MCM double hexamer bound to natural DNA duplex'), ALB_INIT],
+    sources: [BLOW, BURGERS, LI, PDB('7W1Y', 'human MCM double hexamer bound to natural DNA duplex'), ALB_INIT,
+      { t: 'Méchali (2010) Eukaryotic DNA replication origins: many choices for appropriate answers. Nat Rev Mol Cell Biol 11:728 (PubMed 20861881)', url: 'https://pubmed.ncbi.nlm.nih.gov/20861881/' }],
   },
 
   mmr: {
@@ -101,7 +102,7 @@ export default {
         'Een ligase (ligase IIIα–XRCC1 of ligase I) sluit de streng. Dit is de korte-patchroute (1 nt); bij de lange-patchroute worden 2–10 nt vervangen.',
       ],
       facts: [['Schade', 'één base: U, 8-oxoG, gealkyleerde basen, …'], ['Eerste enzym', 'DNA-glycosylase (minstens 11 soorten bij zoogdieren)'], ['Korte patch', '1 nucleotide (Pol β)'], ['Lange patch', '2–10 nucleotiden'], ['Structuur', 'PDB 1EMH: menselijk UDG met uitgeklapte (niet-knipbare) pseudo-uridine']],
-      why: 'Deze kleine schade ontstaat in elke cel voortdurend. Zonder BER zouden U·G-paren bij de volgende kopie C→T-mutaties geven. Het eerste enzym voor uracil, UNG, is van alle DNA-glycosylasen veruit het snelste.',
+      why: 'Deze kleine schade ontstaat in elke cel voortdurend. Zonder BER zouden U·G-paren bij de volgende kopie C→T-mutaties geven. Van de enzymen die uracil uit DNA halen, is UNG veruit het snelste.',
     },
     en: {
       kort: 'Sometimes one letter changes by itself, for example a C that becomes a U. A repair enzyme flips that single letter out of the DNA and cuts it loose. Then other enzymes put back the right letter and seal the strand again.',
@@ -114,7 +115,7 @@ export default {
         'A ligase (ligase IIIα–XRCC1 or ligase I) seals the strand. This is the short-patch route (1 nt); in the long-patch route 2–10 nt are replaced.',
       ],
       facts: [['Damage', 'one base: U, 8-oxoG, alkylated bases, …'], ['First enzyme', 'DNA glycosylase (at least 11 kinds in mammals)'], ['Short patch', '1 nucleotide (Pol β)'], ['Long patch', '2–10 nucleotides'], ['Structure', 'PDB 1EMH: human UDG with a flipped-out (non-cleavable) pseudouridine']],
-      why: 'This small damage arises in every cell all the time. Without BER, U·G pairs would give C→T mutations at the next copy. The first enzyme for uracil, UNG, is by far the fastest of all DNA glycosylases.',
+      why: 'This small damage arises in every cell all the time. Without BER, U·G pairs would give C→T mutations at the next copy. Of the enzymes that remove uracil from DNA, UNG is by far the fastest.',
     },
     sources: [KROKAN, PARIKH, PDB('1EMH', 'human uracil-DNA glycosylase bound to uncleaved substrate-containing DNA'), ALB_REPAIR],
   },
@@ -130,7 +131,7 @@ export default {
         'Pol δ, Pol ε of Pol κ (met PCNA) vult het gat op met de andere streng als matrijs; ligase IIIα–XRCC1 of ligase I sluit.',
       ],
       facts: [['Letsels', 'UV-dimeren (CPD, 6-4PP), omvangrijke adducten'], ['Uitgeknipt', '24–32 nt'], ['Herkenning', 'XPC–RAD23B (globaal) of vastgelopen RNA-pol II (transcriptie)'], ['Ziekte', 'xeroderma pigmentosum: > 2 000× meer kans op huidkanker'], ['3D-structuur', 'PDB 6RO4: kern van TFIIH (o.a. XPB en XPD) met XPA op gedeeltelijk geopend DNA, cryo-EM 3,5 Å']],
-      why: 'NER is het enige herstel voor UV-schade bij de mens. Mensen met xeroderma pigmentosum (een defect in een XP-gen) zijn extreem gevoelig voor zonlicht en krijgen veel vaker huidkanker. NER verwijdert ook schade door sommige chemotherapieën.',
+      why: 'NER is bij de mens de belangrijkste route voor UV-schade: wij missen fotolyase, het enzym waarmee sommige andere dieren UV-schade rechtstreeks terugdraaien. Mensen met xeroderma pigmentosum (een defect in een XP-gen) zijn extreem gevoelig voor zonlicht en krijgen veel vaker huidkanker. NER verwijdert ook schade door sommige chemotherapieën.',
     },
     en: {
       kort: 'UV light can link two neighbouring Ts together. That makes a bump in the DNA. Proteins spot the bump, cut away a short piece of strand on both sides and build it again, with the other strand as a guide.',
@@ -142,9 +143,9 @@ export default {
         'Pol δ, Pol ε or Pol κ (with PCNA) fills the gap using the other strand as template; ligase IIIα–XRCC1 or ligase I seals.',
       ],
       facts: [['Lesions', 'UV dimers (CPD, 6-4PP), bulky adducts'], ['Excised', '24–32 nt'], ['Recognition', 'XPC–RAD23B (global) or stalled RNA pol II (transcription)'], ['Disease', 'xeroderma pigmentosum: > 2,000× higher risk of skin cancer'], ['3D structure', 'PDB 6RO4: core of TFIIH (including XPB and XPD) with XPA on partly opened DNA, cryo-EM 3.5 Å']],
-      why: 'NER is the only repair for UV damage in humans. People with xeroderma pigmentosum (a defect in an XP gene) are extremely sensitive to sunlight and get skin cancer far more often. NER also removes damage caused by some chemotherapy drugs.',
+      why: 'In humans NER is the main route for UV damage: we lack photolyase, the enzyme some other animals use to reverse UV damage directly. People with xeroderma pigmentosum (a defect in an XP gene) are extremely sensitive to sunlight and get skin cancer far more often. NER also removes damage caused by some chemotherapy drugs.',
     },
-    sources: [SCHARER, REARDON, ALB_REPAIR, KOKIC, PDB('6RO4', 'Structure of the core TFIIH-XPA-DNA complex (3D-stappen)')],
+    sources: [SCHARER, REARDON, ALB_REPAIR, KOKIC, { t: 'Chatterjee & Walker (2017) Mechanisms of DNA damage, repair and mutagenesis. Environ Mol Mutagen 58:235 (PMC) — fotolyase niet bij placentale zoogdieren', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5474181/' }, PDB('6RO4', 'Structure of the core TFIIH-XPA-DNA complex (3D-stappen)')],
   },
 
   dsb: {
@@ -188,8 +189,8 @@ export default {
         'Bij ernstige schade zet p53 genen voor apoptose aan (o.a. PUMA, NOXA, BAX) of gaat de cel in senescentie (blijvende stop).',
         'Het kerndomein van p53 bindt het DNA: een lus-blad-helixmotief in de grote groef en arginine 248 in de kleine groef; een zinkatoom houdt twee lussen bij elkaar (PDB 1TUP).',
       ],
-      facts: [['Vaakst gemuteerd gen in kanker', 'TP53: 42 % van de tumoren in 12 kankertypes'], ['Per kankertype', 'van ≈ 5 % tot 38–50 % (bv. eierstok, slokdarm, darm, long)'], ['Soort mutaties', 'meestal missense; 87,9 % in codons 125–300 (DNA-bindend deel)'], ['Hotspots', 'contact: R248, R273 · structuur: R175, G245, R249, R282'], ['Structuur', 'PDB 1TUP: drie p53-kerndomeinen op DNA (2,2 Å)']],
-      why: 'Omdat p53 beslist tussen herstellen en opruimen, verliezen tumoren het vaak als eerste veiligheid. De meeste TP53-mutaties veranderen één aminozuur in het DNA-bindende deel, zodat p53 zijn doelgenen niet meer kan aanzetten. Dat verklaart waarom TP53 het vaakst gemuteerde gen in kanker is.',
+      facts: [['Vaakst gemuteerd gen in kanker', 'TP53: 42 % van de tumoren in 12 kankertypes'], ['Per kankertype', 'van ≈ 5 % tot 38–50 % (bv. eierstok, slokdarm, darm, long)'], ['Soort mutaties', '86 % ligt in codons 125–300 (DNA-bindend deel); daar is 87,9 % missense'], ['Hotspots', 'contact: R248, R273 · structuur: R175, G245, R249, R282'], ['Structuur', 'PDB 1TUP: drie p53-kerndomeinen op DNA (2,2 Å)']],
+      why: 'Omdat p53 beslist tussen herstellen en opruimen, heeft een tumorcel er voordeel bij als p53 uitvalt. TP53 is het vaakst gemuteerde gen in kanker. De meeste TP53-mutaties veranderen één aminozuur in het DNA-bindende deel, zodat p53 zijn doelgenen niet meer kan aanzetten.',
     },
     en: {
       kort: 'p53 is a protein that raises the alarm when DNA is damaged. It switches on genes that pause cell division, so there is time to repair. If the damage is too great, p53 makes the cell clear itself away. In many tumours the gene for p53 is broken.',
@@ -201,8 +202,8 @@ export default {
         'With severe damage p53 switches on genes for apoptosis (e.g. PUMA, NOXA, BAX) or the cell enters senescence (a permanent stop).',
         'The core domain of p53 binds the DNA: a loop-sheet-helix motif in the major groove and arginine 248 in the minor groove; a zinc atom holds two loops together (PDB 1TUP).',
       ],
-      facts: [['Most frequently mutated gene in cancer', 'TP53: 42 % of tumours across 12 cancer types'], ['Per cancer type', 'from ≈ 5 % to 38–50 % (e.g. ovary, oesophagus, colon, lung)'], ['Kind of mutations', 'mostly missense; 87.9 % in codons 125–300 (DNA-binding part)'], ['Hotspots', 'contact: R248, R273 · structural: R175, G245, R249, R282'], ['Structure', 'PDB 1TUP: three p53 core domains on DNA (2.2 Å)']],
-      why: 'Because p53 decides between repairing and clearing away, tumours often lose it as their first safeguard. Most TP53 mutations change one amino acid in the DNA-binding part, so p53 can no longer switch on its target genes. That explains why TP53 is the most frequently mutated gene in cancer.',
+      facts: [['Most frequently mutated gene in cancer', 'TP53: 42 % of tumours across 12 cancer types'], ['Per cancer type', 'from ≈ 5 % to 38–50 % (e.g. ovary, oesophagus, colon, lung)'], ['Kind of mutations', '86 % lie in codons 125–300 (DNA-binding part); there 87.9 % are missense'], ['Hotspots', 'contact: R248, R273 · structural: R175, G245, R249, R282'], ['Structure', 'PDB 1TUP: three p53 core domains on DNA (2.2 Å)']],
+      why: 'Because p53 decides between repairing and clearing away, a tumour cell benefits when p53 fails. TP53 is the most frequently mutated gene in cancer. Most TP53 mutations change one amino acid in the DNA-binding part, so p53 can no longer switch on its target genes.',
     },
     sources: [GNANA, KUMARI, KANDOTH, OLIVIER, CHO, LANE, PDB('1TUP', 'tumor suppressor p53 complexed with DNA')],
   },

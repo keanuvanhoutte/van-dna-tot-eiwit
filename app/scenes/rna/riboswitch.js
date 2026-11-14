@@ -47,14 +47,14 @@ function swPt(u, k) {
 export default {
   id: 'riboswitch',
   title: L3('Een RNA-schakelaar voelt een klein molecuul', 'An RNA switch senses a small molecule'),
-  scale: L3('vanggedeelte: 71 letters · ≈ 6 nm', 'catching part: 71 letters · ≈ 6 nm'),
+  scale: L3('vanggedeelte: 71 letters · ≈ 7 nm', 'catching part: 71 letters · ≈ 7 nm'),
   time: L3('omklappen: snel (niet op tijdschaal)', 'flipping: fast (not to time scale)'),
   org: L3('bacterie (Vibrio vulnificus) · PDB 1Y26', 'bacterium (Vibrio vulnificus) · PDB 1Y26'),
   legend: [[RNA, 'mRNA'], [ADE, L3('adenine (klein molecuul)', 'adenine (small molecule)')], [SD, L3('landingsplaats van het ribosoom', 'ribosome landing site')], [C.rrna, L3('ribosoom', 'ribosome')],
     [ARM1, L3('arm 1', 'arm 1')], [ARM2, L3('arm 2', 'arm 2')], [U74, L3('de U die met adenine paart', 'the U that pairs with adenine')]],
   simplified: {
-    nl: 'De 2D-tekening is een schema: alleen het vanggedeelte telt al 71 letters, de hele schakelaar is nog langer, en het omklappen verloopt via tussenvormen; bij deze schakelaar helpt ook het ribosoom zelf mee. De 3D-structuur toont alleen het vanggedeelte met adenine, zonder het schakeldeel en zonder de landingsplaats; het RNA werd in het lab gemaakt. Dat er bij de mens geen schakelaars bekend zijn, betekent niet dat ze zeker ontbreken: er kunnen er nog ontdekt worden.',
-    en: 'The 2D drawing is a diagram: the catching part alone has 71 letters, the whole switch is longer still, and the flip goes through intermediate shapes; for this switch the ribosome itself also helps. The 3D structure only shows the catching part with adenine, without the switching part and without the landing site; the RNA was made in the lab. That no switches are known in humans does not mean they are surely absent: more may still be discovered.' },
+    nl: 'De 2D-tekening is een schema: alleen het vanggedeelte telt al 71 letters, de hele schakelaar is nog langer, en het omklappen verloopt via tussenvormen; bij deze schakelaar helpt ook een eiwit van het ribosoom (S1) het RNA open te vouwen. De 3D-structuur toont alleen het vanggedeelte met adenine, zonder het schakeldeel en zonder de landingsplaats; het RNA werd in het lab gemaakt. Dat er bij de mens geen schakelaars bekend zijn, betekent niet dat ze zeker ontbreken: er kunnen er nog ontdekt worden.',
+    en: 'The 2D drawing is a diagram: the catching part alone has 71 letters, the whole switch is longer still, and the flip goes through intermediate shapes; for this switch a protein of the ribosome (S1) also helps to unfold the RNA. The 3D structure only shows the catching part with adenine, without the switching part and without the landing site; the RNA was made in the lab. That no switches are known in humans does not mean they are surely absent: more may still be discovered.' },
   steps: [
     { dur: 9000, cam: FULL, title: L3('Een schakelaar in het mRNA zelf', 'A switch in the mRNA itself'),
       text: L3('Bij bacteriën kan het begin van een mRNA een klein molecuul voelen. Zonder adenine verstopt het de landingsplaats van het ribosoom.', 'In bacteria the start of an mRNA can sense a small molecule. Without adenine it hides the ribosome’s landing site.') },

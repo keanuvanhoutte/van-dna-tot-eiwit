@@ -20,8 +20,8 @@ export default {
     ['#7fdc6a', 'NLS'], [C.prot2, { nl: 'importine α/β', en: 'importin α/β' }], ['#5fd3e6', 'Ran·GTP'],
     [PINK, { nl: 'adenovirus / viraal DNA', en: 'adenovirus / viral DNA' }], [C.dna, { nl: 'chromatine', en: 'chromatin' }]],
   simplified: {
-    nl: 'Het porie-complex is achtvoudig symmetrisch; we tekenen één doorsnede, dus slechts twee van de acht "spaken". De FG-herhalingen zijn als losse slierten getekend — hun echte, snel bewegende netwerk is niet met één beeld te vangen. Van de ~30 nucleoporinen noemen we er drie (Nup214, Nup358, Nup88). Ran, RCC1 en RanGAP staan symbolisch; het capside van het adenovirus is sterk vergroot.',
-    en: 'The pore complex is eightfold symmetric; we draw a single cross-section, so only two of the eight "spokes". The FG repeats are drawn as loose strands — their real, fast-moving meshwork cannot be captured in one frame. Of the ~30 nucleoporins we name three (Nup214, Nup358, Nup88). Ran, RCC1 and RanGAP are symbolic, and the adenovirus capsid is greatly enlarged.' },
+    nl: 'Het porie-complex is achtvoudig symmetrisch; we tekenen één doorsnede, dus slechts twee van de acht "spaken". De FG-herhalingen zijn als losse slierten getekend — hun echte, snel bewegende netwerk is niet met één beeld te vangen. Van de ~30 nucleoporinen noemen we er twee (Nup214 en Nup358). Ran, RCC1 en RanGAP staan symbolisch; het capside van het adenovirus is sterk vergroot.',
+    en: 'The pore complex is eightfold symmetric; we draw a single cross-section, so only two of the eight "spokes". The FG repeats are drawn as loose strands — their real, fast-moving meshwork cannot be captured in one frame. Of the ~30 nucleoporins we name two (Nup214 and Nup358). Ran, RCC1 and RanGAP are symbolic, and the adenovirus capsid is greatly enlarged.' },
   steps: [
     ST(7000, cam(820, 330, 1450), 'Het virus komt aan bij de kern', 'The virus reaches the nucleus',
       'Een motoreiwit heeft het virus naar de kern gesleept. Die is omgeven door een dubbel membraan vol poriën.',

@@ -6,7 +6,7 @@ import { T, btn, phage, PHDNA } from '../entry/_corona.js';
  * Bacteriofagen (zijpad virussen, 05-11-2026). Een faag hecht aan E. coli en spuit zijn DNA via de staart naar binnen.
  * Lytisch: de cel maakt nieuwe fagen en barst open (T-even fagen: latente periode ≈ 20–25 min; Abedon 2019).
  * Lysogeen: faag λ bouwt zijn DNA met integrase (Int) in op de att-plaats van het chromosoom (profaag) en wordt mee gekopieerd;
- * bij DNA-schade (UV) wordt de repressor CI via RecA afgebroken, Xis knipt de profaag los en de lytische cyclus start
+ * bij DNA-schade (UV) wordt de repressor CI via RecA afgebroken; Int knipt de profaag samen met Xis weer los en de lytische cyclus start
  * (Casjens & Hendrix 2015). Bronnen: zie shared/details/virus2.js.
  */
 const L3 = (nl, en) => ({ nl, en });

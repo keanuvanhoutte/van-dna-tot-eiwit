@@ -115,7 +115,7 @@ export default {
         <g id="gn-tata">${mono(365, Y + 6, 'TATAAA', '#e2d6ff', 17)}</g>
         <circle data-anchor="promoter" cx="${(PROM[0] + PROM[1]) / 2}" cy="${Y + 84}" r="1" fill="none" data-pos="below"/>
       </g>
-      <g id="gn-promlab">${txt(365, Y + 48, T2('TATA-box ≈ −30', 'TATA box ≈ −30'), '#c9b8ff', 17)}${txt(365, Y + 74, T2('(of CpG-eiland)', '(or CpG island)'), C.muted, 17)}</g>
+      <g id="gn-promlab">${txt(365, Y + 48, T2('TATA-box ≈ −25', 'TATA box ≈ −25'), '#c9b8ff', 17)}${txt(365, Y + 74, T2('(of CpG-eiland)', '(or CpG island)'), C.muted, 17)}</g>
       <g data-node="splicing" data-color="${col.intron}" data-label="${T2('Intronen → splicing', 'Introns → splicing')}">${intr}<circle data-anchor="splicing" cx="${(EX[0][1] + EX[1][0]) / 2}" cy="${Y - 60}" r="1" fill="none"/></g>
       ${exons}
       <g id="gn-codons">
@@ -150,7 +150,7 @@ export default {
         $('gn-dnaL').setAttribute('x2', f1(ENH[0] + dx));
         const lp = `M${f1(eR)},${Y} C${f1(eR - 70 * k)},${f1(Y - h * 1.25)} ${f1(PROM[0] + 60 * k)},${f1(Y - h * 1.25)} ${PROM[0] - 6},${Y}`;
         let g = `<path d="${lp}" stroke="${C.dna2}" stroke-width="6" fill="none"/>`;
-        if (k > .05 && step >= 1 && step <= 2) g += txt((eR + PROM[0]) / 2, Y - h * .95, T2('… 10–1000 kb …', '… 10–1,000 kb …'), C.muted, 16);
+        if (k > .05 && step >= 1 && step <= 2) g += txt((eR + PROM[0]) / 2, Y - h * .95, T2('… tot honderden kb …', '… up to hundreds of kb …'), C.muted, 16);
         if (k < .05) g += `<g stroke="${C.muted}" stroke-width="3"><line x1="246" y1="${Y - 14}" x2="238" y2="${Y + 14}"/><line x1="258" y1="${Y - 14}" x2="250" y2="${Y + 14}"/></g>`;
         if (k > .05) {
           g += `<ellipse cx="${f1((eR + PROM[0]) / 2)}" cy="${Y - 34}" rx="${f1(10 + (PROM[0] - eR) / 2 + 8)}" ry="11" fill="none" stroke="#ffc247" stroke-width="5" opacity="${f1(k)}"/>`;

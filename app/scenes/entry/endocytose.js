@@ -20,8 +20,8 @@ export default {
     [C.mem, { nl: 'membraan / endosoom', en: 'membrane / endosome' }], [PINK, { nl: 'adenovirus', en: 'adenovirus' }],
     [LIP, { nl: 'lipidenanodeeltje', en: 'lipid nanoparticle' }], ['#8d6cc4', { nl: 'lysosoom', en: 'lysosome' }], [C.rna, 'mRNA']],
   simplified: {
-    nl: 'Eén endosoom draagt hier zowel een virus als een lipidenanodeeltje; in werkelijkheid zitten die in aparte blaasjes. De pH-waarden zijn typische waarden (vroeg ≈ 6,5, laat ≈ 5,5, lysosoom ≈ 4,5) en variëren per celtype. Van de klathrine-mand tekenen we enkele triskelia, niet het hele veelvlak; adaptoren (AP-2), Rab-eiwitten en ESCRT zijn weggelaten. Het adenovirus ontsnapt in werkelijkheid al uit het vroege endosoom (proteïne VI werkt los van de pH); hier tonen we beide ontsnappingen na elkaar om het overzichtelijk te houden.',
-    en: 'A single endosome here carries both a virus and a lipid nanoparticle; in reality these travel in separate vesicles. The pH values are typical (early ≈ 6.5, late ≈ 5.5, lysosome ≈ 4.5) and vary between cell types. Of the clathrin cage we draw a few triskelia, not the whole polyhedron; adaptors (AP-2), Rab proteins and ESCRT are omitted. In reality adenovirus already escapes from the early endosome (protein VI acts independently of pH); here both escapes are shown one after the other to keep it clear.' },
+    nl: 'Eén endosoom draagt hier zowel een virus als een lipidenanodeeltje; in werkelijkheid zitten die in aparte blaasjes. De pH-waarden zijn typische waarden (vroeg ≈ 6,5, laat ≈ 5,5, lysosoom ≈ 4,5) en variëren per celtype. Van de klathrine-mand tekenen we enkele triskelia, niet het hele veelvlak; adaptoren (AP-2), Rab-eiwitten en ESCRT zijn weggelaten. Het adenovirus ontsnapt in werkelijkheid al vroeg, want proteïne VI breekt membranen ook zonder zuur open; hier tonen we beide ontsnappingen na elkaar om het overzichtelijk te houden.',
+    en: 'A single endosome here carries both a virus and a lipid nanoparticle; in reality these travel in separate vesicles. The pH values are typical (early ≈ 6.5, late ≈ 5.5, lysosome ≈ 4.5) and vary between cell types. Of the clathrin cage we draw a few triskelia, not the whole polyhedron; adaptors (AP-2), Rab proteins and ESCRT are omitted. In reality adenovirus escapes early, since protein VI ruptures membranes without acid as well; here both escapes are shown one after the other to keep it clear.' },
   steps: [
     ST(6000, cam(PX, 200, 860), 'De cel verzamelt vracht', 'The cell gathers cargo',
       'Helper-eiwitten brengen receptoren met hun vracht samen op één klein stukje membraan.',
@@ -39,8 +39,8 @@ export default {
       'Het endosoom wordt nog zuurder. Veel virussen en vaccinbolletjes gebruiken dat als seintje om te ontsnappen.',
       'The endosome becomes even more acidic. Many viruses and vaccine particles use this as their cue to escape.'),
     ST(7000, cam(830, 590, 820), 'Het adenovirus breekt uit', 'Adenovirus breaks out',
-      'Het adenovirus wacht niet op het zuur: een eigen eiwit breekt al vroeg de wand van het blaasje open.',
-      'Adenovirus does not wait for the acid: one of its own proteins breaks the vesicle wall open early on.'),
+      'Het adenovirus heeft het zuur niet nodig: een eigen eiwit kan de wand van het blaasje ook zo openbreken.',
+      'Adenovirus does not need the acid: one of its own proteins can break the vesicle wall open anyway.'),
     ST(7000, cam(1010, 570, 900), 'Het vaccin-mRNA ontsnapt', 'The vaccine mRNA escapes',
       'In het zure blaasje worden de vetten die het mRNA vasthouden positief. De wand wordt zwak en wat mRNA komt vrij.',
       'In the acidic vesicle, the fats that hold the mRNA become positive. The wall weakens and some mRNA gets out.'),

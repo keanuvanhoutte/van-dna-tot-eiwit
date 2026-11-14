@@ -58,18 +58,18 @@ function mrna(L) {
   // start/stop
   s += Ln(174, y - 6, 174, y + h + 8, C.ok, 3.5) + T(174, y + h + 32, 'AUG', { mono: true, col: C.ok, w: 700 });
   s += Ln(396, y - 6, 396, y + h + 8, RED, 3.5) + T(396, y + h + 32, 'stop', { mono: true, col: RED, w: 700 });
-  s += T(540, y + h + 32, '~200–250 nt', { size: 18, mono: true, col: C.muted, w: 500 });
+  s += T(540, y + h + 32, '~250 nt', { size: 18, mono: true, col: C.muted, w: 500 });
   // richting
   s += T(22, 232, "5'", { mono: true, col: C.muted }) + arrow(48, 225, 552, 225) + T(578, 232, "3'", { mono: true, col: C.muted });
   return out(600, 256, s, {
     legend: [
       { c: C.cap, t: L({ nl: '5\'-cap (m⁷GpppNm)', en: '5\' cap (m⁷GpppNm)' }), d: L({ nl: 'eIF4E bindt de cap → 43S-complex laadt; de cap beschermt tegen 5\'→3\'-afbraak', en: 'eIF4E binds the cap → 43S complex loads; the cap protects against 5\'→3\' decay' }) },
       { c: C.rna, op: .45, t: "5'-UTR", d: L({ nl: 'scannen 5\'→3\' naar het eerste AUG, in een goede Kozak-context: gccRccAUGG', en: 'scanning 5\'→3\' to the first AUG, in a good Kozak context: gccRccAUGG' }) },
-      { c: C.rna, t: L({ nl: 'CDS (coderende sequentie)', en: 'CDS (coding sequence)' }), d: L({ nl: 'codons in één leesraam, van AUG (Met) tot het stopcodon; exon-exonovergangen dragen EJC\'s (controle via NMD)', en: 'codons in a single reading frame, from AUG (Met) to the stop codon; exon–exon junctions carry EJCs (surveillance by NMD)' }) },
+      { c: C.rna, t: L({ nl: 'CDS (coderende sequentie)', en: 'CDS (coding sequence)' }), d: L({ nl: 'codons in één leesraam, van AUG (Met) tot het stopcodon', en: 'codons in a single reading frame, from AUG (Met) to the stop codon' }) },
       { c: C.ok, line: true, t: L({ nl: 'startcodon AUG', en: 'start codon AUG' }) },
       { c: RED, line: true, t: L({ nl: 'stopcodon UAA / UAG / UGA', en: 'stop codon UAA / UAG / UGA' }) },
       { c: C.rna, op: .45, t: "3'-UTR", d: L({ nl: 'miRNA-bindingsplaatsen (seed), AU-rijke elementen, eiwitbinding; bevat het polyadenyleringssignaal AAUAAA', en: 'miRNA binding sites (seed), AU-rich elements, protein binding; contains the polyadenylation signal AAUAAA' }) },
-      { c: C.trna, t: L({ nl: 'poly(A)-staart (~200–250 nt)', en: 'poly(A) tail (~200–250 nt)' }), d: L({ nl: 'PABP op poly(A) ↔ eIF4G: "gesloten lus"; deadenylatie start de afbraak', en: 'PABP on poly(A) ↔ eIF4G: "closed loop"; deadenylation starts decay' }) },
+      { c: C.trna, t: L({ nl: 'poly(A)-staart (~250 nt)', en: 'poly(A) tail (~250 nt)' }), d: L({ nl: 'PABP op poly(A) ↔ eIF4G: "gesloten lus"; deadenylatie start de afbraak', en: 'PABP on poly(A) ↔ eIF4G: "closed loop"; deadenylation starts decay' }) },
     ],
     notes: [L({ nl: 'Rijp menselijk mRNA, 5\'→3\' van links naar rechts; schematisch, niet op schaal.', en: 'Mature human mRNA, 5\'→3\' from left to right; schematic, not to scale.' })],
   });
@@ -120,7 +120,7 @@ function premrna(L) {
     notes: [
       L({ nl: 'Het spliceosoom voert 2 transesterificaties uit.', en: 'The spliceosome carries out 2 transesterifications.' }),
       L({ nl: 'Het intron komt vrij als lariat (2\'–5\'-binding op het vertakkingspunt-A) en wordt afgebroken.', en: 'The intron is released as a lariat (2\'–5\' bond at the branch-point A) and degraded.' }),
-      L({ nl: 'Het mRNA draagt EJC\'s op de exonovergangen. Schematisch, niet op schaal.', en: 'The mRNA carries EJCs at the exon junctions. Schematic, not to scale.' }),
+      L({ nl: 'Schematisch, niet op schaal.', en: 'Schematic, not to scale.' }),
     ],
   });
 }
@@ -310,7 +310,7 @@ function tdna(L) {
   s += arc(cx, cy, r, deg(255), deg(275), C.ok, 20);
   const lab = (a, t, col) => ringLabel(cx, cy, r + 24, deg(a), t, { size: 21, w: 700, col });
   s += lab(0, 'T-DNA', C.tdna) + lab(-58, 'LB', C.text) + lab(58, 'RB', C.text) + lab(190, 'vir', C.prot) + lab(265, 'ori', C.ok);
-  s += T(cx, cy + 2, 'Ti', { size: 24, w: 800 }) + T(cx, cy + 28, '~200 kb', { size: 18, col: C.muted, mono: true, w: 500 });
+  s += T(cx, cy + 2, 'Ti', { size: 24, w: 800 }) + T(cx, cy + 28, '200–800 kb', { size: 18, col: C.muted, mono: true, w: 500 });
   s += T(cx, 366, 'Agrobacterium', { size: 20, col: C.muted, w: 500, extra: ' font-style="italic"' });
   // 1: knippen → T-streng
   s += arrow(282, 206, 330, 206) + badge(306, 180, 1);
@@ -336,7 +336,7 @@ function tdna(L) {
       { c: C.tdna, t: 'T-DNA', d: L({ nl: 'tussen de grenssequenties LB en RB', en: 'between the border sequences LB and RB' }) },
       { c: C.prot, t: L({ nl: 'vir-genen', en: 'vir genes' }) },
       { c: C.ok, t: 'ori' },
-      { c: C.dna, line: true, t: L({ nl: 'Ti-plasmide (~200 kb) in Agrobacterium tumefaciens', en: 'Ti plasmid (~200 kb) in Agrobacterium tumefaciens' }) },
+      { c: C.dna, line: true, t: L({ nl: 'Ti-plasmide (200–800 kb) in Agrobacterium tumefaciens', en: 'Ti plasmid (200–800 kb) in Agrobacterium tumefaciens' }) },
     ],
     steps: [
       L({ nl: 'VirD1/D2 knippen; VirD2 blijft aan het 5\'-uiteinde van de T-streng.', en: 'VirD1/D2 nick; VirD2 stays attached to the 5\' end of the T-strand.' }),

@@ -3,6 +3,10 @@ const ALBERTS_DNA = { t: 'Alberts et al., Molecular Biology of the Cell (4e) —
 const ALBERTS_NT = { t: 'Alberts et al., Molecular Biology of the Cell (4e) — Panel 2-6: A Survey of the Nucleotides (NCBI Bookshelf)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK26883/' };
 const DREW = { t: 'Drew et al. (1981) Structure of a B-DNA dodecamer: conformation and dynamics. PNAS 78:2179 (PDB 1BNA)', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC319307/' };
 const MOTM_DNA = { t: 'PDB-101 Molecule of the Month: DNA', url: 'https://pdb101.rcsb.org/motm/23' };
+const WANG79 = { t: 'Wang (1979) Helical repeat of DNA in solution. PNAS 76:200–203 (PMC382905)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC382905/' };
+const MARINI = { t: 'Marini et al. (2021) DNA studies: latest spectroscopic and structural approaches. Micromachines 12:1094 (PMC8465297)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8465297/' };
+const TANG = { t: 'Tang (2022) Z-nucleic acids: uncovering the functions from past to present. Eur J Immunol 52:1700–1711 (PMC9827954)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC9827954/' };
+const HISEY = { t: 'Hisey, Masnovo & Mirkin (2024) Triplex H-DNA structure: the long and winding road from the discovery to its role in human disease. NAR Mol Med', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11667243/' };
 
 export default {
   dnahelix: {
@@ -36,7 +40,7 @@ export default {
       facts: [['Diameter', '≈ 20 Å (2 nm)'], ['Rise per bp', '≈ 3.4 Å'], ['bp per turn', '≈ 10.5 (in solution; fibre model 10)'], ['Handedness', 'right-handed (B-DNA)'], ['Major / minor groove', '≈ 12 / 6 Å wide'], ['Example structure', 'PDB 1BNA (CGCGAATTCGCG)']],
       why: 'The helical shape explains how DNA can be copied (each strand is a template), how it is packed compactly around nucleosomes and how proteins can recognise a sequence without opening the helix — the basis for gene regulation in the next chapter.',
     },
-    sources: [ALBERTS_DNA, DREW, MOTM_DNA, { t: 'RCSB PDB — 1BNA: Structure of a B-DNA dodecamer', url: 'https://www.rcsb.org/structure/1BNA' }],
+    sources: [ALBERTS_DNA, DREW, MOTM_DNA, WANG79, MARINI, { t: 'RCSB PDB — 1BNA: Structure of a B-DNA dodecamer', url: 'https://www.rcsb.org/structure/1BNA' }],
   },
 
   dnavormen: {
@@ -46,7 +50,7 @@ export default {
       how: [
         'B-DNA: rechtshandig, ≈ 10,5 bp/winding in oplossing (klassiek vezelmodel: 10), 3,4 Å/bp, ≈ 20 Å breed, suikers C2′-endo, basen anti.',
         'A-DNA: rechtshandig, ≈ 11 bp/winding, ≈ 2,6 Å/bp, ≈ 23 Å breed, suikers C3′-endo; basenparen ≈ 20° gekanteld en naast de as (holte in het midden).',
-        'C3′-endo brengt opeenvolgende fosfaten dichter bij elkaar (≈ 5,9 i.p.v. ≈ 7,0 Å): de helix wordt korter.',
+        'C3′-endo brengt opeenvolgende fosfaten dichter bij elkaar (gemeten: ≈ 6,0 Å in 440D i.p.v. ≈ 6,7 Å in 1BNA): de helix wordt korter.',
         'Z-DNA: linkshandig, 12 bp/winding, ≈ 3,7 Å/bp, ≈ 18 Å breed; herhalende eenheid = dinucleotide met G syn (C3′-endo) en C anti (C2′-endo).',
         'Groeven: B = brede, diepe grote groef; A = smalle, diepe grote en brede, ondiepe kleine groef; Z = vrijwel vlakke "grote groef" en smalle, diepe kleine groef.',
         'Omstandigheden: A bij weinig water en in dsRNA/hybriden; Z bij alternerende (CG)n, hoog zout of negatieve supercoiling.',
@@ -60,7 +64,7 @@ export default {
       how: [
         'B-DNA: right-handed, ≈ 10.5 bp/turn in solution (classic fibre model: 10), 3.4 Å/bp, ≈ 20 Å wide, sugars C2′-endo, bases anti.',
         'A-DNA: right-handed, ≈ 11 bp/turn, ≈ 2.6 Å/bp, ≈ 23 Å wide, sugars C3′-endo; base pairs tilted ≈ 20° and displaced from the axis (hollow core).',
-        'C3′-endo brings successive phosphates closer together (≈ 5.9 instead of ≈ 7.0 Å): the helix becomes shorter.',
+        'C3′-endo brings successive phosphates closer together (measured: ≈ 6.0 Å in 440D instead of ≈ 6.7 Å in 1BNA): the helix becomes shorter.',
         'Z-DNA: left-handed, 12 bp/turn, ≈ 3.7 Å/bp, ≈ 18 Å wide; repeating unit = dinucleotide with G syn (C3′-endo) and C anti (C2′-endo).',
         'Grooves: B = wide, deep major groove; A = narrow, deep major and wide, shallow minor groove; Z = almost flat "major groove" and narrow, deep minor groove.',
         'Conditions: A at low water activity and in dsRNA/hybrids; Z in alternating (CG)n, at high salt or under negative supercoiling.',
@@ -68,7 +72,7 @@ export default {
       facts: [['B-DNA', '≈ 10.5 bp/turn, right'], ['A-DNA', '≈ 11 bp/turn, right'], ['Z-DNA', '12 bp/turn, left'], ['Sugar pucker', "B: C2′-endo · A: C3′-endo · Z: alternating"], ['Structures', 'PDB 440D (A), 1BNA (B), 1DCG (Z)']],
       why: 'The forms differ in bp per turn, rise, handedness, grooves and sugar pucker. RNA duplexes are (almost) always A-form, which determines how proteins recognise them; Z-DNA can form transiently behind RNA polymerase (negative supercoiling) and is recognised by Zα domains (e.g. ADAR1).',
     },
-    sources: [ALBERTS_DNA, DREW, { t: 'Wang et al. (1979) Molecular structure of a left-handed double helical DNA fragment at atomic resolution. Nature 282:680', url: 'https://pubmed.ncbi.nlm.nih.gov/514347/' }, { t: 'Rich & Zhang (2003) Z-DNA: the long road to biological function. Nat Rev Genet 4:566', url: 'https://pubmed.ncbi.nlm.nih.gov/12838348/' }, { t: 'RCSB PDB — 440D: A-DNA crystal structure of d(AGGGGCCCCT)', url: 'https://www.rcsb.org/structure/440D' }],
+    sources: [ALBERTS_DNA, DREW, MARINI, TANG, WANG79, { t: 'Wang et al. (1979) Molecular structure of a left-handed double helical DNA fragment at atomic resolution. Nature 282:680', url: 'https://pubmed.ncbi.nlm.nih.gov/514347/' }, { t: 'Rich & Zhang (2003) Z-DNA: the long road to biological function. Nat Rev Genet 4:566', url: 'https://pubmed.ncbi.nlm.nih.gov/12838348/' }, { t: 'RCSB PDB — 440D: A-DNA crystal structure of d(AGGGGCCCCT)', url: 'https://www.rcsb.org/structure/440D' }],
   },
 
   noncanon: {
@@ -79,10 +83,10 @@ export default {
         'G-kwartet: vier guanines in een vlak, verbonden door 8 Hoogsteen-H-bruggen (N1–H···O6, N2–H···N7).',
         'Twee of meer kwartetten stapelen; een K⁺-ion tussen twee lagen wordt gecoördineerd door 8 O6-zuurstoffen.',
         'Topologie hangt af van sequentie en kation: de telomeerherhaling vormt met K⁺ in het kristal een parallelle propeller (1KF1), met Na⁺ een antiparallelle mand (143D).',
-        'Triplex: een derde streng ligt in de grote groef en paart via Hoogsteen (T·A–T, C⁺·G–C); bij H-DNA vouwt de helft van de pyrimidinestreng terug en blijft de purinestreng deels enkelstrengig.',
+        'Triplex: een derde streng ligt in de grote groef en paart via Hoogsteen (T·A–T, C⁺·G–C); bij H-DNA vouwt de helft van één streng terug (hier de pyrimidinestreng) en blijft de helft van de andere streng enkelstrengig.',
         'Kruisvorm: bij een palindroom vormt elke streng een haarspeld; samen een vierwegsknooppunt.',
-        'i-motief: half-geprotoneerde C·C⁺-paren (3 H-bruggen) die in elkaar schuiven, stabiel bij licht zure pH.',
-        'Negatieve supercoiling levert de energie om deze structuren uit B-DNA te laten ontstaan.',
+        'i-motief: half-geprotoneerde C·C⁺-paren die in elkaar schuiven, stabiel bij licht zure pH.',
+        'Negatieve supercoiling helpt zulke structuren (vooral Z-DNA, kruisvormen en H-DNA) uit B-DNA te laten ontstaan.',
       ],
       facts: [['H-bruggen per G-kwartet', '8 (Hoogsteen)'], ['Telomeerherhaling (mens)', 'TTAGGG'], ['Stabiliserend kation', 'K⁺ (tussen de lagen)'], ['PDB', '1KF1 (K⁺, parallel) · 143D (Na⁺, mand) · 1D3X (triplex)'], ['Triplets', 'T·A–T en C⁺·G–C']],
       why: 'G-quadruplexen aan telomeren en in promoters (bv. MYC) beïnvloeden replicatie, transcriptie en genoomstabiliteit en zijn doelwit voor kankergeneesmiddelen; niet-B-structuren zijn ook hotspots voor mutaties. Ze tonen dat basenparing meer kan dan Watson–Crick.',
@@ -94,10 +98,10 @@ export default {
         'G-quartet: four guanines in a plane, connected by 8 Hoogsteen H-bonds (N1–H···O6, N2–H···N7).',
         'Two or more quartets stack; a K⁺ ion between two layers is coordinated by 8 O6 oxygens.',
         'Topology depends on sequence and cation: the telomeric repeat forms a parallel propeller with K⁺ in the crystal (1KF1) and an antiparallel basket with Na⁺ (143D).',
-        'Triplex: a third strand lies in the major groove and pairs via Hoogsteen bonds (T·A–T, C⁺·G–C); in H-DNA half of the pyrimidine strand folds back and the purine strand stays partly single-stranded.',
+        'Triplex: a third strand lies in the major groove and pairs via Hoogsteen bonds (T·A–T, C⁺·G–C); in H-DNA half of one strand folds back (here the pyrimidine strand) and half of the other strand stays single-stranded.',
         'Cruciform: at a palindrome each strand forms a hairpin; together a four-way junction.',
-        'i-motif: hemiprotonated C·C⁺ pairs (3 H-bonds) that intercalate, stable at slightly acidic pH.',
-        'Negative supercoiling provides the energy for these structures to form from B-DNA.',
+        'i-motif: hemiprotonated C·C⁺ pairs that intercalate, stable at slightly acidic pH.',
+        'Negative supercoiling helps such structures (especially Z-DNA, cruciforms and H-DNA) to form from B-DNA.',
       ],
       facts: [['H-bonds per G-quartet', '8 (Hoogsteen)'], ['Telomeric repeat (human)', 'TTAGGG'], ['Stabilising cation', 'K⁺ (between layers)'], ['PDB', '1KF1 (K⁺, parallel) · 143D (Na⁺, basket) · 1D3X (triplex)'], ['Triplets', 'T·A–T and C⁺·G–C']],
       why: 'G-quadruplexes at telomeres and in promoters (e.g. MYC) affect replication, transcription and genome stability and are targets for anticancer drugs; non-B structures are also mutation hotspots. They show that base pairing can do more than Watson–Crick.',
@@ -108,6 +112,8 @@ export default {
       { t: 'Hisey, Masnovo & Mirkin (2024) Triplex H-DNA structure: the long and winding road from the discovery to its role in human disease. NAR Mol Med', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11667243/' },
       { t: 'Zeraati et al. (2018) I-motif DNA structures are formed in the nuclei of human cells. Nat Chem 10:631', url: 'https://pubmed.ncbi.nlm.nih.gov/29686376/' },
       { t: 'RCSB PDB — 143D: Solution structure of the human telomeric repeat d(AG3[T2AG3]3) G-quadruplex', url: 'https://www.rcsb.org/structure/143D' },
+      { t: 'Spiegel, Adhikari & Balasubramanian (2020) The structure and function of DNA G-quadruplexes. Trends Chem 2:123–136 (PMC7472594)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7472594/' },
+      { t: 'Srinivas, Rachakonda & Kumar (2020) Telomeres and telomere length: a general overview. Cancers 12:558 (PMC7139734)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7139734/' },
     ],
   },
 
@@ -122,7 +128,7 @@ export default {
         'Elk paar toont in de grote groef een eigen patroon van H-brugdonoren, -acceptoren en de methylgroep van T: zo herkennen eiwitten de sequentie.',
         'Regels van Chargaff: A = T en G = C in dubbelstrengig DNA.',
         'Stapeling tussen opeenvolgende paren (van-der-Waals-, hydrofobe krachten) levert het grootste deel van de stabiliteit.',
-        'Hoogsteen: de purine draait naar syn en paart met zijn N7-rand (C1′–C1′ ≈ 8,5 Å); wobble G·U in RNA verschuift U naar de grote groef.',
+        'Hoogsteen: de purine draait naar syn en paart met zijn N7-rand; wobble G·U in RNA paart verschoven, met 2 H-bruggen.',
       ],
       facts: [['A–T', '2 H-bruggen'], ['G–C', '3 H-bruggen'], ["C1′–C1′", '≈ 10,5 Å (Watson–Crick)'], ['H-brugafstand', '≈ 2,8–3,0 Å'], ['GC-gehalte mens', '≈ 41 %'], ['Wobble', 'G·U, 2 H-bruggen (RNA)']],
       why: 'Complementaire basenparing is de basis van replicatie, transcriptie en translatie (codon–anticodon). Alternatieve paringen (Hoogsteen, wobble) maken triplexen, G-quadruplexen en de flexibele derde codonpositie mogelijk.',
@@ -137,7 +143,7 @@ export default {
         'In the major groove every pair shows its own pattern of H-bond donors, acceptors and the methyl group of T: this is how proteins recognise the sequence.',
         "Chargaff's rules: A = T and G = C in double-stranded DNA.",
         'Stacking between successive pairs (van der Waals, hydrophobic forces) provides most of the stability.',
-        'Hoogsteen: the purine flips to syn and pairs with its N7 edge (C1′–C1′ ≈ 8.5 Å); wobble G·U in RNA shifts U towards the major groove.',
+        'Hoogsteen: the purine flips to syn and pairs with its N7 edge; wobble G·U in RNA pairs in a shifted way, with 2 H-bonds.',
       ],
       facts: [['A–T', '2 H-bonds'], ['G–C', '3 H-bonds'], ["C1′–C1′", '≈ 10.5 Å (Watson–Crick)'], ['H-bond distance', '≈ 2.8–3.0 Å'], ['Human GC content', '≈ 41 %'], ['Wobble', 'G·U, 2 H-bonds (RNA)']],
       why: 'Complementary base pairing underlies replication, transcription and translation (codon–anticodon). Alternative pairings (Hoogsteen, wobble) enable triplexes, G-quadruplexes and the flexible third codon position.',
@@ -183,7 +189,7 @@ export default {
       facts: [['Purines', 'adenine, guanine (2 rings)'], ['Pyrimidines', 'cytosine, thymine, uracil (1 ring)'], ['Nucleoside', 'base + sugar (e.g. deoxyadenosine)'], ['Nucleotide', 'nucleoside + phosphate (e.g. dAMP)'], ['Bond in the chain', "3′→5′ phosphodiester"], ['T vs U', 'T = 5-methyluracil']],
       why: 'The chemistry of the nucleotide determines everything above it: the 5′→3′ direction of synthesis, the charge of DNA, the difference in stability between DNA and RNA and, through pucker and χ, which helix form arises.',
     },
-    sources: [ALBERTS_NT, ALBERTS_DNA, { t: 'PDB-101 Learn: Paper Models — DNA', url: 'https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/dna' }, DREW],
+    sources: [ALBERTS_NT, ALBERTS_DNA, { t: 'PDB-101 Learn: Paper Models — DNA', url: 'https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/dna' }, DREW, { t: 'Heider et al. (2017) Defining the RNaseH2 enzyme-initiated ribonucleotide excision repair pathway in Archaea. J Biol Chem 292:8835–8845 (PMC5448109) — reactieve 2′-OH', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5448109/' }],
   },
 
   supercoiling: {
@@ -193,13 +199,13 @@ export default {
       how: [
         'Linking number Lk = aantal keren dat de ene streng rond de andere gaat; een geheel getal dat alleen verandert als een streng breekt.',
         'Lk = Tw + Wr: twist (windingen rond de as) plus writhe (kronkeling van de as zelf, bv. een plectoneem).',
-        'Ontspannen B-DNA: Lk₀ = N/10,5. Onderwonden DNA (ΔLk < 0) is negatief gesupercoild; cellulair DNA heeft σ = ΔLk/Lk₀ ≈ −0,06.',
-        'Bij eukaryoten zit de negatieve supercoiling grotendeels vast in nucleosomen (≈ −1 per nucleosoom).',
+        'Ontspannen B-DNA: Lk₀ = N/10,5. Onderwonden DNA (ΔLk < 0) is negatief gesupercoild; fysiologisch is σ = ΔLk/Lk₀ ≈ −0,05.',
+        'Bij eukaryoten zit de negatieve supercoiling grotendeels vast in nucleosomen; komen nucleosomen los, dan komt die spanning plaatselijk vrij.',
         'Twin-domain-model: een voortschrijdend RNA-polymerase maakt positieve supercoils vóór en negatieve achter zich.',
         'Topo-isomerase I (TOP1, type IB) knipt één streng, blijft via een tyrosine gebonden en laat de streng rond de intacte streng draaien; geen ATP.',
         'Topo-isomerase II (TOP2A/B) knipt beide strengen, haalt een tweede duplex door de breuk en verandert Lk met 2; ATP-afhankelijk. Het ontwart ook dochterchromatiden na replicatie.',
       ],
-      facts: [['Kernformule', 'Lk = Tw + Wr'], ['σ in cellen', '≈ −0,06 (negatief)'], ['TOP1', '1 streng, geen ATP'], ['TOP2', '2 strengen, ATP, ΔLk = ±2'], ['Geneesmiddelen', 'camptothecine (TOP1); etoposide, doxorubicine (TOP2)']],
+      facts: [['Kernformule', 'Lk = Tw + Wr'], ['σ fysiologisch', '≈ −0,05 (negatief)'], ['TOP1', '1 streng, geen ATP'], ['TOP2', '2 strengen, ATP, ΔLk = ±2'], ['Geneesmiddelen', 'camptothecine (TOP1); etoposide, doxorubicine (TOP2)']],
       why: 'Negatieve supercoiling maakt het makkelijker om de helix te openen voor transcriptie en replicatie en stimuleert Z-DNA, kruisvormen en H-DNA. Zonder topo-isomerasen zouden transcriptie en replicatie vastlopen; daarom zijn ze belangrijke doelwitten van kankertherapie.',
     },
     en: {
@@ -208,13 +214,13 @@ export default {
       how: [
         'Linking number Lk = the number of times one strand winds around the other; an integer that changes only if a strand is broken.',
         'Lk = Tw + Wr: twist (turns around the axis) plus writhe (coiling of the axis itself, e.g. a plectoneme).',
-        'Relaxed B-DNA: Lk₀ = N/10.5. Underwound DNA (ΔLk < 0) is negatively supercoiled; cellular DNA has σ = ΔLk/Lk₀ ≈ −0.06.',
-        'In eukaryotes the negative supercoiling is largely held in nucleosomes (≈ −1 per nucleosome).',
+        'Relaxed B-DNA: Lk₀ = N/10.5. Underwound DNA (ΔLk < 0) is negatively supercoiled; physiologically σ = ΔLk/Lk₀ ≈ −0.05.',
+        'In eukaryotes the negative supercoiling is largely held in nucleosomes; when nucleosomes come off, that strain is released locally.',
         'Twin-domain model: an advancing RNA polymerase creates positive supercoils ahead of it and negative ones behind.',
         'Topoisomerase I (TOP1, type IB) cuts one strand, stays attached via a tyrosine and lets the strand rotate around the intact strand; no ATP.',
         'Topoisomerase II (TOP2A/B) cuts both strands, passes a second duplex through the break and changes Lk by 2; ATP-dependent. It also untangles daughter chromatids after replication.',
       ],
-      facts: [['Key formula', 'Lk = Tw + Wr'], ['σ in cells', '≈ −0.06 (negative)'], ['TOP1', '1 strand, no ATP'], ['TOP2', '2 strands, ATP, ΔLk = ±2'], ['Drugs', 'camptothecin (TOP1); etoposide, doxorubicin (TOP2)']],
+      facts: [['Key formula', 'Lk = Tw + Wr'], ['Physiological σ', '≈ −0.05 (negative)'], ['TOP1', '1 strand, no ATP'], ['TOP2', '2 strands, ATP, ΔLk = ±2'], ['Drugs', 'camptothecin (TOP1); etoposide, doxorubicin (TOP2)']],
       why: 'Negative supercoiling makes it easier to open the helix for transcription and replication and promotes Z-DNA, cruciforms and H-DNA. Without topoisomerases transcription and replication would stall; that is why they are major targets of cancer therapy.',
     },
     sources: [
@@ -222,6 +228,8 @@ export default {
       { t: 'Pommier et al. (2016) Roles of eukaryotic topoisomerases in transcription, replication and genomic stability. Nat Rev Mol Cell Biol 17:703', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9248348/' },
       { t: 'Champoux (2001) DNA topoisomerases: structure, function, and mechanism. Annu Rev Biochem 70:369', url: 'https://pubmed.ncbi.nlm.nih.gov/11395412/' },
       { t: 'Alberts et al., Molecular Biology of the Cell (4e) — DNA topoisomerases at the replication fork (NCBI Bookshelf)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK26850/' },
+      HISEY,
+      { t: 'Dorman (2026) Microbial Primer: Bacterial DNA supercoiling. Microbiology 172(2) (PMC12904600) — Lk, Tw, Wr; type I/II in stappen van 1/2', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC12904600/' },
     ],
   },
 };

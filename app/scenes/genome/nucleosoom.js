@@ -16,7 +16,7 @@ export default structure3d({
   pdb: '1KX5',
   title: { nl: 'Nucleosoom', en: 'Nucleosome' },
   scale: '≈ 11 nm',
-  time: { nl: 'DNA-uiteinden "ademen": ms – s', en: 'DNA ends "breathe": ms – s' },
+  time: { nl: 'DNA-uiteinden "ademen": ~0,25 s gewikkeld, ~10–50 ms los', en: 'DNA ends "breathe": ~0.25 s wrapped, ~10–50 ms unwrapped' },
   org: { nl: 'Xenopus-histonen + humaan DNA', en: 'Xenopus histones + human DNA' },
   legend: [[C.dna, { nl: 'DNA (147 bp)', en: 'DNA (147 bp)' }], [HC.H3, 'H3'], [HC.H4, 'H4'], [HC.H2A, 'H2A'], [HC.H2B, 'H2B'], ['#ff6b6b', { nl: 'lysines in de staarten', en: 'lysines in the tails' }], ['#ffc247', { nl: 'arginines in de kleine groef', en: 'arginines in the minor groove' }]],
   extra: {
@@ -39,7 +39,7 @@ export default structure3d({
       text: { nl: 'Het DNA draait bijna twee keer rond de eiwitkern. Het blijft een gewone dubbelhelix, maar sterk gebogen.', en: 'The DNA goes almost twice around the protein core. It stays an ordinary double helix, just strongly bent.' } },
     { dur: 8000, spin: .015, focus: [{ sel: H3, style: cart(HC.H3), label: { nl: 'H3 (×2)', en: 'H3 (×2)' } }, { sel: H4, style: cart(HC.H4), label: { nl: 'H4 (×2)', en: 'H4 (×2)' } }], zoom: {},
       title: { nl: 'Het hart van het klosje', en: 'The heart of the spool' },
-      text: { nl: 'In het midden zitten twee paren van de eiwitten H3 en H4 (histonen). Dit deel pakt het DNA als eerste vast.', en: 'At the centre sit two pairs of the proteins H3 and H4 (histones). This part is the first to grab the DNA.' } },
+      text: { nl: 'In het midden zitten twee paren van de eiwitten H3 en H4 (histonen). Dit deel houdt het middelste stuk DNA vast.', en: 'At the centre sit two pairs of the proteins H3 and H4 (histones). This part holds the middle stretch of DNA.' } },
     { dur: 8000, spin: .015, focus: [{ sel: H2A, style: cart(HC.H2A), label: { nl: 'H2A (×2)', en: 'H2A (×2)' } }, { sel: H2B, style: cart(HC.H2B), label: { nl: 'H2B (×2)', en: 'H2B (×2)' } }], zoom: {},
       title: { nl: 'Twee paren komen erbij', en: 'Two more pairs join' },
       text: { nl: 'Aan elke kant komt een paar H2A–H2B bij. Zo zijn er acht histonen: van elk soort twee.', en: 'An H2A–H2B pair joins on each side. That makes eight histones: two of each kind.' } },

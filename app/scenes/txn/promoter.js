@@ -35,8 +35,8 @@ export default {
   legend: [[C.dna, { nl: 'coderende streng', en: 'coding strand' }], [C.dna2, { nl: 'matrijsstreng', en: 'template strand' }], ['#ffc247', 'TATA'], ['#ffb27a', 'BRE'], ['#7fdc6a', 'Inr'], ['#5fd3e6', 'MTE / DPE'],
     [G.d, 'TFIID (TBP + TAFs)'], [G.pol, 'RNA-polymerase II'], [C.rna, 'RNA'], [G.nelf, 'NELF'], [G.dsif, 'DSIF'], [G.ptefb, 'P-TEFb (CDK9)']],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">Consensuscodes: S = G/C, R = A/G, Y = C/T, W = A/T, K = G/T, D = A/G/T, V = A/C/G, N = elke base. De getoonde sequentie is illustratief: hij voldoet aan alle motieven, wat in echte promoters zelden het geval is.</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">Consensus codes: S = G/C, R = A/G, Y = C/T, W = A/T, K = G/T, D = A/G/T, V = A/C/G, N = any base. The sequence shown is illustrative: it matches every motif, which real promoters rarely do.</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">Consensuscodes: S = G/C, R = A/G, Y = C/T, W = A/T, K = G/T, D = A/G/T, V = A/C/G, N = elke base. De DPE-code is die van de fruitvlieg; voor de mens is er nog geen vaste code. De getoonde sequentie is illustratief: hij voldoet aan alle motieven, wat in echte promoters zelden het geval is.</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">Consensus codes: S = G/C, R = A/G, Y = C/T, W = A/T, K = G/T, D = A/G/T, V = A/C/G, N = any base. The DPE code is the fruit-fly one; no fixed code has been established for humans. The sequence shown is illustrative: it matches every motif, which real promoters rarely do.</p>' },
   simplified: {
     nl: 'Geen enkel kernpromoterelement is universeel; de meeste menselijke promoters liggen in CpG-eilanden zonder TATA-box en starten verspreid over meerdere posities. De buiging (~80°) is als één knik getekend; TFIID, Pol II en de factoren zijn schematische vormen (echte structuren: cryo-EM van het humane PIC). Mediator is enkel aangeduid; +1-nucleosoom en capping zijn weggelaten.',
     en: 'No core promoter element is universal; most human promoters lie in CpG islands without a TATA box and start at several dispersed positions. The bend (~80°) is drawn as one kink; TFIID, Pol II and the factors are schematic shapes (real structures: cryo-EM of the human PIC). Mediator is only indicated; the +1 nucleosome and capping are omitted.' },
@@ -56,7 +56,7 @@ export default {
     { dur: 8000, cam: cam(900, 450, 1200), title: { nl: 'Een fosfaat op de staart', en: 'A phosphate on the tail' },
       text: { nl: 'Het enzym krijgt fosfaatgroepjes op zijn lange staart. Daarna laat het de meeste hulpeiwitten los en vertrekt.', en: 'The enzyme gets phosphate groups on its long tail. It then lets go of most helper proteins and sets off.' } },
     { dur: 8000, cam: cam(878, 450, 1150), title: { nl: 'Een korte pauze', en: 'A short pause' },
-      text: { nl: 'Na ~20–60 bouwstenen houden twee eiwitten het enzym even vast. Bij veel menselijke genen is dit een controlepunt.', en: 'After ~20–60 building blocks, two proteins hold the enzyme in place. For many human genes this is a checkpoint.' } },
+      text: { nl: 'Na ~25–50 bouwstenen houden twee eiwitten het enzym even vast. Bij veel menselijke genen is dit een controlepunt.', en: 'After ~25–50 building blocks, two proteins hold the enzyme in place. For many human genes this is a checkpoint.' } },
     { dur: 9000, cam: cam(1200, 450, 1300), title: { nl: 'Het enzym mag verder', en: 'The enzyme may move on' },
       text: { nl: 'Een enzym zet fosfaten op de staart en de pauze-eiwitten. Eén vertrekt, het andere rijdt mee → volgend hoofdstuk.', en: 'An enzyme adds phosphates to the tail and the pause proteins. One leaves, the other rides along → next chapter.' } },
   ],

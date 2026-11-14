@@ -145,7 +145,7 @@ export default {
           m += hbond(hOf(pT, 'N3', pl.A.N7), pl.A.N7, V, hk) + hbond(hOf(pl, 'N6', pT.A.O4), pT.A.O4, V, hk);
           ann += tag(X(V, [0, 0]), Y(V, [0, 5.1]), kf < .5 ? 'anti' : 'syn', BASE.A, 28);
           if (kf > 0 && kf < 1) ann += txt(X(V, pA.A["C1'"]) - 10, Y(V, pA.A["C1'"]) + 60, T2('180° rond N9–C1′', '180° about N9–C1′'), C.muted, 22, 'middle');
-          ann += `<g opacity="${f1(hk)}">${tag(X(V, [2.4, 0]), Y(V, [0, -4.9]), T2("Hoogsteen A·T: C1′–C1′ ≈ 8,5 Å", "Hoogsteen A·T: C1′–C1′ ≈ 8.5 Å"), '#fff', 26)}</g>`;
+          ann += `<g opacity="${f1(hk)}">${tag(X(V, [2.4, 0]), Y(V, [0, -4.9]), T2("Hoogsteen A·T: A draait naar syn", "Hoogsteen A·T: A flips to syn"), '#fff', 26)}</g>`;
         } else if (step === 7) {
           const k = ease(sub(p, .05, .35));
           const pl = place(BASEDEF.U, { tx: D, ty: WOB.ty * k });

@@ -25,7 +25,7 @@ const L3 = (nl, en) => ({ nl, en });
 export default structure3d({
   id: 'rnapol', pdb: '5FLM',
   title: L3('RNA-polymerase II', 'RNA polymerase II'),
-  scale: { nl: '≈ 15 nm · ≈ 0,5 MDa', en: '≈ 15 nm · ≈ 0.5 MDa' }, time: L3('≈ 20–50 nt/s tijdens elongatie', '≈ 20–50 nt/s during elongation'),
+  scale: { nl: '≈ 15 nm · ≈ 0,5 MDa', en: '≈ 15 nm · ≈ 0.5 MDa' }, time: L3('gemiddeld ≈ 30–40 nt/s tijdens elongatie', 'on average ≈ 30–40 nt/s during elongation'),
   org: L3('zoogdier (rund; ≈ identiek aan mens) · PDB 5FLM', 'mammal (bovine; ≈ identical to human) · PDB 5FLM'),
   legend: [[COL.A, 'Rpb1'], [COL.B, 'Rpb2'], [COL.D, 'Rpb4/Rpb7'], [DIM, L3('overige subeenheden', 'other subunits')], [C.dna2, L3('matrijsstreng', 'template strand')], [C.dna, L3('niet-matrijsstreng', 'non-template strand')], [C.rna, 'RNA'], ['#7fdc6a', 'Mg²⁺']],
   extra: {
@@ -61,7 +61,7 @@ export default structure3d({
       text: L3('De triggerlus (geel) klapt dicht over een passende bouwsteen. Met de groene staaf ernaast stuurt hij het koppelen.', 'The trigger loop (yellow) folds over a matching building block. With the green rod beside it, it drives the joining.') },
     { dur: 8000, title: L3('Een stengel aan de zijkant', 'A stalk on the side'), zoom: {}, spin: .012,
       focus: [{ sel: { chain: 'D' }, style: { cartoon: { color: COL.D } }, label: 'Rpb4' }, { sel: { chain: 'G' }, style: { cartoon: { color: COL.G } }, label: 'Rpb7' }],
-      text: L3('Rpb4 en Rpb7 steken uit als een stengel naast de RNA-uitgang. Ze kunnen het RNA vastpakken.', 'Rpb4 and Rpb7 stick out as a stalk next to the RNA exit. They can grab the RNA.') },
+      text: L3('Rpb4 en Rpb7 steken uit als een stengel naast de RNA-uitgang. Ze pakken mogelijk het RNA vast.', 'Rpb4 and Rpb7 stick out as a stalk next to the RNA exit. They may grab the RNA.') },
     { dur: 9000, title: L3('Een onzichtbare staart', 'An invisible tail'), zoom: {}, spin: .012,
       focus: { sel: { chain: 'A', resi: range(1455, 1487) }, style: { cartoon: { color: '#ffc247' }, stick: { color: '#ffc247', radius: .25 } }, label: L3('→ linker + CTD (niet zichtbaar)', '→ linker + CTD (not visible)') },
       text: L3('Hier stopt het zichtbare deel; dan volgt een slappe staart (CTD). Fosfaten daarop roepen RNA-bewerkers op.', 'The visible part stops here; a floppy tail (CTD) follows. Phosphates on it call in RNA-processing enzymes.') },

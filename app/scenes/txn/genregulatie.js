@@ -19,7 +19,7 @@ const M = { act: C.prot, med: '#6f5bd6', hat: '#d98cf0', rem: '#8f7bd0', ctcf: '
 export default {
   id: 'genregulatie',
   title: { nl: 'Genregulatie', en: 'Gene regulation' },
-  scale: '≈ 1–100 kb DNA · 10–30 nm', time: { nl: 'seconden tot uren (hier samengevat)', en: 'seconds to hours (condensed here)' },
+  scale: { nl: 'DNA-afstanden ingekort · eiwitten ≈ 10–30 nm', en: 'DNA distances shortened · proteins ≈ 10–30 nm' }, time: { nl: 'seconden tot uren (hier samengevat)', en: 'seconds to hours (condensed here)' },
   org: { nl: 'mens (RNA-polymerase II-gen)', en: 'human (RNA polymerase II gene)' },
   legend: [[C.dna, 'DNA'], [C.histone, { nl: 'nucleosoom', en: 'nucleosome' }], [C.ok, { nl: 'acetylgroep (Ac)', en: 'acetyl mark (Ac)' }], [M.act, { nl: 'activator', en: 'activator' }],
     [M.med, 'Mediator'], [M.hat, 'HAT (p300/CBP)'], [M.rem, { nl: 'remodeler (SWI/SNF)', en: 'remodeller (SWI/SNF)' }], [M.ctcf, { nl: 'CTCF (isolator)', en: 'CTCF (insulator)' }], [M.rep, { nl: 'repressor', en: 'repressor' }]],
@@ -27,8 +27,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">Rode draad: een gen wordt niet "aangezet" door één schakelaar, maar door een reeks stappen: toegankelijk chromatine, gebonden activatoren, co-activatoren en ten slotte een volledig preinitiatiecomplex op de promoter.</p><p style="font-size:13px;color:#93a0bb">Groene bolletjes op de histonstaarten = acetylgroepen (Ac). Silencers werken niet alleen via deacetylering (HDAC), maar ook via H3K9/H3K27-methylatie en DNA-methylatie.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Common thread: a gene is not switched on by a single switch but by a series of steps: accessible chromatin, bound activators, co-activators and finally a complete pre-initiation complex on the promoter.</p><p style="font-size:13px;color:#93a0bb">Green dots on the histone tails = acetyl groups (Ac). Silencers act not only via deacetylation (HDAC) but also via H3K9/H3K27 methylation and DNA methylation.</p>' },
   simplified: {
-    nl: 'De afstand enhancer–promoter is sterk ingekort (in werkelijkheid vaak tientallen kb, soms tot ~1 Mb). Nucleosomen zijn schijfjes met één DNA-winding (echt ~147 bp in ~1,7 windingen); het DNA is een platte golf. Eén activator staat model voor vele (enhancers binden meestal meerdere factoren samen). Mediator, HAT\'s en remodelers zijn schematische vormen; de volgorde waarin co-activatoren aankomen verschilt per gen. Cohesine (lusvorming) is enkel vermeld.',
-    en: 'The enhancer–promoter distance is strongly shortened (in reality often tens of kb, sometimes up to ~1 Mb). Nucleosomes are discs with one DNA turn (really ~147 bp in ~1.7 turns); the DNA is a flat wave. One activator stands for many (enhancers usually bind several factors together). Mediator, HATs and remodellers are schematic shapes; the order in which co-activators arrive differs between genes. Cohesin (loop formation) is only mentioned.' },
+    nl: 'De afstand enhancer–promoter is sterk ingekort (in werkelijkheid kan die groot zijn, bv. ≈ 1 Mb bij de enhancer van het gen SHH). Nucleosomen zijn schijfjes met één DNA-winding (echt ~147 bp in ~1,7 windingen); het DNA is een platte golf. Eén activator staat model voor vele (enhancers binden meestal meerdere factoren samen). Mediator, HAT\'s en remodelers zijn schematische vormen; de volgorde waarin co-activatoren aankomen verschilt per gen. Cohesine (lusvorming) is enkel vermeld.',
+    en: 'The enhancer–promoter distance is strongly shortened (in reality it can be large, e.g. ≈ 1 Mb for the enhancer of the SHH gene). Nucleosomes are discs with one DNA turn (really ~147 bp in ~1.7 turns); the DNA is a flat wave. One activator stands for many (enhancers usually bind several factors together). Mediator, HATs and remodellers are schematic shapes; the order in which co-activators arrive differs between genes. Cohesin (loop formation) is only mentioned.' },
   steps: [
     { dur: 8000, cam: cam(760, 500, 1400), title: { nl: 'Een gen dat uit staat', en: 'A gene that is switched off' },
       text: { nl: 'Het DNA is rond eiwitklosjes (nucleosomen) gewonden. De startplek is bedekt, dus het gen blijft uit.', en: 'The DNA is wound around protein spools (nucleosomes). The start site is covered, so the gene stays off.' } },
@@ -156,7 +156,7 @@ export default {
         let marks = `<g opacity="${f1(1 - .6 * k)}">` +
           `<rect x="${f1(e[0] - 34)}" y="${f1(e[1] - 22)}" width="68" height="44" rx="8" fill="rgba(255,194,71,.10)" stroke="${C.trna}" stroke-dasharray="5 4" stroke-width="2"/></g>` +
           (k > .5 ? txt(e[0] - 44, e[1] + 88, 'enhancer', C.trna, 21, 'end') : txt(e[0], e[1] + 62, 'enhancer', C.trna, 21));
-        if (step === 0) marks += txt((e[0] + pr[0]) / 2, Y0 + 64, T2('… tientallen kb (ingekort) …', '… tens of kb (shortened) …'), C.muted, 21);
+        if (step === 0) marks += txt((e[0] + pr[0]) / 2, Y0 + 64, T2('… afstand sterk ingekort …', '… distance strongly shortened …'), C.muted, 21);
         $('gr-marks').innerHTML = marks;
         $('gr-prom').innerHTML = `<rect x="${f1(pr[0] - 40)}" y="${f1(pr[1] - 22)}" width="72" height="44" rx="8" fill="rgba(155,123,255,.12)" stroke="${C.prot}" stroke-dasharray="5 4" stroke-width="2"/>` +
           (step === 7 && p > .12 ? '' : k > .5 ? txt(pr[0] - 40, pr[1] - 40, 'TATA', '#c9b8ff', 21, 'middle', 700, 'JetBrains Mono') : txt(pr[0] - 4, pr[1] + 64, 'TATA', '#c9b8ff', 21, 'middle', 700, 'JetBrains Mono'));

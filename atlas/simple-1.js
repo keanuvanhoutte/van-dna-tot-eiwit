@@ -192,17 +192,17 @@ export const SIMPLE = {
       nl: 'Sommige kleine moleculen schuiven in de smalle [[groef|groef]] van DNA, zoals een sleutel in een sleuf. Netropsine heeft een gebogen vorm die past in stukken met veel A’s en T’s. Het DNA zelf verandert daarbij nauwelijks van vorm.',
       en: 'Some small molecules slide into the narrow [[groove|groef]] of DNA, like a key into a slot. Netropsin has a curved shape that fits stretches with many As and Ts. The DNA itself hardly changes shape.' },
     look: {
-      nl: 'Het molecule met de groene koolstofatomen ligt in de smalle groef, midden in de helix. De helix zelf blijft recht en gewoon.',
-      en: 'The molecule with the green carbon atoms lies in the narrow groove, in the middle of the helix. The helix itself stays straight and ordinary.' },
+      nl: 'Het molecule met de groene koolstofatomen ligt in de smalle groef, midden in de helix. De helix zelf blijft gewone B-DNA en buigt hooguit een klein beetje.',
+      en: 'The molecule with the green carbon atoms lies in the narrow groove, in the middle of the helix. The helix itself stays ordinary B-DNA and bends only slightly.' },
     why: {
-      nl: 'Zulke groefbinders herkennen een bepaalde DNA-volgorde. Kleurstoffen die DNA in het lab laten oplichten, zoals DAPI en Hoechst, binden op dezelfde manier.',
-      en: 'Groove binders like this recognise a specific DNA sequence. Dyes that make DNA light up in the lab, such as DAPI and Hoechst, bind in the same way.' },
+      nl: 'Zulke groefbinders herkennen een bepaalde DNA-volgorde. Kleurstoffen die DNA in het lab laten oplichten, zoals Hoechst en DAPI, binden ook in de smalle groef.',
+      en: 'Groove binders like this recognise a specific DNA sequence. Dyes that make DNA light up in the lab, such as Hoechst and DAPI, also bind in the narrow groove.' },
     facts: [
       [{ nl: 'Wat is het?', en: 'What is it?' }, { nl: 'een natuurlijk antibioticum', en: 'a natural antibiotic' }],
       [{ nl: 'Bindt aan', en: 'Binds to' }, { nl: 'de smalle groef, waar veel A’s en T’s zitten', en: 'the narrow groove, where there are many As and Ts' }],
       [{ nl: 'Effect op het DNA', en: 'Effect on the DNA' }, { nl: 'nauwelijks: het blijft gewoon B-DNA', en: 'hardly any: it stays ordinary B-DNA' }],
       [{ nl: 'Bindt slecht bij', en: 'Binds poorly at' }, { nl: 'G–C-paren: een stukje van G zit in de weg', en: 'G–C pairs: a part of G is in the way' }],
-      [{ nl: 'Werkt net zo', en: 'Works the same way' }, { nl: 'DNA-kleurstoffen DAPI en Hoechst', en: 'DNA dyes DAPI and Hoechst' }],
+      [{ nl: 'Ook in de smalle groef', en: 'Also in the narrow groove' }, { nl: 'DNA-kleurstoffen Hoechst en DAPI', en: 'DNA dyes Hoechst and DAPI' }],
     ],
   },
 
@@ -216,10 +216,10 @@ export const SIMPLE = {
       nl: 'De moleculen met groene koolstofatomen zitten aan beide uiteinden tussen de basenparen. Zie hoe de basenparen daar verder uit elkaar staan.',
       en: 'The molecules with green carbon atoms sit between the base pairs at both ends. See how the base pairs are pushed further apart there.' },
     why: {
-      nl: 'Daunomycine en doxorubicine zijn medicijnen tegen kanker, bv. leukemie en borstkanker. Ze werken ook doordat een DNA-knipenzym aan het DNA blijft vastzitten, waardoor het DNA breekt.',
-      en: 'Daunomycin and doxorubicin are drugs against cancer, e.g. leukaemia and breast cancer. They also work because a DNA-cutting enzyme stays stuck to the DNA, so the DNA breaks.' },
+      nl: 'Daunomycine en doxorubicine zijn medicijnen tegen kanker, bv. borstkanker. Ze werken ook doordat een DNA-knipenzym aan het DNA blijft vastzitten, waardoor het DNA breekt.',
+      en: 'Daunomycin and doxorubicin are drugs against cancer, e.g. breast cancer. They also work because a DNA-cutting enzyme stays stuck to the DNA, so the DNA breaks.' },
     facts: [
-      [{ nl: 'Medicijn tegen', en: 'Drug against' }, { nl: 'kanker, bv. leukemie en borstkanker', en: 'cancer, e.g. leukaemia and breast cancer' }],
+      [{ nl: 'Medicijn tegen', en: 'Drug against' }, { nl: 'kanker, bv. borstkanker', en: 'cancer, e.g. breast cancer' }],
       [{ nl: 'Effect op het DNA', en: 'Effect on the DNA' }, { nl: 'basenparen twee keer zo ver uit elkaar', en: 'base pairs twice as far apart' }],
       [{ nl: 'Hoe groot', en: 'How large' }, { nl: 'van ~0,34 naar ~0,68 nm op die plek', en: 'from ~0.34 to ~0.68 nm at that spot' }],
       [{ nl: 'Ander deel', en: 'Other part' }, { nl: 'een suikerstaart ligt in de smalle groef', en: 'a sugar tail lies in the narrow groove' }],

@@ -42,8 +42,8 @@ export default {
   steps: [
     { dur: 7500, cam: FULL, title: L3('In een gezonde cel lezen ribosomen mRNA’s af', 'In a healthy cell ribosomes read mRNAs'),
       text: L3('Op elk mRNA lezen meerdere ribosomen tegelijk. Zo maakt de cel voortdurend eiwitten.', 'Several ribosomes read each mRNA at once. That is how the cell keeps making proteins.') },
-    { dur: 8500, cam: FULL, title: L3('Bij hitte stopt de cel met vertalen', 'In heat the cell stops translating'),
-      text: L3('Bij stress, zoals hitte, start de cel geen nieuwe eiwitten meer. De ribosomen lopen van de mRNA’s af.', 'Under stress, such as heat, the cell stops starting new proteins. The ribosomes run off the mRNAs.') },
+    { dur: 8500, cam: FULL, title: L3('Bij hitte vertaalt de cel veel minder', 'In heat the cell translates far less'),
+      text: L3('Bij stress, zoals hitte, start de cel veel minder nieuwe eiwitten. De ribosomen lopen van de mRNA’s af.', 'Under stress, such as heat, the cell starts far fewer new proteins. The ribosomes run off the mRNAs.') },
     { dur: 9000, cam: FULL, title: L3('Vrije mRNA’s klonteren samen in druppels', 'Free mRNAs clump together in droplets'),
       text: L3('Kleverige eiwitten binden de vrije mRNA’s. Samen vormen ze druppels zonder membraan, zoals olie in water.', 'Sticky proteins bind the free mRNAs. Together they form droplets without a membrane, like oil in water.') },
     { dur: 8500, cam: cam(620, 430, 900), title: L3('Een druppel heeft geen wand', 'A droplet has no wall'),

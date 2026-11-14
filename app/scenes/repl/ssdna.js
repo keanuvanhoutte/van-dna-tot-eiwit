@@ -17,7 +17,7 @@ export default structure3d({
   id: 'ssdna', pdb: '1JMC', format: 'pdb',
   title: { nl: 'Enkelstrengig DNA & RPA', en: 'Single-stranded DNA & RPA' },
   scale: '≈ 5 nm',
-  time: { nl: 'RPA bindt in milliseconden en schuift dynamisch', en: 'RPA binds within milliseconds and moves dynamically' },
+  time: { nl: 'RPA bindt sterk, maar wordt snel uitgewisseld en kan verschuiven', en: 'RPA binds tightly, but is rapidly exchanged and can slide' },
   org: { nl: 'mens (RPA70, kristalstructuur 2,4 Å)', en: 'human (RPA70, crystal structure 2.4 Å)' },
   legend: [[COL_A, 'DBD-A (OB-fold)'], [COL_B, 'DBD-B (OB-fold)'], [C.dna, { nl: 'ssDNA (8 × C)', en: 'ssDNA (8 × C)' }], ['#ffc247', { nl: 'aromatische residuen', en: 'aromatic residues' }]],
   simplified: {

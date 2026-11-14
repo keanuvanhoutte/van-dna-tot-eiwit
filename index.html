@@ -233,7 +233,7 @@ import { mountSearch } from './shared/searchbox.js';
 
 const T = {
   brand: { nl: 'Dogma', en: 'Dogma' },
-  why: { nl: 'Waarom Dogma? Naar het centrale dogma van de biologie: informatie gaat van DNA naar RNA naar eiwit, en nooit terug uit een eiwit.', en: 'Why Dogma? After the central dogma of biology: information flows from DNA to RNA to protein, and never back out of a protein.' },
+  why: { nl: 'Waarom Dogma? Naar het centrale dogma van de biologie: de volgorde-informatie gaat van DNA naar RNA naar eiwit, en nooit van een eiwit terug.', en: 'Why Dogma? After the central dogma of biology: sequence information flows from DNA to RNA to protein, and never back out of a protein.' },
   navAtlas: { nl: '3D-bibliotheek', en: '3D library' },
   navBlue: { nl: 'Over de app', en: 'About the app' },
   eyebrow: { nl: 'Interactief · echte 3D-structuren', en: 'Interactive · real 3D structures' },
@@ -278,19 +278,19 @@ const T = {
   go3: { nl: 'Start het bacterieverhaal', en: 'Start the bacterial story' },
   c2tag: { nl: 'Atlas · zelf rondkijken', en: 'Atlas · explore yourself' },
   c2t: { nl: 'DNA-bib', en: 'DNA library' },
-  c2p: { nl: 'Geen verhaal maar een bibliotheek: alle vormen van DNA en RNA als echte 3D-modellen, met eenvoudige uitleg erbij.',
-         en: 'Not a story but a library: every shape of DNA and RNA as a real 3D model, with a simple explanation.' },
-  c2r: { nl: 'gewone dubbele helix · drie en vier strengen · gevouwen RNA · DNA met medicijn · elk eiwit of gen zelf opzoeken (bv. TP53, insuline)', en: 'ordinary double helix · three and four strands · folded RNA · DNA with a drug · look up any protein or gene (e.g. TP53, insulin)' },
+  c2p: { nl: 'Geen verhaal maar een bibliotheek: veel vormen van DNA en RNA als echte 3D-modellen, met eenvoudige uitleg erbij.',
+         en: 'Not a story but a library: many shapes of DNA and RNA as real 3D models, with a simple explanation.' },
+  c2r: { nl: 'gewone dubbele helix · drie en vier strengen · gevouwen RNA · DNA met medicijn · zelf een eiwit of gen opzoeken in de PDB (bv. TP53, insuline)', en: 'ordinary double helix · three and four strands · folded RNA · DNA with a drug · look up a protein or gene in the PDB yourself (e.g. TP53, insulin)' },
   c2k: { nl: '<em>Kies dit als</em> je zelf wil rondkijken, vormen wil vergelijken of een bepaald eiwit zoekt.', en: '<em>Choose this</em> to look around yourself, compare shapes or find a particular protein.' },
   go4: { nl: 'Open de DNA-bib', en: 'Open the DNA library' },
   sideH: { nl: 'Zijpaden', en: 'Side paths' },
   sideSub: { nl: 'Korte uitstappen rond één onderwerp. Elk zijpad staat op zichzelf; onderaan zie je waar het op het hoofdverhaal aansluit.', en: 'Short detours around one topic. Each side path stands on its own; at the bottom you see where it joins the main story.' },
   s1t: { nl: 'DNA kopiëren en herstellen', en: 'Copying and repairing DNA' },
-  s1p: { nl: 'Hoe de cel haar DNA precies één keer kopieert, welke fouten en schade ontstaan, hoe ze die herstelt — en wat er gebeurt als dat mislukt.', en: 'How the cell copies its DNA exactly once, which errors and damage arise, how it repairs them — and what happens when that fails.' },
+  s1p: { nl: 'Hoe de cel haar DNA precies één keer per celcyclus kopieert, welke fouten en schade ontstaan, hoe ze die herstelt — en wat er gebeurt als dat mislukt.', en: 'How the cell copies its DNA exactly once per cell cycle, which errors and damage arise, how it repairs them — and what happens when that fails.' },
   s2t: { nl: 'Waar een eiwit heen gaat', en: 'Where a protein goes' },
   s2p: { nl: 'Een nieuw eiwit draagt een adreslabel dat zegt waar het moet werken. Daarna: hoe oude of kapotte eiwitten worden opgeruimd.', en: 'A new protein carries an address label that says where it should work. Then: how old or broken proteins are cleared away.' },
   s3t: { nl: 'Welke genen aan staan', en: 'Which genes are on' },
-  s3p: { nl: 'Elke cel heeft hetzelfde DNA maar gebruikt er maar een deel van. Hoe merktekens, verpakking en lussen genen aan of uit zetten.', en: 'Every cell has the same DNA but uses only part of it. How marks, packing and loops switch genes on or off.' },
+  s3p: { nl: 'Bijna elke cel van je lichaam heeft hetzelfde DNA, maar gebruikt er maar een deel van. Hoe merktekens, verpakking en lussen genen aan of uit zetten.', en: 'Almost every cell in your body has the same DNA, but uses only part of it. How marks, packing and loops switch genes on or off.' },
   s4t: { nl: 'Hoe een virus zich laat maken', en: 'How a virus gets made' },
   s4p: { nl: 'Een virus kan zichzelf niet kopiëren: het laat de cel het werk doen. Met het coronavirus, virussen van bacteriën, CRISPR en het mRNA-vaccin.', en: 'A virus cannot copy itself: it makes the cell do the work. With the coronavirus, viruses of bacteria, CRISPR and the mRNA vaccine.' },
   s5t: { nl: 'Het leven van een RNA', en: 'The life of an RNA' },
@@ -306,7 +306,7 @@ const T = {
   h3p: { nl: 'Daar zie je altijd in welk verhaal en hoofdstuk je zit. Uitzoomen brengt je terug naar de hele cel, Startmenu naar deze pagina.', en: 'There you always see which story and chapter you are in. Zoom out takes you back to the whole cell, Main menu to this page.' },
   archT: { nl: 'Archief (goedgekeurde proofs of concept):', en: 'Archive (approved proofs of concept):' },
   c3l: { nl: 'Over de app · bronnen en wetenschappelijke borging', en: 'About the app · sources and scientific quality' },
-  foot: { nl: 'Alle inhoud is nagekeken tegen wetenschappelijke bronnen; die staan bij elke uitleg.', en: 'All content is checked against scientific sources; they are listed with every explanation.' },
+  foot: { nl: 'De inhoud is in controlerondes nagekeken tegen wetenschappelijke bronnen; die staan bij elke uitleg.', en: 'The content was checked against scientific sources in verification rounds; they are listed with every explanation.' },
 };
 const HTML = new Set(['tag1', 'tag2', 'tag3', 'c0k', 'c1k', 'c2k']);
 for (const [id, v] of Object.entries(T)) { const el = document.getElementById(id); if (el) el[HTML.has(id) ? 'innerHTML' : 'textContent'] = L(v); }
