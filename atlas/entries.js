@@ -87,6 +87,7 @@ export const ENTRIES = [
   /* ================= niet-canoniek DNA ================= */
   {
     id: 'g4', pdb: '1KF1', type: ['dna'], cls: ['quad'], ctx: ['cell'], org: { nl: 'menselijke telomeersequentie', en: 'human telomeric sequence' },
+    dim: true, mark: [{ col: '#ffc247', label: { nl: 'G-kwartetten (3 lagen van 4 G’s)', en: 'G-quartets (3 layers of 4 Gs)' }, tag: { nl: 'G-kwartetten', en: 'G-quartets' }, res: ['A:2', 'A:3', 'A:4', 'A:8', 'A:9', 'A:10', 'A:14', 'A:15', 'A:16', 'A:20', 'A:21', 'A:22'] }],
     name: { nl: 'G-quadruplex (K⁺, parallel)', en: 'G-quadruplex (K⁺, parallel)' }, sub: { nl: 'humane telomeer d[AG₃(T₂AG₃)₃] · kristal', en: 'human telomere d[AG₃(T₂AG₃)₃] · crystal' },
     cmp: ['g4basket', 'imotif'], scenes: ['noncanon', 'telomeren'], ions: true,
     what: {
@@ -105,6 +106,7 @@ export const ENTRIES = [
   },
   {
     id: 'g4basket', pdb: '143D', type: ['dna'], cls: ['quad'], ctx: ['lab'], org: { nl: 'menselijke telomeersequentie', en: 'human telomeric sequence' },
+    dim: true, mark: [{ col: '#ffc247', label: { nl: 'G-kwartetten (3 lagen van 4 G’s)', en: 'G-quartets (3 layers of 4 Gs)' }, tag: { nl: 'G-kwartetten', en: 'G-quartets' }, res: ['A:2', 'A:3', 'A:4', 'A:8', 'A:9', 'A:10', 'A:14', 'A:15', 'A:16', 'A:20', 'A:21', 'A:22'] }],
     name: { nl: 'G-quadruplex (Na⁺, antiparallel)', en: 'G-quadruplex (Na⁺, antiparallel)' }, sub: { nl: 'zelfde telomeersequentie · NMR, "basket"', en: 'same telomeric sequence · NMR, "basket"' },
     cmp: ['g4'], scenes: ['noncanon', 'telomeren'],
     what: {
@@ -136,7 +138,8 @@ export const ENTRIES = [
   {
     id: 'triplex', pdb: '1BWG', type: ['dna'], cls: ['triplex'], ctx: ['cell', 'lab'], org: { nl: 'synthetisch', en: 'synthetic' },
     name: { nl: 'Triplex-DNA', en: 'Triplex DNA' }, sub: { nl: 'parallelle triplex (pyrimidinemotief) · NMR', en: 'parallel triplex (pyrimidine motif) · NMR' },
-    helix: ['A', 'B'], hand: 'r', third: 'C', cmp: ['bdna', 'g4'], scenes: ['noncanon'],
+    helix: ['A', 'B'], hand: 'r', third: 'C', cmp: ['bdna', 'g4'], scenes: ['noncanon'], dim: true,
+    mark: [{ col: '#5fd3e6', label: { nl: 'derde streng (in de brede groef)', en: 'third strand (in the wide groove)' }, tag: { nl: 'derde streng', en: 'third strand' }, chains: ['C'] }],
     what: {
       nl: 'Een derde streng (hier CTCTCT, keten C) ligt in de grote groef van een B-achtige duplex en loopt parallel aan de purinestreng, waaraan ze via Hoogsteen-waterstofbruggen bindt: basentripletten T·A–T en C⁺·G–C. De cytosines van de derde streng moeten aan N3 geprotoneerd zijn, dus is een licht zure pH nodig. Aan beide kanten gaat de triplex over in gewone duplex.',
       en: 'A third strand (here CTCTCT, chain C) lies in the major groove of a B-like duplex and runs parallel to the purine strand, to which it binds through Hoogsteen hydrogen bonds: base triples T·A–T and C⁺·G–C. The cytosines of the third strand must be protonated at N3, so slightly acidic pH is needed. On both sides the triplex continues as an ordinary duplex.' },
@@ -200,6 +203,7 @@ export const ENTRIES = [
   },
   {
     id: 'cisplatin', pdb: '1AIO', type: ['dna', 'drug'], cls: ['duplex'], ctx: ['drug'], org: { nl: 'synthetisch', en: 'synthetic' },
+    dim: true, mark: [{ col: '#f06bc0', label: { nl: 'de twee G’s met platina (crosslink)', en: 'the two Gs bound to platinum (crosslink)' }, tag: { nl: 'Pt-crosslink', en: 'Pt crosslink' }, res: ['A:6', 'A:7'] }],
     name: { nl: 'Cisplatine–DNA-adduct', en: 'Cisplatin–DNA adduct' }, sub: { nl: '1,2-d(GpG)-intrastrengcrosslink · 2,6 Å', en: '1,2-d(GpG) intrastrand cross-link · 2.6 Å' },
     helix: ['A', 'B'], hand: 'r', keep: ['A', 'B'], bent: true, cmp: ['bdna', 'intercalator', 'netropsin'], scenes: ['herstel'],
     what: {
@@ -253,10 +257,10 @@ export const ENTRIES = [
     name: { nl: 'Mismatches in een RNA-helix (SRP)', en: 'Mismatches in an RNA helix (SRP)' }, sub: { nl: 'inwendige lus van SRP-RNA domein IV · 1,7 Å', en: 'internal loop of SRP RNA domain IV · 1.7 Å' },
     helix: ['A', 'B'], hand: 'r', cmp: ['wobble', 'dsrna'], scenes: ['rnastructuur', 'er'],
     mark: [
-      { col: '#f06bc0', label: { nl: 'mismatch (A·C, G·A)', en: 'mismatch (A·C, G·A)' }, res: ['A:6', 'B:19', 'A:8', 'B:17'] },
-      { col: '#ffd84d', label: { nl: 'G–U-paar (wobble)', en: 'G–U pair (wobble)' }, res: ['A:4', 'B:21'] },
-      { col: '#f2f4f8', label: { nl: 'base zonder partner', en: 'base without partner' }, res: ['A:5', 'B:18', 'B:20'] },
-    ],
+      { col: '#f06bc0', label: { nl: 'mismatch (A·C, G·A)', en: 'mismatch (A·C, G·A)' }, res: ['A:6', 'B:19', 'A:8', 'B:17'], pairs: true },
+      { col: '#ffd84d', label: { nl: 'G–U-paar (wobble)', en: 'G–U pair (wobble)' }, res: ['A:4', 'B:21'], pairs: true },
+      { col: '#f2f4f8', label: { nl: 'base zonder partner', en: 'base without partner' }, res: ['A:5', 'B:18', 'B:20'], tag: { nl: 'geen partner', en: 'no partner' } },
+    ], dim: true,
     what: {
       nl: 'Dubbelstrengig RNA-dodecameer met het sterk geconserveerde stuk van domein IV van het 4.5S-RNA van het bacteriële signal recognition particle (SRP). Tussen gewone Watson–Crick-paren zit een inwendige lus met niet-canonieke paren: een A·C- en een G·A-mismatch, een G·U-wobblepaar, en drie nucleotiden (C5, G18, A20) die in dit model geen eigen paringspartner hebben (minder dan twee waterstofbruggen naar een andere base; berekend uit de coördinaten). Twee cytidines zijn 5-broomcytidine (hulpmiddel voor de kristallografie).',
       en: 'Double-stranded RNA dodecamer containing the highly conserved part of domain IV of the 4.5S RNA of the bacterial signal recognition particle (SRP). Between ordinary Watson–Crick pairs lies an internal loop with non-canonical pairs: an A·C and a G·A mismatch, a G·U wobble pair, and three nucleotides (C5, G18, A20) that have no pairing partner of their own in this model (fewer than two hydrogen bonds to another base; computed from the coordinates). Two cytidines are 5-bromocytidine (an aid for crystallography).' },
@@ -276,9 +280,9 @@ export const ENTRIES = [
     name: { nl: 'G–U-wobblepaar in RNA', en: 'G–U wobble pair in RNA' }, sub: { nl: 'helix 6 van menselijk SRP-RNA · 2,0 Å', en: 'helix 6 of human SRP RNA · 2.0 Å' },
     helix: ['A', 'B'], hand: 'r', keep: ['A', 'B'], cmp: ['mismatch', 'dsrna'], scenes: ['rnastructuur', 'er'],
     mark: [
-      { col: '#ffd84d', label: { nl: 'G–U-paar (wobble)', en: 'G–U pair (wobble)' }, res: ['A:8', 'B:21', 'A:21', 'B:8'] },
-      { col: '#f06bc0', label: { nl: 'G·G-paren (mismatch)', en: 'G·G pairs (mismatch)' }, res: ['A:12', 'A:13', 'A:16', 'B:13', 'B:16'] },
-    ],
+      { col: '#ffd84d', label: { nl: 'G–U-paar (wobble)', en: 'G–U pair (wobble)' }, res: ['A:8', 'B:21', 'A:21', 'B:8'], pairs: true },
+      { col: '#f06bc0', label: { nl: 'G·G-paren (mismatch)', en: 'G·G pairs (mismatch)' }, res: ['A:12', 'A:13', 'A:16', 'B:13', 'B:16'], tag: { nl: 'G·G', en: 'G·G' } },
+    ], dim: true,
     what: {
       nl: 'Een 29-nucleotide-fragment van helix 6 van het menselijke SRP-RNA (7SL-RNA). In het kristal paren twee kopieën tot een lange dubbelhelix. Naast gewone G–C- en A–U-paren bevat ze twee G·U-wobbleparen: de U schuift een halve plaats op t.o.v. een gewone Watson–Crick-positie en vormt twee waterstofbruggen (G O6–U N3 en G N1–U O2). In het midden liggen bovendien G·G-paren.',
       en: 'A 29-nucleotide fragment of helix 6 of the human SRP RNA (7SL RNA). In the crystal two copies pair into a long double helix. Besides ordinary G–C and A–U pairs it contains two G·U wobble pairs: the U is shifted by half a position relative to a normal Watson–Crick position and forms two hydrogen bonds (G O6–U N3 and G N1–U O2). In the middle there are also G·G pairs.' },
@@ -298,9 +302,9 @@ export const ENTRIES = [
     name: { nl: 'Stam en lus (anticodonarm van tRNA)', en: 'Stem and loop (tRNA anticodon arm)' }, sub: { nl: 'tRNA^Phe van gist, anticodonarm gemarkeerd · 1,93 Å', en: 'yeast tRNA^Phe, anticodon arm highlighted · 1.93 Å' },
     cmp: ['trna', 'tar'], scenes: ['trna', 'rnastructuur'], dim: true,
     mark: [
-      { col: '#4fb0ff', label: { nl: 'stam (5 basenparen)', en: 'stem (5 base pairs)' }, res: ['A:27', 'A:28', 'A:29', 'A:30', 'A:31', 'A:39', 'A:40', 'A:41', 'A:42', 'A:43'] },
-      { col: '#f06bc0', label: { nl: 'lus (7 basen)', en: 'loop (7 bases)' }, res: ['A:32', 'A:33', 'A:37', 'A:38'] },
-      { col: '#ffd84d', label: { nl: 'anticodon (in de lus)', en: 'anticodon (in the loop)' }, res: ['A:34', 'A:35', 'A:36'] },
+      { col: '#4fb0ff', tag: { nl: 'stam', en: 'stem' }, label: { nl: 'stam (5 basenparen)', en: 'stem (5 base pairs)' }, res: ['A:27', 'A:28', 'A:29', 'A:30', 'A:31', 'A:39', 'A:40', 'A:41', 'A:42', 'A:43'] },
+      { col: '#f06bc0', tag: { nl: 'lus', en: 'loop' }, label: { nl: 'lus (7 basen)', en: 'loop (7 bases)' }, res: ['A:32', 'A:33', 'A:37', 'A:38'] },
+      { col: '#ffd84d', tag: { nl: 'anticodon', en: 'anticodon' }, label: { nl: 'anticodon (in de lus)', en: 'anticodon (in the loop)' }, res: ['A:34', 'A:35', 'A:36'] },
     ],
     what: {
       nl: 'Een stam-lus (haarspeld) ontstaat als een RNA-streng terugvouwt en met zichzelf paart. De stam is het dubbelstrengige stuk, de lus het enkelstrengige stuk aan het uiteinde. Hier gemarkeerd in de anticodonarm van tRNA^Phe: een stam van 5 basenparen (27–31 met 39–43) en een lus van 7 nucleotiden (32–38) met het anticodon (34–36, GmAA) dat het codon UUC/UUU op het mRNA leest.',
@@ -321,8 +325,8 @@ export const ENTRIES = [
     name: { nl: 'HIV-1 TAR-RNA (bulge)', en: 'HIV-1 TAR RNA (bulge)' }, sub: { nl: 'haarspeld met trinucleotide-bulge · NMR', en: 'hairpin with trinucleotide bulge · NMR' },
     cmp: ['dsrna', 'pseudoknot'], scenes: ['rnastructuur', 'integratie'],
     mark: [
-      { col: '#f2f4f8', label: { nl: 'bulge (3 basen zonder partner)', en: 'bulge (3 bases without partner)' }, res: ['A:23', 'A:24', 'A:25'] },
-      { col: '#f06bc0', label: { nl: 'lus (6 basen)', en: 'loop (6 bases)' }, res: ['A:30', 'A:31', 'A:32', 'A:33', 'A:34', 'A:35'] },
+      { col: '#f2f4f8', tag: { nl: 'bulge', en: 'bulge' }, label: { nl: 'bulge (3 basen zonder partner)', en: 'bulge (3 bases without partner)' }, res: ['A:23', 'A:24', 'A:25'] },
+      { col: '#f06bc0', tag: { nl: 'lus', en: 'loop' }, label: { nl: 'lus (6 basen)', en: 'loop (6 bases)' }, res: ['A:30', 'A:31', 'A:32', 'A:33', 'A:34', 'A:35'] },
     ],
     what: {
       nl: 'Het TAR-element (transactivation response) is een haarspeld aan het 5\'-uiteinde van alle HIV-1-transcripten. Een bulge van drie ongepaarde nucleotiden (U23-C24-U25) onderbreekt de A-vormige stam en laat de helix knikken; bovenaan zit een lus van zes nucleotiden. Dit NMR-model toont het 29-nt kerngedeelte.',
@@ -340,11 +344,11 @@ export const ENTRIES = [
     name: { nl: 'tRNA (L-vorm)', en: 'tRNA (L-shape)' }, sub: { nl: 'tRNA^Phe van gist · 1,93 Å', en: 'yeast tRNA^Phe · 1.93 Å' },
     cmp: ['rnasep', 'riboswitch'], scenes: ['trna', 'aars'], ions: true,
     mark: [
-      { col: '#ffc247', label: { nl: 'acceptorstam + CCA (hier hangt het aminozuur)', en: 'acceptor stem + CCA (carries the amino acid)' }, res: ['A:1', 'A:2', 'A:3', 'A:4', 'A:5', 'A:6', 'A:7', 'A:66', 'A:67', 'A:68', 'A:69', 'A:70', 'A:71', 'A:72', 'A:73', 'A:74', 'A:75', 'A:76'] },
-      { col: '#4fb0ff', label: { nl: 'D-arm', en: 'D arm' }, res: ['A:10', 'A:11', 'A:12', 'A:13', 'A:14', 'A:15', 'A:16', 'A:17', 'A:18', 'A:19', 'A:20', 'A:21', 'A:22', 'A:23', 'A:24', 'A:25'] },
-      { col: '#f06bc0', label: { nl: 'anticodonarm (leest het codon)', en: 'anticodon arm (reads the codon)' }, res: ['A:27', 'A:28', 'A:29', 'A:30', 'A:31', 'A:32', 'A:33', 'A:34', 'A:35', 'A:36', 'A:37', 'A:38', 'A:39', 'A:40', 'A:41', 'A:42', 'A:43'] },
-      { col: '#c9a574', label: { nl: 'variabele lus', en: 'variable loop' }, res: ['A:44', 'A:45', 'A:46', 'A:47', 'A:48'] },
-      { col: '#7fdc6a', label: { nl: 'TΨC-arm', en: 'TΨC arm' }, res: ['A:49', 'A:50', 'A:51', 'A:52', 'A:53', 'A:54', 'A:55', 'A:56', 'A:57', 'A:58', 'A:59', 'A:60', 'A:61', 'A:62', 'A:63', 'A:64', 'A:65'] },
+      { col: '#ffc247', tag: { nl: 'acceptorstam', en: 'acceptor stem' }, label: { nl: 'acceptorstam + CCA (hier hangt het aminozuur)', en: 'acceptor stem + CCA (carries the amino acid)' }, res: ['A:1', 'A:2', 'A:3', 'A:4', 'A:5', 'A:6', 'A:7', 'A:66', 'A:67', 'A:68', 'A:69', 'A:70', 'A:71', 'A:72', 'A:73', 'A:74', 'A:75', 'A:76'] },
+      { col: '#4fb0ff', tag: { nl: 'D-arm', en: 'D arm' }, label: { nl: 'D-arm', en: 'D arm' }, res: ['A:10', 'A:11', 'A:12', 'A:13', 'A:14', 'A:15', 'A:16', 'A:17', 'A:18', 'A:19', 'A:20', 'A:21', 'A:22', 'A:23', 'A:24', 'A:25'] },
+      { col: '#f06bc0', tag: { nl: 'anticodonarm', en: 'anticodon arm' }, label: { nl: 'anticodonarm (leest het codon)', en: 'anticodon arm (reads the codon)' }, res: ['A:27', 'A:28', 'A:29', 'A:30', 'A:31', 'A:32', 'A:33', 'A:34', 'A:35', 'A:36', 'A:37', 'A:38', 'A:39', 'A:40', 'A:41', 'A:42', 'A:43'] },
+      { col: '#c9a574', tag: { nl: 'variabele lus', en: 'variable loop' }, label: { nl: 'variabele lus', en: 'variable loop' }, res: ['A:44', 'A:45', 'A:46', 'A:47', 'A:48'] },
+      { col: '#7fdc6a', tag: { nl: 'TΨC-arm', en: 'TΨC arm' }, label: { nl: 'TΨC-arm', en: 'TΨC arm' }, res: ['A:49', 'A:50', 'A:51', 'A:52', 'A:53', 'A:54', 'A:55', 'A:56', 'A:57', 'A:58', 'A:59', 'A:60', 'A:61', 'A:62', 'A:63', 'A:64', 'A:65'] },
     ],
     what: {
       nl: 'Transfer-RNA vouwt zijn klaverbladstructuur (acceptorstam, D-arm, anticodonarm, variabele lus, TψC-arm) tot een L-vorm: de acceptorstam stapelt op de TψC-arm en de anticodonstam op de D-stam. Zo liggen het 3\'-CCA-uiteinde (met het aminozuur) en het anticodon ~75 Å uit elkaar — de afstand tussen het peptidyltransferasecentrum en het decodeercentrum van het ribosoom. Gist-tRNA^Phe was in 1974 de eerste RNA-structuur op atoomniveau; dit is de herbepaling uit 2000.',

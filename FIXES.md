@@ -126,3 +126,10 @@
 - [x] Nieuwe uitspraken van vandaag: "PABP om de ~27 A's" → bron toegevoegd (Baer & Kornberg 1983, samenvatting: "27-residue repeating structure"); klik-info aminozuren/basen/suikers → bronnen Alberts et al. 2002 (NCBI Bookshelf NBK26830, NBK26883) en de PDB Chemical Component Dictionary, bij elk 3D-item onder "Voor wie meer wil".
 - [x] Preciezer geformuleerd: "letter nr. 21" (PDB-nummer, niet noodzakelijk de 21e letter); methionine "bij het maken begint elk eiwit ermee (vaak later weggeknipt)"; T-DNA "in de PDB bestaat geen 3D-structuur van het T-DNA zelf" (zelf nagezocht) i.p.v. "nooit gemeten".
 - [x] Structuurformules: 20 aminozuren en 5 basen + ribose/deoxyribose nagekeken tegen de standaardformules (o.a. NH₂/=O/NH-posities, methyl van T, ringen van His/Trp/Pro).
+
+## "Wat is welk deel?" en aanduiden waar het om draait — 14-11-2026
+- [x] Bovenaan de tabel: "Wat is welk deel?" — per keten een kleurchip (de kleur in de figuur), korte naam en functie in gewone taal, voor de 27 items met meerdere delen of een eiwit (atlas/roles.js; gebaseerd op de molecuulnamen per keten in de PDB, opgehaald met .fix-ronde/chains.py, en op de eigen itemtekst). Kleine moleculen krijgen automatisch een rij. Dezelfde namen in de legende (bv. "schaar (ribozym) A") en in het klik-tabje ("onderdeel: schaar").
+- [x] Bij twijfel geen gok: bij het groep-I-intron noemen de onderzoekers "beide exonen" zonder te zeggen welk kort stuk welk is → "twee korte RNA-stukken"; het tRNA bij RNase P is volgens de publicatie een rijp (al geknipt) tRNA.
+- [x] Waar het om draait: mismatch en wobble nu ook met de rest grijs (zoals bulge en stam-lus) en een label per bijzonder paar in de figuur (G·A, A·C, G·U, G·G, "geen partner"); alle items met onderdelen krijgen labels (tRNA-armen, stam/lus/anticodon, bulge).
+- [x] Nieuwe onderdelen die rechtstreeks uit de structuur volgen: triplex (de derde streng C), G-quadruplexen (de 12 G's van de 3 kwartetten), cisplatine (G6 en G7, waarvan de N7 binnen 2,6 Å van het platina ligt: de GG-crosslink).
+- Controle: 37/37 items zonder fouten, 27 schermopnames zonder fouten.

@@ -4,6 +4,7 @@
  * URL: ?id=<item>&cmp=<id>,<id>&lang=nl|en&from=<scène-id>
  */
 import { aaSVG, AACLASS, CLASSES } from './aa2d.js';
+import { ROLES } from './roles.js';
 import { baseSVG, sugarSVG } from './base2d.js';
 import { pdbUrl, rcsbEntryUrl } from '../shared/pdb.js';
 import { lang, L, setLang } from '../shared/i18n.js';
@@ -89,6 +90,8 @@ const T = {
   inSchema: { nl: 'In het schema', en: 'In the diagram' },
   sideHide: { nl: 'Lijst inklappen (meer plaats voor de figuur)', en: 'Collapse the list (more room for the figure)' }, sideShow: { nl: 'Lijst tonen', en: 'Show the list' }, sideName: { nl: 'Bibliotheek', en: 'Library' },
   infoHide: { nl: 'Uitleg inklappen (meer plaats voor de figuur)', en: 'Collapse the explanation (more room for the figure)' }, infoShow: { nl: 'Uitleg tonen', en: 'Show the explanation' }, infoName: { nl: 'Uitleg', en: 'Explanation' },
+  secRoles: { nl: 'Wat is welk deel?', en: 'Which part is what?' }, ligRole: { nl: 'klein molecule (groene koolstofatomen) dat hier vastzit', en: 'small molecule (green carbon atoms) bound here' },
+  rolesTip: { nl: 'Kies Kleur → Per streng om elk deel een eigen kleur te geven.', en: 'Choose Colour → By strand to give each part its own colour.' },
   colours: { nl: 'Kleuren', en: 'Colours' }, focusHint: { nl: 'klik op een kleur om enkel dat deel te zien', en: 'click a colour to see only that part' },
   clickHint: { nl: '<i>ⓘ</i> <b>Klik op een stukje van de figuur</b> voor uitleg', en: '<i>ⓘ</i> <b>Click a piece of the figure</b> for an explanation' },
   focusAll: { nl: 'alles tonen', en: 'show all' }, legMore: { nl: n => `+${n} meer ▾`, en: n => `+${n} more ▾` }, legLess: { nl: 'minder ▴', en: 'fewer ▴' },
@@ -634,7 +637,7 @@ async function loadSlot(s, e) {
     const seqTxt = chains.length && chains.length <= 4 && e.cls.some(c => ['duplex', 'quad', 'triplex', 'junction', 'single'].includes(c)) && !e.cls.includes('complex')
       ? chains.map(c => `<code>${seq(c)}</code>`).join(' · ') + ' · ' : '';
     el.querySelector('.smeta').innerHTML = `${seqTxt ? `${t('seqLbl')} ${seqTxt}` : ''}${methodText(method)}${res ? ` · ${res} Å` : ''}`;
-    el.querySelector('.calcgrid').innerHTML = factsTable(e) + measuredTable(e, an, method, res) + `<details class="allcalc"><summary>${t('allCalc')}</summary>${calcTable(e, an)}</details>`;
+    el.querySelector('.calcgrid').innerHTML = '<div class="rolebox"></div>' + factsTable(e) + measuredTable(e, an, method, res) + `<details class="allcalc"><summary>${t('allCalc')}</summary>${calcTable(e, an)}</details>`;
     s.viewer.setClickable({}, true, a => showPop(s, a));
     // handje boven een atoom: zo zie je dat je erop kan klikken
     s.viewer.setHoverable({}, true, () => { s.stage.style.cursor = 'pointer'; }, () => { s.stage.style.cursor = ''; });
@@ -799,7 +802,35 @@ function distinctChains(s) {
  * met entry.dim wordt de rest van het RNA grijs, zodat het gemarkeerde stuk opvalt */
 function markOf(e) {
   if (!e?.mark || state.color !== 'part') return null;
-  const m = new Map(); for (const g of e.mark) for (const r of g.res) m.set(r, g.col); return m;
+  const m = new Map(), ch = new Map();
+  for (const g of e.mark) { for (const r of g.res ?? []) m.set(r, g.col); for (const c of g.chains ?? []) ch.set(c, g.col); }
+  const key = k => m.get(k) ?? ch.get(k.split(':')[0]);
+  return { get: key, has: k => key(k) !== undefined };
+}
+/* bij welk gemarkeerd onderdeel hoort deze base? */
+const markGroupOf = (e, a) => (e.mark ?? []).find(g => (g.res ?? []).includes(a.chain + ':' + a.resi) || (g.chains ?? []).includes(a.chain));
+/* labels in de figuur bij de gemarkeerde stukken (Per onderdeel): per groepje bij elkaar liggende basen één label */
+function markLabels(s) {
+  const { viewer, atoms, entry: e } = s; if (!e.mark || state.color !== 'part' || e.heavy) return;
+  const rep = new Map();
+  for (const a of atoms) if (a.kind === 'na' && (a.atom === "C1'" || !rep.has(a.chain + ':' + a.resi) && a.atom === 'P')) rep.set(a.chain + ':' + a.resi, a);
+  for (const g of e.mark) {
+    const rs = [...rep.values()].filter(a => markGroupOf(e, a) === g); if (!rs.length) continue;
+    // groepjes: basen binnen 11 Å van elkaar horen samen (bv. de twee basen van één paar)
+    const grp = rs.map((_, i) => i), find = i => grp[i] === i ? i : (grp[i] = find(grp[i]));
+    for (let i = 0; i < rs.length; i++) for (let j = i + 1; j < rs.length; j++) if (Math.hypot(rs[i].x - rs[j].x, rs[i].y - rs[j].y, rs[i].z - rs[j].z) < 11) grp[find(i)] = find(j);
+    const clusters = new Map(); rs.forEach((a, i) => { const k = find(i); if (!clusters.has(k)) clusters.set(k, []); clusters.get(k).push(a); });
+    const many = clusters.size > 4 && !g.pairs;
+    // paren: de residuen staan per twee in de lijst (bv. A:6 met B:19) → één label per paar
+    const byKey = new Map(rs.map(a => [a.chain + ':' + a.resi, a]));
+    const list = g.pairs ? (g.res ?? []).reduce((t, k, i, arr) => (i % 2 ? t : [...t, [byKey.get(k), byKey.get(arr[i + 1])].filter(Boolean)]), []) : many ? [rs] : [...clusters.values()];
+    const ORDER = { G: 0, A: 1, C: 2, U: 3, T: 3 };   // gewone schrijfwijze: G·U, A·C, G·A
+    for (const cl of list) {
+      const c = cl.reduce((t, a) => [t[0] + a.x / cl.length, t[1] + a.y / cl.length, t[2] + a.z / cl.length], [0, 0, 0]);
+      const txt = g.pairs && cl.length === 2 ? cl.map(a => parentBase(a.resn0 ?? a.resn)).sort((x, y) => (ORDER[x] ?? 9) - (ORDER[y] ?? 9)).join('·') : L(g.tag ?? g.label);
+      viewer.addLabel(txt, { position: { x: c[0], y: c[1], z: c[2] }, backgroundColor: g.col, backgroundOpacity: .92, fontColor: '#0a1224', fontSize: 13, fontOpacity: 1, borderRadius: 6, padding: 3, inFront: true, alignment: 'center' });
+    }
+  }
 }
 function colorFn(s) {
   const cf0 = baseColorFn(s), mk = markOf(s.entry);
@@ -817,8 +848,8 @@ function focusTest(s, k) {
   const [kind, v] = [k.slice(0, 1), k.slice(2)];
   if (kind === 'c') return a => a.chain === v;
   if (kind === 't') return a => (a.kind === 'prot' ? 'prot' : s.an.chainType[a.chain] === 'rna' ? 'rna' : 'dna') === v;
-  if (kind === 'p') { const g = (s.entry.mark ?? []).find(m => L(m.label) === v), set = new Set(g?.res ?? []); return a => set.has(a.chain + ':' + a.resi); }
-  if (kind === 'r') { const set = new Set((s.entry.mark ?? []).flatMap(m => m.res)); return a => a.kind === 'na' && !set.has(a.chain + ':' + a.resi); }
+  if (kind === 'p') { const g = (s.entry.mark ?? []).find(m => L(m.label) === v), set = new Set(g?.res ?? []), cs = new Set(g?.chains ?? []); return a => set.has(a.chain + ':' + a.resi) || cs.has(a.chain); }
+  if (kind === 'r') return a => a.kind === 'na' && !markGroupOf(s.entry, a);
   if (kind === 'b') return a => a.kind === 'na' && !BB.test(a.atom) && (parentBase(a.resn0 ?? a.resn) === v || v === 'T/U' && ['T', 'U'].includes(parentBase(a.resn0 ?? a.resn)));
   return () => true;
 }
@@ -834,7 +865,7 @@ function render(s) {
   if (!atoms) return;
   hidePop(s, false);
   viewer.setStyle({}, {});
-  viewer.removeAllShapes();
+  viewer.removeAllShapes(); viewer.removeAllLabels();
   const cf = colorFn(s);
   const col = cf ? { colorfunc: cf } : { colorscheme: 'Jmol' };
   const NA = { predicate: a => a.kind === 'na' }, PR = { predicate: a => a.kind === 'prot' };
@@ -880,7 +911,7 @@ function render(s) {
     for (const [a, b] of list) viewer.addCylinder({ start: xyz(a), end: xyz(b), radius: .07, dashed, dashLength: .25, gapLength: .18, color: '#ffffff' });
   }
   if (state.syn) for (const r of s.an.synRes) viewer.setStyle({ chain: r.chain, resi: r.resi }, { stick: { color: '#f06bc0', radius: .26 } });
-  if (naOff) { viewer.setStyle(NA, {}); viewer.removeAllShapes(); }
+  if (naOff) { viewer.setStyle(NA, {}); viewer.removeAllShapes(); } else markLabels(s);
   viewer.render();
 }
 const xyz = a => ({ x: a.x, y: a.y, z: a.z });
@@ -999,8 +1030,9 @@ function popHTML(s, a) {
   const el = ELNAME[a.elem?.toUpperCase()] ? `${L(ELNAME[a.elem.toUpperCase()])} (${a.atom})` : a.atom;
   if (a.kind === 'na') {
     const b = parentBase(a.resn0 ?? a.resn), ty = s.an.chainType[a.chain] === 'rna' ? 'RNA' : 'DNA';
-    const g = (s.entry.mark ?? []).find(m => m.res.includes(a.chain + ':' + a.resi));
-    return [`<b>${b ?? a.resn}${BASENAME[b] ? ` · ${L(BASENAME[b])}` : ''}</b>`, pt('letter', a.resi, ty, a.chain), focusBtn(s, a),
+    const g = markGroupOf(s.entry, a);
+    const ro = roleOf(s, a.chain);
+    return [`<b>${b ?? a.resn}${BASENAME[b] ? ` · ${L(BASENAME[b])}` : ''}</b>`, pt('letter', a.resi, ty, a.chain), ro ? `${pt('part')}: <i style="--c:#7cc4ff">${L(ro.short)}</i>` : '', focusBtn(s, a),
       a.resn0 && a.resn0 !== a.resn ? `${pt('mod')}: ${a.resn0}` : '',
       g && state.color === 'part' ? `${pt('part')}: <i style="--c:${g.col}">${L(g.label)}</i>` : '',
       naFig(b, ty === 'RNA', BB.test(a.atom)), `${pt('atom')}: ${el} · ${BB.test(a.atom) ? pt('inBb') : pt('inBase')}`];
@@ -1008,7 +1040,7 @@ function popHTML(s, a) {
   if (a.kind === 'prot') {
     const r = a.resn0 ?? a.resn, nm = AANAME[r], what = AAWHAT[r];
     return [`<b>${nm ? (lang === 'nl' ? nm[0] : nm[1] ?? nm[0]) : r}</b> <small>${r}</small>`, `<span class="pw">${pt('aaIs')}</span>`,
-      what ? `<span class="pk">${L(what)}</span>` : '', pt('aa', a.resi, a.chain), focusBtn(s, a), aaFig(r), `${pt('atom')}: ${el}`];
+      what ? `<span class="pk">${L(what)}</span>` : '', pt('aa', a.resi, a.chain), roleOf(s, a.chain) ? `${pt('part')}: <i style="--c:#7cc4ff">${L(roleOf(s, a.chain).short)}</i>` : '', focusBtn(s, a), aaFig(r), `${pt('atom')}: ${el}`];
   }
   if (a.kind === 'ion') return [`<b>${IONLABEL[a.resn] ?? a.resn}</b>`, `${pt('ion')}${ION_NAME[a.resn] ? ': ' + L(ION_NAME[a.resn]) : ''}`];
   if (a.kind === 'lig') {
@@ -1087,12 +1119,28 @@ function legend() {
     const many = it.length > LEG_SHORT + 1, more = many ? `<button class="lmore2" data-more>${s.legAll ? t('legLess') : t('legMore')(it.length - LEG_SHORT)}</button>` : '';
     // uitgelicht deel dat niet in de legende staat (gekozen via het klik-tabje): als eigen chip, met ×
     const extra = s.focus && !it.some(x => x.includes(`data-f="${esc(s.focus)}"`)) ? `<button class="lc fk on" data-f="${esc(s.focus)}"><i style="background:#fff"></i>${t('focusOn')} ${esc(s.focus.slice(2))} ×</button>` : '';
-    box.classList.toggle('short', many && !s.legAll); box.classList.toggle('closed', legClosed);
+    box.classList.toggle('short', many && !s.legAll); box.classList.toggle('closed', legClosed); rolesTable(s);
     box.innerHTML = `<button class="ltog" data-tog aria-expanded="${!legClosed}">${t('colours')} <span>${legClosed ? `▸ ${t('legShow')(it.length)}` : '▾'}</span></button>`
       + (legClosed ? '' : it.join('') + more + extra + (s.focus ? `<button class="lreset" data-f="">${t('focusAll')}</button>` : nF > 1 ? `<span class="lhint">${t('focusHint')}</span>` : ''));
   }
   $('legend').hidden = true;
   guide();
+}
+const roleOf = (s, c) => (ROLES[s.entry?.id] ?? []).find(r => r.chains.includes(c));
+/* tabel "Wat is welk deel?": per keten de kleur zoals in de figuur nu, en wat dat deel doet */
+function rolesTable(s) {
+  const box = s.el.querySelector('.rolebox'); if (!box) return;
+  const roles = ROLES[s.entry?.id]; if (!roles || !s.atoms) { box.innerHTML = ''; return; }
+  const cf = colorFn(s), shownCh = new Set(s.atoms.filter(a => a.kind === 'na' || a.kind === 'prot').map(a => a.chain));
+  const colOf = c => { const a = s.atoms.find(x => x.chain === c && (x.kind === 'na' || x.kind === 'prot') && !BB.test(x.atom) && x.atom !== 'CA') ?? s.atoms.find(x => x.chain === c); return a && cf ? cf(a) : '#8b97b3'; };
+  const rows = roles.filter(r => r.chains.some(c => shownCh.has(c))).map(r => {
+    const cs = r.chains.filter(c => shownCh.has(c)), cols = [...new Set(cs.map(colOf))];
+    const chips = cols.slice(0, 6).map(c => `<i style="background:${c}"></i>`).join('') + (cols.length > 6 ? '<i class="more">…</i>' : '');
+    return `<tr><td><span class="rchips">${chips}</span><b>${L(r.short)}</b><span class="rch">${cs.length > 4 ? cs[0] + '–' + cs.at(-1) : cs.join(', ')}</span></td><td>${L(r)}</td></tr>`;
+  });
+  for (const [k] of Object.entries(s.an.ligs ?? {})) rows.push(`<tr><td><span class="rchips"><i style="background:#33ff33"></i></span><b>${LIGNAME[k] ? L(LIGNAME[k]).replace(/ \(.*\)$/, '') : s.entry.ligNames?.[k] ?? k}</b><span class="rch">${k}</span></td><td>${t('ligRole')}</td></tr>`);
+  const tip = state.color !== 'chain' && roles.length > 1 && colorAvail()?.has('chain') ? `<tr class="tipr"><td colspan="2">${t('rolesTip')}</td></tr>` : '';
+  box.innerHTML = `<table class="calc easy roles"><tr class="sec"><td colspan="2">${t('secRoles')}</td></tr>${rows.join('')}${tip}</table>`;
 }
 function legendItems(shown) {
   const items = [];
@@ -1116,7 +1164,7 @@ function legendItems(shown) {
     const s0 = shown[0];
     if (s0) {
       const all = Object.entries(distinctChains(s0)).filter(([c]) => s0.an.chainType[c] === 'prot' || state.na);
-      for (const [c, col] of all.slice(0, 24)) { const ty = s0.an.chainType[c]; sw(col, `${ty === 'prot' ? t('protChain') : (ty === 'rna' ? 'RNA-' : 'DNA-') + t('strand')} ${c}`, 'c:' + c); }
+      for (const [c, col] of all.slice(0, 24)) { const ty = s0.an.chainType[c], r = roleOf(s0, c); sw(col, r ? `${L(r.short)} <span class="lch">${c}</span>` : `${ty === 'prot' ? t('protChain') : (ty === 'rna' ? 'RNA-' : 'DNA-') + t('strand')} ${c}`, 'c:' + c); }
       if (all.length > 24) items.push(`<span class="lmore">${t('moreChains').replace('{n}', all.length - 24)}</span>`);
     }
   } else if (state.color === 'base') {

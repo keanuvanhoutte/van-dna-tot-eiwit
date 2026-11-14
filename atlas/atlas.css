@@ -420,6 +420,13 @@ button { font-family: inherit; }
 .calc.meas tr.sec td { color: #2cc6a8; background: linear-gradient(90deg, rgba(44,198,168,.16), rgba(44,198,168,.02)); }
 .calc.easy td:first-child { font-weight: 500; }
 .calc.easy td:last-child { font-weight: 500; }
+.calc.roles td:first-child { width: 42%; }
+.calc.roles .rchips { display: inline-flex; gap: 3px; margin-right: 7px; vertical-align: -1px; }
+.calc.roles .rchips i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; box-shadow: 0 0 0 1.5px rgba(0,0,0,.3); }
+.calc.roles .rchips i.more { background: none; box-shadow: none; width: auto; height: auto; color: var(--muted); font-style: normal; font-size: 11px; }
+.calc.roles .rch { margin-left: 6px; font: 500 10.5px var(--mono); color: var(--muted); }
+.calc.roles .tipr td { color: var(--muted); font-size: 12px; }
+.sleg .lch { font: 500 10.5px var(--mono); color: var(--muted); margin-left: 2px; }
 .calc.easy .ref { display: block; width: fit-content; max-width: 100%; box-sizing: border-box; margin-top: 3px; padding: 2px 7px; border-radius: 6px; background: rgba(160,180,220,.1); font-size: 11px; line-height: 1.35; }
 
 /* ---------- infokolom: kaartjes met icoon, kleurwoorden ---------- */
