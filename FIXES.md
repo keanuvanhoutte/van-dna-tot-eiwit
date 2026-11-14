@@ -133,3 +133,4 @@
 - [x] Waar het om draait: mismatch en wobble nu ook met de rest grijs (zoals bulge en stam-lus) en een label per bijzonder paar in de figuur (G·A, A·C, G·U, G·G, "geen partner"); alle items met onderdelen krijgen labels (tRNA-armen, stam/lus/anticodon, bulge).
 - [x] Nieuwe onderdelen die rechtstreeks uit de structuur volgen: triplex (de derde streng C), G-quadruplexen (de 12 G's van de 3 kwartetten), cisplatine (G6 en G7, waarvan de N7 binnen 2,6 Å van het platina ligt: de GG-crosslink).
 - Controle: 37/37 items zonder fouten, 27 schermopnames zonder fouten.
+- [x] Vinkje "Labels in de figuur" in het menu Tonen: zet de labels bij de gemarkeerde stukken aan of uit (standaard aan, keuze onthouden, ook ?lbl=0 in een link); verschijnt enkel bij moleculen met zulke labels. Getest bij TAR: 2 labels → 0 → na herladen nog uit → weer 2.

@@ -98,7 +98,7 @@ const T = {
   legShow: { nl: n => `${n} kleuren tonen`, en: n => `show ${n} colours` }, focusOn: { nl: 'keten', en: 'chain' },
   restGrey: { nl: 'rest', en: 'rest' }, restOf: { nl: 'rest van het', en: 'rest of the' }, protChain: { nl: 'eiwitketen', en: 'protein chain' }, moreChains: { nl: 'nog {n} ketens', en: '{n} more chains' },
   gripTip: { nl: 'Sleep om de tabel breder of smaller te maken · dubbelklik = standaardbreedte', en: 'Drag to make the table wider or narrower · double-click = default width' },
-  hb: { nl: 'Waterstofbruggen', en: 'Hydrogen bonds' }, synMark: { nl: 'Omgeklapte basen (syn)', en: 'Flipped bases (syn)' }, ions: { nl: 'Ionen', en: 'Ions' }, ligs: { nl: 'Medicijn / klein molecule', en: 'Drug / small molecule' },
+  lblTog: { nl: 'Labels in de figuur', en: 'Labels in the figure' }, hb: { nl: 'Waterstofbruggen', en: 'Hydrogen bonds' }, synMark: { nl: 'Omgeklapte basen (syn)', en: 'Flipped bases (syn)' }, ions: { nl: 'Ionen', en: 'Ions' }, ligs: { nl: 'Medicijn / klein molecule', en: 'Drug / small molecule' },
   markT: { nl: 'Markeringen', en: 'Highlights' }, water: { nl: 'Water', en: 'Water' }, spin: { nl: 'Rondraaien', en: 'Spin' }, link: { nl: 'Samen draaien', en: 'Rotate together' },
   loading: { nl: 'Structuur laden uit de PDB…', en: 'Loading structure from the PDB…' },
   loadingBig: { nl: 'Grote structuur laden (enkele MB)…', en: 'Loading a large structure (several MB)…' },
@@ -252,13 +252,13 @@ const state = {
   cmp: false, set: [],
   filt: { type: new Set(), cls: new Set(), ctx: new Set() }, text: '',
   found: null, foundShown: 10, foundAll: false, na: true,
-  style: 'cartoon', bases: 'rings', color: 'type', colorWant: 'auto', hb: false, syn: false, ions: true, ligs: true, water: false,
+  style: 'cartoon', bases: 'rings', color: 'type', colorWant: 'auto', hb: false, syn: false, ions: true, ligs: true, water: false, lbl: (() => { try { return localStorage.getItem('atlas-lbl') !== '0'; } catch { return true; } })(),
 };
 // optionele weergave-instellingen via de URL (deelbare links): ?style=trace&color=base&hb=1&syn=1&water=1&ions=0&ligs=0
 if (['cartoon', 'stick', 'sphere'].includes(q.get('style'))) state.style = q.get('style');
 if (q.get('style') === 'trace' || q.get('bases') === 'rungs') state.bases = 'rungs';   // oude links naar de ladder blijven werken
 if (['part', 'strand', 'chain', 'type', 'base', 'elem'].includes(q.get('color'))) state.colorWant = q.get('color') === 'strand' ? 'chain' : q.get('color');
-for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'na']) if (q.has(k)) state[k] = q.get(k) === '1';
+for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'na', 'lbl']) if (q.has(k)) state[k] = q.get(k) === '1';
 const cmpIds = (q.get('cmp') || '').split(',').filter(id => BY[id] && id !== state.id).slice(0, 2);
 if (cmpIds.length) { state.cmp = true; state.set = [state.id, ...cmpIds]; } else state.set = [state.id];
 
@@ -811,7 +811,7 @@ function markOf(e) {
 const markGroupOf = (e, a) => (e.mark ?? []).find(g => (g.res ?? []).includes(a.chain + ':' + a.resi) || (g.chains ?? []).includes(a.chain));
 /* labels in de figuur bij de gemarkeerde stukken (Per onderdeel): per groepje bij elkaar liggende basen één label */
 function markLabels(s) {
-  const { viewer, atoms, entry: e } = s; if (!e.mark || state.color !== 'part' || e.heavy) return;
+  const { viewer, atoms, entry: e } = s; if (!state.lbl || !e.mark || state.color !== 'part' || e.heavy) return;
   const rep = new Map();
   for (const a of atoms) if (a.kind === 'na' && (a.atom === "C1'" || !rep.has(a.chain + ':' + a.resi) && a.atom === 'P')) rep.set(a.chain + ':' + a.resi, a);
   for (const g of e.mark) {
@@ -1111,6 +1111,7 @@ function legend() {
   const all = SLOTS.filter(s => !s.el.hidden && s.an);
   // "DNA en RNA tonen" heeft enkel zin als er ook eiwit in beeld is (anders blijft er niets over)
   if (all.length) $('na').closest('label').hidden = !all.some(s => s.an.prot);
+  if (all.length) $('lblTog').hidden = !all.some(s => s.entry.mark && !s.entry.heavy);
   for (const s of SLOTS) {
     const box = s.el.querySelector('.sleg');
     if (s.el.hidden || !s.an) { box.hidden = true; continue; }
@@ -1322,8 +1323,8 @@ $('bases').querySelectorAll('button').forEach(b => { b.setAttribute('aria-presse
 for (const id of ['style', 'color']) $(id).querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === state[id]));
 $('style').querySelectorAll('button').forEach(b => { b.title = L(T.hintStyle[b.dataset.v]); });
 $('color').querySelectorAll('button').forEach(b => { b.title = L(T.hintColor[b.dataset.v]); });
-for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'na']) $(k).checked = state[k];
-for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'na']) $(k).onchange = e => { state[k] = e.target.checked; renderAll(); legend(); };
+for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'na', 'lbl']) $(k).checked = state[k];
+for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'na', 'lbl']) $(k).onchange = e => { state[k] = e.target.checked; if (k === 'lbl') { try { localStorage.setItem('atlas-lbl', e.target.checked ? '1' : '0'); } catch { /* geen opslag */ } } renderAll(); legend(); };
 $('spin').onchange = e => SLOTS.forEach(s => s.viewer.spin(e.target.checked ? 'y' : false, SPIN));
 
 /* Kleurkeuzes die bij dit molecule niets anders tonen, worden verborgen (bv. "per streng" bij één enkele RNA-streng
