@@ -54,7 +54,7 @@ const T = {
   ttl: { nl: '3D-bibliotheek', en: '3D library' },
   ttlSub: { nl: 'Echte 3D-vormen van DNA, RNA, eiwitten en hun partners, zoals onderzoekers ze gemeten hebben', en: 'Real 3D shapes of DNA, RNA, proteins and their partners, as researchers measured them' },
   back: { nl: '← terug naar de animatie', en: '← back to the animation' },
-  home: { nl: 'Start', en: 'Home' }, story: { nl: 'Verhaal-app', en: 'Story app' },
+  home: { nl: 'Start', en: 'Home' }, story: { nl: 'Naar verhaal', en: 'To the story' },
   search: { nl: 'Zoek in de bibliotheek: bv. tRNA, histon…', en: 'Search the library: e.g. tRNA, histone…' },
   recog: { nl: 'Herkend:', en: 'Recognised:' }, words: { nl: 'woorden:', en: 'words:' },
   loose: { nl: 'Niets past bij alles samen; dit komt het dichtst in de buurt.', en: 'Nothing matches everything together; these come closest.' },
