@@ -121,8 +121,8 @@ export function tmHelix(x, y0, y1, col = C.prot, op = 1, w = 14) {
  * (x, yUit) = waar de tunnel de 60S verlaat (onderaan). Geeft { svg, ptc, uit, tunnelD, mrnaY, L, S } terug. */
 export function ribosoom80S(x, yUit, { s = 1, op = 1, label = '', labelSmall = '', tRNAs = 2, mrna = true } = {}) {
   const L = { cx: x, cy: yUit - 66 * s, rx: 122 * s, ry: 64 * s };                 // 60S
-  const S = { cx: x - 10 * s, cy: L.cy - L.ry - 52 * s, rx: 100 * s, ry: 42 * s };   // 40S, met een spleet tussen beide eenheden
-  const mrnaY = L.cy - L.ry - 12 * s;                                                // mRNA loopt door die spleet, gebonden aan de 40S
+  const S = { cx: x - 10 * s, cy: L.cy - L.ry - 36 * s, rx: 100 * s, ry: 42 * s };   // 40S: raakt de 60S over een groot vlak (bruggen tussen de eenheden)
+  const mrnaY = L.cy - L.ry - 10 * s;                                                // mRNA loopt door die spleet, gebonden aan de 40S
   const ptc = [x + 4 * s, L.cy - L.ry + 26 * s];                                     // actief centrum: bovenaan in de 60S
   const tunnelD = `M${f1(ptc[0])},${f1(ptc[1])} C${f1(x + 26 * s)},${f1(L.cy - 6 * s)} ${f1(x - 10 * s)},${f1(L.cy + 26 * s)} ${f1(x)},${f1(yUit + 2)}`;
   let g = `<g opacity="${f1(op)}">`;
@@ -200,10 +200,10 @@ export function hydrolase(x, y, { s = 1, op = 1, tag = 0, glycaan = true, seed =
   if (op <= .01) return '';
   let g = `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(${f1(s)})">` + eiwit(0, 0, 30, 23, col, { seed, holte: true });
   if (glycaan) {
-    g += `<path d="M-4,-21 v-12 M-4,-33 l-9,-10 M-4,-33 l9,-10" stroke="#c9d2e4" stroke-width="2.4" fill="none"/>`;
-    g += `<rect x="-10" y="-39" width="12" height="12" rx="2" fill="#0072BC"/>` +                                   // GlcNAc (SNFG blauw vierkant)
-      `<circle cx="-14" cy="-46" r="6.5" fill="#00A651"/><circle cx="6" cy="-46" r="6.5" fill="#00A651"/>`;          // mannose (groen)
-    if (tag > .01) g += `<g opacity="${f1(tag)}"><circle cx="18" cy="-58" r="15" fill="#ff6b6b"/><text x="18" y="-50" font-size="22" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">P</text></g>`;
+    g += `<path d="M-4,-21 v-26 M-4,-47 l-9,-10 M-4,-47 l9,-10" stroke="#c9d2e4" stroke-width="2.4" fill="none"/>`;
+    g += `<rect x="-10" y="-34" width="12" height="12" rx="2" fill="#0072BC"/><rect x="-10" y="-47" width="12" height="12" rx="2" fill="#0072BC"/>` +   // twee GlcNAc (SNFG blauw vierkant), zoals de kern van elk N-glycaan
+      `<circle cx="-14" cy="-56" r="6.5" fill="#00A651"/><circle cx="6" cy="-56" r="6.5" fill="#00A651"/>`;          // mannose (groen)
+    if (tag > .01) g += `<g opacity="${f1(tag)}"><circle cx="20" cy="-66" r="15" fill="#ff6b6b"/><text x="20" y="-58" font-size="22" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">P</text></g>`;
   }
   return g + '</g>';
 }
