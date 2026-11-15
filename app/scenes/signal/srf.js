@@ -1,6 +1,7 @@
 import { C, T2, svgOpen, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { T, TL, smooth, tag, arrowDefs, arr, phos, panel, spark, PHOS } from '../prot/_b_kit.js';
 import { K, kinase, chip, pdot } from './rtk.js';
+import { eiwit } from '../../bio.js';
 
 /*
  * Verhaallijn 2, hoofdstuk "srf": het serum-responselement (SRE) van het FOS-gen in de kern.
@@ -25,7 +26,8 @@ function dna(x0, x1, y, amp = 11, per = 68) {
   return `<path d="${rungs}" stroke="#6f86b8" stroke-width="3" opacity=".6"/><path d="M${s2.join('L')}" stroke="${C.dna2}" stroke-width="6" fill="none"/><path d="M${s1.join('L')}" stroke="${C.dna}" stroke-width="6" fill="none"/>`;
 }
 const box = (a, b, col, op = .28) => `<rect x="${a}" y="${DY - 26}" width="${b - a}" height="52" rx="8" fill="${col}" fill-opacity="${op}" stroke="${col}" stroke-width="2"/>`;
-const blobP = (cx, cy, rx, ry, col, fo = .28) => `<ellipse cx="${f1(cx)}" cy="${f1(cy)}" rx="${rx}" ry="${ry}" fill="${col}" fill-opacity="${fo}" stroke="${col}" stroke-width="3"/>`;
+/* eiwit als bobbelige vorm (bio.js); de vorm hangt af van grootte en kleur, zodat hetzelfde eiwit dezelfde vorm houdt als het beweegt */
+const blobP = (cx, cy, rx, ry, col, fo = .28) => eiwit(cx, cy, rx, ry, col, { seed: (rx * 7 + ry * 3 + parseInt(col.slice(1, 3), 16)) % 97 });
 
 const SCENE = {
   id: 'srf',
@@ -148,7 +150,7 @@ const SCENE = {
         /* ---- Pol II + TFIID + RNA ---- */
         let pl = '';
         pl += blobP((TATA[0] + TATA[1]) / 2, DY - 44, 34, 22, '#c9b8ff', .3);                        // TFIID (TBP) op TATA
-        pl += `<ellipse cx="${f1(polX)}" cy="${DY - 18}" rx="78" ry="58" fill="${POL}" fill-opacity=".32" stroke="${POL}" stroke-width="3"/>`;
+        pl += eiwit(polX, DY - 18, 80, 58, POL, { seed: 50 });
         pl += T(polX, DY - 22, 'Pol II', { size: 22, col: '#fff', w: 800 });
         if (rnaLen > 0) {
           const n = 14, pts = [];

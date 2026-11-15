@@ -1,5 +1,6 @@
 import { C, T2, svgOpen, cam, FULL, f1 } from '../../kit.js';
-import { T, K, track, hot, tag, phos, bilayer, nucEnv, dna, mrna, adr, gpcr7, cAMP, anchor, ADRC, GTPC, GAC, GBC } from './_sig1.js';
+import { T, K, track, hot, tag, phos, bilayer, nucEnv, dna, mrna, adr, gpcr7, gAlpha, gBG, cAMP, anchor, ADRC, GTPC, GAC, GBC } from './_sig1.js';
+import { eiwit, tmHelix } from '../../bio.js';
 
 /* Zijpad: adrenaline → β2-adrenerge receptor → Gs → adenylylcyclase → cAMP → PKA → CREB (CRE).
  * Membraan y 260–324, cytosol tot 646, kernenvelop y 660, DNA y 800. Alles volgt g = stap + p. */
@@ -57,9 +58,9 @@ export default {
   ],
 
   svg() {
-    const ac = `${[756, 770, 784, 818, 832, 846].map(x => `<rect x="${x - 5}" y="${MY - 12}" width="10" height="${MH + 24}" rx="5" fill="${ACC}" fill-opacity=".5" stroke="${ACC}" stroke-width="2"/>`).join('')}
-      <ellipse cx="775" cy="${MY + MH + 44}" rx="32" ry="26" fill="${ACC}" fill-opacity=".3" stroke="${ACC}" stroke-width="3"/>
-      <ellipse cx="830" cy="${MY + MH + 48}" rx="30" ry="26" fill="${ACC}" fill-opacity=".3" stroke="${ACC}" stroke-width="3"/>`;
+    const ac = [756, 770, 784, 818, 832, 846].map(x => tmHelix(x, MY - 12, MY + MH + 12, ACC, .85, 11)).join('') +
+      `<path d="M770,${MY + MH + 10} L775,${MY + MH + 22} M832,${MY + MH + 10} L830,${MY + MH + 24}" stroke="${ACC}" stroke-width="5"/>` +
+      eiwit(775, MY + MH + 44, 32, 26, ACC, { seed: 41 }) + eiwit(830, MY + MH + 48, 30, 26, ACC, { seed: 42 });
     return svgOpen() + `
       <rect x="-600" y="-600" width="2800" height="${MY + 610}" fill="#0b1226"/>
       <rect x="-600" y="${MY + MH - 4}" width="2800" height="${NY - MY - MH + 8}" fill="url(#gCyto)"/>
@@ -103,18 +104,11 @@ export default {
         const dock = K(g, 2.05, 2.4);
         const dx = -130 * dock;
         const bx = 635 + dx, by = 395;                                      // Gβ
-        const ga = track(g, [[2.05, 560, 385], [2.4, 430, 390], [3.1, 430, 390], [3.35, 560, 480], [3.6, 724, 404], [8.35, 724, 404], [8.6, 600, 490], [8.85, 430, 390]]);
+        const ga = track(g, [[2.05, 560, 385], [2.4, 430, 390], [3.1, 430, 390], [3.6, 724, 400], [8.35, 724, 400], [8.85, 430, 390]]);
         // nucleotide in Gα: GDP → GTP → (8.1) GDP
         const hyd = K(g, 8.1, 8.3);
-        let G = '';
-        G += `<path d="M${f1(bx + 20)},${by - 42} q6,-12 0,-24" stroke="${GBC}" stroke-width="3" fill="none"/>`;
-        G += `<ellipse cx="${f1(bx)}" cy="${by}" rx="32" ry="32" fill="${GBC}" fill-opacity=".3" stroke="${GBC}" stroke-width="3"/>`;
-        G += `<ellipse cx="${f1(bx + 22)}" cy="${by - 40}" rx="28" ry="12" fill="${GBC}" fill-opacity=".45" stroke="${GBC}" stroke-width="2.5"/>`;
-        G += `<text x="${f1(bx)}" y="${by + 7}" font-size="18" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">βγ</text>`;
-        const onMem = ga[1] < 420;
-        G += `<path d="M${f1(ga[0] - 20)},${f1(ga[1] - 34)} L${f1(ga[0] - 20)},${MY + MH - 4}" stroke="${GAC}" stroke-width="3" opacity="${onMem ? .8 : 0}"/>`;
-        G += `<ellipse cx="${f1(ga[0])}" cy="${f1(ga[1])}" rx="46" ry="36" fill="${GAC}" fill-opacity=".3" stroke="${GAC}" stroke-width="3"/>`;
-        G += `<text x="${f1(ga[0] - 2)}" y="${f1(ga[1] - 8)}" font-size="18" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">Gαs</text>`;
+        /* Gα (vetzuuranker) en Gβγ (prenylanker) blijven allebei aan het binnenblad van het membraan; Gα schuift achter Gβγ langs */
+        let G = gAlpha(ga[0], ga[1], MY + MH, { lab: 'Gαs' }) + gBG(bx, by, MY + MH);
         const isGTP = g >= 2.6 && g < 8.2;
         if (!isGTP || g < 2.6) {
           // GDP (begin) of GDP die vertrekt
@@ -153,31 +147,31 @@ export default {
           const col = deg > .5 ? AMPC : GTPC;
           A += cAMP(px, py, 1 - K(g, 8.4 + (i % 5) * .08, 8.6 + (i % 5) * .08), 10, col);
         });
-        if (pde > .01) A += `<g opacity="${f1(pde)}"><ellipse cx="940" cy="585" rx="40" ry="28" fill="#ff9d5c" fill-opacity=".3" stroke="#ff9d5c" stroke-width="3"/>` +
+        if (pde > .01) A += `<g opacity="${f1(pde)}">${eiwit(940, 585, 40, 28, '#ff9d5c', { seed: 43 })}` +
           `<text x="940" y="592" font-size="18" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">PDE</text></g>`;
         $('gp-camp').innerHTML = A;
 
         /* ---------- PKA ---------- */
         let P = '';
         const rel = K(g, 5.4, 5.85);
-        P += `<ellipse cx="${PKX - 15}" cy="${PKY}" rx="16" ry="44" fill="${RC}" fill-opacity=".35" stroke="${RC}" stroke-width="3"/><ellipse cx="${PKX + 15}" cy="${PKY}" rx="16" ry="44" fill="${RC}" fill-opacity=".35" stroke="${RC}" stroke-width="3"/>`;
+        P += eiwit(PKX - 15, PKY, 16, 44, RC, { seed: 44, bumps: .08 }) + eiwit(PKX + 15, PKY, 16, 44, RC, { seed: 45, bumps: .08 });
         P += `<text x="${PKX}" y="${PKY + 66}" font-size="18" text-anchor="middle" fill="${RC}" font-family="Inter" font-weight="700">R R</text>`;
         const c1 = track(g, [[5.4, PKX - 58, PKY], [5.85, PORE + 10, 600], [6.05, PORE + 10, 600], [6.25, PORE, NY], [6.5, CRX - 45, DY - 82]]);
         const c2 = track(g, [[5.4, PKX + 58, PKY], [5.85, PKX + 130, 590]]);
-        for (const [x, y] of [c1, c2]) P += `<circle cx="${f1(x)}" cy="${f1(y)}" r="27" fill="${C.prot}" fill-opacity=".45" stroke="${C.prot}" stroke-width="3"/><text x="${f1(x)}" y="${f1(y + 7)}" font-size="19" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="800">C</text>`;
+        for (const [x, y] of [c1, c2]) P += eiwit(x, y, 29, 26, C.prot, { seed: 46 }) + `<text x="${f1(x)}" y="${f1(y + 7)}" font-size="19" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="800">C</text>`;
         if (rel > .02 && rel < .98) P += `<circle cx="${PKX}" cy="${PKY}" r="${f1(40 + 50 * rel)}" fill="none" stroke="${GTPC}" stroke-width="3" opacity="${f1(1 - rel)}"/>`;
         $('gp-pka').innerHTML = P;
 
         /* ---------- kern: CREB, CBP, Pol II ---------- */
         let N = '';
         const pS = K(g, 6.55, 6.72) * (1 - K(g, 8.5, 8.8));
-        N += `<g><ellipse cx="${CRX - 22}" cy="${DY - 38}" rx="24" ry="22" fill="${CREBC}" fill-opacity=".35" stroke="${CREBC}" stroke-width="3"/><ellipse cx="${CRX + 22}" cy="${DY - 38}" rx="24" ry="22" fill="${CREBC}" fill-opacity=".35" stroke="${CREBC}" stroke-width="3"/>` +
+        N += `<g>${eiwit(CRX - 22, DY - 38, 24, 22, CREBC, { seed: 47 })}${eiwit(CRX + 22, DY - 38, 24, 22, CREBC, { seed: 48 })}` +
           `<path d="M${CRX - 14},${DY - 18} l-6,26 M${CRX + 14},${DY - 18} l6,26" stroke="${CREBC}" stroke-width="6" stroke-linecap="round"/></g>`;
         N += phos(CRX - 40, DY - 58, 15, pS);
         const cbp = track(g, [[7.05, 1360, 620, 0], [7.4, CRX + 8, DY - 112, 1], [8.55, CRX + 8, DY - 112, 1], [8.9, 1360, 620, 0]]);
-        if (cbp[2] > .01) N += `<g opacity="${f1(cbp[2])}"><ellipse cx="${f1(cbp[0])}" cy="${f1(cbp[1])}" rx="62" ry="34" fill="${CBPC}" fill-opacity=".3" stroke="${CBPC}" stroke-width="3"/></g>`;
+        if (cbp[2] > .01) N += eiwit(cbp[0], cbp[1], 62, 34, CBPC, { seed: 49, op: cbp[2] });
         const pol = K(g, 7.3, 7.5) * (1 - K(g, 8.55, 8.9));
-        if (pol > .01) N += `<g opacity="${f1(pol)}"><ellipse cx="1335" cy="${DY - 22}" rx="50" ry="34" fill="${C.prot3}" fill-opacity=".45" stroke="${C.prot}" stroke-width="3"/>` +
+        if (pol > .01) N += `<g opacity="${f1(pol)}">${eiwit(1335, DY - 22, 52, 36, C.prot3, { seed: 50, stroke: C.prot })}` +
           `<text x="1335" y="${DY - 14}" font-size="21" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">Pol II</text></g>`;
         N += mrna(1372, DY - 40, K(g, 7.5, 7.95), 170);
         // CRE-sequentie

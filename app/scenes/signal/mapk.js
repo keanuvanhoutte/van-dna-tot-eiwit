@@ -1,6 +1,7 @@
 import { C, T2, svgOpen, cam, sub, ease, lerp, clamp, f1, rng, squiggle } from '../../kit.js';
 import { T, smooth, tag, arrowDefs, arr, phos, panel, spark, PHOS } from '../prot/_b_kit.js';
 import { K, membrane, kinase, tyr, ras, grbSos, SOS_OFF, chip, pdot } from './rtk.js';
+import { kernEnvelopLijn, kernporie, eiwit, tmHelix } from '../../bio.js';
 
 /*
  * Verhaallijn 2, hoofdstuk "mapk": Ras–Raf–MEK–ERK. Plasmamembraan boven (y 110–170), kernenvelop onder (y 715–750).
@@ -91,17 +92,14 @@ const SCENE = {
   ],
   loop: false,
   svg() {
-    const env = (y, col) => {
-      let d = `M-600,${y}`; PORES.forEach(px => { d += ` L${px - PW},${y} M${px + PW},${y}`; }); d += ' L2200,' + y;
-      return `<path d="${d}" stroke="${col}" stroke-width="9" fill="none" stroke-linecap="round"/>`;
-    };
-    const npc = px => `<rect x="${px - PW - 16}" y="${NO - 14}" width="22" height="${NI - NO + 28}" rx="10" fill="${C.prot2}" opacity=".85"/><rect x="${px + PW - 6}" y="${NO - 14}" width="22" height="${NI - NO + 28}" rx="10" fill="${C.prot2}" opacity=".85"/>`;
+    const NM = (NO + NI) / 2, EW = 13, EG = NI - NO - EW;                       // midden, membraandikte, perinucleaire ruimte
+    const npc = px => kernporie(px, NM, 0, { H: EG + 2 * EW, poreW: 2 * PW - 20, col: '#b9a6ff' });
     return svgOpen(arrowDefs('mk', { m: C.muted, w: '#fff', e: K.erk })) + `
     <rect x="-600" y="${MB}" width="2800" height="${NO - MB}" fill="url(#gCyto)" opacity=".85"/>
     <rect x="-600" y="${NI}" width="2800" height="900" fill="url(#gNuc)"/>
     <g data-node="chromatine" data-color="${C.dna}" data-nolabel>${CHROM}</g>
     ${membrane('mk', MT, MB)}
-    <g data-node="kern" data-color="#9cc0ff" data-nolabel>${env(NO, '#7aa0d8')}${env(NI, '#9cc0ff')}</g>
+    <g data-node="kern" data-color="#9cc0ff" data-nolabel>${kernEnvelopLijn(-600, 2200, NM, { poriën: PORES, w: EW, gap: EG, poreW: 2 * PW - 20, npc: false })}</g>
     <g data-node="kernimport" data-color="${C.prot2}" data-label="${T2('Kernporie', 'Nuclear pore')}">${PORES.map(npc).join('')}<g id="mk-kiA"><circle data-anchor="kernimport" cx="${PORES[2]}" cy="${NO - 18}" r="1" fill="none"/></g></g>
     <g data-node="rtk" data-color="${K.rec}" data-label="${T2('← EGF-receptor', '← EGF receptor')}"><g id="mk-rec"></g><g id="mk-rtkA"><circle data-anchor="rtk" cx="135" cy="60" r="1" fill="none"/></g></g>
     <g data-node="rtk" data-color="${K.grb}" data-nolabel><g id="mk-sos"></g></g>
@@ -117,9 +115,8 @@ const SCENE = {
     const $ = id => svg.getElementById(id);
     /* receptorstomp + Grb2–SOS (statisch) */
     let rec = '';
-    [95, 175].forEach(x => { rec += `<rect x="${x - 7}" y="${MT - 12}" width="14" height="${MB - MT + 22}" rx="6" fill="${K.rec}"/>` +
-      `<ellipse cx="${x}" cy="${MT - 50}" rx="30" ry="40" fill="${K.rec}" fill-opacity=".28" stroke="${K.rec}" stroke-width="3"/>`; });
-    rec += `<ellipse cx="135" cy="${MT - 58}" rx="16" ry="12" fill="${K.egf}" fill-opacity=".45" stroke="${K.egf}" stroke-width="2.5"/>`;
+    [95, 175].forEach((x, i) => { rec += tmHelix(x, MT - 12, MB + 10, K.rec, 1, 14) + eiwit(x, MT - 50, 30, 40, K.rec, { seed: 70 + i * 10, bumps: .09 }); });
+    rec += eiwit(52, MT - 46, 16, 13, K.egf, { seed: 9, bumps: .16 }) + eiwit(218, MT - 46, 16, 13, K.egf, { seed: 9, bumps: .16 });   // EGF op elk monomeer (2:2)
     rec += `<path d="M95,${MB + 8} C95,${MB + 25} 95,195 95,202" stroke="${K.rec}" stroke-width="5" fill="none"/><path d="M175,${MB + 8} C175,${MB + 30} 185,230 185,240" stroke="${K.rec}" stroke-width="5" fill="none"/>`;
     rec += kinase(95, 222, K.rec, { sc: .75 }) + kinase(185, 262, K.rec, { sc: .75, on: 1 });
     const tB = [[185, 336], [200, 368], [218, 396]], tA = [[95, 296], [80, 330], [62, 356], [42, 376]];
@@ -145,7 +142,7 @@ const SCENE = {
         if (step === 7 || step === 8) {
           const g = step === 8 ? 1 - ease(sub(p, 0, .2)) : ease(sub(p, 0, .25));
           const gx = RAS[0] + 20, gy = lerp(RAS[1] + 190, RAS[1] + 84, g);
-          if (g > .01) rs += `<ellipse cx="${f1(gx)}" cy="${f1(gy)}" rx="60" ry="34" fill="#ff6b9a" fill-opacity=".25" stroke="#ff6b9a" stroke-width="3" opacity="${f1(g)}"/>` + T(gx, gy + 8, 'GAP', { size: 22, col: '#fff', w: 800, op: g });
+          if (g > .01) rs += eiwit(gx, gy, 60, 34, '#ff6b9a', { seed: 88, op: g }) + T(gx, gy + 8, 'GAP', { size: 22, col: '#fff', w: 800, op: g });
           const pi = step === 7 ? sub(p, .45, .85) : 0;
           if (pi > 0 && pi < 1) rs += T(RAS[0] + 70 + 60 * pi, RAS[1] - 10 + 40 * pi, 'Pᵢ', { size: 22, col: PHOS, w: 800, op: 1 - pi });
         }
@@ -173,7 +170,7 @@ const SCENE = {
         const rx = lerp(RAF_OFF[0], RAF_ON[0], rk), ry = lerp(RAF_OFF[1], RAF_ON[1], rk);
         const rbd = [lerp(RAF_OFF[0] - 80, RBD_ON[0], rk), lerp(RAF_OFF[1] + 10, RBD_ON[1], rk)];
         let ks = `<path d="M${f1(rbd[0])},${f1(rbd[1])} Q${f1((rbd[0] + rx) / 2)},${f1(ry + 20)} ${f1(rx - 30)},${f1(ry + 4)}" stroke="${K.raf}" stroke-width="5" fill="none"/>` +
-          `<circle cx="${f1(rbd[0])}" cy="${f1(rbd[1])}" r="17" fill="${K.raf}" fill-opacity=".45" stroke="${K.raf}" stroke-width="3"/>`;
+          eiwit(rbd[0], rbd[1], 18, 16, K.raf, { seed: 87 });                  // Ras-bindend domein (RBD) van Raf
         ks += kin(rx, ry, K.raf, 'Raf', { on: rafOn, cw });
 
         /* ---- MEK ---- */

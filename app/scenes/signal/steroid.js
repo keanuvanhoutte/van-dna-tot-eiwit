@@ -1,5 +1,6 @@
 import { C, T2, svgOpen, cam, FULL, f1 } from '../../kit.js';
 import { T, K, track, hot, bilayer, nucEnv, dna, mrna, cort, gr, grBound as grB, hsp90, anchor, CORTC, HSPC, NLSC } from './_sig1.js';
+import { eiwit } from '../../bio.js';
 const grBound = (x, side, op) => grB(x, side, DY, op);
 
 /* Zijpad: cortisol → glucocorticoïdreceptor (GR, NR3C1) → kern → GRE.
@@ -101,13 +102,12 @@ export default {
 
         /* ---------- chaperones ---------- */
         const rel = K(g, 3.55, 3.95), gone = 1 - K(g, 4.0, 4.3);
-        const hs = track(g, [[3.55, GX + 45, GY - 2, 1], [3.95, 900, 340, .45]]);
+        const hs = track(g, [[3.55, GX + 45, GY - 2, 1], [3.95, 920, 385, .45]]);
         const p23 = track(g, [[3.55, GX + 45, GY - 102], [3.95, 860, 300]]);
         const fk = track(g, [[3.55, GX + 120, GY - 58], [3.95, 1010, 420]]);
         const cop = (1 - .55 * rel) * gone;
         let H = hsp90(hs[0], hs[1], cop, .15 * rel, 1.25);
-        H += cop > .01 ? `<g opacity="${f1(cop)}"><circle cx="${f1(p23[0])}" cy="${f1(p23[1])}" r="15" fill="${P23C}" fill-opacity=".45" stroke="${P23C}" stroke-width="3"/>` +
-          `<ellipse cx="${f1(fk[0])}" cy="${f1(fk[1])}" rx="26" ry="22" fill="${FKBPC}" fill-opacity=".35" stroke="${FKBPC}" stroke-width="3"/></g>` : '';
+        H += cop > .01 ? `<g opacity="${f1(cop)}">${eiwit(p23[0], p23[1], 16, 14, P23C, { seed: 61 })}${eiwit(fk[0], fk[1], 27, 22, FKBPC, { seed: 62 })}</g>` : '';
         $('st-chap').innerHTML = H;
         $('st-chapG').setAttribute('opacity', g < 4.2 ? '1' : '0');
         $('st-chapA').setAttribute('cx', f1(hs[0])); $('st-chapA').setAttribute('cy', f1(hs[1] + 120));
@@ -138,12 +138,12 @@ export default {
           `<text x="1000" y="${DY + 50}" font-size="22" text-anchor="middle" fill="${C.muted}" font-family="JetBrains Mono" font-weight="700">nnn</text>` +
           `<text x="${H2}" y="${DY + 50}" font-size="23" text-anchor="middle" fill="#cfe0ff" font-family="JetBrains Mono" font-weight="700">TGTTCT</text></g>`;
         const co = track(g, [[6.05, 1200, 540, 0], [6.4, 1000, 612, 1]]);
-        if (co[2] > .01) N += `<g opacity="${f1(co[2])}"><ellipse cx="${f1(co[0])}" cy="${f1(co[1])}" rx="108" ry="32" fill="${COAC}" fill-opacity=".3" stroke="${COAC}" stroke-width="3"/>` +
+        if (co[2] > .01) N += `<g opacity="${f1(co[2])}">${eiwit(co[0], co[1], 108, 32, COAC, { seed: 63, bumps: .08 })}` +
           `<text x="${f1(co[0])}" y="${f1(co[1] + 8)}" font-size="22" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">CBP/p300 · SRC</text></g>`;
         const pol = K(g, 6.3, 6.5);
         $('st-nuc').innerHTML = N;
         N = '';                                                 // Pol II apart (klikbaar naar RNA-polymerase II), mRNA erna
-        $('st-pol').innerHTML = pol <= .01 ? '' : `<g opacity="${f1(pol)}"><ellipse cx="1200" cy="${DY - 24}" rx="52" ry="36" fill="${C.prot3}" fill-opacity=".45" stroke="${C.prot}" stroke-width="3"/>` +
+        $('st-pol').innerHTML = pol <= .01 ? '' : `<g opacity="${f1(pol)}">${eiwit(1200, DY - 24, 54, 38, C.prot3, { seed: 50, stroke: C.prot })}` +
           `<text x="1200" y="${DY - 16}" font-size="21" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">Pol II</text></g>`;
         N += mrna(1240, DY - 46, K(g, 6.5, 6.95), 190);
         $('st-nuc2').innerHTML = N;
@@ -169,7 +169,7 @@ export default {
           T(GX + 45, GY + 100, 'Hsp90', { size: 22, col: HSPC, op: k }) +
           T(GX + 80, GY - 110, 'p23', { size: 22, col: P23C, op: k, anchor: 'start' }) +
           T(GX + 155, GY - 50, 'FKBP51', { size: 22, col: FKBPC, op: k, anchor: 'start' }) +
-          T(GX - 110, GY + 35, 'NTD', { size: 18, col: C.muted, op: k }) + T(GX - 40, GY + 35, 'DBD', { size: 18, col: C.muted, op: k }) + T(GX + 45, GY + 62, 'LBD', { size: 18, col: C.muted, op: k });
+          T(GX - 110, GY + 35, 'NTD', { size: 18, col: C.muted, op: k }) + T(GX - 40, GY + 35, 'DBD', { size: 18, col: C.muted, op: k }) + T(GX + 112, GY + 34, 'LBD', { size: 18, col: C.muted, op: k, anchor: 'start' });
         k = on(3.4, 3.7, 4.02, 4.2);
         if (k > .01) L += T(GX + 45, GY + 70, T2('ligandbindend domein', 'ligand-binding domain'), { size: 22, col: C.prot, op: k }) +
           T(GX - 20, GY - 60, 'NLS', { size: 22, col: NLSC, op: k * nls }) +

@@ -1,5 +1,6 @@
 import { C, T2, svgOpen, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { T, smooth, tag, arrowDefs, arr, phos, spark, PHOS } from '../prot/_b_kit.js';
+import { membraanLijn, eiwit, eiwitPad, tmHelix } from '../../bio.js';
 
 /*
  * Verhaallijn 2, hoofdstuk "rtk": EGF activeert de EGF-receptor (EGFR/ErbB1).
@@ -15,11 +16,7 @@ export const K = {
 
 /* fosfolipide dubbellaag tussen y0 en y1 (patroon met kopjes en staarten) */
 export function membrane(pre, y0, y1, x0 = -600, x1 = 2200) {
-  const h = y1 - y0;
-  return `<defs><pattern id="${pre}-lip" x="0" y="${y0}" width="18" height="${h}" patternUnits="userSpaceOnUse">` +
-    `<circle cx="9" cy="8" r="7" fill="#c9a574"/><circle cx="9" cy="${h - 8}" r="7" fill="#c9a574"/>` +
-    `<path d="M6,15 L6,${h / 2 - 3} M12,15 L12,${h / 2 - 3} M6,${h - 15} L6,${h / 2 + 3} M12,${h - 15} L12,${h / 2 + 3}" stroke="#8a7355" stroke-width="2"/></pattern></defs>` +
-    `<rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${h}" fill="rgba(201,165,116,.12)"/><rect x="${x0}" y="${y0}" width="${x1 - x0}" height="${h}" fill="url(#${pre}-lip)"/>`;
+  return membraanLijn(x0, x1, (y0 + y1) / 2, { w: y1 - y0 });
 }
 
 /* tweelobbig kinasedomein (N-lob boven, C-lob onder); on = 0..1 actief (gloed) */
@@ -27,8 +24,10 @@ export function kinase(kx, ky, col, o = {}) {
   const { op = 1, on = 0, sc = 1 } = o;
   if (op <= .01) return '';
   const g = on > .01 ? `<ellipse cx="${f1(kx)}" cy="${f1(ky + 32 * sc)}" rx="${f1(78 * sc)}" ry="${f1(82 * sc)}" fill="${col}" opacity="${f1(on * .22)}" filter="url(#glow)"/>` : '';
-  return `<g opacity="${f1(op)}">${g}<ellipse cx="${f1(kx)}" cy="${f1(ky)}" rx="${f1(40 * sc)}" ry="${f1(28 * sc)}" fill="${col}" fill-opacity="${f1(.2 + .35 * on)}" stroke="${col}" stroke-width="3"/>` +
-    `<ellipse cx="${f1(kx)}" cy="${f1(ky + 62 * sc)}" rx="${f1(52 * sc)}" ry="${f1(36 * sc)}" fill="${col}" fill-opacity="${f1(.2 + .35 * on)}" stroke="${col}" stroke-width="3"/></g>`;
+  const seed = parseInt(col.slice(1, 4), 16) % 97;
+  const dim = (cx, cy, rx, ry, sd) => on < .99 ? `<path d="${eiwitPad(cx, cy, rx, ry, sd)}" fill="#0b1224" fill-opacity="${f1(.4 * (1 - on))}"/>` : '';
+  return `<g opacity="${f1(op)}">${g}` + eiwit(kx, ky + 62 * sc, 52 * sc, 36 * sc, col, { seed: seed + 1 }) + dim(kx, ky + 62 * sc, 52 * sc, 36 * sc, seed + 1) +
+    eiwit(kx, ky, 40 * sc, 28 * sc, col, { seed }) + dim(kx, ky, 40 * sc, 28 * sc, seed) + '</g>';
 }
 
 /* bolletje met letter; de letter valt weg als ze bij camerabreedte cw kleiner dan ~10 px op het scherm zou staan */
@@ -54,7 +53,8 @@ export function ras(x, y, memY, o = {}) {
   if (anchor) s += `<path d="M${f1(x)},${f1(y - r)} C${f1(x - 10)},${f1(y - r - 18)} ${f1(x + 10)},${f1(memY + 22)} ${f1(x)},${f1(memY + 6)}" stroke="${col}" stroke-width="4" fill="none"/>`;
   if (anchor) s += `<path d="M${f1(x)},${f1(memY + 6)} l-5,-7 l10,-7 l-10,-7 l10,-7" stroke="#e3c89c" stroke-width="3.5" fill="none" stroke-linejoin="round"/>`;
   if (on > .01) s += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r + 14)}" fill="${col}" opacity="${f1(on * .25)}" filter="url(#glow)"/>`;
-  s += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${col}" fill-opacity="${f1(.18 + .4 * on)}" stroke="${col}" stroke-width="3"/>`;
+  s += eiwit(x, y, r * 1.05, r * .95, col, { seed: 17 });
+  if (on < .99) s += `<path d="${eiwitPad(x, y, r * 1.05, r * .95, 17)}" fill="#0b1224" fill-opacity="${f1(.35 * (1 - on))}"/>`;
   if (nuc && nucOp > .01) s += tag(x, y + 4, nuc, nuc === 'GTP' ? K.gtp : K.gdp, { fs: 17, op: nucOp });
   return s + '</g>';
 }
@@ -68,10 +68,8 @@ export function grbSos(x, y, o = {}) {
   s += `<path d="${smooth([[so[0] - 70, so[1] + 38], [sh3a[0] + 30, sh3a[1] - 24], [sh3a[0] + 8, sh3a[1] - 6]])}" stroke="${K.sos}" stroke-width="5" fill="none"/>`;
   s += `<path d="${smooth([[so[0] - 40, so[1] + 48], [sh3b[0] + 60, sh3b[1] - 30], [sh3b[0] + 12, sh3b[1] - 4]])}" stroke="${K.sos}" stroke-width="5" fill="none"/>`;
   s += `<path d="M${f1(x + 14)},${f1(y - 12)} L${f1(sh3a[0])},${f1(sh3a[1])} M${f1(x + 16)},${f1(y + 10)} L${f1(sh3b[0])},${f1(sh3b[1])}" stroke="${K.grb}" stroke-width="5"/>`;
-  s += `<circle cx="${f1(x)}" cy="${f1(y)}" r="27" fill="${K.grb}" fill-opacity=".35" stroke="${K.grb}" stroke-width="3"/>`;
-  s += `<circle cx="${f1(sh3a[0])}" cy="${f1(sh3a[1])}" r="18" fill="${K.grb}" fill-opacity=".35" stroke="${K.grb}" stroke-width="3"/>`;
-  s += `<circle cx="${f1(sh3b[0])}" cy="${f1(sh3b[1])}" r="18" fill="${K.grb}" fill-opacity=".35" stroke="${K.grb}" stroke-width="3"/>`;
-  s += `<ellipse cx="${f1(so[0])}" cy="${f1(so[1])}" rx="100" ry="52" fill="${K.sos}" fill-opacity=".25" stroke="${K.sos}" stroke-width="3"/>`;
+  s += eiwit(x, y, 28, 26, K.grb, { seed: 81 }) + eiwit(sh3a[0], sh3a[1], 19, 17, K.grb, { seed: 82 }) + eiwit(sh3b[0], sh3b[1], 19, 17, K.grb, { seed: 83 });
+  s += eiwit(so[0], so[1], 100, 52, K.sos, { seed: 84, bumps: .09 });
   s += T(so[0] + 12, so[1] + 9, 'SOS', { size: 26, col: '#fff', w: 800 });
   if (labels) {
     s += T(x, y + 8, 'SH2', { size: 17, col: '#fff', w: 800 });
@@ -101,9 +99,10 @@ function receptor(x, s, ext, kx, ky, o = {}) {
   const { nums = false, armHi = 0, kOn = 0, ys = [0, 0, 0], cw = 1000 } = o;
   const P = k => { const a = ECD.t[k], b = ECD.e[k]; return [x + s * lerp(a[0], b[0], ext), lerp(a[1], b[1], ext)]; };
   const col = K.rec, I = P('I'), II0 = P('II0'), II1 = P('II1'), arm = P('arm'), III = P('III'), IV = P('IV');
-  const lobe = (p, rx, ry) => `<ellipse cx="${f1(p[0])}" cy="${f1(p[1])}" rx="${rx}" ry="${ry}" fill="${col}" fill-opacity=".28" stroke="${col}" stroke-width="3"/>`;
+  let nLob = 0;
+  const lobe = (p, rx, ry) => eiwit(p[0], p[1], rx, ry, col, { seed: 70 + (nLob++) + (s > 0 ? 0 : 10), bumps: .09 });
   let g = '';
-  g += `<rect x="${f1(x - 7)}" y="${MT - 12}" width="14" height="${MB - MT + 22}" rx="6" fill="${col}"/>`;       // transmembraanhelix
+  g += tmHelix(x, MT - 12, MB + 10, col, 1, 14);       // transmembraanhelix (één per receptor)
   g += lobe(IV, 22, 30) + lobe(III, 38, 36);
   g += `<path d="M${f1(II0[0])},${f1(II0[1])} L${f1(II1[0])},${f1(II1[1])}" stroke="${col}" stroke-width="30" stroke-linecap="round" opacity=".55"/>`;
   g += `<path d="M${f1((II0[0] + II1[0]) / 2)},${f1((II0[1] + II1[1]) / 2)} L${f1(arm[0])},${f1(arm[1])}" stroke="${armHi > .01 ? '#e0d6ff' : col}" stroke-width="12" stroke-linecap="round"/>`;
@@ -123,7 +122,7 @@ function receptor(x, s, ext, kx, ky, o = {}) {
 
 function egf(x, y, op = 1) {
   if (op <= .01) return '';
-  return `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(1.35) translate(${f1(-x)} ${f1(-y)})"><path d="M${f1(x - 22)},${f1(y)} C${f1(x - 24)},${f1(y - 20)} ${f1(x - 4)},${f1(y - 22)} ${f1(x + 4)},${f1(y - 14)} C${f1(x + 16)},${f1(y - 22)} ${f1(x + 26)},${f1(y - 8)} ${f1(x + 22)},${f1(y + 4)} C${f1(x + 20)},${f1(y + 20)} ${f1(x - 18)},${f1(y + 22)} ${f1(x - 22)},${f1(y)} Z" fill="${K.egf}" fill-opacity=".45" stroke="${K.egf}" stroke-width="3"/></g>`;
+  return eiwit(x, y, 31, 25, K.egf, { seed: 9, bumps: .16, op });
 }
 
 const SCENE = {

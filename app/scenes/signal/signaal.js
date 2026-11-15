@@ -1,5 +1,6 @@
 import { C, T2, svgOpen, cam, FULL, f1, lerp, rng, squiggle } from '../../kit.js';
-import { T, K, track, hot, bilayer, nucEnv, dna, mrna, egf, adr, cort, gpcr7, egfr, gr, grBound, hsp90, bead, cAMP, anchor,
+import { eiwit, tmHelix } from '../../bio.js';
+import { T, K, track, hot, bilayer, nucEnv, dna, mrna, egf, adr, cort, gpcr7, egfr, gAlpha, gBG, gr, grBound, hsp90, bead, cAMP, anchor,
   EGFC, ADRC, CORTC, GTPC, HSPC, GAC, GBC } from './_sig1.js';
 
 /* Verhaallijn 2, hoofdstuk 1: overzicht. Eerst de cel uit het hoofdstuk 'cel', dan inzoomen op het plasmamembraan.
@@ -168,7 +169,7 @@ export default {
         const pA = K(g, 5.05, 5.25);
         let A = '';
         if (g >= 7.05) A += `<ellipse cx="${XA}" cy="${MY + 30}" rx="${f1(150)}" ry="210" fill="${EGFC}" opacity="${f1(.07 * K(g, 7.05, 7.4))}"/>`;
-        A += egfr(rx1, MY, MH, dimA, pA) + egfr(rx2, MY, MH, dimA, pA);
+        A += egfr(rx1, MY, MH, dimA, pA, -1) + egfr(rx2, MY, MH, dimA, pA, 1);
         $('sg-A').innerHTML = A;
         A = '';                                                  // Ras → ERK: aparte groep (klikbaar naar de MAPK-cascade)
         const beads = [['Ras', 500, 5.15], ['Raf', 550, 5.3], ['MEK', 600, 5.45], ['ERK', 650, 5.6]];
@@ -187,13 +188,12 @@ export default {
         const tilt = 8 * K(g, 2.55, 2.85);
         let B = gpcr7(XB, MY, MH, tilt, 1);
         // adenylylcyclase (2 × 6 TM, symbolisch) + katalytisch deel
-        B += `<g opacity=".95">${[964, 976, 988].map(x => `<rect x="${x - 4}" y="${MY - 10}" width="9" height="${MH + 20}" rx="4" fill="#b58cff" fill-opacity=".55" stroke="#b58cff" stroke-width="1.5"/>`).join('')}` +
-          `<ellipse cx="985" cy="${MY + MH + 36}" rx="34" ry="24" fill="#b58cff" fill-opacity=".3" stroke="#b58cff" stroke-width="3"/>` +
+        B += `<g opacity=".95">${[964, 976, 988].map(x => tmHelix(x, MY - 10, MY + MH + 10, '#b58cff', .85, 10)).join('')}` +
+          eiwit(985, MY + MH + 36, 34, 24, '#b58cff', { seed: 41 }) +
           `<text x="985" y="${MY + MH + 42}" font-size="16" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">AC</text></g>`;
-        const gs = track(g, [[5.1, 880, 418], [5.35, 985, 470]]);
-        B += `<ellipse cx="920" cy="422" rx="22" ry="20" fill="${GBC}" fill-opacity=".35" stroke="${GBC}" stroke-width="3"/>`;
-        B += `<ellipse cx="${f1(gs[0])}" cy="${f1(gs[1])}" rx="38" ry="27" fill="${GAC}" fill-opacity=".35" stroke="${GAC}" stroke-width="3"/>` +
-          `<text x="${f1(gs[0])}" y="${f1(gs[1] + 6)}" font-size="17" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">Gαs</text>`;
+        /* G-eiwit aan de binnenkant van het membraan: Gβγ (prenylanker) en Gαs (vetzuuranker), dat naar het enzym schuift */
+        const gs = track(g, [[5.1, 846, 420], [5.35, 958, 452]]);
+        B += gBG(912, 418, MY + MH, { r: 22, lab: "" }) + gAlpha(gs[0], gs[1], MY + MH, { fs: 17 });
         const nC = Math.round(16 * K(g, 5.35, 5.8));
         for (let i = 0; i < nC; i++) {
           const ang = i * 2.39996, rr = 34 + (i % 5) * 16;

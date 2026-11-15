@@ -4,7 +4,7 @@
  * (g = i + 1) vanzelf aan op het beginbeeld van stap i + 1.
  */
 import { C, f1, clamp, ease } from '../../kit.js';
-import { npc } from '../entry/_bits.js';
+import { kernEnvelopLijn, kernporie, eiwit, tmHelix } from '../../bio.js';
 export { T, TL, tag, arrowDefs, arr, phos, panel } from '../prot/_b_kit.js';
 
 export const EGFC = '#7fdc6a';    // EGF (peptide, groen zoals een keten)
@@ -41,20 +41,13 @@ export function bilayer(x0, x1, y, o = {}) {
   return `<rect x="${x0}" y="${y + 8}" width="${x1 - x0}" height="${h - 16}" fill="${C.mem}" fill-opacity=".10"/>` +
     `<path d="${tails}" stroke="#a88d66" stroke-width="1.8" opacity=".75" fill="none"/><g fill="${C.mem}">${heads}</g>`;
 }
-/* kernenvelop (dubbel membraan) met poriën */
+/* kernenvelop: twee lipidedubbellagen (buiten- en binnenmembraan) die bij elke kernporie in elkaar overgaan,
+ * met het poriecomplex in de opening (bio.js). Cytoplasma boven, kern onder; buitenkant y − 18 … y + 18. */
 export function nucEnv(x0, x1, y, pores, s = .6) {
-  const gap = 58 * s / .6;
-  let segs = [], x = x0;
-  for (const p of [...pores].sort((a, b) => a - b)) { segs.push([x, p - gap]); x = p + gap; }
-  segs.push([x, x1]);
   /* klikbaar zonder label: envelop → celkern, poriën → kernporie & import */
-  let out = `<g data-node="kern" data-color="#9cc0ff" data-nolabel>`;
-  for (const [a, b] of segs) {
-    out += `<path d="M${f1(a)},${y - 14}L${f1(b)},${y - 14}" stroke="#7aa0d8" stroke-width="8"/><path d="M${f1(a)},${y + 14}L${f1(b)},${y + 14}" stroke="#9cc0ff" stroke-width="8"/>`;
-  }
-  out += `</g><g data-node="kernimport" data-color="${C.prot}" data-nolabel>`;
-  for (const p of pores) out += `<g transform="translate(${p} ${y})">${npc(0, 0, s, { fg: .6 })}</g>`;
-  return out + '</g>';
+  const env = kernEnvelopLijn(x0, x1, y, { poriën: pores, w: 14, gap: 12, poreW: 30, npc: false, lumen: 'rgba(201,165,116,.22)' });
+  const npcs = pores.map(x => kernporie(x, y, 0, { H: 40, poreW: 30 })).join('');
+  return `<g data-node="kern" data-color="#9cc0ff" data-nolabel>${env}</g><g data-node="kernimport" data-color="${C.prot}" data-nolabel>${npcs}</g>`;
 }
 /* klikbaar zonder label (hotspot naar knoop `node`), voor onderdelen die al een eigen scène hebben */
 export const hot = (node, col, s) => `<g data-node="${node}" data-color="${col}" data-nolabel>${s}</g>`;
@@ -83,8 +76,7 @@ export function mrna(x, y, u, len = 150, op = 1) {
 /* ---------- signaalmoleculen ---------- */
 export function egf(x, y, sc = 1, op = 1) {
   if (op <= .01) return '';
-  return `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(sc)})" opacity="${f1(op)}"><ellipse rx="24" ry="19" fill="${EGFC}" fill-opacity=".3" stroke="${EGFC}" stroke-width="3"/>` +
-    `<path d="M-15,4 C-12,-12 -4,-10 -2,0 S8,12 12,-2 S16,-10 17,2" stroke="${EGFC}" stroke-width="3" fill="none" stroke-linecap="round"/></g>`;
+  return `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(sc)})" opacity="${f1(op)}">${eiwit(0, 0, 23, 18, EGFC, { seed: 9, bumps: .16 })}</g>`;      // klein eiwit (53 aminozuren)
 }
 const HEX = (r, x = 0, y = 0) => [30, 90, 150, 210, 270, 330].map(a => `${f1(x + Math.cos(a * Math.PI / 180) * r)},${f1(y + Math.sin(a * Math.PI / 180) * r)}`).join(' ');
 /* adrenaline: catecholring (2 OH) + zijketen met secundair amine */
@@ -112,7 +104,11 @@ export function cort(x, y, sc = 1, op = 1, rot = 0) {
 }
 
 /* ---------- receptoren en eiwitten ---------- */
-/* 7TM-receptor; y = bovenkant bilaag, h = dikte; tilt6 = uitzwaai van helix 6 (graden) */
+const ANK = '#e3c89c';                                 // lipide-anker (vetzuur/prenyl) in de binnenste laag
+/* lipide-anker: zigzag van (x, memB + 6) omhoog in de binnenste laag van het membraan (memB = onderkant membraan) */
+export const lipAnker = (x, memB, op = 1) => op <= .01 ? '' : `<path d="M${f1(x)},${f1(memB + 6)} l-5,-7 l10,-7 l-10,-7 l10,-7" stroke="${ANK}" stroke-width="3.5" fill="none" stroke-linejoin="round" stroke-linecap="round" opacity="${f1(op)}"/>`;
+/* 7TM-receptor; y = bovenkant bilaag, h = dikte; tilt6 = uitzwaai van helix 6 (graden).
+ * Zeven α-helices door de staartjeslaag, verbonden door lussen buiten (boven) en binnen (onder); N-eind buiten, C-eind binnen. */
 export function gpcr7(x, y, h = 64, tilt6 = 0, op = 1, col = C.prot) {
   if (op <= .01) return '';
   let s = '';
@@ -125,20 +121,40 @@ export function gpcr7(x, y, h = 64, tilt6 = 0, op = 1, col = C.prot) {
     }
     const rot = i === 5 ? -tilt6 : 0;                // negatief = onderkant zwaait weg van de bundel (naar buiten)
     const hl6 = i === 5 && tilt6 > 1;
-    s += `<rect x="${f1(hx - 8.5)}" y="${top}" width="17" height="${bot - top}" rx="8" fill="${hl6 ? '#c9b6ff' : col}" fill-opacity=".55" stroke="${hl6 ? '#e4dbff' : col}" stroke-width="2.5" transform="rotate(${f1(rot)} ${f1(hx)} ${top})"/>`;
+    s += `<g transform="rotate(${f1(rot)} ${f1(hx)} ${top})">${tmHelix(hx, top, bot, hl6 ? '#c9b6ff' : col, 1, 17)}</g>`;
   }
   s += `<path d="M${x - 63},${top} q-10,-26 6,-44" stroke="${col}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
   s += `<path d="M${x + 63},${bot} q14,20 2,44" stroke="${col}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
   return `<g opacity="${f1(op)}">${s}</g>`;
 }
-/* EGFR-monomeer: ectodomein boven, één TM-helix, kinasedomein onder */
-export function egfr(x, y, h = 64, op = 1, pN = 0) {
+/* EGFR-monomeer: extracellulair deel (domeinen I–IV, compact boven de helix), één TM-helix, kinasedomein (N- en C-lob)
+ * in het cytosol en de C-staart. side = −1/+1: kant waar EGF bindt (het extracellulaire deel buigt licht die kant uit). */
+export function egfr(x, y, h = 64, op = 1, pN = 0, side = 0) {
   if (op <= .01) return '';
-  let s = `<path d="M${f1(x - 6)},${y - 2} C${f1(x - 30)},${y - 20} ${f1(x - 34)},${y - 70} ${f1(x - 10)},${y - 82} C${f1(x + 14)},${y - 92} ${f1(x + 30)},${y - 60} ${f1(x + 22)},${y - 34} C${f1(x + 16)},${y - 14} ${f1(x + 8)},${y - 6} ${f1(x + 5)},${y - 2}Z" fill="${C.prot}" fill-opacity=".45" stroke="${C.prot}" stroke-width="3"/>`;
-  s += `<rect x="${f1(x - 5)}" y="${y - 4}" width="10" height="${h + 8}" rx="4" fill="${C.prot}"/>`;
-  s += `<ellipse cx="${f1(x)}" cy="${y + h + 34}" rx="23" ry="30" fill="${C.prot}" fill-opacity=".45" stroke="${C.prot}" stroke-width="3"/>`;
+  let s = eiwit(x + side * 3, y - 28, 15, 27, C.prot, { seed: 51, bumps: .08 }) + eiwit(x + side * 9, y - 74, 21, 24, C.prot, { seed: 52, bumps: .1 });
+  s += tmHelix(x, y - 4, y + h + 4, C.prot, 1, 11);
+  s += `<path d="M${f1(x)},${y + h + 2} v10" stroke="${C.prot}" stroke-width="5"/>`;
+  s += eiwit(x, y + h + 24, 17, 13, C.prot, { seed: 53 }) + eiwit(x, y + h + 50, 22, 16, C.prot, { seed: 54 });
   s += `<path d="M${f1(x)},${y + h + 64} q-6,16 4,30" stroke="${C.prot}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
   if (pN > .01) s += `<g opacity="${f1(pN)}"><circle cx="${f1(x + 4)}" cy="${y + h + 100}" r="13" fill="#ff6b6b" stroke="#fff" stroke-width="1.6"/><text x="${f1(x + 4)}" y="${y + h + 106}" font-size="17" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="800">P</text></g>`;
+  return `<g opacity="${f1(op)}">${s}</g>`;
+}
+/* G-eiwit (heterotrimeer) aan de binnenkant van het membraan. Gα: GTPase-domein + helixdomein, via een vetzuuranker
+ * (palmitoyl) in het binnenblad; Gβ (β-propeller) + Gγ (lang en smal) met een prenylanker. memB = onderkant membraan. */
+export function gAlpha(x, y, memB, { op = 1, anker = 1, lab = 'Gαs', fs = 18 } = {}) {
+  if (op <= .01) return '';
+  let s = '';
+  if (anker > .01) s += `<path d="M${f1(x - 22)},${f1(y - 26)} L${f1(x - 22)},${f1(memB + 6)}" stroke="${GAC}" stroke-width="3.5" opacity="${f1(anker)}"/>` + lipAnker(x - 22, memB, anker);
+  s += eiwit(x + 26, y - 18, 22, 17, GAC, { seed: 32 }) + eiwit(x - 2, y + 2, 44, 32, GAC, { seed: 31 });
+  if (lab) s += `<text x="${f1(x - 4)}" y="${f1(y - 8)}" font-size="${fs}" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">${lab}</text>`;
+  return `<g opacity="${f1(op)}">${s}</g>`;
+}
+export function gBG(x, y, memB, { op = 1, lab = 'βγ', r = 32 } = {}) {
+  if (op <= .01) return '';
+  const k = r / 32;
+  let s = `<path d="M${f1(x + 40 * k)},${f1(y - 44 * k)} L${f1(x + 40 * k)},${f1(memB + 6)}" stroke="${GBC}" stroke-width="3"/>` + lipAnker(x + 40 * k, memB);
+  s += eiwit(x + 20 * k, y - 38 * k, 27 * k, 10 * k, GBC, { seed: 34, bumps: .06 }) + eiwit(x, y, 32 * k, 30 * k, GBC, { seed: 33, bumps: .07 });
+  if (lab) s += `<text x="${f1(x)}" y="${f1(y + 6 * k)}" font-size="${f1(Math.max(14, 18 * k))}" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">${lab}</text>`;
   return `<g opacity="${f1(op)}">${s}</g>`;
 }
 /* glucocorticoïdreceptor: NTD (ongeordend), DBD (2 zinkvingers), LBD; ligand en NLS optioneel */
@@ -146,10 +162,10 @@ export function gr(x, y, o = {}) {
   const { op = 1, lig = 0, nls = 0, rot = 0, sc = 1, flip = 1 } = o;
   if (op <= .01) return '';
   let s = `<path d="M-40,0 C-54,-16 -66,10 -80,-2 S-100,-14 -106,4" stroke="${C.prot}" stroke-width="5" fill="none" stroke-linecap="round"/>`;
-  s += `<rect x="-42" y="-16" width="30" height="32" rx="9" fill="${C.prot}" fill-opacity=".6" stroke="${C.prot}" stroke-width="3"/>`;
+  s += eiwit(-27, 0, 16, 17, C.prot, { seed: 21, bumps: .08 });
   s += `<circle cx="-33" cy="8" r="4" fill="#cfd6e6"/><circle cx="-21" cy="8" r="4" fill="#cfd6e6"/>`;
   s += `<path d="M-12,0 L4,0" stroke="${C.prot}" stroke-width="5"/>`;
-  s += `<g transform="rotate(${f1(-18 * lig)} 30 0)"><ellipse cx="30" cy="0" rx="30" ry="27" fill="${C.prot}" fill-opacity=".45" stroke="${C.prot}" stroke-width="3"/>` +
+  s += `<g transform="rotate(${f1(-18 * lig)} 30 0)">${eiwit(30, 0, 30, 27, C.prot, { seed: 22, bumps: .08 })}` +
     `<path d="M44,-24 q16,8 12,26" stroke="${C.prot}" stroke-width="5" fill="none" stroke-linecap="round" transform="rotate(${f1(40 * lig)} 44 -24)"/></g>`;
   if (nls > .01) s += `<g opacity="${f1(nls)}"><rect x="-14" y="-32" width="22" height="16" rx="5" fill="${NLSC}"/></g>`;
   const L = lig > .01 ? cort(30, 2, .6, 1, 0) : '';
@@ -161,23 +177,29 @@ export function grBound(x, side, dy, op = 1, sc = 1) {
   const y = 0;
   return `<g opacity="${f1(op)}" transform="translate(0 ${f1(dy - 38 * sc)}) translate(${f1(x)} 0) scale(${f1(sc)}) translate(${f1(-x)} 0)">
     <path d="M${x + side * 18},${y - 6} C${x + side * 50},${y - 20} ${x + side * 44},${y - 60} ${x + side * 78},${y - 64} S${x + side * 96},${y - 30} ${x + side * 128},${y - 40}" stroke="${C.prot}" stroke-width="5" fill="none" stroke-linecap="round"/>
-    <rect x="${x - 22}" y="${y - 22}" width="44" height="46" rx="12" fill="${C.prot}" fill-opacity=".6" stroke="${C.prot}" stroke-width="3"/>
+    ${eiwit(x, y + 1, 23, 24, C.prot, { seed: 23, bumps: .08 })}
     <circle cx="${x - 9}" cy="${y + 10}" r="5.5" fill="#cfd6e6"/><circle cx="${x + 9}" cy="${y + 10}" r="5.5" fill="#cfd6e6"/>
     <path d="M${x},${y - 22} L${x + side * 14},${y - 52}" stroke="${C.prot}" stroke-width="6"/>
-    <ellipse cx="${x + side * 20}" cy="${y - 92}" rx="44" ry="40" fill="${C.prot}" fill-opacity=".45" stroke="${C.prot}" stroke-width="3"/>
+    ${eiwit(x + side * 20, y - 92, 44, 40, C.prot, { seed: 24, bumps: .08 })}
     ${cort(x + side * 20, y - 90, .9, 1)}</g>`;
 }
-/* Hsp90-dimeer als klem (twee armen) */
+/* Hsp90-dimeer: twee protomeren, elk met N-, M- en C-domein. De C-domeinen houden het dimeer onderaan samen; de
+ * N-domeinen sluiten bovenaan (gesloten klem). Het cliënteiwit (GR) zit tussen de M-domeinen. open = 0..1. */
 export function hsp90(x, y, op = 1, open = 0, sc = 1) {
   if (op <= .01) return '';
-  const arm = side => `<path d="M${side * 8},-50 C${side * (40 + 30 * open)},-44 ${side * (48 + 30 * open)},0 ${side * (26 + 20 * open)},46" stroke="${HSPC}" stroke-width="15" fill="none" stroke-linecap="round" opacity=".85"/>` +
-    `<circle cx="${side * (10 + 14 * open)}" cy="-54" r="15" fill="${HSPC}" opacity=".9"/>`;
-  return `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(sc)})" opacity="${f1(op)}">${arm(-1)}${arm(1)}</g>`;
+  let s = '';
+  for (const k of [-1, 1]) {
+    const N = [k * (13 + 22 * open), -50], M = [k * (40 + 24 * open), -4], Cd = [k * (17 + 6 * open), 44];
+    s += `<path d="M${f1(N[0])},${N[1]} L${f1(M[0])},${M[1]} L${f1(Cd[0])},${Cd[1]}" stroke="${HSPC}" stroke-width="9" fill="none" stroke-linejoin="round"/>`;
+    s += eiwit(Cd[0], Cd[1], 17, 13, HSPC, { seed: 92 + k }) + eiwit(M[0], M[1], 15, 27, HSPC, { seed: 94 + k }) + eiwit(N[0], N[1], 16, 14, HSPC, { seed: 96 + k });
+  }
+  return `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(sc)})" opacity="${f1(op)}">${s}</g>`;
 }
-/* kinase/klein eiwit als cirkel met symbool */
+/* klein eiwit (kinase, adapter …) met naam: bobbelige vorm; seed volgt uit de naam (vaste vorm per eiwit) */
 export function bead(x, y, r, col, lab = '', op = 1, fs = 18, tcol = '#fff') {
   if (op <= .01) return '';
-  return `<g opacity="${f1(op)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${col}" fill-opacity=".35" stroke="${col}" stroke-width="3"/>` +
+  const seed = [...String(lab || 'x')].reduce((a, c) => a + c.charCodeAt(0), 0);
+  return `<g opacity="${f1(op)}">${eiwit(x, y, r * 1.08, r * .95, col, { seed })}` +
     (lab ? `<text x="${f1(x)}" y="${f1(y + fs * .36)}" font-size="${fs}" text-anchor="middle" fill="${tcol}" font-family="Inter" font-weight="700">${lab}</text>` : '') + '</g>';
 }
 export function cAMP(x, y, op = 1, r = 9, col = GTPC) {
