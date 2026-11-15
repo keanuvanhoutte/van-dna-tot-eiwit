@@ -7,8 +7,8 @@ const MEM = 380, MEMH = 44;
 /* De keten komt links uit het translocon; het N-uiteinde loopt voorop (rechts). Van N naar C lees je dus van rechts naar links:
  * G-S-L-A-V-N-L-T-E-K, met het sequon N-L-T (N op index 4, S/T twee plaatsen verder richting C = index 2). */
 const SEQ = ['K', 'E', 'T', 'L', 'N', 'V', 'A', 'L', 'S', 'G'];
-const ASN = 4, BX0 = 380, BDX = 52, BY = 510;
-const DOL = [1000, MEM + MEMH / 2 + 12];
+const ASN = 4, BX0 = 380, BDX = 52, BY = 700;   // kralenrij laag genoeg zodat de suikerboom (naast OST) er vrij boven hangt
+const DOL = [672, MEM + MEMH / 2 + 12];                           // dolichol-PP vlak naast OST (OST bindt drager en keten tegelijk)
 /* ribosoom op het ER: 60S op Sec61, 40S erboven, mRNA ertussen; de keten loopt door de tunnel van de 60S het kanaal in */
 const RIB = ribosoomOpER(330, MEM + MEMH / 2, { mw: MEMH, s: 1.05, label: '60S', labelSmall: '40S' });
 const FOLD = [1010, 560], FASN = [1098, 530];                      // gevouwen glycoproteïne rechts in het lumen, dicht bij het membraan
@@ -16,7 +16,7 @@ const FOLD = [1010, 560], FASN = [1098, 530];                      // gevouwen g
  * met een lange, uitgestrekte P-arm. Het lectinedomein ligt in rust rechts en raakt gebonden de laatste Glc (c1). */
 const CNXTM = 1380, CNXREST = [1480, 478], CNXBIND = [1310, 520];
 /* zijlabels cytosol / ER-lumen per stap (x van cytosol, x van lumen), zodat ze binnen elke camera vallen */
-const SIDE = [[700, 700], [700, 700], [700, 700], [700, 1080], [780, 780], [780, 780], [780, 780]];
+const SIDE = [[700, 700], [700, 700], [900, 900], [900, 1080], [780, 780], [780, 780], [1100, 1480]];
 const D = 26;                                                      // afstand tussen suikers
 
 /* suikerboom Glc3Man9GlcNAc2 (groeit langs +y vanaf (0,0)); st = { glc, man8, complex } */
@@ -66,33 +66,33 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">Suikers in de internationale SNFG-symbolen (Symbol Nomenclature for Glycans): blauw vierkant GlcNAc, geel vierkant GalNAc, groene cirkel mannose, blauwe cirkel glucose, gele cirkel galactose, paarse ruit siaalzuur, rode driehoek fucose.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Sugars in the international SNFG symbols (Symbol Nomenclature for Glycans): blue square GlcNAc, yellow square GalNAc, green circle mannose, blue circle glucose, yellow circle galactose, purple diamond sialic acid, red triangle fucose.</p>' },
   simplified: {
-    nl: 'Bindingstypes (α1-2, α1-3, …) zijn niet getekend; de boom toont wel de juiste samenstelling Glc3Man9GlcNAc2 en vertakking. OST, Sec61 en calnexine zijn schematisch (OST-A/STT3A werkt co-translationeel naast het translocon, OST-B/STT3B ook later). Calreticuline (oplosbaar) en ERp57 werken zoals calnexine en zijn weggelaten of enkel vermeld. In het Golgi ontstaan veel verschillende complexe glycanen; één biantennaire vorm is als voorbeeld getekend.',
-    en: 'Linkage types (α1-2, α1-3, …) are not drawn; the tree does show the correct composition Glc3Man9GlcNAc2 and branching. OST, Sec61 and calnexin are schematic (OST-A/STT3A acts co-translationally next to the translocon, OST-B/STT3B also later). Calreticulin (soluble) and ERp57 work like calnexin and are omitted or only mentioned. Many different complex glycans form in the Golgi; one biantennary form is drawn as an example.' },
+    nl: 'Bindingstypes (α1-2, α1-3, …) zijn niet getekend; de boom toont wel de juiste samenstelling Glc3Man9GlcNAc2 en vertakking. OST, Sec61 en calnexine zijn schematisch (OST-A/STT3A werkt co-translationeel naast het translocon, OST-B/STT3B ook later). Calreticuline (oplosbaar) en ERp57 werken zoals calnexine en zijn weggelaten of enkel vermeld. In het Golgi ontstaan veel verschillende complexe glycanen; één biantennaire vorm is als voorbeeld getekend. ERAD is schematisch: het retrotranslocon (in gist het ubiquitineligase Hrd1; Schoebel et al. 2017, Nature) en het proteasoom zijn eenvoudige vormen, en verdere stappen in het cytosol zijn weggelaten.',
+    en: 'Linkage types (α1-2, α1-3, …) are not drawn; the tree does show the correct composition Glc3Man9GlcNAc2 and branching. OST, Sec61 and calnexin are schematic (OST-A/STT3A acts co-translationally next to the translocon, OST-B/STT3B also later). Calreticulin (soluble) and ERp57 work like calnexin and are omitted or only mentioned. Many different complex glycans form in the Golgi; one biantennary form is drawn as an example. ERAD is schematic: the retrotranslocon (in yeast the ubiquitin ligase Hrd1; Schoebel et al. 2017, Nature) and the proteasome are simple shapes, and further steps in the cytosol are omitted.' },
   steps: [
-    ST(7500, cam(640, 430, 1350), 'Een keten gaat het ER in', 'A chain enters the ER',
+    ST(7500, cam(640, 470, 1350), 'Een keten gaat het ER in', 'A chain enters the ER',
       'Het ribosoom zit vast op het ER. De keten schuift door een porie naar de binnenkant van het ER.',
       'The ribosome is docked on the ER. The chain threads through a pore into the inside of the ER.'),
-    ST(7500, cam(610, 520, 820), 'Waar komt de suiker?', 'Where does the sugar go?',
+    ST(7500, cam(620, 600, 1150), 'Waar komt de suiker?', 'Where does the sugar go?',
       'Suiker komt op een asparagine (N) met twee plekken verder Ser of Thr (S/T). Pro ertussen mag niet.',
       'Sugar goes onto an asparagine (N) with Ser or Thr (S/T) two places further. A Pro in between is not allowed.'),
     ST(8000, cam(1056, 540, 1000), 'Een kant-en-klare suikerboom', 'A ready-made sugar tree',
       'Aan de binnenkant van het ER-membraan hangt een boompje van 14 suikers klaar op een vetachtige drager.',
       'On the inner side of the ER membrane, a tree of 14 sugars waits on a fatty carrier.'),
-    ST(8000, cam(780, 540, 1000), 'De boom gaat er in één keer op', 'The tree goes on in one go',
+    ST(8000, cam(800, 640, 1210), 'De boom gaat er in één keer op', 'The tree goes on in one go',
       'Een enzym zet de hele boom in één keer op de asparagine, terwijl de keten nog groeit.',
       'An enzyme puts the whole tree onto the asparagine at once, while the chain is still growing.'),
     ST(8500, cam(1250, 540, 1000), 'Bijknippen en vasthouden', 'Trimming and holding',
       'Enzymen knippen 2 van de 3 glucoses weg. Een helper (calnexine) herkent de laatste en houdt het eiwit vast.',
       'Enzymes trim 2 of the 3 glucoses. A helper (calnexin) recognises the last one and holds the protein.'),
     ST(9000, cam(1250, 540, 1000), 'Nog een ronde?', 'Another round?',
-      'De laatste glucose gaat eraf: het eiwit komt vrij. Nog niet goed gevouwen? Dan komt er een glucose terug.',
-      'The last glucose comes off: the protein is released. Not folded right yet? Then a glucose is added back.'),
-    ST(8500, cam(1250, 520, 1100), 'Doorlaten of afbreken', 'Pass or break down',
+      'Het eiwit laat even los en de laatste glucose wordt weggeknipt. Nog niet goed gevouwen? Dan komt er een glucose terug.',
+      'The protein lets go for a moment and the last glucose is trimmed off. Not folded right yet? Then a glucose is added back.'),
+    ST(8500, cam(1218, 530, 1100), 'Doorlaten of afbreken', 'Pass or break down',
       'Goed gevouwen: door naar het Golgi. Blijft het fout, dan gaat het eiwit uit het ER en wordt het afgebroken.',
       'Folded correctly: on to the Golgi. If it stays wrong, the protein leaves the ER and is broken down.'),
     ST(9000, cam(2160, 480, 1150), 'In het Golgi: andere suikers', 'In the Golgi: other sugars',
-      'In het Golgi gaan suikers eraf en komen andere erop. De meeste suikers op Ser of Thr komen pas hier.',
-      'In the Golgi, sugars are removed and others added. Most sugars on Ser or Thr are only added here.'),
+      'In het Golgi gaan suikers eraf en komen andere erop. Suikerketens die met GalNAc op Ser of Thr beginnen, komen pas hier.',
+      'In the Golgi, sugars are removed and others added. Sugar chains that start with GalNAc on Ser or Thr are only added here.'),
   ],
   svg() {
     // membraan (twee lagen) over de hele breedte van het ER-deel
@@ -175,9 +175,10 @@ export default {
         let dol = '';
         const transfer = step === 3 ? ease(sub(p, .2, .7)) : step > 3 ? 1 : 0;
         if (step <= 3) {
-          let z = `M${DOL[0]},${MEM + 26}`; for (let i = 1; i <= 16; i++) z += ` L${DOL[0] + i * 16},${MEM + (i % 2 ? 14 : 26)}`;
-          dol += `<path d="${z}" stroke="#ffb27a" stroke-width="4" fill="none"/>` + `<circle cx="${DOL[0]}" cy="${DOL[1] - 4}" r="7" fill="${C.danger}"/><circle cx="${DOL[0] + 14}" cy="${DOL[1] - 10}" r="7" fill="${C.danger}"/>`;
-          if (step >= 2) dol += T(DOL[0] + 150, MEM - 14, T2('dolichol-PP', 'dolichol-PP'), { size: 20, col: '#ffb27a', op: step === 2 ? sub(p, 0, .2) : 1 });
+          // vetachtige staart in het membraan, PP-kop (rood) aan de lumenkant
+          let z = `M${DOL[0] + 10},${MEM + 26}`; for (let i = 1; i <= 7; i++) z += ` L${DOL[0] + 10 + i * 12},${MEM + (i % 2 ? 14 : 26)}`;
+          dol += `<path d="${z}" stroke="#ffb27a" stroke-width="4" fill="none"/>` + `<circle cx="${DOL[0]}" cy="${MEM + MEMH - 6}" r="7" fill="${C.danger}"/><circle cx="${DOL[0] + 12}" cy="${MEM + MEMH - 12}" r="7" fill="${C.danger}"/>`;
+          if (step >= 2) dol += T(DOL[0] + 40, MEM - 14, T2('dolichol-PP', 'dolichol-PP'), { size: 20, col: '#ffb27a', anchor: 'start', op: step === 2 ? sub(p, 0, .2) : 1 });
         }
         $('gl-dol').innerHTML = dol;
 
@@ -185,7 +186,10 @@ export default {
         let tree = '', st = { glc: 3, man8: false, complex: false };
         let tx = DOL[0], ty = DOL[1], rot = 0, top = step >= 2 ? 1 : .35;
         const asnX = BX0 + ASN * BDX;
-        if (step === 3) { tx = lerp(DOL[0], asnX, transfer); ty = lerp(DOL[1], BY + 20, transfer); }
+        if (step === 3) {                                                // via de actieve plaats van OST (gele stip) naar het Asn
+          const t1 = clamp(transfer * 2), t2 = clamp(transfer * 2 - 1);
+          tx = lerp(lerp(DOL[0], 600, t1), asnX, t2); ty = lerp(lerp(DOL[1], MEM + MEMH + 28, t1), BY + 20, t2);
+        }
         let move = 0;
         if (step >= 4) {
           move = step === 4 ? ease(sub(p, 0, .3)) : 1;
@@ -226,6 +230,7 @@ export default {
           const k = clamp(cnxK), gx = lerp(CNXREST[0], CNXBIND[0], k), gy = lerp(CNXREST[1], CNXBIND[1], k);
           cn += `<path d="M${CNXTM},${MEM + MEMH + 4} Q${CNXTM},${f1(gy - 12)} ${f1(gx)},${f1(gy)}" stroke="${C.prot}" stroke-width="10" fill="none" stroke-linecap="round" opacity=".75"/>`;   // korte linker
           cn += tmHelix(CNXTM, MEM - 6, MEM + MEMH + 6, C.prot, 1, 16);
+          cn += `<path d="M${CNXTM},${MEM - 4} q12,-16 2,-34 q-8,-12 4,-22" stroke="${C.prot}" stroke-width="6" fill="none" stroke-linecap="round"/>`;   // staart in het cytosol (type I)
           // lange P-arm (haarspeld van prolinerijke herhalingen) die van het lectinedomein wegsteekt
           const arm = `M${f1(gx + 30)},${f1(gy - 12)} C${f1(gx + 90)},${f1(gy - 40)} ${f1(gx + 160)},${f1(gy - 30)} ${f1(gx + 200)},${f1(gy - 8)}`;
           cn += `<path d="${arm}" stroke="${C.prot}" stroke-width="16" fill="none" stroke-linecap="round" opacity=".7"/><path d="${arm}" stroke="#0b1224" stroke-opacity=".45" stroke-width="2.5" fill="none"/>`;
@@ -249,7 +254,13 @@ export default {
           en += enz(c[0] + 79, c[1], 94, 30, T2('glucosidase II', 'glucosidase II'), { col: C.prot2, fs: 16, op: sub(p, .12, .18) * (1 - sub(p, .33, .38)), fillOp: .5 });
           en += enz(c[0] + 72, c[1], 70, 34, 'UGGT', { col: C.prot3, fs: 18, op: sub(p, .45, .52) * (1 - sub(p, .74, .8)), fillOp: .6 });
           lb += T(1110, 655, p < .45 ? T2('vrij: gevouwen?', 'released: folded?') : T2('UGGT: "nog niet goed" → Glc terug', 'UGGT: "not yet right" → Glc back'), { size: 22, col: p < .45 ? C.text : '#c9b8ff', op: sub(p, .25, .35), anchor: 'start' });
-          lb += T(1010, 715, T2('cyclus herhaalt tot het eiwit gevouwen is', 'the cycle repeats until the protein is folded'), { size: 20, col: C.muted, op: sub(p, .8, .95) });
+          // de cyclus als kleine tekening: vasthouden → los + Glc eraf → UGGT: Glc terug → opnieuw vasthouden
+          const kc = sub(p, .8, .95), cy = 712, cx = [850, 1060, 1290];
+          [[T2('calnexine houdt vast', 'calnexin holds'), C.prot], [T2('los + Glc eraf', 'released + Glc off'), C.text], [T2('UGGT: Glc terug', 'UGGT: Glc back'), '#c9b8ff']]
+            .forEach(([s2, col], i) => lb += T(cx[i], cy, s2, { size: 18, col, anchor: 'middle', op: kc }));
+          lb += arr(948, cy - 6, 985, cy - 6, C.muted, 'gl-m', { w: 3, op: kc }) + arr(1138, cy - 6, 1195, cy - 6, C.muted, 'gl-m', { w: 3, op: kc });
+          lb += arr(1290, cy + 12, 850, cy + 12, C.muted, 'gl-m', { w: 3, op: kc, bend: -.12 });
+          lb += T(1070, cy + 74, T2('herhaalt tot het eiwit gevouwen is', 'repeats until the protein is folded'), { size: 18, col: C.muted, op: kc });
         }
         if (step === 6) {
           const c = tipAt(tx, ty, rot, .55, 6.3);
@@ -260,22 +271,29 @@ export default {
         // ERAD
         let er = '';
         if (step === 6) {
-          const ke = sub(p, .55, .7), RX = 925;
-          // terug door het ER-membraan (retrotranslocon) naar het cytosol, waar het proteasoom (vat met 4 ringen + kapjes) het afbreekt
+          /* tweede lot: een ander, blijvend misgevouwen eiwit (gestippeld). Het gaat als keten terug door het ER-membraan
+           * (retrotranslocon) naar het cytosol, krijgt daar ubiquitine en wordt door het proteasoom afgebroken (Schoebel et al. 2017). */
+          const km = sub(p, .5, .6), ke = sub(p, .55, .65), kt = ease(sub(p, .65, .92)), RX = 840, MX = 850, MY = 690;
+          er += `<g opacity="${f1(km * (1 - .55 * kt))}"><ellipse cx="${MX}" cy="${MY}" rx="68" ry="50" fill="rgba(255,107,107,.10)" stroke="${C.chain}" stroke-width="4" stroke-dasharray="14 8"/>` +
+            chain([[MX - 40, MY + 10], [MX - 15, MY - 25], [MX + 10, MY + 15], [MX + 35, MY - 20]], { w: 5, op: .6 }) + '</g>';
           er += `<g opacity="${f1(ke)}">${sec61(RX, MEM + MEMH / 2, { mw: MEMH, col: C.danger })}`;
-          [0, 1, 2, 3].forEach(i => er += `<rect x="${RX - 24}" y="${246 + i * 21}" width="48" height="19" rx="6" fill="${C.danger}" fill-opacity=".35" stroke="${C.danger}" stroke-width="2"/>`);
-          er += eiwit(RX, 238, 30, 12, C.danger, { seed: 81, bumps: .1 }) + eiwit(RX, 334, 30, 12, C.danger, { seed: 82, bumps: .1 }) + '</g>';
-          er += arr(932, 507, RX, 352, C.danger, 'gl-r', { w: 5, op: ke }) + T(948, 458, 'ERAD', { size: 22, col: C.danger, anchor: 'start', w: 800, op: ke });
-          er += T(RX + 50, 282, T2('proteasoom', 'proteasome'), { size: 21, col: C.danger, anchor: 'start', op: ke }) + T(RX + 50, 306, T2('breekt het eiwit af', 'breaks the protein down'), { size: 18, col: C.muted, anchor: 'start', op: ke });
-          er += T(1030, 790, T2('blijvend misgevouwen → terug naar het cytosol', 'permanently misfolded → back to the cytosol'), { size: 21, col: C.danger, anchor: 'start', op: sub(p, .6, .75) });
-          er += `<rect x="1000" y="755" width="560" height="50" fill="transparent"/>`;
+          [0, 1, 2, 3].forEach(i => er += `<rect x="${RX - 24}" y="${254 + i * 21}" width="48" height="19" rx="6" fill="${C.danger}" fill-opacity=".35" stroke="${C.danger}" stroke-width="2"/>`);
+          er += eiwit(RX, 246, 30, 12, C.danger, { seed: 81, bumps: .1 }) + eiwit(RX, 342, 30, 12, C.danger, { seed: 82, bumps: .1 }) + '</g>';
+          if (kt > .01) er += `<path d="M${MX},${MY - 50} C${MX - 2},${MY - 120} ${RX},${MEM + MEMH + 50} ${RX},${MEM + MEMH} L${RX},354" pathLength="1" stroke="${C.chain}" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="${f1(kt)} 2"/>`;
+          const ku = sub(p, .8, .9);
+          [0, 1, 2].forEach(i => er += `<circle cx="${RX - 20 - i * 15}" cy="${362 - i * 9}" r="8" fill="#ffd166" stroke="#0a1224" stroke-width="1.5" opacity="${f1(ku)}"/>`);
+          er += T(RX - 66, 336, T2('ubiquitine', 'ubiquitin'), { size: 16, col: '#ffd166', anchor: 'end', op: ku });
+          er += T(RX - 34, MEM + MEMH + 34, 'retrotranslocon', { size: 17, col: C.danger, anchor: 'end', op: ke }) + T(RX + 18, MEM + MEMH + 80, 'ERAD', { size: 22, col: C.danger, anchor: 'start', w: 800, op: ke });
+          er += T(RX + 50, 290, T2('proteasoom', 'proteasome'), { size: 21, col: C.danger, anchor: 'start', op: ke }) + T(RX + 50, 314, T2('breekt het eiwit af', 'breaks the protein down'), { size: 18, col: C.muted, anchor: 'start', op: ke });
+          er += T(780, 790, T2('blijvend misgevouwen → terug naar het cytosol', 'permanently misfolded → back to the cytosol'), { size: 21, col: C.danger, anchor: 'start', op: sub(p, .6, .75) });
+          er += `<rect x="770" y="755" width="560" height="50" fill="transparent"/>`;
         }
         $('gl-erad').innerHTML = er;
-        $('gl-eradA').setAttribute('cx', 1250); $('gl-eradA').setAttribute('cy', step === 6 && p > .6 ? 760 : -9999);
+        $('gl-eradA').setAttribute('cx', 1050); $('gl-eradA').setAttribute('cy', step === 6 && p > .6 ? 760 : -9999);
         // labels per stap: welke kant van het ER-membraan is wat
         if (step <= 6) lb += T(SIDE[step][0], MEM - 35, 'cytosol', { size: 22, col: C.muted, anchor: 'start' }) + T(SIDE[step][1], MEM + MEMH + 44, T2('ER-lumen', 'ER lumen'), { size: 22, col: C.mem, anchor: 'start' });
         $('gl-er').setAttribute('opacity', f1(step === 7 ? 1 - ease(sub(p, 0, .2)) : 1));
-        if (step === 0) lb += T(640, 720, T2('keten groeit het lumen in', 'chain grows into the lumen'), { size: 22, col: C.chain, op: sub(p, .3, .5) });
+        if (step === 0) lb += T(640, 800, T2('keten groeit het lumen in', 'chain grows into the lumen'), { size: 22, col: C.chain, op: sub(p, .3, .5) });
         if (step === 2) {
           const k = sub(p, .15, .35);
           lb += panel(1110, 440, 400, 330, { op: k });
