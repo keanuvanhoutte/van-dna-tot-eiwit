@@ -210,3 +210,150 @@ export function hydrolase(x, y, { s = 1, op = 1, tag = 0, glycaan = true, seed =
   }
   return g + '</g>';
 }
+
+/* =====================================================================================================
+ * Uitbreiding detailronde (hele app): kernenvelop, mitochondrion, bacteriewand, 70S-ribosoom, klein ribosoom.
+ * ===================================================================================================== */
+
+/* hulp: lengte langs een puntenlijst en een stuk ervan (op booglengte) */
+const cumLen = (P, closed) => { const Q = closed ? [...P, P[0]] : P, L = [0]; for (let i = 1; i < Q.length; i++) L.push(L[i - 1] + Math.hypot(Q[i][0] - Q[i - 1][0], Q[i][1] - Q[i - 1][1])); return { Q, L }; };
+const puntOp = ({ Q, L }, s) => { let i = 1; while (i < L.length - 1 && L[i] < s) i++; const t = (s - L[i - 1]) / ((L[i] - L[i - 1]) || 1); return [Q[i - 1][0] + (Q[i][0] - Q[i - 1][0]) * t, Q[i - 1][1] + (Q[i][1] - Q[i - 1][1]) * t, Math.atan2(Q[i][1] - Q[i - 1][1], Q[i][0] - Q[i - 1][0])]; };
+const stuk = (cl, s0, s1, step = 6) => { const n = Math.max(2, Math.ceil((s1 - s0) / step) + 1); return Array.from({ length: n }, (_, i) => puntOp(cl, s0 + (s1 - s0) * i / (n - 1))); };
+export const ptsEllips = (cx, cy, rx, ry, n = null) => { const N = n ?? Math.max(28, Math.round((rx + ry) * .3)); return Array.from({ length: N }, (_, i) => [cx + rx * Math.cos(i / N * 6.2832), cy + ry * Math.sin(i / N * 6.2832)]); };
+/* staafvorm (bacterie): middelpunt, totale lengte, straal, hoek (radialen) */
+export const ptsStaaf = (cx, cy, len, r, ang = 0) => {
+  const a = len / 2 - r, P = [], ca = Math.cos(ang), sa = Math.sin(ang), rot = (x, y) => [cx + x * ca - y * sa, cy + x * sa + y * ca];
+  for (let i = 0; i <= 16; i++) { const t = -Math.PI / 2 + Math.PI * i / 16; P.push(rot(a + r * Math.cos(t), r * Math.sin(t))); }
+  for (let i = 0; i <= 16; i++) { const t = Math.PI / 2 + Math.PI * i / 16; P.push(rot(-a + r * Math.cos(t), r * Math.sin(t))); }
+  const out = []; for (let i = 0; i < P.length; i++) { const p = P[i], q = P[(i + 1) % P.length]; out.push(p); const d = Math.hypot(q[0] - p[0], q[1] - p[1]); if (d > 20) for (let k = 1; k < d / 14; k++) out.push([p[0] + (q[0] - p[0]) * k * 14 / d, p[1] + (q[1] - p[1]) * k * 14 / d]); }
+  return out;
+};
+
+/* ---------- kernenvelop ----------
+ * Twee membranen (buiten- en binnenmembraan) met de perinucleaire ruimte ertussen; bij elke kernporie gaan beide
+ * membranen in elkaar over (Alberts/MBoC; Beck & Hurt 2017). Elk stuk envelop tussen twee poriën is daarom één
+ * platte, gesloten zak. P = puntenlijst (cirkel, ellips of lijn), poriën = posities als fractie (0..1) van de lengte.
+ * binnen = +1 als de kern aan de +normaal-kant ligt (bij ptsCirkel/ptsEllips: +1 = binnenkant). */
+export function kernEnvelop(P, { closed = true, poriën = [], w = 12, gap = 12, poreW = 26, op = 1, binnen = 1, lumen = 'rgba(201,165,116,.14)', npc = true, s = 1 } = {}) {
+  if (op <= .01) return '';
+  const cl = cumLen(P, closed), tot = cl.L[cl.L.length - 1], half = (gap + w) / 2;
+  const pos = poriën.map(f => ((f % 1) + 1) % 1 * tot).sort((a, b) => a - b);
+  const segs = [];
+  if (!pos.length) segs.push([0, tot, closed ? 'ring' : 'open']);
+  else if (closed) pos.forEach((p, i) => { const q = i + 1 < pos.length ? pos[i + 1] : pos[0] + tot; segs.push([p + poreW / 2 + half, q - poreW / 2 - half, 'zak']); });
+  else { let from = 0; pos.forEach((p, i) => { segs.push([from, p - poreW / 2 - half, i === 0 ? 'start' : 'zak']); from = p + poreW / 2 + half; }); segs.push([from, tot, 'eind']); }
+  const off = (p, d) => [p[0] - Math.sin(p[2]) * d, p[1] + Math.cos(p[2]) * d];     // zelfde normaal als offsetPts
+  const cap = (p, from, to) => { const T = [Math.cos(p[2]), Math.sin(p[2])], n = [-Math.sin(p[2]), Math.cos(p[2])], o = []; for (let k = 1; k < 8; k++) { const th = from + (to - from) * k / 8; o.push([p[0] + half * (Math.cos(th) * T[0] + Math.sin(th) * n[0]), p[1] + half * (Math.cos(th) * T[1] + Math.sin(th) * n[1])]); } return o; };
+  let g = `<g opacity="${f1(op)}">`;
+  for (const [s0, s1, soort] of segs) {
+    if (s1 - s0 < 4) continue;
+    const sub = s1 <= tot ? stuk(cl, s0, s1) : [...stuk(cl, s0, tot), ...stuk(cl, 0, s1 - tot).slice(1)];
+    const top = sub.map(p => off(p, -half)), bot = sub.map(p => off(p, half));
+    if (soort === 'ring') { g += `<path d="${ptsD(top, true)}" fill="none" stroke="${lumen}" stroke-width="${f1(gap + w)}"/>` + membraanPts(top, { w, closed: true }) + membraanPts(bot, { w, closed: true }); continue; }
+    g += `<path d="${ptsD([...top, ...bot.slice().reverse()], true)}" fill="${lumen}"/>`;
+    if (soort === 'open') { g += membraanPts(top, { w }) + membraanPts(bot, { w }); continue; }
+    if (soort === 'zak') { const pts = [...top, ...cap(sub[sub.length - 1], -Math.PI / 2, Math.PI / 2), ...bot.slice().reverse(), ...cap(sub[0], Math.PI / 2, Math.PI * 1.5)]; g += membraanPts(pts, { w, closed: true }); continue; }
+    // start/eind: één kant open (rand van het beeld), andere kant afgerond bij de porie
+    if (soort === 'start') g += membraanPts([...top, ...cap(sub[sub.length - 1], -Math.PI / 2, Math.PI / 2), ...bot.slice().reverse()], { w });
+    else g += membraanPts([...bot.slice().reverse(), ...cap(sub[0], Math.PI / 2, Math.PI * 1.5), ...top], { w });
+  }
+  if (npc) for (const p of pos) { const [x, y, a] = puntOp(cl, p % tot); g += kernporie(x, y, a * 180 / Math.PI + (binnen > 0 ? 0 : 180), { s, H: gap + 2 * w, poreW }); }
+  return g + '</g>';
+}
+/* rechte kernenvelop (cytoplasma boven, kern onder) met poriën op x-posities */
+export const kernEnvelopLijn = (x0, x1, y, o = {}) => kernEnvelop(ptsLijn(x0, y, x1, y, 2), { ...o, closed: false, binnen: 1, poriën: (o.poriën ?? []).map(x => (x - x0) / (x1 - x0)) });
+
+/* kernporiecomplex (zijaanzicht): eiwitring rond een centraal kanaal, filamenten aan de cytoplasmakant en een korf
+ * (nuclear basket) aan de kernkant. Lokaal: +y = kern. rot in graden. */
+export function kernporie(x, y, rot = 0, { s = 1, H = 36, poreW = 26, op = 1, col = '#9db4d8' } = {}) {
+  if (op <= .01) return '';
+  const hw = poreW / 2, bh = H / 2 + 8 * s;
+  let g = `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(rot)})">`;
+  for (const k of [-1, 1]) {
+    const d = eiwitPad(k * (hw + 7 * s), 0, 9 * s, bh, 80 + k, .05);
+    g += `<path d="${d}" fill="#0b1224"/><path d="${d}" fill="${col}" fill-opacity=".6" stroke="${col}" stroke-width="2"/>`;
+    g += `<path d="M${f1(k * (hw + 7 * s))},${f1(-bh + 2)} q${f1(k * 6 * s)},${f1(-12 * s)} ${f1(k * 2 * s)},${f1(-22 * s)}" stroke="${col}" stroke-width="${f1(3 * s)}" fill="none" stroke-linecap="round"/>`;   // filament (cytoplasma)
+    g += `<path d="M${f1(k * (hw + 7 * s))},${f1(bh - 2)} L${f1(k * 7 * s)},${f1(bh + 24 * s)}" stroke="${col}" stroke-width="${f1(3 * s)}" fill="none" stroke-linecap="round"/>`;   // korf (kern)
+  }
+  g += `<path d="M${f1(-8 * s)},${f1(bh + 24 * s)} H${f1(8 * s)}" stroke="${col}" stroke-width="${f1(4 * s)}" stroke-linecap="round"/>`;
+  return g + '</g>';
+}
+
+/* ---------- mitochondrion ----------
+ * Buitenmembraan (glad) + binnenmembraan met cristae (plooien die de matrix in steken) (Alberts/MBoC; Kühlbrandt 2015).
+ * (cx,cy) midden, rx/ry halve assen, rot in graden, n = aantal cristae, w = membraandikte. */
+export function mitochondrion(cx, cy, rx, ry, { rot = 0, n = 5, w = 8, op = 1, matrix = 'rgba(120,200,160,.13)', ims = 'rgba(201,165,116,.10)', diep = .62 } = {}) {
+  if (op <= .01) return '';
+  const gap = w * .9 + 3, irx = rx - gap - w, iry = ry - gap - w, hw = w * .75 + 3;
+  const cr = Array.from({ length: n }, (_, i) => ({ x: -irx * .78 + irx * 1.56 * (i + .5) / n, side: i % 2 ? 1 : -1 }));
+  const yb = (x, sg) => sg * iry * Math.sqrt(Math.max(0, 1 - (x / irx) ** 2));
+  const P = [], N = 140;
+  for (let i = 0; i <= N; i++) {
+    const a0 = (i - 1) / N * 6.2832, a1 = i / N * 6.2832, x0 = irx * Math.cos(a0), x1 = irx * Math.cos(a1), sg = Math.sin((a0 + a1) / 2) < 0 ? -1 : 1;
+    if (i > 0) for (const c of cr) {
+      if (c.side !== sg) continue;
+      const hit = sg < 0 ? (x0 < c.x - hw && x1 >= c.x - hw) : (x0 > c.x + hw && x1 <= c.x + hw);
+      if (!hit) continue;
+      const ycen = yb(c.x, sg) - sg * 2 * iry * diep;          // naar binnen
+      if (sg < 0) { P.push([c.x - hw, yb(c.x - hw, sg)], [c.x - hw, ycen]); for (let k = 1; k < 8; k++) { const th = Math.PI - Math.PI * k / 8; P.push([c.x + hw * Math.cos(th), ycen + hw * Math.sin(th)]); } P.push([c.x + hw, ycen], [c.x + hw, yb(c.x + hw, sg)]); }
+      else { P.push([c.x + hw, yb(c.x + hw, sg)], [c.x + hw, ycen]); for (let k = 1; k < 8; k++) { const th = -Math.PI * k / 8; P.push([c.x + hw * Math.cos(th), ycen + hw * Math.sin(th)]); } P.push([c.x - hw, ycen], [c.x - hw, yb(c.x - hw, sg)]); }
+    }
+    if (i < N && !cr.some(c => c.side === sg && Math.abs(x1 - c.x) < hw + w)) P.push([x1, iry * Math.sin(a1)]);
+  }
+  const Pt = P.map(p => [cx + p[0], cy + p[1]]);
+  return `<g opacity="${f1(op)}" transform="rotate(${f1(rot)} ${f1(cx)} ${f1(cy)})"><ellipse cx="${f1(cx)}" cy="${f1(cy)}" rx="${f1(rx)}" ry="${f1(ry)}" fill="${ims}"/>` +
+    `<path d="${ptsD(Pt, true)}" fill="${matrix}"/>` + membraanPts(Pt, { w, closed: true }) + membraanPts(ptsEllips(cx, cy, rx - w / 2, ry - w / 2), { w, closed: true }) + '</g>';
+}
+
+/* ---------- bacteriewand ----------
+ * type 'neg' (gramnegatief, bv. E. coli): binnenmembraan – periplasma met een dunne peptidoglycaanlaag – buitenmembraan
+ * met lipopolysachariden (LPS) aan de buitenkant. type 'pos' (grampositief): binnenmembraan + dikke peptidoglycaanlaag
+ * met teichoïnezuren, geen buitenmembraan (Silhavy, Kahne & Walker 2010).
+ * P = lijn van het binnenmembraan (cytoplasmamembraan); buiten = -1/+1: aan welke normaalkant de buitenwereld ligt
+ * (bij ptsCirkel/ptsEllips/ptsStaaf: -1 = buitenkant; bij ptsLijn van links naar rechts: -1 = boven). */
+export const PG = '#b9a3e3', LPS = '#7fd1a8';
+export function bacterieWand(P, { type = 'neg', closed = true, w = 12, buiten = -1, op = 1, periplasma = 'rgba(185,163,227,.10)' } = {}) {
+  if (op <= .01) return '';
+  const off = d => offsetPts(P, buiten * d, closed), D = Q => ptsD(Q, closed), hr = Math.max(2.2, w * .13);
+  let g = `<g opacity="${f1(op)}" fill="none">`;
+  if (type === 'neg') {
+    const per = w * 1.6, dPG = w / 2 + per * .5, dOM = w + per;
+    g += `<path d="${D(off(w / 2 + per / 2))}" stroke="${periplasma}" stroke-width="${f1(per)}"/>`;
+    g += `<path d="${D(off(dPG - 2.5))}" stroke="${PG}" stroke-width="1.8"/><path d="${D(off(dPG + 2.5))}" stroke="${PG}" stroke-width="1.8"/>`;
+    g += `<path d="${D(off(dPG))}" stroke="${PG}" stroke-width="5" stroke-dasharray="1.6 5.4"/>`;          // peptidebruggen tussen de suikerketens
+    g += membraanPts(off(0), { w, closed });                                                                  // binnenmembraan
+    g += membraanPts(off(dOM), { w, closed });                                                                // buitenmembraan
+    g += `<path d="${D(off(dOM + w / 2 + w * .45))}" stroke="${LPS}" stroke-width="${f1(w * .9)}" stroke-dasharray="1.6 ${f1(hr * 2.3 - 1.6)}" opacity=".9"/>`;   // LPS-ketens op de buitenlaag
+  } else {
+    const d0 = w / 2 + 3, dik = w * 2.4;
+    for (let k = 0; k <= 5; k++) g += `<path d="${D(off(d0 + dik * k / 5))}" stroke="${PG}" stroke-width="1.6"/>`;
+    g += `<path d="${D(off(d0 + dik / 2))}" stroke="${PG}" stroke-width="${f1(dik)}" stroke-dasharray="1.5 6" opacity=".8"/>`;
+    g += `<path d="${D(off(d0 + dik + 4))}" stroke="#ffd59e" stroke-width="8" stroke-dasharray="1.6 14" opacity=".9"/>`;   // teichoïnezuren steken uit
+    g += membraanPts(off(0), { w, closed });
+  }
+  return g + '</g>';
+}
+/* totale dikte van de wand vanaf het midden van het binnenmembraan (handig om iets er net buiten te tekenen) */
+export const bacterieWandDikte = (type = 'neg', w = 12) => type === 'neg' ? w + w * 1.6 + w / 2 + w * .9 : w / 2 + 3 + w * 2.4 + 8;
+
+/* ---------- 70S-ribosoom (bacterie) ----------
+ * Zelfde bouw als het 80S-ribosoom (kleine eenheid leest het mRNA, tRNA's tot het PTC, tunnel door de grote eenheid),
+ * maar kleiner: 30S + 50S = 70S (≈ 20 nm tegenover ≈ 25–30 nm). */
+export const ribosoom70S = (x, yUit, o = {}) => ribosoom80S(x, yUit, { ...o, s: (o.s ?? 1) * .85 });
+
+/* klein ribosoom voor overzichtsbeelden: grote en kleine eenheid die tegen elkaar liggen (geen bolletje).
+ * rot in graden: 0 = kleine eenheid boven. */
+export function ribosoomKlein(x, y, { s = 1, rot = 0, op = 1, col = C.rrna } = {}) {
+  if (op <= .01) return '';
+  return `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(rot)}) scale(${f1(s)})">` +
+    `<path d="${eiwitPad(0, 4, 13, 8.5, 60, .07)}" fill="${col}" fill-opacity=".75" stroke="${col}" stroke-width="1.6"/>` +
+    `<path d="${eiwitPad(-1, -8.5, 10, 5, 40, .08)}" fill="${col}" fill-opacity=".45" stroke="${col}" stroke-width="1.6"/></g>`;
+}
+
+/* dubbelmembraanblaasje (autofagosoom): twee dubbellagen met een smalle ruimte ertussen */
+export function blaasjeDubbel(cx, cy, r, { lumen = 'rgba(201,165,116,.08)', w = 10, gap = 6, op = 1 } = {}) {
+  if (op <= .01) return '';
+  const ri = r - w / 2 - gap / 2, ro = r + w / 2 + gap / 2;
+  return `<g opacity="${f1(op)}"><circle cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(ro)}" fill="rgba(201,165,116,.12)"/><circle cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(ri)}" fill="${lumen}"/>` +
+    membraanPts(ptsCirkel(cx, cy, ri), { w, closed: true }) + membraanPts(ptsCirkel(cx, cy, ro), { w, closed: true }) + '</g>';
+}

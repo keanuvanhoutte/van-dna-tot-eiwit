@@ -1,0 +1,26 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>bio-test2</title>
+<style>body{margin:0;background:#070b16}svg{display:block}</style></head>
+<body>
+<!-- Testblad 2 voor app/bio.js: kernenvelop, mitochondrion, bacteriewand, ribosomen. tools/shot-url.sh "tools/bio-test2.html?z=1" uit.png 1600 900 -->
+<div id="o"></div>
+<script type="module">
+import * as B from '../app/bio.js';
+import { C } from '../app/kit.js';
+const q = new URLSearchParams(location.search), z = +(q.get('z') ?? 1), cx = +(q.get('cx') ?? 800), cy = +(q.get('cy') ?? 450);
+let s = '';
+s += B.kernEnvelopLijn(20, 760, 90, { poriën: [200, 520], w: 16, gap: 18, poreW: 30 });
+s += B.kernEnvelop(B.ptsCirkel(230, 380, 150), { poriën: [.05, .3, .55, .8], w: 9, gap: 10, poreW: 22, s: .7 });
+s += B.mitochondrion(620, 380, 170, 85, { rot: -12, n: 6, w: 8 });
+s += B.bacterieWand(B.ptsLijn(820, 120, 1580, 120, 60), { type: 'neg', closed: false, w: 16 });
+s += B.bacterieWand(B.ptsLijn(820, 260, 1580, 260, 60), { type: 'pos', closed: false, w: 16 });
+s += B.bacterieWand(B.ptsStaaf(1200, 470, 560, 110), { type: 'neg', w: 9 });
+for (let i = 0; i < 6; i++) s += B.ribosoomKlein(1040 + i * 60, 470 + (i % 2) * 30, { s: 1.4, rot: i * 20 });
+const r = B.ribosoom70S(300, 820, { label: '50S', labelSmall: '30S' });
+s += r.svg + `<path d="${r.tunnelD}" stroke="${C.chain}" stroke-width="5" fill="none"/>`;
+const r2 = B.ribosoom80S(620, 820, { label: '60S', labelSmall: '40S' });
+s += r2.svg;
+s += B.blaasjeDubbel(880, 720, 80);
+document.getElementById('o').innerHTML = `<svg viewBox="${cx - 800 / z} ${cy - 450 / z} ${1600 / z} ${900 / z}" width="1600" height="900">${B.bioDefs}${s}</svg>`;
+</script>
+</body></html>
