@@ -158,3 +158,11 @@
 - [x] Nieuw clip-probleem door een correctie (label "sequon" in glyco stap 3 buiten beeld) → label verschoven; clip-check glyco 0. Vergeleken met de versie vóór de controle: geen andere nieuwe meldingen.
 - [x] Bronlinks (719) nagekeken via E-utilities, Crossref, RCSB en UniProt: geen dode links. Vijf uitgeverslinks achter een botcontrole vervangen door PubMed-links (24354960, 7929587, 8614640, 23275456, 14693367). NIH HIVinfo blijft (werkt in een gewone browser, blokkeert enkel automatische controles).
 - [x] check.html 125·125·125 PROBLEMS (0); bundeltest OK.
+
+## Detailronde (proef) — 15-11-2026: representatievere figuren
+- [x] Gedeelde tekenset `app/bio.js`: membraan als lipidedubbellaag langs elk pad (4 SVG-paden, licht), blaasjes, Golgi-cisternen, bobbelige eiwitten, TM-helix, 80S-ribosoom (40S boven, mRNA langs de 40S, tRNA's van codon tot PTC, tunnel door de 60S), ribosoom op het ER op Sec61, M6P-receptor als dimeer (type I), V-ATPase, hydrolase met N-glycaan. Testblad: tools/bio-test.html.
+- [x] Fouten in de figuren die de gebruiker vond: ribosoom in glyco (keten door de kleine eenheid) en het algemene ribosoommodel (tunnel los in de 60S) → één correct model in bio.js.
+- [x] Proefscènes hertekend: glyco, lysosoom; nieuwe scène `dubbellaag` (celmembraan, 8 stappen, bronnen Casares 2019, Mitra 2004, Singer & Nicolson 1972, Möckl 2020), bereikbaar vanuit de cel.
+- [x] Onafhankelijke beeldcontrole 1: 39 punten (4 fout, 6 misleidend) → fix-ronde, per scène gecommit (8f69f96, d0cf65b, 290395b, 0ddaeb6).
+- [x] Onafhankelijke beeldcontrole 2: 38/39 opgelost (punt 40 bleek wel gedekt door Casares 2019), 19 nieuwe punten (2 misleidend: één eiwit kreeg zowel Golgi- als ERAD-pijl; blaasjes gleden door membranen) → opgelost (fb3a4fc, 8a1b968, 0ca3f1e). Blaasjes ontstaan nu als knop uit het membraan.
+- [x] Controles: check.html 126·126·126 PROBLEMS (0); text/clip/blank-check 0 voor glyco, lysosoom, dubbellaag.
