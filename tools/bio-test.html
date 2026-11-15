@@ -1,0 +1,26 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>bio-test</title>
+<style>body{margin:0;background:#070b16}svg{display:block}</style></head>
+<body>
+<!-- Testblad voor app/bio.js (gedeelde tekenset). Gebruik: tools/shot-url.sh "tools/bio-test.html?z=1" uit.png 1600 900 -->
+<div id="o"></div>
+<script type="module">
+import * as B from '../app/bio.js';
+import { C } from '../app/kit.js';
+const q = new URLSearchParams(location.search), z = +(q.get('z') ?? 1), cx = +(q.get('cx') ?? 800), cy = +(q.get('cy') ?? 450);
+let s = '';
+s += B.membraanLijn(40, 1560, 120, { w: 44 });
+s += B.membraanLijn(40, 700, 260, { w: 22 });
+s += B.blaasje(900, 260, 70, { lumen: 'rgba(255,107,107,.12)', rand: '#ff6b6b' });
+s += B.blaasje(1100, 260, 26);
+s += B.cisterne(1350, 300, { len: 260, dik: 30, buig: 40 });
+s += B.cisterne(1420, 300, { len: 240, dik: 30, buig: 38 });
+const r = B.ribosoomOpER(300, 640, { mw: 40, s: 1, label: '60S', labelSmall: '40S' });
+s += B.membraanLijn(40, 760, 640, { w: 40 }) + r.svg + `<path d="${r.tunnelD}" stroke="${C.chain}" stroke-width="5" fill="none"/>`;
+s += B.m6pReceptor(900, 640, { dir: -1, mw: 40 }) + B.membraanLijn(800, 1060, 640, { w: 40 });
+s += B.hydrolase(1000, 520, { tag: 1 });
+s += B.vATPase(1250, 640, -Math.PI / 2) + B.membraanLijn(1150, 1550, 640, { w: 40 });
+s += B.eiwit(1400, 520, 60, 40, C.prot, { seed: 3, label: 'eiwit', holte: true });
+document.getElementById('o').innerHTML = `<svg viewBox="${cx - 800 / z} ${cy - 450 / z} ${1600 / z} ${900 / z}" width="1600" height="900">${B.bioDefs}${s}</svg>`;
+</script>
+</body></html>

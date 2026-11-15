@@ -397,4 +397,42 @@ export default {
       { t: 'RCSB PDB 7R5K — human nuclear pore complex (cryo-EM)', url: 'https://www.rcsb.org/structure/7R5K' },
     ],
   },
+
+  /* detailronde (15-11-2026) */
+  dubbellaag: {
+    nl: {
+      kort: 'Rond elke cel zit een membraan van twee lagen vetmoleculen. Hun waterminnende koppen zitten aan de buiten- en binnenkant, hun staarten verstoppen zich in het midden. Daarin zitten cholesterol en eiwitten, en buiten hangen suikers.',
+      what: 'Het plasmamembraan is een vloeibare dubbellaag van amfipathische lipiden: moleculen met een waterminnend en een waterafstotend deel. In water leggen zulke lipiden zich vanzelf in twee lagen, met de staarten naar elkaar toe. Het membraan is ongeveer 4 nm dik.',
+      how: [
+        'Een glycerofosfolipide heeft een kop met een fosfaatgroep (bv. met choline), vast aan glycerol, en twee vetzuurstaarten.',
+        'Een cis-dubbele binding geeft een staart een sterke knik. Zulke staarten liggen minder dicht op elkaar, waardoor het membraan vloeibaarder wordt.',
+        'Cholesterol heeft vier aaneengesloten ringen met een OH-groep. Het plasmamembraan bevat ongeveer 80 % van alle cholesterol van de cel.',
+        'Membraaneiwitten zijn deels in het membraan ingebed: hun apolaire delen zitten in het midden, hun polaire delen steken uit in het water.',
+        'De twee lagen zijn verschillend: buiten vooral fosfatidylcholine (PC) en sfingolipiden, binnen fosfatidylethanolamine (PE), het negatief geladen fosfatidylserine (PS) en fosfatidylinositol (PI). Flippasen en floppasen, pompen die ATP verbruiken, houden dat verschil in stand.',
+        'Aan de buitenkant van elke cel zit een laag suikers, vast aan eiwitten en lipiden: de glycocalyx.',
+      ],
+      facts: [['Dikte', '≈ 3,6–4,3 nm (fosfaat tot fosfaat, plasmamembraan)'], ['Model', 'vloeibaar mozaïek (Singer & Nicolson, 1972)'], ['Cholesterol', '≈ 80 % van de cholesterol van de cel zit in het plasmamembraan'], ['Buitenlaag', 'vooral PC en sfingolipiden'], ['Binnenlaag', 'PE, PS (negatief) en PI']],
+      why: 'Het membraan bepaalt wat de cel in- en uitgaat. Daarom hebben signaalmoleculen receptoren nodig, en moeten virussen en mRNA-vaccins een weg door het membraan vinden.',
+    },
+    en: {
+      kort: 'Every cell is wrapped in a membrane of two layers of fat molecules. Their water-loving heads face outside and inside, their tails hide in the middle. Cholesterol and proteins sit in it, and sugars hang on the outside.',
+      what: 'The plasma membrane is a fluid bilayer of amphipathic lipids: molecules with a water-loving and a water-repelling part. In water such lipids arrange themselves into two layers, with the tails facing each other. The membrane is about 4 nm thick.',
+      how: [
+        'A glycerophospholipid has a head with a phosphate group (e.g. with choline), attached to glycerol, and two fatty acid tails.',
+        'A cis double bond gives a tail a strong kink. Such tails pack less tightly, which makes the membrane more fluid.',
+        'Cholesterol has four fused rings with an OH group. The plasma membrane contains about 80% of all the cell’s cholesterol.',
+        'Membrane proteins are partly embedded: their nonpolar parts sit in the middle, their polar parts stick out into the water.',
+        'The two layers differ: outside mainly phosphatidylcholine (PC) and sphingolipids, inside phosphatidylethanolamine (PE), the negatively charged phosphatidylserine (PS) and phosphatidylinositol (PI). Flippases and floppases, pumps that use ATP, maintain this difference.',
+        'The outside of every cell carries a layer of sugars attached to proteins and lipids: the glycocalyx.',
+      ],
+      facts: [['Thickness', '≈ 3.6–4.3 nm (phosphate to phosphate, plasma membrane)'], ['Model', 'fluid mosaic (Singer & Nicolson, 1972)'], ['Cholesterol', '≈ 80% of the cell’s cholesterol is in the plasma membrane'], ['Outer leaflet', 'mainly PC and sphingolipids'], ['Inner leaflet', 'PE, PS (negative) and PI']],
+      why: 'The membrane decides what enters and leaves the cell. That is why signalling molecules need receptors, and why viruses and mRNA vaccines must find a way through the membrane.',
+    },
+    sources: [
+      { t: 'Casares, Escribá & Rosselló (2019) Membrane lipid composition: effect on membrane and organelle structure, function and compartmentalization and therapeutic avenues. Int J Mol Sci 20:2167 (PMC6540057)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6540057/' },
+      { t: 'Mitra et al. (2004) Modulation of the bilayer thickness of exocytic pathway membranes by membrane proteins rather than cholesterol. PNAS 101:4083 (PMC384699)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC384699/' },
+      { t: 'Singer & Nicolson (1972) The fluid mosaic model of the structure of cell membranes. Science 175:720 (PubMed 4333397)', url: 'https://pubmed.ncbi.nlm.nih.gov/4333397/' },
+      { t: 'Möckl (2020) The emerging role of the mammalian glycocalyx in functional membrane organization and immune system regulation. Front Cell Dev Biol 8:253 (PMC7174505)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7174505/' },
+    ],
+  },
 };

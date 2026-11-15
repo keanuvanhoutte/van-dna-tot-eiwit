@@ -41,7 +41,7 @@ const N = [
   // ───────────── BINNENKOMST ─────────────
   { id: 'cel', t: 'Menselijke cel', en: 'Human cell', stage: 'entry', scale: 1, kind: 'structure',
     s: 'Startpunt: een menselijke epitheelcel. Het genoom zit in de kern (plus een klein genoom in de mitochondriën); eiwitsynthese gebeurt in het cytosol en aan het ruw ER.',
-    in: ['kern', 'ribosoom', 'er'], rel: ['adeno', 'lnp', 'virus', 'signaal'] },
+    in: ['kern', 'ribosoom', 'er', 'dubbellaag'], rel: ['adeno', 'lnp', 'virus', 'signaal'] },
   /* verhaallijn 2: een signaalmolecule zet een gen aan */
   { id: 'signaal', t: 'Signaalmolecule & receptor', en: 'Cell signalling', stage: 'entry', scale: 1, kind: 'process',
     s: 'Een signaalmolecule (bv. de groeifactor EGF, adrenaline of cortisol) bindt aan een receptor. De receptor zet het signaal om in een reactie in de cel, vaak tot in de kern, waar genen aan- of uitgaan.',
@@ -98,6 +98,10 @@ const N = [
   { id: 'assemblage', t: 'Assemblage & uitgang van coronavirussen', en: 'Coronavirus assembly & egress', stage: 'entry', scale: 2, kind: 'process',
     s: 'De structurele eiwitten S, E en M zitten in ER-membranen en reizen naar het ER–Golgi-tussencompartiment (ERGIC); het N-eiwit pakt het nieuwe genoom in (vRNP’s), waarna het virus naar het lumen afknopt. Blaasjes brengen het naar buiten (exocytose); β-coronavirussen gebruiken daarvoor volgens celkweekonderzoek lysosomen, die minder zuur worden.',
     rel: ['er', 'golgi', 'lysosoom', 'sleutel', 'faag'] },
+  /* detailronde (15-11-2026): inzoomen op de celmembraan */
+  { id: 'dubbellaag', t: 'Celmembraan: de lipidedubbellaag', en: 'Cell membrane: the lipid bilayer', stage: 'entry', scale: 4, kind: 'structure',
+    s: 'Het plasmamembraan is een vloeibare dubbellaag van amfipathische lipiden (fosfolipiden met een fosfaatkop op glycerol en twee vetzuurstaarten, sfingolipiden en cholesterol), ≈ 4 nm dik. Een cis-dubbele binding geeft een knik en maakt het membraan vloeibaarder. De buitenlaag bevat vooral PC en sfingolipiden, de binnenlaag PE, PS en PI; flippasen en floppasen houden die asymmetrie in stand. Eiwitten zitten deels ingebed (vloeibaar mozaïek); suikers vormen buiten de glycocalyx.',
+    rel: ['signaal', 'membraan', 'glyco', 'endocytose', 'lnp'] },
 
   // ───────────── GENOOM & CHROMATINE ─────────────
   { id: 'kern', t: 'Celkern', en: 'Nucleus', stage: 'genome', scale: 2, kind: 'structure',

@@ -35,6 +35,7 @@ export const LINKS = {
   dnamethyl: ['dnahelix', 'gen', 'genregulatie', 'histonmod', 'nucleotide', 'replicatie'],
   dnavormen: ['dnahelix', 'nucleotide', 'rnastructuur', 'supercoiling'],
   dsb: ['dnahelix', 'herstel', 'ner', 'p53', 'ssdna', 'telomeren'],
+  dubbellaag: ['cel'],
   editing: ['codon', 'rnastructuur', 'splicing'],
   elongatie: ['aars', 'basenparing', 'capping', 'codon', 'initiatie', 'peptide', 'polya', 'ribosoom', 'terminatie', 'trna', 'vouwing'],
   endocytose: ['adeno', 'cel', 'kernimport', 'lnp', 'translatie', 'viruskopie'],

@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1, CLASSCOL, AACLASS, THREE } from '../../kit.js';
 import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, sugar, panel, SNFG } from './_b_kit.js';
+import { membraanLijn, ribosoomOpER, eiwit, tmHelix } from '../../bio.js';
 
 /* ER-membraan horizontaal (cytosol boven, lumen onder); rechts (x 1700–2600) het Golgi */
 const MEM = 380, MEMH = 44;
@@ -8,6 +9,8 @@ const MEM = 380, MEMH = 44;
 const SEQ = ['K', 'E', 'T', 'L', 'N', 'V', 'A', 'L', 'S', 'G'];
 const ASN = 4, BX0 = 380, BDX = 52, BY = 510;
 const DOL = [1000, MEM + MEMH / 2 + 12];
+/* ribosoom op het ER: 60S op Sec61, 40S erboven, mRNA ertussen; de keten loopt door de tunnel van de 60S het kanaal in */
+const RIB = ribosoomOpER(330, MEM + MEMH / 2, { mw: MEMH, s: 1.05, label: '60S', labelSmall: '40S' });
 const FOLD = [1010, 640], FASN = [1098, 610];                      // gevouwen glycoproteïne rechts in het lumen
 const CNX = [1380, 600];
 const D = 26;                                                      // afstand tussen suikers
@@ -89,7 +92,7 @@ export default {
   ],
   svg() {
     // membraan (twee lagen) over de hele breedte van het ER-deel
-    const mem = `<rect x="-200" y="${MEM}" width="1880" height="${MEMH}" fill="${C.mem}" opacity=".22"/><line x1="-200" y1="${MEM}" x2="1680" y2="${MEM}" stroke="${C.mem}" stroke-width="3"/><line x1="-200" y1="${MEM + MEMH}" x2="1680" y2="${MEM + MEMH}" stroke="${C.mem}" stroke-width="3"/>`;
+    const mem = membraanLijn(-200, 1680, MEM + MEMH / 2, { w: MEMH, gaten: [[294, 366], [524, 656]] });   // openingen: Sec61 en OST
     // Golgi-cisternen rechts
     let golgi = '';
     [0, 1, 2, 3].forEach(i => golgi += `<path d="M${1800 + i * 12},${190 + i * 42} Q1970,${160 + i * 42} ${2140 - i * 12},${190 + i * 42}" stroke="${C.mem}" stroke-width="22" fill="none" opacity="${.3 + i * .12}" stroke-linecap="round"/>`);
@@ -99,13 +102,12 @@ export default {
     <g data-node="er" data-color="${C.mem}" data-nolabel>${mem}</g>
     ${T(-150, MEM - 30, 'cytosol', { size: 22, col: C.muted, anchor: 'start' })}${T(-150, MEM + MEMH + 44, T2('ER-lumen', 'ER lumen'), { size: 22, col: C.mem, anchor: 'start' })}
     <g data-node="er" data-color="${C.rrna}" data-label="${T2('Ribosoom op het ER (SRP-route)', 'Ribosome on the ER (SRP route)')}">
-      <ellipse cx="330" cy="250" rx="160" ry="85" fill="rgba(44,198,168,.18)" stroke="${C.rrna}" stroke-width="3"/>
-      <ellipse cx="330" cy="345" rx="120" ry="34" fill="rgba(44,198,168,.28)" stroke="${C.rrna}" stroke-width="3"/>
-      ${T(330, 250, T2('ribosoom', 'ribosome'), { size: 22, col: C.rrna })}
-      <circle data-anchor="er" cx="330" cy="160" r="1" fill="none"/>
+      ${RIB.svg}
+      ${T(560, RIB.S.cy - 10, T2('ribosoom', 'ribosome'), { size: 22, col: C.rrna, anchor: 'start' })}
+      ${T(584, RIB.mrnaY + 7, 'mRNA', { size: 18, col: C.rna, anchor: 'start' })}
+      <circle data-anchor="er" cx="330" cy="${f1(RIB.S.cy - RIB.S.ry - 20)}" r="1" fill="none"/>
     </g>
     <g data-node="er" data-color="${C.prot}" data-nolabel>
-    <rect x="302" y="${MEM - 4}" width="56" height="${MEMH + 8}" rx="10" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>
     ${T(250, MEM + MEMH + 44, 'Sec61', { size: 18, col: C.prot, anchor: 'end' })}
     </g>
     <g id="gl-ost"></g>
@@ -134,7 +136,7 @@ export default {
         let cs = '';
         if (step <= 3) {
           const slide = step === 0 ? (1 - ease(sub(p, .1, .9))) * -5 * BDX : 0;
-          const pts = [[330, 300], [330, MEM + MEMH + 20], [345, BY - 20], [BX0 - 10 + slide, BY]];
+          const pts = [RIB.ptc, [336, RIB.L.cy + 10], [330, MEM + MEMH + 20], [345, BY - 20], [BX0 - 10 + slide, BY]];
           cs += chain(pts, { w: 7 });
           let line = [];
           for (let i = SEQ.length - 1; i >= 0; i--) { const x = BX0 + (SEQ.length - 1 - i) * 0 + i * BDX + slide; if (x >= BX0 - 5) line.push([x, BY]); }
@@ -162,7 +164,7 @@ export default {
 
         /* ---------- OST en dolichol ---------- */
         const ostOn = step <= 3 ? 1 : 0;
-        $('gl-ost').innerHTML = ostOn ? `<path d="M520,${MEM - 20} h140 v${MEMH + 40} q0,30 -30,34 h-80 q-30,-4 -30,-34 Z" fill="rgba(155,123,255,.3)" stroke="${C.prot}" stroke-width="3"/>` +
+        $('gl-ost').innerHTML = ostOn ? eiwit(590, MEM + MEMH / 2 + 16, 72, 52, C.prot, { seed: 33, bumps: .1 }) +
           T(590, MEM - 34, 'OST', { size: 24, col: C.prot, w: 800 }) + (step === 3 ? `<circle cx="590" cy="${MEM + MEMH + 44}" r="8" fill="#ffc247"/>` : '') : '';
         let dol = '';
         const transfer = step === 3 ? ease(sub(p, .2, .7)) : step > 3 ? 1 : 0;
@@ -218,7 +220,7 @@ export default {
           const tip = tipAt(tx, ty, rot, -1.1, 7);
           const lx = lerp(CNX[0] + 120, tip[0] + 44, clamp(cnxK)), ly = lerp(CNX[1], tip[1], clamp(cnxK));
           cn += `<path d="M${CNX[0] + 60},${MEM + MEMH} C${CNX[0] + 70},${MEM + 120} ${f1(lx + 60)},${f1(ly - 110)} ${f1(lx + 30)},${f1(ly - 40)}" stroke="${C.prot}" stroke-width="16" fill="none" stroke-linecap="round" opacity=".6"/>`;
-          cn += `<rect x="${CNX[0] + 40}" y="${MEM - 6}" width="40" height="${MEMH + 12}" rx="8" fill="rgba(155,123,255,.4)" stroke="${C.prot}" stroke-width="3"/>`;
+          cn += tmHelix(CNX[0] + 60, MEM - 6, MEM + MEMH + 6, C.prot, 1, 16);
           cn += enz(lx + 40, ly, 58, 48, '', { col: C.prot, fillOp: .4 });
           cn += T(lx + 40, ly + 82, T2('calnexine', 'calnexin'), { size: 22, col: '#c9b8ff' });
           cn += T(lx + 40, ly + 110, T2('(lectine, bindt Glc₁)', '(lectin, binds Glc₁)'), { size: 18, col: C.muted });

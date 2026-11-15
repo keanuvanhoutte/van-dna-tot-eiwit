@@ -1,6 +1,7 @@
 /* Korte titels (1–2 woorden, NL/EN) onder elk stuk van de tijdlijn, per knoop en per stap.
  * Ook gebruikt door het zoeken: "knippen" springt naar die stap. Bij nieuwe of gewijzigde stappen hier aanvullen. */
 export const STEP_TAGS = {
+  "dubbellaag": [["celrand", "cell edge"], ["twee lagen", "two layers"], ["één lipide", "one lipid"], ["knik", "kink"], ["cholesterol", "cholesterol"], ["eiwitten", "proteins"], ["buiten ≠ binnen", "outside ≠ inside"], ["vloeibaar", "fluid"]],
   "virus": [["eiwitjas", "protein coat"], ["aanhechten", "attaching"], ["opslokken", "engulfing"], ["versmelten", "fusing"], ["uitpakken", "uncoating"], ["route genoom", "genome route"], ["vrijkomen", "release"]],
   "adeno": [["eiwitjas", "capsid"], ["DNA binnenin", "DNA inside"], ["aanhaken", "docking"], ["startsein", "go signal"], ["inbuigen", "membrane bends"], ["afsnoeren", "pinching off"], ["naar de kern", "to the nucleus"], ["kernporie", "nuclear pore"]],
   "lnp": [["vetbolletje", "lipid particle"], ["aangepast mRNA", "modified mRNA"], ["opslokken", "uptake"], ["verzuren", "acidifying"], ["ontsnappen", "escape"], ["eiwit maken", "making protein"], ["afbreken", "breakdown"]],

@@ -1,7 +1,8 @@
-import { C, T2, svgOpen, FULL, sub, ease, lerp, f1, rng } from '../../kit.js';
-import { T } from './_b_kit.js';
+import { C, T2, svgOpen, FULL, cam, sub, ease, lerp, f1, rng } from '../../kit.js';
+import { T, TL } from './_b_kit.js';
 import { arrow } from '../repl/_draw.js';
 import { DEST, btn } from './_fate.js';
+import { blaasje, cisterne, membraanPts, ptsBoog, hydrolase, m6pReceptor, vATPase, eiwit, bioDefs } from '../../bio.js';
 
 /*
  * Lysosoom: in het Golgi krijgen zure knipenzymen een suikerlabel (mannose-6-fosfaat); een ontvanger (M6P-receptor)
@@ -13,16 +14,17 @@ const ENZ = C.prot, SUG = '#00A651', PH = DEST.lyso, REC = '#ffc247', ENDO = '#f
 const LY = [1180, 400], LR = 190, EN = [850, 650], GOL = [400, 400], TRANS = [590, 420], PMX = 1520;
 const DEBRIS = '#8a93a8', GLYC = '#9cc0ff';
 
-/* enzym met suikerboom; tag = fosfaat op de suiker; op = zichtbaarheid */
-function enzyme(x, y, { tag = 1, s = 1, op = 1, sugar = true } = {}) {
-  if (op <= .01) return '';
-  return `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(${f1(s)})"><ellipse rx="30" ry="22" fill="${ENZ}" fill-opacity=".5" stroke="${ENZ}" stroke-width="3"/>` +
-    (sugar ? `<line x1="0" y1="-22" x2="0" y2="-40" stroke="#c9d2e4" stroke-width="3"/><rect x="-8" y="-55" width="16" height="16" rx="3" fill="${SUG}"/>` +
-      (tag > .01 ? `<g opacity="${f1(tag)}"><circle cx="18" cy="-62" r="15" fill="${PH}"/><text x="18" y="-54.5" font-size="22" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">P</text></g>` : '') : '') + '</g>';
+/* zuur knipenzym met suikerboom; tag = fosfaat op de mannose (het M6P-label) */
+const enzyme = (x, y, { tag = 1, s = 1, op = 1, sugar = true, seed = 5 } = {}) => hydrolase(x, y, { tag, s, op, glycaan: sugar, seed });
+/* transportblaasje met M6P-receptoren in het membraan: de kop van de receptor steekt in het lumen en houdt het label vast */
+function vesRec(cx, cy, r, { op = 1, recOp = 1, binds = true } = {}) {
+  if (op <= .01 && recOp <= .01) return '';
+  let g = blaasje(cx, cy, r, { op, w: 10, lumen: 'rgba(201,165,116,.10)' });
+  // receptor bovenaan het blaasje, kop naar binnen (lumen); bij "binds" precies op het label van het enzym
+  g += m6pReceptor(cx + 8, cy - r, { dir: 1, mw: 10, s: .8, op: recOp });
+  return g;
 }
-/* ontvanger in een membraan: Y-vorm met staart naar beneden */
-const receptor = (x, y, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}"><path d="M${f1(x)},${f1(y + 40)} L${f1(x)},${f1(y)} M${f1(x)},${f1(y)} L${f1(x - 14)},${f1(y - 22)} M${f1(x)},${f1(y)} L${f1(x + 14)},${f1(y - 22)}" stroke="${REC}" stroke-width="7" stroke-linecap="round" fill="none"/></g>`;
-const R0 = rng(7), CHUNK = Array.from({ length: 7 }, () => [LY[0] + (R0() - .5) * 220, LY[1] + (R0() - .5) * 200, 16 + R0() * 12]);
+const R0 = rng(7), CHUNK = Array.from({ length: 7 }, (_, i) => [LY[0] + (R0() - .5) * 220, LY[1] + (R0() - .5) * 200, 16 + R0() * 12, 200 + i]);
 const LENZ = [[-90, -70], [70, -90], [110, 30], [-40, 90], [-120, 40]].map(([dx, dy]) => [LY[0] + dx, LY[1] + dy]);
 
 export default {
@@ -39,9 +41,9 @@ export default {
   steps: [
     { dur: 7500, cam: FULL, title: L3('Het lysosoom breekt grote moleculen af', 'The lysosome breaks down large molecules'),
       text: L3('Een lysosoom is een blaasje vol knipenzymen. Binnen is het zuur: pH ongeveer 4,5 tot 5.', 'A lysosome is a vesicle full of cutting enzymes. Inside it is acidic: pH about 4.5 to 5.') },
-    { dur: 8000, cam: FULL, title: L3('Het enzym krijgt een label in het Golgi', 'The enzyme gets a tag in the Golgi'),
+    { dur: 8000, cam: cam(500, 390, 780), title: L3('Het enzym krijgt een label in het Golgi', 'The enzyme gets a tag in the Golgi'),
       text: L3('Op een suiker van het enzym komt een fosfaatgroepje. Dat suikerlabel is het adres van het lysosoom.', 'A small phosphate group is put on one of the enzyme’s sugars. That sugar tag is the lysosome’s address.') },
-    { dur: 8000, cam: FULL, title: L3('Een ontvanger grijpt het label', 'A receiver grabs the tag'),
+    { dur: 8000, cam: cam(500, 390, 780), title: L3('Een ontvanger grijpt het label', 'A receiver grabs the tag'),
       text: L3('Een ontvanger in het Golgi-membraan herkent het label. Samen gaan ze in een blaasje.', 'A receiver in the Golgi membrane recognises the tag. Together they go into a vesicle.') },
     { dur: 9000, cam: FULL, title: L3('Afgeleverd, en de ontvanger keert terug', 'Delivered, and the receiver returns'),
       text: L3('Het blaasje versmelt met een endosoom. Daar laat de ontvanger los en keert terug naar het Golgi.', 'The vesicle fuses with an endosome. There the receiver lets go and returns to the Golgi.') },
@@ -54,18 +56,19 @@ export default {
   ],
   svg() {
     let golgi = '';
-    for (let i = 0; i < 4; i++) { const x = 300 + i * 62; golgi += `<path d="M${x + 20},230 Q${x - 40},400 ${x + 20},570" stroke="${C.mem}" stroke-width="30" fill="none" stroke-linecap="round" opacity=".5"/>`; }
-    return svgOpen() + `
+    for (let i = 0; i < 4; i++) golgi += cisterne(310 + i * 62, 400, { len: 330 - Math.abs(i - 1.5) * 30, dik: 26, buig: 34, w: 9 });
+    return svgOpen(bioDefs) + `
     <g data-node="golgi" data-color="${C.mem}" data-label="${T2('Golgi', 'Golgi')}">${golgi}<circle data-anchor="golgi" cx="380" cy="200" r="1" fill="none"/></g>
     ${T(380, 640, 'Golgi', { size: 28, col: C.mem })}
-    <g data-node="endocytose" data-color="${ENDO}" data-nolabel><circle cx="${EN[0]}" cy="${EN[1]}" r="70" fill="rgba(255,138,61,.12)" stroke="${ENDO}" stroke-width="3"/></g>
+    <g data-node="endocytose" data-color="${ENDO}" data-nolabel>${blaasje(EN[0], EN[1], 70, { lumen: 'rgba(255,138,61,.13)', rand: ENDO, w: 12 })}</g>
     ${T(EN[0], EN[1] + 110, T2('endosoom', 'endosome'), { size: 26, col: ENDO })}
     <g data-node="autofagie" data-color="${DEST.lyso}" data-label="${T2('Ook grote stukken: autofagie', 'Large pieces too: autophagy')}">
-      <circle id="ly-body" cx="${LY[0]}" cy="${LY[1]}" r="${LR}" fill="rgba(255,107,107,.12)" stroke="${DEST.lyso}" stroke-width="4"/>
+      <g id="ly-body">${blaasje(LY[0], LY[1], LR, { lumen: 'rgba(255,107,107,.11)', rand: DEST.lyso, w: 16 })}</g>
+      <g id="ly-pump"></g>
       <circle data-anchor="autofagie" data-pos="below" cx="${LY[0]}" cy="${LY[1] + LR + 70}" r="1" fill="none"/></g>
     ${T(LY[0], LY[1] + LR + 44, T2('lysosoom', 'lysosome'), { size: 30, col: DEST.lyso, w: 700 })}
     <g id="ly-ph"></g>
-    <path d="M${PMX},120 Q${PMX + 30},450 ${PMX},780" stroke="${C.mem}" stroke-width="14" fill="none" opacity=".55"/>
+    ${membraanPts(ptsBoog(PMX, 100, PMX + 30, 450, PMX, 800), { w: 20 })}
     <g id="ly-in"></g><g id="ly-fx"></g>
     ${btn('sortering', 40, 330, T2('↑ overzicht adreslabels', '↑ address labels overview'), C.ok)}
     ${btn('golgi', 400, 300, T2('← het Golgi', '← the Golgi'), C.mem)}
@@ -83,19 +86,22 @@ export default {
         const kIcell = step === 5 ? ease(sub(p, .05, .9)) : 0, kPompe = step === 6 ? ease(sub(p, .1, .9)) : 0, kX6 = step === 6 ? 1 - ease(sub(p, 0, .3)) : 0;
         const icell = Math.max(kIcell, kX6);       // stap 6 begint waar stap 5 eindigde en vloeit dan terug naar gewoon
         // pH-label
-        $('ly-ph').innerHTML = T(LY[0], LY[1] - LR - 30, T2('pH ≈ 4,5–5 (zuur)', 'pH ≈ 4.5–5 (acidic)'), { size: 28, col: C.text, op: kIntro });
+        $('ly-ph').innerHTML = T(LY[0], LY[1] - LR - 38, T2('pH ≈ 4,5–5 (zuur)', 'pH ≈ 4.5–5 (acidic)'), { size: 28, col: C.text, op: kIntro });
+        // protonpompen (V-ATPase) in het lysosoommembraan: kop in het cytosol, pompen H⁺ naar binnen → het lumen wordt zuur
+        $('ly-pump').innerHTML = [-2.35, -.85, .45, 2.65].map(a => vATPase(LY[0] + Math.cos(a) * LR, LY[1] + Math.sin(a) * LR, a, { s: .9, k: kIntro })).join('') +
+          TL(1330, 196, [T2('protonpomp', 'proton pump'), T2('H⁺ naar binnen', 'H⁺ inward')], { size: 24, col: '#5fd3e6', op: kIntro, anchor: 'start' });
         let g = '', fx = '';
         // enzymen in het lysosoom (verdwijnen bij I-cel; bij Pompe blijven ze, op één na)
         LENZ.forEach(([x, y], i) => {
           const op = (1 - icell * .85) * (i === 2 ? 1 - kPompe : 1);
-          g += enzyme(x, y, { s: .9, sugar: false, op });
+          g += enzyme(x, y, { s: .9, sugar: false, op, seed: 10 + i });
         });
         // brokken: in stap 4 in stukjes geknipt; bij I-cel en Pompe hopen ze (of glycogeen) zich op
         CHUNK.forEach(([x, y, r], i) => {
           const cut = kWork, full = 1 - cut;
-          if (full > .01) g += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="${DEBRIS}" opacity="${f1(.8 * full)}"/>`;
+          if (full > .01) g += eiwit(x, y, r * 1.15, r, DEBRIS, { seed: CHUNK[i][3], op: .9 * full, bumps: .2 });
           if (cut > .01 && icell < .99) for (let k = 0; k < 4; k++) g += `<circle cx="${f1(x + Math.cos(k * 1.57 + i) * r * cut)}" cy="${f1(y + Math.sin(k * 1.57 + i) * r * cut)}" r="5" fill="${C.chain}" opacity="${f1(cut * (1 - icell))}"/>`;
-          if (icell > .01) g += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r * (1 + .5 * icell))}" fill="${DEBRIS}" opacity="${f1(.85 * icell)}"/>`;
+          if (icell > .01) g += eiwit(x, y, r * 1.15 * (1 + .5 * icell), r * (1 + .5 * icell), DEBRIS, { seed: CHUNK[i][3], op: .9 * icell, bumps: .2 });
         });
         if (kPompe > .01) for (let i = 0; i < 14; i++) {
           const a = i * 2.4, rr = 30 + (i % 5) * 26, x = LY[0] + Math.cos(a) * rr, y = LY[1] + 20 + Math.sin(a) * rr * .8;
@@ -120,9 +126,10 @@ export default {
             const rOp = step === 2 ? kRec : 1;
             let rx = ex + 16, ry = ey - 112;
             if (step >= 3 && kBack > 0) { rx = lerp(EN[0], TRANS[0] + 36, kBack); ry = lerp(EN[1] - 120, TRANS[1] - 112, kBack) - Math.sin(kBack * Math.PI) * 100; }
-            g += `<g transform="rotate(180 ${f1(rx)} ${f1(ry + 40)})">${receptor(rx, ry + 40, rOp * (step === 4 ? 1 - ease(sub(p, 0, .3)) : 1))}</g>`;
+            const recOp = rOp * (step === 4 ? 1 - ease(sub(p, 0, .3)) : 1);
             const vr = 70, vOp = (step === 2 ? kBud : 1) * (1 - kFuse);
-            if (vOp > .01) g += `<circle cx="${f1(ex + 8)}" cy="${f1(ey - 36)}" r="${vr}" fill="none" stroke="${C.mem}" stroke-width="6" opacity="${f1(vOp * .8)}"/>`;
+            if (kBack <= 0) g += vesRec(ex + 8, ey - 36, vr, { op: vOp, recOp: recOp * (1 - kFuse * 0) });
+            else g += vesRec(rx - 8, ry + 40, 34, { op: recOp, recOp });        // de ontvanger keert terug in een eigen blaasje
             if (step === 3) fx += T(lerp(EN[0], TRANS[0], .5), EN[1] - 210, T2('ontvanger keert terug', 'receiver returns'), { size: 24, col: REC, op: ease(sub(p, .6, .8)) * (1 - ease(sub(p, .92, 1))) });
           }
         }

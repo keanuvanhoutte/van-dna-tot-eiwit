@@ -13,4 +13,6 @@ import sleutel from './sleutel.js';
 import viruskopie from './viruskopie.js';
 import schaar from './schaar.js';
 import assemblage from './assemblage.js';
-export default [cel, virus, adeno, lnp, endocytose, baltimore, rt, integratie, kernimport, sleutel, viruskopie, schaar, assemblage];
+/* detailronde (15-11-2026) */
+import dubbellaag from './dubbellaag.js';
+export default [cel, virus, adeno, lnp, endocytose, baltimore, rt, integratie, kernimport, sleutel, viruskopie, schaar, assemblage, dubbellaag];
