@@ -20,7 +20,7 @@ const R = rng(11);
 /* lipiden: posities langs x voor beide lagen; sommige plaatsen = eiwit of cholesterol */
 const XS = [];
 for (let x = 20; x <= 1580; x += PITCH) XS.push(x);
-const PROT1 = [760, 940], PROT2 = [1230, 1320];                 // receptor (bundel helices) en een eiwit met één helix
+const PROT1 = [734, 986], PROT2 = [1230, 1320];                 // receptor (bundel helices) en een eiwit met één helix
 const HW = 36;                                                   // helixbreedte ≈ 1 nm bij ≈ 37 px/nm
 const inProt = x => (x > PROT1[0] - 11 && x < PROT1[1] + 11) || (x > PROT2[0] - 8 && x < PROT2[1] + 8);
 const CHOLX = [212, 394, 680, 1066, 1430, 1508];                   // cholesterolposities: even index = buitenlaag, oneven = binnenlaag
@@ -47,22 +47,34 @@ function lipid(x, side, { kink = false, col = PC, s = 1, dx = 0 } = {}) {
   const t2 = kink ? `M${f1(x + 4 + dx)},${f1(y0)} v${f1(dir * tl * .45)} l${f1(tl * .55 * .5)},${f1(dir * tl * .55 * .866)}` : `M${f1(x + 4 + dx)},${f1(y0)} v${f1(dir * tl)}`;
   return `<path d="${t1} ${t2}" stroke="${TAILC}" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${f1(x + dx)}" cy="${f1(hy)}" r="${HR}" fill="${col}"/>`;
 }
-/* cholesterol: steroïdskelet van drie zesringen (A–C) en één vijfring (D) tussen de staarten;
- * OH-groep aan de A-ring ter hoogte van de koppen, korte koolwaterstofstaart aan de D-ring (Casares 2019) */
+/* cholesterol: steroïdskelet van drie zesringen (A–C, hoekig versmolten zoals fenantreen) en één vijfring (D),
+ * ringen met gedeelde zijden; OH-groep aan de A-ring ter hoogte van de koppen, korte koolwaterstofstaart aan de D-ring (Casares 2019) */
 function chol(x, side, op = 1) {
-  const y0 = side < 0 ? TOP + HR * 1.2 : BOT - HR * 1.2, dir = -side;
-  let g = `<g opacity="${f1(op)}"><circle cx="${f1(x)}" cy="${f1(y0)}" r="5" fill="#ff6b6b"/>`;            // OH
-  for (let k = 0; k < 3; k++) g += `<path d="M${f1(x)},${f1(y0 + dir * (10 + k * 12))} l7,${f1(dir * 5)} l0,${f1(dir * 8)} l-7,${f1(dir * 5)} l-7,${f1(-dir * 5)} l0,${f1(-dir * 8)}z" fill="${CHOL}" fill-opacity=".85" stroke="#0b1224" stroke-opacity=".5" stroke-width="1.2"/>`;
-  const yd = y0 + dir * 47;                                                                                 // D-ring (vijfring) aan de onderrand van de C-ring
-  g = g.replace('>', `><path d="M${f1(x - 7)},${f1(yd)} L${f1(x + 7)},${f1(yd)} L${f1(x + 9)},${f1(yd + dir * 9)} L${f1(x)},${f1(yd + dir * 15)} L${f1(x - 9)},${f1(yd + dir * 9)}z" fill="${CHOL}" fill-opacity=".85" stroke="#0b1224" stroke-opacity=".5" stroke-width="1.2"/>`);
-  return g + `<path d="M${f1(x)},${f1(yd + dir * 15)} l3,${f1(dir * 5)} l-3,${f1(dir * 4)}" stroke="${CHOL}" stroke-width="3" fill="none"/></g>`;
+  const y0 = side < 0 ? TOP + HR * 1.2 : BOT - HR * 1.2, dir = -side, s = 8, d = Math.sqrt(3) * s;
+  const P = (cx, cy, r, a) => `${f1(cx + r * Math.cos(a * Math.PI / 180))},${f1(cy + dir * r * Math.sin(a * Math.PI / 180))}`;
+  const ring = (cx, cy, n, r, a0) => `<path d="M${Array.from({ length: n }, (_, k) => P(cx, cy, r, a0 + k * 360 / n)).join(' L')}z" fill="${CHOL}" fill-opacity=".85" stroke="#0b1224" stroke-opacity=".55" stroke-width="1.2"/>`;
+  const ax = x - 3, ay = y0 + dir * 14;                                     // A-ring; B rechtsonder, C linksonder van B (hoekig), D rechtsonder van C
+  const bx = ax + d * .5, by = ay + dir * d * .866, cx = bx - d * .5, cy = by + dir * d * .866;
+  const r5 = s / (2 * Math.sin(Math.PI / 5)), a5 = s / (2 * Math.tan(Math.PI / 5));
+  const dx = cx + (d / 2 + a5) * .5, dy = cy + dir * (d / 2 + a5) * .866;     // vijfring deelt de rechtsonderzijde van C
+  const tail = P(dx, dy, r5, 60);
+  return `<g opacity="${f1(op)}"><circle cx="${f1(ax)}" cy="${f1(y0)}" r="5" fill="#ff6b6b"/>` +       // OH
+    ring(ax, ay, 6, s, 30) + ring(bx, by, 6, s, 30) + ring(cx, cy, 6, s, 30) + ring(dx, dy, 5, r5, 204) +
+    `<path d="M${tail} l4,${f1(dir * 6)} l-2,${f1(dir * 5)}" stroke="${CHOL}" stroke-width="3" fill="none" stroke-linecap="round"/></g>`;
 }
-/* suikerketen (glycaan) aan de buitenkant op een eiwit of lipide */
-function glycan(x, y, n = 4, op = 1, seed = 1) {
-  const r = rng(seed); let g = `<g opacity="${f1(op)}">`, px = x, py = y;
-  for (let k = 0; k < n; k++) { const nx = px + (r() - .5) * 18, ny = py - 15; g += `<line x1="${f1(px)}" y1="${f1(py)}" x2="${f1(nx)}" y2="${f1(ny)}" stroke="#c9d2e4" stroke-width="2"/><circle cx="${f1(nx)}" cy="${f1(ny)}" r="6" fill="${SUGAR}"/>`; px = nx; py = ny;
-    if (k === 1 && n > 3) { const bx = nx + 14, by = ny - 8; g += `<line x1="${f1(nx)}" y1="${f1(ny)}" x2="${f1(bx)}" y2="${f1(by)}" stroke="#c9d2e4" stroke-width="2"/><circle cx="${f1(bx)}" cy="${f1(by)}" r="6" fill="#FFD400"/>`; } }
-  return g + '</g>';
+/* suikers in SNFG-symbolen (zoals in de rest van de app): blauw ■ GlcNAc, groen ● mannose, blauw ● glucose, geel ● galactose */
+const SNFG = { GlcNAc: '#0072BC', Glc: '#0072BC', Man: '#00A651', Gal: '#FFD400' };
+const sym = (x, y, t) => t === 'GlcNAc' ? `<rect x="${f1(x - 6)}" y="${f1(y - 6)}" width="12" height="12" rx="1.5" fill="${SNFG[t]}" stroke="#0a1224" stroke-width="1.4"/>` : `<circle cx="${f1(x)}" cy="${f1(y)}" r="6.5" fill="${SNFG[t]}" stroke="#0a1224" stroke-width="1.4"/>`;
+const bond = (x1, y1, x2, y2) => `<line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x2)}" y2="${f1(y2)}" stroke="#c9d2e4" stroke-width="2"/>`;
+/* N-glycaan op een eiwit: de kern die elk N-glycaan heeft (2 GlcNAc, 1 mannose met 2 mannose-takken) */
+function nGlycan(x, y, op = 1) {
+  const p = [[x, y - 14], [x, y - 30], [x, y - 46]], l = [x - 12, y - 60], r = [x + 12, y - 60];
+  return `<g opacity="${f1(op)}">` + bond(x, y, ...p[0]) + bond(...p[0], ...p[1]) + bond(...p[1], ...p[2]) + bond(...p[2], ...l) + bond(...p[2], ...r) +
+    sym(...p[0], 'GlcNAc') + sym(...p[1], 'GlcNAc') + sym(...p[2], 'Man') + sym(...l, 'Man') + sym(...r, 'Man') + '</g>';
+}
+/* glycosfingolipide: glucose op het ceramide (glucosylceramide) met een galactose erop; Casares 2019: GSL's zijn gebaseerd op GlcCer of GalCer met mono-, di- of oligosachariden */
+function gslGlycan(x, y, op = 1) {
+  return `<g opacity="${f1(op)}">` + bond(x, y, x, y - 14) + bond(x, y - 14, x + 4, y - 29) + sym(x, y - 14, 'Glc') + sym(x + 4, y - 29, 'Gal') + '</g>';
 }
 
 export default {
@@ -72,7 +84,7 @@ export default {
   time: { nl: 'lipiden schuiven voortdurend opzij (schematisch)', en: 'lipids keep sliding sideways (schematic)' },
   org: { nl: 'mens (plasmamembraan)', en: 'human (plasma membrane)' },
   legend: [[PC, L3('kop van een fosfolipide (waterminnend)', 'phospholipid head (water-loving)')], [TAILC, L3('vetzuurstaart (waterafstotend)', 'fatty acid tail (water-repelling)')],
-    [CHOL, L3('cholesterol', 'cholesterol')], [PROT, L3('membraaneiwit', 'membrane protein')], [SUGAR, L3('suiker (glycocalyx)', 'sugar (glycocalyx)')],
+    [CHOL, L3('cholesterol', 'cholesterol')], [PROT, L3('membraaneiwit', 'membrane protein')], [SNFG.Glc, L3('suiker: glucose ● of GlcNAc ■', 'sugar: glucose ● or GlcNAc ■')], [SNFG.Gal, L3('suiker: galactose ●', 'sugar: galactose ●')], [SNFG.Man, L3('suiker: mannose ●', 'sugar: mannose ●')],
     [SM, L3('sfingolipide (buitenlaag)', 'sphingolipid (outer layer)')], [PE, L3('fosfatidylethanolamine (binnenlaag)', 'phosphatidylethanolamine (inner layer)')], [PS, L3('fosfatidylserine (binnenlaag)', 'phosphatidylserine (inner layer)')]],
   simplified: {
     nl: 'Schematisch: echte membranen bevatten honderden soorten lipiden en veel meer eiwit, en alles beweegt voortdurend. Kleuren en vormen zijn vereenvoudigd; de verhouding tussen dikte en eiwitgrootte klopt ongeveer (een helix is ongeveer 1 nm breed). De suikerlaag (glycocalyx) is in werkelijkheid veel dichter en meestal tientallen tot honderden nanometer dik.',
@@ -131,11 +143,11 @@ export default {
         $('db-lip').innerHTML = g;
         // ---- eiwitten en suikers ----
         let pr = '';
-        // receptor: bundel helices door het membraan, waterminnende lussen boven en onder
+        // receptor met zeven helices door het membraan (zoals een GPCR; hier naast elkaar uitgevouwen), waterminnende lussen boven en onder
         const c1b = (PROT1[0] + PROT1[1]) / 2, c1 = c1b + mv(c1b), x2b = (PROT2[0] + PROT2[1]) / 2, x2 = x2b + mv(x2b);
         let ch = '';
-        for (let k = 0; k < 5; k++) ch += tmHelix(c1 - 2 * HW + k * HW, TOP - 6, BOT + 6, PROT, 1, HW);
-        ch += eiwit(c1, TOP - 34, 98, 30, PROT, { seed: 21 }) + eiwit(c1, BOT + 30, 88, 26, PROT, { seed: 22 });
+        for (let k = 0; k < 7; k++) ch += tmHelix(c1 - 3 * HW + k * HW, TOP - 6, BOT + 6, PROT, 1, HW);
+        ch += eiwit(c1, TOP - 34, 136, 30, PROT, { seed: 21 }) + eiwit(c1, BOT + 30, 126, 26, PROT, { seed: 22 });
         pr += `<g data-node="signaal" data-color="${PROT}" data-label="${T2('Receptoren vangen signalen', 'Receptors catch signals')}">${ch}<circle data-anchor="signaal" cx="${f1(c1 - 30)}" cy="${TOP - 150}" r="1" fill="none"/></g>`;
         // eiwit met één helix en een grote kop buiten
         const p2 = tmHelix(x2, TOP - 4, BOT + 4, PROT, 1, HW) + eiwit(x2, TOP - 60, 70, 46, PROT, { seed: 23 }) + eiwit(x2 + 6, BOT + 22, 30, 18, PROT, { seed: 24 });
@@ -151,8 +163,8 @@ export default {
         }
         const kSug = Math.max(at(6), fade0, step === 7 ? 1 : 0);
         if (kSug > .01) {
-          let sg = glycan(x2 - 20, TOP - 104, 5, kSug, 3) + glycan(x2 + 22, TOP - 100, 4, kSug, 4) + glycan(c1 + 50, TOP - 62, 4, kSug, 5);
-          for (const l of LIPIDS) if (l.gsl) sg += glycan(l.x + mv(l.x), TOP, 3, kSug * .9, l.x);      // suikers op glycosfingolipiden
+          let sg = nGlycan(x2 - 20, TOP - 104, kSug) + nGlycan(x2 + 24, TOP - 100, kSug) + nGlycan(c1 + 60, TOP - 62, kSug);
+          for (const l of LIPIDS) if (l.gsl) sg += gslGlycan(l.x + mv(l.x), TOP, kSug);      // suikers op glycosfingolipiden
           pr += `<g data-node="glyco" data-color="${SUGAR}" data-label="${T2('Suikers erop zetten', 'Adding the sugars')}">${sg}<circle data-anchor="glyco" cx="${f1(1470 + mv(1470))}" cy="${TOP - 60}" r="1" fill="none"/></g>`;
         }
         $('db-prot').innerHTML = pr;
@@ -164,7 +176,7 @@ export default {
             `<g clip-path="url(#db-celclip)"><circle cx="${ccx}" cy="${ccy}" r="${cr}" fill="rgba(201,165,116,.14)" stroke="${PC}" stroke-width="6"/></g>` +
             T(ccx, 290, T2('cel', 'cell'), { size: 22, col: C.mem }) +
             `<rect x="${ccx - 14}" y="${ccy - cr - 14}" width="28" height="28" fill="none" stroke="#ffd166" stroke-width="3"/>` +
-            `<path d="M${ccx - 14},${ccy - cr + 14} L${px + 10},${TOP - 8} M${ccx + 14},${ccy - cr + 14} L${px + pw - 10},${TOP - 8}" stroke="#ffd166" stroke-width="2" stroke-dasharray="6 5" opacity=".75"/>` +
+            `<path d="M${ccx - 14},${ccy - cr + 14} L${px + 30},${TOP - 50} M${ccx + 14},${ccy - cr + 14} L${px + pw - 30},${TOP - 50}" stroke="#ffd166" stroke-width="2" stroke-dasharray="6 5" opacity=".75"/>` +
             T(ccx + 24, ccy - cr - 18, T2('ingezoomd', 'zoomed in'), { size: 22, col: '#ffd166', anchor: 'start' }) + '</g>';
         }
         const o1 = only(1);
