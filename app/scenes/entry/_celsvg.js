@@ -38,6 +38,13 @@ export function sceneCel() {
       erRibo += ribosoomKlein(x, y, { s: .5, rot: a + (k % 2) * 4 + 90 });
     }
   }
+  // ER-lumen loopt door in de ruimte tussen de twee kernmembranen: korte halzen tussen het buitenste kernmembraan en de
+  // binnenste ER-zak (tussen twee poriën), zodat de ER-zakken niet los naast de kern liggen.
+  for (const a of [0, 60, 100]) {
+    const [x0, y0] = P(a, nr + 10), [x1, y1] = P(a, nr + 28), t = (a + 90) * Math.PI / 180, dx = Math.cos(t) * 5.5, dy = Math.sin(t) * 5.5;
+    er += `<path d="M${f1(x0 + dx)},${f1(y0 + dy)} L${f1(x1 + dx)},${f1(y1 + dy)} L${f1(x1 - dx)},${f1(y1 - dy)} L${f1(x0 - dx)},${f1(y0 - dy)}Z" fill="rgba(143,179,232,.16)"/>` +
+      membraanPts([[x0 + dx, y0 + dy], [x1 + dx, y1 + dy]], { w: 4.5 }) + membraanPts([[x0 - dx, y0 - dy], [x1 - dx, y1 - dy]], { w: 4.5 });
+  }
   // centrosoom + microtubuli (sporen voor transport naar de kern)
   const mtoc = [600, 330];
   let mt = '';
@@ -47,7 +54,8 @@ export function sceneCel() {
   }
   const mito = [[1120, 250, 20], [1230, 520, -60], [1040, 740, 10], [470, 560, 70], [620, 740, -20], [980, 170, -10]]
     .map(([x, y, rot]) => mitochondrion(x, y, 42, 18, { rot, n: 4, w: 3.4 })).join('');
-  const lyso = [[1300, 380], [430, 460], [1180, 660]].map(([x, y]) => blaasje(x, y, 17, { lumen: 'rgba(141,108,196,.45)', w: 5.5 })).join('');
+  const lyso = [[1290, 405], [430, 460], [1180, 660]]   // volledig in het cytosol, los van het plasmamembraan
+   .map(([x, y]) => blaasje(x, y, 17, { lumen: 'rgba(141,108,196,.45)', w: 5.5 })).join('');
   // vrije polysomen in het cytosol: ribosomen (twee eenheden) op één mRNA
   let poly = '';
   for (const [x, y] of [[1150, 380], [1190, 440], [1110, 470]]) {
@@ -58,16 +66,12 @@ export function sceneCel() {
   const virion = (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})">${capsid(22, { fibre: 15, hexons: false })}${viralGenome(17, 1, false)}</g>`;
   // lipidenanodeeltje met mRNA
   const lnp = (x, y) => `<g transform="translate(${x} ${y})">${lnpParticle(24)}</g>`;
-  // EGF-receptor: dimeer, per monomeer een domein buiten, één transmembraanhelix en een kinasedomein in het cytosol
-  const egfr = a => {
+  // EGF-receptor zonder EGF: een monomeer (domein buiten, één transmembraanhelix, kinasedomein in het cytosol).
+  // Pas als EGF bindt, vormen twee receptoren een dimeer (ligand-geïnduceerde dimerisatie, Alberts/MBoC hfst. 15).
+  const egfr = (a, k = 0) => {
     const [x, y] = memAt(a), rot = normAt(a) + 90;
-    let g = `<g transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(rot)})">`;
-    for (const k of [-1, 1]) {
-      g += tmHelix(k * 8, -10, 10, C.prot, 1, 6);
-      g += eiwit(k * 9, -24, 8, 11, C.prot, { seed: 21 + k, bumps: .08 });
-      g += eiwit(k * 9, 21, 8.5, 8, '#b9a6ff', { seed: 24 + k, bumps: .08 });
-    }
-    return g + '</g>';
+    return `<g transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(rot)})">` + tmHelix(0, -10, 10, C.prot, 1, 6) +
+      eiwit(1, -24, 8, 11, C.prot, { seed: 21 + k, bumps: .08 }) + eiwit(1, 21, 8.5, 8, '#b9a6ff', { seed: 24 + k, bumps: .08 }) + '</g>';
   };
 
   const [px, py] = P(215, nr + 4);
@@ -117,9 +121,9 @@ export function sceneCel() {
       <g><g transform="scale(.55)">${virion(0, 0)}</g><animateMotion dur="7s" repeatCount="indefinite" path="${vPath}"/></g>
     </g>
     <g data-node="endocytose" data-color="${C.mem}" data-label="${L({ nl: 'Endosoom', en: 'Endosome' })}">
-      ${blaasje(330, 300, 40, { w: 8 })}${virion(330, 300, .6)}
-      ${blaasje(345, 650, 40, { w: 8 })}${lnp(345, 650)}
-      <circle data-anchor="endocytose" data-pos="below" cx="338" cy="700" r="1" fill="none"/>
+      ${blaasje(415, 325, 40, { w: 8 })}${virion(415, 325, .6)}
+      ${blaasje(425, 632, 40, { w: 8 })}${lnp(425, 632)}
+      <circle data-anchor="endocytose" data-pos="below" cx="425" cy="682" r="1" fill="none"/>
     </g>
     <!-- route 2: mRNA in lipidenanodeeltje -->
     <g data-node="lnp" data-color="${C.trna}" data-label="${L({ nl: 'mRNA-vaccin (LNP)', en: 'mRNA vaccine (LNP)' })}">
@@ -134,7 +138,7 @@ export function sceneCel() {
     <g data-node="signaal" data-color="${C.prot}" data-label="${L({ nl: 'Signaalmolecule (EGF)', en: 'Signal molecule (EGF)' })}">
       <circle data-anchor="signaal" cx="1350" cy="118" r="1" fill="none"/>
       <rect x="1235" y="110" width="200" height="130" fill="transparent"/>
-      ${egfr(-41)}${egfr(-37)}
+      ${egfr(-44, 0)}${egfr(-35, 1)}
       ${[[1290, 170], [1335, 140], [1385, 180], [1400, 130]].map(([x, y], i) => `<g><path d="${eiwitPad(x, y, 8, 7, 11 + i, .12)}" fill="#5fd3e6" opacity="${i ? .85 : 1}"/><animateTransform attributeName="transform" type="translate" values="0 0;0 -6;0 0" dur="${3 + i * .7}s" repeatCount="indefinite"/></g>`).join('')}
     </g>
     <text x="110" y="120" fill="${C.muted}" font-size="22" font-family="Inter" opacity=".75">${L({ nl: 'extracellulair', en: 'extracellular' })}</text>

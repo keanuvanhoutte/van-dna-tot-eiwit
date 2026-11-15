@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, txt, cam, sub, ease, lerp, clamp, f1, rng, squiggle } from '../../kit.js';
 import { PINK } from './_bits.js';
+import { eiwit } from '../../bio.js';
 
 /* Zijpad: hoe integrase het provirus in een gastheerchromosoom bouwt. */
 const HOST = 640, Y0 = 330, H = 270;      // gastheer-DNA, basis van de virale lus, hoogte van de lus
@@ -27,8 +28,8 @@ export default {
     en: 'The intasome is drawn as one protein blob holding both DNA ends; in reality it is a symmetric complex of integrase subunits (a tetramer for HIV-1). The inserted provirus is drawn as a loop to save space; in the chromosome it simply lies in line. Base pairs are not drawn individually, so the 5 bp between the two insertion sites is symbolic. The capsid, LEDGF/p75 and the repair enzymes are schematic.' },
   steps: [
     ST(7000, cam(800, 385, 1350), 'Viraal DNA in de kern', 'Viral DNA in the nucleus',
-      'Het nieuwe virus-DNA, met aan elk uiteinde een herhaling (LTR), gaat samen met eiwitten de kern in.',
-      'The new viral DNA, with a repeat (LTR) at each end, enters the nucleus together with proteins.'),
+      'Het nieuwe virus-DNA is in de kern aangekomen. Aan elk uiteinde zit een herhaling (LTR).',
+      'The new viral DNA has arrived in the nucleus. At each end there is a repeat (LTR).'),
     ST(7000, cam(800, 300, 1000), 'Integrase grijpt het DNA vast', 'Integrase grabs the DNA',
       'Het virale enzym integrase grijpt beide uiteinden van het virus-DNA vast en houdt ze samen.',
       'The viral enzyme integrase grabs both ends of the viral DNA and holds them together.'),
@@ -68,7 +69,7 @@ export default {
       <g id="in-repair-body"></g>
     </g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Transcriptie van het provirus', 'Transcription of the provirus')}" id="in-txn" opacity="0">
-      <circle data-anchor="transcriptie" cx="560" cy="${HOST - 214}" r="1" fill="none"/>
+      <circle data-anchor="transcriptie" cx="690" cy="${HOST - 186}" r="1" fill="none"/>
       <g data-node="rnapol" data-color="${C.prot}" data-nolabel><g id="in-pol"></g></g>
       <g id="in-txn-body"></g>
     </g>
@@ -78,18 +79,19 @@ export default {
 
   init(svg) {
     const $ = id => svg.getElementById(id);
-    const loopD = y => `M${E1},${f1(y)} C380,${f1(y - 20)} 380,${f1(y - H)} 800,${f1(y - H)} C1220,${f1(y - H)} 1220,${f1(y - 20)} ${E2},${f1(y)}`;
+    /* de lus vertrekt steil omhoog uit de twee insertieplaatsen: de uiteinden zitten ín de opening van het gastheer-DNA, niet erop */
+    const loopD = y => `M${E1},${f1(y)} C${E1 - 30},${f1(y - 110)} 380,${f1(y - H)} 800,${f1(y - H)} C1220,${f1(y - H)} ${E2 + 30},${f1(y - 110)} ${E2},${f1(y)}`;
     const viral = (y, trimmed) => {
       const d = loopD(y);
       return `<path d="${d}" stroke="${PINK}" stroke-width="18" fill="none" stroke-linecap="${trimmed ? 'butt' : 'round'}"/>
         <path d="${d}" stroke="#2a0f24" stroke-width="4" fill="none"/>
         <path d="${d}" pathLength="1000" stroke="#ffd0ec" stroke-width="18" fill="none" stroke-dasharray="130 740 130" opacity=".55"/>
-        ${txt(610, y + 34, 'LTR', PINK, 20)}${txt(990, y + 34, 'LTR', PINK, 20)}
+        ${txt(E1 - 92, y - 40, 'LTR', PINK, 20)}${txt(E2 + 92, y - 40, 'LTR', PINK, 20)}
         ${txt(800, y - H - 24, L({ nl: 'gag · pol · env (≈ 9,7 kb)', en: 'gag · pol · env (≈ 9.7 kb)' }), C.text, 19)}`;
     };
+    /* intasoom: een kluwen van integrase-subeenheden (bobbelige eiwitten) rond de twee DNA-uiteinden */
     const intasome = (y, op) => op <= .01 ? '' : `<g transform="translate(800 ${f1(y)})" opacity="${f1(op)}">
-      <ellipse rx="92" ry="56" fill="rgba(155,123,255,.28)" stroke="${C.prot}" stroke-width="3"/>
-      ${[[-40, -14], [40, -14], [-40, 16], [40, 16]].map(([x, yy]) => `<circle cx="${x}" cy="${yy}" r="17" fill="${C.prot}" opacity=".6"/>`).join('')}
+      ${[[-44, -16, 46, 32], [44, -16, 46, 32], [-36, 20, 40, 28], [36, 20, 40, 28]].map(([x, yy, rx, ry], i) => eiwit(x, yy, rx, ry, C.prot, { seed: 70 + i, bumps: .12 })).join('')}
       ${txt(0, -70, L({ nl: 'intasoom (integrase)', en: 'intasome (integrase)' }), C.prot, 19)}</g>`;
 
     return {
@@ -118,7 +120,7 @@ export default {
 
         /* herstel: 5-bp duplicatie aan weerszijden */
         const rOn = step === 4 ? ease(sub(p, .25, .6)) : step > 4 ? 1 : 0;
-        $('in-repair').setAttribute('opacity', f1(step === 4 ? rOn : 0));
+        $('in-repair').setAttribute('opacity', f1(rOn));   // de 5-bp-duplicatie blijft zichtbaar
         $('in-repair-body').innerHTML = rOn > .01
           ? `<g opacity="${f1(rOn)}">${[[E1 - 26, E1], [E2, E2 + 26]].map(([a, b]) => `<rect x="${a}" y="${HOST - 14}" width="${b - a}" height="28" rx="4" fill="${C.chain}" opacity=".85"/>`).join('')}
              ${step === 4 ? `${txt(E1 - 70, HOST - 34, T2('herstel', 'repair'), C.chain, 17)}${txt(E2 + 70, HOST - 34, T2('herstel', 'repair'), C.chain, 17)}` : ''}</g>` : '';
@@ -127,9 +129,9 @@ export default {
         const txnOn = step === 6 ? ease(sub(p, .15, .55)) : 0;
         $('in-txn').setAttribute('opacity', f1(txnOn));
         $('in-pol').innerHTML = txnOn > .01
-          ? `<g transform="translate(520 ${HOST - 150})"><ellipse rx="54" ry="40" fill="rgba(155,123,255,.3)" stroke="${C.prot}" stroke-width="3"/>${txt(0, 7, 'Pol II', '#e8edf7', 20)}</g>` : '';
+          ? `<g transform="translate(650 ${HOST - 122})">${eiwit(0, 0, 56, 42, C.prot, { seed: 12, bumps: .1 })}${txt(0, 7, 'Pol II', '#e8edf7', 20)}</g>` : '';
         $('in-txn-body').innerHTML = txnOn > .01
-          ? `<g transform="translate(520 ${HOST - 150})"><path d="M-40,-30 q-60,-60 -140,-50" stroke="${C.rna}" stroke-width="6" fill="none"/>${txt(-230, -96, T2('viraal mRNA', 'viral mRNA'), C.rna, 20)}</g>
+          ? `<g transform="translate(650 ${HOST - 122})"><path d="M-40,-30 q-60,-60 -140,-50" stroke="${C.rna}" stroke-width="6" fill="none"/>${txt(-230, -96, T2('viraal mRNA', 'viral mRNA'), C.rna, 20)}</g>
              ${txt(520, HOST + 60, T2('linker-LTR = promoter', 'left LTR = promoter'), PINK, 19)}` : '';
 
         /* notities */

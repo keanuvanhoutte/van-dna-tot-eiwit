@@ -1,7 +1,11 @@
 import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { PINK } from './_bits.js';
 
-/* Zijpad: de zeven Baltimore-klassen. Eén rij per klasse; elke stap licht er één uit. */
+/* Zijpad: de zeven Baltimore-klassen. Eén rij per klasse; elke stap licht er één uit.
+ * Klasse VII (hepatitis B): het cccDNA in de kern wordt door het RNA-polymerase II van de cel afgeschreven tot de mRNA's
+ * en het pregenomisch RNA (pgRNA); reverse transcriptase (P-eiwit) zet het pgRNA pas bij de replicatie, in het capside,
+ * om naar nieuw DNA (Beck & Nassal, World J Gastroenterol 2007, 13:48–64; Baltimore, Bacteriol Rev 1971). */
+const POL2 = '#5fd3e6';
 const Y0 = 170, DY = 108;
 const rowY = i => Y0 + i * DY;
 /* camera per klasse: zoom op de rij, maar blijf binnen de figuur (geen lege helft boven/onder) */
@@ -18,7 +22,8 @@ const CLASSES = [
   { n: 'IV', g: '(+)ssRNA', gl: { nl: 'genoom ís al mRNA', en: 'genome already is mRNA' }, ex: { nl: 'poliovirus, SARS-CoV-2', en: 'poliovirus, SARS-CoV-2' }, mid: [] },
   { n: 'V', g: '(−)ssRNA', gl: { nl: 'complement van mRNA', en: 'complement of mRNA' }, ex: { nl: 'influenza, mazelen, ebola', en: 'influenza, measles, Ebola' }, mid: [{ t: 'RdRp', c: C.prot, lab: { nl: 'viraal enzym', en: 'viral enzyme' } }] },
   { n: 'VI', g: 'ssRNA-RT', gl: { nl: 'RNA → DNA → genoom', en: 'RNA → DNA → genome' }, ex: { nl: 'HIV-1', en: 'HIV-1' }, mid: [{ t: 'RT', c: C.trna, lab: { nl: 'reverse transcriptase', en: 'reverse transcriptase' } }, { t: 'dsDNA', c: C.dna }] },
-  { n: 'VII', g: 'dsDNA-RT', gl: { nl: 'DNA met RNA-tussenstap', en: 'DNA with RNA intermediate' }, ex: { nl: 'hepatitis B-virus', en: 'hepatitis B virus' }, mid: [{ t: 'RT', c: C.trna, lab: { nl: 'bij de replicatie', en: 'during replication' } }] },
+  { n: 'VII', g: 'dsDNA-RT', gl: { nl: 'DNA met RNA-tussenstap', en: 'DNA with RNA intermediate' }, ex: { nl: 'hepatitis B-virus', en: 'hepatitis B virus' }, mid: [{ t: 'Pol II', c: POL2, lab: { nl: 'van de cel', en: "host cell's" } }],
+    side: { nl: 'kopiëren: RNA → RT → DNA', en: 'copying: RNA → RT → DNA' } },
 ];
 /* toestand per stap: rij-opaciteit en detail-opaciteit (stap 0 = overzicht, stap k = klasse k-1) */
 const rowOp = (step, i) => (step === 0 || i === step - 1 ? 1 : .14);
@@ -44,7 +49,7 @@ function nuc(x, y, w, kind) {
 const hot = (node, col, s) => node ? `<g data-node="${node}" data-color="${col}" data-nolabel>${s}</g>` : s;
 /* knoop per genoomtype en per tussenstap */
 const GENOME_NODE = { dsDNA: 'dnahelix', ssDNA: 'ssdna', '(+)ssRNA': 'translatie', 'ssRNA-RT': 'rt' };
-const MID_NODE = { dsDNA: 'dnahelix', RT: 'rt' };
+const MID_NODE = { dsDNA: 'dnahelix', RT: 'rt', 'Pol II': 'rnapol' };
 const arrow = (x0, x1, y) =>
   `<line x1="${f1(x0)}" y1="${f1(y)}" x2="${f1(x1)}" y2="${f1(y)}" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)" opacity=".8"/>`;
 
@@ -53,7 +58,7 @@ export default {
   title: { nl: 'Baltimore-klassen', en: 'Baltimore classification' },
   scale: { nl: 'genoomniveau', en: 'genome level' }, time: { nl: 'n.v.t. (indeling)', en: 'n/a (classification)' },
   org: { nl: 'virussen van dieren, planten en bacteriën', en: 'viruses of animals, plants and bacteria' },
-  legend: [[C.dna, 'DNA'], [C.rna, 'RNA / mRNA'], [C.prot, { nl: 'viraal RNA-polymerase (RdRp)', en: 'viral RNA polymerase (RdRp)' }], [C.trna, { nl: 'reverse transcriptase', en: 'reverse transcriptase' }]],
+  legend: [[C.dna, 'DNA'], [C.rna, 'RNA / mRNA'], [C.prot, { nl: 'viraal RNA-polymerase (RdRp)', en: 'viral RNA polymerase (RdRp)' }], [C.trna, { nl: 'reverse transcriptase', en: 'reverse transcriptase' }], [POL2, { nl: 'RNA-polymerase II van de cel', en: 'host RNA polymerase II' }]],
   simplified: {
     nl: 'Dit is een indeling naar "hoe komt dit genoom aan mRNA?", niet naar verwantschap. Per klasse tonen we één schematische route; details (segmenten, subgenomische RNA\'s, capping door virale enzymen, waar in de cel het gebeurt) zijn weggelaten. Het pokkenvirus is klasse I maar repliceert in het cytoplasma, met zijn eigen RNA-polymerase — de uitzondering die de regel bevestigt.',
     en: 'This is a classification by "how does this genome get to mRNA?", not by relatedness. Per class we show one schematic route; details (segments, subgenomic RNAs, capping by viral enzymes, where in the cell it happens) are omitted. Poxvirus is class I but replicates in the cytoplasm, using its own RNA polymerase — the exception that proves the rule.' },
@@ -80,8 +85,8 @@ export default {
       'Retrovirussen zoals HIV-1 maken van hun RNA eerst DNA en bouwen dat in het DNA van de cel in.',
       'Retroviruses such as HIV-1 first make DNA from their RNA and insert it into the cell’s DNA.'),
     ST(7000, rowCam(6), 'Klasse VII: DNA via een RNA-tussenstap', 'Class VII: DNA via an RNA step',
-      'Hepatitis B heeft DNA, maar kopieert zich via een RNA-tussenstap die weer naar DNA wordt omgezet.',
-      'Hepatitis B has DNA, but copies itself through an RNA step that is turned back into DNA.'),
+      'Hepatitis B heeft DNA: de cel maakt er gewoon mRNA van. Om zich te kopiëren zet het virus een RNA-kopie weer om naar DNA.',
+      'Hepatitis B has DNA: the cell simply makes mRNA from it. To copy itself, the virus turns an RNA copy back into DNA.'),
   ],
 
   svg() {
@@ -107,7 +112,8 @@ export default {
           ${txt(XG + WG / 2, y + 44, L(c.gl), C.muted, 20)}
           ${det}
           ${txt(XR + WR / 2, y - 24, 'mRNA', C.rna, 22)}
-          ${txt(XE, y + 8, L(c.ex), C.text, 21, 'start', 500)}
+          ${txt(XE, c.side ? y - 4 : y + 8, L(c.ex), C.text, 21, 'start', 500)}
+          ${c.side ? txt(XE, y + 28, '↺ ' + L(c.side), C.trna, 19, 'start', 600) : ''}
         </g>
       </g>`;
     });

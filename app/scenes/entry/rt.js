@@ -21,6 +21,9 @@ const trna = (x, y, op = 1) => `<g transform="translate(${f1(x)} ${f1(y)})" opac
 const enz = (x, y, lab, col) => `<g transform="translate(${f1(x)} ${f1(y)})"><ellipse rx="${Math.max(34, lab.length * 6.5)}" ry="24" fill="rgba(155,123,255,.22)" stroke="${col}" stroke-width="2.5"/>${txt(0, 6, lab, col, 18)}</g>`;
 
 /* tRNA-primer na de strengoverdracht: klikbaar (zelfde doel als de tRNA-hotspot in stap 1–2), zonder extra label */
+/* 5'/3'-labels aan de uiteinden van een streng (nodig om de sprongen te volgen) */
+const P5 = "5'", P3 = "3'";
+const end = (x, y, lab, col) => txt(x, y + 6, lab, col, 17);
 const trnaHot = (x, y) => `<g data-node="trna" data-href="../atlas/index.html?id=trna" data-color="${TRC}" data-nolabel>${trna(x, y)}</g>`;
 
 export default {
@@ -79,8 +82,9 @@ export default {
       ${box(...SEG.PBS, laneY(1), 'PBS', '#ffb27a')}
       ${trna(SEG.PBS[1], laneY(1) + 30)}
       ${strand(SEG.R5[0], SEG.PBS[0], laneY(1) + 30, DNAC, 1, 7)}
-      ${txt((SEG.R5[0] + SEG.PBS[0]) / 2, laneY(1) + 56, L({ nl: 'nieuw DNA (R-U5)', en: 'new DNA (R-U5)' }), DNAC, 18)}
-      ${enz(SEG.R5[0] - 60, laneY(1) + 16, 'RT', C.prot)}`);
+      ${txt(SEG.R5[0] + 52, laneY(1) + 62, L({ nl: 'nieuw DNA (R-U5)', en: 'new DNA (R-U5)' }), DNAC, 18, 'start')}
+      ${enz(SEG.R5[0] + 6, laneY(1) + 62, 'RT', C.prot)}
+      ${end(SEG.R5[0] - 24, laneY(1), P5, RNAC)}${end(SEG.R3[1] + 24, laneY(1), P3, RNAC)}${end(SEG.R5[0] - 24, laneY(1) + 30, P3, DNAC)}`);
 
     /* 2 — RNase H */
     lanes.push(`${T(2, 'RNase H')}
@@ -88,14 +92,16 @@ export default {
       ${strand(SEG.PBS[0], SEG.R3[1], laneY(2), RNAC, .8, 6)}
       ${strand(SEG.R5[0], SEG.PBS[0], laneY(2) + 30, DNAC, 1, 7)}${trna(SEG.PBS[1], laneY(2) + 30)}
       ${enz(SEG.R5[0] + 20, laneY(2) - 40, 'RNase H', C.prot)}
-      ${txt((SEG.R5[0] + SEG.U5[1]) / 2, laneY(2) + 58, L({ nl: 'RNA afgebroken', en: 'RNA degraded' }), C.muted, 18)}`);
+      ${txt((SEG.R5[0] + SEG.U5[1]) / 2, laneY(2) + 58, L({ nl: 'RNA afgebroken', en: 'RNA degraded' }), C.muted, 18)}
+      ${end(SEG.R3[1] + 24, laneY(2), P3, RNAC)}${end(SEG.R5[0] - 24, laneY(2) + 30, P3, DNAC)}`);
 
     /* 3 — eerste strengoverdracht */
     lanes.push(`${T(3, L({ nl: '1ᵉ strengoverdracht', en: '1st strand transfer' }))}
       ${strand(SEG.PBS[0], SEG.R3[1], laneY(3), RNAC, .8, 6)}${box(...SEG.R3, laneY(3), 'R', RNAC)}
       ${strand(SEG.U3[1], SEG.R3[1], laneY(3) + 30, DNAC, 1, 7)}${trnaHot(SEG.R3[1] + 72, laneY(3) + 30)}
       <path d="M${SEG.R5[0] + 30},${laneY(3) + 46} C600,${laneY(3) + 92} 1100,${laneY(3) + 92} ${SEG.U3[1] + 20},${laneY(3) + 46}" stroke="${DNAC}" stroke-width="3" fill="none" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
-      ${txt(880, laneY(3) + 112, L({ nl: 'het DNA springt naar de andere R', en: 'the DNA jumps to the other R' }), DNAC, 17)}`);
+      ${txt(880, laneY(3) + 112, L({ nl: 'het DNA springt naar de andere R', en: 'the DNA jumps to the other R' }), DNAC, 17)}
+      ${end(SEG.PBS[0] - 24, laneY(3), P5, RNAC)}${end(SEG.U3[1] - 24, laneY(3) + 30, P3, DNAC)}`);
 
     /* 4 — (−)-streng compleet, alleen PPT blijft */
     lanes.push(`${T(4, L({ nl: '(−)-streng compleet', en: '(−) strand complete' }))}
@@ -103,14 +109,16 @@ export default {
       ${box(...SEG.PPT, laneY(4), 'PPT', '#ffb27a')}
       ${strand(SEG.PBS[0], SEG.R3[1], laneY(4) + 30, DNAC, 1, 7)}${trnaHot(SEG.R3[1] + 72, laneY(4) + 30)}
       ${txt(760, laneY(4) + 56, L({ nl: '(−)-DNA-streng', en: '(−) DNA strand' }), DNAC, 18)}
-      ${enz(SEG.PBS[0] - 70, laneY(4) + 14, 'RT', C.prot)}`);
+      ${enz(SEG.PBS[0] - 70, laneY(4) + 14, 'RT', C.prot)}
+      ${end(SEG.PBS[0] - 20, laneY(4) + 52, P3, DNAC)}`);
 
     /* 5 — (+)-streng vanaf de PPT */
     lanes.push(`${T(5, L({ nl: '(+)-streng start', en: '(+) strand starts' }))}
       ${strand(SEG.PBS[0], SEG.R3[1], laneY(5) + 16, DNAC, 1, 7)}${trnaHot(SEG.R3[1] + 72, laneY(5) + 16)}
       ${box(...SEG.PPT, laneY(5) - 16, 'PPT', '#ffb27a')}
       ${strand(SEG.PPT[1], SEG.R3[1] + 60, laneY(5) - 16, C.dna2, 1, 7)}
-      ${txt(1170, laneY(5) - 52, L({ nl: '(+)-DNA: U3-R-U5-PBS', en: '(+) DNA: U3-R-U5-PBS' }), C.dna2, 18)}`);
+      ${txt(1170, laneY(5) - 52, L({ nl: '(+)-DNA: U3-R-U5-PBS', en: '(+) DNA: U3-R-U5-PBS' }), C.dna2, 18)}
+      ${end(SEG.PBS[0] - 24, laneY(5) + 16, P3, DNAC)}${end(SEG.R3[1] + 84, laneY(5) - 16, P3, C.dna2)}`);
 
     /* 6 — tweede strengoverdracht */
     lanes.push(`${T(6, L({ nl: '2ᵉ strengoverdracht', en: '2nd strand transfer' }))}
@@ -119,7 +127,8 @@ export default {
       ${strand(SEG.PPT[1], SEG.R3[1] + 60, laneY(6) - 16, C.dna2, 1, 7)}
       ${box(SEG.R3[1] - 10, SEG.R3[1] + 60, laneY(6) - 16, 'PBS', '#8fb3ff')}
       <path d="M${SEG.R3[1] + 25},${laneY(6) - 34} C1250,${laneY(6) - 80} 560,${laneY(6) - 80} ${(SEG.PBS[0] + SEG.PBS[1]) / 2},${laneY(6) - 2}" stroke="#8fb3ff" stroke-width="3" fill="none" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
-      ${txt(880, laneY(6) + 60, L({ nl: 'tRNA en PPT weggeknipt', en: 'tRNA and PPT removed' }), C.muted, 18)}`);
+      ${txt(880, laneY(6) + 60, L({ nl: 'tRNA en PPT weggeknipt', en: 'tRNA and PPT removed' }), C.muted, 18)}
+      ${end(SEG.PBS[0] - 24, laneY(6) + 16, P3, DNAC)}${end(SEG.R3[1] + 24, laneY(6) + 16, P5, DNAC)}${end(SEG.PPT[1] - 24, laneY(6) - 16, P5, C.dna2)}`);
 
     /* 7 — lineair dsDNA met LTR's */
     const L1 = [330, 560], L2 = [1130, 1360];
@@ -128,7 +137,8 @@ export default {
       ${box(L1[0], L1[1], laneY(7), 'LTR: U3-R-U5', '#8fb3ff', 1, 26)}
       ${box(L2[0], L2[1], laneY(7), 'LTR: U3-R-U5', '#8fb3ff', 1, 26)}
       ${txt((L1[1] + L2[0]) / 2, laneY(7) - 24, L({ nl: 'gag · pol · env', en: 'gag · pol · env' }), C.text, 18)}
-      ${txt(880, laneY(7) + 52, L({ nl: 'dubbelstrengig DNA — klaar voor integratie', en: 'double-stranded DNA — ready for integration' }), C.text, 18)}`);
+      ${txt(880, laneY(7) + 52, L({ nl: 'dubbelstrengig DNA — klaar voor integratie', en: 'double-stranded DNA — ready for integration' }), C.text, 18)}
+      ${end(L1[0] - 24, laneY(7) - 9, P3, DNAC)}${end(L2[1] + 24, laneY(7) - 9, P5, DNAC)}${end(L1[0] - 24, laneY(7) + 13, P5, C.dna2)}${end(L2[1] + 24, laneY(7) + 13, P3, C.dna2)}`);
 
     return svgOpen() + `
     ${txt(620, 206, T2('Van (+)RNA naar dubbelstrengig DNA', 'From (+)RNA to double-stranded DNA'), C.muted, 20)}
@@ -138,8 +148,7 @@ export default {
       <rect x="1175" y="${440 + 78}" width="170" height="44" rx="12" fill="rgba(79,143,247,.12)" stroke="${C.dna}" stroke-dasharray="6 5"/>
       ${txt(1260, 440 + 106, T2('integrase →', 'integrase →'), C.dna, 18)}
     </g>
-    <g data-node="baltimore" data-color="${C.trna}" data-label="${T2('Baltimore-klasse VI', 'Baltimore class VI')}">
-      <circle data-anchor="baltimore" data-pos="below" cx="1230" cy="232" r="1" fill="none"/>
+    <g data-node="baltimore" data-color="${C.trna}" data-nolabel>
       <rect x="1100" y="176" width="260" height="46" rx="12" fill="rgba(255,194,71,.08)" stroke="${C.trna}" stroke-dasharray="6 5"/>
       ${txt(1230, 206, T2('Baltimore-klasse VI', 'Baltimore class VI'), C.trna, 18)}
     </g>

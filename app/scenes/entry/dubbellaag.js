@@ -147,7 +147,13 @@ export default {
         const c1b = (PROT1[0] + PROT1[1]) / 2, c1 = c1b + mv(c1b), x2b = (PROT2[0] + PROT2[1]) / 2, x2 = x2b + mv(x2b);
         let ch = '';
         for (let k = 0; k < 7; k++) ch += tmHelix(c1 - 3 * HW + k * HW, TOP - 6, BOT + 6, PROT, 1, HW);
-        ch += eiwit(c1, TOP - 34, 136, 30, PROT, { seed: 21 }) + eiwit(c1, BOT + 30, 126, 26, PROT, { seed: 22 });
+        /* lussen tussen opeenvolgende helices: N-uiteinde buiten, dan beurtelings een lus binnen (ICL) en buiten (ECL),
+           C-uiteinde binnen (bouw van een receptor met zeven helices; Alberts/MBoC hfst. 15) */
+        const hx = k => c1 - 3 * HW + k * HW, lus = (k, boven) => { const xa = hx(k), xb = hx(k + 1), y = boven ? TOP - 6 : BOT + 6, d = boven ? -1 : 1, h = boven && k === 3 ? 46 : 26;
+          return `<path d="M${f1(xa)},${f1(y)} C${f1(xa - 4)},${f1(y + d * h)} ${f1(xb + 4)},${f1(y + d * h)} ${f1(xb)},${f1(y)}" stroke="${PROT}" stroke-width="${f1(HW * .55)}" fill="none" stroke-linecap="round" opacity=".85"/>`; };
+        for (let k = 0; k < 6; k++) ch += lus(k, k % 2 === 1);
+        ch += `<path d="M${f1(hx(0))},${f1(TOP - 6)} q-6,-30 -34,-40 t-30,-14" stroke="${PROT}" stroke-width="${f1(HW * .55)}" fill="none" stroke-linecap="round" opacity=".85"/>`;   // N-uiteinde (buiten)
+        ch += `<path d="M${f1(hx(6))},${f1(BOT + 6)} q4,20 30,22 l40,0 q20,2 26,24" stroke="${PROT}" stroke-width="${f1(HW * .55)}" fill="none" stroke-linecap="round" opacity=".85"/>`;     // C-uiteinde (cytosol)
         pr += `<g data-node="signaal" data-color="${PROT}" data-label="${T2('Receptoren vangen signalen', 'Receptors catch signals')}">${ch}<circle data-anchor="signaal" cx="${f1(c1 - 30)}" cy="${TOP - 150}" r="1" fill="none"/></g>`;
         // eiwit met één helix en een grote kop buiten
         const p2 = tmHelix(x2, TOP - 4, BOT + 4, PROT, 1, HW) + eiwit(x2, TOP - 60, 70, 46, PROT, { seed: 23 }) + eiwit(x2 + 6, BOT + 22, 30, 18, PROT, { seed: 24 });
@@ -163,7 +169,7 @@ export default {
         }
         const kSug = Math.max(at(6), fade0, step === 7 ? 1 : 0);
         if (kSug > .01) {
-          let sg = nGlycan(x2 - 20, TOP - 104, kSug) + nGlycan(x2 + 24, TOP - 100, kSug) + nGlycan(c1 + 60, TOP - 62, kSug);
+          let sg = nGlycan(x2 - 20, TOP - 104, kSug) + nGlycan(x2 + 24, TOP - 100, kSug) + nGlycan(c1 - 3 * HW - 34, TOP - 46, kSug);   // op het N-uiteinde van de receptor
           for (const l of LIPIDS) if (l.gsl) sg += gslGlycan(l.x + mv(l.x), TOP, kSug);      // suikers op glycosfingolipiden
           pr += `<g data-node="glyco" data-color="${SUGAR}" data-label="${T2('Suikers erop zetten', 'Adding the sugars')}">${sg}<circle data-anchor="glyco" cx="${f1(1470 + mv(1470))}" cy="${TOP - 60}" r="1" fill="none"/></g>`;
         }

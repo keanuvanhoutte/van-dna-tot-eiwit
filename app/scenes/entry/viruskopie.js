@@ -8,14 +8,21 @@ import { cisterne } from '../../bio.js';
  * proteasen (PLpro in nsp3, Mpro = nsp5) knippen die in 15–16 niet-structurele eiwitten (nsp1–16). Die vormen het replicatie-
  * en transcriptiecomplex met het RNA-afhankelijke RNA-polymerase (nsp12) in blaasjes met een dubbel membraan, afgeleid van het ER;
  * een moleculaire porie (nsp3) laat RNA naar het cytosol. Bronnen: V'kovski et al. 2021, Snijder et al. 2020, Wolff et al. 2020.
+ * Fix-ronde 15-11-2026 (V'kovski et al., Nat Rev Microbiol 2021, 19:155-170): ORF1a en ORF1b beslaan twee derde van het
+ * genoom; de ribosomen vertalen dus alleen dat deel tot pp1a/pp1ab (de keten groeit uit de tunnel van de grote eenheid).
+ * Het laatste derde (S, E, M, N ...) wordt van subgenomische mRNA's vertaald. Twee cysteineproteasen in de keten zelf knippen:
+ * PLpro in nsp3 en Mpro (3CLpro) = nsp5. Het replicatiecomplex is verankerd aan het membraan van de blaasjes (DMV's);
+ * een porie (nsp3) verbindt het binnenste van het blaasje (dsRNA) met het cytosol.
  */
 const L3 = (nl, en) => ({ nl, en });
 const RY = 250, X0 = 150, X1 = 1110, CY = 380;            // RNA-hoogte, begin/einde van het genoom, hoogte van de keten
-const N = 16, SEG = (X1 - X0) / N;                          // 16 stukken (nsp1–16)
+const XO = X0 + (X1 - X0) * 2 / 3;                          // einde van ORF1a/1ab (≈ 2/3 van het genoom)
+const N = 16, SEG = (XO - X0) / N;                          // 16 stukken (nsp1–16)
+const SCH = [2, 4];                                          // nsp3 (PLpro) en nsp5 (Mpro): de scharen in de keten
 const MACH = [3, 6, 7, 9, 10, 11, 12, 13];                  // stukken die (o.a.) de kopieermachine vormen (nsp3–4–6 membraan, nsp7–8–12 polymerase, 9, 10, 13)
-const SEGCOL = i => MACH.includes(i) ? (i === 11 ? COPY : C.prot) : ['#7fdc6a', '#5fb85a', '#a6e38f'][i % 3];
+const SEGCOL = i => SCH.includes(i) ? CUT : MACH.includes(i) ? (i === 11 ? COPY : C.prot) : ['#7fdc6a', '#5fb85a', '#a6e38f'][i % 3];
 const DV = [[1270, 650, 120], [1060, 720, 78], [1480, 720, 80]];   // blaasjes met dubbel membraan
-const MX = 1270, MY = 650;                                  // plaats van de kopieermachine
+const MX = 1270, MY = 480;                                  // plaats van de kopieermachine: aan de cytosolkant van de porie bovenop het grote blaasje
 
 export default {
   id: 'viruskopie',
@@ -38,7 +45,7 @@ export default {
     { dur: 8500, cam: FULL, title: L3('De stukken bouwen een kopieermachine', 'The pieces build a copying machine'),
       text: L3('Een deel van de stukken vormt samen een kopieermachine voor RNA.', 'Some of the pieces together form a copying machine for RNA.') },
     { dur: 9000, cam: FULL, title: L3('Kopiëren in een beschermd blaasje', 'Copying inside a protected vesicle'),
-      text: L3('Het virus vervormt het ER tot blaasjes met een dubbel membraan. Daarin maakt de machine kopieën van het RNA.', 'The virus reshapes the ER into vesicles with a double membrane. Inside, the machine makes copies of the RNA.') },
+      text: L3('Het virus vervormt het ER tot blaasjes met een dubbel membraan. De machine zit aan zo’n blaasje vast en kopieert het RNA naar binnen.', 'The virus reshapes the ER into vesicles with a double membrane. The machine sits on such a vesicle and copies the RNA inside it.') },
     { dur: 9000, cam: FULL, title: L3('Nieuwe kopieën gaan door een poortje naar buiten', 'New copies leave through a small gate'),
       text: L3('De kopieën verlaten het blaasje door een poortje. Ze worden opnieuw afgelezen of ingepakt in nieuwe virussen.', 'The copies leave the vesicle through a small gate. They are read again or packed into new viruses.') },
   ],
@@ -91,17 +98,24 @@ export default {
         for (let k = 0; k < 3; k++) {
           const u = Math.max(0, run - k * .22);
           if (step === 0 && k > 0 && u <= 0) continue;
-          rb += ribo(lerp(X0 + 40, X1 - 30, Math.min(1, u)), RY + 4, .55, rOp);
+          rb += ribo(lerp(X0 + 40, XO, Math.min(1, u)), RY + 4, .55, rOp);
         }
         if (step === 0) rb += T(560, RY + 95, T2('ribosomen van de cel', 'ribosomes of the cell'), { size: 26, col: C.rrna, w: 700, op: ease(sub(p, .4, .6)) });
+        // het laatste derde van het genoom (S, E, M, N ...) wordt niet door deze ribosomen gelezen
+        rb += `<path d="M${f1(XO + 6)},${RY - 30} V${RY + 30}" stroke="${C.muted}" stroke-width="2" stroke-dasharray="5 5"/>` +
+          T((XO + X1) / 2 + 30, RY - 44, T2('S · E · M · N: later, via kortere kopieën', 'S · E · M · N: later, via shorter copies'), { size: 23, col: C.muted, w: 600, op: step <= 2 ? 1 : .6 });
         $('vk-ribo').innerHTML = rb;
 
         /* de lange keten (stap 1) → stukken (stap 2) → kopieermachine (stap 3–5) */
         let ch = '', fx = '';
         const grow = step < 1 ? 0 : step === 1 ? ease(sub(p, .05, .9)) : 1;
+        /* de keten komt uit de tunnel van de grote eenheid van het voorste ribosoom (tot het einde van ORF1ab), daarna los */
+        const runNow = step === 0 ? .35 * ease(sub(p, .25, 1)) : step === 1 ? .35 + .65 * ease(sub(p, 0, .9)) : 1;
+        const lead = lerp(X0 + 40, XO, Math.min(1, runNow)), tunOp = step === 1 ? 1 : step === 2 ? 1 - ease(sub(p, 0, .2)) : 0;
         const cut = ph(2, .35, .8), gather = ph(3, .1, .75), sink = ph(4, .1, .7);
         if (grow > 0) {
-          const xEnd = lerp(X0, X1, grow);
+          const xEnd = Math.min(lead, lerp(X0, XO, grow));
+          if (tunOp > .01) ch += `<path d="M${f1(lead)},${RY + 54} C${f1(lead)},${CY - 10} ${f1(xEnd + 10)},${CY - 20} ${f1(xEnd)},${CY}" stroke="${C.chain}" stroke-width="10" fill="none" stroke-linecap="round" opacity="${f1(tunOp)}"/>`;
           for (let i = 0; i < N; i++) {
             const a = X0 + i * SEG, b = Math.min(X0 + (i + 1) * SEG, xEnd);
             if (b <= a) break;
@@ -114,35 +128,42 @@ export default {
               const cx = lerp((x0 + x1) / 2, tx, gather), cy2 = lerp(y, ty, gather), hw = lerp((x1 - x0) / 2, 16, gather);
               x0 = cx - hw; x1 = cx + hw; y = cy2;
             } else if (gather > 0) op = 1 - .45 * gather - .35 * sink;
-            ch += `<path d="M${f1(x0)},${f1(y)} L${f1(x1)},${f1(y)}" stroke="${cut > .02 ? SEGCOL(i) : C.chain}" stroke-width="16" stroke-linecap="round" opacity="${f1(op)}"/>`;
+            const kS = step >= 2 && SCH.includes(i) ? ph(2, 0, .2) : 0;     // de twee scharen kleuren eerst op, dan knippen ze
+            ch += `<path d="M${f1(x0)},${f1(y)} L${f1(x1)},${f1(y)}" stroke="${kS > .5 || cut > .02 ? SEGCOL(i) : C.chain}" stroke-width="16" stroke-linecap="round" opacity="${f1(op)}"/>`;
           }
-          if (step === 1) ch += T(lerp(X0, X1, grow) / 2 + X0 / 2, CY + 60, T2('één lange eiwitketen', 'one long protein chain'), { size: 26, col: C.chain, w: 700, op: ease(sub(p, .3, .5)) });
+          if (step === 1) ch += T(lerp(X0, XO, grow) / 2 + X0 / 2, CY + 60, T2('één lange eiwitketen', 'one long protein chain'), { size: 26, col: C.chain, w: 700, op: ease(sub(p, .3, .5)) });
         }
         // scharen op de knipplekken (stap 2)
         if (step === 2) {
-          const kS = ease(sub(p, .05, .3)) * (1 - ease(sub(p, .85, 1)) * .6);
-          for (let i = 1; i < N; i++) ch += scissors(X0 + i * SEG, CY - 34, .7, kS, Math.abs(Math.sin(p * 9 + i)) * .8);
-          fx += T(630, CY + 140, T2('16 losse eiwitten', '16 separate proteins'), { size: 28, col: C.text, w: 700, op: ease(sub(p, .65, .85)) });
+          // geen losse scharen: de twee knipstukken zitten in de keten (nsp3 = PLpro, nsp5 = Mpro); de knipplekken lichten op
+          const kL = ease(sub(p, .1, .3)), kC = ease(sub(p, .3, .6)) * (1 - ease(sub(p, .85, 1)));
+          fx += T(X0 + 2.5 * SEG, CY - 40, 'PLpro', { size: 21, col: CUT, w: 700, op: kL }) + T(X0 + 4.5 * SEG, CY - 70, 'Mpro', { size: 21, col: CUT, w: 700, op: kL });
+          fx += `<path d="M${f1(X0 + 2.5 * SEG)},${CY - 34} V${CY - 12} M${f1(X0 + 4.5 * SEG)},${CY - 64} V${CY - 12}" stroke="${CUT}" stroke-width="2" opacity="${f1(kL)}"/>`;
+          for (let i = 1; i < N; i++) fx += `<path d="M${f1(X0 + i * SEG)},${CY - 16} l-5,-9 h10z M${f1(X0 + i * SEG)},${CY + 16} l-5,9 h10z" fill="${CUT}" opacity="${f1(kC)}"/>`;
+          fx += T(450, CY + 140, T2('16 losse eiwitten', '16 separate proteins'), { size: 28, col: C.text, w: 700, op: ease(sub(p, .65, .85)) });
         }
         // de machine (stap 3+)
         if (gather > .6) {
           const mx = lerp(1270, MX, sink), my = lerp(420, MY, sink), o = ease(sub(gather, .6, 1));
           ch = `<ellipse cx="${f1(mx)}" cy="${f1(my)}" rx="62" ry="50" fill="rgba(155,123,255,.18)" stroke="${C.prot}" stroke-width="3" opacity="${f1(o)}"/>` + ch;
-          fx += T(mx, my - (step >= 4 ? 70 : 78), T2('kopieermachine', 'copying machine'), { size: 26, col: C.prot, w: 700, op: o });
+          fx += T(mx - (step >= 4 ? 170 : 0), my - (step >= 4 ? 20 : 78), T2('kopieermachine', 'copying machine'), { size: 26, col: C.prot, w: 700, op: o });
         }
-        // kopiëren in het blaasje (stap 4) en kopieën naar buiten (stap 5)
+        /* stap 4: het blaasje ontstaat onder de machine, die aan het membraan blijft (cytosolkant). Het (+)RNA dient als matrijs;
+           binnenin groeit de kopie ertegenaan (dubbelstrengig RNA). Stap 5: kopieën gaan door het poortje naar het cytosol. */
         if (step >= 4) {
-          const kC = step === 4 ? ease(sub(p, .55, .95)) : 1;
-          fx += rnaWave(MX - 50, MX - 50 + 100 * kC, MY + 70, 1, 6);
+          const kT = ph(4, .35, .55), kC = step === 4 ? ease(sub(p, .55, .95)) : 1, cy0 = DV[0][1];
+          fx += `<path d="M${MX - 10},${MY + 40} C${MX - 10},${cy0 - 60} ${MX - 60},${cy0 - 40} ${MX - 70},${cy0}" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round" opacity="${f1(kT)}"/>`;
+          fx += rnaWave(MX - 70, MX + 60, cy0, kT, 6);
+          fx += rnaWave(MX - 70, MX - 70 + 130 * kC, cy0 + 16, kC > .02 ? 1 : 0, 6, '#ffc9a3');
         }
         if (step === 5) {
           for (let k = 0; k < 4; k++) {
             const u = ease(sub(p, .15 + k * .12, .55 + k * .12));
             if (u <= 0) continue;
-            const x = lerp(1270, 1460 - k * 170, u), y = lerp(520, 400 + (k % 2) * 60, u);
+            const x = lerp(1300, 1500 - k * 130, u), y = lerp(530, 340 + (k % 2) * 50, u);
             fx += rnaWave(x - 45, x + 45, y, 1, 6);
           }
-          fx += T(1280, 352, T2('nieuwe RNA-kopieën', 'new RNA copies'), { size: 26, col: C.rna, w: 700, op: ease(sub(p, .5, .7)) });
+          fx += T(1330, 298, T2('nieuwe RNA-kopieën', 'new RNA copies'), { size: 26, col: C.rna, w: 700, op: ease(sub(p, .5, .7)) });
         }
         $('vk-chain').innerHTML = ch;
         $('vk-fx').innerHTML = fx;

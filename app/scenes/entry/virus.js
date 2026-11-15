@@ -4,7 +4,7 @@ import { membraanPts, ptsCirkel, ptsLijn, eiwit, eiwitPad, blaasje } from '../..
 import { btn } from '../prot/_fate.js';
 
 /* Zijpad: wat doet een virus eigenlijk bij een cel? Twee binnenkomstroutes, dan het genoomtype. */
-const MEM = 330, LX = 430, RX = 1160;
+const MEM = 330, LX = 430, RX = 1160, BX = 1400;   // BX: plaats van de knopvorming (stap 6)
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 
 /* kegelvormig capside van HIV-1 met twee RNA-kopieën (het genoom is diploïd) */
@@ -89,7 +89,7 @@ export default {
       <g id="vi-nuc-body"></g>
     </g>
     <g id="vi-notes"></g>
-    ${btn('sleutel', 610, 380, T2('sleutel en slot in 3D →', 'key and lock in 3D →'), '#ff9d5c')}
+    ${btn('sleutel', 610, 380, T2('sleutel en slot in 3D →', 'key and lock in 3D →'), '#ff9d5c', 100)}
     </svg>`;
   },
 
@@ -103,16 +103,38 @@ export default {
         /* membraan: knop links (stap 2: de cel slokt het virus op) of uitstulping rechts (stap 3: de envelop versmelt) */
         const BR = 104, lk = step === 2 ? ease(sub(p, .05, .5)) : 0;
         const fuseK = step === 3 && p >= .3 ? .97 * (1 - ease(sub(p, .3, .85))) : 0;
+        /* stap 6: links barst de cel open (gat in het membraan, lysis), rechts knopt een omhuld virus af */
+        const budK = step === 6 ? .85 * ease(sub(p, .1, .6)) : 0, lysK = step === 6 ? ease(sub(p, .1, .45)) : 0;
         const memP = step === 2 && p < .5 ? knopPts(-400, MEM, 2000, MEM, LX + 400, BR, lk * .97)
-          : fuseK > .005 ? knopPts(-400, MEM, 2000, MEM, RX + 400, 72, fuseK, { side: -1 }) : ptsLijn(-400, MEM, 2000, MEM);
-        $('vi-mem').innerHTML = membraanPts(memP, { w: 22 });
+          : fuseK > .005 ? knopPts(-400, MEM, 2000, MEM, RX + 400, 72, fuseK, { side: -1 })
+          : budK > .005 ? knopPts(LX + 10 + 60 * lysK, MEM, 2000, MEM, BX - LX - 10 - 60 * lysK, 44, budK, { side: -1 }) : ptsLijn(-400, MEM, 2000, MEM);
+        $('vi-mem').innerHTML = membraanPts(memP, { w: 22 }) + (budK > .005 ? membraanPts(ptsLijn(-400, MEM, LX - 10 - 60 * lysK, MEM), { w: 22 }) : '');
+
+        /* opKnop voor een uitstulping naar boven (fusie): plaats op booglengte sK vanaf de top van de knop; geeft [x, y, richting naar buiten in graden] */
+        const opUit = (sK, k, R, X) => {
+          const kk = Math.min(.985, Math.max(0, k)), c = R * (2 * kk - 1), th0 = Math.acos(Math.max(-1, Math.min(1, -c / R))), th = sK / R;
+          if (Math.abs(th) <= th0) return [X + R * Math.sin(th), MEM - c - R * Math.cos(th), Math.atan2(-Math.cos(th), Math.sin(th)) * 180 / Math.PI];
+          return [X + Math.sign(sK) * (R * Math.sin(th0) + Math.abs(sK) - R * th0), MEM, -90];
+        };
+        /* Env-uitsteeksel (zelfde vorm als in enveloped(72)): steel door het membraan, kop buiten; deg = richting naar buiten */
+        const env = (x, y, deg, R = 72) => `<g transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(deg)})"><line x1="-8" y1="0" x2="${f1(R * .25 + 8)}" y2="0" stroke="#ff9d5c" stroke-width="${f1(R * .06)}"/>` +
+          `<path d="${eiwitPad(R * .36 + 8, 0, R * .14, R * .16, 5, .12)}" fill="#ff9d5c" stroke="#7a3d17" stroke-width="1.2"/></g>`;
+        /* na de fusie zitten de Env-eiwitten en de receptoren in het celmembraan (de envelop is er een deel van geworden) */
+        const fused = step > 3 || (step === 3 && p >= .3), kF = step === 3 ? fuseK : 0;
+        const ENV_TH = Array.from({ length: 10 }, (_, i) => { const a = (i * 36 + 9) * Math.PI / 180; return Math.atan2(Math.cos(a), -Math.sin(a)); });
 
         /* receptoren (type I-membraaneiwitten); links gaan ze mee naar binnen, rechts verdwijnen ze tijdens de fusie uit beeld */
         let rec = '';
         const rOn = step >= 1 ? 1 : ease(sub(p, .5, .9));
-        const lOn = step === 2 ? 1 - ease(sub(p, .1, .4)) : step >= 3 ? 0 : rOn, rOn2 = step === 3 ? 1 - ease(sub(p, .25, .45)) : step >= 4 ? 0 : rOn;
+        const lOn = step === 2 ? 1 - ease(sub(p, .1, .4)) : step >= 3 ? 0 : rOn;
         for (const x of [LX - 40, LX + 40]) rec += `<g opacity="${f1(lOn)}">${car(x, MEM - 6, -1, 1.6, step === 1 ? 1 : 0)}</g>`;
-        for (const x of [RX - 46, RX + 46]) rec += `<g opacity="${f1(rOn2)}">${car(x, MEM - 6, -1, 1.6, step === 1 ? 1 : 0)}</g>`;
+        for (const k of [-1, 1]) {
+          // rechts: receptoren blijven in het membraan, net naast de hals van de versmeltende envelop
+          const th0 = fused ? Math.acos(Math.max(-1, Math.min(1, -72 * (2 * Math.min(.985, kF) - 1) / 72))) : 0;
+          const x = fused ? opUit(k * (72 * th0 + 26), kF, 72, RX)[0] : RX + k * 46;
+          rec += `<g opacity="${f1(rOn)}">${car(x, MEM - 6, -1, 1.6, step === 1 ? 1 : 0)}</g>`;
+        }
+        if (fused) for (const th of ENV_TH) { const [x, y, d] = opUit(72 * th, kF, 72, RX); rec += env(x, y, d); }
         $('vi-rec').innerHTML = rec;
 
         /* links: niet-omhuld virus (eiwitjas, geen membraan) via endocytose */
@@ -177,10 +199,19 @@ export default {
           no += `<g opacity="${f1(k)}">${txt(RX, 778, T2('vaak cytosol · retrovirus: eerst DNA', 'often cytosol · retrovirus: DNA first'), C.rna, 22)}</g>`;
         }
         if (step === 6) {
-          const k = ease(sub(p, .15, .6));
+          const k = ease(sub(p, .45, .8));
           no += `<g opacity="${f1(k)}">${txt(800, 250, T2('nieuwe deeltjes: lysis of knopvorming', 'new particles: lysis or budding'), C.text, 24)}
-            ${[0, 1, 2].map(i => `<g transform="translate(${f1(300 + i * 120)} ${f1(150 - Math.sin(tt + i) * 10)})">${enveloped(34)}</g>`).join('')}
-            ${[0, 1, 2].map(i => `<g transform="translate(${f1(1180 + i * 120)} ${f1(160 + Math.sin(tt + i) * 10)})">${capsid(30, { fibre: 22, hexons: false })}</g>`).join('')}</g>`;
+            ${[0, 1, 2].map(i => `<g transform="translate(${f1(260 + i * 120)} ${f1(160 + Math.sin(tt + i) * 10)})">${capsid(30, { fibre: 22, hexons: false })}</g>`).join('')}
+            ${[0, 1, 2].map(i => `<g transform="translate(${f1(1060 + i * 110)} ${f1(140 - Math.sin(tt + i) * 10)})">${enveloped(34)}</g>`).join('')}
+            ${txt(LX + 110, MEM + 70, T2('lysis: de cel barst open', 'lysis: the cell bursts'), PINK, 21, 'start')}
+            ${txt(BX, MEM + 80, T2('knopvorming', 'budding'), '#ff9d5c', 21)}</g>`;
+          /* lysis: capsiden komen door het gat naar buiten; knopvorming: een capside in een uitstulping met Env */
+          no += [[-30, -40], [35, -10], [-5, 25]].map(([dx, dy], i) => `<g transform="translate(${f1(LX + dx * (.4 + lysK))} ${f1(MEM + dy - 60 * lysK * (i === 0 ? 1 : .3))})" opacity="${f1(lysK)}">${capsid(24, { fibre: 16, hexons: false })}</g>`).join('');
+          if (budK > .01) {
+            const c = 44 * (2 * budK - 1);
+            no += `<g transform="translate(${BX} ${f1(MEM - c)})">${hivCapsid(44 * .9)}</g>`;
+            for (let i = 0; i < 7; i++) { const [x, y, d] = opUit((i - 3) * 30, budK, 44, BX); no += env(x, y, d, 44); }
+          }
         }
         $('vi-notes').innerHTML = no;
 

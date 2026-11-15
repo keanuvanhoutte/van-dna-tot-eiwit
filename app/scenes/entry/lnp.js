@@ -1,11 +1,12 @@
 import { C, L, T2, svgOpen, txt, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { lnpParticle, knopPts, ptsPad, blaasjeOpen, PINK, LIP, PEG, CHOL } from './_bits.js';
-import { blaasje, membraanPts, ptsLijn } from '../../bio.js';
+import { lnpParticle, knopPts, ptsPad, padPts, blaasjeOpen, PINK, LIP, PEG, CHOL } from './_bits.js';
+import { blaasje, membraanPts, ptsLijn, ribosoomKlein, eiwit, kernEnvelop, ptsCirkel } from '../../bio.js';
 
 /* Zijpad: hoe een mRNA-vaccin zijn boodschap in het cytosol krijgt. */
 const AX = 420, AY = 330, AR = 130;      // anatomie links
 const MEM = 150, RX = 1130;              // celmembraan en route rechts
 const KR = 96;                           // straal van de kuil / het nieuwe blaasje
+const RAND = padPts('M760,1000 C820,700 860,' + MEM + ' 1000,' + MEM, 12).slice(0, -1);
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 
 export default {
@@ -45,9 +46,9 @@ export default {
 
   svg() {
     return svgOpen() + `
-    <path id="ln-cyto" fill="url(#gCyto)" d="M620,${MEM} L2000,${MEM} L2000,1600 L620,1600Z"/>
-    <g id="ln-mem">${membraanPts(ptsLijn(620, MEM, 2000, MEM), { w: 22 })}</g>
-    <text x="1400" y="${MEM - 30}" font-size="17" fill="${C.muted}" font-family="Inter" opacity=".6">${T2('extracellulair', 'extracellular')}</text>
+    <path id="ln-cyto" fill="url(#gCyto)"/>
+    <g id="ln-mem"></g>
+    <text x="1380" y="${MEM - 30}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">${T2('extracellulair', 'extracellular')}</text>
     <g id="ln-anat"></g>
     <g data-node="mrnaafbraak" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-label="${T2('mRNA — in 3D', 'mRNA — in 3D')}" id="ln-mrna" opacity="0">
       <circle data-anchor="mrnaafbraak" cx="${AX + 260}" cy="${AY + 180}" r="1" fill="none"/>
@@ -123,12 +124,13 @@ export default {
         else if (step === 3) { const u = ease(sub(p, .1, .8)); py = lerp(300, 460, u); }
         else if (step === 4) { const u = ease(sub(p, .1, .7)); py = lerp(460, 560, u); escape = ease(sub(p, .45, .95)); }
         else if (step >= 5) { py = 560; escape = 1; }
-        const partOp = step <= 1 ? 0 : step === 2 ? ease(clamp(p / .3)) : step === 6 ? .55 : 1;
+        const partOp = step <= 1 ? 0 : step === 6 ? .55 : 1;     // stap 2 begint meteen met het deeltje boven de cel (geen donker beginbeeld)
         $('ln-part').innerHTML = partOp > .01
           ? `<g transform="translate(${px} ${f1(py)})">${lnpParticle(pr, partOp, { protonated: step >= 3 ? (step === 3 ? ease(sub(p, .3, .8)) : 1) : 0 })}</g>` : '';
 
-        const mP = knopPts(620, MEM, 2000, MEM, RX - 620, KR, kn);
-        $('ln-cyto').setAttribute('d', ptsPad(mP) + ' L2000,1600 L620,1600Z');
+        /* celrand: links buigt het membraan naar beneden (hoek van de cel), zodat het niet recht afgekapt eindigt */
+        const mP = RAND.concat(knopPts(1000, MEM, 2000, MEM, RX - 1000, KR, kn));
+        $('ln-cyto').setAttribute('d', ptsPad(mP) + ' L2000,1600 L760,1600Z');
         $('ln-mem').innerHTML = membraanPts(mP, { w: 22 });
         if (step === 2) {
           endo = los ? blaasje(px, py, lerp(KR, 104, ease(sub(p, .6, .9))), { w: 20 }) : '';
@@ -150,15 +152,19 @@ export default {
         $('ln-ribo-body').innerHTML = rOn > .01
           ? `<path d="M${px - 60},${f1(py + 90)} Q900,740 820,760" stroke="${C.rna}" stroke-width="4" fill="none" stroke-dasharray="10 8" opacity=".5"/>
              <path d="M760,760 q26,-20 52,0 t52,0 t52,0 t52,0" stroke="${C.rna}" stroke-width="6" fill="none"/>
-             ${[0, 1, 2, 3].map(i => `<g transform="translate(${f1(786 + i * 52)} ${f1(752 + (i % 2) * 6)})"><circle r="21" fill="${C.rrna}"/><circle cy="16" r="14" fill="#1f9d86"/></g>`).join('')}
-             ${step >= 5 ? `<g opacity="${f1(step === 5 ? ease(sub(p, .35, .8)) : 1)}">${[0, 1, 2, 3, 4].map(i => `<circle cx="${f1(1010 + i * 26)}" cy="${f1(700 - i * 10)}" r="13" fill="${C.prot}" stroke="#2a1f4a" stroke-width="1.5"/>`).join('')}
+             ${[0, 1, 2, 3].map(i => { const x = 786 + i * 52, y = 760 + (i % 2 ? 17 : -3);   // ribosoom (twee eenheden), mRNA tussen beide
+               const kc = step >= 5 ? (step === 5 ? ease(sub(p, .1, .7)) : 1) : .25, L = (10 + i * 12) * kc;   // keten groeit uit de grote eenheid
+               return ribosoomKlein(x, y, { s: 1.9 }) + `<path d="M${x},${y + 24} q${f1(-L * .4)},${f1(L * .5)} ${f1(L * .1)},${f1(L)}" stroke="${C.chain}" stroke-width="4" fill="none" stroke-linecap="round"/>`; }).join('')}
+             ${step >= 5 ? `<g opacity="${f1(step === 5 ? ease(sub(p, .45, .85)) : 1)}">
+               <path d="M${f1(942)},${f1(784)} q10,-30 26,-52" stroke="${C.chain}" stroke-width="3" fill="none" stroke-dasharray="5 6" opacity=".7"/>
+               ${eiwit(1000, 712, 32, 23, C.prot, { seed: 33, bumps: .14 })}${eiwit(1068, 728, 26, 20, C.prot, { seed: 34, bumps: .14 })}
                ${txt(1235, 705, T2('antigeen-eiwit', 'antigen protein'), C.prot, 21)}</g>` : ''}` : '';
 
         /* kern-uitsluiting */
         const nOn = step === 6 ? ease(sub(p, .15, .5)) : 0;
         $('ln-nuc').setAttribute('opacity', f1(nOn));
         $('ln-nuc-body').innerHTML = nOn > .01
-          ? `<circle cx="1480" cy="420" r="140" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="4"/>
+          ? `<circle cx="1480" cy="420" r="128" fill="url(#gNuc)"/>${kernEnvelop(ptsCirkel(1480, 420, 140, 90), { poriën: [.05, .2, .35, .5, .65, .8, .95], w: 7, gap: 7, poreW: 16, s: .45 })}
              ${txt(1480, 430, T2('celkern', 'nucleus'), '#9cc0ff', 24)}
              <path d="M960,790 Q1330,790 1420,580" stroke="${C.danger}" stroke-width="5" fill="none" stroke-dasharray="12 9" marker-end="url(#arrow)" opacity=".9"/>
              <g transform="translate(1290 750)"><circle r="26" fill="#0b1224" stroke="${C.danger}" stroke-width="5"/><line x1="-18" y1="18" x2="18" y2="-18" stroke="${C.danger}" stroke-width="5"/></g>` : '';

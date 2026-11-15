@@ -49,6 +49,17 @@ export function capsid(R, o = {}) {
   return s + '</g>';
 }
 
+/* capside dat openbreekt: k = 0 heel … 1 in drie brokstukken uit elkaar (gekartelde breuklijnen, via clipPath). id = unieke naam. */
+export function capsidBreuk(R, k, id, o = {}) {
+  if (k <= .01) return capsid(R, o);
+  const z = R * 1.6, d = R * .5 * k, P = [[[-z, -z], [z * .15, -z], [R * .1, -R * .2], [-R * .2, R * .15], [-z, R * .05]],
+    [[z * .15, -z], [z, -z], [z, R * .3], [R * .25, R * .05], [R * .1, -R * .2]],
+    [[-z, R * .05], [-R * .2, R * .15], [R * .1, -R * .2], [R * .25, R * .05], [z, R * .3], [z, z], [-z, z]]];
+  const dir = [[-1, -.8], [1, -.6], [0, 1]];
+  return P.map((poly, i) => `<clipPath id="${id}-${i}"><polygon points="${poly.map(q => q.map(f1).join(',')).join(' ')}"/></clipPath>` +
+    `<g transform="translate(${f1(dir[i][0] * d)} ${f1(dir[i][1] * d)}) rotate(${f1(dir[i][0] * 12 * k)})"><g clip-path="url(#${id}-${i})">${capsid(R, o)}</g></g>`).join('');
+}
+
 /* viraal genoom in het capside: dsDNA-lus met proteïne VII-bolletjes */
 export function viralGenome(R, op = 1, beads = true) {
   const p = `M${f1(-R * .5)},${f1(-R * .1)} C${f1(-R * .6)},${f1(-R * .55)} ${f1(R * .1)},${f1(-R * .62)} ${f1(R * .22)},${f1(-R * .2)}
@@ -225,6 +236,27 @@ export function motor(x, y, ang = 0, s = 1, col = C.prot, phase = 0, flip = 1) {
     <ellipse cx="${f1(-11 + l1)}" cy="23" rx="8" ry="5" fill="${col}"/><ellipse cx="${f1(11 + l2)}" cy="23" rx="8" ry="5" fill="${col}"/>
     <path d="M0,0 L0,-16" stroke="${col}" stroke-width="5" stroke-linecap="round"/>
     <circle cy="-20" r="7" fill="${col}"/></g>`;
+}
+
+/* kinesine-1 die tegelijk aan twee dingen vastzit (bv. Nup358 van de porie en het capside): de koppen lopen op een
+ * microtubule, vanaf het staarteinde gaan twee armen naar de doelen. ang zoals bij motor() (koppen aan de +y-kant).
+ * Strunze et al., Cell Host Microbe 2011: het capside bindt de lichte keten (Klc1/2), Nup358 de zware keten (Kif5c). */
+export function kinesineGreep(x, y, ang, s, col, phase, doelen = []) {
+  const a = ang * Math.PI / 180, hx = x + 20 * s * Math.sin(a), hy = y - 20 * s * Math.cos(a);   // staarteinde = (0,-20) lokaal
+  let g = doelen.map(([tx, ty]) => `<path d="M${f1(hx)},${f1(hy)} Q${f1((hx + tx) / 2)},${f1((hy + ty) / 2 - 14)} ${f1(tx)},${f1(ty)}" stroke="${col}" stroke-width="${f1(4 * s)}" fill="none" stroke-linecap="round"/>` +
+    `<circle cx="${f1(tx)}" cy="${f1(ty)}" r="${f1(6 * s)}" fill="${col}"/>`).join('');
+  return g + motor(x, y, ang, s, col, phase);
+}
+
+/* lineair viraal dsDNA (adenovirus) in de kern: twee strengen, aan beide uiteinden het terminaal eiwit (TP),
+ * met enkele bolletjes proteïne VII. Het adenovirusgenoom blijft lineair (geen ring). */
+export function linDNA(x0, x1, y, { op = 1, amp = 9, vii = 4 } = {}) {
+  if (op <= .01) return '';
+  const pad = d => { let s = `M${f1(x0)},${f1(y + d)}`; for (let x = x0 + 8; x <= x1; x += 8) s += ` L${f1(x)},${f1(y + d + amp * Math.sin((x - x0) / 26))}`; return s; };
+  let g = `<g opacity="${f1(op)}"><path d="${pad(-4)}" stroke="${PINK}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="${pad(4)}" stroke="#e7a9d6" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  for (let i = 0; i < vii; i++) { const x = x0 + (x1 - x0) * (i + 1) / (vii + 1); g += `<circle cx="${f1(x)}" cy="${f1(y + amp * Math.sin((x - x0) / 26))}" r="8" fill="#c98fe0" stroke="#3b1130" stroke-width="1"/>`; }
+  for (const x of [x0, x1]) { const yy = y + amp * Math.sin((x - x0) / 26); g += `<path d="${eiwitPad(x + (x === x0 ? -8 : 8), yy, 11, 10, x === x0 ? 21 : 22, .1)}" fill="#ffd166" stroke="#8a6a1c" stroke-width="1.5"/>`; }
+  return g + '</g>';
 }
 
 /* ── kernporiecomplex in doorsnede ────────────────────────────────── */

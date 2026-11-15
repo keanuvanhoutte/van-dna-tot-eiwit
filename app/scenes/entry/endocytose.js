@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, pill, txt, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { blaasje, membraanPts, ptsLijn } from '../../bio.js';
-import { capsid, viralGenome, knopPts, ptsPad, blaasjeOpen, triskelion, lnpParticle, PINK, FIBRE, LIP } from './_bits.js';
+import { blaasje, membraanPts, ptsLijn, ribosoomKlein, eiwit } from '../../bio.js';
+import { capsid, viralGenome, knopPts, ptsPad, blaasjeOpen, triskelion, lnpParticle, car, PINK, FIBRE, LIP } from './_bits.js';
 import { btn } from '../prot/_fate.js';
 
 /* Hoofdstuk 3: van klathrine-put tot endosomale ontsnapping (of afbraak in het lysosoom). */
@@ -22,8 +22,8 @@ export default {
     [C.mem, { nl: 'membraan / endosoom', en: 'membrane / endosome' }], [PINK, { nl: 'adenovirus', en: 'adenovirus' }],
     [LIP, { nl: 'lipidenanodeeltje', en: 'lipid nanoparticle' }], ['#8d6cc4', { nl: 'lysosoom', en: 'lysosome' }], [C.rna, 'mRNA']],
   simplified: {
-    nl: 'Eén endosoom draagt hier zowel een virus als een lipidenanodeeltje; in werkelijkheid zitten die in aparte blaasjes. De pH-waarden zijn typische waarden (vroeg ≈ 6,5, laat ≈ 5,5, lysosoom ≈ 4,5) en variëren per celtype. Van de klathrine-mand tekenen we enkele triskelia, niet het hele veelvlak; adaptoren (AP-2), Rab-eiwitten en ESCRT zijn weggelaten. Het adenovirus ontsnapt in werkelijkheid al vroeg, want proteïne VI breekt membranen ook zonder zuur open; hier tonen we beide ontsnappingen na elkaar om het overzichtelijk te houden.',
-    en: 'A single endosome here carries both a virus and a lipid nanoparticle; in reality these travel in separate vesicles. The pH values are typical (early ≈ 6.5, late ≈ 5.5, lysosome ≈ 4.5) and vary between cell types. Of the clathrin cage we draw a few triskelia, not the whole polyhedron; adaptors (AP-2), Rab proteins and ESCRT are omitted. In reality adenovirus escapes early, since protein VI ruptures membranes without acid as well; here both escapes are shown one after the other to keep it clear.' },
+    nl: 'Eén endosoom draagt hier zowel een virus als een lipidenanodeeltje; in werkelijkheid zitten die in aparte blaasjes. De pH-waarden zijn typische waarden (vroeg ≈ 6,5, laat ≈ 5,5, lysosoom ≈ 4,5) en variëren per celtype. Van de klathrine-mand tekenen we enkele triskelia, niet het hele veelvlak; receptoren en adaptoren (AP-2) staan er schematisch, Rab-eiwitten en ESCRT zijn weggelaten. Het adenovirus ontsnapt in werkelijkheid al vroeg, want proteïne VI breekt membranen ook zonder zuur open; hier tonen we beide ontsnappingen na elkaar om het overzichtelijk te houden.',
+    en: 'A single endosome here carries both a virus and a lipid nanoparticle; in reality these travel in separate vesicles. The pH values are typical (early ≈ 6.5, late ≈ 5.5, lysosome ≈ 4.5) and vary between cell types. Of the clathrin cage we draw a few triskelia, not the whole polyhedron; receptors and adaptors (AP-2) are schematic, Rab proteins and ESCRT are omitted. In reality adenovirus escapes early, since protein VI ruptures membranes without acid as well; here both escapes are shown one after the other to keep it clear.' },
   steps: [
     ST(6000, cam(PX, 200, 860), 'De cel verzamelt vracht', 'The cell gathers cargo',
       'Helper-eiwitten brengen receptoren met hun vracht samen op één klein stukje membraan.',
@@ -61,6 +61,7 @@ export default {
     <text x="210" y="${MEM + 60}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">cytosol</text>
     <g id="en-mem">${membraanPts(ptsLijn(-400, MEM, 2000, MEM), { w: 22 })}</g>
     <g id="en-clath"></g>
+    <g id="en-rec"></g>
     <g id="en-vatp"></g>
 
     <g data-node="adeno" data-color="${PINK}" data-label="${T2('Adenovirus-capside', 'Adenovirus capsid')}">
@@ -84,7 +85,7 @@ export default {
       <g id="en-ribo-body"></g>
     </g>
     <g id="en-notes"></g>
-    ${btn('viruskopie', 1130, 400, T2('een RNA-virus aan het werk →', 'an RNA virus at work →'), C.rna, 70)}
+    ${btn('viruskopie', 1140, 400, T2('een RNA-virus aan het werk →', 'an RNA virus at work →'), C.rna, 188)}
     </svg>`;
   },
 
@@ -103,7 +104,7 @@ export default {
       // stap 0–1: de vracht ligt buiten op het membraan en zakt mee in de kuil; stap 2 (p ≥ .5): los blaasje
       if (step <= 1 || (step === 2 && p < .5)) return [PX, Math.max(MEM - 52, MEM + KR * (2 * kuil(step, p) - 1)), 0, 7.4];
       if (step === 2) return [PX, lerp(MEM + KR * .94, 320, ease(sub(p, .5, .9))), KR, 7.0];
-      if (step === 3) { const u = ease(sub(p, .1, .8)); return [lerp(PX, EE[0], u), lerp(320, EE[1], u), lerp(86, EE[2], u), lerp(6.9, 6.5, u)]; }
+      if (step === 3) { const u = ease(sub(p, .1, .8)); return [lerp(PX, EE[0], u), lerp(320, EE[1], u), lerp(KR, EE[2], u), lerp(6.9, 6.5, u)]; }
       if (step === 4) { const u = ease(sub(p, .1, .85)); return [lerp(EE[0], LE[0], u), lerp(EE[1], LE[1], u), lerp(EE[2], LE[2], u), lerp(6.5, 5.5, u)]; }
       if (step <= 6) return [LE[0], LE[1], LE[2], 5.5];
       if (step === 7) { const u = ease(sub(p, .1, .7)); return [lerp(LE[0], LY[0], u), lerp(LE[1], LY[1], u), lerp(LE[2], LY[2], u), lerp(5.5, 4.5, u)]; }
@@ -146,6 +147,18 @@ export default {
         }
         $('en-clath').innerHTML = cl;
 
+        /* receptoren (in het membraan, binden de vracht) en adaptoren (AP-2, aan de cytosolkant, binden receptor én klathrine) */
+        let rc = '';
+        const recOn = step === 0 ? ease(sub(p, .05, .4)) : step === 1 ? 1 : step === 2 ? 1 - ease(sub(p, .7, .95)) : 0;
+        const apOn = step === 0 ? ease(sub(p, .3, .6)) : step === 1 ? 1 : step === 2 ? 1 - ease(sub(p, .45, .6)) : 0;
+        if (recOn > .01) for (const k of [-1, 1]) {
+          const losNu = step === 2 && p >= .5;
+          const [x, y, a] = losNu ? [cx + k * Math.sin(24 * Math.PI / 180) * cr, cy + Math.cos(24 * Math.PI / 180) * cr, -k * 24] : opKnop(k * 50, -5, kn);
+          rc += `<g opacity="${f1(recOn)}" transform="rotate(${f1(a)} ${f1(x)} ${f1(y)})">${car(x, y, -1, 1.2)}</g>`;
+          if (apOn > .01 && !losNu) { const [ax, ay] = opKnop(k * 50, 34, kn); rc += eiwit(ax, ay, 15, 10, '#8fa8ff', { seed: 40 + k, op: apOn, bumps: .1 }); }
+        }
+        $('en-rec').innerHTML = rc;
+
         /* endosoom / lysosoom */
         let ves = '';
         if (step >= 2 && step < 8 && cr > 4) {
@@ -175,17 +188,21 @@ export default {
         }
         $('en-vatp').innerHTML = vat;
 
-        /* vracht: virus + LNP */
-        const off = cr > 40 ? cr * .42 : 50;
-        let vx = cx - off, vy = cy, esc = 0;
+        /* vracht: virus + LNP. Tot het blaasje los is, zitten ze vast aan receptoren in het membraan van de kuil (opKnop);
+           daarna schuiven ze naar het midden van het blaasje (zelfde plaats bij de overgang: geen sprong). */
+        const los = step > 2 || (step === 2 && p >= .5);
+        const off = cr > 40 ? cr * .42 : 50, R0 = KR - 70, jx = R0 * Math.sin(50 / KR), jy = R0 * Math.cos(50 / KR);
+        const uL = step === 2 ? ease(sub(p, .55, .95)) : 1;
+        const vrachtXY = k => !los ? opKnop(k * 50, -70, kn) : step === 2 ? [cx + k * lerp(jx, off, uL), cy + lerp(jy, 0, uL)] : [cx + k * off, cy];
+        let [vx, vy] = vrachtXY(-1), esc = 0;
         if (step === 5 && p > .5) { esc = ease(sub(p, .5, 1)); vx = lerp(cx - off, cx - cr - 95, esc); vy = lerp(cy, cy - 30, esc); }
         if (step >= 6) { vx = LE[0] - LE[2] - 95; vy = LE[1] - 30; }
-        if (step === 8) { const u = ease(sub(p, .15, .85)); vx = lerp(LE[0] - LE[2] - 95, 440, u); vy = lerp(LE[1] - 30, 640, u); }
-        const vOp = step >= 7 && step < 8 ? .0 : 1;
+        if (step === 8) { const u = ease(sub(p, .15, .85)); vx = lerp(LE[0] - LE[2] - 95, 560, u); vy = lerp(LE[1] - 30, 630, u); }
+        const vOp = 1;                       // het ontsnapte virus blijft in beeld (het wordt niet afgebroken)
         $('en-virus').innerHTML = `<g transform="translate(${f1(vx)} ${f1(vy)})" opacity="${f1(vOp)}">${capsid(36, { fibre: 18, missing: [1, 4], op: 1 })}</g>`;
         $('en-virus-a').setAttribute('cx', f1(vx)); $('en-virus-a').setAttribute('cy', f1(vy - 60));
 
-        let lx = cx + off, ly = cy;
+        let [lx, ly] = vrachtXY(1);
         if (step >= 7) { lx = cx + cr * .3; ly = cy; }
         const lOp = step === 7 && p > .75 ? 1 - ease(sub(p, .75, 1)) * .7 : 1;
         $('en-lnp').innerHTML = `<g transform="translate(${f1(lx)} ${f1(ly)})" opacity="${f1(lOp)}">${lnpParticle(36, 1, { protonated: step >= 6 ? (step === 6 ? ease(sub(p, .1, .5)) : 1) : 0 })}</g>`;
@@ -208,7 +225,8 @@ export default {
           const x1 = lerp(x0, 1160, u), y1 = lerp(y0, 400, u);
           $('en-ribo-body').innerHTML = (step === 6 ? `<path d="M${f1(x0)},${f1(y0)} Q${f1((x0 + x1) / 2 + 60)},${f1((y0 + y1) / 2 - 80)} ${f1(x1)},${f1(y1)}" stroke="${C.rna}" stroke-width="4" fill="none" stroke-dasharray="10 8" opacity=".6"/>` : '') + `
             <path d="M${f1(x1 - 60)},${f1(y1)} q16,-14 32,0 t32,0 t32,0" stroke="${C.rna}" stroke-width="5" fill="none"/>
-            ${[0, 1, 2].map(i => `<g transform="translate(${f1(x1 - 44 + i * 34)} ${f1(y1 - 6)})"><circle r="15" fill="${C.rrna}"/><circle cy="12" r="10" fill="#1f9d86"/></g>`).join('')}
+            ${[0, 1, 2].map(i => { const rx = x1 - 44 + i * 34, ry = y1 + (i % 2 ? 7 : -7) + 5; /* mRNA tussen de twee eenheden */ return ribosoomKlein(rx, ry, { s: 1.15 }) +
+              `<path d="M${f1(rx)},${f1(ry + 14)} q${f1(-6 - i * 3)},${f1(8 + i * 4)} ${f1(2 + i * 2)},${f1(14 + i * 7)}" stroke="${C.chain}" stroke-width="3" fill="none" stroke-linecap="round"/>`; }).join('')}
             ${txt(x1 + 76, y1 + 8, 'mRNA', C.rna, 22, 'start')}`;
         } else $('en-ribo-body').innerHTML = '';
 
@@ -217,7 +235,9 @@ export default {
         /* notities */
         let no = '';
         if (step === 0) no += `<g opacity="${f1(ease(sub(p, .25, .6)))}">${txt(PX + 250, MEM - 70, T2('vracht + receptoren', 'cargo + receptors'), C.muted, 22)}
-          ${txt(PX - 250, MEM + 100, T2('adaptoren kiezen de vracht', 'adaptors select the cargo'), '#8fa8ff', 21)}</g>`;
+          <line x1="${PX + 180}" y1="${MEM - 62}" x2="${PX + 62}" y2="${MEM - 22}" stroke="${C.muted}" stroke-width="2"/>
+          ${txt(PX - 250, MEM + 100, T2('adaptoren kiezen de vracht', 'adaptors select the cargo'), '#8fa8ff', 21)}
+          <line x1="${PX - 170}" y1="${MEM + 86}" x2="${PX - 66}" y2="${MEM + 38}" stroke="#8fa8ff" stroke-width="2"/></g>`;
         if (step === 5) {
           no += `<g opacity="${f1(ease(sub(p, .15, .5)))}">${txt(LE[0] - 240, LE[1] + 190, T2('proteïne VI steekt in het membraan', 'protein VI inserts into the membrane'), '#ff9d5c', 22)}
             ${[0, 1, 2, 3].map(i => `<path d="M${LE[0] - LE[2] - 4 + i * 6},${LE[1] - 70 + i * 26} q14,-8 26,2" stroke="#ff9d5c" stroke-width="5" fill="none" stroke-linecap="round"/>`).join('')}</g>`;

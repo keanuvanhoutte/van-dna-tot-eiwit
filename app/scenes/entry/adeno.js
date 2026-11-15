@@ -1,15 +1,27 @@
 import { C, L, T2, svgOpen, pill, txt, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { blaasje, membraanPts } from '../../bio.js';
-import { capsid, viralGenome, padPts, knopPts, ptsPad, blaasjeOpen, car, integrin, triskelion, microtubule, motor, npc, PINK, FIBRE } from './_bits.js';
+import { blaasje, membraanPts, kernEnvelop, ptsCirkel } from '../../bio.js';
+import { capsid, viralGenome, padPts, knopPts, ptsPad, blaasjeOpen, car, integrin, triskelion, microtubule, motor, kinesineGreep, linDNA, capsidBreuk, npc, PINK, FIBRE } from './_bits.js';
 
 /* Hoofdstuk 2 van het verhaal: het adenovirus (HAdV-C5) hecht aan een epitheelcel en wordt opgenomen.
- * Coördinaten: membraan horizontaal op y = MEM, extracellulair erboven, cytosol eronder. */
+ * Coördinaten: membraan horizontaal op y = MEM, extracellulair erboven, cytosol eronder.
+ * Fix-ronde 15-11-2026: kernenvelop als twee dubbellagen die aan de porie in elkaar overgaan (kernEnvelop, bio.js);
+ * kinesine-1 bindt Nup358 (zware keten Kif5c) en het capside (lichte keten Klc1/2) en trekt het capside op de porie
+ * uiteen (Strunze et al., Cell Host Microbe 2011, 10:210–223); het genoom is één lineair dsDNA met het terminaal
+ * eiwit (TP) aan beide 5′-uiteinden en wordt in de kern niet circulair (ICTV-rapport Adenoviridae). */
 const MEM = 300, PX = 1080;           // y van het plasmamembraan, x van de opnameplaats
 const AX = 390, AY = 430, AR = 150;  // anatomie-inzet links (buiten de cel)
 const VR = 48;                       // straal van het capside op de route
 const KR = 90;                       // straal van de klathrinekuil / het blaasje (virus + vezels passen erin)
-const NUC = [1250, 1250, 520];       // kern (cx, cy, r) — bovenrand op y ≈ 730
+const NUC = [1250, 1250, 509];       // kern (cx, cy, r = middenlijn van de kernenvelop) — de porie ligt op die cirkel
 const PORE = [1120, 758];
+const MT0 = [985, 505];               // begin van de microtubule: onder het opengebroken endosoom (niet erdoor)
+/* kernenvelop: twee lipidedubbellagen die bij de porie in elkaar overgaan (bio.js, Alberts/MBoC hfst. 12). De porie ligt op
+ * hoek PA van de cirkel; het NPC wordt mee gedraaid zodat zijn kernkant naar het middelpunt wijst. */
+const PA = Math.atan2(PORE[1] - NUC[1], PORE[0] - NUC[0]), PROT = PA * 180 / Math.PI + 90;
+const PF = [((PA / (2 * Math.PI)) + 1) % 1, .9];          // poriën als fractie van de omtrek: de grote (virus) en één verderop
+const ENV = kernEnvelop(ptsCirkel(NUC[0], NUC[1], NUC[2], 220), { poriën: PF, w: 12, gap: 20, poreW: 2 * 92 * .9, npc: false });
+const ANDERE = PF.slice(1).map(f => { const a = f * 2 * Math.PI, x = NUC[0] + NUC[2] * Math.cos(a), y = NUC[1] + NUC[2] * Math.sin(a);
+  return `<g transform="rotate(${f1(a * 180 / Math.PI + 90)} ${f1(x)} ${f1(y)})">${npc(x, y, .9)}</g>`; }).join('');
 
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 
@@ -20,7 +32,7 @@ export default {
   org: { nl: 'humaan adenovirus C5 in een epitheelcel', en: 'human adenovirus C5 in an epithelial cell' },
   legend: [[PINK, { nl: 'capside / viraal dsDNA', en: 'capsid / viral dsDNA' }], [FIBRE, { nl: 'vezel + knop (fiber knob)', en: 'fibre + knob' }],
     ['#7fc9b6', 'CAR'], ['#c9a574', { nl: 'αv-integrine, membraan', en: 'αv integrin, membrane' }], ['#8fa8ff', { nl: 'klathrine', en: 'clathrin' }],
-    [C.prot, { nl: 'motoreiwitten, nucleoporinen', en: 'motor proteins, nucleoporins' }], ['#c98fe0', { nl: 'proteïne VII', en: 'protein VII' }]],
+    [C.prot, { nl: 'motoreiwitten, nucleoporinen', en: 'motor proteins, nucleoporins' }], ['#c98fe0', { nl: 'proteïne VII', en: 'protein VII' }], ['#ffd166', { nl: 'terminaal eiwit (TP)', en: 'terminal protein (TP)' }]],
   simplified: {
     nl: 'Het capside is een icosaëder met 240 hexonen en 12 pentonen; hier tekenen we het silhouet (zeshoek) met één vezel per zichtbare hoek in plaats van alle twaalf. Van de tientallen betrokken gastheereiwitten tonen we alleen CAR, αv-integrine, klathrine, dynamine en de motoren. Afmetingen zijn niet op schaal ten opzichte van de cel, en de tijdschaal is sterk vertraagd.',
     en: 'The capsid is an icosahedron with 240 hexons and 12 pentons; here we draw the silhouette (a hexagon) with one fibre per visible vertex instead of all twelve. Of the dozens of host proteins involved we show only CAR, αv integrin, clathrin, dynamin and the motors. Sizes are not to scale relative to the cell and the time scale is strongly slowed down.' },
@@ -58,8 +70,8 @@ export default {
     <text id="ad-reg2" x="1400" y="${MEM + 70}" font-size="22" fill="${C.muted}" font-family="Inter" opacity="0">cytosol</text>
 
     <g id="ad-nuc" data-node="kern" data-color="${C.dna}" data-nolabel opacity="0">
-      <circle cx="${NUC[0]}" cy="${NUC[1]}" r="${NUC[2] + 14}" fill="none" stroke="#7aa0d8" stroke-width="6" opacity=".7"/>
-      <circle cx="${NUC[0]}" cy="${NUC[1]}" r="${NUC[2]}" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="4"/>
+      <circle cx="${NUC[0]}" cy="${NUC[1]}" r="${NUC[2] - 20}" fill="url(#gNuc)"/>
+      ${ENV}${ANDERE}
     </g>
     <g id="ad-mt" opacity="0"></g>
     <g id="ad-membrane"></g>
@@ -71,7 +83,7 @@ export default {
     </g>
 
     <g data-node="kernimport" data-color="${C.prot}" data-label="${T2('Kernporie (Nup214)', 'Nuclear pore (Nup214)')}">
-      <g id="ad-pore" opacity="0">${npc(PORE[0], PORE[1], .9)}</g>
+      <g id="ad-pore" opacity="0"><g transform="rotate(${f1(PROT)} ${PORE[0]} ${PORE[1]})">${npc(PORE[0], PORE[1], .9)}</g></g>
       <circle data-anchor="kernimport" data-pos="below" cx="${PORE[0] - 165}" cy="${PORE[1] + 20}" r="1" fill="none"/>
     </g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Pol II leest de virale genen', 'Pol II reads the viral genes')}" id="ad-txn" opacity="0">
@@ -226,7 +238,7 @@ export default {
         }
         const vOp = step < 2 ? 0 : step === 7 && p > .75 ? 1 - ease(sub(p, .75, 1)) * .55 : 1;
         $('ad-virus').innerHTML = vOp <= .01 ? '' :
-          `<g transform="translate(${f1(vx)} ${f1(vy)}) rotate(${f1(step >= 6 ? 14 : 0)})">${capsid(vR, { fibre: fib, bend, missing, op: vOp })}${step >= 6 ? viralGenome(VR * .8, .9) : gOp > .01 ? viralGenome(vR * .8, gOp) : ''}</g>`;
+          `<g transform="translate(${f1(vx)} ${f1(vy)}) rotate(${f1(step >= 6 ? 14 : 0)})">${step === 7 ? `<g opacity="${f1(vOp)}">${capsidBreuk(vR, ease(sub(p, .45, .8)), 'ad-brk', { fibre: fib, missing })}</g>` : capsid(vR, { fibre: fib, bend, missing, op: vOp })}${step >= 6 ? viralGenome(VR * .8, .9) : gOp > .01 ? viralGenome(vR * .8, gOp) : ''}</g>`;
 
         /* ── blaasje / endosoom ───────────────────────────── */
         let ves = '';
@@ -244,7 +256,7 @@ export default {
         $('ad-nuc').setAttribute('opacity', f1(nucOp));
         $('ad-pore').setAttribute('opacity', f1(nucOp));
         $('ad-mt').setAttribute('opacity', f1(step === 6 ? ease(clamp(p / .25)) : step === 7 ? 1 : 0));
-        if (nucOp > .01) $('ad-mt').innerHTML = microtubule(960, 400, PORE[0] + 20, PORE[1] - 70, 16);
+        if (nucOp > .01) $('ad-mt').innerHTML = microtubule(MT0[0], MT0[1], PORE[0] + 20, PORE[1] - 70, 16);
 
         /* ── notities per stap ────────────────────────────── */
         let no = '';
@@ -254,8 +266,8 @@ export default {
           const dk = ease(sub(p, .3, .95));
           if (dk > .02) {
             const u = ease(clamp((p - .3) / .7));
-            const mx = lerp(1030, PORE[0] + 22, u), my = lerp(480, PORE[1] - 90, u);
-            const ang = Math.atan2(PORE[1] - 70 - 400, PORE[0] + 20 - 960) * 180 / Math.PI;
+            const mx = lerp(1012, PORE[0] + 22, u), my = lerp(528, PORE[1] - 90, u);
+            const ang = Math.atan2(PORE[1] - 70 - MT0[1], PORE[0] + 20 - MT0[0]) * 180 / Math.PI;
             no += `<g opacity="${f1(dk)}">${motor(mx, my, ang, 1.5, C.prot, tt * 6)}
               ${txt(860, 700, T2('dyneïne over microtubuli', 'dynein along microtubules'), C.prot, 23)}</g>`;
           }
@@ -264,8 +276,10 @@ export default {
           const k1 = ease(sub(p, .1, .4)), k2 = ease(sub(p, .45, .8));
           no += `<g opacity="${f1(k1)}">${txt(890, PORE[1] - 155, 'hexon ↔ Nup214', C.prot, 22)}
             <line x1="${890}" y1="${PORE[1] - 146}" x2="${PORE[0] - 46}" y2="${PORE[1] - 86}" stroke="${C.prot}" stroke-width="2"/>
-            ${txt(1350, PORE[1] - 250, T2('kinesine-1 + histon H1', 'kinesin-1 + histone H1'), C.prot, 22)}
-            ${motor(PORE[0] + 120, PORE[1] - 120, 180, 1.4, '#b9a6ff', tt * 6, -1)}</g>`;
+            ${txt(1330, PORE[1] - 250, T2('kinesine-1 trekt de jas open', 'kinesin-1 pulls the coat apart'), '#b9a6ff', 22)}
+            <line x1="1300" y1="${PORE[1] - 240}" x2="${PORE[0] + 150}" y2="${PORE[1] - 190}" stroke="#b9a6ff" stroke-width="2"/>
+            ${microtubule(PORE[0] + 60, PORE[1] - 250, PORE[0] + 330, PORE[1] - 150, 14)}
+            ${kinesineGreep(PORE[0] + 150, PORE[1] - 186, 200, 1.3, '#b9a6ff', tt * 6, [[PORE[0] + 30, PORE[1] - 118], [PORE[0] + 52, PORE[1] - 76]])}</g>`;
           no += `<g opacity="${f1(k2)}">${txt(1400, PORE[1] + 130, T2('DNA + proteïne VII → kern', 'DNA + protein VII → nucleus'), PINK, 22)}</g>`;
         }
         $('ad-notes').innerHTML = no;
@@ -276,8 +290,7 @@ export default {
         const txnOp = step === 7 ? ease(sub(p, .5, .9)) : 0;
         $('ad-txn').setAttribute('opacity', f1(txnOp));
         $('ad-episome').innerHTML = txnOp > .01
-          ? `<g transform="translate(1110 862)"><ellipse rx="80" ry="32" fill="none" stroke="${PINK}" stroke-width="5"/>
-             ${txt(0, 6, T2('episoom', 'episome'), PINK, 21)}</g>` : '';
+          ? `${linDNA(1000, 1230, 846, { vii: 4 })}${txt(1115, 900, T2('lineair viraal DNA', 'linear viral DNA'), PINK, 21)}` : '';
       },
     };
   },
