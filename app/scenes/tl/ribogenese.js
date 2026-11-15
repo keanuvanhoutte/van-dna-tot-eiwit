@@ -157,7 +157,7 @@ export default {
           const cd = ease(sub(p, .05, .3)), ha = ease(sub(p, .35, .6));
           const guide = (x, y, col, name, prot, k) => k <= .01 ? '' : `<g opacity="${f1(k)}"><path d="M${x - 60},${y} h120" stroke="${col}" stroke-width="6" stroke-linecap="round"/><path d="M${x - 60},${y} q-30,30 0,60 h120 q30,-30 0,-60" stroke="${col}" stroke-width="4" fill="none" opacity=".7"/>` +
             `<ellipse cx="${x}" cy="${y + 58}" rx="54" ry="22" fill="${C.prot}" opacity=".85"/>${txt(x, y + 64, prot, '#fff', 16, 'middle', 700)}${txt(x, y + 110, name, col, 20, 'middle', 800)}` +
-            [-40, -20, 0, 20, 40].map(dx => `<line x1="${x + dx}" y1="${y - 4}" x2="${x + dx}" y2="${BY + 44}" stroke="#fff" stroke-width="2" stroke-dasharray="3 3"/>`).join('') + '</g>';
+            [-40, -20, 0, 20, 40].map(dx => `<path d="M${x + dx},${y - 4} V${BY + 80} M${x + dx},${BY + 52} V${BY + 44}" stroke="#fff" stroke-width="2" stroke-dasharray="3 3"/>`).join('') + '</g>';
           sno += guide(SEGX[5][0] + 90, BY + 96 + (1 - cd) * 80, '#ffc247', T2('C/D-box-snoRNA', 'C/D box snoRNA'), T2('fibrillarine', 'fibrillarin'), cd);
           sno += guide(SEGX[1][0] + 60, BY + 96 + (1 - ha) * 80, '#ffe08a', T2('H/ACA-snoRNA', 'H/ACA snoRNA'), T2('dyskerine', 'dyskerin'), ha);
           ov += `<g opacity="${f1(sub(p, .7, .85))}">` + textBox(330, 505, 470, [T2('Me = 2\'-O-methylribose (≈ 100×)', 'Me = 2\'-O-methylribose (≈ 100×)'), T2('Ψ = pseudo-uridine (≈ 100×)', 'Ψ = pseudouridine (≈ 100×)')], { col: '#ffc247', fs: 19 }) + '</g>';

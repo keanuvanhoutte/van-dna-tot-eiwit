@@ -115,7 +115,7 @@ export default {
     const ntX = (i, c, v, scan) => PC + ((i - S0 - 1) - 3 * (c + v)) * NT + scan;
 
     /* ov = overzicht (stap 0, ver uitgezoomd): letters verborgen, grote regiolabels; lab5/lab3 = zichtbaarheid UTR-labels */
-    function drawMRNA(c, v, scan, ov, lab5, lab3, ovL = ov) {
+    function drawMRNA(c, v, scan, ov, lab5, lab3, ovL = ov, kortA = 0) {
       let m = '';
       const x0 = ntX(0, c, v, scan) - NT / 2, x1 = ntX(MRNA.length - 1, c, v, scan) + NT / 2, lo = 1 - ov;
       m += `<line x1="${f1(x0 - 20)}" y1="${YM}" x2="${f1(x1)}" y2="${YM}" stroke="${C.rna}" stroke-width="${f1(6 + 8 * ov)}"/>`;
@@ -138,7 +138,7 @@ export default {
       $('tl-cap').innerHTML = `<circle cx="${f1(capX)}" cy="${YM}" r="23" fill="${C.cap}" stroke="${C.rna}" stroke-width="2"/><text x="${f1(capX)}" y="${YM + 5}" font-size="15" text-anchor="middle" fill="#3a1a05" font-family="Inter" font-weight="700" opacity="${f1(lo)}">m⁷G</text>` + txt(capX, YM - 34, "5'", C.text, f1(18 + 40 * ov));
       const aS = ntX(MRNA.length - POLYA.length, c, v, scan) - NT / 2, aE = x1;
       $('tl-polya').innerHTML = `<rect x="${f1(aS)}" y="${YM - 16}" width="${f1(aE - aS)}" height="70" fill="transparent"/>` + (lo > .01 ? `<g opacity="${f1(lo)}"><path d="M${f1(aS + 4)},${YM + 76} v10 H${f1(aE - 4)} v-10" stroke="${C.rna}" stroke-width="2" fill="none"/>` +
-        (lab3 > .01 ? `<g opacity="${f1(lab3)}">${txt(aS + 8, YM + 112, 'poly(A)', C.rna, 20, 'start', 700)}</g>` :   // stopstappen: het midden van de staart valt buiten beeld
+        (kortA === 2 ? txt(aS + 8, YM + 112, 'poly(A)', C.rna, 24, 'start', 700) : kortA === 1 ? txt(aS - 8, YM + 112, 'poly(A) →', C.rna, 24, 'end', 700) :   // stopstappen: het midden van de staart valt buiten beeld
           txt((aS + aE) / 2, YM + 114, T2('poly(A)-staart (verkort)', 'poly(A) tail (shortened)'), C.rna, 20)) + '</g>' : '');
       $('tl-polyaA').setAttribute('cx', f1((aS + aE) / 2)); $('tl-polyaA').setAttribute('cy', YM + 150 + 60 * ov);
       // UTR-labels (alleen in de stappen waar ze ertoe doen)
@@ -187,7 +187,7 @@ export default {
       let g = pts.length > 1 ? `<path d="${pts.map((p, i) => `${i ? 'L' : 'M'}${f1(p[0])},${f1(p[1])}`).join('')}" stroke="${C.chain}" stroke-width="4" fill="none"/>` : '';
       g += pts.map(([x, y, a]) => bead(x, y, a, 21)).join('');
       const tip = pts[Math.min(3, pts.length - 1)] ?? anchor;
-      const nt = pts[pts.length - 1] ?? anchor, ca = released > .5 ? [FOLD[0] + 200, FOLD[1] + 10] : [nt[0], nt[1] - 30];
+      const nt = pts[pts.length - 1] ?? anchor, ca = released > .5 ? [FOLD[0] + 200, FOLD[1] + 10] : [nt[0] - 200, nt[1] + 40];
       $('tl-chainA').setAttribute('cx', f1(ca[0])); $('tl-chainA').setAttribute('cy', f1(ca[1]));
       return g;
     }
@@ -212,7 +212,7 @@ export default {
         const lab3 = step === 12 ? sub(p, .2, .5) : step === 13 ? 1 : step === 14 ? 1 - sub(p, 0, .3) : 0;
         // grote overzichtslabels verdwijnen meteen bij het inzoomen (anders vallen ze half buiten de nieuwe camera)
         const ovL = step === 1 ? ov * (1 - sub(p, 0, .06)) : ov;
-        const capX = drawMRNA(c, v, scan, ov, lab5, lab3, ovL);
+        const capX = drawMRNA(c, v, scan, ov, lab5, lab3, ovL, step >= 12 ? 2 : step === 11 ? 1 : 0);
         // labels van het ribosoom: alleen in de stap waar ze ertoe doen
         const l40 = step === 1 ? sub(p, .35, .7) : step === 2 ? 1 - sub(p, 0, .3) : step === 4 ? sub(p, .4, .7) : step === 5 ? 1 - sub(p, 0, .3) : 0;
         const l60 = step === 4 ? sub(p, .4, .7) : step === 5 ? 1 - sub(p, 0, .3) : 0;
@@ -221,8 +221,8 @@ export default {
 
         // subeenheden
         const smallOp = step === 0 ? 0 : step === 1 ? ease(sub(p, .2, .6)) : step === 14 ? 1 - .5 * ease(sub(p, .3, .8)) : 1;
-        const largeOp = step <= 3 ? 0 : step === 4 ? ease(sub(p, 0, .6)) : step === 14 ? 1 - .5 * ease(sub(p, .3, .8)) : 1;
-        const largeDy = step === 4 ? -160 * (1 - ease(sub(p, 0, .6))) : step === 14 ? -160 * ease(sub(p, .3, .8)) : 0;
+        const largeOp = step <= 3 ? 0 : step === 4 ? lerp(.4, 1, ease(sub(p, 0, .4))) : step === 14 ? 1 - .5 * ease(sub(p, .3, .8)) : 1;
+        const largeDy = step === 4 ? -70 * (1 - ease(sub(p, 0, .4))) : step === 14 ? -160 * ease(sub(p, .3, .8)) : 0;
         $('tl-small').setAttribute('opacity', f1(smallOp)); $('tl-small').setAttribute('transform', `translate(0 ${step === 14 ? f1(90 * ease(sub(p, .3, .8))) : 0})`);
         $('tl-large').setAttribute('opacity', f1(largeOp)); $('tl-large').setAttribute('transform', `translate(0 ${f1(largeDy)})`);
 
@@ -231,7 +231,7 @@ export default {
         if (step >= 1 && step <= 2) eif += factor(capX + 70, YM - 50, 90, 34, 'eIF4F', C.prot2, step === 1 ? sub(p, 0, .3) : 1 - sub(p, .6, 1), 18);
         if (step >= 1 && step <= 4) {
           const o1 = step === 1 ? sub(p, .3, .6) : 1;
-          eif += factor(1000, 705, 80, 34, 'eIF3', C.prot3, step === 4 ? o1 * (1 - sub(p, .4, .8)) : o1, 18);
+          eif += factor(860, 705, 80, 34, 'eIF3', C.prot3, step === 4 ? o1 * (1 - sub(p, .4, .8)) : o1, 18);
           eif += factor(SITE.P - 130, 330, 130, 34, 'eIF2·GTP', C.prot2, step === 3 ? o1 * (1 - sub(p, .5, .9)) : step === 4 ? 0 : o1, 18);
           eif += factor(SITE.P - 180, 705, 76, 34, 'eIF1', C.prot3, step === 3 ? o1 * (1 - sub(p, .5, .9)) : step === 4 ? 0 : o1, 18);
           if (step === 4) eif += factor(SITE.A + 40, 150 - 160 * (1 - ease(sub(p, 0, .6))), 146, 34, 'eIF5B·GTP', C.prot2, 1 - sub(p, .7, 1), 18);
@@ -244,7 +244,7 @@ export default {
         $('tl-eefA').setAttribute('cx', '-9999');
         // tRNA-label links naast de arm van het tRNA in de P-plaats (niet op de keten)
         const tAx = phase === 'elong' ? SITE.P - v * COD - ease(sub(u, .85, 1)) * 160 : SITE.P;
-        $('tl-trnaA').setAttribute('cx', step === 0 ? '-9999' : f1(tAx - 80)); $('tl-trnaA').setAttribute('cy', f1(YM - 52 - 90 - (phase === 'elong' ? ease(sub(u, .85, 1)) * 220 : 0)));
+        $('tl-trnaA').setAttribute('cx', step === 0 || (step === 14 && p > .5) ? '-9999' : f1(tAx - 80)); $('tl-trnaA').setAttribute('cy', f1(YM - 52 - 90 - (phase === 'elong' ? ease(sub(u, .85, 1)) * 220 : 0)));
         let chain = '';
         const yDock = YM - 52;
         if (phase === 'init') {
@@ -263,10 +263,10 @@ export default {
           const ix = lerp(SITE.A + 380, aX, arr), iy = lerp(yDock - 420, yDock, arr);
           const carriesOwnAa = bond < .5;
           inc += trna(ix, iy, c + 1, carriesOwnAa ? AAS[c + 1] : null, sub(u, 0, .08) * 1, step === 6);
-          const eA = u < .4 ? [ix + 84, iy - 176] : u >= .62 && u < .82 ? [SITE.A + 190 - shift, 352] : [-9999, 0];
+          const eA = u < .4 ? [ix + 250, iy - 140] : u >= .62 && u < .82 ? [SITE.A + 190 - shift, 352] : [-9999, 0];
           $('tl-eefA').setAttribute('cx', f1(eA[0])); $('tl-eefA').setAttribute('cy', f1(eA[1]));
           if (u < .45) eef = factor(ix + 84, iy - 150, 150, 34, 'eEF1A·GTP', C.prot2, 1 - sub(u, .38, .45), 19);
-          if (u >= .6 && u < .85) eef = factor(SITE.A + 70 - shift, 360, 136, 34, 'eEF2·GTP', C.prot2, sub(u, .6, .64) * (1 - sub(u, .8, .85)), 19);
+          if (u >= .6 && u < .85) eef = factor(SITE.A + 70 - shift, 360, 136, 34, 'eEF2·GTP', C.prot2, sub(u, .6, .64) * (1 - sub(u, .76, .82)), 19);
           pairs += pairLines(aX, CODONS[c + 1], sub(u, .3, .38));
           if (u < .85) pairs += pairLines(pX, CODONS[c], .55);
           // keten: vóór binding aan P-tRNA (c+1 residuen), erna aan het nieuwe tRNA (c+2 residuen)
@@ -287,7 +287,7 @@ export default {
           const rin = step === 12 ? ease(sub(p, 0, .5)) : 1;
           const rx = lerp(SITE.A + 380, SITE.A, rin), ry = lerp(yDock - 420, yDock, rin);
           const rop = step === 14 ? 1 - sub(p, 0, .4) : 1;
-          rf = (rop <= .01 ? '' : `<g opacity="${f1(rop)}">` + eRF1(rx, ry) + '</g>') + factor(rx + 100, ry - 170, 136, 34, 'eRF3·GTP', C.prot2, step === 12 ? sub(p, .1, .4) * (1 - sub(p, .75, 1)) : 0, 18);
+          rf = (rop <= .01 ? '' : `<g opacity="${f1(rop)}">` + eRF1(rx, ry) + '</g>') + factor(rx + 100, ry - 170, 136, 34, 'eRF3·GTP', C.prot2, step === 12 ? sub(p, .1, .4) * (1 - sub(p, .7, .9)) : 0, 18);
           chain = chainSVG([SITE.P + 22, yDock - 222], c + 1, rel);
           if (step === 14) abce += factor(SITE.P, 505, 110, 38, 'ABCE1', C.prot2, sub(p, .2, .45), 22);
         }

@@ -60,7 +60,7 @@ export default {
     ST(8500, cam(760, 470, 1250), 'Op weg naar het ER', 'On the way to the ER', 'Ribosoom en herkenningsdeeltje hechten aan een ontvanger (receptor) in het ER-membraan.', 'Ribosome and recognition particle dock onto a receiver (receptor) in the ER membrane.'),
     ST(9000, cam(820, 560, 950), 'Over naar het kanaal', 'Handed over to the channel', 'Het deeltje laat los. Het ribosoom gaat op een kanaal in het ER-membraan zitten; het label opent dat kanaal.', 'The particle lets go. The ribosome sits down on a channel in the ER membrane; the label opens that channel.'),
     ST(9000, cam(840, 622, 1040), 'De keten schuift het ER in', 'The chain threads into the ER', 'De aanmaak gaat verder: de groeiende keten schuift meteen door het kanaal naar de binnenkant van het ER.', 'Production resumes: the growing chain threads straight through the channel into the inside of the ER.'),
-    ST(8500, cam(820, 660, 950), 'Het label wordt afgeknipt', 'The label is cut off', 'Een knipenzym binnen in het ER knipt het adreslabel af. Dat blijft in het membraan en wordt afgebroken.', 'A cutting enzyme inside the ER cuts off the address label. It stays in the membrane and is broken down.'),
+    ST(8500, cam(810, 630, 1070), 'Het label wordt afgeknipt', 'The label is cut off', 'Een knipenzym binnen in het ER knipt het adreslabel af. Dat blijft in het membraan en wordt afgebroken.', 'A cutting enzyme inside the ER cuts off the address label. It stays in the membrane and is broken down.'),
     ST(8500, cam(860, 640, 1100), 'Vooruitblik: suikers erop', 'Preview: adding sugars', 'Een enzym kan een kant-en-klare suikerboom op bepaalde plekken zetten. Albumine heeft zo’n plek niet.', 'An enzyme can put a ready-made sugar tree on certain spots. Albumin has no such spot.'),
     ST(9500, cam(1060, 560, 1150), 'Eiwitten die in het membraan blijven', 'Proteins that stay in the membrane', 'Een waterafstotend stuk dat niet geknipt wordt, glipt zijdelings uit het kanaal en blijft in het membraan.', 'A water-repelling stretch that is not cut off slips sideways out of the channel and stays stuck in the membrane.'),
   ],
@@ -184,8 +184,8 @@ export default {
           if (i >= 4 && i <= 6) ch += `<rect x="${GATE - 19}" y="${MT - 34}" width="38" height="${17 * 6.6 + 24}" rx="17" fill="rgba(127,220,106,.18)" stroke="${C.chain}" stroke-width="2" opacity="${f1(sigOp * (i === 4 ? sub(p, .6, .8) : 1))}"/>`;
           const lo = i > 0 && LET[i] !== LET[i - 1] ? lerp(LET[i - 1], LET[i], sub(p, 0, .2)) : LET[i];
           const kB = i === 4 ? 1 - sub(p, .5, .9) : kS;                  // compacte bolletjes zonder letters zodra het signaal een helix is
-          pos.forEach((q, j) => { const o = j < NSIG ? sigOp : 1, inGate = i >= 4 && j < NSIG, r0 = i === 1 || i === 2 ? 15 : 14; if (o > .01) ch += `<g opacity="${f1(o)}">${bead(q[0], q[1], SEQ[j], inGate ? 11 : lerp(r0, 11, kB), inGate ? 0 : lo * (1 - kB))}</g>`; });
-          if (i <= 3 && pos.length) ch += txt(pos[0][0] + (kS > .5 ? -6 : 8), pos[0][1] - 20, 'N', '#fff', 20, 'middle', 800);
+          pos.forEach((q, j) => { const o = j < NSIG ? sigOp : 1, inGate = i >= 4 && j < NSIG, r0 = i === 1 || i === 2 || i === 6 ? 15 : 14; if (o > .01) ch += `<g opacity="${f1(o)}">${bead(q[0], q[1], SEQ[j], inGate ? 11 : lerp(r0, 11, kB), inGate ? 0 : lo * (1 - kB))}</g>`; });
+          if (i <= 3 && pos.length) ch += txt(pos[0][0] + (kS > .5 ? -26 : 8), pos[0][1] - (kS > .5 ? 12 : 20), 'N', '#fff', 20, 'middle', 800);
           ch += '</g>';
         }
         $('er-chain').innerHTML = ch;
@@ -202,10 +202,10 @@ export default {
           const k = i === 2 ? ease(sub(p, .05, .45)) : 1, rel = i === 4 ? ease(sub(p, .45, .85)) : 0;
           const base = i === 4 ? RECEP : exit;              // in stap 5 blijft SRP bij de receptor; het ribosoom schuift naar Sec61
           const off = [(1 - k) * 300 + rel * 140, -(1 - k) * 220 - rel * 160];
-          const b54 = [base[0] + S54[0] + off[0], base[1] + S54[1] + off[1]], alu = [base[0] + 141 + off[0], base[1] - 165 + off[1]];
+          const b54 = [base[0] + S54[0] + off[0], base[1] + S54[1] + off[1]], alu = [base[0] + 118 + off[0], base[1] - 124 + off[1]];   // Alu in de spleet tussen 40S en 60S, bij de bindingsplaats van de elongatiefactoren (onder het mRNA)
           const srpOp = i === 2 ? sub(p, 0, .15) : i === 3 ? 1 : 1 - sub(p, .45, .8);
           srp += `<g opacity="${f1(srpOp)}">` +
-            `<path d="M${f1(b54[0])},${f1(b54[1])} C${f1(b54[0] + 175)},${f1(b54[1] - 70)} ${f1(alu[0] + 130)},${f1(alu[1] + 40)} ${f1(alu[0])},${f1(alu[1])}" stroke="${SL7}" stroke-width="10" fill="none" stroke-linecap="round"/>` +
+            `<path d="M${f1(b54[0])},${f1(b54[1])} C${f1(b54[0] + 120)},${f1(b54[1] - 40)} ${f1(alu[0] + 90)},${f1(alu[1] + 30)} ${f1(alu[0])},${f1(alu[1])}" stroke="${SL7}" stroke-width="10" fill="none" stroke-linecap="round"/>` +
             eiwit(b54[0], b54[1], 62, 28, C.prot, { seed: 54, label: 'SRP54', fs: 18 }) +
             eiwit(alu[0], alu[1], 30, 19, C.prot3, { seed: 14, label: 'Alu', fs: 15 }) +
             (i === 3 || (i === 4 && p < .45) ? txt(b54[0] - 20, b54[1] + 48, 'GTP', '#ffe08a', 16, 'middle', 700) : '') + '</g>';
@@ -218,9 +218,11 @@ export default {
         if (i === 6) {
           const k = sub(p, .05, .25), flash = sub(p, .35, .5);
           spc += `<g opacity="${f1(k)}">${tmHelix(GATE + 70, MT - 4, MB + 4, C.prot3, 1, 14)}${eiwit(GATE + 66, MB + 38, 48, 26, C.prot3, { seed: 21, label: 'SPC', fs: 18 })}${txt(GATE + 122, MB + 44, T2('signaalpeptidase', 'signal peptidase'), C.prot, 18, 'start', 700)}</g>`;
-          if (flash > 0 && flash < 1) spc += `<circle cx="${GATE}" cy="${MT + 98}" r="${f1(16 + 30 * flash)}" fill="none" stroke="#fff" stroke-width="3" opacity="${f1(1 - flash)}"/>`;
-          ov += `<g opacity="${f1(sub(p, .45, .6))}">${txt(GATE - 66, MT + 108, '✂', '#fff', 30, 'middle', 800)}</g>`;
-          ov += `<g opacity="${f1(sub(p, .75, .9))}">${txt(1270, 905, T2('N-terminus van pro-albumine: RGVFRR-DAHK…', 'N terminus of pro-albumin: RGVFRR-DAHK…'), '#fff', 20, 'end', 700)}</g>`;
+          // knipplaats Ser18 | Arg19: de schaar blijft bij Arg19, het nieuwe N-uiteinde, ook als de keten verschuift
+          const kp = pos[NSIG] ?? [GATE, MT + 98], kq = pos[NSIG - 1] ?? kp, kc = sub(p, .45, .9) > 0 ? kp : [(kp[0] + kq[0]) / 2, (kp[1] + kq[1]) / 2];
+          if (flash > 0 && flash < 1) spc += `<circle cx="${f1(kc[0])}" cy="${f1(kc[1])}" r="${f1(16 + 30 * flash)}" fill="none" stroke="#fff" stroke-width="3" opacity="${f1(1 - flash)}"/>`;
+          ov += `<g opacity="${f1(sub(p, .45, .6))}">${txt(kc[0] - 34, kc[1] + 10, '✂', '#fff', 30, 'middle', 800)}</g>`;
+          ov += `<g opacity="${f1(sub(p, .75, .9))}">${txt(870, 745, T2('N-terminus van pro-albumine:', 'N terminus of pro-albumin:'), '#fff', 20, 'start', 700) + txt(870, 773, 'RGVFRR-DAHK…', '#fff', 20, 'start', 700)}</g>`;
         }
         if (i === 7) {
           const k = sub(p, .05, .25);

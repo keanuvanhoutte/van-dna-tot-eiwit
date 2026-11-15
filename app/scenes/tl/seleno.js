@@ -28,7 +28,7 @@ export default {
     ST(9500, cam(800, 330, 1350), 'Gemaakt op zijn eigen tRNA', 'Made on its own tRNA', 'Het tRNA krijgt eerst serine. Twee enzymen maken daar selenocysteïne van: zuurstof wordt selenium.', 'The tRNA is first loaded with serine. Two enzymes turn it into selenocysteine: oxygen becomes selenium.'),
     ST(9000, cam(920, 460, 1350), 'Een lus in het mRNA geeft het sein', 'A loop in the mRNA gives the signal', 'Een haarspeldlus achteraan in het mRNA (SECIS) roept via een eiwit een speciale helper met het tRNA erbij.', 'A hairpin loop near the end of the mRNA (SECIS) calls in, via a protein, a special helper carrying the tRNA.'),
     ST(9000, cam(770, 470, 1150), 'Het ribosoom komt bij UGA', 'The ribosome reaches UGA', 'Die speciale helper levert het tRNA af in plaats van de gewone. Het anticodon past op UGA.', 'That special helper delivers the tRNA instead of the usual one. The anticodon fits UGA.'),
-    ST(8500, cam(700, 460, 1050), 'Ingebouwd, en verder lezen', 'Built in, and reading on', 'Selenocysteïne wordt gewoon vastgekoppeld en het ribosoom leest door. Zonder selenium of lus stopt het hier meestal.', 'Selenocysteine is linked on as usual and the ribosome reads on. Without selenium or the loop it usually stops here.'),
+    ST(8500, cam(830, 440, 1340), 'Ingebouwd, en verder lezen', 'Built in, and reading on', 'Selenocysteïne wordt gewoon vastgekoppeld en het ribosoom leest door. Zonder selenium of lus stopt het hier meestal.', 'Selenocysteine is linked on as usual and the ribosome reads on. Without selenium or the loop it usually stops here.'),
     ST(9500, cam(800, 470, 1400), 'UAG in sommige microben', 'UAG in some microbes', 'Sommige archaea en enkele bacteriën lezen UAG als pyrrolysine, een aminozuur gemaakt uit twee lysines.', 'Some archaea and a few bacteria read UAG as pyrrolysine, an amino acid made from two lysines.'),
     ST(9000, FULL, 'Aminozuur 21 en 22', 'Amino acids 21 and 22', 'Beide via een stopcodon. Selenocysteïne: in soorten uit alle drie de takken van het leven. Pyrrolysine: enkele microben.', 'Both via a stop codon. Selenocysteine: in species from all three branches of life. Pyrrolysine: a few microbes.'),
   ],
@@ -180,7 +180,7 @@ export default {
           m0 += txt(190, y0 + 24, "5'", C.text, 20, 'end') + txt(1410, y0 + 24, "3'", C.text, 20, 'start') + txt(640, y0 + 80, T2('UAG = Pyl', 'UAG = Pyl'), PYL_COL, 24, 'middle', 800) + '</g>';
           const k2 = ease(sub(p, .35, .7));
           const [x, y] = E2([1150, 330], [640, y0 - 30], k2);
-          pylm = m0; pylt = trna(x, y, 'AUC', ['Pyl', PYL_COL], 1);
+          pylm = m0; pylt = trna(x, y, 'AUC', ['Pyl', PYL_COL], 1, k2 > .95);
           let s0 = `<g>` + textBox(150, 330, 430, [T2('2 × Lys → Pyl (PylB, C, D)', '2 × Lys → Pyl (PylB, C, D)'), T2('PylRS laadt tRNA-Pyl direct', 'PylRS charges tRNA-Pyl directly'), T2('bv. methylamine-methyltransferasen', 'e.g. methylamine methyltransferases')], { title: T2('Pyrrolysine (Pyl, O)', 'Pyrrolysine (Pyl, O)'), col: PYL_COL, fs: 19 }) + '</g>';
           s0 += `<g opacity="${f1(sub(p, .75, .9))}">${txt(x + 60, y - 110, T2('CUA · UAG', 'CUA · UAG'), '#fff', 22, 'start', 700)}</g>`;
           pyl = s0;

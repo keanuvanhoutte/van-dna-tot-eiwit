@@ -32,7 +32,7 @@ export default {
     ST(8000, cam(420, 460, 700), 'Drie zones in elkaar', 'Three zones, one inside the other',
       'De nucleolus heeft drie zones in elkaar. Het RNA ontstaat binnenin en schuift naar buiten terwijl het rijpt.',
       'The nucleolus has three zones nested inside each other. The RNA is made inside and moves outwards as it matures.'),
-    ST(8000, cam(1170, 240, 860), 'Honderden kopieën van één gen', 'Hundreds of copies of one gene',
+    ST(8000, cam(1155, 190, 960), 'Honderden kopieën van één gen', 'Hundreds of copies of one gene',
       'De genen voor ribosoom-RNA liggen in honderden kopieën achter elkaar. De tussenstukken worden geen ribosoom-RNA.',
       'The genes for ribosomal RNA lie one after another in hundreds of copies. The spacers do not become ribosomal RNA.'),
     ST(9000, cam(1030, 290, 760), 'Kerstbomen van RNA', 'Christmas trees of RNA',
@@ -112,7 +112,7 @@ export default {
       <path d="M${FCS[1][0] + 60},${FCS[1][1] - 60} L720,90 M${FCS[1][0] + 60},${FCS[1][1] + 60} L720,420" stroke="#fff" stroke-width="1.5" stroke-dasharray="6 5" opacity=".4"/>
     </g>
     <g id="nl-envelope">
-      <g data-node="kernimport" data-color="${C.prot}" data-nolabel>${kernEnvelop(ptsBoog(40, 838, 420, 768, 820, 838, 40), { closed: false, poriën: [.495], poreW: 58, w: 11, gap: 11, binnen: -1, s: 1.1 })}</g>
+      <g data-node="kernimport" data-color="${C.prot}" data-nolabel>${kernEnvelop(ptsBoog(40, 838, 370, 777, 700, 822, 40), { closed: false, poriën: [.576], poreW: 58, w: 11, gap: 11, binnen: -1, s: 1.1 })}</g>
       ${txt(560, 770, T2('kernenvelop · kernporie', 'nuclear envelope · pore'), C.muted, 15, 'start')}
       ${txt(140, 862, T2('cytoplasma ↓', 'cytoplasm ↓'), C.muted, 15)}
     </g>
@@ -152,7 +152,7 @@ export default {
             `<circle cx="${f1(x)}" cy="${f1(TREE.y - len)}" r="${f1(2 + 3 * u)}" fill="${C.rrna}"/>` +
             `<circle cx="${f1(x)}" cy="${TREE.y}" r="5.5" fill="${C.prot}" stroke="#0a1224" stroke-width="1.5"/>`;
         }
-        if (step === 3) tr += `<g opacity="${f1(sub(p, .5, .8))}">${txt(TREE.x1 + 14, TREE.y - 16, '← Pol I', C.prot, 20, 'start', 700)}</g>`;
+        if (step === 3) tr += `<g opacity="${f1(sub(p, .5, .8))}"><line x1="${TREE.x1 + 34}" y1="${TREE.y - 30}" x2="${TREE.x1 - 6}" y2="${TREE.y - 6}" stroke="${C.prot}" stroke-width="2"/>${txt(TREE.x1 + 38, TREE.y - 30, 'Pol I', C.prot, 20, 'start', 700)}</g>`;
         $('nl-tree').innerHTML = tr;
 
         // snoRNP-modificaties op het 47S
