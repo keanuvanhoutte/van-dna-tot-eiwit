@@ -2,7 +2,7 @@ import { C, T2, svgOpen, FULL, cam, sub, ease, lerp, f1, rng } from '../../kit.j
 import { T, TL } from './_b_kit.js';
 import { arrow } from '../repl/_draw.js';
 import { DEST, btn } from './_fate.js';
-import { blaasje, cisterne, membraanPts, ptsBoog, hydrolase, m6pReceptor, vATPase, eiwit, bioDefs } from '../../bio.js';
+import { blaasje, cisterne, membraanPts, ptsBoog, hydrolase, tmHelix, vATPase, eiwit, bioDefs } from '../../bio.js';
 
 /*
  * Lysosoom: in het (cis-)Golgi krijgen zure knipenzymen een suikerlabel (mannose-6-fosfaat); een ontvanger (M6P-receptor)
@@ -15,24 +15,67 @@ import { blaasje, cisterne, membraanPts, ptsBoog, hydrolase, m6pReceptor, vATPas
 const L3 = (nl, en) => ({ nl, en });
 const ENZ = C.prot, SUG = '#00A651', PH = DEST.lyso, REC = '#ffc247', ENDO = '#ff8a3d', PUMP = '#5fd3e6';
 const LY = [1180, 400], LR = 190, EN = [800, 580], ER0 = 105, PMX = 1520;
-const DEBRIS = '#8a93a8', GLYC = '#9cc0ff';
+const DEBRIS = '#8a93a8', GLYC = '#9cc0ff', BB = '#e6ebf5';   // BB = afbraakproducten (bouwstenen)
 const ES = .5;                                  // grootte van het enzym (zodat het met label in het Golgi-lumen past)
 /* Golgi: 4 cisternen, cis links, trans rechts (x = midden van de uiteinden) */
 const GX = i => 250 + i * 92, GLEN = i => 330 - Math.abs(i - 1.5) * 30;
 const CISP = [217, 400];                        // enzym in het lumen van de cis-cisterne
+const UP = [0, -1];
 const RC = [516, 244];                          // ontvanger in de bovenste kap van de trans-cisterne (kop naar het lumen)
 const RE = [-10, 75];                           // enzym t.o.v. de ontvanger: het label zit net onder de groeve van de kop
-const VR = 48, V0 = [RC[0] - 8, RC[1] + VR], V1 = [600, 215];          // receptorblaasje: in de kap → afgesnoerd
-const ERC = [EN[0], EN[1] - ER0], VE = [ERC[0] - 8, ERC[1] - VR + 12]; // ontvanger bovenaan het endosoom; blaasje dat versmelt
+const BW = 10, GAP = BW / 2 + 6;                // membraandikte van een blaasje; afstand knop → afgesnoerd blaasje
+const VR = 48, V1 = [RC[0], RC[1] - VR - GAP];  // receptorblaasje, net afgesnoerd van de trans-kap
+const ERC = [EN[0], EN[1] - ER0], VE = [ERC[0], ERC[1] - VR - GAP];   // plek bovenaan het endosoom waar het blaasje versmelt
 const EREL = [830, 590];                        // losgelaten enzym in het endosoom
-const SR = 30, SV0 = [ERC[0] - 8, ERC[1] - 30], SV1 = [RC[0] - 8, RC[1] - 19];   // terugkeerblaasje van de ontvanger
-const CR = 36, C0 = [EREL[0], EREL[1] - 14], C1 = [950, 600], C2 = [1054, 573];   // tussen twee protonpompen door  // blaasje endosoom → lysosoom
+const SR = 30, SV0 = [ERC[0], ERC[1] - SR - GAP], SV1 = [RC[0], RC[1] - SR - GAP];   // terugkeerblaasje van de ontvanger
+const CR = 36;
+const onC = (c, R, a) => [[c[0] + Math.cos(a) * R, c[1] + Math.sin(a) * R], [Math.cos(a), Math.sin(a)]];
+const [ME, NE] = onC(EN, ER0, .15), [ML, NL] = onC(LY, LR, 2.2);    // knop op het endosoom; versmelting met het lysosoom (tussen twee pompen)
+const C1 = [ME[0] + NE[0] * (CR + GAP), ME[1] + NE[1] * (CR + GAP)], C2 = [ML[0] + NL[0] * (CR + GAP), ML[1] + NL[1] * (CR + GAP)];
 const ARR = [1240, 480];                        // het afgeleverde enzym in het lysosoom
-const SEC = [[492, 386], [610, 330], [640, 132], [PMX - 23, 132]];     // I-cel: secretieblaasje Golgi → celmembraan (boven het lysosoom)
+/* I-cel: secretieblaasjes knoppen af van de rechterwand van de trans-cisterne en versmelten boven het lysosoom met het celmembraan */
+const MS = [520, 400], NS = [1, 0], WAIT = [[492, 414], [501, 474], [496, 354]];
+const MP = [1523, 132], NP = [-.997, .078];
+const SEC = [[MS[0] + CR + GAP, 400], [610, 330], [640, 132], [MP[0] + NP[0] * (CR + GAP), MP[1] + NP[1] * (CR + GAP)]];
+const CISW = [[217, 400], [308, 400], [400, 400], [RC[0] + RE[0], RC[1] + RE[1] + 12]];   // het enzym schuift door de stapel
+/* "gat" in het moedermembraan bij een knop: de kleur van het lumen erachter (lumenkleur over de achtergrond) */
+const HOLE = { golgi: '#272834', endo: '#2c232c', lyso: '#271e30', out: '#0a101f' };
 
 const enzyme = (x, y, { tag = 1, s = ES, op = 1, sugar = true, seed = 5 } = {}) => hydrolase(x, y, { tag, s, op, glycaan: sugar, seed });
-const rec = (x, y, op = 1) => m6pReceptor(x, y, { dir: 1, mw: 9, s: .5, op });
-const ves = (c, r, op) => blaasje(c[0], c[1], r, { op, w: 10, lumen: 'rgba(201,165,116,.10)' });
+/* M6P-receptor (kationafhankelijk, een dimeer): twee transmembraanhelices, elk met een korte staart in het cytosol en een
+ * kopdomein in het lumen; de groeve onderaan de kop houdt het label vast. (x, y) = punt op het membraan, kop naar beneden. */
+function rec(x, y, op = 1) {
+  if (op <= .01) return '';
+  const half = 8.5, kopY = y + half + 17;
+  let g = `<g opacity="${f1(op)}">`;
+  for (const dx of [-7, 7]) {
+    g += tmHelix(x + dx, y - half, y + half, REC, 1, 6);
+    g += `<path d="M${f1(x + dx)},${f1(y - half)} q${f1(dx * .5)},-5 ${f1(dx * .2)},-10" stroke="${REC}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+    g += `<line x1="${f1(x + dx)}" y1="${f1(y + half)}" x2="${f1(x + dx)}" y2="${f1(kopY - 6)}" stroke="${REC}" stroke-width="2.5"/>`;
+  }
+  g += eiwit(x - 7, kopY, 10, 8.5, REC, { seed: 71 }) + eiwit(x + 7.5, kopY + 2, 9.5, 8, REC, { seed: 72 });
+  g += `<path d="M${f1(x - 5)},${f1(kopY + 7.5)} q5,-4.5 10,0" stroke="#0b1224" stroke-opacity=".6" stroke-width="2" fill="none"/>`;
+  return g + '</g>';
+}
+const ves = (c, r, op = 1) => blaasje(c[0], c[1], r, { op, w: BW, lumen: 'rgba(201,165,116,.10)' });
+/* Knop: een blaasje ontstaat uit het membraan zelf. m = punt op het moedermembraan, n = richting naar het cytosol, r = straal.
+ * k = 0: vlak membraan; k ↑: het membraan stulpt uit naar het cytosol (de hals blijft open naar het lumen); k = 1: afgesnoerd.
+ * Versmelten = dezelfde knop met k van 1 naar 0. Geeft { svg, c, top } terug; top = het punt van de knop het verst van de hals. */
+function knop(m, n, r, k, hole, op = 1) {
+  const rho = r * (.1 + .9 * Math.min(1, k / .6));
+  const d = k < .75 ? rho * .8 * k / .75 : lerp(.8 * r, r + GAP, (k - .75) / .25);
+  const c = [m[0] + n[0] * d, m[1] + n[1] * d], top = [c[0] + n[0] * rho, c[1] + n[1] * rho];
+  const o = op * Math.min(1, k / .08);
+  let svg = '';
+  if (o > .01) {
+    if (d < rho) {
+      const a = Math.acos(d / rho), phi = Math.atan2(-n[1], -n[0]), P = [];
+      for (let i = 0; i <= 40; i++) { const t = phi + a + (2 * Math.PI - 2 * a) * i / 40; P.push([c[0] + rho * Math.cos(t), c[1] + rho * Math.sin(t)]); }
+      svg = `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="${f1(Math.max(0, rho - BW / 2 + 1))}" fill="${hole}" opacity="${f1(o)}"/>` + membraanPts(P, { w: BW, op: o });
+    } else svg = ves(c, rho, o);
+  }
+  return { svg, c, top: k < .1 ? mix(m, top, k / .1) : top };
+}
 const mix = (a, b, k) => [lerp(a[0], b[0], k), lerp(a[1], b[1], k)];
 const add = (a, d) => [a[0] + d[0], a[1] + d[1]];
 const bow = (a, b, k, h) => { const q = mix(a, b, k); return [q[0], q[1] - Math.sin(k * Math.PI) * h]; };
@@ -52,18 +95,18 @@ export default {
   time: { nl: 'schematisch', en: 'schematic' },
   org: { nl: 'mens', en: 'human' },
   legend: [[ENZ, L3('knipenzym (zure hydrolase)', 'cutting enzyme (acid hydrolase)')], [SUG, L3('suiker (mannose)', 'sugar (mannose)')], [PH, L3('fosfaat: het label (mannose-6-fosfaat)', 'phosphate: the tag (mannose 6-phosphate)')],
-    [REC, L3('ontvanger (M6P-receptor)', 'receiver (M6P receptor)')], [PUMP, L3('protonpomp (V-ATPase)', 'proton pump (V-ATPase)')], [C.mem, 'Golgi'], [ENDO, L3('endosoom', 'endosome')], [DEST.lyso, L3('lysosoom', 'lysosome')]],
+    [REC, L3('ontvanger (M6P-receptor)', 'receiver (M6P receptor)')], [PUMP, L3('protonpomp (V-ATPase)', 'proton pump (V-ATPase)')], [C.mem, 'Golgi'], [ENDO, L3('endosoom', 'endosome')], [DEST.lyso, L3('lysosoom', 'lysosome')], [BB, L3('bouwstenen (afbraakproducten)', 'building blocks (breakdown products)')]],
   simplified: {
-    nl: 'Schematisch en niet op schaal. Het label wordt in twee stappen gemaakt (eerst een fosfaat met een afdekgroep, die daarna verwijderd wordt); hier is dat één stap. Het enzym springt hier van de cis- naar de trans-cisterne; in werkelijkheid schuift het door de stapel. Het endosoom rijpt in werkelijkheid geleidelijk tot lysosoom; hier brengt één blaasje het enzym over. Niet elk lysosomaal eiwit gebruikt dit label: er bestaan ook andere ontvangers.',
-    en: 'Schematic and not to scale. The tag is made in two steps (first a phosphate with a capping group, which is then removed); here that is one step. Here the enzyme jumps from the cis to the trans cisterna; in reality it moves through the stack. In reality the endosome gradually matures into a lysosome; here a single vesicle carries the enzyme across. Not every lysosomal protein uses this tag: other receivers also exist.' },
+    nl: 'Schematisch en niet op schaal. Het label wordt in twee stappen gemaakt (eerst een fosfaat met een afdekgroep, die daarna verwijderd wordt); hier is dat één stap. Het enzym verschijnt hier na elkaar in elke cisterne; in werkelijkheid schuift het geleidelijk door de stapel. Het endosoom rijpt in werkelijkheid geleidelijk tot lysosoom; hier brengt één blaasje het enzym over. Niet elk lysosomaal eiwit gebruikt dit label: er bestaan ook andere ontvangers.',
+    en: 'Schematic and not to scale. The tag is made in two steps (first a phosphate with a capping group, which is then removed); here that is one step. Here the enzyme appears in each cisterna in turn; in reality it moves gradually through the stack. In reality the endosome gradually matures into a lysosome; here a single vesicle carries the enzyme across. Not every lysosomal protein uses this tag: other receivers also exist.' },
   steps: [
     { dur: 7500, cam: FULL, title: L3('Het lysosoom breekt grote moleculen af', 'The lysosome breaks down large molecules'),
       text: L3('Een lysosoom is een blaasje vol knipenzymen. Binnen is het zuur: pH ongeveer 4,5 tot 5.', 'A lysosome is a vesicle full of cutting enzymes. Inside it is acidic: pH about 4.5 to 5.') },
-    { dur: 8000, cam: cam(500, 370, 840), title: L3('Het enzym krijgt een label in het Golgi', 'The enzyme gets a tag in the Golgi'),
+    { dur: 8000, cam: cam(500, 355, 860), title: L3('Het enzym krijgt een label in het Golgi', 'The enzyme gets a tag in the Golgi'),
       text: L3('Aan de cis-kant van het Golgi komt een fosfaatgroepje op een suiker van het enzym. Dat suikerlabel is het adres van het lysosoom.', 'On the cis side of the Golgi a small phosphate group is put on one of the enzyme’s sugars. That sugar tag is the lysosome’s address.') },
-    { dur: 8000, cam: cam(500, 370, 840), title: L3('Een ontvanger grijpt het label', 'A receiver grabs the tag'),
-      text: L3('Een ontvanger in het membraan van het trans-Golgi grijpt het label. Samen snoeren ze af in een klein blaasje.', 'A receiver in the membrane of the trans-Golgi grabs the tag. Together they pinch off in a small vesicle.') },
-    { dur: 9000, cam: cam(730, 440, 1060), title: L3('Afgeleverd, en de ontvanger keert terug', 'Delivered, and the receiver returns'),
+    { dur: 8000, cam: cam(500, 355, 860), title: L3('Een ontvanger grijpt het label', 'A receiver grabs the tag'),
+      text: L3('Het enzym schuift door naar de trans-kant. Daar grijpt een ontvanger in het membraan het label, en samen snoeren ze af in een blaasje.', 'The enzyme moves on to the trans side. There a receiver in the membrane grabs the tag, and together they pinch off in a vesicle.') },
+    { dur: 9000, cam: cam(955, 420, 1040), title: L3('Afgeleverd, en de ontvanger keert terug', 'Delivered, and the receiver returns'),
       text: L3('Het blaasje versmelt met een endosoom. Daar is het zuurder: de ontvanger laat los en keert terug naar het Golgi.', 'The vesicle fuses with an endosome. It is more acidic there: the receiver lets go and returns to the Golgi.') },
     { dur: 9000, cam: cam(1000, 425, 1040), title: L3('In het zuur gaan de enzymen aan het werk', 'In the acid the enzymes get to work'),
       text: L3('Een blaasje brengt het enzym naar het lysosoom. Het zuur zet de enzymen aan: ze knippen grote moleculen in bouwstenen.', 'A vesicle carries the enzyme to the lysosome. The acid switches the enzymes on: they cut large molecules into building blocks.') },
@@ -77,11 +120,11 @@ export default {
     for (let i = 0; i < 4; i++) golgi += cisterne(GX(i), 400, { len: GLEN(i), dik: 56, buig: 34, w: 9 });
     return svgOpen(bioDefs) + `
     <g data-node="golgi" data-color="${C.mem}" data-label="${T2('Golgi', 'Golgi')}">${golgi}<circle data-anchor="golgi" cx="380" cy="200" r="1" fill="none"/></g>
-    ${T(GX(0), 600, 'cis', { size: 22, col: C.muted })}${T(GX(3), 600, 'trans', { size: 22, col: C.muted })}${arrow(GX(0) + 26, 593, GX(3) - 34, 593, C.muted, 2)}
+    ${T(GX(0), 584, 'cis', { size: 22, col: C.muted })}${T(GX(3), 584, 'trans', { size: 22, col: C.muted })}${arrow(GX(0) + 26, 577, GX(3) - 34, 577, C.muted, 2)}
     ${T(394, 655, 'Golgi', { size: 28, col: C.mem })}
-    <g data-node="endocytose" data-color="${ENDO}" data-nolabel>${blaasje(EN[0], EN[1], ER0, { lumen: 'rgba(255,138,61,.13)', rand: ENDO, w: 12 })}</g>
-    ${T(EN[0], EN[1] + ER0 + 29, T2('endosoom', 'endosome'), { size: 24, col: ENDO })}
-    <g id="ly-epump"></g>
+    <g id="ly-endo"><g data-node="endocytose" data-color="${ENDO}" data-nolabel>${blaasje(EN[0], EN[1], ER0, { lumen: 'rgba(255,138,61,.13)', rand: ENDO, w: 12 })}</g>
+    ${T(EN[0], EN[1] + ER0 + 25, T2('endosoom', 'endosome'), { size: 24, col: ENDO })}
+    <g id="ly-epump"></g></g>
     <g data-node="autofagie" data-color="${DEST.lyso}" data-label="${T2('Ook grote stukken: autofagie', 'Large pieces too: autophagy')}">
       <g id="ly-body">${blaasje(LY[0], LY[1], LR, { lumen: 'rgba(255,107,107,.11)', rand: DEST.lyso, w: 16 })}</g>
       <g id="ly-pump"></g>
@@ -118,18 +161,20 @@ export default {
           TL(985, 158, [T2('protonpomp', 'proton pump'), T2('H⁺ naar binnen', 'H⁺ inward')], { size: 24, col: PUMP, op: calm, anchor: 'end' });
         // ook het endosoom heeft protonpompen (iets minder zuur dan het lysosoom)
         $('ly-epump').innerHTML = [2.3, 2.85].map(a => vATPase(EN[0] + Math.cos(a) * ER0, EN[1] + Math.sin(a) * ER0, a, { s: .8, k: kIntro })).join('');
-        let g = '', fx = '';
+        // het endosoom valt weg in de ingezoomde Golgi-stappen (half in beeld, onder de ondertitel)
+        $('ly-endo').setAttribute('opacity', f1(step === 1 ? 1 - ease(sub(p, 0, .15)) : step === 2 ? 0 : step === 3 ? ease(sub(p, 0, .12)) : 1));
+        let g = '', kn = '', fx = '';
         // enzymen in het lysosoom (verdwijnen bij I-cel; bij Pompe blijven ze, op één na)
         LENZ.forEach(([x, y], i) => {
           const op = (1 - icell * .85) * (i === 2 ? 1 - kPompe : 1);
-          g += enzyme(x, y, { sugar: false, op, seed: 10 + i });
+          g += enzyme(x, y, { tag: 0, op, seed: 10 + i });     // lysosomale enzymen houden hun suikers; enkel het fosfaat is eraf
         });
         if (step >= 5) g += enzyme(ARR[0], ARR[1], { tag: 0, op: 1 - icell * .85 });   // het in stap 5 afgeleverde enzym
         // brokken: in stap 5 in stukjes geknipt; bij I-cel en Pompe hopen ze (of glycogeen) zich op
         CHUNK.forEach(([x, y, r], i) => {
           const cut = kWork, full = 1 - cut;
           if (full > .01) g += eiwit(x, y, r * 1.15, r, DEBRIS, { seed: CHUNK[i][3], op: .9 * full, bumps: .2 });
-          if (cut > .01 && icell < .99) for (let k = 0; k < 4; k++) g += `<circle cx="${f1(x + Math.cos(k * 1.57 + i) * r * cut)}" cy="${f1(y + Math.sin(k * 1.57 + i) * r * cut)}" r="5" fill="${C.chain}" opacity="${f1(cut * (1 - icell))}"/>`;
+          if (cut > .01 && icell < .99) for (let k = 0; k < 4; k++) g += `<circle cx="${f1(x + Math.cos(k * 1.57 + i) * r * cut)}" cy="${f1(y + Math.sin(k * 1.57 + i) * r * cut)}" r="5" fill="${BB}" opacity="${f1(cut * (1 - icell))}"/>`;
           if (icell > .01) g += eiwit(x, y, r * 1.15 * (1 + .5 * icell), r * (1 + .5 * icell), DEBRIS, { seed: CHUNK[i][3], op: .9 * icell, bumps: .2 });
         });
         if (kPompe > .01) for (let i = 0; i < 14; i++) {
@@ -137,7 +182,7 @@ export default {
           g += `<g opacity="${f1(kPompe)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="13" fill="${GLYC}" opacity=".85"/><circle cx="${f1(x + 9)}" cy="${f1(y - 7)}" r="8" fill="${GLYC}" opacity=".85"/></g>`;
         }
         const yLab = LY[1] + LR - 60;
-        if (step === 4) fx += T(LY[0], yLab, T2('bouwstenen', 'building blocks'), { size: 24, col: C.chain, op: ease(sub(p, .78, .9)) });
+        if (step === 4) fx += T(LY[0], yLab, T2('bouwstenen', 'building blocks'), { size: 24, col: BB, op: ease(sub(p, .78, .9)) });
         if (kPompe > .3) fx += T(LY[0], yLab, T2('glycogeen hoopt op', 'glycogen piles up'), { size: 24, col: GLYC, op: kPompe });
 
         // ---- de reis van één enzym (stappen 2–5), altijd binnen een membraan ----
@@ -148,51 +193,62 @@ export default {
             T(CISP[0], 222, T2('label erop', 'tag added'), { size: 26, col: PH, op: k });
         }
         if (step === 2) {
-          const kX = ease(sub(p, 0, .3)), kRec = ease(sub(p, .2, .45)), kGrab = ease(sub(p, .35, .5)), kBud = ease(sub(p, .55, .95));
-          if (kX < .99) g += enzyme(CISP[0], CISP[1], { op: 1 - kX });
-          const vc = mix(V0, V1, kBud);
-          g += ves(vc, VR, kBud);
-          g += rec(...add(vc, [8, -VR]), kRec);
-          g += enzyme(...add(add(vc, [8, -VR]), [RE[0], RE[1] + 12 * (1 - kGrab)]), { op: kX });
+          // het enzym schuift door de stapel (cis → trans), de ontvanger zit in de trans-kap; dan knopt het blaasje af
+          const u = sub(p, 0, .3) * 3, kRec = ease(sub(p, .2, .45)), kGrab = ease(sub(p, .35, .5)), kBud = ease(sub(p, .5, .95));
+          CISW.slice(0, 3).forEach((q, j) => { const o = Math.max(0, 1 - Math.abs(u - j)); if (o > .01) g += enzyme(q[0], q[1], { op: o }); });
+          const b = knop(RC, UP, VR, kBud, HOLE.golgi);
+          kn += b.svg;
+          const rp = kBud > 0 ? b.top : RC;
+          g += rec(rp[0], rp[1], kRec);
+          g += enzyme(...add(rp, [RE[0], RE[1] + 12 * (1 - kGrab)]), { op: Math.max(0, Math.min(1, u - 2)) });
         }
         if (step === 3) {
-          const kGo = ease(sub(p, 0, .3)), kFuse = ease(sub(p, .3, .42)), kAcid = ease(sub(p, .38, .5)), kRel = ease(sub(p, .45, .6));
-          const kOut = ease(sub(p, .55, .65)), kBack = ease(sub(p, .62, .85)), kIn = ease(sub(p, .85, .95));
-          const vc = bow(V1, VE, kGo, 40);
-          g += ves(vc, VR, 1 - kFuse);
-          // ontvanger: in het blaasjesmembraan → in het endosoommembraan → in een eigen blaasje terug → weer in het trans-Golgi
-          const sv = bow(SV0, SV1, kBack, 80);
-          let r = mix(add(vc, [8, -VR]), ERC, kFuse);
-          if (kOut > 0) r = mix(ERC, add(sv, [8, -SR]), kOut);
-          if (kIn > 0) r = mix(add(SV1, [8, -SR]), RC, kIn);
-          g += ves(sv, SR, kOut * (1 - kIn)) + rec(r[0], r[1]);
-          const bound = add(mix(add(vc, [8, -VR]), ERC, kFuse), RE);
-          g += enzyme(...mix(bound, EREL, kRel));
+          const kGo = ease(sub(p, 0, .28)), kFuse = ease(sub(p, .28, .45)), kAcid = ease(sub(p, .38, .5)), kRel = ease(sub(p, .45, .58));
+          const kOut = ease(sub(p, .55, .7)), kBack = ease(sub(p, .7, .84)), kIn = ease(sub(p, .84, .95));
+          let rp;
+          // heen: het blaasje reist naar het endosoom en versmelt (knop in omgekeerde richting); de ontvanger blijft in het membraan
+          if (kFuse <= 0) { const c = bow(V1, VE, kGo, 40); kn += ves(c, VR); rp = add(c, [0, -VR]); }
+          else { const b = knop(ERC, UP, VR, 1 - kFuse, HOLE.endo); kn += b.svg; rp = b.top; }
+          const bound = add(rp, RE);
+          // terug: een nieuw blaasje knopt af van het endosoom, reist terug en versmelt met de trans-kap
+          if (kOut > 0 && kBack <= 0) { const b = knop(ERC, UP, SR, kOut, HOLE.endo); kn += b.svg; rp = b.top; }
+          else if (kBack > 0 && kIn <= 0) { const c = bow(SV0, SV1, kBack, 80); kn += ves(c, SR); rp = add(c, [0, -SR]); }
+          else if (kIn > 0) { const b = knop(RC, UP, SR, 1 - kIn, HOLE.golgi); kn += b.svg; rp = b.top; }
+          g += rec(rp[0], rp[1]);
+          g += enzyme(...mix(kRel > 0 ? add(ERC, RE) : bound, EREL, kRel));
           fx += T(EN[0] + ER0 + 10, 615, T2('zuurder', 'more acidic'), { size: 24, col: PUMP, op: kAcid, anchor: 'start' });
-          fx += T(640, 420, T2('ontvanger keert terug', 'receiver returns'), { size: 24, col: REC, op: ease(sub(p, .6, .7)) * (1 - ease(sub(p, .85, .93))) });
+          fx += T(560, 462, T2('ontvanger keert terug', 'receiver returns'), { size: 24, col: REC, anchor: 'start', op: ease(sub(p, .65, .72)) * (1 - ease(sub(p, .86, .93))) });
         }
         if (step >= 4) g += rec(RC[0], RC[1]);                          // de ontvanger is terug in het trans-Golgi
         if (step === 4) {
-          const kB = ease(sub(p, .05, .3)), kG = ease(sub(p, .3, .45)), kF = ease(sub(p, .45, .55)), kIn = ease(sub(p, .45, .6)), kDeP = ease(sub(p, .5, .62));
-          const c = p < .3 ? mix(C0, C1, kB) : mix(C1, C2, kG);
-          g += ves(c, CR, kB * (1 - kF));
-          g += enzyme(...mix(add(c, [0, 14]), ARR, kIn), { tag: 1 - kDeP });
+          const kB = ease(sub(p, .05, .3)), kG = ease(sub(p, .3, .45)), kF = ease(sub(p, .45, .6)), kIn = ease(sub(p, .53, .68)), kDeP = ease(sub(p, .58, .68));
+          let c;
+          if (p < .3) { const b = knop(ME, NE, CR, kB, HOLE.endo); kn += b.svg; c = b.c; }
+          else if (kF <= 0) { c = mix(C1, C2, kG); kn += ves(c, CR); }
+          else { const b = knop(ML, NL, CR, 1 - kF, HOLE.lyso); kn += b.svg; c = b.c; }
+          const inV = add(c, [0, 14]);
+          const ep = p < .3 ? mix(EREL, inV, Math.min(1, kB / .7)) : mix(inV, ARR, kIn);
+          g += enzyme(...ep, { tag: 1 - kDeP });
           fx += T(EN[0] + ER0 + 10, 615, T2('zuurder', 'more acidic'), { size: 24, col: PUMP, op: 1 - ease(sub(p, 0, .15)), anchor: 'start' });
-          fx += T(ARR[0], ARR[1] + 48, T2('fosfaat eraf', 'phosphate removed'), { size: 22, col: PH, op: ease(sub(p, .5, .6)) * (1 - ease(sub(p, .7, .78))) });
+          fx += T(ARR[0], ARR[1] + 48, T2('fosfaat eraf', 'phosphate removed'), { size: 22, col: PH, op: ease(sub(p, .58, .66)) * (1 - ease(sub(p, .74, .8))) });
         }
-        // I-cel: enzymen zonder label gaan in secretieblaasjes naar het celmembraan en worden uitgescheiden (exocytose)
+        // I-cel: enzymen zonder label knoppen af in secretieblaasjes, die met het celmembraan versmelten (exocytose)
         if (sec > .01) {
           for (let i = 0; i < 3; i++) {
             const u = step === 5 ? ease(sub(p, .05 + i * .12, .7 + i * .12)) : 1;
-            const c = pl(SEC, Math.min(1, u / .8));
-            g += ves(c, CR, Math.min(1, u / .08) * (1 - sub(u, .8, .88)) * sec);
-            const out = mix(mix(add(c, [0, 14]), [1566, SEC[3][1] + 14], sub(u, .8, .9)), [1566, 250 + i * 115], sub(u, .88, 1));
-            g += enzyme(...out, { tag: 0, op: sec });
+            let c, ep;
+            if (u < .15) { const b = knop(MS, NS, CR, u / .15, HOLE.golgi, sec); kn += b.svg; c = b.c; ep = mix(WAIT[i], add(c, [0, 14]), Math.min(1, u / .15 / .7)); }
+            else if (u < .8) { c = pl(SEC, (u - .15) / .65); kn += ves(c, CR, sec); ep = add(c, [0, 14]); }
+            else {
+              const b = knop(MP, NP, CR, 1 - sub(u, .8, .9), HOLE.out, sec); kn += b.svg; c = b.c;
+              ep = mix(mix(add(c, [0, 14]), [1566, MP[1] + 14], sub(u, .84, .94)), [1566, 250 + i * 115], sub(u, .93, 1));
+            }
+            g += enzyme(...ep, { tag: 0, op: sec });
           }
           fx += T(900, 198, T2('geen label → naar buiten de cel', 'no tag → out of the cell'), { size: 24, col: PH, op: sec });
           fx += T(LY[0], yLab, T2('afval hoopt op', 'waste piles up'), { size: 24, col: DEBRIS, op: icell });
         }
-        $('ly-in').innerHTML = g; $('ly-fx').innerHTML = fx;
+        $('ly-in').innerHTML = kn + g; $('ly-fx').innerHTML = fx;
       },
     };
   },

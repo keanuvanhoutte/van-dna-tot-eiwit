@@ -7,8 +7,8 @@
  *   - eiwit(...)       : bobbelige, onregelmatige eiwitvorm (deterministisch via seed) i.p.v. een gladde ellips.
  *   - ribosoomOpER     : 60S zit op het Sec61-kanaal, 40S erboven, mRNA tussen beide eenheden, de keten loopt door de
  *                        tunnel van de 60S rechtstreeks het kanaal in (Voorhees & Hegde 2016; Gemmer & Förster 2020).
- *   - m6pReceptor      : ontvanger met een grote domeinkop in het lumen, één transmembraanhelix en een korte staart
- *                        (geen Y-vorm: die lijkt op een antilichaam).
+ *   - m6pReceptor      : ontvanger als dimeer (kationafhankelijke MPR): per monomeer een lumendomein, één
+ *                        transmembraanhelix en een korte staart in het cytosol (geen Y-vorm: die lijkt op een antilichaam).
  *   - vATPase          : protonpomp (V1-kop in het cytosol, V0-ring in het membraan).
  * Alle maten in scènecoördinaten (viewBox 1600×900). Alle functies geven een SVG-string terug.
  */
@@ -165,19 +165,22 @@ export function sec61(x, yMem, { mw = 22, s = 1, op = 1, col = C.prot } = {}) {
 }
 
 /* ---------- mannose-6-fosfaatreceptor (membraaneiwit) ----------
- * richting: dir = -1 → lumendomein naar boven (membraan onder), +1 → naar beneden. Kop = 2 bolvormige domeinen
- * (zoals de kationafhankelijke MPR, een dimeer), daaronder één transmembraanhelix en een korte cytosolische staart. */
-export function m6pReceptor(x, yMem, { dir = -1, mw = 18, col = '#ffc247', op = 1, s = 1, bezet = false } = {}) {
+ * Getekend als de kationafhankelijke MPR: een dimeer van twee type I-eiwitten. Elk monomeer heeft één bolvormig
+ * lumendomein (met een M6P-bindingsplaats), één transmembraanhelix en een korte staart in het cytosol.
+ * dir = -1 → lumendomeinen naar boven (membraan onder), +1 → naar beneden. */
+export function m6pReceptor(x, yMem, { dir = -1, mw = 18, col = '#ffc247', op = 1, s = 1 } = {}) {
   if (op <= .01) return '';
-  const d = dir, half = mw / 2 + 4;
-  const kopY = yMem + d * (half + 34 * s);
+  const d = dir, half = mw / 2 + 4, kopY = yMem + d * (half + 34 * s);
   let g = `<g opacity="${f1(op)}">`;
-  g += tmHelix(x, yMem - half, yMem + half, col, 1, 10 * s);
-  g += `<path d="M${f1(x)},${f1(yMem - d * half)} q${f1(8 * s)},${f1(-d * 10 * s)} ${f1(2 * s)},${f1(-d * 18 * s)}" stroke="${col}" stroke-width="${f1(5 * s)}" fill="none" stroke-linecap="round"/>`;   // korte staart in het cytosol
-  g += `<line x1="${f1(x)}" y1="${f1(yMem + d * half)}" x2="${f1(x)}" y2="${f1(kopY - d * 14 * s)}" stroke="${col}" stroke-width="${f1(5 * s)}"/>`;
-  g += eiwit(x - 14 * s, kopY, 20 * s, 17 * s, col, { seed: 71, holte: false }) + eiwit(x + 15 * s, kopY + d * 4 * s, 19 * s, 16 * s, col, { seed: 72 });
-  // bindingsgroeve bovenaan de kop (waar het M6P-label in past)
-  g += `<path d="M${f1(x - 10 * s)},${f1(kopY + d * 15 * s)} q${f1(10 * s)},${f1(-d * 9 * s)} ${f1(20 * s)},0" stroke="#0b1224" stroke-opacity=".6" stroke-width="${f1(4 * s)}" fill="none"/>`;
+  for (const k of [-1, 1]) {                                   // twee monomeren
+    const hx = x + k * 9 * s;
+    g += tmHelix(hx, yMem - half, yMem + half, col, 1, 9 * s);
+    g += `<path d="M${f1(hx)},${f1(yMem - d * half)} q${f1(k * 7 * s)},${f1(-d * 9 * s)} ${f1(k * 2 * s)},${f1(-d * 16 * s)}" stroke="${col}" stroke-width="${f1(4.5 * s)}" fill="none" stroke-linecap="round"/>`;   // korte staart in het cytosol
+    g += `<line x1="${f1(hx)}" y1="${f1(yMem + d * half)}" x2="${f1(x + k * 14 * s)}" y2="${f1(kopY - d * 12 * s)}" stroke="${col}" stroke-width="${f1(4.5 * s)}"/>`;
+    g += eiwit(x + k * 15 * s, kopY, 18 * s, 16 * s, col, { seed: 71 + k });
+  }
+  // bindingsplaatsen aan de top van elk domein (waar het M6P-label in past)
+  for (const k of [-1, 1]) g += `<path d="M${f1(x + k * 15 * s - 7 * s)},${f1(kopY + d * 14 * s)} q${f1(7 * s)},${f1(-d * 7 * s)} ${f1(14 * s)},0" stroke="#0b1224" stroke-opacity=".6" stroke-width="${f1(3.5 * s)}" fill="none"/>`;
   return g + '</g>';
 }
 
