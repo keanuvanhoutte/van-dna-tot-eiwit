@@ -409,9 +409,9 @@ export default {
         'Cholesterol heeft vier aaneengesloten ringen met een OH-groep. Het plasmamembraan bevat ongeveer 80 % van alle cholesterol van de cel.',
         'Membraaneiwitten zijn deels in het membraan ingebed: hun apolaire delen zitten in het midden, hun polaire delen steken uit in het water.',
         'De twee lagen zijn verschillend: buiten vooral fosfatidylcholine (PC) en sfingolipiden, binnen fosfatidylethanolamine (PE), het negatief geladen fosfatidylserine (PS) en fosfatidylinositol (PI). Flippasen en floppasen, pompen die ATP verbruiken, houden dat verschil in stand.',
-        'Aan de buitenkant van elke cel zit een laag suikers, vast aan eiwitten en lipiden: de glycocalyx.',
+        'Aan de buitenkant van elke cel zit een laag suikers, vast aan eiwitten en aan sfingolipiden (glycosfingolipiden): de glycocalyx. Ze is meestal tientallen tot honderden nanometer dik.',
       ],
-      facts: [['Dikte', '≈ 3,6–4,3 nm (fosfaat tot fosfaat, plasmamembraan)'], ['Model', 'vloeibaar mozaïek (Singer & Nicolson, 1972)'], ['Cholesterol', '≈ 80 % van de cholesterol van de cel zit in het plasmamembraan'], ['Buitenlaag', 'vooral PC en sfingolipiden'], ['Binnenlaag', 'PE, PS (negatief) en PI']],
+      facts: [['Dikte', '≈ 3,6–4,3 nm (fosfaat tot fosfaat, plasmamembraan van levercellen van de rat)'], ['Model', 'vloeibaar mozaïek (Singer & Nicolson, 1972)'], ['Cholesterol', '≈ 80 % van de cholesterol van de cel zit in het plasmamembraan'], ['Buitenlaag', 'vooral PC en sfingolipiden'], ['Binnenlaag', 'PE, PS (negatief) en PI']],
       why: 'Het membraan bepaalt wat de cel in- en uitgaat. Daarom hebben signaalmoleculen receptoren nodig, en moeten virussen en mRNA-vaccins een weg door het membraan vinden.',
     },
     en: {
@@ -423,9 +423,9 @@ export default {
         'Cholesterol has four fused rings with an OH group. The plasma membrane contains about 80% of all the cell’s cholesterol.',
         'Membrane proteins are partly embedded: their nonpolar parts sit in the middle, their polar parts stick out into the water.',
         'The two layers differ: outside mainly phosphatidylcholine (PC) and sphingolipids, inside phosphatidylethanolamine (PE), the negatively charged phosphatidylserine (PS) and phosphatidylinositol (PI). Flippases and floppases, pumps that use ATP, maintain this difference.',
-        'The outside of every cell carries a layer of sugars attached to proteins and lipids: the glycocalyx.',
+        'The outside of every cell carries a layer of sugars attached to proteins and to sphingolipids (glycosphingolipids): the glycocalyx. It is usually tens to hundreds of nanometres thick.',
       ],
-      facts: [['Thickness', '≈ 3.6–4.3 nm (phosphate to phosphate, plasma membrane)'], ['Model', 'fluid mosaic (Singer & Nicolson, 1972)'], ['Cholesterol', '≈ 80% of the cell’s cholesterol is in the plasma membrane'], ['Outer leaflet', 'mainly PC and sphingolipids'], ['Inner leaflet', 'PE, PS (negative) and PI']],
+      facts: [['Thickness', '≈ 3.6–4.3 nm (phosphate to phosphate, plasma membrane of rat liver cells)'], ['Model', 'fluid mosaic (Singer & Nicolson, 1972)'], ['Cholesterol', '≈ 80% of the cell’s cholesterol is in the plasma membrane'], ['Outer leaflet', 'mainly PC and sphingolipids'], ['Inner leaflet', 'PE, PS (negative) and PI']],
       why: 'The membrane decides what enters and leaves the cell. That is why signalling molecules need receptors, and why viruses and mRNA vaccines must find a way through the membrane.',
     },
     sources: [
