@@ -1,5 +1,17 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1, FULL } from '../../kit.js';
 import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, panel, sugar } from './_b_kit.js';
+import { membraanPts, blaasje, cisterne, ribosoomKlein, kernEnvelop, ptsCirkel, ptsBoog, eiwitPad } from '../../bio.js';
+
+/* detailronde 15-11-2026: membranen als lipidedubbellaag (bio.js). bandPts = gesloten omtrek van een buis/zak rond een
+ * middenlijn P (halve dikte h, afgeronde uiteinden) → één membraan rond een lumen (ER-blad, TGN-buisje). */
+function bandPts(P, h) {
+  const nrm = i => { const a = P[Math.max(0, i - 1)], b = P[Math.min(P.length - 1, i + 1)]; let dx = b[0] - a[0], dy = b[1] - a[1]; const n = Math.hypot(dx, dy) || 1; return [-dy / n, dx / n]; };
+  const top = P.map((q, i) => { const n = nrm(i); return [q[0] + n[0] * h, q[1] + n[1] * h]; }), bot = P.map((q, i) => { const n = nrm(i); return [q[0] - n[0] * h, q[1] - n[1] * h]; });
+  const cap = (i, s) => { const n = nrm(i), t = [n[1] * s, -n[0] * s]; return Array.from({ length: 7 }, (_, k) => { const a = Math.PI * (k + 1) / 8; return [P[i][0] + n[0] * h * Math.cos(a) * s + t[0] * h * Math.sin(a), P[i][1] + n[1] * h * Math.cos(a) * s + t[1] * h * Math.sin(a)]; }); };
+  return [...top, ...cap(P.length - 1, 1), ...bot.reverse(), ...cap(0, -1)];
+}
+const ptsD = P => 'M' + P.map(q => f1(q[0]) + ',' + f1(q[1])).join(' L') + 'Z';
+const zak = (P, h, lumen, w = 8) => { const B = bandPts(P, h); return `<path d="${ptsD(B)}" fill="${lumen}"/>` + membraanPts(B, { w, closed: true }); };
 
 /* Eén doorsnede van een secretoire cel: ER (links) → ERGIC → Golgi (cis → trans) → TGN → plasmamembraan (rechts), endosoom/lysosoom onderaan */
 const X0 = 690, SPC = 88, GY = 440, GH = 180;       // Golgi: x van de cis-cisterne, afstand, middelpunt, halve hoogte
@@ -51,15 +63,18 @@ export default {
   ],
   svg() {
     // kern + ER
-    const nuc = `<circle cx="-60" cy="450" r="230" fill="url(#gNuc)" stroke="${C.dna}" stroke-width="3" opacity=".9"/>` + T(-40, 460, T2('kern', 'nucleus'), { size: 24, col: C.dna2 });
+    const nuc = `<circle cx="-60" cy="450" r="222" fill="url(#gNuc)" opacity=".9"/>` + kernEnvelop(ptsCirkel(-60, 450, 226, 120), { poriën: [.9, .96, .03, .1], w: 9, gap: 9, poreW: 18 }) + T(-40, 460, T2('kern', 'nucleus'), { size: 24, col: C.dna2 });
     let er = '';
-    [0, 1, 2].forEach(i => { const r = 265 + i * 42; er += `<path d="M${f1(-60 + r * Math.cos(-1.1))},${f1(450 + r * Math.sin(-1.1))} A${r},${r} 0 0 1 ${f1(-60 + r * Math.cos(1.1))},${f1(450 + r * Math.sin(1.1))}" stroke="${C.mem}" stroke-width="20" fill="none" opacity=".45" stroke-linecap="round"/>`;
-      for (let a = -1; a <= 1; a += .16) er += `<circle cx="${f1(-60 + (r + 14) * Math.cos(a))}" cy="${f1(450 + (r + 14) * Math.sin(a))}" r="5" fill="${C.rrna}"/>`; });
+    [0, 1, 2].forEach(i => {                       // ruw ER: platte zakken (één membraan rond het lumen) met ribosomen aan de cytosolkant
+      const r = 265 + i * 42, P = Array.from({ length: 41 }, (_, k) => { const a = -1.1 + 2.2 * k / 40; return [-60 + r * Math.cos(a), 450 + r * Math.sin(a)]; });
+      er += zak(P, 11, 'rgba(201,165,116,.22)', 8);
+      for (let a = -1; a <= 1; a += .16) er += ribosoomKlein(-60 + (r + 21) * Math.cos(a), 450 + (r + 21) * Math.sin(a), { s: .55, rot: a * 180 / Math.PI + 90 });
+    });
     // plasmamembraan
-    const pm = `<path d="M${PMX},60 Q${PMX + 40},450 ${PMX},840" stroke="${C.mem}" stroke-width="16" fill="none" opacity=".6"/>` + TL(PMX + 70, 250, [T2('buiten', 'outside'), T2('de cel', 'the cell')], { size: 22, col: C.muted });
+    const pm = membraanPts(ptsBoog(PMX, 40, PMX + 40, 450, PMX, 860, 50), { w: 20 }) + TL(PMX + 70, 250, [T2('buiten', 'outside'), T2('de cel', 'the cell')], { size: 22, col: C.muted });
     // endosoom en lysosoom
-    const el = `<circle cx="${ENDO[0]}" cy="${ENDO[1]}" r="46" fill="rgba(255,138,61,.12)" stroke="#ff8a3d" stroke-width="3"/>` + `<g id="go-ell1">` + TL(ENDO[0], ENDO[1] + 78, [T2('endosoom', 'endosome'), T2('pH ≈ 5,5–6,5', 'pH ≈ 5.5–6.5')], { size: 22, col: '#ff8a3d' }) + '</g>' +
-      `<circle cx="${LYSO[0]}" cy="${LYSO[1]}" r="56" fill="rgba(214,90,90,.15)" stroke="${C.bact}" stroke-width="3"/>` + `<g id="go-ell2">` + TL(LYSO[0], LYSO[1] + 88, [T2('lysosoom', 'lysosome'), T2('pH ≈ 4,5–5', 'pH ≈ 4.5–5')], { size: 22, col: C.danger }) + '</g>';
+    const el = blaasje(ENDO[0], ENDO[1], 44, { w: 9, lumen: 'rgba(255,138,61,.12)', rand: '#ff8a3d' }) + `<g id="go-ell1">` + TL(ENDO[0], ENDO[1] + 78, [T2('endosoom', 'endosome'), T2('pH ≈ 5,5–6,5', 'pH ≈ 5.5–6.5')], { size: 22, col: '#ff8a3d' }) + '</g>' +
+      blaasje(LYSO[0], LYSO[1], 54, { w: 9, lumen: 'rgba(214,90,90,.15)', rand: C.bact }) + `<g id="go-ell2">` + TL(LYSO[0], LYSO[1] + 88, [T2('lysosoom', 'lysosome'), T2('pH ≈ 4,5–5', 'pH ≈ 4.5–5')], { size: 22, col: C.danger }) + '</g>';
     return svgOpen(arrowDefs('go', { m: C.muted, o: COPII, b: COPI, g: C.ok })) + `
     <g data-node="kern" data-color="${C.dna}" data-nolabel>${nuc}</g>
     <g data-node="er" data-color="${C.mem}" data-label="${T2('Ruw ER', 'Rough ER')}">${er}<circle data-anchor="er" cx="240" cy="200" r="1" fill="none"/></g>
@@ -75,9 +90,12 @@ export default {
   },
   init(svg) {
     const $ = id => svg.getElementById(id);
-    const ves = (x, y, coat, cargo, r = 15, op = 1) => op > .01 ? `<g opacity="${f1(op)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="rgba(201,165,116,.18)" stroke="${coat}" stroke-width="4" ${coat === CLATH ? 'stroke-dasharray="4 3"' : ''}/>` + (cargo ? `<circle cx="${f1(x)}" cy="${f1(y)}" r="${r * .42}" fill="${cargo}"/>` : '') + '</g>' : '';
-    const cisColor = x => { const k = clamp((x - X0) / (3 * SPC)); return `rgb(${Math.round(lerp(214, 176, k))},${Math.round(lerp(186, 132, k))},${Math.round(lerp(140, 96, k))})`; };
-    const cisterna = (x, op) => op > .01 ? `<path d="M${f1(x + 14)},${GY - GH} Q${f1(x - 46)},${GY} ${f1(x + 14)},${GY + GH}" stroke="${cisColor(x)}" stroke-width="36" fill="none" stroke-linecap="round" opacity="${f1(.55 * op)}"/>` : '';
+    // blaasje: dubbellaag rond een lumen, met de mantel (COPII / COPI / clathrine) als gekleurde rand, vracht binnenin
+    const ves = (x, y, coat, cargo, r = 15, op = 1) => op > .01 ? `<g opacity="${f1(op)}">${blaasje(x, y, r, { w: 7, lumen: 'rgba(201,165,116,.18)' })}<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r + 6)}" fill="none" stroke="${coat}" stroke-width="3" ${coat === CLATH ? 'stroke-dasharray="4 3"' : ''}/>` +
+      (cargo ? `<path d="${eiwitPad(x, y, r * .42, r * .38, 7, .1)}" fill="${cargo}"/>` : '') + '</g>' : '';
+    const cisColor = (x, a) => { const k = clamp((x - X0) / (3 * SPC)); return `rgba(${Math.round(lerp(214, 176, k))},${Math.round(lerp(186, 132, k))},${Math.round(lerp(140, 96, k))},${a})`; };
+    // Golgi-cisterne: platte zak met één membraan (bio.js cisterne), gebogen zoals vroeger (uiteinden x + 14, midden x − 16)
+    const cisterna = (x, op) => op > .01 ? cisterne(x + 14, GY, { len: 2 * GH, dik: 30, buig: 30, vert: true, w: 9, lumen: cisColor(x, .32), op }) : '';
 
     return {
       update(t, s) {
@@ -93,11 +111,11 @@ export default {
           if (op > .2) for (let j = 0; j < 3; j++) g += `<circle cx="${f1(x - 14)}" cy="${GY - 90 + j * 90}" r="8" fill="${CARGO}" opacity="${f1(op)}"/>`;
         }
         // TGN: buisjesnetwerk
-        g += `<path d="M${TGN[0]},${GY - 150} q30,40 0,80 q-30,40 0,80 q30,40 0,80 q-30,40 0,80" stroke="${C.mem}" stroke-width="18" fill="none" opacity=".55" stroke-linecap="round"/>`;
-        g += `<circle cx="${TGN[0] + 30}" cy="${GY - 110}" r="14" fill="rgba(201,165,116,.4)"/><circle cx="${TGN[0] + 34}" cy="${GY + 40}" r="14" fill="rgba(201,165,116,.4)"/><circle cx="${TGN[0] + 26}" cy="${GY + 140}" r="14" fill="rgba(201,165,116,.4)"/>`;
+        g += zak(Array.from({ length: 33 }, (_, k) => [TGN[0] + 15 * Math.sin(k / 32 * 4 * Math.PI), GY - 150 + 320 * k / 32]), 11, 'rgba(201,165,116,.25)', 8);
+        for (const [dx, dy] of [[34, -110], [38, 40], [30, 140]]) g += blaasje(TGN[0] + dx, GY + dy, 13, { w: 7, lumen: 'rgba(201,165,116,.3)' });
         $('go-cis').innerHTML = g;
         // ERGIC
-        $('go-ergic').innerHTML = `<g opacity=".8">${[[0, -40], [18, 0], [-10, 36], [22, 50]].map(([dx, dy]) => `<circle cx="${ERGIC[0] + dx}" cy="${ERGIC[1] + dy}" r="20" fill="rgba(201,165,116,.22)" stroke="${C.mem}" stroke-width="3"/>`).join('')}</g>`;
+        $('go-ergic').innerHTML = `<g opacity=".9">${[[0, -40], [22, 2], [-12, 40], [26, 62]].map(([dx, dy]) => blaasje(ERGIC[0] + dx, ERGIC[1] + dy, 19, { w: 8, lumen: 'rgba(201,165,116,.22)' })).join('')}</g>`;
 
         /* ---------- vesikels ---------- */
         let v = '';
@@ -116,7 +134,7 @@ export default {
             const pos = qb([X0 - 10, GY - 140], [520, 230], [EXIT[0] + 10, EXIT[1] - 110], u);
             v += ves(pos[0], pos[1], COPI, C.prot, 15);
           }
-          v += `<g><rect x="${X0 - 45}" y="${GY - 180}" width="16" height="30" rx="5" fill="${COPI}"/></g>`;
+          v += `<path d="${eiwitPad(X0 - 37, GY - 165, 9, 16, 9, .08)}" fill="${COPI}"/>`;
         }
         if (step === 3) {
           for (let i = 0; i < 3; i++) {
@@ -133,7 +151,7 @@ export default {
             const a = [TGN[0] + 40, GY - 10 + k * 10], b = [PMX - 20, 440 + k * 40];
             if (u > 0) {
               if (u < .85) { const pos = qb(a, [1250, 420 + k * 20], b, u / .85); v += ves(pos[0], pos[1], C.mem, CARGO, 16); }
-              else { const f = (u - .85) / .15; v += `<path d="M${PMX - 20},${b[1] - 20 + 10 * f} q${f1(-20 * (1 - f))},20 0,40" stroke="${C.mem}" stroke-width="4" fill="none" opacity="${f1(1 - f)}"/>` + `<circle cx="${f1(PMX + 20 + 40 * f)}" cy="${b[1]}" r="7" fill="${CARGO}" opacity="${f1(1 - f * .5)}"/>`; }
+              else { const f = (u - .85) / .15; v += blaasje(PMX - 20 + 12 * f, b[1], 16 * (1 - .5 * f), { w: 7, op: 1 - f, lumen: 'rgba(201,165,116,.18)' }) + `<circle cx="${f1(PMX + 20 + 40 * f)}" cy="${b[1]}" r="7" fill="${CARGO}" opacity="${f1(1 - f * .5)}"/>`; }
             }
           }
           // gereguleerd: granules sparen zich op en versmelten na Ca²⁺
@@ -142,7 +160,7 @@ export default {
           gr.forEach(([x, y], k) => {
             const arrive = step === 5 ? ease(sub(p, .3 + k * .1, .6 + k * .1)) : 1;
             const gx = lerp(TGN[0] + 30, x, arrive), gy = lerp(GY - 110, y, arrive);
-            if (fuse < 1) v += `<g opacity="${f1((1 - fuse) * (arrive > 0 ? 1 : 0))}"><circle cx="${f1(lerp(gx, PMX - 26, fuse))}" cy="${f1(gy)}" r="22" fill="rgba(240,107,192,.35)" stroke="${GRAN}" stroke-width="3"/><circle cx="${f1(lerp(gx, PMX - 26, fuse))}" cy="${f1(gy)}" r="11" fill="${GRAN}"/></g>`;
+            if (fuse < 1) v += `<g opacity="${f1((1 - fuse) * (arrive > 0 ? 1 : 0))}">${blaasje(lerp(gx, PMX - 26, fuse), gy, 22, { w: 8, lumen: 'rgba(240,107,192,.3)', rand: GRAN })}<circle cx="${f1(lerp(gx, PMX - 26, fuse))}" cy="${f1(gy)}" r="11" fill="${GRAN}"/></g>`;
             if (fuse > 0) v += `<circle cx="${f1(PMX + 30 + 60 * fuse + k * 12)}" cy="${f1(y + (k - 1.5) * 20 * fuse)}" r="8" fill="${GRAN}" opacity="${f1(fuse)}"/>`;
           });
           if (step === 6) v += T(1540, 330, 'Ca²⁺', { size: 26, col: '#ffe08a', w: 800, op: sub(p, .5, .6) * (1 - sub(p, .9, 1)) }) + (p > .5 && p < .9 ? `<circle cx="1540" cy="322" r="${f1(20 + 40 * ((p - .5) / .4))}" fill="none" stroke="#ffe08a" stroke-width="3" opacity="${f1(1 - (p - .5) / .4)}"/>` : '');
@@ -153,8 +171,10 @@ export default {
             if (u > 0 && u < 1) { const pos = qb([TGN[0] + 20, GY + 150], [1060, 640], [ENDO[0] - 30, ENDO[1] - 20], u); v += ves(pos[0], pos[1], CLATH, '#ff8a3d', 16); }
           }
           if (step === 7) {
-            const rel = sub(p, .55, .75), toL = ease(sub(p, .7, 1)), back = ease(sub(p, .6, .95));
-            v += `<circle cx="${f1(lerp(ENDO[0], LYSO[0] - 20, toL))}" cy="${ENDO[1]}" r="9" fill="#ff8a3d" opacity="${f1(rel)}"/><circle cx="${f1(lerp(ENDO[0] + 10, LYSO[0] + 10, toL))}" cy="${ENDO[1] + 18}" r="9" fill="#ff8a3d" opacity="${f1(rel)}"/>`;
+            const rel = sub(p, .55, .75), toL = ease(sub(p, .7, .92)), back = ease(sub(p, .6, .95));
+            // het losgelaten enzym gaat in een blaasje van het endosoom naar het lysosoom (nooit los door een membraan)
+            if (toL > 0 && toL < 1) v += ves(lerp(ENDO[0] + 50, LYSO[0] - 60, toL), ENDO[1] - 40 * Math.sin(Math.PI * toL), C.mem, '#ff8a3d', 16, rel);
+            else { const xs = toL >= 1 ? [LYSO[0] - 20, LYSO[0] + 10] : [ENDO[0], ENDO[0] + 10]; v += `<circle cx="${xs[0]}" cy="${ENDO[1]}" r="9" fill="#ff8a3d" opacity="${f1(rel)}"/><circle cx="${xs[1]}" cy="${ENDO[1] + 18}" r="9" fill="#ff8a3d" opacity="${f1(rel)}"/>`; }
             if (back > 0 && back < 1) { const pos = qb([ENDO[0] - 20, ENDO[1] - 46], [1080, 560], [TGN[0] + 30, GY + 120], back); v += ves(pos[0], pos[1], C.mem, C.prot, 13); }
           }
         }

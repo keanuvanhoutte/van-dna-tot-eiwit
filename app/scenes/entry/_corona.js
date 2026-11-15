@@ -5,8 +5,16 @@
  */
 import { C, f1 } from '../../kit.js';
 import { T } from '../prot/_b_kit.js';
-import { btn, ribo } from '../prot/_fate.js';
-export { T, btn, ribo };
+import { btn } from '../prot/_fate.js';
+import { membraanPts, ptsCirkel, eiwit, eiwitPad, blaasjeDubbel, ribosoom80S } from '../../bio.js';
+export { T, btn };
+
+/* ribosoom (detailronde 15-11-2026): zelfde aanroep als ribo() uit prot/_fate.js (mRNA horizontaal door (cx, cy − 4·s)),
+ * maar getekend als 80S-ribosoom uit bio.js: 40S boven het mRNA, 60S eronder, tRNA's tot het actieve centrum. */
+export function ribo(cx, cy, s = 1, op = 1, { mrna = true, tRNAs = 2 } = {}) {
+  if (op <= .01) return '';
+  return ribosoom80S(cx, cy + 85.6 * s, { s: .64 * s, op, mrna, tRNAs }).svg;
+}
 
 export const SPIKE = '#ff9d5c', REC = '#7fc9b6', CUT = '#e070ff', COPY = C.prot2, DRUG = '#5fd3e6', NPROT = '#ffd166';
 export const PHAGE = '#c7d2e8', PHDNA = C.tdna;
@@ -14,26 +22,27 @@ export const PHAGE = '#c7d2e8', PHDNA = C.tdna;
 /* knop met link (bv. naar de atlas): zoals btn, maar met data-href */
 export const hbtn = (node, x, w, label, col, href, y = 40) => `<g data-node="${node}" data-href="${href}" data-nolabel data-color="${col}"><rect x="${x}" y="${y}" width="${w}" height="54" rx="27" fill="rgba(13,20,38,.75)" stroke="${col}" stroke-width="2"/>${T(x + w / 2, y + 35, label, { size: 22, halo: false })}</g>`;
 
-/* coronavirusdeeltje: envelop met uitsteeksels (spikes) en ingepakt RNA; R = straal */
+/* coronavirusdeeltje: envelop = lipidedubbellaag (afkomstig van het ER–Golgi-tussencompartiment) met uitsteeksels (S-trimeer:
+ * steel in het membraan + kop buiten) en binnenin het RNA, ingepakt door het N-eiwit. R = straal tot het midden van het membraan. */
 export function corona(x, y, R, op = 1, spikes = 14) {
   if (op <= .01) return '';
+  const w = Math.max(6, R * .24);
   let s = `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)})">`;
   for (let i = 0; i < spikes; i++) {
-    const a = (i + .5) * 2 * Math.PI / spikes, cx = Math.cos(a), sy = Math.sin(a);
-    s += `<line x1="${f1(cx * R)}" y1="${f1(sy * R)}" x2="${f1(cx * R * 1.3)}" y2="${f1(sy * R * 1.3)}" stroke="${SPIKE}" stroke-width="${f1(R * .1)}"/>`;
-    s += `<circle cx="${f1(cx * R * 1.36)}" cy="${f1(sy * R * 1.36)}" r="${f1(R * .13)}" fill="${SPIKE}"/>`;
+    const a = (i + .5) * 360 / spikes;
+    s += `<g transform="rotate(${f1(a)})"><line x1="${f1(R)}" y1="0" x2="${f1(R * 1.26)}" y2="0" stroke="${SPIKE}" stroke-width="${f1(Math.max(2, R * .07))}"/>` +
+      `<path d="${eiwitPad(R * 1.4, 0, R * .17, R * .13, 7 + i % 3, .1)}" fill="${SPIKE}" stroke="#7a3d17" stroke-width="${f1(Math.max(.8, R * .02))}"/></g>`;
   }
-  s += `<circle r="${f1(R)}" fill="rgba(201,165,116,.14)" stroke="${C.mem}" stroke-width="${f1(R * .12)}"/>`;
+  s += `<circle r="${f1(R - w / 2)}" fill="rgba(201,165,116,.14)"/>` + membraanPts(ptsCirkel(0, 0, R, Math.max(24, Math.round(R * .9))), { w, closed: true });
   s += `<path d="M${f1(-R * .55)},${f1(R * .1)} q${f1(R * .18)},${f1(-R * .4)} ${f1(R * .36)},0 t${f1(R * .36)},0 t${f1(R * .36)},0" stroke="${C.rna}" stroke-width="${f1(R * .1)}" fill="none" stroke-linecap="round"/>`;
-  for (const [u, v] of [[-.4, -.05], [0, .15], [.38, -.1]]) s += `<circle cx="${f1(u * R)}" cy="${f1(v * R)}" r="${f1(R * .12)}" fill="${NPROT}" opacity=".85"/>`;
+  for (const [u, v, k] of [[-.4, -.05, 1], [0, .15, 2], [.38, -.1, 3]]) s += `<path d="${eiwitPad(u * R, v * R, R * .13, R * .12, 50 + k, .1)}" fill="${NPROT}" opacity=".9"/>`;
   return s + '</g>';
 }
 
-/* blaasje met dubbel membraan (vervormd ER) */
+/* blaasje met een dubbel membraan (vervormd ER): twee lipidedubbellagen; r = buitenrand */
 export function dmv(x, y, r, op = 1) {
-  if (op <= .01) return '';
-  return `<g opacity="${f1(op)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="rgba(201,165,116,.08)" stroke="${C.mem}" stroke-width="7"/>` +
-    `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(Math.max(0, r - 13))}" fill="rgba(10,18,36,.6)" stroke="${C.mem}" stroke-width="5"/></g>`;
+  if (op <= .01 || r < 16) return '';
+  return blaasjeDubbel(x, y, r - 10, { w: 8, gap: 4, op, lumen: 'rgba(10,18,36,.6)' });
 }
 
 /* golvende RNA-streng van x0 naar x1 op hoogte y */

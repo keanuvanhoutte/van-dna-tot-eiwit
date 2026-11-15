@@ -1,5 +1,6 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1 } from '../../kit.js';
-import { bilayer } from './_bits.js';
+import { knopPts, ptsPad } from './_bits.js';
+import { blaasje, cisterne, membraanPts, ptsLijn } from '../../bio.js';
 import { T, btn, ribo, corona, rnaWave, SPIKE, NPROT } from './_corona.js';
 
 /*
@@ -15,7 +16,9 @@ const LYSO = '#ff6b6b';
 const spikeP = (x, y, ang = 0, op = 1, s = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(ang)}) scale(${f1(s)})"><line x1="0" y1="0" x2="0" y2="-26" stroke="${SPIKE}" stroke-width="6"/><circle cx="0" cy="-30" r="8" fill="${SPIKE}"/></g>`;
 const kluwen = (x, y, op = 1, s = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(${f1(s)})"><path d="M-30,4 q10,-26 22,-4 t22,2 t18,-6" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round"/>` +
   [[-26, 2], [-10, -10], [6, 4], [22, -6], [34, 4]].map(([u, v]) => `<circle cx="${u}" cy="${v}" r="8" fill="${NPROT}" stroke="#0a1224" stroke-width="1.5"/>`).join('') + '</g>';
-const vesicle = (x, y, r, col, op = 1) => op <= .01 ? '' : `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="${col === LYSO ? 'rgba(255,107,107,.10)' : 'rgba(201,165,116,.08)'}" stroke="${col}" stroke-width="8" opacity="${f1(op)}"/>`;
+/* blaasje = lipidedubbellaag rond een lumen; het lysosoom krijgt een rode rand */
+const vesicle = (x, y, r, col, op = 1) => col === LYSO ? blaasje(x, y, r, { w: 18, op, lumen: 'rgba(255,107,107,.10)', rand: LYSO }) : blaasje(x, y, r, { w: 18, op, lumen: 'rgba(201,165,116,.08)' });
+const KB = 40, KW = 60;                            // afknoppen in het ERGIC: straal van de knop, halve breedte van de basis
 
 export default {
   id: 'assemblage',
@@ -44,10 +47,10 @@ export default {
   ],
   svg() {
     return svgOpen() + `
-    <rect x="-400" y="-400" width="${PM + 400}" height="1700" fill="url(#gCyto)"/>
+    <path id="as-cyto" fill="url(#gCyto)" d="M-400,-400 L${PM},-400 L${PM},1300 L-400,1300Z"/>
     ${T(40, 880, 'cytosol', { size: 24, col: C.muted, anchor: 'start', w: 500 })}
     ${T(PM + 30, 880, T2('buiten', 'outside'), { size: 24, col: C.muted, anchor: 'start', w: 500 })}
-    <g data-node="cel" data-nolabel data-color="${C.mem}">${bilayer(`M${PM},-200 L${PM},1200`)}</g>
+    <g data-node="cel" data-nolabel data-color="${C.mem}"><g id="as-pm">${membraanPts(ptsLijn(PM, -400, PM, 1300), { w: 22 })}</g></g>
     <g data-node="er" data-nolabel data-color="${C.mem}"><g id="as-er"></g></g>
     <g data-node="golgi" data-nolabel data-color="${C.mem}"><g id="as-gol"></g></g>
     <g id="as-eg"></g>
@@ -61,6 +64,15 @@ export default {
   init(svg) {
     const $ = id => svg.getElementById(id);
     const ER = [[90, 300, 470], [90, 430, 470], [90, 560, 430]];   // ER-banden: x0, y, x1
+    const [ex, ey, erx, ery] = EG;
+    /* ERGIC-membraan (ellips); k > 0: bovenaan stulpt een knop naar het lumen (het virus knopt af) */
+    const ybK = ey - ery * Math.sqrt(1 - (KW / erx) ** 2);
+    const ergicPts = k => {
+      const N = 96, P = [];
+      for (let i = 0; i < N; i++) { const a = -Math.PI / 2 + 2 * Math.PI * i / N; P.push([ex + erx * Math.cos(a), ey + ery * Math.sin(a)]); }
+      if (k <= .005) return P;
+      return P.filter(([x, y]) => !(Math.abs(x - ex) < KW && y < ey)).concat(knopPts(ex - KW, ybK, ex + KW, ybK, KW, KB, k, { step: 5 }));
+    };
     return {
       update(t, s) {
         const { step, p } = s;
@@ -69,10 +81,11 @@ export default {
         /* ER met ribosomen en uitsteeksels in het membraan */
         let er = '';
         ER.forEach(([x0, y, x1], i) => {
-          er += `<path d="M${x0},${y} L${x1},${y}" stroke="${C.mem}" stroke-width="34" stroke-linecap="round" opacity=".9"/><path d="M${x0},${y} L${x1},${y}" stroke="#2a2240" stroke-width="18" stroke-linecap="round"/>`;
-          for (let k = 0; k < 3; k++) er += ribo(x0 + 70 + k * 140, y - 40, .32, 1);
+          // ER-zak: dubbellaag rond een lumen; ribosomen op de buitenkant, het uitsteeksel steekt in het lumen
+          er += cisterne((x0 + x1) / 2, y, { len: x1 - x0 + 30, dik: 58, buig: 0, vert: false, w: 10, lumen: 'rgba(143,179,232,.14)' });
+          for (let k = 0; k < 3; k++) er += ribo(x0 + 70 + k * 140, y - 42, .32, 1);
           const kS = step === 0 ? ease(sub(p, .25 + i * .1, .6 + i * .1)) : 1;
-          for (let k = 0; k < 3; k++) er += spikeP(x0 + 140 + k * 140, y + 17, 180, kS, .9);
+          for (let k = 0; k < 3; k++) er += spikeP(x0 + 120 + k * (x1 - x0 - 190) / 2, y + 24, 0, kS, .78);   // binnen de zak
         });
         er += T(280, 660, T2('ER', 'ER'), { size: 30, col: C.mem, w: 700 });
         if (step === 0) er += T(280, 230, T2('uitsteeksels in het membraan', 'spikes in the membrane'), { size: 26, col: SPIKE, w: 700, op: ease(sub(p, .55, .75)) });
@@ -80,15 +93,17 @@ export default {
 
         /* Golgi (klein, rechts van het tussencompartiment) */
         let gol = '';
-        for (let k = 0; k < 4; k++) gol += `<path d="M${1070 + k * 6},${240 + k * 34} q90,-30 180,0" stroke="${C.mem}" stroke-width="14" fill="none" stroke-linecap="round" opacity=".8"/>`;
+        for (let k = 0; k < 4; k++) gol += cisterne(1160 + k * 6, 240 + k * 34, { len: 180, dik: 14, buig: 15, vert: false, w: 6, lumen: 'rgba(201,165,116,.18)' });
         gol += T(1160, 210, 'Golgi', { size: 28, col: C.mem, w: 700 });
         $('as-gol').innerHTML = gol;
 
         /* tussencompartiment + kluwens + afknoppen */
-        const [ex, ey, erx, ery] = EG;
-        const kB = ph(2, .15, .75);                       // afknoppen
+        // afknoppen (stap 2): de kluwen zakt op het membraan (p 0–.3), het membraan stulpt rond de kluwen het lumen in (k → .97)
+        // en snoert af (p = .75): het nieuwe virus heeft dat stukje membraan als envelop
+        const kn = step === 2 && p < .75 ? .97 * ease(sub(p, .25, .72)) : 0;
+        const mE = ergicPts(kn);
         let eg = '';
-        eg += `<ellipse cx="${ex}" cy="${ey}" rx="${erx}" ry="${ery}" fill="rgba(201,165,116,.08)" stroke="${C.mem}" stroke-width="10"/>`;
+        eg += `<path d="${ptsPad(mE, true)}" fill="rgba(201,165,116,.08)"/>` + membraanPts(mE, { w: 16, closed: true });
         eg += T(ex, ey + ery + 46, T2('tussen ER en Golgi', 'between ER and Golgi'), { size: 26, col: C.mem, w: 700 });
         // uitsteeksels die al in dit membraan zitten
         for (const a of [-60, -30, 30, 60]) eg += spikeP(ex + erx * Math.sin(a * Math.PI / 180) * 1.0, ey - ery * Math.cos(a * Math.PI / 180), a + 180, ph(0, .5, .9), .8);
@@ -103,11 +118,12 @@ export default {
         if (step === 1) eg += T(760, 200, T2('RNA + inpakeiwit = kluwen', 'RNA + packing protein = bundle'), { size: 26, col: NPROT, w: 700, op: ease(sub(p, .45, .65)) });
         // afknoppen (stap 2): de kluwen zakt door het membraan en wordt een virus
         if (step >= 2) {
-          const y = lerp(270, ey - 5, step === 2 ? kB : 1);
-          const toV = step === 2 ? ease(sub(p, .6, .9)) : 1;
+          const y = step > 2 ? ey - 5 : p < .75 ? Math.max(lerp(270, ybK - 26, ease(sub(p, 0, .3))), ybK + KB * (2 * kn - 1))
+            : lerp(ybK + KB * .94, ey - 5, ease(sub(p, .75, .95)));
+          const toV = step === 2 ? ease(sub(p, .72, .85)) : 1;
           const leave = ph(3, .05, .3);
           if (leave < 1) {
-            eg += kluwen(ex, y, 1 - toV, 1.5);
+            eg += kluwen(ex, y, 1 - toV, step === 2 ? lerp(1.5, .72, ease(sub(p, 0, .3))) : .72);
             eg += corona(lerp(ex, ex + 120, leave), y, 34, toV * (1 - leave));
             if (step === 2) eg += T(ex, ey + 4 + 60, T2('nieuw virus', 'new virus'), { size: 26, col: C.text, w: 700, op: ease(sub(p, .8, .95)) });
           }
@@ -118,8 +134,9 @@ export default {
         let ly = '', fx = '';
         if (step >= 3) {
           const go = ph(3, .1, .6), fuse = ph(3, .6, .85), out = ph(3, .75, 1);
-          const vx = lerp(ex + 150, PM - 95, go), vy = lerp(ey, 560, go);
-          if (fuse < 1 && step === 3) ly += vesicle(vx, vy, 90, C.mem, 1 - fuse);
+          const vx = lerp(ex + 150, PM - 85, go), vy = lerp(ey, 560, go);
+          // versmelten: het blaasje wordt een knop van het celmembraan die openklapt naar buiten en vlak wordt
+          if (step === 3 && fuse < .02) ly += vesicle(vx, vy, 90, C.mem, 1);
           const VIR = [[-30, -20], [30, 25]];
           VIR.forEach(([dx, dy], i) => {
             const x = lerp(vx + dx, PM + 80 + i * 60, out), y = lerp(vy + dy, 480 + i * 140, out);
@@ -140,6 +157,10 @@ export default {
           fx += T(1590, 190, T2('→ volgende cel', '→ next cell'), { size: 28, col: SPIKE, w: 700, anchor: 'end', op: k });
         }
         $('as-lys').innerHTML = ly;
+        const kF = step === 3 ? .97 * (1 - ease(sub(p, .6, .85))) : 0, fz = step === 3 && ph(3, .6, .85) >= .02 && kF > .005;
+        const mPM = fz ? knopPts(PM, -400, PM, 1300, 560 + 400, 90, kF) : ptsLijn(PM, -400, PM, 1300);
+        $('as-pm').innerHTML = membraanPts(mPM, { w: 22 });
+        $('as-cyto').setAttribute('d', 'M-400,-400 L' + ptsPad(mPM).slice(1) + ' L-400,1300Z');
         $('as-fx').innerHTML = fx;
       },
     };

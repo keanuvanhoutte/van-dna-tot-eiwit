@@ -1,6 +1,8 @@
 import { C, T2, svgOpen, FULL, cam, sub, ease, lerp, f1 } from '../../kit.js';
 import { T } from './_b_kit.js';
 import { DEST, icon, beads, btn } from './_fate.js';
+import { blaasje, eiwitPad } from '../../bio.js';
+const prot = (x, y, rx, ry, sd, col = C.chain, fo = .25) => { const d = eiwitPad(x, y, rx, ry, sd, .09); return `<path d="${d}" fill="#0b1224" fill-opacity=".5"/><path d="${d}" fill="${col}" fill-opacity="${fo}" stroke="${col}" stroke-width="3" stroke-linejoin="round"/>`; };
 
 /*
  * Import in het peroxisoom: het label PTS1 (Ser-Lys-Leu, helemaal aan het C-uiteinde) wordt in het cytosol herkend door
@@ -16,8 +18,8 @@ const START = [420, 470], INSIDE = [1130, 530];
 function cargo(x, y, { op = 1, letters = 0, two = true } = {}) {
   if (op <= .01) return '';
   let s = `<g opacity="${f1(op)}">`;
-  if (two) s += `<circle cx="${f1(x - 44)}" cy="${f1(y + 6)}" r="38" fill="rgba(127,220,106,.22)" stroke="${C.chain}" stroke-width="3"/><path d="M${f1(x - 66)},${f1(y + 6)} q12,-18 24,0 t24,0" stroke="${C.chain}" stroke-width="4" fill="none"/>`;
-  s += `<circle cx="${f1(x + 22)}" cy="${f1(y)}" r="40" fill="rgba(127,220,106,.28)" stroke="${C.chain}" stroke-width="3"/><path d="M${f1(x)},${f1(y)} q12,-18 24,0 t24,0" stroke="${C.chain}" stroke-width="4" fill="none"/>`;
+  if (two) s += `${prot(x - 44, y + 6, 38, 36, 21)}<path d="M${f1(x - 66)},${f1(y + 6)} q12,-18 24,0 t24,0" stroke="${C.chain}" stroke-width="4" fill="none"/>`;
+  s += `${prot(x + 22, y, 40, 38, 22)}<path d="M${f1(x)},${f1(y)} q12,-18 24,0 t24,0" stroke="${C.chain}" stroke-width="4" fill="none"/>`;
   s += beads(x + 66, y - 4, 4, { sp: 20, r: 8, lab: [{ from: 1, to: 3, col: PX }] });
   if (letters > .01) ['S', 'K', 'L'].forEach((c, i) => { s += T(x + 86 + i * 20, y - 24, c, { size: 22, col: PX, w: 800, op: letters, font: 'JetBrains Mono' }); });
   return s + '</g>';
@@ -53,12 +55,12 @@ export default {
       text: L3('Werkt een bouwgen van het peroxisoom niet, dan stapelen zeer lange vetzuren op. Dat kan al bij baby’s ernstig zijn.', 'If a building gene of the peroxisome fails, very long fatty acids pile up. This can already be severe in babies.') },
   ],
   svg() {
-    let mem = `<circle cx="${PC[0]}" cy="${PC[1]}" r="${PR}" fill="rgba(95,211,230,.07)" stroke="${PX}" stroke-width="16" stroke-opacity=".35"/>` +
-      `<circle cx="${PC[0]}" cy="${PC[1]}" r="${PR + 8}" fill="none" stroke="${PX}" stroke-width="5" stroke-dasharray="2 10" stroke-linecap="round"/>` +
-      `<circle cx="${PC[0]}" cy="${PC[1]}" r="${PR - 8}" fill="none" stroke="${PX}" stroke-width="5" stroke-dasharray="2 10" stroke-linecap="round"/>`;
+    // één membraan (lipidedubbellaag) rond het lumen; aanmeerplaats (PEX13/PEX14) als eiwitten in het membraan
+    let mem = blaasje(PC[0], PC[1], PR, { w: 24, lumen: 'rgba(95,211,230,.07)', rand: PX });
+    const dockSvg = prot(GATE[0], GATE[1] - 40, 22, 30, 14, DOCK, .45) + prot(GATE[0], GATE[1] + 40, 22, 30, 13, DOCK, .45);
     return svgOpen() + `
     <g id="px-org">${mem}
-      <rect x="${GATE[0] - 22}" y="${GATE[1] - 60}" width="44" height="120" rx="18" fill="${DOCK}" fill-opacity=".35" stroke="${DOCK}" stroke-width="3"/></g>
+      ${dockSvg}</g>
     ${T(PC[0], PC[1] + PR + 50, T2('peroxisoom', 'peroxisome'), { size: 30, col: PX, w: 700 })}
     ${T(80, 820, T2('cytosol', 'cytosol'), { size: 28, anchor: 'start', col: C.muted })}
     <g id="px-in"></g><g id="px-mv"></g><g id="px-fx"></g>
@@ -67,7 +69,7 @@ export default {
       <g data-node="er" data-nolabel data-color="${DEST.er}">${icon('er', 120, 190, 30)}</g><g data-node="mito" data-nolabel data-color="${DEST.mito}">${icon('mito', 205, 190, 26)}</g>
       ${beads(270, 190, 9, { sp: 22, r: 8 })}${T(500, 199, T2('alleen uitgerold', 'only unrolled'), { size: 26, anchor: 'start' })}
       ${icon('perox', 140, 300, 34)}
-      <circle cx="300" cy="300" r="34" fill="rgba(127,220,106,.25)" stroke="${C.chain}" stroke-width="3"/><circle cx="360" cy="300" r="30" fill="rgba(127,220,106,.25)" stroke="${C.chain}" stroke-width="3"/>
+      ${prot(300, 300, 34, 32, 23)}${prot(360, 300, 30, 28, 24)}
       ${T(500, 309, T2('ook gevouwen ✓', 'folded too ✓'), { size: 26, anchor: 'start', col: C.ok })}
     </g>
     ${btn('sortering', 40, 330, T2('↑ overzicht adreslabels', '↑ address labels overview'), C.ok)}

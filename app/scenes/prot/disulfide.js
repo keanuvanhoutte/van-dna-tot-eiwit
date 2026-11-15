@@ -1,5 +1,5 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, panel, lerpPts } from './_b_kit.js';
+import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, panel, lerpPts, blob } from './_b_kit.js';
 
 /* Paneel A (x 0–1600): ketens + PDI + Ero1 in het ER-lumen · Paneel B (x 1700–3300): ER vs cytosol · Paneel C (x 3400–5000): insuline */
 const SS = '#ffc247';
@@ -91,7 +91,7 @@ export default {
     const pdiAt = (x, y, ox, op = 1, lab = true) => {
       // omgekeerde U: a linksonder, b linksboven, b′ rechtsboven, a′ rechtsonder; actieve plaatsen onderaan a en a′
       let s = `<g opacity="${f1(op)}">`;
-      [[-100, 40, 'a'], [-60, -50, 'b'], [60, -50, 'b′'], [100, 40, 'a′']].forEach(([dx, dy, l]) => s += `<ellipse cx="${x + dx}" cy="${y + dy}" rx="56" ry="46" fill="${C.prot}" fill-opacity=".32" stroke="${C.prot}" stroke-width="3"/>` + T(x + dx, y + dy + 7, l, { size: 20, col: '#fff' }));
+      [[-100, 40, 'a'], [-60, -50, 'b'], [60, -50, 'b′'], [100, 40, 'a′']].forEach(([dx, dy, l]) => s += `${blob(x + dx, y + dy, 56, 46, { fill: C.prot, stroke: C.prot, sw: 3, seed: 104 + dx, extra: ' fill-opacity=".32"' })}` + T(x + dx, y + dy + 7, l, { size: 20, col: '#fff' }));
       for (const dx of [-100, 100]) {
         const ay = y + 92;
         if (ox) s += `<circle cx="${x + dx - 12}" cy="${ay}" r="8" fill="${SS}"/><circle cx="${x + dx + 12}" cy="${ay}" r="8" fill="${SS}"/><line x1="${x + dx - 4}" y1="${ay}" x2="${x + dx + 4}" y2="${ay}" stroke="${SS}" stroke-width="4"/>`;

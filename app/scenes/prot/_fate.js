@@ -4,6 +4,7 @@
  */
 import { C, f1 } from '../../kit.js';
 import { T } from './_b_kit.js';
+import { eiwitPad, cisterne, ribosoomKlein, kernEnvelop, ptsCirkel, mitochondrion, blaasje, membraanLijn, membraanPts, LIPID } from '../../bio.js';
 
 /* vaste kleur per bestemming (ook in de legendes) */
 export const DEST = { cyt: '#93a0bb', er: '#e0b25c', kern: C.dna, mito: '#ff8a3d', perox: '#5fd3e6', lyso: '#ff6b6b' };
@@ -25,42 +26,73 @@ export function beads(x0, y, n, { sp = 22, r = 9, col = C.chain, lab = [], op = 
   return `<g opacity="${f1(op)}"><path d="${line}" stroke="${col}" stroke-width="${f1(r * .55)}" fill="none" stroke-linecap="round"/>${b}</g>`;
 }
 
-/* ribosoom (twee lobben) */
+/* ribosoom (zijaanzicht, overzicht): grote eenheid onder, kleine eenheid erboven, het mRNA in de spleet ertussen
+ * (de kleine eenheid leest het), en de uitgangstunnel door de grote eenheid naar onderen (daar komt de keten uit).
+ * Detailronde 15-11-2026: bobbelige eenheden die tegen elkaar liggen i.p.v. twee ellipsen; zelfde parameters en voetafdruk.
+ * Tunneluitgang (bij s = 1): (cx, cy + 70). */
 export function ribo(cx, cy, s = 1, op = 1) {
   if (op <= .01) return '';
+  const big = eiwitPad(0, 26, 80, 46, 60, .05), sm = eiwitPad(-6, -32, 58, 27, 40, .06);
   return `<g opacity="${f1(op)}" transform="translate(${f1(cx)} ${f1(cy)}) scale(${f1(s)})">` +
-    `<ellipse cx="0" cy="22" rx="78" ry="46" fill="rgba(44,198,168,.2)" stroke="${C.rrna}" stroke-width="3"/>` +
-    `<ellipse cx="0" cy="-34" rx="54" ry="30" fill="rgba(44,198,168,.12)" stroke="${C.rrna}" stroke-width="3"/>` +
-    `<path d="M-120,-4 L120,-4" stroke="${C.rna}" stroke-width="5" stroke-linecap="round"/></g>`;
+    `<path d="${big}" fill="#0b1224"/><path d="${big}" fill="${C.rrna}" fill-opacity=".34" stroke="${C.rrna}" stroke-width="3"/>` +
+    `<path d="M4,-2 C22,18 -10,42 0,72" stroke="#0b1224" stroke-opacity=".75" stroke-width="13" fill="none" stroke-linecap="round"/>` +
+    `<path d="${sm}" fill="#0b1224"/><path d="${sm}" fill="${C.rrna}" fill-opacity=".2" stroke="${C.rrna}" stroke-width="3"/>` +
+    `<path d="M-120,-6 C-60,-10 40,-1 120,-7" stroke="${C.rna}" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;
 }
 
-/* pictogrammen van bestemmingen (middelpunt cx, cy; grootte s ≈ straal) */
+/* pictogrammen van bestemmingen (middelpunt cx, cy; grootte s ≈ straal). Detailronde 15-11-2026: echte vormen uit bio.js
+ * (dubbellaag, kernenvelop met poriën, mitochondrion met cristae, ruw ER met ribosomen), getekend op referentiegrootte 60
+ * en geschaald; de kleur van de bestemming zit in een dunne rand en in het lumen. */
 export function icon(kind, cx, cy, s = 34, op = 1) {
   if (op <= .01) return '';
-  const c = DEST[kind];
+  const c = DEST[kind], R = 60, k = s / R;
+  const tint = a => c + Math.round(a * 255).toString(16).padStart(2, '0');
   let g = '';
-  if (kind === 'cyt') g = `<circle r="${s}" fill="rgba(147,160,187,.10)" stroke="${c}" stroke-width="3" stroke-dasharray="6 5"/>` +
-    [[-12, -8], [10, 6], [-4, 14], [14, -12]].map(([x, y]) => `<circle cx="${f1(x * s / 34)}" cy="${f1(y * s / 34)}" r="${f1(4 * s / 34)}" fill="${c}"/>`).join('');
-  if (kind === 'er') g = [-1, 0, 1].map(k => `<path d="M${f1(-s)},${f1(k * s * .5)} Q0,${f1(k * s * .5 - s * .35)} ${f1(s)},${f1(k * s * .5)}" stroke="${c}" stroke-width="${f1(s * .2)}" fill="none" stroke-linecap="round" opacity=".9"/>`).join('');
-  if (kind === 'kern') g = `<circle r="${s}" fill="rgba(79,143,247,.15)" stroke="${c}" stroke-width="3"/><circle r="${f1(s - 6)}" fill="none" stroke="${c}" stroke-width="2"/>` +
-    [0, 1.6, 3.2, 4.8].map(a => `<circle cx="${f1(Math.cos(a) * (s - 3))}" cy="${f1(Math.sin(a) * (s - 3))}" r="4" fill="#0a1224" stroke="${c}" stroke-width="2"/>`).join('');
-  if (kind === 'mito') g = `<ellipse rx="${f1(s * 1.3)}" ry="${f1(s * .75)}" fill="rgba(255,138,61,.15)" stroke="${c}" stroke-width="3"/>` +
-    `<path d="M${f1(-s * .95)},0 q${f1(s * .16)},${f1(-s * .5)} ${f1(s * .32)},0 t${f1(s * .32)},0 t${f1(s * .32)},0 t${f1(s * .32)},0 t${f1(s * .32)},0 t${f1(s * .32)},0" stroke="${c}" stroke-width="2.5" fill="none"/>`;
-  if (kind === 'perox') g = `<circle r="${f1(s * .8)}" fill="rgba(95,211,230,.14)" stroke="${c}" stroke-width="3"/><rect x="${f1(-s * .3)}" y="${f1(-s * .3)}" width="${f1(s * .6)}" height="${f1(s * .6)}" rx="3" fill="${c}" opacity=".55" transform="rotate(20)"/>`;
-  if (kind === 'lyso') g = `<circle r="${f1(s * .85)}" fill="rgba(255,107,107,.15)" stroke="${c}" stroke-width="3"/>` +
-    [[-8, -6], [8, -8], [0, 8], [-10, 8], [10, 6]].map(([x, y]) => `<path d="M${f1(x * s / 34 - 4)},${f1(y * s / 34)} l8,0" stroke="${c}" stroke-width="3" stroke-linecap="round"/>`).join('');
-  return `<g opacity="${f1(op)}" transform="translate(${f1(cx)} ${f1(cy)})">${g}</g>`;
+  if (kind === 'cyt') g = `<circle r="${R}" fill="rgba(147,160,187,.10)" stroke="${c}" stroke-width="${f1(3 / k)}" stroke-dasharray="${f1(10)} ${f1(9)}"/>` +
+    [[-22, -14, 1], [18, 10, 2], [-6, 26, 3], [26, -22, 4]].map(([x, y, sd]) => `<path d="${eiwitPad(x, y, 9, 7.5, sd, .12)}" fill="${c}" fill-opacity=".85"/>`).join('');
+  if (kind === 'er') {
+    for (const j of [-1, 0, 1]) g += cisterne(0, j * 34, { len: 118 - Math.abs(j) * 10, dik: 16, buig: 14, vert: false, w: 9, lumen: tint(.28) });
+    for (const [x, y] of [[-40, -48], [-8, -52], [26, -50], [-30, -14], [10, -16], [40, -13], [-20, 20], [20, 21]]) g += ribosoomKlein(x, y, { s: .55 });
+  }
+  if (kind === 'kern') g = `<circle r="${R - 9}" fill="${tint(.16)}"/>` + kernEnvelop(ptsCirkel(0, 0, R - 9, 48), { poriën: [.06, .31, .56, .81], w: 8, gap: 7, poreW: 14, lumen: 'rgba(201,165,116,.18)', npc: false }) +
+    `<circle r="${R + 2}" fill="none" stroke="${c}" stroke-width="${f1(2.2 / k)}" opacity=".8"/>` + `<circle cx="12" cy="-6" r="13" fill="${c}" fill-opacity=".35"/>`;
+  if (kind === 'mito') g = mitochondrion(0, 0, R * 1.3, R * .74, { n: 4, w: 8, matrix: tint(.18), ims: 'rgba(201,165,116,.10)' }) +
+    `<ellipse rx="${f1(R * 1.3 + 4)}" ry="${f1(R * .74 + 4)}" fill="none" stroke="${c}" stroke-width="${f1(2.2 / k)}" opacity=".8"/>`;
+  if (kind === 'perox') g = blaasje(0, 0, R * .78, { w: 10, lumen: tint(.16), rand: c }) +
+    [[-14, -12, 5], [14, -6, 6], [-4, 16, 7]].map(([x, y, sd]) => `<path d="${eiwitPad(x, y, 11, 9, sd, .12)}" fill="${c}" fill-opacity=".75"/>`).join('');
+  if (kind === 'lyso') g = blaasje(0, 0, R * .84, { w: 10, lumen: tint(.18), rand: c }) +
+    [[-16, -14, 8], [16, -12, 9], [0, 16, 10], [-20, 14, 11]].map(([x, y, sd]) => `<path d="${eiwitPad(x, y, 10, 8, sd, .12)}" fill="${c}" fill-opacity=".8"/>`).join('');
+  return `<g opacity="${f1(op)}" transform="translate(${f1(cx)} ${f1(cy)}) scale(${f1(k)})">${g}</g>`;
 }
 
-/* dubbele lipidelaag (horizontaal) tussen x0 en x1, middellijn y, dikte h; gat tussen gx0 en gx1 (optioneel) */
+/* lipidedubbellaag (horizontaal) tussen x0 en x1, middellijn y, dikte h; gat tussen gap[0] en gap[1] (optioneel).
+ * Detailronde 15-11-2026: getekend met bio.js (kopjes buiten, staartjes binnen) i.p.v. twee stippellijnen; zelfde parameters.
+ * col = kleur van de kopjes (C.mem → de gewone lipidekleur). */
 export function bilayer(x0, x1, y, { h = 60, col = C.mem, gap = null, op = 1 } = {}) {
   if (op <= .01) return '';
-  // vlak als <path> (geen <rect>): membranen lopen bewust tot buiten beeld
-  const seg = (a, b) => b - a < 4 ? '' : `<path d="M${f1(a)},${f1(y - h / 2)}H${f1(b)}V${f1(y + h / 2)}H${f1(a)}Z" fill="rgba(201,165,116,.16)"/>` +
-    `<line x1="${f1(a)}" y1="${f1(y - h / 2)}" x2="${f1(b)}" y2="${f1(y - h / 2)}" stroke="${col}" stroke-width="10" stroke-dasharray="2 12" stroke-linecap="round"/>` +
-    `<line x1="${f1(a)}" y1="${f1(y + h / 2)}" x2="${f1(b)}" y2="${f1(y + h / 2)}" stroke="${col}" stroke-width="10" stroke-dasharray="2 12" stroke-linecap="round"/>`;
-  const body = gap ? seg(x0, gap[0]) + seg(gap[1], x1) : seg(x0, x1);
-  return `<g opacity="${f1(op)}">${body}</g>`;
+  return `<g opacity="${f1(op)}">${membraanLijn(x0, x1, y, { w: h, gaten: gap ? [gap] : [], head: col === C.mem ? LIPID.head : col })}</g>`;
+}
+
+/* Knop: een blaasje ontstaat uit een membraan (zelfde werkwijze als in lysosoom.js). m = punt op het moedermembraan,
+ * n = eenheidsvector naar de kant waar het blaasje heen gaat, r = straal, k = 0 (vlak) … 1 (afgesnoerd).
+ * Versmelten = dezelfde knop met k van 1 naar 0. hole = kleur van het lumen achter de hals (bedekt het moedermembraan).
+ * Geeft { svg, c, top } terug (c = middelpunt van het blaasje). */
+export function knop(m, n, r, k, { hole = '#1d2030', w = 10, gap = null, op = 1, lumen = 'rgba(201,165,116,.10)' } = {}) {
+  const G = gap ?? w / 2 + 6;
+  const rho = r * (.1 + .9 * Math.min(1, k / .6));
+  const d = k < .75 ? rho * .8 * k / .75 : (.8 * r) + ((r + G) - .8 * r) * (k - .75) / .25;
+  const c = [m[0] + n[0] * d, m[1] + n[1] * d], top = [c[0] + n[0] * rho, c[1] + n[1] * rho];
+  const o = op * Math.min(1, k / .08);
+  let svg = '';
+  if (o > .01) {
+    if (d < rho) {
+      const a = Math.acos(d / rho), phi = Math.atan2(-n[1], -n[0]), P = [];
+      for (let i = 0; i <= 40; i++) { const t = phi + a + (2 * Math.PI - 2 * a) * i / 40; P.push([c[0] + rho * Math.cos(t), c[1] + rho * Math.sin(t)]); }
+      svg = `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="${f1(Math.max(0, rho - w / 2 + 1))}" fill="${hole}" opacity="${f1(o)}"/>` +
+        `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="${f1(Math.max(0, rho - w / 2 + 1))}" fill="${lumen}" opacity="${f1(o)}"/>` + membraanPts(P, { w, op: o });
+    } else svg = blaasje(c[0], c[1], rho, { op: o, w, lumen });
+  }
+  return { svg, c, top: k < .1 ? [m[0] + (top[0] - m[0]) * k / .1, m[1] + (top[1] - m[1]) * k / .1] : top };
 }
 
 /* kader voor een 3D-venster (de echte structuur komt erbovenop via inset3d) */

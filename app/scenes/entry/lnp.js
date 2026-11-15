@@ -1,9 +1,11 @@
 import { C, L, T2, svgOpen, txt, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { lnpParticle, bilayer, PINK, LIP, PEG, CHOL } from './_bits.js';
+import { lnpParticle, knopPts, ptsPad, blaasjeOpen, PINK, LIP, PEG, CHOL } from './_bits.js';
+import { blaasje, membraanPts, ptsLijn } from '../../bio.js';
 
 /* Zijpad: hoe een mRNA-vaccin zijn boodschap in het cytosol krijgt. */
 const AX = 420, AY = 330, AR = 130;      // anatomie links
 const MEM = 150, RX = 1130;              // celmembraan en route rechts
+const KR = 96;                           // straal van de kuil / het nieuwe blaasje
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 
 export default {
@@ -43,8 +45,8 @@ export default {
 
   svg() {
     return svgOpen() + `
-    <rect x="620" y="${MEM}" width="1400" height="1400" fill="url(#gCyto)"/>
-    <g id="ln-mem">${bilayer(`M620,${MEM} L2000,${MEM}`)}</g>
+    <path id="ln-cyto" fill="url(#gCyto)" d="M620,${MEM} L2000,${MEM} L2000,1600 L620,1600Z"/>
+    <g id="ln-mem">${membraanPts(ptsLijn(620, MEM, 2000, MEM), { w: 22 })}</g>
     <text x="1400" y="${MEM - 30}" font-size="17" fill="${C.muted}" font-family="Inter" opacity=".6">${T2('extracellulair', 'extracellular')}</text>
     <g id="ln-anat"></g>
     <g data-node="mrnaafbraak" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-label="${T2('mRNA — in 3D', 'mRNA — in 3D')}" id="ln-mrna" opacity="0">
@@ -115,7 +117,9 @@ export default {
 
         /* route rechts */
         let px = RX, py = 60, pr = 58, endo = '', escape = 0;
-        if (step === 2) { const u = ease(sub(p, .1, .8)); py = lerp(60, 300, u); }
+        // stap 2: het deeltje landt op het membraan, dat er een kuil rond vormt (k → .97); bij p = .6 snoert het blaasje af
+        const kn = step === 2 && p < .6 ? .97 * ease(sub(p, .15, .58)) : 0, los = step === 2 && p >= .6;
+        if (step === 2) py = los ? lerp(MEM + KR * .94, 300, ease(sub(p, .6, .9))) : Math.max(lerp(60, MEM - 62, ease(sub(p, 0, .15))), MEM + KR * (2 * kn - 1));
         else if (step === 3) { const u = ease(sub(p, .1, .8)); py = lerp(300, 460, u); }
         else if (step === 4) { const u = ease(sub(p, .1, .7)); py = lerp(460, 560, u); escape = ease(sub(p, .45, .95)); }
         else if (step >= 5) { py = 560; escape = 1; }
@@ -123,16 +127,19 @@ export default {
         $('ln-part').innerHTML = partOp > .01
           ? `<g transform="translate(${px} ${f1(py)})">${lnpParticle(pr, partOp, { protonated: step >= 3 ? (step === 3 ? ease(sub(p, .3, .8)) : 1) : 0 })}</g>` : '';
 
+        const mP = knopPts(620, MEM, 2000, MEM, RX - 620, KR, kn);
+        $('ln-cyto').setAttribute('d', ptsPad(mP) + ' L2000,1600 L620,1600Z');
+        $('ln-mem').innerHTML = membraanPts(mP, { w: 22 });
         if (step === 2) {
-          const k = ease(sub(p, .35, .9));
-          endo = `<circle cx="${px}" cy="${f1(py)}" r="${f1(lerp(78, 100, k))}" fill="rgba(201,165,116,.10)" stroke="${C.mem}" stroke-width="7" opacity="${f1(k)}"/>`;
+          endo = los ? blaasje(px, py, lerp(KR, 104, ease(sub(p, .6, .9))), { w: 20 }) : '';
         } else if (step === 3) {
-          endo = `<circle cx="${px}" cy="${f1(py)}" r="104" fill="rgba(201,165,116,.10)" stroke="${C.mem}" stroke-width="7"/>
+          endo = `${blaasje(px, py, 104, { w: 20 })}
             <rect x="${px - 62}" y="${f1(py - 160)}" width="124" height="38" rx="12" fill="#0b1224" stroke="#ff9d5c" stroke-width="2.5"/>
             ${txt(px, f1(py - 133), L({ nl: 'pH 5,5', en: 'pH 5.5' }), '#ff9d5c', 24)}`;
         } else if (step >= 4) {
-          const k = step === 4 ? escape : 1;
-          endo = `<path d="M${px - 104},${f1(py)} a104,104 0 1,1 68,88" fill="none" stroke="${C.mem}" stroke-width="7" stroke-dasharray="${k > .2 ? '26 18' : '1 0'}"/>`;
+          // het verzwakte membraan scheurt linksonder open, waar het mRNA naar buiten glipt
+          const k = step === 4 ? ease(sub(escape, 0, .4)) : 1;
+          endo = blaasjeOpen(px, py, 104, k > .02 ? [[124 - 22 * k, 124 + 22 * k], [40, 40 + 14 * k]] : [], { w: 20 });
         }
         $('ln-endo').innerHTML = step >= 2 ? endo : '';
         $('ln-endo-a').setAttribute('cy', f1(py - 110));

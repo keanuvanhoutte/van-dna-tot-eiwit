@@ -1,12 +1,12 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, panel, phos, ub } from './_b_kit.js';
+import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, panel, phos, ub, blob } from './_b_kit.js';
 
 /* Panelen naast elkaar: A (0–1600) kwaliteitscontrole & aggregatie · B (1700–3300) kinetiek · C (3400–5000) cross-β
  * D (5100–6700) ziekten · E (6800–8400) prionen · F (8500–10100) UPR */
 const HYD = '#ff9f43', BAD = '#ff6b6b', SC = '#e07b5a';
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 
-const native = (x, y, s = 1, op = 1) => `<g opacity="${f1(op)}"><ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(62 * s)}" ry="${f1(50 * s)}" fill="rgba(127,220,106,.2)" stroke="${C.chain}" stroke-width="4"/>` +
+const native = (x, y, s = 1, op = 1) => `<g opacity="${f1(op)}">${blob(f1(x), f1(y), f1(62 * s), f1(50 * s), { fill: 'rgba(127,220,106,.2)', stroke: C.chain, sw: 4, seed: 105 })}` +
   chain([[x - 38 * s, y + 5 * s], [x - 16 * s, y - 28 * s], [x + 4 * s, y + 10 * s], [x + 24 * s, y - 24 * s], [x + 40 * s, y + 12 * s], [x, y + 32 * s]], { w: 5, op: .7 }) + '</g>';
 const misf = (x, y, s = 1, op = 1, rot = 0) => `<g opacity="${f1(op)}" transform="rotate(${f1(rot)} ${f1(x)} ${f1(y)})">` + chain([[x - 60 * s, y + 20 * s], [x - 30 * s, y - 20 * s], [x, y + 18 * s], [x + 30 * s, y - 24 * s], [x + 62 * s, y + 10 * s]], { w: 7 }) +
   `<path d="${smooth([[x - 30 * s, y - 20 * s], [x, y + 18 * s], [x + 30 * s, y - 24 * s]])}" stroke="${HYD}" stroke-width="12" fill="none" stroke-linecap="round" opacity=".9"/></g>`;
@@ -168,9 +168,9 @@ export default {
         /* ---------- paneel E: prionen ---------- */
         let pr = '';
         if (step >= 4 && step <= 6) {
-          const helixProt = (x, y, op = 1) => `<g opacity="${f1(op)}"><ellipse cx="${x}" cy="${y}" rx="95" ry="75" fill="rgba(127,220,106,.16)" stroke="${C.chain}" stroke-width="4"/>` +
+          const helixProt = (x, y, op = 1) => `<g opacity="${f1(op)}">${blob(x, y, 95, 75, { fill: 'rgba(127,220,106,.16)', stroke: C.chain, sw: 4, seed: 106 })}` +
             [[-45, -20], [10, 25], [45, -25]].map(([dx, dy]) => { let d = ''; for (let k = 0; k <= 24; k++) d += `${k ? 'L' : 'M'}${f1(x + dx - 30 + k * 2.5)},${f1(y + dy + 10 * Math.sin(k * .8))}`; return `<path d="${d}" stroke="${C.chain}" stroke-width="5" fill="none"/>`; }).join('') + '</g>';
-          const betaProt = (x, y, op = 1) => `<g opacity="${f1(op)}"><ellipse cx="${x}" cy="${y}" rx="95" ry="75" fill="rgba(255,107,107,.16)" stroke="${BAD}" stroke-width="4"/>` +
+          const betaProt = (x, y, op = 1) => `<g opacity="${f1(op)}">${blob(x, y, 95, 75, { fill: 'rgba(255,107,107,.16)', stroke: BAD, sw: 4, seed: 107 })}` +
             [-40, -13, 14, 41].map(dx => `<path d="M${x + dx},${y + 40} v-62" stroke="${BAD}" stroke-width="12"/><path d="M${x + dx - 11},${y - 20} L${x + dx},${y - 40} L${x + dx + 11},${y - 20}Z" fill="${BAD}"/>`).join('') + '</g>';
           const k = step === 5 ? ease(sub(p, .1, .4)) : 0, conv = step === 5 ? ease(sub(p, .4, .7)) : 0, rep2 = step === 5 ? sub(p, .75, .95) : 0;
           const cx = 7600;

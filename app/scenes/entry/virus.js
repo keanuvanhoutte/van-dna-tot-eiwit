@@ -1,23 +1,29 @@
 import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { capsid, bilayer, car, PINK, FIBRE, LIP } from './_bits.js';
+import { capsid, car, knopPts, blaasjeOpen, PINK, FIBRE, LIP } from './_bits.js';
+import { membraanPts, ptsCirkel, ptsLijn, eiwit, eiwitPad, blaasje } from '../../bio.js';
 import { btn } from '../prot/_fate.js';
 
 /* Zijpad: wat doet een virus eigenlijk bij een cel? Twee binnenkomstroutes, dan het genoomtype. */
 const MEM = 330, LX = 430, RX = 1160;
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 
-/* omhuld virusdeeltje: membraan met spikes en een kern erin */
-const enveloped = (R, op = 1, spikes = 12) => {
+/* kegelvormig capside van HIV-1 met twee RNA-kopieën (het genoom is diploïd) */
+const hivCapsid = (R, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}" transform="rotate(-24)">
+  <path d="M${f1(-R * .62)},${f1(-R * .2)} L${f1(R * .5)},${f1(-R * .42)} A${f1(R * .42)},${f1(R * .42)} 0 0 1 ${f1(R * .5)},${f1(R * .42)} L${f1(-R * .62)},${f1(R * .2)} A${f1(R * .2)},${f1(R * .2)} 0 0 1 ${f1(-R * .62)},${f1(-R * .2)}Z" fill="#3a1a33" stroke="${PINK}" stroke-width="${f1(Math.max(2, R * .07))}" stroke-linejoin="round"/>
+  <path d="M${f1(-R * .45)},${f1(-R * .06)} q${f1(R * .2)},${f1(-R * .18)} ${f1(R * .4)},0 t${f1(R * .4)},0 M${f1(-R * .4)},${f1(R * .12)} q${f1(R * .2)},${f1(-R * .18)} ${f1(R * .4)},0 t${f1(R * .4)},0" stroke="${C.rna}" stroke-width="${f1(Math.max(2, R * .06))}" fill="none" stroke-linecap="round"/></g>`;
+/* omhuld virusdeeltje (HIV-1): envelop = lipidedubbellaag (meegenomen van de vorige cel) met Env-uitsteeksels (steel door het
+ * membraan, kop buiten), binnenin het kegelvormige capside. spikes = 0 → enkel membraan + capside. */
+const enveloped = (R, op = 1, spikes = 10) => {
+  if (op <= .01) return '';
+  const w = Math.max(6, R * .22);
   let s = `<g opacity="${f1(op)}">`;
   for (let i = 0; i < spikes; i++) {
-    const a = i * 360 / spikes, x = Math.cos(a * Math.PI / 180), y = Math.sin(a * Math.PI / 180);
-    s += `<line x1="${f1(x * R)}" y1="${f1(y * R)}" x2="${f1(x * R * 1.32)}" y2="${f1(y * R * 1.32)}" stroke="#ff9d5c" stroke-width="${f1(R * .09)}"/>`;
-    s += `<circle cx="${f1(x * R * 1.4)}" cy="${f1(y * R * 1.4)}" r="${f1(R * .12)}" fill="#ff9d5c"/>`;
+    const a = i * 360 / spikes + 9;
+    s += `<g transform="rotate(${f1(a)})"><line x1="${f1(R - w / 2)}" y1="0" x2="${f1(R * 1.25)}" y2="0" stroke="#ff9d5c" stroke-width="${f1(Math.max(2, R * .06))}"/>` +
+      `<path d="${eiwitPad(R * 1.36, 0, R * .14, R * .16, 3 + i % 4, .12)}" fill="#ff9d5c" stroke="#7a3d17" stroke-width="1.2"/></g>`;
   }
-  s += `<circle r="${f1(R)}" fill="rgba(201,165,116,.12)" stroke="${C.mem}" stroke-width="${f1(R * .16)}"/>`;
-  s += `<circle r="${f1(R * .58)}" fill="#3a1a33" stroke="${PINK}" stroke-width="${f1(R * .08)}"/>`;
-  s += `<path d="M${f1(-R * .3)},0 q${f1(R * .15)},${f1(-R * .22)} ${f1(R * .3)},0 t${f1(R * .3)},0" stroke="${C.rna}" stroke-width="${f1(R * .07)}" fill="none"/>`;
-  return s + '</g>';
+  s += `<circle r="${f1(R - w / 2)}" fill="rgba(201,165,116,.12)"/>` + membraanPts(ptsCirkel(0, 0, R, Math.max(28, Math.round(R * .8))), { w, closed: true });
+  return s + hivCapsid(R * .9) + '</g>';
 };
 
 export default {
@@ -60,7 +66,7 @@ export default {
     <rect x="-400" y="${MEM}" width="2400" height="1400" fill="url(#gCyto)"/>
     <text x="195" y="${MEM - 44}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">${T2('extracellulair', 'extracellular')}</text>
     <text x="195" y="${MEM + 60}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">cytosol</text>
-    <g id="vi-mem">${bilayer(`M-400,${MEM} L2000,${MEM}`)}</g>
+    <g id="vi-mem"></g>
     <g id="vi-rec"></g>
     <g data-node="endocytose" data-color="${C.mem}" data-label="${T2('Endocytose & ontsnapping', 'Endocytosis & escape')}">
       <circle id="vi-endo-a" data-anchor="endocytose" data-pos="below" cx="${LX}" cy="${MEM + 100}" r="1" fill="none"/>
@@ -94,57 +100,66 @@ export default {
         const { step, p } = s;
         const tt = t / 1000;
 
-        /* receptoren */
+        /* membraan: knop links (stap 2: de cel slokt het virus op) of uitstulping rechts (stap 3: de envelop versmelt) */
+        const BR = 104, lk = step === 2 ? ease(sub(p, .05, .5)) : 0;
+        const fuseK = step === 3 && p >= .3 ? .97 * (1 - ease(sub(p, .3, .85))) : 0;
+        const memP = step === 2 && p < .5 ? knopPts(-400, MEM, 2000, MEM, LX + 400, BR, lk * .97)
+          : fuseK > .005 ? knopPts(-400, MEM, 2000, MEM, RX + 400, 72, fuseK, { side: -1 }) : ptsLijn(-400, MEM, 2000, MEM);
+        $('vi-mem').innerHTML = membraanPts(memP, { w: 22 });
+
+        /* receptoren (type I-membraaneiwitten); links gaan ze mee naar binnen, rechts verdwijnen ze tijdens de fusie uit beeld */
         let rec = '';
         const rOn = step >= 1 ? 1 : ease(sub(p, .5, .9));
-        for (const x of [LX - 40, LX + 40, RX - 46, RX + 46]) rec += `<g opacity="${f1(rOn)}">${car(x, MEM - 6, -1, 1.6, step === 1 ? 1 : 0)}</g>`;
+        const lOn = step === 2 ? 1 - ease(sub(p, .1, .4)) : step >= 3 ? 0 : rOn, rOn2 = step === 3 ? 1 - ease(sub(p, .25, .45)) : step >= 4 ? 0 : rOn;
+        for (const x of [LX - 40, LX + 40]) rec += `<g opacity="${f1(lOn)}">${car(x, MEM - 6, -1, 1.6, step === 1 ? 1 : 0)}</g>`;
+        for (const x of [RX - 46, RX + 46]) rec += `<g opacity="${f1(rOn2)}">${car(x, MEM - 6, -1, 1.6, step === 1 ? 1 : 0)}</g>`;
         $('vi-rec').innerHTML = rec;
 
-        /* links: niet-omhuld virus via endocytose */
-        let ly = 150, lOp = 1, lmiss = [];
+        /* links: niet-omhuld virus (eiwitjas, geen membraan) via endocytose */
+        let ly = 150, lOp = 1, lmiss = [], lfib = 58, vesR = 0;
         if (step === 0) ly = 150;
         else if (step === 1) ly = lerp(150, MEM - 108, ease(sub(p, .2, .9)));
-        else if (step === 2) ly = lerp(MEM - 108, 520, ease(sub(p, .1, .8)));
-        else if (step >= 3) { ly = 520; lmiss = step >= 4 ? [0, 2, 4] : []; }
+        else if (step === 2) {
+          lfib = lerp(58, 30, ease(sub(p, 0, .3)));
+          if (p < .5) ly = MEM + BR * (2 * lk * .97 - 1);
+          else { const u = ease(sub(p, .5, .95)); ly = lerp(MEM + BR * .94, 520, u); vesR = lerp(BR, 118, u); }
+        }
+        else if (step >= 3) { ly = 520; lfib = 30; vesR = 118; lmiss = step >= 4 ? [0, 2, 4] : []; }
         if (step >= 4) lOp = step === 4 ? 1 - ease(sub(p, .45, .9)) * .6 : .4;
-        $('vi-left').innerHTML = `<g transform="translate(${LX} ${f1(ly)})">${capsid(66, { fibre: 58, op: lOp, missing: lmiss })}</g>`;
+        $('vi-left').innerHTML = `<g transform="translate(${LX} ${f1(ly)})">${capsid(66, { fibre: lfib, op: lOp, missing: lmiss })}</g>`;
         $('vi-left-a').setAttribute('cy', f1(ly - 128));
 
-        /* endosoom links */
+        /* endosoom links: afgesnoerd blaasje met één dubbellaag; in stap 4 breekt het open */
         let endo = '';
-        if (step === 2) {
-          const k = ease(sub(p, .3, .8));
-          endo = `<circle cx="${LX}" cy="${f1(ly)}" r="${f1(lerp(90, 118, k))}" fill="rgba(201,165,116,.10)" stroke="${C.mem}" stroke-width="7" opacity="${f1(k)}"/>`;
-        } else if (step === 3) endo = `<circle cx="${LX}" cy="520" r="118" fill="rgba(201,165,116,.10)" stroke="${C.mem}" stroke-width="7" opacity=".5"/>`;
-        else if (step === 4) endo = `<path d="M${LX - 118},520 a118,118 0 1,1 76,100" fill="none" stroke="${C.mem}" stroke-width="7" stroke-dasharray="26 18" opacity="${f1(1 - ease(sub(p, .4, .9)) * .6)}"/>`;
+        if ((step === 2 && p >= .5) || step === 3) endo = blaasje(LX, ly, vesR, { w: 18 });
+        else if (step === 4) {
+          const k = ease(sub(p, .1, .6));
+          endo = blaasjeOpen(LX, 520, 118, [[200, 200 + 70 * k], [330, 330 + 45 * k], [70, 70 + 55 * k]], { w: 18, op: 1 - ease(sub(p, .4, .9)) * .6 });
+        }
         $('vi-endo').innerHTML = endo;
         /* label onder het endosoom; na het uncoaten (stap 4+) is er geen endosoom meer */
         $('vi-endo-a').setAttribute('cx', f1(step >= 2 ? LX + 225 : LX));
         $('vi-endo-a').setAttribute('cy', f1(step >= 2 ? ly - 40 : MEM + 100));
         $('vi-endo-a').setAttribute('opacity', step >= 4 ? '0' : '1');
 
-        /* rechts: omhuld virus dat fuseert */
+        /* rechts: omhuld virus; zijn envelop versmelt met het celmembraan (stap 3) */
         let ry = 150, rOpv = 1, rR = 72;
         if (step <= 1) ry = step === 1 ? lerp(150, MEM - 110, ease(sub(p, .2, .9))) : 150;
         else if (step === 2) ry = MEM - 110;
-        else if (step === 3) { const u = ease(sub(p, .15, .7)); ry = lerp(MEM - 110, MEM - 80, u); rOpv = 1 - u; }
+        else if (step === 3) { ry = lerp(MEM - 110, MEM - 70, ease(sub(p, .05, .3))); rOpv = p < .3 ? 1 : 0; }
         else rOpv = 0;
         $('vi-right').innerHTML = rOpv > .01 ? `<g transform="translate(${RX} ${f1(ry)})">${enveloped(rR, rOpv)}</g>` : '';
         $('vi-right-a').setAttribute('cy', f1(ry - 110)); $('vi-right-a').setAttribute('opacity', rOpv > .1 ? '1' : '0');
 
-        /* inhoud die vrijkomt na fusie */
+        /* het capside komt na de fusie vrij in het cytosol (de envelop is nu deel van het celmembraan) */
         let fus = '';
-        if (step >= 3) {
-          const k = step === 3 ? ease(sub(p, .45, .95)) : 1;
-          const cy2 = step === 3 ? lerp(MEM + 20, 470, ease(sub(p, .5, 1))) : step === 4 ? lerp(470, 540, ease(sub(p, .1, .8))) : 540;
-          fus += `<g opacity="${f1(k)}"><circle cx="${RX}" cy="${f1(cy2)}" r="${f1(step >= 4 ? 30 : 42)}" fill="#3a1a33" stroke="${PINK}" stroke-width="5"/>
-            <path d="M${RX - 26},${f1(cy2)} q13,-18 26,0 t26,0" stroke="${C.rna}" stroke-width="5" fill="none"/></g>`;
-          if (step === 3) {
-            const u = ease(sub(p, .15, .7));
-            if (u < .98) fus += `<path d="M${RX - 95},${MEM} A95,${f1(95 * (1 - u) + 1)} 0 0 1 ${RX + 95},${MEM}" fill="rgba(201,165,116,.12)" stroke="${C.mem}" stroke-width="12" opacity="${f1(Math.min(1, u * 4))}"/>`;
-            fus += `<g opacity="${f1(ease(sub(p, .3, .7)))}">${txt(RX, MEM + 230, T2('de envelop versmelt met het celmembraan', 'the envelope fuses with the cell membrane'), C.mem, 20)}</g>`;
-          }
+        if (step >= 3 && !(step === 3 && p < .3)) {
+          const cy2 = step === 3 ? lerp(MEM - 70, 470, ease(sub(p, .35, 1))) : step === 4 ? lerp(470, 540, ease(sub(p, .1, .8))) : 540;
+          const cR = step === 3 ? 65 : step === 4 ? lerp(65, 50, ease(sub(p, .1, .8))) : 50;
+          const cOp = step === 4 ? 1 - ease(sub(p, .45, .9)) * .5 : step > 4 ? .5 : 1;
+          fus += `<g transform="translate(${RX} ${f1(cy2)})">${hivCapsid(cR, cOp)}</g>`;
         }
+        if (step === 3) fus += `<g opacity="${f1(ease(sub(p, .3, .7)))}">${txt(RX, MEM + 230, T2('de envelop versmelt met het celmembraan', 'the envelope fuses with the cell membrane'), C.mem, 20)}</g>`;
         $('vi-fusion').innerHTML = fus;
 
         /* genoom vrij + fork */

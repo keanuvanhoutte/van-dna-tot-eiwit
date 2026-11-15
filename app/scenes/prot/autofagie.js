@@ -2,6 +2,7 @@ import { C, T2, svgOpen, FULL, sub, ease, lerp, f1, rng } from '../../kit.js';
 import { T } from './_b_kit.js';
 import { arrow } from '../repl/_draw.js';
 import { DEST, icon, btn } from './_fate.js';
+import { membraanPts, blaasje, blaasjeDubbel, mitochondrion, eiwitPad, vATPase } from '../../bio.js';
 
 /*
  * Autofagie (macroautofagie): een plat membraan (fagofoor) groeit rond een stuk cytoplasma (hier een kapot mitochondrion
@@ -23,23 +24,42 @@ function arc(cx, cy, r, a0, a1, col, w, op = 1) {
   const [x0, y0] = p(a0), [x1, y1] = p(a1);
   return `<path d="M${f1(x0)},${f1(y0)} A${f1(r)},${f1(r)} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${f1(x1)},${f1(y1)}" stroke="${col}" stroke-width="${w}" fill="none" stroke-linecap="round" opacity="${f1(op)}"/>`;
 }
-/* kapot mitochondrion en een klont eiwitten */
+/* kapot mitochondrion (gezwollen, weinig cristae) en een klont eiwitten */
 function damagedMito(x, y, s = 1, op = 1) {
   if (op <= .01) return '';
-  return `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(${f1(s)})"><ellipse rx="95" ry="52" fill="rgba(255,138,61,.12)" stroke="${DEST.mito}" stroke-width="4" stroke-dasharray="40 10 60 14"/>` +
-    `<path d="M-60,0 q12,-26 24,0 M-20,-6 q12,26 24,0 M24,0 q12,-26 24,0" stroke="${DEST.mito}" stroke-width="3" fill="none"/></g>`;
+  return `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(${f1(s)}) rotate(-8)">${mitochondrion(0, 0, 95, 56, { n: 3, w: 7, diep: .45, matrix: 'rgba(160,150,140,.16)' })}</g>`;
 }
-const clump = (x, y, s = 1, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}">${AGGB.map(([dx, dy, r]) => `<circle cx="${f1(x + dx * s)}" cy="${f1(y + dy * s)}" r="${f1(r * s)}" fill="${AGG}" fill-opacity=".75" stroke="#0a1224" stroke-width="1.5"/>`).join('')}</g>`;
-/* autofagosoom: twee membranen */
-const avo = (x, y, r, op = 1, inner = 1) => op <= .01 ? '' : arc(x, y, r + 14, 0, 360, PHAG, 6, op) + arc(x, y, r, 0, 360, PHAG, 6, op * inner);
-
+const clump = (x, y, s = 1, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}">${AGGB.map(([dx, dy, r], i) => { const d = eiwitPad(x + dx * s, y + dy * s, r * s, r * s * .85, 300 + i, .12); return `<path d="${d}" fill="${AGG}" fill-opacity=".75" stroke="#0a1224" stroke-width="1.5"/>`; }).join('')}</g>`;
+/* fagofoor: een platte zak (twee membranen die aan de rand in elkaar overgaan), gebogen als een kom rond (cx, cy).
+ * a0..a1 in graden; ri/ro = straal van het binnen- en buitenmembraan. Gesloten (≥ 360°) = autofagosoom met dubbel membraan. */
+const MW = 10, RI = OR - 2, RO = OR + 16;
+function fagofoor(cx, cy, a0, a1, op = 1) {
+  if (op <= .01 || a1 - a0 < 2) return '';
+  if (a1 - a0 >= 359) return blaasjeDubbel(cx, cy, (RI + RO) / 2, { w: MW, gap: RO - RI - MW, op });
+  const rad = a => a * Math.PI / 180, N = Math.max(8, Math.round((a1 - a0) / 4)), rm = (RI + RO) / 2, h = (RO - RI) / 2;
+  const arcP = (r, from, to) => Array.from({ length: N + 1 }, (_, i) => { const a = rad(from + (to - from) * i / N); return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; });
+  const cap = (a, end) => Array.from({ length: 7 }, (_, i) => {           // afgeronde rand van de zak: buiten- gaat over in binnenmembraan
+    const t = end ? Math.PI * (i + 1) / 8 : Math.PI - Math.PI * (i + 1) / 8, A = rad(a), n = [Math.cos(A), Math.sin(A)], tg = end ? [-n[1], n[0]] : [n[1], -n[0]];
+    return [cx + n[0] * rm + n[0] * h * Math.cos(t) + tg[0] * h * Math.sin(t), cy + n[1] * rm + n[1] * h * Math.cos(t) + tg[1] * h * Math.sin(t)]; });
+  const P = [...arcP(RO, a0, a1), ...cap(a1, true), ...arcP(RI, a1, a0), ...cap(a0, false)];
+  const D = 'M' + P.map(q => f1(q[0]) + ',' + f1(q[1])).join(' L') + 'Z';
+  return `<g opacity="${f1(op)}"><path d="${D}" fill="rgba(201,165,116,.14)"/>${membraanPts(P, { w: MW, closed: true })}</g>`;
+}
+/* lysosoom: één membraan, knipenzymen binnen, protonpompen in het membraan */
+function lysosoom(x, y, r, op = 1, enzymes = 1) {
+  if (op <= .01) return '';
+  let g = blaasje(x, y, r, { w: 12, lumen: 'rgba(255,107,107,.12)', rand: LYS });
+  if (enzymes > .01) g += `<g opacity="${f1(enzymes)}">` + [[-.4, -.3], [.25, -.4], [.45, .15], [-.1, .3], [-.45, .25]].map(([dx, dy], i) => { const d = eiwitPad(x + dx * r, y + dy * r, 13, 10, 200 + i, .12); return `<path d="${d}" fill="${LYS}" fill-opacity=".7"/>`; }).join('') + '</g>';
+  for (const a of [-2.2, -.9, .45]) g += vATPase(x + Math.cos(a) * r, y + Math.sin(a) * r, a, { s: .6, k: 0 });
+  return `<g opacity="${f1(op)}">${g}</g>`;
+}
 export default {
   id: 'autofagie',
   title: { nl: 'De cel verteert stukken van zichzelf', en: 'The cell digests parts of itself' },
   scale: { nl: 'schematisch (een lysosoom is ≈ 0,5 µm)', en: 'schematic (a lysosome is ≈ 0.5 µm)' },
   time: { nl: 'schematisch', en: 'schematic' },
   org: { nl: 'mens', en: 'human' },
-  legend: [[PHAG, L3('membraan van het zakje (fagofoor → autofagosoom)', 'membrane of the pouch (phagophore → autophagosome)')], [DEST.mito, L3('kapot mitochondrion', 'damaged mitochondrion')], [AGG, L3('klont eiwitten', 'protein clump')],
+  legend: [[PHAG, L3('membraan van het zakje (fagofoor → autofagosoom)', 'membrane of the pouch (phagophore → autophagosome)')], ['#a0968c', L3('kapot mitochondrion (gezwollen, twee membranen)', 'damaged mitochondrion (swollen, two membranes)')], [AGG, L3('klont eiwitten', 'protein clump')],
     [LYS, L3('lysosoom', 'lysosome')], [BB, L3('bouwstenen (o.a. aminozuren)', 'building blocks (e.g. amino acids)')]],
   simplified: {
     nl: 'Schematisch en niet op schaal. Het zakje groeit uit een stukje membraan met hulp van veel eiwitten (o.a. LC3 op het membraan), die niet getekend zijn. Hier wordt een kapot mitochondrion en een klont samen ingepakt; in de cel wordt afval vaak apart en gericht ingepakt, of wordt bij honger een willekeurig stuk cytoplasma opgenomen. Er bestaan ook kleinere vormen van autofagie.',
@@ -95,15 +115,18 @@ export default {
         if (step >= 1 && kFuse < .99) {
           const ext = lerp(40, 330, kGrow) + 30 * kClose, a0 = -90 - ext / 2, a1 = -90 + ext / 2;
           const op = (1 - kFuse) * dim;
-          mem += arc(cx, by, OR + 14, a0, a1, PHAG, 6, op) + arc(cx, by, OR, a0 + 2, a1 - 2, PHAG, 6, op);
+          mem += fagofoor(cx, by, a0, a1, op);
           if (step === 1) mem += T(cx, by - OR - 50, T2('groeiend membraan', 'growing membrane'), { size: 26, col: PHAG, op: ease(sub(p, .3, .6)) });
           if (step === 2) mem += T(cx, by - OR - 50, T2('twee membranen', 'two membranes'), { size: 26, col: PHAG, op: ease(sub(p, .5, .8)) });
         }
         // lysosoom (en na versmelten: één groot verteerblaasje)
         let lys = '';
-        const lr = lerp(LR, OR + 20, kFuse);
-        lys += `<circle cx="${f1(mx)}" cy="${f1(by)}" r="${f1(lr)}" fill="rgba(255,107,107,${f1(.1 + .08 * kFuse)})" stroke="${LYS}" stroke-width="4" opacity="${f1(dim)}"/>`;
-        if (kFuse < .5) for (let i = 0; i < 5; i++) lys += `<path d="M${f1(mx - 30 + (i % 3) * 30)},${f1(by - 40 + i * 20)} l16,0" stroke="${LYS}" stroke-width="4" stroke-linecap="round" opacity="${f1(1 - kFuse * 2)}"/>`;
+        const lr = LR;
+        // vóór het versmelten: lysosoom naast het autofagosoom; erna: één verteerblaasje met één membraan (het buitenmembraan
+        // van het autofagosoom is versmolten met dat van het lysosoom), het binnenmembraan zit nog rond de inhoud
+        lys += lysosoom(mx, by, lr, dim * (1 - kFuse), 1);
+        if (kFuse > .01) lys += lysosoom(FUSE[0], by, OR + 30, dim * kFuse, 1 - kDig * .3) +
+          `<g opacity="${f1(kFuse * (1 - kDig) * dim)}">${membraanPts(Array.from({ length: 64 }, (_, i) => [FUSE[0] + RI * Math.cos(i / 64 * 6.2832), by + RI * Math.sin(i / 64 * 6.2832)]), { w: MW, closed: true })}</g>`;
         lys += T(mx, by + lr + 46, kFuse > .5 ? T2('verteren', 'digesting') : T2('lysosoom', 'lysosome'), { size: 28, col: LYS, w: 700, op: dim });
         if (kFuse > .5 || step < 3) put('af-lA', mx + lr * .6, by - lr - 6); else put('af-lA', -99, -99);
         $('af-lys').innerHTML = lys;
@@ -127,7 +150,7 @@ export default {
             T(150, 172, T2('voedingssensor', 'nutrient sensor'), { size: 24, anchor: 'start' }) + T(150, 204, sOn > .5 ? T2('aan', 'on') : T2('uit (honger)', 'off (hunger)'), { size: 22, anchor: 'start', col: sOn > .5 ? C.ok : C.danger }) + '</g>';
           SMALL.forEach(([x, y], i) => {
             const o = step === 5 ? ease(sub(p, .15 + i * .1, .35 + i * .1)) : (i < 2 ? 1 : 1 - kDaily);
-            fx += avo(x, y, 42, o * sOp) + `<circle cx="${f1(x)}" cy="${f1(y)}" r="16" fill="${AGG}" opacity="${f1(.6 * o * sOp)}"/>`;
+            fx += blaasjeDubbel(x, y, 42, { w: 8, gap: 5, op: o * sOp }) + `<path d="${eiwitPad(x, y, 17, 14, 400 + i, .12)}" fill="${AGG}" opacity="${f1(.6 * o * sOp)}"/>`;
           });
           if (step === 6) fx += T(800, 800, T2('✓ ook zonder honger: opruimen', '✓ even without hunger: tidying up'), { size: 28, col: C.ok, op: kDaily });
         }

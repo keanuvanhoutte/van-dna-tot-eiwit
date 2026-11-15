@@ -5,6 +5,7 @@
  * Alle functies geven SVG-strings terug en zijn deterministisch.
  */
 import { C, f1 } from '../../kit.js';
+import { membraanPts, eiwit, eiwitPad, tmHelix, LIPID } from '../../bio.js';
 
 export const FIBRE = '#f3a6d3', CAPS = '#4a2440', PINK = C.tdna;
 export const LIP = '#e8c27a', PEG = '#9fe3d0', CHOL = '#c5d06b';
@@ -59,28 +60,115 @@ export function viralGenome(R, op = 1, beads = true) {
   return s + '</g>';
 }
 
-/* ── membraan ─────────────────────────────────────────────────────── */
-export function bilayer(d, col = C.mem, w = 15) {
-  return `<path d="${d}" stroke="${col}" stroke-width="${w}" fill="none" stroke-linecap="round"/>` +
-    `<path d="${d}" stroke="#2a1f14" stroke-width="${w * .3}" fill="none" stroke-linecap="round" opacity=".55"/>`;
+/* ── membraan ───────────────────────────────────────────────────────
+ * Detailronde 15-11-2026: elk membraan is een lipidedubbellaag (bio.js: kopjes buiten, staartjes binnen).
+ * bilayer(d) aanvaardt nog steeds een SVG-pad (M/L/H/V/Q/C/Z, absoluut of relatief); het pad wordt bemonsterd tot punten.
+ * col wordt niet meer gebruikt (vaste lipidekleuren); w = oude lijndikte, de dubbellaag wordt ≈ 1,5 × zo breed. */
+export function padPts(d, step = 10) {
+  const tok = d.match(/[MLHVQCZmlhvqcz]|-?\d*\.?\d+(?:e[-+]?\d+)?/g) || [];
+  let i = 0, cmd = 'M', x = 0, y = 0, x0 = 0, y0 = 0;
+  const P = [], n = () => parseFloat(tok[i++]), isCmd = k => /^[A-Za-z]$/.test(tok[k] ?? '');
+  const curve = (f, len) => { const N = Math.max(4, Math.ceil(len / step)); for (let k = 1; k <= N; k++) P.push(f(k / N)); };
+  while (i < tok.length) {
+    if (isCmd(i)) cmd = tok[i++];
+    const rel = cmd === cmd.toLowerCase(), U = cmd.toUpperCase(), ox = rel ? x : 0, oy = rel ? y : 0;
+    if (U === 'Z') { if (P.length) P.push([x0, y0]); x = x0; y = y0; if (!isCmd(i)) i++; continue; }
+    if (U === 'M') { x = ox + n(); y = oy + n(); x0 = x; y0 = y; P.push([x, y]); cmd = rel ? 'l' : 'L'; continue; }
+    if (U === 'L') { x = ox + n(); y = oy + n(); P.push([x, y]); continue; }
+    if (U === 'H') { x = ox + n(); P.push([x, y]); continue; }
+    if (U === 'V') { y = oy + n(); P.push([x, y]); continue; }
+    if (U === 'Q') {
+      const ax = x, ay = y, cx = ox + n(), cy = oy + n(), ex = ox + n(), ey = oy + n();
+      curve(t => { const u = 1 - t; return [u * u * ax + 2 * u * t * cx + t * t * ex, u * u * ay + 2 * u * t * cy + t * t * ey]; }, Math.hypot(cx - ax, cy - ay) + Math.hypot(ex - cx, ey - cy));
+      x = ex; y = ey; continue;
+    }
+    if (U === 'C') {
+      const ax = x, ay = y, c1x = ox + n(), c1y = oy + n(), c2x = ox + n(), c2y = oy + n(), ex = ox + n(), ey = oy + n();
+      curve(t => { const u = 1 - t; return [u * u * u * ax + 3 * u * u * t * c1x + 3 * u * t * t * c2x + t * t * t * ex, u * u * u * ay + 3 * u * u * t * c1y + 3 * u * t * t * c2y + t * t * t * ey]; },
+        Math.hypot(c1x - ax, c1y - ay) + Math.hypot(c2x - c1x, c2y - c1y) + Math.hypot(ex - c2x, ey - c2y));
+      x = ex; y = ey; continue;
+    }
+    i++;                                                   // onbekend: overslaan
+  }
+  return P.filter((p, k) => k === 0 || Math.hypot(p[0] - P[k - 1][0], p[1] - P[k - 1][1]) > .5);
+}
+export function bilayer(d, col = C.mem, w = 15, o = {}) {
+  return membraanPts(padPts(d), { w: w * 1.5, ...o });
+}
+/* puntenlijst → SVG-pad (voor vullingen, klikzones) */
+export const ptsPad = (P, closed = false) => 'M' + P.map(p => f1(p[0]) + ',' + f1(p[1])).join(' L') + (closed ? 'Z' : '');
+/* gladmaken: enkele rondes voortschrijdend gemiddelde (eindpunten van een open lijn blijven staan) */
+export function glad(P, rondes = 3, closed = false) {
+  let Q = P;
+  for (let r = 0; r < rondes; r++) Q = Q.map((p, i) => {
+    if (!closed && (i === 0 || i === Q.length - 1)) return p;
+    const a = Q[(i - 1 + Q.length) % Q.length], b = Q[(i + 1) % Q.length];
+    return [(a[0] + 2 * p[0] + b[0]) / 4, (a[1] + 2 * p[1] + b[1]) / 4];
+  });
+  return Q;
+}
+/* membraan met een knop (instulping of uitstulping), zoals bij endocytose, afknoppen en membraanfusie.
+ * Basislijn van (x0,y0) naar (x1,y1); de knop ligt op afstand u van (x0,y0), straal r.
+ * k = 0: vlak · 0,5: halve bol · 1: bol hangt nog aan een smalle hals (afgesnoerd bij k = 1).
+ * side = +1: knop aan de kant van de normaal (-dy, dx) (bij een lijn van links naar rechts: naar onder). */
+export function knopPts(x0, y0, x1, y1, u, r, k, { side = 1, step = 7, rondes = 3 } = {}) {
+  const L = Math.hypot(x1 - x0, y1 - y0), tx = (x1 - x0) / L, ty = (y1 - y0) / L, nx = -ty * side, ny = tx * side;
+  const at = (a, v) => [x0 + tx * a + nx * v, y0 + ty * a + ny * v];
+  const kk = Math.min(.985, Math.max(0, k)), c = r * (2 * kk - 1), th0 = Math.acos(Math.max(-1, Math.min(1, -c / r))), hc = r * Math.sin(th0);
+  const P = [];
+  const flat = (a, b) => { if (b <= a) return; const far = 3 * r; const pts = [a]; for (let s = a + step; s < b; s += (Math.abs(s - u) > far ? step * 6 : step)) pts.push(s); pts.push(b); pts.forEach(s => P.push(at(s, 0))); };
+  flat(0, u - hc);
+  if (th0 > .02) { const N = Math.max(6, Math.ceil(th0 * r / step)); for (let i = 0; i <= N; i++) { const th = -th0 + 2 * th0 * i / N; P.push(at(u + r * Math.sin(th), c + r * Math.cos(th))); } }
+  flat(u + hc, L);
+  return glad(P, rondes);
+}
+/* membraanboog: stuk van een cirkelvormig membraan van hoek a0 tot a1 (graden), bv. een opengebroken blaasje */
+export function boogPts(cx, cy, r, a0, a1, step = 8) {
+  const N = Math.max(3, Math.ceil(Math.abs(a1 - a0) * Math.PI / 180 * r / step));
+  return Array.from({ length: N + 1 }, (_, i) => { const a = (a0 + (a1 - a0) * i / N) * Math.PI / 180; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; });
+}
+/* opengebroken blaasje: dubbellaag met gaten (hoeken in graden, [van, tot]) */
+export function blaasjeOpen(cx, cy, r, gaten = [], { w = 18, lumen = 'rgba(201,165,116,.08)', op = 1 } = {}) {
+  if (op <= .01) return '';
+  const G = gaten.map(([a, b]) => [((a % 360) + 360) % 360, ((a % 360) + 360) % 360 + (b - a)]).sort((p, q) => p[0] - q[0]);
+  let g = `<g opacity="${f1(op)}"><circle cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(r)}" fill="${lumen}"/>`;
+  if (!G.length) return g + membraanPts(boogPts(cx, cy, r, 0, 360).slice(0, -1), { w, closed: true }) + '</g>';
+  for (let i = 0; i < G.length; i++) { const a = G[i][1], b = i + 1 < G.length ? G[i + 1][0] : G[0][0] + 360; if (b - a > 4) g += membraanPts(boogPts(cx, cy, r, a, b), { w }); }
+  return g + '</g>';
+}
+/* gesloten zak langs een boog (ER-cisterne rond de kern): middenstraal rad, van hoek a0 tot a1 (graden), dikte dik */
+export function zakBoog(cx, cy, rad, a0, a1, { dik = 16, w = 6, lumen = 'rgba(143,179,232,.16)', op = 1 } = {}) {
+  if (op <= .01) return '';
+  const ri = rad - dik / 2, ro = rad + dik / 2, uit = boogPts(cx, cy, ro, a0, a1, 6), bin = boogPts(cx, cy, ri, a1, a0, 6);
+  const sg = Math.sign(a1 - a0) || 1;
+  const kap = (a, bulge, e0) => {                          // halve cirkel rond het uiteinde, van de ene membraanrand naar de andere
+    const ar = a * Math.PI / 180, ex = Math.cos(ar), ey = Math.sin(ar), mx = cx + rad * ex, my = cy + rad * ey, bx = -ey * bulge, by = ex * bulge, out = [];
+    for (let k = 1; k < 6; k++) { const th = Math.PI * k / 6, c = Math.cos(th) * dik / 2 * e0, sn = Math.sin(th) * dik / 2; out.push([mx + ex * c + bx * sn, my + ey * c + by * sn]); }
+    return out;
+  };
+  const P = [...uit, ...kap(a1, sg, 1), ...bin, ...kap(a0, -sg, -1)];
+  return `<g opacity="${f1(op)}"><path d="${ptsPad(P, true)}" fill="${lumen}"/>${membraanPts(P, { w, closed: true })}</g>`;
 }
 
 /* ── receptoren ───────────────────────────────────────────────────── */
-/* CAR: twee Ig-domeinen op een steel (aanhechtingsreceptor) */
+/* CAR (coxsackie-adenovirusreceptor): type I-membraaneiwit met twee Ig-domeinen buiten (D1 bovenaan bindt de vezelknop),
+ * één transmembraanhelix en een staart in het cytosol. (x,y) ≈ buitenkant van het membraan; up = -1: buiten = boven. */
 export function car(x, y, up = -1, s = 1, hl = 0) {
   const c = hl > .5 ? '#9fe3d0' : '#7fc9b6';
-  return `<g transform="translate(${f1(x)} ${f1(y)}) scale(${s})">
-    <rect x="-5" y="${up < 0 ? -8 : 0}" width="10" height="26" rx="3" fill="${c}" opacity=".7"/>
-    <rect x="-11" y="${f1(up * 40)}" width="22" height="20" rx="6" fill="${c}"/>
-    <rect x="-11" y="${f1(up * 20)}" width="22" height="20" rx="6" fill="${c}" opacity=".85"/></g>`;
+  return `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(s)} ${f1(s * -up)})">` +
+    tmHelix(0, -5, 13, c, 1, 6) +
+    `<path d="M0,13 q5,5 1,10 q-4,4 1,8" stroke="${c}" stroke-width="2.6" fill="none" stroke-linecap="round"/>` +       // staart (cytosol)
+    `<path d="M0,-5 L0,-11" stroke="${c}" stroke-width="2.6"/>` +
+    eiwit(0, -19, 8.5, 8.5, c, { seed: 31, bumps: .08 }) + eiwit(.5, -36, 8.5, 8.5, c, { seed: 32, bumps: .08 }) + '</g>';
 }
-/* αv-integrine: heterodimeer met twee poten en een kop */
+/* αv-integrine: heterodimeer (α + β), elk met een kop buiten, een lange poot, één transmembraanhelix en een korte staart */
 export function integrin(x, y, s = 1, hl = 0) {
   const a = hl > .5 ? '#ffd166' : '#c9a574', b = hl > .5 ? '#ffb347' : '#a98a5e';
-  return `<g transform="translate(${f1(x)} ${f1(y)}) scale(${s})">
-    <path d="M-7,26 L-5,-14" stroke="${a}" stroke-width="7" stroke-linecap="round"/>
-    <path d="M7,26 L5,-14" stroke="${b}" stroke-width="7" stroke-linecap="round"/>
-    <ellipse cx="-6" cy="-22" rx="11" ry="10" fill="${a}"/><ellipse cx="7" cy="-19" rx="9" ry="8" fill="${b}"/></g>`;
+  return `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(s)})">` +
+    tmHelix(-5, -3, 16, a, 1, 5.5) + tmHelix(5, -3, 16, b, 1, 5.5) +
+    `<path d="M-5,16 q-3,5 -1,9 M5,16 q3,5 1,9" stroke="${a}" stroke-width="2.4" fill="none" stroke-linecap="round"/>` +
+    `<path d="M-5,-3 L-6,-16 M5,-3 L6,-14" stroke="${a}" stroke-width="3.2" stroke-linecap="round"/>` +
+    eiwit(-6, -23, 10, 8.5, a, { seed: 41, bumps: .08 }) + eiwit(7, -20, 7.5, 7, b, { seed: 42, bumps: .08 }) + '</g>';
 }
 /* klathrine-triskelion */
 export function triskelion(x, y, rot = 0, s = 1, col = '#8fa8ff', op = 1) {
@@ -90,28 +178,33 @@ export function triskelion(x, y, rot = 0, s = 1, col = '#8fa8ff', op = 1) {
     <circle r="4" fill="${col}"/></g>`;
 }
 
-/* ── lipidenanodeeltje ────────────────────────────────────────────── */
+/* ── lipidenanodeeltje ────────────────────────────────────────────
+ * Geen blaasje met een dubbellaag rond water: buiten één laag lipiden (helperfosfolipide + PEG-lipide, koppen naar buiten,
+ * staartjes naar binnen) met cholesterol; binnenin een dichte kern van ioniseerbare lipiden met het mRNA in kleine
+ * waterige holtes (zie 'simplified' in lnp.js). protonated (0..1): plusladingen op de ioniseerbare lipiden (zuur endosoom). */
 export function lnpParticle(R, op = 1, o = {}) {
-  const prot = o.protonated ?? 0;
+  const prot = o.protonated ?? 0, hr = Math.max(1.6, R * .05), pitch = hr * 2.3, tl = R * .07;
   let s = `<g opacity="${f1(op)}">`;
-  for (let a = 0; a < 360; a += 24) {
+  for (let a = 0; a < 360; a += 24) {                      // PEG-ketens aan de buitenkant
     const [x, y] = [Math.cos(rad(a)) * R, Math.sin(rad(a)) * R];
     s += `<path d="M${f1(x)},${f1(y)} q${f1(Math.cos(rad(a + 30)) * R * .22)},${f1(Math.sin(rad(a + 30)) * R * .22)} ${f1(Math.cos(rad(a)) * R * .3)},${f1(Math.sin(rad(a)) * R * .3)}" stroke="${PEG}" stroke-width="${f1(R * .045)}" fill="none" opacity=".85"/>`;
   }
-  s += `<circle r="${f1(R)}" fill="rgba(255,194,71,.10)" stroke="${LIP}" stroke-width="${f1(R * .11)}"/>`;
-  s += `<circle r="${f1(R * .72)}" fill="none" stroke="${LIP}" stroke-width="${f1(R * .07)}" opacity=".6" stroke-dasharray="${f1(R * .12)} ${f1(R * .08)}"/>`;
-  for (let a = 15; a < 360; a += 30) {
-    const r2 = R * .86;
-    s += `<circle cx="${f1(Math.cos(rad(a)) * r2)}" cy="${f1(Math.sin(rad(a)) * r2)}" r="${f1(R * .06)}" fill="${CHOL}"/>`;
-  }
-  if (prot > .02) for (let a = 0; a < 360; a += 60) {
-    const r2 = R * .5;
-    /* positieve lading als getekend plusje (geen tekst: blijft scherp bij elke zoom) */
-    const [px, py, h] = [Math.cos(rad(a)) * r2, Math.sin(rad(a)) * r2, R * .09];
-    s += `<path d="M${f1(px - h)},${f1(py)}h${f1(2 * h)}M${f1(px)},${f1(py - h)}v${f1(2 * h)}" stroke="#ff9d5c" stroke-width="${f1(R * .045)}" stroke-linecap="round" opacity="${f1(prot)}"/>`;
-  }
-  s += `<path d="M${f1(-R * .45)},${f1(-R * .1)} q${f1(R * .16)},${f1(-R * .3)} ${f1(R * .3)},0 t${f1(R * .3)},0 t${f1(R * .3)},0" stroke="${C.rna}" stroke-width="${f1(R * .08)}" fill="none" stroke-linecap="round"/>`;
-  s += `<path d="M${f1(-R * .35)},${f1(R * .26)} q${f1(R * .16)},${f1(-R * .3)} ${f1(R * .3)},0 t${f1(R * .3)},0" stroke="${C.rna}" stroke-width="${f1(R * .08)}" fill="none" stroke-linecap="round"/>`;
+  s += `<circle r="${f1(R)}" fill="#1b1a22"/><circle r="${f1(R - 2 * hr)}" fill="rgba(232,194,122,.30)"/>`;     // kern van ioniseerbare lipiden
+  // buitenste laag: één rij koppen met staartjes naar binnen (monolaag)
+  s += `<circle r="${f1(R - 2 * hr - tl / 2)}" fill="none" stroke="${LIPID.tail}" stroke-width="${f1(tl)}" stroke-dasharray="${f1(hr * .35)} ${f1(hr * .45)} ${f1(hr * .35)} ${f1(pitch - hr * 1.15)}"/>`;
+  s += `<circle r="${f1(R - hr)}" fill="none" stroke="#c9a574" stroke-width="${f1(hr * 2)}" stroke-linecap="round" stroke-dasharray="0 ${f1(pitch)}"/>`;
+  for (let a = 15; a < 360; a += 30) s += `<circle cx="${f1(Math.cos(rad(a)) * R * .84)}" cy="${f1(Math.sin(rad(a)) * R * .84)}" r="${f1(R * .055)}" fill="${CHOL}"/>`;
+  // waterige holtes met mRNA, omringd door de koppen van ioniseerbare lipiden
+  const H = [[-.36, -.24, .22], [.24, -.32, .19], [.32, .22, .21], [-.2, .32, .2]];
+  H.forEach(([u, v, rr], i) => {
+    const cx = u * R, cy = v * R, r2 = rr * R;
+    s += `<circle cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(r2)}" fill="#0d1a33" stroke="${LIP}" stroke-width="${f1(hr * 1.8)}" stroke-linecap="round" stroke-dasharray="0 ${f1(hr * 2.4)}"/>`;
+    s += `<path d="M${f1(cx - r2 * .62)},${f1(cy)} q${f1(r2 * .31)},${f1(-r2 * .5)} ${f1(r2 * .62)},0 t${f1(r2 * .62)},0" stroke="${C.rna}" stroke-width="${f1(Math.max(1.5, R * .045))}" fill="none" stroke-linecap="round"/>`;
+    if (prot > .02) {                                      // plusladingen op de ioniseerbare lipiden
+      const [px, py, h] = [cx + r2 * .95, cy - r2 * .95, R * .06];
+      s += `<path d="M${f1(px - h)},${f1(py)}h${f1(2 * h)}M${f1(px)},${f1(py - h)}v${f1(2 * h)}" stroke="#ff9d5c" stroke-width="${f1(R * .04)}" stroke-linecap="round" opacity="${f1(prot)}"/>`;
+    }
+  });
   return s + '</g>';
 }
 
@@ -135,17 +228,21 @@ export function motor(x, y, ang = 0, s = 1, col = C.prot, phase = 0, flip = 1) {
 }
 
 /* ── kernporiecomplex in doorsnede ────────────────────────────────── */
-/* Getekend rond (x,y): cytoplasma boven (y kleiner), nucleoplasma onder. */
+/* Getekend rond (x,y): cytoplasma boven (y kleiner), nucleoplasma onder. Het membraan (kernenvelop) tekent de scène zelf;
+ * de membraanring van de porie valt op ± 92·s, het poriemembraan hoort daar te liggen (zie kernEnvelop in bio.js). */
 export function npc(x, y, s = 1, o = {}) {
   const fg = o.fg ?? 1, col = C.prot, g = [];
   const S = v => f1(v * s);
   // ring-doorsnede: twee "blokken" links en rechts van het kanaal
   for (const side of [-1, 1]) {
-    g.push(`<g transform="translate(${S(side * 62)} 0)">
-      <rect x="${S(-26)}" y="${S(-40)}" width="${S(52)}" height="${S(80)}" rx="${S(12)}" fill="#1a2242" stroke="${col}" stroke-width="${S(3)}"/>
-      <rect x="${S(-18)}" y="${S(-30)}" width="${S(36)}" height="${S(22)}" rx="${S(7)}" fill="${col}" opacity=".35"/>
-      <rect x="${S(-18)}" y="${S(8)}" width="${S(36)}" height="${S(22)}" rx="${S(7)}" fill="${col}" opacity=".35"/>
-      <rect x="${S(-18)}" y="${S(-11)}" width="${S(36)}" height="${S(19)}" rx="${S(6)}" fill="${col}" opacity=".22"/></g>`);
+    /* per spaak: cytoplasmatische ring, binnenring en kernring (bobbelige eiwitdomeinen) en een membraanring aan de
+       buitenkant, die in het poriemembraan zit (waar buiten- en binnenmembraan in elkaar overgaan) */
+    const cx0 = side * 62;
+    for (const [dy, rx, ry, sd, fo] of [[-27, 25, 13, 1, .5], [0, 21, 12, 2, .32], [27, 25, 13, 3, .5], [0, 8, 11, 4, .7]]) {
+      const ox = sd === 4 ? cx0 + side * 30 : cx0;
+      const d = eiwitPad(ox * s, dy * s, rx * s, ry * s, 90 + sd * 2 + (side > 0 ? 1 : 0), .07);
+      g.push(`<path d="${d}" fill="#1a2242"/><path d="${d}" fill="${col}" fill-opacity="${fo}" stroke="${col}" stroke-width="${S(2.2)}"/>`);
+    }
     // cytoplasmatische filamenten (boven) en kernmandje (onder)
     for (let i = 0; i < 3; i++) {
       const fx = side * (40 + i * 14);

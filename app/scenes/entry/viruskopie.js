@@ -1,5 +1,6 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1 } from '../../kit.js';
 import { T, btn, ribo, rnaWave, scissors, dmv, CUT, COPY } from './_corona.js';
+import { cisterne } from '../../bio.js';
 
 /*
  * Het virus laat zich kopiëren (zijpad virussen, 05-11-2026). Het (+)RNA-genoom van SARS-CoV-2 (29 903 nt) wordt meteen door
@@ -66,9 +67,11 @@ export default {
         const kEr = ph(4, 0, .35);
         let er = '';
         if (kEr > .01) {
-          er += `<path d="M900,860 C1000,800 1120,830 1180,790 M1360,790 C1420,830 1520,800 1640,850" stroke="${C.mem}" stroke-width="12" fill="none" opacity="${f1(kEr * .8)}" stroke-linecap="round"/>`;
+          // twee ER-zakken (dubbellaag rond een lumen), waaruit de blaasjes ontstaan
+          er += `<g transform="rotate(-14 1040 825)">${cisterne(1040, 825, { len: 290, dik: 24, buig: 6, vert: false, w: 8, op: kEr, lumen: 'rgba(143,179,232,.14)' })}</g>` +
+            `<g transform="rotate(12 1500 820)">${cisterne(1500, 820, { len: 290, dik: 24, buig: 6, vert: false, w: 8, op: kEr, lumen: 'rgba(143,179,232,.14)' })}</g>`;
           DV.forEach(([x, y, r], i) => { er += dmv(x, y, r * (i ? ph(4, .2, .55) : ph(4, .05, .4)), kEr); });
-          er += T(1270, 830, T2('ER → blaasjes met dubbel membraan', 'ER → vesicles with a double membrane'), { size: 24, col: C.mem, op: ph(4, .4, .6) });
+          er += T(1270, 878, T2('ER → blaasjes met dubbel membraan', 'ER → vesicles with a double membrane'), { size: 24, col: C.mem, op: ph(4, .4, .6) });
           // poortje bovenaan het grote blaasje (stap 5)
           const kP = ph(5, 0, .25);
           if (kP > .01) er += `<g opacity="${f1(kP)}"><rect x="1250" y="512" width="40" height="34" rx="6" fill="${C.prot2}" stroke="#0a1224" stroke-width="2"/>${[0, 1, 2, 3].map(i => `<rect x="${1248 + i * 12}" y="500" width="8" height="14" rx="3" fill="${C.prot2}"/>`).join('')}</g>` +

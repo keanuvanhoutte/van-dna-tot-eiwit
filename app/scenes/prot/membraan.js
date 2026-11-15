@@ -2,7 +2,8 @@ import { C, T2, svgOpen, FULL, cam, sub, ease, lerp, f1 } from '../../kit.js';
 import { inset3d, withInset } from '../../kit3d.js';
 import { T } from './_b_kit.js';
 import { arrow } from '../repl/_draw.js';
-import { HYD, LUMEN, ribo, bilayer, at, beadsAt, btn } from './_fate.js';
+import { HYD, LUMEN, bilayer, at, beadsAt, btn } from './_fate.js';
+import { ribosoom80S, eiwitPad, blaasje, tmHelix } from '../../bio.js';
 
 /*
  * Membraaneiwitten: een waterafstotend stuk stopt de doorgang door het kanaal (Sec61) en glipt via de zijdeur
@@ -45,8 +46,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">De eerste twee stappen tonen de echte cryo-EM-structuur van het menselijke Sec61-kanaal (Itskanov et al., <i>Nat Chem Biol</i> 2023). Daarna volgt een schema van één membraaneiwit dat wordt ingebouwd.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">The first two steps show the real cryo-EM structure of the human Sec61 channel (Itskanov et al., <i>Nat Chem Biol</i> 2023). Then a diagram follows of one membrane protein being built in.</p>' },
   simplified: {
-    nl: 'De 3D-structuur is het kanaal zonder ribosoom en zonder keten; de zijdeur staat er gedeeltelijk open. Twee korte lussen aan de cytosolkant van Sec61α komen in deze structuur van gist, de rest is menselijk. In het schema is de keten als bolletjes getekend: het vettige stuk telt 6 bolletjes in plaats van ongeveer 20 aminozuren, en het geknipte adreslabel (signaalpeptide) van het begin is weggelaten. Getoond is één eenvoudig geval (begin binnen, einde buiten); andere membraaneiwitten liggen andersom of steken meerdere keren door het membraan. Hulpeiwitten naast het kanaal zijn niet getekend.',
-    en: 'The 3D structure is the channel without ribosome and without chain; its side gate is partly open. In this structure two short loops on the cytosolic side of Sec61α come from yeast; the rest is human. In the diagram the chain is drawn as beads: the greasy stretch has 6 beads instead of about 20 amino acids, and the cleaved address label (signal peptide) at the start is left out. One simple case is shown (start inside, end outside); other membrane proteins sit the other way round or cross the membrane several times. Helper proteins next to the channel are not drawn.' },
+    nl: 'De 3D-structuur is het kanaal zonder ribosoom en zonder keten; de zijdeur staat er gedeeltelijk open. Twee korte lussen aan de cytosolkant van Sec61α komen in deze structuur van gist, de rest is menselijk. Het blaasje is niet op schaal getekend. In het schema is de keten als bolletjes getekend: het vettige stuk telt 6 bolletjes in plaats van ongeveer 20 aminozuren, en het geknipte adreslabel (signaalpeptide) van het begin is weggelaten. Getoond is één eenvoudig geval (begin binnen, einde buiten); andere membraaneiwitten liggen andersom of steken meerdere keren door het membraan. Hulpeiwitten naast het kanaal zijn niet getekend.',
+    en: 'The 3D structure is the channel without ribosome and without chain; its side gate is partly open. In this structure two short loops on the cytosolic side of Sec61α come from yeast; the rest is human. The vesicle is not drawn to scale. In the diagram the chain is drawn as beads: the greasy stretch has 6 beads instead of about 20 amino acids, and the cleaved address label (signal peptide) at the start is left out. One simple case is shown (start inside, end outside); other membrane proteins sit the other way round or cross the membrane several times. Helper proteins next to the channel are not drawn.' },
   steps: [
     { dur: 8500, cam: FULL, title: L3('Een kanaal in het ER-membraan', 'A channel in the ER membrane'),
       text: L3('Dit is het echte kanaal van de mens waardoor nieuwe eiwitten het ER in gaan. Het bestaat uit drie eiwitten.', 'This is the real human channel through which new proteins enter the ER. It is made of three proteins.') },
@@ -70,7 +71,7 @@ export default {
       <g data-node="er" data-color="${C.mem}" data-label="${T2('Hoe kwam het eiwit hier? (ER)', 'How did the protein get here? (ER)')}">${bilayer(-300, 1900, MY, { h: MH, gap: [CX - 74, CX + 74] })}<circle data-anchor="er" cx="${CX - 330}" cy="${MT - 20}" r="1" fill="none"/></g>
       ${T(90, 200, T2('cytosol', 'cytosol'), { size: 28, anchor: 'start', col: C.muted })}
       ${T(90, 790, T2('binnenkant van het ER', 'inside of the ER'), { size: 28, anchor: 'start', col: '#e0b25c' })}
-      <g id="mb-chan"></g><g id="mb-ribo"></g><g id="mb-chain"></g><g id="mb-fx"></g>
+      <g id="mb-chan"></g><g id="mb-chain"></g><g id="mb-ribo"></g><g id="mb-fx"></g>
       <g data-node="golgi" data-color="${C.mem}" data-label="${T2('Verder naar het Golgi', 'On to the Golgi')}"><g id="mb-ves"></g><circle id="mb-vesA" data-anchor="golgi" cx="-99" cy="-99" r="1" fill="none"/></g>
     </g>
     <g id="mb-3d">
@@ -100,11 +101,12 @@ export default {
         const kIn = ph(2, .05, .85), kStop = ph(3, .05, .4), kSide = ph(3, .45, .9), kTail = ph(4, .05, .7), kOff = ph(4, .7, .95), kZoom = ph(5, .1, .4), kVes = ph(6, .1, .75);
         // kanaal: rechterhelft schuift open tijdens het zijwaarts glippen
         const open = 26 * Math.sin(Math.PI * Math.min(1, kSide * 1.2)) * (kSide < 1 ? 1 : 0);
-        $('mb-chan').innerHTML = `<rect x="${CX - 74}" y="${MT - 10}" width="44" height="${MH + 20}" rx="14" fill="${SECA}" fill-opacity=".35" stroke="${SECA}" stroke-width="3"/>` +
-          `<rect x="${f1(CX + 30 + open)}" y="${MT - 10}" width="44" height="${MH + 20}" rx="14" fill="${SECA}" fill-opacity=".35" stroke="${SECA}" stroke-width="3"/>` +
-          T(CX - 120, MB + 50, T2('kanaal', 'channel'), { size: 24, col: SECA, anchor: 'end' });
-        // ribosoom: zit op het kanaal, laat los aan het einde van stap 4
-        $('mb-ribo').innerHTML = ribo(CX + lerp(0, -260, kOff), 330 - lerp(0, 120, kOff), 1.1, 1 - kOff * .85) + T(CX - 150, 300, T2('ribosoom', 'ribosome'), { size: 24, col: C.rrna, anchor: 'end', op: 1 - kOff });
+        // Sec61-kanaal: twee helften (bobbelige eiwitvorm) door de dubbellaag; de rechterhelft wijkt opzij (zijdeur)
+        const half = (x, sd) => { const d = eiwitPad(x, MY, 26, MH / 2 + 12, sd, .05); return `<path d="${d}" fill="#0b1224"/><path d="${d}" fill="${SECA}" fill-opacity=".5" stroke="${SECA}" stroke-width="3"/>`; };
+        $('mb-chan').innerHTML = half(CX - 48, 61) + half(CX + 48 + open, 62) + T(CX - 120, MB + 50, T2('kanaal', 'channel'), { size: 24, col: SECA, anchor: 'end' });
+        // ribosoom: de tunneluitgang van de grote eenheid zit op het kanaal; laat los aan het einde van stap 4
+        const rb = ribosoom80S(CX, MT - 14, { s: .9 });
+        $('mb-ribo').innerHTML = `<g opacity="${f1(1 - kOff * .85)}" transform="translate(${f1(lerp(0, -260, kOff))} ${f1(-lerp(0, 120, kOff))})">${rb.svg}</g>` + T(CX - 130, 300, T2('ribosoom', 'ribosome'), { size: 24, col: C.rrna, anchor: 'end', op: 1 - kOff });
         // keten: lengte die al door het kanaal is (booglengte vanaf het ribosoom)
         const Lpush = step < 2 ? 0 : lerp(130, STOP - NH * SP, kIn) + (NH * SP) * kStop;
         const pts = [], cols = [];
@@ -126,7 +128,7 @@ export default {
         let ch = beadsAt(pts, i => cols[i], R, showChain * (1 - kVes));
         // helix-band rond het vettige stuk en de schaal (stap 5)
         let fx = '';
-        if (kSide > .5) fx += `<rect x="${HX - 26}" y="${MT + 2}" width="52" height="${MH - 4}" rx="20" fill="none" stroke="${HYD}" stroke-width="4" opacity="${f1((kSide - .5) * 2 * (1 - kVes))}"/>`;
+        if (kSide > .5) fx = tmHelix(HX, MT + 2, MB - 2, HYD, (kSide - .5) * 2 * (1 - kVes) * .45, 50) + fx;
         if (pts.length && step >= 2) fx += T(pts[0][0], pts[0][1] + 48, T2('begin', 'start'), { size: 24, col: C.text, op: ease(sub(kTail, .7, 1)) * (1 - kVes) });
         if (nTail > 1) fx += T(pts[pts.length - 1][0] + 20, pts[pts.length - 1][1] - 26, T2('einde', 'end'), { size: 24, col: C.text, op: ease(sub(kTail, .7, 1)) * (1 - kVes) });
         if (step === 3) fx += T(HX + 80, MT - 40, T2('vettig stuk', 'greasy stretch'), { size: 26, col: HYD, anchor: 'start', op: ease(sub(p, .55, .8)) });
@@ -139,13 +141,13 @@ export default {
         let ves = '';
         const va = $('mb-vesA');
         if (kVes > .01) {
-          const vx = lerp(HX, HX + 300, kVes), vy = lerp(MT - 40, 250, kVes), r = lerp(40, 110, kVes);
-          ves += `<g opacity="${f1(kVes)}"><circle cx="${f1(vx)}" cy="${f1(vy)}" r="${f1(r)}" fill="${LUMEN}" stroke="${C.mem}" stroke-width="${f1(r * .26)}" stroke-opacity=".55"/>` +
-            `<circle cx="${f1(vx)}" cy="${f1(vy)}" r="${f1(r)}" fill="none" stroke="${C.mem}" stroke-width="3" stroke-dasharray="2 9"/>`;
-          // helix in de wand (onderaan), begin naar binnen, einde naar buiten
-          const hy = vy + r, inner = [[vx - 30, hy - 40], [vx - 50, vy + 10], [vx - 20, vy - 30], [vx + 20, vy - 10]].map(q => [lerp(vx, q[0], r / 110), lerp(vy, q[1], r / 110)]);
-          ves += beadsAt(inner, () => C.chain, 10) + `<rect x="${f1(vx - 12)}" y="${f1(hy - 22)}" width="24" height="44" rx="10" fill="${HYD}"/>` +
-            beadsAt([[vx + 10, hy + 30], [vx + 50, hy + 60], [vx + 90, hy + 50], [vx + 130, hy + 80]], () => C.chain, 10) + '</g>';
+          // het blaasje snoert af van het ER-membraan (naar het cytosol) en reist weg; niet op schaal
+          const vx = lerp(HX, HX + 300, kVes), r = lerp(40, 110, kVes), vy = lerp(MT - 40, 250, kVes), mw = r * .26;
+          ves += `<g opacity="${f1(Math.min(1, kVes * 3))}">${blaasje(vx, vy, r, { w: mw, lumen: 'rgba(201,165,116,.14)' })}`;
+          // helix in de wand (onderaan): begin naar binnen (lumen), einde naar buiten (cytosol)
+          const hy = vy + r, kk = r / 110, inner = [[vx - 30, hy - 40], [vx - 50, vy + 10], [vx - 20, vy - 30], [vx + 20, vy - 10]].map(q => [lerp(vx, q[0], kk), lerp(vy, q[1], kk)]);
+          ves += beadsAt(inner, () => C.chain, 10 * Math.max(.5, kk)) + tmHelix(vx, hy - mw / 2 - 4, hy + mw / 2 + 4, HYD, 1, 20 * Math.max(.5, kk)) +
+            beadsAt([[vx + 10, hy + 30], [vx + 50, hy + 60], [vx + 90, hy + 50], [vx + 130, hy + 80]].map(q => [lerp(vx, q[0], kk), lerp(hy, q[1], kk)]), () => C.chain, 10 * Math.max(.5, kk)) + '</g>';
           ves += arrow(vx + r + 30, vy, vx + r + 150, vy, C.mem, 5, ease(sub(kVes, .7, 1))) + T(vx + r + 90, vy - 30, 'Golgi', { size: 28, col: C.mem, op: ease(sub(kVes, .7, 1)) });
           va.setAttribute('cx', f1(vx + r + 100)); va.setAttribute('cy', f1(vy + 60));
           // het membraan zelf blijft; de helix op de oude plek verdwijnt

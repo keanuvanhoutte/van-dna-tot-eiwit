@@ -1,11 +1,13 @@
 import { C, L, T2, svgOpen, pill, txt, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { capsid, viralGenome, bilayer, car, integrin, triskelion, microtubule, motor, npc, PINK, FIBRE } from './_bits.js';
+import { blaasje, membraanPts } from '../../bio.js';
+import { capsid, viralGenome, padPts, knopPts, ptsPad, blaasjeOpen, car, integrin, triskelion, microtubule, motor, npc, PINK, FIBRE } from './_bits.js';
 
 /* Hoofdstuk 2 van het verhaal: het adenovirus (HAdV-C5) hecht aan een epitheelcel en wordt opgenomen.
  * Coördinaten: membraan horizontaal op y = MEM, extracellulair erboven, cytosol eronder. */
 const MEM = 300, PX = 1080;           // y van het plasmamembraan, x van de opnameplaats
 const AX = 390, AY = 430, AR = 150;  // anatomie-inzet links (buiten de cel)
 const VR = 48;                       // straal van het capside op de route
+const KR = 90;                       // straal van de klathrinekuil / het blaasje (virus + vezels passen erin)
 const NUC = [1250, 1250, 520];       // kern (cx, cy, r) — bovenrand op y ≈ 730
 const PORE = [1120, 758];
 
@@ -100,11 +102,17 @@ export default {
 
   init(svg) {
     const $ = id => svg.getElementById(id);
-    /* membraan met een kuil op x = PX */
-    const memPath = (dip, wd = 190) => {
-      let d = 'M520,1000 C600,700 640,' + MEM + ' 880,' + MEM;
-      for (let x = 880; x <= 2000; x += 8) d += `L${f1(x)},${f1(MEM + dip * Math.exp(-Math.pow((x - PX) / wd, 2)))}`;
-      return d;
+    /* membraan: gebogen rand links, dan horizontaal met een knop (klathrinekuil) op x = PX; k = 0 vlak … .97 bijna afgesnoerd */
+    const rand = padPts('M520,1000 C600,700 640,' + MEM + ' 880,' + MEM, 12).slice(0, -1);
+    const memPts = k => rand.concat(knopPts(880, MEM, 2000, MEM, PX - 880, KR, k));
+    /* plaats op het membraan op booglengte sK van het midden van de kuil; off > 0 = naar het cytosol, < 0 = naar buiten.
+     * los = het afgesnoerde blaasje [cx, cy]: dan ligt alles op de cirkel. Geeft [x, y, draaihoek] (0 = buitenkant boven). */
+    const opKnop = (sK, off, k, los = null) => {
+      const kk = Math.min(.985, Math.max(0, k)), c = KR * (2 * kk - 1), th0 = los ? Math.PI : Math.acos(Math.max(-1, Math.min(1, -c / KR)));
+      const cx = los ? los[0] : PX, cy = los ? los[1] : MEM + c, th = sK / KR;
+      if (Math.abs(th) <= th0) return [cx + (KR + off) * Math.sin(th), cy + (KR + off) * Math.cos(th), -th * 180 / Math.PI];
+      const sg = Math.sign(sK);
+      return [PX + sg * (KR * Math.sin(th0) + Math.abs(sK) - KR * th0), MEM + off, 0];
     };
     return {
       update(t, s) {
@@ -143,23 +151,26 @@ export default {
           $('ad-anat-lab').innerHTML = lab;
         } else $('ad-anat-lab').innerHTML = '';
 
-        /* ── membraan / put ───────────────────────────────── */
-        let dip = 0, neck = 190;
-        if (step === 4) { dip = 110 * ease(sub(p, .15, .95)); neck = lerp(230, 150, ease(p)); }
-        else if (step === 5) { dip = 110 * (1 - ease(sub(p, .25, .65))); neck = lerp(150, 90, ease(clamp(p / .5))); }
-        else if (step > 5) dip = 0;
-        const mp = memPath(dip, neck);
-        $('ad-cyto').setAttribute('d', mp + ' L2000,1500 L520,1500 Z');
-        $('ad-membrane').innerHTML = bilayer(mp);
+        /* ── membraan / kuil ─────────────────────────────── */
+        // stap 4: de kuil zakt in (k 0 → .75); stap 5: de hals knijpt dicht (k → .97) en bij p = .5 snoert het blaasje af
+        let kn = 0, los = null;
+        if (step === 4) kn = .75 * ease(sub(p, .15, .95));
+        else if (step === 5) {
+          if (p < .5) kn = lerp(.75, .97, ease(sub(p, 0, .45)));
+          else { const u = ease(sub(p, .5, .9)); los = [PX, lerp(MEM + KR * .94, 420, u), lerp(KR, 92, u)]; }
+        }
+        const mP = memPts(los ? 0 : kn);
+        $('ad-cyto').setAttribute('d', ptsPad(mP) + ' L2000,1500 L520,1500 Z');
+        $('ad-membrane').innerHTML = membraanPts(mP, { w: 22 });
 
-        /* ── receptoren ───────────────────────────────────── */
+        /* ── receptoren (bewegen mee met het membraan van de kuil) ── */
         let rec = '';
         const carOn = step >= 2 ? (step === 2 ? ease(sub(p, .25, .5)) : 1) : 0;
         const intOn = step >= 3 ? (step === 3 ? ease(sub(p, .1, .45)) : 1) : 0;
         if (step >= 2 && step <= 5) {
-          const drop = x => dip * Math.exp(-Math.pow((x - PX) / neck, 2));
-          for (const dx of [-30, 30]) rec += `<g opacity="${f1(carOn)}">${car(PX + dx, MEM + drop(PX + dx) - 8, -1, 1.5)}</g>`;
-          for (const dx of [-68, 68]) rec += `<g opacity="${f1(intOn)}">${integrin(PX + dx, MEM + drop(PX + dx) - 10, 1.5)}</g>`;
+          const at = (sK, fn, on) => { const [x, y, a] = opKnop(sK, -8, kn, los); return `<g opacity="${f1(on)}" transform="rotate(${f1(a)} ${f1(x)} ${f1(y)})">${fn(x, y)}</g>`; };
+          for (const dx of [-30, 30]) rec += at(dx, (x, y) => car(x, y, -1, 1.5), carOn);
+          for (const dx of [-68, 68]) rec += at(dx, (x, y) => integrin(x, y - 2, 1.5), intOn);
           if (step === 2) rec += `<g opacity="${f1(ease(sub(p, .55, .8)))}">${txt(PX + 250, MEM - 60, 'CAR', '#9fe3d0', 26)}
             <line x1="${PX + 200}" y1="${MEM - 56}" x2="${PX + 48}" y2="${MEM - 46}" stroke="#9fe3d0" stroke-width="2"/>
             ${txt(PX + 270, MEM - 28, T2('(aanhechting)', '(attachment)'), C.muted, 20)}</g>`;
@@ -174,21 +185,20 @@ export default {
         let cl = '';
         const clOn = step === 4 ? ease(sub(p, .25, .9)) : step === 5 ? 1 - ease(sub(p, .55, 1)) : 0;
         if (clOn > .01) {
-          const drop = x => dip * Math.exp(-Math.pow((x - PX) / neck, 2));
           for (let i = -4; i <= 4; i++) {
-            const x = PX + i * 44, y = MEM + drop(x) + 30;
-            cl += triskelion(x, y, i * 24, 1.15, '#8fa8ff', clOn * clamp(1 - Math.abs(i) / 6.5));
+            const [x, y, a] = opKnop(i * 44, 30, kn, los);
+            cl += triskelion(x, y, i * 24 + a, 1.15, '#8fa8ff', clOn * clamp(1 - Math.abs(i) / 6.5));
           }
           if (step === 4) cl += `<g opacity="${f1(ease(sub(p, .55, .9)))}">${txt(PX - 250, MEM + 190, T2('klathrine-mandje', 'clathrin cage'), '#8fa8ff', 21)}
             <line x1="${PX - 170}" y1="${MEM + 182}" x2="${PX - 110}" y2="${MEM + 140}" stroke="#8fa8ff" stroke-width="2"/></g>`;
         }
         if (step === 5) {
-          const k = ease(sub(p, 0, .45));
-          const yN = MEM + dip * .55;
-          cl += `<g opacity="${f1(1 - ease(sub(p, .55, .95)))}">
-            ${[0, 1, 2].map(i => `<ellipse cx="${PX}" cy="${f1(yN + 4 + i * 16)}" rx="${f1(lerp(64, 24, k))}" ry="9" fill="none" stroke="${C.prot}" stroke-width="6"/>`).join('')}
+          // dynamine: ringen rond de hals, net onder het membraan; ze verdwijnen zodra het blaasje los is
+          const c = KR * (2 * Math.min(.985, kn || .97) - 1), hc = KR * Math.sin(Math.acos(Math.max(-1, Math.min(1, -c / KR))));
+          cl += `<g opacity="${f1(1 - ease(sub(p, .5, .7)))}">
+            ${[0, 1].map(i => `<ellipse cx="${PX}" cy="${f1(MEM - 4 + i * 13)}" rx="${f1(hc + 14)}" ry="8" fill="none" stroke="${C.prot}" stroke-width="6"/>`).join('')}
             ${txt(PX + 215, MEM + 44, T2('dynamine (GTP)', 'dynamin (GTP)'), C.prot, 21)}
-            <line x1="${PX + 150}" y1="${MEM + 36}" x2="${PX + 76}" y2="${f1(yN + 18)}" stroke="${C.prot}" stroke-width="2"/></g>`;
+            <line x1="${PX + 150}" y1="${MEM + 36}" x2="${f1(PX + hc + 18)}" y2="${MEM + 8}" stroke="${C.prot}" stroke-width="2"/></g>`;
         }
         $('ad-clath').innerHTML = cl;
 
@@ -202,8 +212,8 @@ export default {
           vR = lerp(AR, VR, u); fib = lerp(AR * .82, 44, u); gOp = 1 - ease(sub(p, .1, .45));
         }
         else if (step === 3) { vy = lerp(140, 196, ease(sub(p, .2, .8))); bend = 5 * ease(sub(p, .3, .9)); }
-        else if (step === 4) { vy = lerp(196, MEM + 110 - 58, ease(sub(p, .2, .95))); bend = 8; fib = lerp(44, 30, ease(p)); missing = p > .5 ? [1, 4] : []; }
-        else if (step === 5) { vy = lerp(MEM + 110 - 58, 420, ease(sub(p, .2, .8))); bend = 8; fib = 26; missing = [1, 4]; }
+        else if (step === 4) { vy = Math.max(lerp(196, MEM - KR + 40, ease(sub(p, 0, .2))), MEM + KR * (2 * kn - 1)); bend = 8; fib = lerp(44, 30, ease(p)); missing = p > .5 ? [1, 4] : []; }
+        else if (step === 5) { vy = los ? los[1] : MEM + KR * (2 * kn - 1); bend = 8; fib = 26; missing = [1, 4]; }
         else if (step >= 6) { fib = 20; missing = [0, 1, 3, 4]; }
         if (step === 6) {
           const k = ease(clamp(p / .95));
@@ -220,18 +230,14 @@ export default {
 
         /* ── blaasje / endosoom ───────────────────────────── */
         let ves = '';
-        if (step === 5) {
-          const k = ease(sub(p, .35, .8));
-          ves = `<circle cx="${PX}" cy="${f1(lerp(360, 420, k))}" r="${f1(lerp(70, 92, k))}" fill="rgba(201,165,116,.10)" stroke="${C.mem}" stroke-width="7" opacity="${f1(k)}"/>`;
-        } else if (step === 6) {
-          const k = 1 - ease(clamp(p / .28));
-          const broken = p > .14;
-          ves = broken
-            ? `<g opacity="${f1(Math.max(0, k + .25))}"><path d="M${PX - 92},420 a92,92 0 1,1 60,78" fill="none" stroke="${C.mem}" stroke-width="7" stroke-dasharray="26 18"/></g>`
-            : `<circle cx="${PX}" cy="420" r="92" fill="rgba(201,165,116,.10)" stroke="${C.mem}" stroke-width="7"/>`;
+        if (los) ves = blaasje(los[0], los[1], los[2], { w: 22 });
+        else if (step === 6) {
+          // proteïne VI maakt een gat aan de kant waar het virus naar buiten gaat (linksonder)
+          const k = ease(sub(p, .02, .2));
+          ves = blaasjeOpen(PX, 420, 92, [[150 - 38 * k, 150 + 38 * k], [300, 300 + 30 * k], [40, 40 + 22 * k]], { w: 22, op: 1 - .65 * ease(sub(p, .2, .45)) });
         }
         $('ad-ves').innerHTML = ves;
-        $('ad-ves-a').setAttribute('cy', step >= 5 ? '330' : '500');
+        $('ad-ves-a').setAttribute('cy', step >= 5 ? '540' : '500');
 
         /* ── kern, microtubule, porie ─────────────────────── */
         const nucOp = step >= 6 ? (step === 6 ? ease(clamp(p / .3)) : 1) : 0;

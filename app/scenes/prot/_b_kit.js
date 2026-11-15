@@ -3,6 +3,7 @@
  * Kleurcodes volgen app/kit.js: keten groen (C.chain), enzymen paars (C.prot/prot2/prot3), membranen C.mem.
  */
 import { C, f1 } from '../../kit.js';
+import { eiwitPad } from '../../bio.js';
 
 export const UB = '#ffd166';          // ubiquitine
 export const PHOS = '#ff6b6b';        // fosfaatgroep (negatief geladen = rood, zoals CLASSCOL['-'])
@@ -31,11 +32,15 @@ export function smooth(pts) {
 }
 export const chain = (pts, o = {}) => `<path d="${smooth(pts)}" stroke="${o.col ?? C.chain}" stroke-width="${o.w ?? 8}" fill="none" stroke-linecap="round" stroke-linejoin="round"${o.op !== undefined ? ` opacity="${f1(o.op)}"` : ''}${o.dash ? ` stroke-dasharray="${o.dash}"` : ''}/>`;
 
-/* enzym/eiwit als afgeronde vorm met label */
+/* enzym/eiwit met label. Detailronde 15-11-2026: getekend als bobbelige eiwitvorm (bio.js eiwitPad) i.p.v. een gladde
+ * ellips; zelfde parameters als vroeger. De vorm ligt vast per (rx, ry, label) of via o.seed; o.bumps = hoe bobbelig. */
+const seedOf = (rx, ry, label) => { let h = Math.round(rx * 7 + ry * 13); for (const ch of String(label ?? '')) h = (h * 31 + ch.charCodeAt(0)) % 9973; return h + 1; };
 export function enz(x, y, rx, ry, label, o = {}) {
-  const { col = C.prot, op = 1, fs = 22, rot = 0, fillOp = .28, tcol = '#fff', dy = 0 } = o;
+  const { col = C.prot, op = 1, fs = 22, rot = 0, fillOp = .28, tcol = '#fff', dy = 0, seed = null, bumps = .08 } = o;
   if (op <= .01) return '';
-  return `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(rot)})"><ellipse rx="${rx}" ry="${ry}" fill="${col}" fill-opacity="${fillOp}" stroke="${col}" stroke-width="3"/></g>` +
+  const sd = seed ?? seedOf(rx, ry, label), d = eiwitPad(0, 0, rx, ry, sd, bumps), hl = eiwitPad(-rx * .2, -ry * .24, rx * .5, ry * .42, sd + 3, bumps);
+  return `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(rot)})"><path d="${d}" fill="#0b1224" fill-opacity="${f1(Math.min(.7, fillOp * 1.4))}"/>` +
+    `<path d="${d}" fill="${col}" fill-opacity="${fillOp}" stroke="${col}" stroke-width="3" stroke-linejoin="round"/><path d="${hl}" fill="#fff" fill-opacity=".07"/></g>` +
     (label ? T(x, y + fs * .35 + dy, label, { size: fs, col: tcol, op }) : '');
 }
 /* pil (label met achtergrond) */
@@ -87,3 +92,8 @@ export function panel(x, y, w, h, o = {}) {
 export const spark = (x, y, k, col = ATPC) => k > .01 && k < .99 ? `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(10 + 40 * k)}" fill="none" stroke="${col}" stroke-width="3" opacity="${f1(1 - k)}"/>` : '';
 /* lineaire interpolatie van punten */
 export const lerpPts = (a, b, k) => a.map((p, i) => [p[0] + (b[i][0] - p[0]) * k, p[1] + (b[i][1] - p[1]) * k]);
+/* bobbelige eiwitvorm (detailronde 15-11-2026) als vervanger van een gladde <ellipse> die een eiwit voorstelt */
+export const blob = (cx, cy, rx, ry, { fill = 'rgba(127,220,106,.2)', stroke = C.chain, sw = 4, seed = 1, bumps = .08, extra = '' } = {}) => {
+  const d = eiwitPad(+cx, +cy, +rx, +ry, seed, bumps);
+  return `<path d="${d}" fill="#0b1224" fill-opacity=".45"/><path d="${d}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" stroke-linejoin="round"${extra}/>`;
+};

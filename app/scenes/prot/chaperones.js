@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1, rng } from '../../kit.js';
-import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, panel, spark, lerpPts, ATPC } from './_b_kit.js';
+import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, panel, spark, lerpPts, ATPC, blob } from './_b_kit.js';
+import { ribosoom80S } from '../../bio.js';
 
 /* Paneel A (x 0–1600): Hsp70-cyclus · Paneel B (x 1700–3300): chaperonine (GroEL–GroES) · Paneel C (x 3400–5000): netwerk */
 const HYD = '#ff9f43';                                   // hydrofoob segment
@@ -75,9 +76,8 @@ export default {
     return svgOpen(arrowDefs('ch', { m: C.muted, w: '#fff' })) + `
     ${crowd}
     <g data-node="translatie" data-color="${C.rrna}" data-label="${T2('Ribosoom (translatie)', 'Ribosome (translation)')}">
-      <ellipse cx="200" cy="200" rx="150" ry="95" fill="rgba(44,198,168,.18)" stroke="${C.rrna}" stroke-width="3"/>
-      <ellipse cx="170" cy="300" rx="120" ry="50" fill="rgba(44,198,168,.25)" stroke="${C.rrna}" stroke-width="3"/>
-      ${T(185, 205, T2('ribosoom', 'ribosome'), { size: 22, col: C.rrna })}
+      <g transform="rotate(-90 300 250)">${ribosoom80S(300, 252, { s: .82 }).svg}</g>
+      ${T(255, 400, T2('ribosoom', 'ribosome'), { size: 22, col: C.rrna })}
     </g>
     <g data-node="misvouwing" data-color="${C.danger}" data-nolabel><g id="ch-agg"></g></g>
     <g id="ch-hsp"></g>
@@ -108,7 +108,7 @@ export default {
       return bottom ? `<g transform="translate(0 ${2 * EQ}) scale(1 -1)">${pair}</g>` : pair;
     };
     const unf = (cx, cy, s, a = 1) => chain([[cx - 70 * s, cy + 10], [cx - 40 * s, cy - 30], [cx - 10 * s, cy + 20], [cx + 20 * s, cy - 25], [cx + 50 * s, cy + 15], [cx + 75 * s, cy - 15]], { w: 7, op: a });
-    const folded = (cx, cy, a = 1) => `<g opacity="${f1(a)}"><ellipse cx="${f1(cx)}" cy="${f1(cy)}" rx="52" ry="42" fill="rgba(127,220,106,.25)" stroke="${C.chain}" stroke-width="4"/>` + chain([[cx - 30, cy], [cx - 10, cy - 22], [cx + 12, cy - 4], [cx + 28, cy - 22], [cx + 30, cy + 14], [cx - 10, cy + 20]], { w: 5, op: .7 }) + '</g>';
+    const folded = (cx, cy, a = 1) => `<g opacity="${f1(a)}">${blob(f1(cx), f1(cy), 52, 42, { fill: 'rgba(127,220,106,.25)', stroke: C.chain, sw: 4, seed: 103 })}` + chain([[cx - 30, cy], [cx - 10, cy - 22], [cx + 12, cy - 4], [cx + 28, cy - 22], [cx + 30, cy + 14], [cx - 10, cy + 20]], { w: 5, op: .7 }) + '</g>';
 
     return {
       update(t, s) {

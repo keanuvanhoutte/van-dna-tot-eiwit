@@ -1,5 +1,5 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1, CLASSCOL, AACLASS, THREE } from '../../kit.js';
-import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, panel, phos, lerpPts } from './_b_kit.js';
+import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, panel, phos, lerpPts, blob } from './_b_kit.js';
 
 /* A (0–1600): geordend domein + IDR · B (1700–3300): sequentie + ladings-hydropathieplot · C (3400–5000): pKID–KIX · D (5100–6700): waarom */
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
@@ -95,7 +95,7 @@ export default {
 
     return svgOpen(arrowDefs('id', { m: C.muted, w: '#fff' })) + `
     <g data-node="tertiair" data-color="${C.prot}" data-label="${T2('Geordend domein (tertiaire structuur)', 'Ordered domain (tertiary structure)')}">
-      <ellipse cx="${DOM[0]}" cy="${DOM[1]}" rx="150" ry="120" fill="rgba(155,123,255,.2)" stroke="${C.prot}" stroke-width="4"/>
+      ${blob(DOM[0], DOM[1], 150, 120, { fill: 'rgba(155,123,255,.2)', stroke: C.prot, sw: 4, seed: 108 })}
       ${[[-70, -30], [0, 30], [70, -20]].map(([dx, dy]) => { let d = ''; for (let k = 0; k <= 30; k++) d += `${k ? 'L' : 'M'}${f1(DOM[0] + dx - 40 + k * 2.7)},${f1(DOM[1] + dy + 12 * Math.sin(k * .75))}`; return `<path d="${d}" stroke="${C.prot}" stroke-width="6" fill="none"/>`; }).join('')}
       <circle data-anchor="tertiair" cx="${DOM[0]}" cy="${DOM[1] - 125}" r="1" fill="none"/>
     </g>
