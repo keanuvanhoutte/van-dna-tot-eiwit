@@ -1,5 +1,6 @@
 /* Gedeelde tekenhulpjes voor de scènes van stage 'repl' (replicatie & herstel). */
 import { C, BASE, COMP, f1, txt } from '../../kit.js';
+import { eiwitPad } from '../../bio.js';
 
 export const NEW = '#5fd3e6';          // nieuw gesynthetiseerd DNA (niet te verwarren met de ouderstrengen)
 export const PRIMER = C.rna;           // RNA-primer = RNA = oranje
@@ -14,12 +15,24 @@ export const pth = (pts, col, w = 7, op = 1, extra = '') =>
 /* uiteinde-label 5'/3' */
 export const endl = (x, y, s, col = C.text, size = 17, op = 1) =>
   op <= .01 ? '' : `<g opacity="${f1(op)}">${txt(x, y, s, col, size, 'middle', 700, 'JetBrains Mono')}</g>`;
-/* eiwitbolletje met label */
-export function prot(cx, cy, rx, ry, col, label, fs = 15, op = 1, sub = '') {
+/* eiwit met label: bobbelige eiwitvorm (bio.js eiwitPad) i.p.v. een gladde ellips. De vorm is vast per label/kleur
+ * (seed uit de tekst), zodat ze niet verspringt tussen frames. Licht doorschijnend: DNA eronder blijft zichtbaar. */
+const hashS = s => { let h = 7; for (const ch of String(s)) h = (h * 31 + ch.charCodeAt(0)) % 9973; return h; };
+export function prot(cx, cy, rx, ry, col, label, fs = 15, op = 1, sub = '', seed = null) {
   if (op <= .01) return '';
-  return `<g opacity="${f1(op)}"><ellipse cx="${f1(cx)}" cy="${f1(cy)}" rx="${rx}" ry="${ry}" fill="${col}" fill-opacity=".28" stroke="${col}" stroke-width="3"/>` +
+  const sd = seed ?? (hashS(label) + hashS(col)) % 97 + 1, dP = eiwitPad(cx, cy, rx, ry, sd, .1);
+  return `<g opacity="${f1(op)}"><path d="${dP}" fill="#0b1224" fill-opacity=".35"/><path d="${dP}" fill="${col}" fill-opacity=".3" stroke="${col}" stroke-width="3"/>` +
+    `<path d="${eiwitPad(cx - rx * .2, cy - ry * .22, rx * .5, ry * .45, sd + 3, .1)}" fill="#fff" fill-opacity=".08"/>` +
     txt(cx, cy + fs * .36 - (sub ? fs * .5 : 0), label, '#fff', fs, 'middle', 700) +
     (sub ? txt(cx, cy + fs * .36 + fs * .75, sub, '#dfe6f5', fs * .72, 'middle', 500) : '') + '</g>';
+}
+/* eiwit met naam, zelfde parameters als pill() uit de kit (midden x,y, breedte, hoogte): bobbelige eiwitvorm i.p.v. een
+ * gladde pil, zodat transcriptiefactoren, licentie-eiwitten e.d. als eiwit herkenbaar zijn. Vaste vorm per naam. */
+export function ePill(x, y, w, h, text, col = C.prot, op = 1, fs = 12) {
+  if (op <= .01) return '';
+  const dP = eiwitPad(x, y, w / 2 + 2, h / 2 + 3, hashS(text) % 89 + 3, .11);
+  return `<g opacity="${f1(op)}"><path d="${dP}" fill="${col}" fill-opacity=".85" stroke="${col}" stroke-width="2"/>` +
+    `<text x="${f1(x)}" y="${f1(y + fs * .36)}" font-size="${fs}" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="600">${text}</text></g>`;
 }
 /* ring (klem) gezien van opzij: ellips met drie segmenten (trimeer) */
 export function clamp3(cx, cy, rx, ry, col = PCNA, op = 1, label = '', fs = 13) {
@@ -60,11 +73,11 @@ export function arrow(x0, y0, x1, y1, col = C.muted, w = 3, op = 1) {
   return `<g opacity="${f1(op)}"><line x1="${f1(x0)}" y1="${f1(y0)}" x2="${f1(x1 - Math.cos(a) * h * .6)}" y2="${f1(y1 - Math.sin(a) * h * .6)}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>` +
     `<path d="M${f1(x1)},${f1(y1)}L${f1(p1[0])},${f1(p1[1])}L${f1(p2[0])},${f1(p2[1])}Z" fill="${col}"/></g>`;
 }
-/* kleine RPA-bolletjes op enkelstrengig DNA */
+/* RPA op enkelstrengig DNA: een rij kleine bobbelige eiwitten (heterotrimeer, ~30 nt per molecule) */
 export function rpaRow(x0, x1, y, op = 1, sp = 44, ry = 13) {
   if (op <= .01 || x1 - x0 < 20) return '';
   let s = `<g opacity="${f1(op)}">`;
-  for (let x = x0 + sp / 2; x < x1 - 8; x += sp) s += `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${f1(sp / 2 - 3)}" ry="${ry}" fill="#d9a8f5" fill-opacity=".35" stroke="#d9a8f5" stroke-width="2.5"/>`;
+  for (let x = x0 + sp / 2, i = 0; x < x1 - 8; x += sp, i++) s += `<path d="${eiwitPad(x, y, sp / 2 - 3, ry, 70 + (i % 5), .1)}" fill="#d9a8f5" fill-opacity=".35" stroke="#d9a8f5" stroke-width="2.5"/>`;
   return s + '</g>';
 }
 export const RPA = '#d9a8f5';

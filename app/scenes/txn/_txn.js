@@ -61,8 +61,7 @@ export function nucleosome(x, y, op = 1, ac = 0, rot = 0) {
     `<ellipse rx="30" ry="24" fill="${C.histone}" fill-opacity=".85" stroke="#5d6578" stroke-width="2"/>` +
     `<path d="M-34,6 C-34,-30 34,-30 34,-4 C34,26 -28,28 -31,-6" stroke="${C.dna}" stroke-width="5" fill="none" opacity=".9"/>` +
     `<line x1="-6" y1="-24" x2="-4" y2="-40" stroke="${C.histone}" stroke-width="3"/><line x1="8" y1="-23" x2="12" y2="-38" stroke="${C.histone}" stroke-width="3"/>`;
-  if (ac > .01) s += `<g opacity="${f1(ac)}"><circle cx="-4" cy="-45" r="8" fill="${C.ok}" stroke="#0a1224" stroke-width="1.5"/><circle cx="13" cy="-43" r="8" fill="${C.ok}" stroke="#0a1224" stroke-width="1.5"/></g>`;
-    `<text x="-4" y="-40.5" font-size="8" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">Ac</text><text x="12" y="-38.5" font-size="8" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">Ac</text></g>`;
+  if (ac > .01) s += `<g opacity="${f1(ac)}"><circle cx="-4" cy="-45" r="8" fill="${C.ok}" stroke="#0a1224" stroke-width="1.5"/><circle cx="13" cy="-43" r="8" fill="${C.ok}" stroke="#0a1224" stroke-width="1.5"/></g>`;   // acetylgroepen op de histonstaarten (labels in de scène zelf)
   return s + '</g>';
 }
 

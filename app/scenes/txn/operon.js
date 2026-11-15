@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { helixAlong, prot, panel, arrow } from './_txn.js';
+import { bacterieWand, ptsStaaf, ribosoomKlein } from '../../bio.js';
 
 /* E. coli lac-operon. Posities in scènecoördinaten (niet op schaal in bp). */
 const Y0 = 470, TSS = 520;
@@ -50,8 +51,9 @@ export default {
   ],
   svg() {
     return svgOpen() + `
-    <rect x="-40" y="140" width="1680" height="620" rx="120" fill="${C.bact}" fill-opacity=".05" stroke="${C.bact}" stroke-opacity=".35" stroke-width="3"/>
-    <text id="op-cell" x="120" y="730" font-family="Inter" font-size="22" fill="${C.bact}" opacity=".8">${T2('bacteriecel (geen kern)', 'bacterial cell (no nucleus)')}</text>
+    <path d="M${ptsStaaf(800, 450, 1760, 310).map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join(' L')}Z" fill="${C.bact}" fill-opacity=".05"/>
+    ${bacterieWand(ptsStaaf(800, 450, 1760, 310), { type: 'neg', w: 12, op: .8 })}
+    <text id="op-cell" x="250" y="712" font-family="Inter" font-size="22" fill="${C.bact}" opacity=".8">${T2('bacteriecel (geen kern)', 'bacterial cell (no nucleus)')}</text>
     <g id="op-elems"></g>
     <g data-node="dnahelix" data-nolabel data-color="${C.dna}"><g id="op-rungs"></g><path id="op-s1" stroke="${C.dna}" stroke-width="5" fill="none"/><path id="op-s2" stroke="${C.dna2}" stroke-width="5" fill="none"/></g>
     <g id="op-seq"></g>
@@ -95,8 +97,9 @@ export default {
         // ribosomen vanaf het 5'-uiteinde, om de ~130 nt-px
         for (let d = 60; d < len - 40; d += 130) {
           const q = pts[Math.floor((len - d) / 8)] ?? pts[pts.length - 1];
-          g += `<g transform="translate(${f1(q[0])} ${f1(q[1])})"><ellipse cx="0" cy="-12" rx="17" ry="11" fill="${K.ribo}" fill-opacity=".45" stroke="${K.ribo}" stroke-width="2"/><ellipse cx="0" cy="6" rx="12" ry="7" fill="${K.ribo}" fill-opacity=".6" stroke="${K.ribo}" stroke-width="2"/>` +
-            `<path d="M0,-22 q8,-12 0,-22 q-8,-10 2,-20" stroke="${C.chain}" stroke-width="3" fill="none"/></g>`;
+          // 70S: grote eenheid (50S) boven, kleine (30S) onder, mRNA ertussen; de keten komt uit de grote eenheid
+          g += ribosoomKlein(q[0], q[1] + 2, { s: 1.5, rot: 180, col: K.ribo }) +
+            `<path d="M${f1(q[0])},${f1(q[1] - 17)} q8,-12 0,-22 q-8,-10 2,-20" stroke="${C.chain}" stroke-width="3" fill="none"/>`;
         }
       }
       return g;

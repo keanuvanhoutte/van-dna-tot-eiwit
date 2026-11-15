@@ -1,5 +1,7 @@
 import { C, L, T2, svgOpen, pill, txt, mono, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { helixAlong, prot, panel, arrow } from './_txn.js';
+import { ePill } from '../repl/_draw.js';
+import { eiwitPad } from '../../bio.js';
 
 /* Kernpromoter −44 … +44 (er bestaat geen positie 0). 1 bp = 16 px. */
 const BP = 16, Y0 = 540;
@@ -151,13 +153,13 @@ export default {
           g += '</g>';
         }
         if (step >= 1 && step <= 2 && theta > .1) g += txt(T[0] + 110, Y0 + 190, `≈ ${Math.round(theta * 180 / Math.PI)}°`, C.trna, 22);
-        g += pill(T[0] - 128, T[1] - 14, 88, 32, 'TFIIA', G.a, fin(2, .05, .35), 18);
+        g += ePill(T[0] - 128, T[1] - 14, 88, 32, 'TFIIA', G.a, fin(2, .05, .35), 18);
         const B = ctr(bx(-20));
-        g += pill(bx(-17), Y0 - 54, 88, 32, 'TFIIB', G.b, fin(2, .35, .7) * (1 - leave), 18);
+        g += ePill(bx(-17), Y0 - 54, 88, 32, 'TFIIB', G.b, fin(2, .35, .7) * (1 - leave), 18);
         const polOp = fin(3, .05, .45);
         const px = aX - 30, py = Y0 - 88;
-        g += pill(px + 156, py + 122, 88, 32, 'TFIIF', G.f, fin(3, .2, .5) * (1 - leave), 18);
-        g += pill(px + 222, py + 20, 88, 32, 'TFIIE', G.e, fin(4, .05, .35) * (1 - leave), 18);
+        g += ePill(px + 156, py + 122, 88, 32, 'TFIIF', G.f, fin(3, .2, .5) * (1 - leave), 18);
+        g += ePill(px + 222, py + 20, 88, 32, 'TFIIE', G.e, fin(4, .05, .35) * (1 - leave), 18);
         const hOp = fin(4, .35, .7);
         const hx = px + 225, hy = py - 66;
         g += `<g opacity="${f1(hOp * (1 - leave))}">` + prot(hx, hy, 76, 40, G.h, 1, 71, 'TFIIH', 18) +
@@ -167,11 +169,11 @@ export default {
         const nelfOp = step === 7 ? sub(p, .45, .7) : step === 8 ? 1 - ease(sub(p, .45, .75)) : 0;
         const dsifOp = step === 7 ? sub(p, .35, .6) : step === 8 ? 1 : 0;
         const pausePx = step === 8 ? aX - 30 : px;
-        g += pill(pausePx + 120, py - 128 - (step === 8 ? 120 * ease(sub(p, .45, .75)) : 0), 86, 32, 'NELF', G.nelf, nelfOp, 18);
-        g += pill(pausePx - 214, py + 30, 86, 32, 'DSIF', G.dsif, dsifOp, 18);   // links van de RNA-uitgang, vrij van de RNA-lijn
+        g += ePill(pausePx + 120, py - 128 - (step === 8 ? 120 * ease(sub(p, .45, .75)) : 0), 86, 32, 'NELF', G.nelf, nelfOp, 18);
+        g += ePill(pausePx - 214, py + 30, 86, 32, 'DSIF', G.dsif, dsifOp, 18);   // links van de RNA-uitgang, vrij van de RNA-lijn
         if (step === 8) {
           const pt = ease(sub(p, 0, .3));
-          g += pill(pausePx - 20, py - 178, 190, 34, 'P-TEFb (CDK9)', '#4a9a3a', pt, 18);
+          g += ePill(pausePx - 20, py - 178, 190, 34, 'P-TEFb (CDK9)', '#4a9a3a', pt, 18);
           if (pt > .3) g += `<g opacity="${f1(pt * nelfOp)}">${txt(pausePx + 176, py - 138 - 120 * ease(sub(p, .45, .75)), 'P', C.ok, 20)}</g><g opacity="${f1(pt)}">${txt(pausePx - 272, py + 22, 'P', C.ok, 20)}</g>`;
         }
         $('pr-gtf').innerHTML = g;
@@ -187,7 +189,7 @@ export default {
         if (polOp > .01) {
           const dy = -200 * (1 - polOp);
           pol += `<g opacity="${f1(polOp)}" transform="translate(${f1(px)} ${f1(py + dy)})">` +
-            `<path d="M-150,-10 C-150,-100 -60,-128 20,-120 C110,-112 160,-70 150,0 C145,70 110,118 20,122 C-70,126 -150,90 -150,-10Z" fill="rgba(155,123,255,.20)" stroke="${G.pol}" stroke-width="3"/>` +
+            `<path d="${eiwitPad(0, 0, 150, 121, 77, .06)}" fill="rgba(155,123,255,.20)" stroke="${G.pol}" stroke-width="3"/>` +
             txt(0, -70, 'Pol II', '#fff', 24) +
             `<circle cx="30" cy="88" r="7" fill="#fff" opacity=".9" filter="url(#glow)"/>` +
             '';

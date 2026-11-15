@@ -1,5 +1,6 @@
 import { C, BASE, L, T2, svgOpen, txt, pill, nt, aa, cam, sub, ease, lerp, clamp, f1, translate, THREE, AACLASS, CLASSCOL } from '../../kit.js';
 import { seg, pth, endl, prot, tag, arrow } from './_draw.js';
+import { eiwit, ribosoom80S } from '../../bio.js';
 
 /*
  * Mutaties in het begin van het menselijke β-globinegen (HBB), coderende streng 5'→3'.
@@ -178,16 +179,17 @@ export default {
           nm += seg(x0, Y, e1, Y, C.rna, 12) + seg(e1, Y, e2, Y, '#ffb27a', 12) + seg(e2, Y, x1, Y, C.rna, 12);
           nm += `<circle cx="${x0 - 22}" cy="${Y}" r="21" fill="${C.cap}"/>` + txt(x0 - 22, Y + 5, 'm⁷G', '#3a1a05', 14, 'middle', 700);
           nm += txt(x1 + 10, Y + 5, 'AAAA…', C.rna, 15, 'start', 700, 'JetBrains Mono');
-          nm += txt((x0 + e1) / 2 + 30, Y + 48, 'exon 1', C.muted, 17) + txt((e1 + e2) / 2, Y + 48, 'exon 2', C.muted, 17) + txt((e2 + x1) / 2, Y + 48, 'exon 3', C.muted, 17);
+          nm += txt(e1 - 38, Y + 48, 'exon 1', C.muted, 17) + txt((e1 + e2) / 2, Y + 48, 'exon 2', C.muted, 17) + txt((e2 + x1) / 2, Y + 48, 'exon 3', C.muted, 17);
           // EJC's (~20–24 nt stroomopwaarts van elke junctie)
-          for (const j of [e1, e2]) nm += `<g><rect x="${j - 52}" y="${Y - 48}" width="48" height="30" rx="8" fill="#e0708f"/>${txt(j - 28, Y - 28, 'EJC', '#fff', 15, 'middle', 700)}</g>`;
+          for (const j of [e1, e2]) nm += eiwit(j - 28, Y - 30, 30, 18, '#e0708f', { seed: j % 7 + 2, label: 'EJC', fs: 15 });
           // stopcodon (PTC) in exon 1
           const ptc = x0 + 150;
           nm += `<g transform="translate(${ptc} ${Y})"><path d="M-10,-24 L10,-24 L24,-10 L24,10 L10,24 L-10,24 L-24,10 L-24,-10Z" fill="${C.danger}"/>${txt(0, 5, 'UAG', '#fff', 13, 'middle', 700)}</g>`;
           // ribosoom
-          const rx = lerp(x0 + 20, ptc, clamp(kR * 1.4));
-          rib = `<g opacity="${f1(k * (1 - kD * .85) * (1 - kD))}"><ellipse cx="${f1(rx)}" cy="${Y - 30}" rx="44" ry="26" fill="${C.rrna}" fill-opacity=".35" stroke="${C.rrna}" stroke-width="3"/><ellipse cx="${f1(rx)}" cy="${Y + 22}" rx="34" ry="16" fill="${C.rrna}" fill-opacity=".35" stroke="${C.rrna}" stroke-width="3"/></g>`;
-          nm += `<g opacity="${f1(kU * (1 - kD))}"><rect x="${ptc - 38}" y="${Y - 114}" width="76" height="34" rx="10" fill="${C.prot2}"/>${txt(ptc, Y - 91, 'UPF1', '#fff', 17, 'middle', 700)}</g>`;
+          const rx = lerp(x0 + 60, ptc, clamp(kR * 1.4));
+          { const rb = ribosoom80S(rx, Y + 140 * .42, { s: .42, mrna: false, tRNAs: 1 });   // 40S boven, 60S onder het mRNA
+            rib = `<g opacity="${f1(k * (1 - kD * .85) * (1 - kD))}">${rb.svg}</g>`; }
+          nm += eiwit(ptc, Y - 97, 44, 20, C.prot2, { seed: 11, label: 'UPF1', fs: 17, op: kU * (1 - kD) });
           nm += `<g opacity="${f1(kU * (1 - kD))}">${seg(ptc + 34, Y - 94, e2 - 60, Y - 50, C.prot2, 3, 1, 'stroke-dasharray="6 5"')}</g>`;
           nm += '</g>';
           nm += tag(1160, Y - 140, T2('stop in exon 1: ver vóór de laatste exon-exonovergang', 'stop in exon 1: far upstream of the last exon–exon junction'), C.text, 18, 'middle', sub(p, .3, .45));

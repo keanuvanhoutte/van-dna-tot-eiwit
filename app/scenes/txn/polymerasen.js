@@ -45,7 +45,9 @@ export default {
       s += `<g data-node="${nodes[i]}" data-color="${PC[i]}" data-label="${labels[i]}">` + prot(x, 280, 120, 78, PC[i], 1, 100 + i * 7, '', 15) +
         txt(x, 270, `Pol ${['I', 'II', 'III'][i]}`, '#fff', 26, 'middle', 800) + txt(x, 304, `${nsub[i]} ${L({ nl: 'subeenheden', en: 'subunits' })}`, '#fff', 19) +
         `<circle id="pc-a${i}" data-anchor="${nodes[i]}" cx="${x}" cy="206" r="1" fill="none"/></g>`;
-      for (let k = 0; k < 5; k++) s += `<circle cx="${x - 48 + k * 24}" cy="330" r="8" fill="${C.histone}" stroke="#0a1224" stroke-width="1.5"/>`;
+      // chromatine onder het enzym: DNA (blauw) gewonden rond histonkernen (nucleosomen), geen losse bolletjes
+      s += `<path d="M${x - 76},330 ${[0, 1, 2, 3, 4].map(k => `C${x - 58 + k * 24},316 ${x - 50 + k * 24},344 ${x - 40 + k * 24},330`).join(' ')} L${x + 76},330" stroke="${C.dna}" stroke-width="3" fill="none"/>`;
+      for (let k = 0; k < 5; k++) s += `<circle cx="${x - 48 + k * 24}" cy="330" r="8" fill="${C.histone}" stroke="#0a1224" stroke-width="1.5"/><path d="M${x - 56 + k * 24},333 a8,8 0 0 0 16,0" stroke="${C.dna}" stroke-width="2.5" fill="none"/>`;
       if (i === 1) s += `<path d="M${x + 60},${340} q20,30 0,55 q-20,25 5,50" stroke="${PC[1]}" stroke-width="3" fill="none"/>` + txt(x + 95, 420, 'CTD', PC[1], 20, 'start');
       s += `<g data-node="${i === 0 ? 'nucleolus' : 'kern'}" data-nolabel data-color="${C.muted}">` + pill(x, 397, 196, 32, loc[i], i === 0 ? '#58677f' : '#44516a', 1, 19) + '</g>';
       s += '</g>';

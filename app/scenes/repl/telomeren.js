@@ -1,6 +1,7 @@
 import { C, BASE, COMP, L, T2, svgOpen, txt, pill, nt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { NEW, PRIMER, seg, pth, endl, prot, tag, arrow } from './_draw.js';
 import { with3d } from './_mix3d.js';
+import { eiwitPad } from '../../bio.js';
 
 /*
  * Telomeer van een menselijk chromosoom (uiteinde rechts).
@@ -130,7 +131,7 @@ const scene = {
             const yR = YB + (1 - kIn) * 90;
             // TERT-lichaam (achter de letters: wordt vooraan in m gezet)
             const cx = xOf(jStart + 5), cy = (YT + YB + BH) / 2 + 40 + (1 - kIn) * 90;
-            const tert = `<g opacity="${f1(kIn)}"><ellipse cx="${f1(cx)}" cy="${f1(cy)}" rx="250" ry="140" fill="${C.prot}" fill-opacity=".14" stroke="${C.prot}" stroke-width="3"/>` +
+            const tert = `<g opacity="${f1(kIn)}"><path d="${eiwitPad(cx, cy, 250, 140, 33, .06)}" fill="${C.prot}" fill-opacity=".14" stroke="${C.prot}" stroke-width="3"/>` +
               txt(cx + 200, cy + 60, 'TERT', '#fff', 22, 'middle', 700) + '</g>';
             tertS = tert;
             // hTR: matrijs + (gestippeld) de rest van het 451-nt RNA

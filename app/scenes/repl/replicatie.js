@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, txt, pill, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { NEW, PRIMER, seg, pth, endl, prot, tag, arrow } from './_draw.js';
+import { NEW, PRIMER, seg, pth, endl, prot, tag, arrow, ePill } from './_draw.js';
+import { eiwitPad } from '../../bio.js';
 
 /*
  * Overzicht van DNA-replicatie in een stuk van een menselijk chromosoom.
@@ -196,8 +197,8 @@ export default {
           let first = null;
           b.forEach((q, i) => {
             if (!q.on || tau - FIRE[i] < .4) return;
-            if (!q.mr && q.xr < X1) { const y = ys(sepAt(q.xr - 12, b))[1]; fk += `<ellipse cx="${f1(q.xr - 10)}" cy="${f1(y)}" rx="13" ry="21" fill="${C.prot}" fill-opacity=".3" stroke="${C.prot}" stroke-width="3" transform="rotate(-30 ${f1(q.xr - 10)} ${f1(y)})"/>`; first ??= [q.xr - 10, y - 60]; }
-            if (!q.ml && q.xl > X0) { const y = ys(sepAt(q.xl + 12, b))[0]; fk += `<ellipse cx="${f1(q.xl + 10)}" cy="${f1(y)}" rx="13" ry="21" fill="${C.prot}" fill-opacity=".3" stroke="${C.prot}" stroke-width="3" transform="rotate(-30 ${f1(q.xl + 10)} ${f1(y)})"/>`; }
+            if (!q.mr && q.xr < X1) { const y = ys(sepAt(q.xr - 12, b))[1]; fk += `<g transform="translate(${f1(q.xr - 10)} ${f1(y)}) rotate(-30)"><path d="${eiwitPad(0, 0, 14, 22, 21, .1)}" fill="${C.prot}" fill-opacity=".3" stroke="${C.prot}" stroke-width="3"/></g>`; first ??= [q.xr - 10, y - 60]; }
+            if (!q.ml && q.xl > X0) { const y = ys(sepAt(q.xl + 12, b))[0]; fk += `<g transform="translate(${f1(q.xl + 10)} ${f1(y)}) rotate(-30)"><path d="${eiwitPad(0, 0, 14, 22, 22, .1)}" fill="${C.prot}" fill-opacity=".3" stroke="${C.prot}" stroke-width="3"/></g>`; }
           });
           const an = $('rp-fanchor');
           if (first && step >= 3 && step <= 4) { an.setAttribute('cx', f1(first[0] + 90)); an.setAttribute('cy', f1(CY - 22)); } else { an.setAttribute('cx', -99); an.setAttribute('cy', -99); }
@@ -231,11 +232,11 @@ export default {
             const q = b[i];
             // ORC/Cdc6/Cdt1 verdwijnen na licentie
             const preOp = step === 1 ? 1 - (main ? sub(p, .86, 1) * .75 : .75) : fired ? 0 : !main && step === 3 ? .25 * (1 - sub(p, 0, .2)) : !main && step === 4 ? .25 * sub(p, 0, .2) : .25;   // in de ingezoomde bel (stap 3) geen half afgesneden labels van de buren
-            pr += pill(o - 70, CY - 44, 62, 28, 'ORC', C.prot3, kO * preOp * lic, 15);
-            pr += pill(o - 70, CY - 78, 66, 26, 'Cdc6', C.prot2, kC6 * preOp, 14);
-            pr += pill(o + 78, CY - 60, 66, 26, 'Cdt1', C.prot2, (step === 1 && main ? sub(p, .35, .45) * (1 - sub(p, .8, .95)) : 0), 14);
+            pr += ePill(o - 70, CY - 44, 62, 28, 'ORC', C.prot3, kO * preOp * lic, 15);
+            pr += ePill(o - 70, CY - 78, 66, 26, 'Cdc6', C.prot2, kC6 * preOp, 14);
+            pr += ePill(o + 78, CY - 60, 66, 26, 'Cdt1', C.prot2, (step === 1 && main ? sub(p, .35, .45) * (1 - sub(p, .8, .95)) : 0), 14);
             // MCM-hexameren
-            const hex = (x, y, col, op, lbl) => op <= .01 ? '' : `<g opacity="${f1(op)}"><rect x="${f1(x - 19)}" y="${f1(y - 32)}" width="38" height="64" rx="12" fill="${col}" fill-opacity=".28" stroke="${col}" stroke-width="3"/>${lbl ? txt(x, y + 5, lbl, '#fff', 12) : ''}</g>`;
+            const hex = (x, y, col, op, lbl) => op <= .01 ? '' : `<g opacity="${f1(op)}"><path d="${eiwitPad(x, y, 20, 33, 9, .07)}" fill="${col}" fill-opacity=".28" stroke="${col}" stroke-width="3"/>${lbl ? txt(x, y + 5, lbl, '#fff', 12) : ''}</g>`;
             if (!fired || k < 1) {
               const xa = lerp(o - 20, q.xr - 10, k), ya = lerp(CY, ys(sepAt(q.xr - 12, b))[1], k);
               const xb = lerp(o + 20, q.xl + 10, k), yb = lerp(CY, ys(sepAt(q.xl + 12, b))[0], k);
@@ -243,14 +244,14 @@ export default {
               // Cdc45 + GINS
               const kg = step === 2 && main ? ease(sub(p, .2, .42)) : fired ? 1 : 0;
               if (kg > .01) {
-                pr += pill(xa, ya + 46, 58, 22, 'Cdc45', '#b07cf0', kg, 12) + pill(xa, ya + 70, 52, 22, 'GINS', '#8a6cf0', kg, 12);
-                pr += pill(xb, yb - 46, 58, 22, 'Cdc45', '#b07cf0', kg, 12) + pill(xb, yb - 70, 52, 22, 'GINS', '#8a6cf0', kg, 12);
+                pr += ePill(xa, ya + 46, 58, 22, 'Cdc45', '#b07cf0', kg, 12) + ePill(xa, ya + 70, 52, 22, 'GINS', '#8a6cf0', kg, 12);
+                pr += ePill(xb, yb - 46, 58, 22, 'Cdc45', '#b07cf0', kg, 12) + ePill(xb, yb - 70, 52, 22, 'GINS', '#8a6cf0', kg, 12);
               }
             }
             if (main && step === 1) pr += tag(o, CY + 78, T2('MCM2-7-dubbelhexameer (inactief) rond dsDNA', 'MCM2-7 double hexamer (inactive) around dsDNA'), C.text, 16, 'middle', kM2);
             if (main && step === 2) {
               const kk = ease(sub(p, 0, .15)) * (1 - sub(p, .42, .55));
-              pr += pill(o - 150, CY - 120, 64, 28, 'DDK', '#e0708f', kk, 15) + pill(o + 150, CY - 120, 64, 28, 'CDK', '#e0708f', kk, 15);
+              pr += ePill(o - 150, CY - 120, 64, 28, 'DDK', '#e0708f', kk, 15) + ePill(o + 150, CY - 120, 64, 28, 'CDK', '#e0708f', kk, 15);
               pr += arrow(o - 118, CY - 110, o - 40, CY - 50, '#e0708f', 3, kk) + arrow(o + 118, CY - 110, o + 40, CY - 50, '#e0708f', 3, kk);
               pr += tag(o, CY + 130, T2('CMG = Cdc45 + MCM2-7 + GINS', 'CMG = Cdc45 + MCM2-7 + GINS'), C.text, 17, 'middle', sub(p, .3, .45));
               pr += tag(o, CY + 156, T2("elke CMG loopt 3'→5' over zijn streng", "each CMG moves 3'→5' along its strand"), C.muted, 15, 'middle', sub(p, .65, .8));
@@ -271,7 +272,7 @@ export default {
           for (let x = 120, i = 0; x < 1500; x += 95, i++) {
             const y1 = CY - G / 2 - H + 7, y2 = CY + G / 2 + H - 7;
             const op = kn * clamp((kn * 16 - i * .9));
-            nu += `<g opacity="${f1(clamp(op))}"><ellipse cx="${x}" cy="${f1(y1 - 20)}" rx="22" ry="15" fill="${C.histone}" fill-opacity=".55" stroke="${C.histone}" stroke-width="2"/><ellipse cx="${x + 47}" cy="${f1(y2 + 20)}" rx="22" ry="15" fill="${C.histone}" fill-opacity=".55" stroke="${C.histone}" stroke-width="2"/></g>`;
+            nu += `<g opacity="${f1(clamp(op))}"><path d="${eiwitPad(x, y1 - 20, 22, 15, 5 + i % 3, .08)}" fill="${C.histone}" fill-opacity=".55" stroke="${C.histone}" stroke-width="2"/><path d="${eiwitPad(x + 47, y2 + 20, 22, 15, 8 + i % 3, .08)}" fill="${C.histone}" fill-opacity=".55" stroke="${C.histone}" stroke-width="2"/></g>`;
           }
           an2.setAttribute('cx', 690); an2.setAttribute('cy', CY - G / 2 - H - 40);
           const kc = ease(sub(p, .55, .8));

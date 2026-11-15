@@ -1,4 +1,6 @@
 import { C, BASE, COMP, RNA_COMP, L, T2, svgOpen, pill, txt, mono, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
+import { ePill } from '../repl/_draw.js';
+import { eiwitPad } from '../../bio.js';
 
 /* coderende streng 5'→3' (links → rechts); promoter met TATA-box aan het begin */
 const GENE = 'GCTATAAAAGGCCTGACGATGGCTTTCAAGGATTGGCACGGACTGACCGAAAGCTAAGGTCACGTTAGCCATGGACTTCGAAGCTGCATGCCTAGTCAGGATCCATGA';
@@ -64,7 +66,7 @@ export default {
     <g data-node="capping" data-nolabel data-color="${C.prot2}"><g id="tx-capenz"></g></g>
     <g data-node="rnapol" data-color="${C.prot}" data-label="${T2('RNA-polymerase II', 'RNA polymerase II')}">
       <g id="tx-pol">
-        <path d="M-150,-40 C-150,-120 -60,-150 20,-140 C110,-130 160,-80 150,-10 C145,60 110,110 20,115 C-70,120 -150,80 -150,-40Z" fill="rgba(155,123,255,.20)" stroke="${C.prot}" stroke-width="3"/>
+        <path d="${eiwitPad(0, -12, 150, 128, 77, .06)}" fill="rgba(155,123,255,.20)" stroke="${C.prot}" stroke-width="3"/>
         <path d="M-60,112 q10,30 -5,50 q-15,20 0,40 q15,20 0,40" stroke="${C.prot}" stroke-width="3" fill="none" opacity=".7"/>
         ${[0, 1, 2, 3, 4, 5].map(i => `<circle cx="${-62 + (i % 2 ? 6 : -6)}" cy="${128 + i * 14}" r="4" fill="${C.prot}"/>`).join('')}
         <g id="tx-ctdp"></g>
@@ -145,7 +147,7 @@ export default {
         const capK = capOn ? clamp((rnaLen - 25 * BP) / 60) : 0;
         $('tx-cap').innerHTML = capK > 0 ? `<g transform="translate(${f1(end[0] - 8)} ${f1(end[1])})" opacity="${f1(capK)}"><circle r="19" fill="${C.cap}" stroke="${C.rna}" stroke-width="2"/><text y="5" font-size="14" text-anchor="middle" fill="#3a1a05" font-family="Inter" font-weight="700">m⁷G</text></g>` : '';
         const enzK = (rnaLen > 19 * BP ? clamp(1 - Math.max(0, rnaLen - 26 * BP) / 120) : 0) * (step === 7 ? 1 - sub(p, 0, .05) : step > 7 ? 0 : 1);
-        $('tx-capenz').innerHTML = pill(end[0] - 130, end[1] + 4, 170, 30, T2('cappingenzym', 'capping enzyme'), C.prot2, enzK, 16);
+        $('tx-capenz').innerHTML = ePill(end[0] - 130, end[1] + 4, 170, 30, T2('cappingenzym', 'capping enzyme'), C.prot2, enzK, 16);
 
         // Pol II + CTD-fosforylatie
         const pol = $('tx-pol');
@@ -160,13 +162,13 @@ export default {
         // algemene transcriptiefactoren
         const g = [];
         const tbp = step === 0 ? ease(sub(p, .25, .6)) : 1;
-        g.push(pill(187, 425, 118, 30, 'TFIID/TBP', '#8e6cf0', tbp, 15));
+        g.push(ePill(187, 425, 118, 30, 'TFIID/TBP', '#8e6cf0', tbp, 15));
         const inS1 = (a, b) => step === 1 ? ease(sub(p, a, b)) : step > 1 && step < 3 ? 1 : step === 3 ? 1 - sub(p, .2, .7) : 0;
-        g.push(pill(120, 520, 64, 24, 'TFIIA', '#6f5bd6', inS1(.05, .25)));
-        g.push(pill(260, 522, 64, 24, 'TFIIB', '#6f5bd6', inS1(.15, .35)));
-        g.push(pill(START + 185, 392, 64, 24, 'TFIIF', '#5a4bb8', inS1(.35, .6)));
-        g.push(pill(START - 175, 350, 64, 24, 'TFIIE', '#5a4bb8', inS1(.6, .8)));
-        g.push(pill(START + 190, 336, 74, 26, 'TFIIH', '#8e6cf0', inS1(.75, .95)));
+        g.push(ePill(120, 520, 64, 24, 'TFIIA', '#6f5bd6', inS1(.05, .25)));
+        g.push(ePill(260, 522, 64, 24, 'TFIIB', '#6f5bd6', inS1(.15, .35)));
+        g.push(ePill(START + 185, 392, 64, 24, 'TFIIF', '#5a4bb8', inS1(.35, .6)));
+        g.push(ePill(START - 175, 350, 64, 24, 'TFIIE', '#5a4bb8', inS1(.6, .8)));
+        g.push(ePill(START + 190, 336, 74, 26, 'TFIIH', '#8e6cf0', inS1(.75, .95)));
         $('tx-gtf').innerHTML = g.join('');
 
         // supercoils

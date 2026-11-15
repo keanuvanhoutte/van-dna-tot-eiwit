@@ -1,6 +1,7 @@
 import { C, BASE, COMP, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { NEW, PRIMER, ADNA, PCNA, RPA, seg, pth, endl, prot, clamp3, duplex, tag, arrow, rpaRow } from './_draw.js';
 import { with3d } from './_mix3d.js';
+import { eiwitPad } from '../../bio.js';
 
 /*
  * Replicatievork (mens). De vork beweegt naar rechts.
@@ -177,9 +178,12 @@ const scene = {
           lag += seg(priR, NTOP, PRI5, NTOP, PRIMER, 7);
           if (priA < priR) lag += seg(priA, NTOP, priR, NTOP, ADNA, 7);
           if (step >= 6 && del3 < PRI_A) lag += seg(del3, NTOP, PRI_A, NTOP, NEW, 7);
-          lag += endl(PRI5 + 16, NTOP - 10, "5'", PRIMER, 16);
+          lag += endl(PRI5 + 16 + (step === 3 ? 80 : step === 4 ? 80 * (1 - sub(p, .05, .3)) : 0), NTOP - 10, "5'", PRIMER, 16);   // opzij zolang Pol α-primase erboven zit
           const e3 = step >= 6 ? del3 : priA;
-          if (!(step === 7 && sealed) && step < 8) lag += endl(e3 - 22, NTOP - 16, "3'", NEW, 16);
+          // 3'-label op de echte plaats; verborgen zolang Pol α-primase of Pol δ het 3'-uiteinde bedekt (anders lijkt het bij de verkeerde streng te horen)
+          const rfcOn = step === 4 ? ease(sub(p, .25, .4)) * (1 - sub(p, .6, .75)) : 0;
+          const cov3 = step === 3 ? 1 : step === 4 ? Math.max(1 - sub(p, .05, .3), rfcOn, ease(sub(p, .7, .95))) : step === 7 ? 1 - sub(p, .1, .35) : step >= 5 ? 1 : 0;
+          if (!(step === 7 && sealed) && step < 8) lag += endl(e3 - 22, NTOP - 16, "3'", NEW, 16, 1 - cov3);
         }
         // nick vóór ligatie
         if (step === 7 && flapCut && !sealed) lag += `<circle cx="${PREV_A}" cy="${NTOP}" r="9" fill="none" stroke="#fff" stroke-width="2.5" opacity="${f1(.5 + .5 * Math.sin(t / 120))}"/>`;
@@ -241,7 +245,10 @@ const scene = {
         /* ---- eiwitten ---- */
         let pr = '';
         // CMG rond de leidende-streng-matrijs
-        pr += `<g transform="translate(972 550) rotate(26)"><ellipse rx="44" ry="74" fill="${C.prot}" fill-opacity=".22" stroke="${C.prot}" stroke-width="4"/><ellipse rx="16" ry="56" fill="none" stroke="${C.prot}" stroke-width="2" opacity=".6"/></g>`;
+        // zijaanzicht van de ring (MCM2-7 + Cdc45 + GINS): bobbelig eiwit met een kanaal waar enkel de leidende-streng-matrijs door loopt
+        pr += `<g transform="translate(972 550) rotate(26)"><path d="${eiwitPad(0, 0, 46, 76, 27, .08)}" fill="${C.prot}" fill-opacity=".24" stroke="${C.prot}" stroke-width="4"/>` +
+          `<path d="${eiwitPad(-30, -40, 22, 20, 28, .1)}" fill="#b07cf0" fill-opacity=".3" stroke="#b07cf0" stroke-width="2.5"/>` +
+          `<rect x="-11" y="-62" width="22" height="124" rx="11" fill="#0b1224" fill-opacity=".45" stroke="${C.prot}" stroke-width="1.5" stroke-opacity=".6"/></g>`;
         pr += tag(1068, 626, 'CMG', '#fff', 26, 'start');                     // componenten + richting: in de ondertitel van stap 0
         pr += arrow(1060, 660, 1150, 660, C.prot, 3.5, 1);
         // Pol ε + PCNA op de leidende streng
@@ -249,17 +256,19 @@ const scene = {
         pr += step === 8 ? prot(LEAD3 + 22, 752, 92, 40, C.prot2, 'Pol ε', 18) : prot(LEAD3 - 48, polEy + 6, 80, 38, C.prot2, 'Pol ε', 24);
         pr += clamp3(step === 8 ? 640 : LEAD3 - 120, (BOTY + NBOT) / 2, 13, 44, PCNA, 1);
         // Pol α-primase
-        const aOp = step < 3 ? (step === 0 ? .0 : 0) : step === 3 ? ease(sub(p, 0, .15)) : step === 4 ? 1 - sub(p, .45, .75) : 0;
-        pr += prot(lerp(PRI5 - 10, priA + 10, step === 3 ? sub(p, .2, .9) : 1), 148, 86, 36, C.prot3, 'Pol α-primase', 16, aOp);
+        const aOp = step < 3 ? (step === 0 ? .0 : 0) : step === 3 ? ease(sub(p, 0, .15)) : step === 4 ? 1 - sub(p, .05, .3) : 0;   // polymerasewissel: Pol α laat los vóór RFC de klem plaatst
+        pr += prot(lerp(PRI5 - 10, priA + 10, step === 3 ? sub(p, .2, .9) : 1), 190 - (step === 4 ? 50 * ease(sub(p, 0, .3)) : 0), 86, 36, C.prot3, 'Pol α-primase', 16, aOp);
         if (step === 3) pr += tag(860, 96, p < .58 ? T2('primase: RNA (~10 nt)', 'primase: RNA (~10 nt)') : T2('Pol α: + ~20 nt DNA', 'Pol α: + ~20 nt DNA'), p < .58 ? PRIMER : ADNA, 18);
         // RFC + PCNA + Pol δ op de volgende streng
-        const rfcOp = step === 4 ? ease(sub(p, .1, .3)) * (1 - sub(p, .75, .95)) : 0;
-        pr += prot(PRI_A - 150, 176, 50, 28, C.prot3, 'RFC', 16, rfcOp) + arrow(PRI_A - 110, 196, PRI_A - 14, 222, C.prot3, 3, rfcOp);
-        const pcnaOp = step < 4 ? 0 : step === 4 ? ease(sub(p, .3, .6)) : step === 7 ? 1 - sub(p, .6, .9) : step > 7 && step < 9 ? 0 : 1;
+        const rfcOp = step === 4 ? ease(sub(p, .25, .4)) * (1 - sub(p, .6, .75)) : 0;
+        pr += prot(PRI_A + 30, 180, 50, 28, C.prot3, 'RFC', 16, rfcOp);   // RFC zit op de primer-matrijsovergang en legt de klem er rond
+        const pcnaOp = step < 4 ? 0 : step === 4 ? ease(sub(p, .35, .6)) : step === 7 ? 1 - sub(p, .6, .9) : step > 7 && step < 9 ? 0 : 1;
         const pcnaX = step >= 6 ? del3 + 22 : PRI_A + 6;
         pr += clamp3(pcnaX, (TOPY + NTOP) / 2, 13, 44, PCNA, pcnaOp) + (step === 4 ? tag(pcnaX + 8, TOPY + 52, T2('PCNA-klem', 'PCNA clamp'), PCNA, 17, 'middle', pcnaOp) : '');
         const dOp = step < 4 ? 0 : step === 4 ? ease(sub(p, .7, .95)) : step === 7 ? 1 - sub(p, .1, .35) : step === 8 ? 0 : 1;
-        pr += prot(step >= 6 ? del3 - 52 : pcnaX + 50, step >= 6 ? (big ? 182 : 160) : 170, big ? 70 : 56, big ? 36 : 30, C.prot2, 'Pol δ', big ? 24 : 18, dOp);
+        // Pol δ zit op de PCNA-klem en omvat het 3'-uiteinde van het groeiende fragment
+        const dX = step >= 6 ? del3 - 14 : pcnaX - 20;   // de opgetilde flap komt er rechtsboven uit
+        pr += prot(dX, NTOP - (big ? 52 : 46), big ? 70 : 58, big ? 38 : 32, C.prot2, 'Pol δ', big ? 24 : 18, dOp);
         if (step === 6) pr += arrow(del3 - 20, 120, del3 - 120, 120, NEW, 4, sub(p, .05, .2)) + tag(del3 - 70, 102, "5'→3'", NEW, 17, 'middle', sub(p, .05, .2));
         if (step === 6 && p > .6) pr += tag(700, 106, T2('strengverdringing → flap', 'strand displacement → flap'), C.text, 17, 'middle', sub(p, .6, .7));
         // FEN1 en ligase I

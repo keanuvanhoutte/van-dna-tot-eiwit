@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { helixAlong, prot, nucleosome, panel, arrow } from './_txn.js';
+import { ePill } from '../repl/_draw.js';
 
 /* Geometrie: DNA als rechte lijn (y = Y0) die bij k = 1 een lus vormt zodat de enhancer (XE) naast de promoter komt. */
 const Y0 = 560, XE = 380, XP = 960, D = 420, TATA = 985, TSS = 1012, GEND = 1420;
@@ -230,14 +231,15 @@ export default {
         const P = pt(TATA);
         const f = (a, b) => step === 7 ? ease(sub(p, a, b)) : 0;
         gtf += prot(P[0], P[1] - 34, 34, 20, '#8e6cf0', f(.05, .2), 51, 'TFIID', 15);
-        gtf += pill(P[0] - 62, P[1] + 32, 70, 26, 'TFIIA', '#6f5bd6', f(.18, .3), 15);
-        gtf += pill(P[0] + 56, P[1] + 32, 70, 26, 'TFIIB', '#6f5bd6', f(.25, .38), 15);
-        pic += prot(P[0] + 95, P[1] - 80, 70, 52, M.pol, f(.4, .58), 52, 'Pol II', 17);
-        gtf += pill(P[0] + 214, P[1] - 92, 70, 26, 'TFIIF', '#5a4bb8', f(.45, .6), 15);
-        gtf += pill(P[0] + 204, P[1] - 36, 70, 26, 'TFIIE', '#5a4bb8', f(.6, .72), 15);
-        gtf += pill(P[0] + 222, P[1] - 150, 74, 28, 'TFIIH', '#8e6cf0', f(.7, .85), 15);
+        gtf += ePill(P[0] - 62, P[1] + 32, 70, 26, 'TFIIA', '#6f5bd6', f(.18, .3), 15);
+        gtf += ePill(P[0] + 56, P[1] + 32, 70, 26, 'TFIIB', '#6f5bd6', f(.25, .38), 15);
+        pic += prot(P[0] + 95, P[1] - 60, 70, 52, M.pol, f(.4, .58), 52, 'Pol II', 17) +   // met de CTD-staart (enkel Pol II heeft die)
+          (f(.4, .58) > .01 ? `<path d="M${f1(P[0] + 60)},${f1(P[1] - 108)} q-18,-16 -6,-32 q12,-16 -6,-32" stroke="${M.pol}" stroke-width="3" fill="none" opacity="${f1(f(.4, .58) * .85)}"/>` + txt(P[0] + 60, P[1] - 180, 'CTD', M.pol, 15, 'middle', 700).replace('<text', `<text opacity="${f1(f(.4, .58))}"`) : '');
+        gtf += ePill(P[0] + 182, P[1] - 92, 70, 26, 'TFIIF', '#5a4bb8', f(.45, .6), 15);
+        gtf += ePill(P[0] + 174, P[1] - 36, 70, 26, 'TFIIE', '#5a4bb8', f(.6, .72), 15);
+        gtf += ePill(P[0] + 176, P[1] - 148, 74, 28, 'TFIIH', '#8e6cf0', f(.7, .85), 15);
         $('gr-pic').innerHTML = pic; $('gr-gtf').innerHTML = gtf;
-        setA('gr-polA', P[0] + 80, P[1] - 134, step === 7 && p > .5);
+        setA('gr-polA', P[0] + 120, P[1] - 124, step === 7 && p > .5);
 
         // zijpad-knop
         const bx0 = step === 6 ? 380 : 110, by0 = step === 6 ? 120 : 200;

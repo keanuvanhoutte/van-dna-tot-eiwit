@@ -1,4 +1,10 @@
 import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, clamp, f1, rng, AACLASS, CLASSCOL } from '../../kit.js';
+import { ribosoom80S, eiwit, eiwitPad } from '../../bio.js';
+
+/* 80S-ribosoom (bio.js) een kwartslag gedraaid: de tunnel van de 60S komt rechts uit bij (565,170), waar de keten verschijnt;
+ * 40S links, mRNA verticaal tussen beide eenheden. */
+const RIB = ribosoom80S(0, 0, { s: .92, mrna: false, tRNAs: 2 });
+const RIB_MRNA_X = 565 + RIB.mrnaY;
 
 /*
  * Vouwing als HP-roostermodel (Lau & Dill 1989): 40 residuen van β-globine, H = hydrofoob (A V L I M F W), P = de rest.
@@ -98,13 +104,11 @@ export default {
     <g data-node="chaperones" data-color="${C.prot}" data-nolabel><g id="vo-tric"></g></g>
     <g id="vo-panel"></g>
     <g id="vo-hs-tl" data-node="translatie" data-color="${C.rrna}" data-label="${T2('Terug: translatie', 'Back: translation')}">
-      <path d="M140,300 C120,190 190,110 330,100 C470,92 560,160 560,250 C560,300 530,330 480,330 L200,330 C170,330 146,320 140,300Z" fill="rgba(44,198,168,.15)" stroke="${C.rrna}" stroke-width="3"/>
-      <path d="M140,340 C150,390 230,420 350,420 C470,420 540,390 550,340 Z" fill="rgba(44,198,168,.22)" stroke="${C.rrna}" stroke-width="3"/>
-      <path d="M350,230 C400,200 470,180 560,170" stroke="rgba(44,198,168,.55)" stroke-width="30" fill="none" stroke-linecap="round"/>
-      ${txt(330, 300, T2('ribosoom (80S)', 'ribosome (80S)'), C.rrna, 24)}
-      ${txt(330, 172, T2('uitgangstunnel', 'exit tunnel'), '#9fb0cc', 21)}
-      <line x1="140" y1="335" x2="560" y2="335" stroke="${C.rna}" stroke-width="5"/>
-      <circle data-anchor="translatie" cx="330" cy="420" r="1" fill="none" data-pos="below"/>
+      <g transform="translate(565 170) rotate(-90)">${RIB.svg}</g>
+      <path d="M${f1(RIB_MRNA_X)},55 L${f1(RIB_MRNA_X)},285" stroke="${C.rna}" stroke-width="6" stroke-linecap="round"/>
+      ${txt(450, 335, T2('ribosoom (80S)', 'ribosome (80S)'), C.rrna, 24)}
+      ${txt(668, 120, T2('uitgangstunnel', 'exit tunnel'), '#9fb0cc', 21)}
+      <circle data-anchor="translatie" cx="430" cy="380" r="1" fill="none" data-pos="below"/>
     </g>
     <g id="vo-hs-ch" data-node="chaperones" data-color="${C.prot}" data-label="${T2('Chaperones', 'Chaperones')}">
       <g id="vo-hsp"></g><circle id="vo-hspA" data-anchor="chaperones" data-pos="below" cx="0" cy="0" r="1" fill="none"/>
@@ -197,7 +201,7 @@ export default {
           ch += `<path d="M560,170 L${pts.slice().reverse().map(q => f1(q[0]) + ',' + f1(q[1])).join(' L')}" stroke="${C.chain}" stroke-width="5" fill="none"/>`;
           ch += pts.map(([x, y, a]) => bead(x, y, a, 15)).join('');
           ch += txt(pts[0][0] + 20, pts[0][1] - 95, T2('N-terminus', 'N-terminus'), '#6fa8ff', 22);
-          hsp = `<ellipse cx="760" cy="265" rx="60" ry="36" fill="${C.prot}" fill-opacity=".3" stroke="${C.prot}" stroke-width="3" opacity="${f1(sub(p, .4, .7))}"/>` + `<text x="760" y="272" font-size="21" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700" opacity="${f1(sub(p, .4, .7))}">Hsp70</text>`;
+          hsp = eiwit(760, 265, 60, 36, C.prot, { seed: 70, label: 'Hsp70', fs: 21, op: sub(p, .4, .7) });
           $('vo-hspA').setAttribute('cx', 760); $('vo-hspA').setAttribute('cy', 302);
         } else if (step >= 1 && step <= 3) {
           let u, jitter = 0, push = 1;
@@ -272,10 +276,11 @@ export default {
           const hi = r.pts.map((q, i) => ({ q, i })).filter(o => HP[o.i]).sort((a, b) => a.q[0] - b.q[0])[0];
           const hx = hi.q[0] - 76, hy = hi.q[1];
           const ho = f1(ease(sub(p, .1, .4)));
-          hsp = `<g opacity="${ho}"><ellipse cx="${f1(hx)}" cy="${f1(hy)}" rx="64" ry="44" fill="${C.prot}" fill-opacity=".45" stroke="${C.prot}" stroke-width="3"/>` + txt(hx, hy + 8, 'Hsp70', '#fff', 24) + '</g>';
+          hsp = eiwit(hx, hy, 64, 44, C.prot, { seed: 70, label: 'Hsp70', fs: 24, op: +ho });
           $('vo-hspA').setAttribute('cx', f1(hx)); $('vo-hspA').setAttribute('cy', f1(hy + 50));
           // chaperonine-kooi (TRiC/CCT)
-          tric += `<g opacity="${f1(ease(sub(p, .3, .6)))}"><rect x="760" y="310" width="170" height="220" rx="30" fill="${C.prot}" fill-opacity=".12" stroke="${C.prot}" stroke-width="4"/><line x1="760" y1="420" x2="930" y2="420" stroke="${C.prot}" stroke-width="3" stroke-dasharray="6 6"/>` +
+          tric += `<g opacity="${f1(ease(sub(p, .3, .6)))}"><path d="${eiwitPad(845, 365, 88, 56, 81, .06)}" fill="${C.prot}" fill-opacity=".2" stroke="${C.prot}" stroke-width="4"/><path d="${eiwitPad(845, 475, 88, 56, 82, .06)}" fill="${C.prot}" fill-opacity=".2" stroke="${C.prot}" stroke-width="4"/>` +
+            `<rect x="805" y="330" width="80" height="180" rx="34" fill="#0b1224" fill-opacity=".6" stroke="${C.prot}" stroke-width="2" stroke-dasharray="6 6"/>`   /* twee ringen op elkaar met een holte in het midden (zijaanzicht) */ +
             txt(845, 285, T2('chaperonine (TRiC)', 'chaperonin (TRiC)'), C.prot, 25) + '</g>';
           // aggregaat
           const ar = rng(3);
