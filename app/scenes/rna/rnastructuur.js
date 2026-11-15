@@ -1,5 +1,6 @@
 import { C, BASE, RNA_PAIR, L, T2, svgOpen, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { prot, note, arrow, ntBox, hb, npairs, snip, hot, setHot } from './_rna.js';
+import { eiwitPad } from '../../bio.js';
 
 /*
  * RNA-structuur: enkelstrengig maar vouwt. Elke stap heeft een eigen gebied op een groot canvas:
@@ -194,7 +195,7 @@ export default {
       s += note(TP[23][0] - 40, TP[23][1] - 30, T2('bulge (U23 C24 U25)', 'bulge (U23 C24 U25)'), '#ffd36b', 19, 'end', sub(p, .25, .4));
       s += note(TP[32][0] + 50, TP[32][1] + 8, T2('lus', 'loop'), C.muted, 17, 'start');
       const tk = ease(sub(p, .5, .75));
-      s += `<g opacity="${f1(tk)}"><ellipse cx="${TP[24][0] + 60}" cy="${TY1 - 200}" rx="80" ry="40" fill="rgba(240,107,192,.25)" stroke="${C.tdna}" stroke-width="3"/>` +
+      s += `<g opacity="${f1(tk)}"><path d="${eiwitPad(TP[24][0] + 60, TY1 - 200, 80, 40, 24, .08)}" fill="rgba(240,107,192,.25)" stroke="${C.tdna}" stroke-width="3"/>` +
         `<text x="${TP[24][0] + 60}" y="${TY1 - 194}" font-size="20" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="800">Tat</text>` +
         `<line x1="${TP[24][0] + 40}" y1="${TY1 - 162}" x2="${TP[24][0] + 10}" y2="${TY1 - 124}" stroke="${C.tdna}" stroke-width="3"/></g>`;
       s += note(2000, 640, T2('HIV-1 TAR (nt 17–45) · echte structuur: PDB 1ANR', 'HIV-1 TAR (nt 17–45) · real structure: PDB 1ANR'), C.muted, 18, 'middle', sub(p, .1, .25));

@@ -2,6 +2,16 @@ import { C, T2, svgOpen, FULL, cam, sub, ease, lerp, f1, rng } from '../../kit.j
 import { T } from '../prot/_b_kit.js';
 import { btn } from '../prot/_fate.js';
 import { ribo, arrow } from './_rna.js';
+import { membraanPts, kernEnvelop, ptsCirkel, eiwitPad } from '../../bio.js';
+/* klein kleverig RNA-bindend eiwit (bobbelig) */
+const stk = (x, y, r, op = 1, sd = 3) => op <= .01 ? '' : `<path d="${eiwitPad(x, y, r, r * .85, sd, .12)}" fill="${STICK}" opacity="${f1(op)}"/>`;
+/* zenuwcel (ALS-stap): celmembraan als dubbellaag + kern met dubbel membraan en poriën */
+const cubK = (a, b, c, d, n = 20) => Array.from({ length: n }, (_, i) => { const t = i / n, u = 1 - t; return [u * u * u * a[0] + 3 * u * u * t * b[0] + 3 * u * t * t * c[0] + t * t * t * d[0], u * u * u * a[1] + 3 * u * u * t * b[1] + 3 * u * t * t * c[1] + t * t * t * d[1]]; });
+const NEURON = (() => {
+  const P = [...cubK([420, 460], [420, 330], [520, 270], [620, 290]), ...cubK([620, 290], [700, 305], [760, 380], [1500, 430]), ...cubK([1500, 430], [1500, 450], [1500, 480], [1500, 500], 4),
+    ...cubK([1500, 500], [760, 540], [700, 620], [620, 630]), ...cubK([620, 630], [520, 645], [420, 590], [420, 460])];
+  return membraanPts(P, { w: 10, closed: true }) + `<circle cx="540" cy="460" r="58" fill="url(#gNuc)"/>` + kernEnvelop(ptsCirkel(540, 460, 62, 50), { poriën: [.1, .35, .6, .85], w: 6, gap: 5, poreW: 10, s: .22 });
+})();
 
 /*
  * Stressgranules en P-bodies (zijpad "Het leven van een RNA", 05-11-2026). Bij stress (hitte, oxidatie …) valt de start van
@@ -96,7 +106,7 @@ export default {
               const dd = d + 70 * runoff, op = 1 - sub(runoff, .3 + j * .15, .7 + j * .1);
               if (op > .01) o += ribo(x + dd * ca * sc, y + dd * sa * sc - 4, .3, op, '');
             });
-            if (stick > .01) [-30, 20].forEach(d => { o += `<circle cx="${f1(x + d * ca * sc)}" cy="${f1(y + d * sa * sc - 10)}" r="9" fill="${STICK}" opacity="${f1(stick)}"/>`; });
+            if (stick > .01) [-30, 20].forEach((d, j) => { o += stk(x + d * ca * sc, y + d * sa * sc - 10, 10, stick, i * 2 + j); });
             o += '</g>';
           });
           // stap 3: moleculen schuiven in en uit
@@ -104,7 +114,7 @@ export default {
             const [x, y] = D[0];
             for (let i = 0; i < 6; i++) {
               const a = i * 1.05 + .3, rr = 125 + 70 * Math.sin(2 * Math.PI * (p * 1.2 + i / 6));
-              o += `<circle cx="${f1(x + rr * Math.cos(a))}" cy="${f1(y + rr * Math.sin(a))}" r="10" fill="${i % 2 ? STICK : C.rna}"/>`;
+              o += i % 2 ? stk(x + rr * Math.cos(a), y + rr * Math.sin(a), 11, 1, i) : `<path d="M${f1(x + rr * Math.cos(a) - 14)},${f1(y + rr * Math.sin(a))} q7,-10 14,0 t14,0" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round"/>`;   // eiwit of stukje mRNA
             }
             o += arrow(x + 200, y - 110, x + 135, y - 70, C.muted, 3, sub(p, .1, .3)) + arrow(x - 135, y + 70, x - 200, y + 110, C.muted, 3, sub(p, .1, .3)) +
               T(x + 210, y - 125, T2('in', 'in'), { size: 26, col: C.text, anchor: 'start', op: sub(p, .1, .3) }) + T(x - 210, y + 140, T2('uit', 'out'), { size: 26, col: C.text, anchor: 'end', op: sub(p, .1, .3) }) +
@@ -138,8 +148,7 @@ export default {
         const vC = vis([7], step, p);
         if (vC > .01) {
           const k = ease(sub(p, .2, .7));
-          o += `<g opacity="${f1(vC)}"><path d="M420,460 C420,330 520,270 620,290 C700,305 760,380 1500,430 L1500,500 C760,540 700,620 620,630 C520,645 420,590 420,460Z" fill="#2a2350" stroke="#b9a6ff" stroke-width="4"/>` +
-            `<circle cx="540" cy="460" r="62" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="3"/>`;
+          o += `<g opacity="${f1(vC)}"><path d="M420,460 C420,330 520,270 620,290 C700,305 760,380 1500,430 L1500,500 C760,540 700,620 620,630 C520,645 420,590 420,460Z" fill="#2a2350"/>` + NEURON;
           // druppel → klonter
           const cx = 760, cy = 460, n = 14;
           let d = '';
@@ -148,7 +157,7 @@ export default {
             d += `${i ? 'L' : 'M'}${f1(cx + rr * Math.cos(a))},${f1(cy + rr * Math.sin(a))}`;
           }
           o += `<path d="${d}Z" fill="${k > .5 ? 'rgba(255,107,107,.35)' : 'rgba(95,211,230,.18)'}" stroke="${k > .5 ? C.danger : SG}" stroke-width="4" stroke-linejoin="round"/>`;
-          for (let i = 0; i < 6; i++) o += `<circle cx="${f1(cx - 30 + (i % 3) * 30)}" cy="${f1(cy - 15 + ((i / 3) | 0) * 30)}" r="9" fill="${STICK}"/>`;
+          for (let i = 0; i < 6; i++) o += stk(cx - 30 + (i % 3) * 30, cy - 15 + ((i / 3) | 0) * 30, 11, 1, 20 + i);
           o += '</g>' + T(540, 700, T2('zenuwcel', 'nerve cell'), { size: 28, w: 700, op: vC }) +
             T(cx, 360, T2('druppel', 'droplet'), { size: 26, col: SG, op: vC * (1 - k) }) + T(cx, 360, T2('klonter', 'clump'), { size: 26, col: C.danger, w: 700, op: vC * k }) +
             T(1150, 640, T2('verband nog onzeker', 'link still uncertain'), { size: 26, col: C.muted, op: vC * sub(p, .6, .85) });

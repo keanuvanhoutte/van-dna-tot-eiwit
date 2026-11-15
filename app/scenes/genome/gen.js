@@ -1,5 +1,6 @@
 import { C, BASE, L, T2, svgOpen, txt, mono, pill, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { ST } from './_a_kit.js';
+import { eiwitPad } from '../../bio.js';
 
 /*
  * Architectuur van een typisch menselijk eiwitcoderend gen (schematisch, niet op schaal):
@@ -156,7 +157,7 @@ export default {
           g += `<ellipse cx="${f1((eR + PROM[0]) / 2)}" cy="${Y - 34}" rx="${f1(10 + (PROM[0] - eR) / 2 + 8)}" ry="11" fill="none" stroke="#ffc247" stroke-width="5" opacity="${f1(k)}"/>`;
           if (step === 1) g += txt((eR + PROM[0]) / 2 - 40, Y - 62, T2('cohesine', 'cohesin'), '#ffc247', 15, 'end');
           const mo = step === 1 ? sub(p, .55, .8) : 0;
-          if (mo > .01) g += `<g opacity="${f1(mo)}"><ellipse cx="${f1((eR + PROM[0]) / 2 + 30)}" cy="${Y + 96}" rx="70" ry="24" fill="rgba(155,123,255,.55)" stroke="${C.prot}" stroke-width="2"/><path d="M${f1((eR + PROM[0]) / 2 + 30)},${Y + 72} L${f1((eR + PROM[0]) / 2 + 20)},${Y + 22}" stroke="${C.prot}" stroke-width="3"/>${txt((eR + PROM[0]) / 2 + 30, Y + 102, 'Mediator', '#fff', 17, 'middle', 700)}</g>`;
+          if (mo > .01) g += `<g opacity="${f1(mo)}"><path d="${eiwitPad((eR + PROM[0]) / 2 + 30, Y + 96, 70, 24, 1114, .07)}" fill="rgba(155,123,255,.55)" stroke="${C.prot}" stroke-width="2"/><path d="M${f1((eR + PROM[0]) / 2 + 30)},${Y + 72} L${f1((eR + PROM[0]) / 2 + 20)},${Y + 22}" stroke="${C.prot}" stroke-width="3"/>${txt((eR + PROM[0]) / 2 + 30, Y + 102, 'Mediator', '#fff', 17, 'middle', 700)}</g>`;
         }
         $('gn-loop').innerHTML = g;
         // markeringen per stap

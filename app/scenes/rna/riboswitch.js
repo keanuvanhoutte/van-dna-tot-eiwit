@@ -124,9 +124,9 @@ export default {
           T(1250, Y + 60, T2('gen', 'gene'), { size: 26, col: C.text });
         // ribosoom
         const rx = lerp(860, 930, kR), ry = lerp(330, Y, kR);
-        o += ribo(rx, ry, .9, 1, '');
+        o += ribo(rx, ry, .9, 1, '', { bact: true, mrna: kR > .5, keten: 150 * kP }) +   // bacterieel 70S-ribosoom (50S + 30S); keten uit de grote eenheid
+          T(rx - 80, ry - 60, '70S', { size: 24, col: C.rrna, w: 700, anchor: 'end' });
         if (step === 0) o += `<g opacity="${f1(sub(p, .45, .65))}"><path d="M${rx + 70},${ry - 60} l40,40 M${rx + 110},${ry - 60} l-40,40" stroke="${C.danger}" stroke-width="8" stroke-linecap="round"/></g>`;
-        for (let i = 0; i < Math.round(7 * kP); i++) o += `<circle cx="${f1(rx + 8 + 6 * Math.sin(i * 1.4))}" cy="${f1(ry - 100 - i * 22)}" r="10" fill="${C.chain}" stroke="#0a1224" stroke-width="2"/>`;
         o += T(1300, 420, T2('gen uit', 'gene off'), { size: 34, col: C.danger, w: 800, op: (step === 0 ? sub(p, .55, .75) : 1) * (1 - kOn) }) +
           T(1300, 420, T2('gen aan', 'gene on'), { size: 34, col: C.ok, w: 800, op: kR });
         $('rw-v').innerHTML = o;

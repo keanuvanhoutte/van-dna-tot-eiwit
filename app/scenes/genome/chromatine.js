@@ -1,5 +1,7 @@
 import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, clamp, f1, rng, squiggle } from '../../kit.js';
 import { ST, HC, nucleo, flag, smooth, panel } from './_a_kit.js';
+import { kernEnvelop, ptsCirkel, eiwitPad } from '../../bio.js';
+const KERN = kernEnvelop(ptsCirkel(290, 450, 218, 140), { poriën: Array.from({ length: 14 }, (_, i) => (i + .3) / 14), w: 5, gap: 4, poreW: 9, s: .28 });   // dubbel membraan met poriën
 
 /*
  * Chromatine: van chromosoomterritorium → lussen/TADs → eu- vs heterochromatine → 10 nm-vezel → (30 nm?) → nucleosoom.
@@ -85,7 +87,7 @@ export default {
     });
     let hp1 = '';
     [[930, 628], [985, 662], [940, 700], [1020, 700], [960, 735], [1030, 630]].forEach(([x, y]) => {
-      hp1 += `<g><ellipse cx="${x - 5}" cy="${y}" rx="7" ry="5" fill="#f06bc0"/><ellipse cx="${x + 5}" cy="${y}" rx="7" ry="5" fill="#f06bc0"/></g>`;
+      hp1 += `<g><path d="${eiwitPad(x - 5, y, 7, 5, 41, .1)}" fill="#f06bc0"/><path d="${eiwitPad(x + 5, y, 7, 5, 42, .1)}" fill="#f06bc0"/></g>`;   // HP1-dimeer
     });
     let me = '';
     [[905, 612], [1013, 646], [925, 681], [1008, 716]].forEach(([x, y]) => { me += flag(x, y, 'K9me3', C.danger, 1, 8); });
@@ -99,7 +101,7 @@ export default {
     bx.forEach((x, i) => {
       const nu = nucleo(x, by[i], 24, { rot: -60 + i * 35, w: 5.5 });
       links += `<path d="M${f1(prev[0])},${f1(prev[1])} Q${f1((prev[0] + nu.a[0]) / 2)},${f1((prev[1] + nu.a[1]) / 2 + (i % 2 ? -14 : 14))} ${f1(nu.a[0])},${f1(nu.a[1])}" stroke="${C.dna}" stroke-width="5.5" fill="none" stroke-linecap="round"/>`;
-      bead += nu.svg + `<circle cx="${f1((nu.a[0] + nu.b[0]) / 2)}" cy="${f1((nu.a[1] + nu.b[1]) / 2)}" r="6" fill="${HC.H1}" stroke="#0a1224" stroke-width="1.5"/>`;
+      bead += nu.svg + `<path d="${eiwitPad((nu.a[0] + nu.b[0]) / 2, (nu.a[1] + nu.b[1]) / 2, 6.5, 6, 43, .1)}" fill="${HC.H1}" stroke="#0a1224" stroke-width="1.5"/>`;
       prev = nu.b;
     });
     links += `<path d="M${f1(prev[0])},${f1(prev[1])} L1575,240" stroke="${C.dna}" stroke-width="5.5" fill="none" stroke-linecap="round"/>`;
@@ -125,8 +127,7 @@ export default {
     <!-- paneel A -->
     <g id="cr-pA">
       ${panel(40, 150, 500, 600, T2('① Territoria', '① Territories'), '#2a3a60', 21)}
-      <g data-node="kern" data-color="#9cc0ff" data-nolabel><circle cx="290" cy="450" r="215" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="4"/>
-      <circle cx="290" cy="450" r="221" fill="none" stroke="#7aa0d8" stroke-width="3" opacity=".6"/></g>
+      <g data-node="kern" data-color="#9cc0ff" data-nolabel><circle cx="290" cy="450" r="215" fill="url(#gNuc)"/>${KERN}</g>
       ${het}
       <g data-node="nucleolus" data-color="${C.rrna}" data-nolabel><path d="M232,420 C236,392 285,388 297,412 C310,438 282,462 255,458 C235,455 229,440 232,420Z" fill="#2a3d63" stroke="#4d6aa0" stroke-width="2"/>
       <text x="266" y="400" font-size="13" text-anchor="middle" fill="#cfdcf5" font-family="Inter" font-weight="700" stroke="#0a1224" stroke-width="3" paint-order="stroke">${T2('nucleolus', 'nucleolus')}</text></g>
@@ -147,7 +148,7 @@ export default {
       ${panel(560, 520, 560, 290, T2('③ Eu- en heterochromatine', '③ Eu- and heterochromatin'), '#2a3a60', 21)}
       <g data-node="histonmod" data-color="${C.chain}" data-label="${T2('Histonmodificaties', 'Histone modifications')}">${eu}<circle data-anchor="histonmod" cx="640" cy="600" r="1" fill="none"/></g>
       <g data-node="rnapol" data-color="${C.prot}" data-label="${T2('RNA-polymerase II', 'RNA polymerase II')}" data-nolabel>
-        <ellipse cx="735" cy="742" rx="26" ry="18" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="2"/>
+        <path d="${eiwitPad(735, 742, 27, 19, 22, .08)}" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="2"/>
         <text x="735" y="746" font-size="10" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">Pol II</text>
       </g>
       <g data-node="dnamethyl" data-color="${C.danger}" data-label="${T2('DNA-methylatie', 'DNA methylation')}">${hetc}${hp1}${me}<circle data-anchor="dnamethyl" cx="1000" cy="590" r="1" fill="none"/></g>

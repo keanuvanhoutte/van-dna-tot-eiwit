@@ -3,6 +3,7 @@ import { T } from '../prot/_b_kit.js';
 import { btn } from '../prot/_fate.js';
 import { arrow } from '../repl/_draw.js';
 import { nucleo } from './_a_kit.js';
+import { eiwitPad } from '../../bio.js';
 
 /*
  * Chromatine-remodeling (zijpad epigenetica, 05-11-2026): ATP-afhankelijke machines verschuiven nucleosomen of nemen ze
@@ -23,7 +24,7 @@ function machine(x, y, op = 1) {
     T(x, y - 92, T2('machine', 'machine'), { size: 26, col: REM, w: 700, op });
 }
 /* activator: eiwit dat een vrij stuk DNA nodig heeft om een gen aan te zetten */
-const reader = (x, y, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}"><ellipse cx="${f1(x)}" cy="${f1(y)}" rx="62" ry="38" fill="${READ}" fill-opacity=".3" stroke="${READ}" stroke-width="3"/></g>` + T(x, y + 9, T2('activator', 'activator'), { size: 22, op });
+const reader = (x, y, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}"><path d="${eiwitPad(x, y, 62, 38, 183, .07)}" fill="${READ}" fill-opacity=".3" stroke="${READ}" stroke-width="3"/></g>` + T(x, y + 9, T2('activator', 'activator'), { size: 22, op });
 
 export default {
   id: 'remodeler',

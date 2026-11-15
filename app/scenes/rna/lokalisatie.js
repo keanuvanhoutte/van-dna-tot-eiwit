@@ -3,6 +3,14 @@ import { T, smooth } from '../prot/_b_kit.js';
 import { btn, at } from '../prot/_fate.js';
 import { microtubule, motor } from '../entry/_bits.js';
 import { capG, ribo } from './_rna.js';
+import { membraanPts, kernEnvelop, ptsCirkel, eiwit, eiwitPad, LIPID } from '../../bio.js';
+
+/* celmembraan (dubbellaag) langs de celvorm en kernenvelop (dubbel membraan met poriën) */
+const cub = (a, b, c, d, n = 22) => Array.from({ length: n }, (_, i) => { const t = i / n, u = 1 - t; return [u * u * u * a[0] + 3 * u * u * t * b[0] + 3 * u * t * t * c[0] + t * t * t * d[0], u * u * u * a[1] + 3 * u * u * t * b[1] + 3 * u * t * t * c[1] + t * t * t * d[1]]; });
+const cellPts = e => [...cub([210, 450], [210, 230], [520, 150], [860, 165]), ...cub([860, 165], [1130, 178], [1330 + e * 40, 230], [1440 + e * 60, 450]),
+  ...cub([1440 + e * 60, 450], [1330 + e * 40, 670], [1130, 722], [860, 735]), ...cub([860, 735], [520, 750], [210, 670], [210, 450])];
+const KERN_A = kernEnvelop(ptsCirkel(470, 450, 160, 90), { poriën: [.04, .16, .29, .41, .54, .66, .79, .91], w: 8, gap: 6, poreW: 14, s: .32 });
+const KERN_C = kernEnvelop(ptsCirkel(315, 455, 58, 48), { poriën: [.1, .35, .6, .85], w: 6, gap: 5, poreW: 10, s: .22 });
 
 /*
  * mRNA-lokalisatie (zijpad "Het leven van een RNA", 05-11-2026). Een adreslabel (zipcode) in de 3′-UTR wordt door een
@@ -26,7 +34,7 @@ function packet(x, y, s = 1, hold = 1, op = 1) {
   return `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(${f1(s)})">` +
     `<path d="M-46,6 q12,-22 24,0 t24,0 t24,0" stroke="${C.rna}" stroke-width="8" fill="none" stroke-linecap="round"/>` +
     `<circle cx="-50" cy="6" r="8" fill="${C.cap}"/><rect x="18" y="-4" width="22" height="18" rx="5" fill="${LAB}"/>` +
-    (hold > .01 ? `<ellipse cx="29" cy="${f1(-14 - 30 * (1 - hold))}" rx="22" ry="15" fill="${HOLD}" opacity="${f1(hold)}"/>` : '') + '</g>';
+    (hold > .01 ? `<path d="${eiwitPad(29, -14 - 30 * (1 - hold), 22, 15, 9, .1)}" fill="${HOLD}" opacity="${f1(hold)}"/>` : '') + '</g>';
 }
 /* zichtbaarheid van een beeld dat in de stappen `set` getoond wordt: invloeien aan het begin van de stap, uitvloeien in de volgende */
 const vis = (set, step, p) => {
@@ -86,8 +94,8 @@ export default {
         const vA = vis([0, 3, 4, 5], step, p);
         if (vA > .01) {
           const grow = ph(5, .45, .95);
-          o += `<g opacity="${f1(vA)}"><path d="${cellPath(grow)}" fill="rgba(19,33,67,.65)" stroke="#5f7bb5" stroke-width="4"/>` +
-            `<circle cx="470" cy="450" r="160" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="4"/>` + T(470, 600, T2('kern', 'nucleus'), { size: 28, col: C.dna2 });
+          o += `<g opacity="${f1(vA)}"><path d="${cellPath(grow)}" fill="rgba(19,33,67,.65)"/>` + membraanPts(cellPts(grow), { w: 10, closed: true }) +
+            `<circle cx="470" cy="450" r="156" fill="url(#gNuc)"/>` + KERN_A + T(470, 600, T2('kern', 'nucleus'), { size: 28, col: C.dna2 });
           o += TR.map(([[x0, y0], [x1, y1]]) => microtubule(x0, y0, x1, y1, 14, TRACK)).join('');
           o += T(1500, 140, T2('rand die vooruit kruipt', 'edge that crawls forward'), { size: 26, anchor: 'end', col: C.muted, op: step >= 4 ? 0 : 1 });   // buiten beeld bij het inzoomen (stap 4–5)
           // andere mRNA's, die overal vertaald worden (stap 0)
@@ -112,7 +120,7 @@ export default {
             // aan de rand: eiwit laat los, mRNA gaat open, ribosomen lezen
             const kLet = ph(4, .05, .4), kOpen = ph(4, .25, .55);
             const [x, y] = along(1, .92);
-            o += packet(x, y - 78, 1.2, 1 - kLet, 1 - kOpen) + `<ellipse cx="${f1(x + 35)}" cy="${f1(y - 120 - 60 * kLet)}" rx="26" ry="18" fill="${HOLD}" opacity="${f1(kLet * (1 - ph(4, .6, .9)))}"/>`;
+            o += packet(x, y - 78, 1.2, 1 - kLet, 1 - kOpen) + `<path d="${eiwitPad(x + 35, y - 120 - 60 * kLet, 26, 18, 9, .1)}" fill="${HOLD}" opacity="${f1(kLet * (1 - ph(4, .6, .9)))}"/>`;
             const mx0 = 1180, mx1 = 1400, my = 372;
             o += `<g opacity="${f1(kOpen)}"><line x1="${mx0}" y1="${my}" x2="${mx1}" y2="${my}" stroke="${C.rna}" stroke-width="9" stroke-linecap="round"/>` + capG(mx0 - 18, my, 18) +
               `<rect x="${mx1 - 70}" y="${my - 10}" width="34" height="20" rx="5" fill="${LAB}"/></g>`;
@@ -157,9 +165,9 @@ export default {
           // stap 2: het eiwit klemt zich vast, ribosoom kan niet beginnen
           const kH = ph(2, .1, .5), kR = ph(2, .5, .8);
           if (kH > .01) {
-            o += `<g opacity="${f1(vB)}"><ellipse cx="${(XL0 + XL1) / 2}" cy="${f1(lerp(720, Y + 38, kH))}" rx="92" ry="48" fill="${HOLD}" fill-opacity=".9" stroke="#0a1224" stroke-width="2"/>` +
+            o += `<g opacity="${f1(vB)}"><path d="${eiwitPad((XL0 + XL1) / 2, lerp(720, Y + 38, kH), 92, 48, 9, .08)}" fill="${HOLD}" fill-opacity=".9" stroke="#0a1224" stroke-width="2"/>` +
               T((XL0 + XL1) / 2, lerp(720, Y + 38, kH) + 9, T2('lezer', 'reader'), { size: 26, col: '#1a0f33', halo: false, w: 800 }) + '</g>';
-            o += `<g opacity="${f1(vB * kR)}">` + ribo(X0 + 40, Y - 170, .9, 1, '') + `<path d="M${X0 + 10},${Y - 110} l60,60 M${X0 + 70},${Y - 110} l-60,60" stroke="${C.danger}" stroke-width="9" stroke-linecap="round"/>` +
+            o += `<g opacity="${f1(vB * kR)}">` + ribo(X0 + 40, Y - 170, .9, 1, '', { mrna: false }) + `<path d="M${X0 + 10},${Y - 110} l60,60 M${X0 + 70},${Y - 110} l-60,60" stroke="${C.danger}" stroke-width="9" stroke-linecap="round"/>` +
               T(X0 + 130, Y - 230, T2('ribosoom moet wachten', 'ribosome has to wait'), { size: 26, col: C.rrna, anchor: 'start' }) + '</g>';
           }
         }
@@ -167,8 +175,8 @@ export default {
         const vC = vis([6], step, p);
         if (vC > .01) {
           o += `<g opacity="${f1(vC)}">`;
-          DEN.forEach(P => { o += `<path d="${smooth(P)}" stroke="#7d6bc4" stroke-width="22" fill="none" stroke-linecap="round"/>`; });
-          o += `<circle cx="330" cy="460" r="125" fill="#2a2350" stroke="#b9a6ff" stroke-width="4"/><circle cx="315" cy="455" r="58" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="3"/>`;
+          DEN.forEach(P => { o += `<path d="${smooth(P)}" stroke="${LIPID.head}" stroke-width="28" fill="none" stroke-linecap="round"/><path d="${smooth(P)}" stroke="#4a3d86" stroke-width="20" fill="none" stroke-linecap="round"/>`; });   // uitloper met celmembraan als rand
+          o += `<circle cx="330" cy="460" r="125" fill="#2a2350"/>` + membraanPts(ptsCirkel(330, 460, 125, 70), { w: 9, closed: true }) + `<circle cx="315" cy="455" r="55" fill="url(#gNuc)"/>` + KERN_C;
           const k = ease(sub(p, .1, .8)), kT = ease(sub(p, .75, .95));
           DEN.forEach((P, i) => {
             const L = len(P), end = P[P.length - 1];
@@ -179,7 +187,7 @@ export default {
               const [x, y] = at(P, d);
               o += `<path d="M${f1(x - 22)},${f1(y)} q7,-12 14,0 t14,0 t14,0" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round"/>`;
             });
-            if (kT > .01) o += ribo(end[0] - 20, end[1] - 4, .28, kT, '') + `<circle cx="${end[0] - 4}" cy="${end[1] - 42}" r="8" fill="${ACT}" opacity="${f1(kT)}"/>`;
+            if (kT > .01) o += ribo(end[0] - 20, end[1] - 4, .28, kT, '', { keten: 70 });   // lokaal gemaakt eiwit uit de grote eenheid
           });
           o += '</g>' + T(330, 640, T2('zenuwcel', 'nerve cell'), { size: 30, w: 700, op: vC }) +
             T(860, 420, T2('uitlopers', 'branches'), { size: 26, col: '#c9b6ff', op: vC }) +

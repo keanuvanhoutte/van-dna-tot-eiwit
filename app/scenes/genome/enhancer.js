@@ -1,6 +1,7 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1 } from '../../kit.js';
 import { T } from '../prot/_b_kit.js';
 import { btn } from '../prot/_fate.js';
+import { eiwitPad } from '../../bio.js';
 
 /*
  * Enhancers (zijpad epigenetica, 05-11-2026): een verre versterker met activatoren komt via een chromatinelus bij de
@@ -14,7 +15,7 @@ const ENH = '#ffb27a', ACT = C.prot, MED = '#5fd3e6', POL = '#6f5bd6', GENE = C.
 const E0 = [230, Y], E1 = [600, Y], P0 = [1060, Y], P1 = [800, Y];   // versterker en startplaats: voor en na de lus
 
 const box = (x, y, w, col, lab, op = 1) => op <= .01 ? '' : `<rect x="${f1(x - w / 2)}" y="${f1(y - 22)}" width="${w}" height="44" rx="10" fill="${col}" opacity="${f1(op)}"/>` + T(x, y + 9, lab, { size: 22, col: '#0a1224', w: 700, halo: false, op });
-const blob = (x, y, rx, ry, col, lab, op = 1, fs = 22) => op <= .01 ? '' : `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${rx}" ry="${ry}" fill="${col}" fill-opacity=".3" stroke="${col}" stroke-width="3" opacity="${f1(op)}"/>` + (lab ? T(x, y + fs * .36, lab, { size: fs, op }) : '');
+const blob = (x, y, rx, ry, col, lab, op = 1, fs = 22) => op <= .01 ? '' : `<path d="${eiwitPad(x, y, rx, ry, 120, .07)}" fill="${col}" fill-opacity=".3" stroke="${col}" stroke-width="3" opacity="${f1(op)}"/>` + (lab ? T(x, y + fs * .36, lab, { size: fs, op }) : '');
 
 export default {
   id: 'enhancer',

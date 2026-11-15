@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, txt, mono, pill, cam, FULL, sub, ease, lerp, clamp, f1, AACLASS, CLASSCOL } from '../../kit.js';
 import { ST, HC, nucleo, flag, smooth } from './_a_kit.js';
+import { eiwitPad } from '../../bio.js';
 
 /*
  * Histonmodificaties op de H3-staart (humaan H3.1, residuen 1–30 na verwijdering van Met1):
@@ -153,7 +154,7 @@ export default {
 
         // --- enzymen ---
         let e = '';
-        const enz = (x, y, label, op, col = C.prot) => op < .01 ? '' : `<g opacity="${f1(op)}"><ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${14 + label.length * 5.2}" ry="28" fill="rgba(155,123,255,.3)" stroke="${col}" stroke-width="3"/>${txt(x, y + 6, label, '#fff', 17, 'middle', 700)}</g>`;
+        const enz = (x, y, label, op, col = C.prot) => op < .01 ? '' : `<g opacity="${f1(op)}"><path d="${eiwitPad(x, y, 14 + label.length * 5.2, 28, 1093, .07)}" fill="rgba(155,123,255,.3)" stroke="${col}" stroke-width="3"/>${txt(x, y + 6, label, '#fff', 17, 'middle', 700)}</g>`;
         if (step === 2) { const k = ease(sub(p, 0, .3)); e += enz(lerp(1650, rx(14), k), TY + 100, 'HAT', 1 - sub(p, .8, 1)); }
         if (step === 3) { const k = ease(sub(p, 0, .3)); e += enz(lerp(1650, rx(18), k), TY + 100, 'HDAC', 1 - sub(p, .8, 1)); }
         if (step === 4) e += enz(rx(4) - 30, TY + 100, T2('KMT (bv. SET1)', 'KMT (e.g. SET1)'), sub(p, 0, .2) * (1 - sub(p, .85, 1)));

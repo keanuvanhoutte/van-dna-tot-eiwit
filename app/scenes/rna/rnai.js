@@ -1,5 +1,6 @@
 import { C, BASE, RNA_PAIR, L, T2, svgOpen, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { prot, capG, ribo, note, arrow, snip, hb, npairs, hot, setHot } from './_rna.js';
+import { kernEnvelop, ptsLijn, eiwitPad } from '../../bio.js';
 
 /*
  * miRNA-route en RNA-interferentie (mens). Voorbeeld-miRNA: let-7a-5p (22 nt).
@@ -62,10 +63,7 @@ export default {
     return svgOpen() + `
     <rect x="-800" y="-600" width="${MEM + 800}" height="2200" fill="url(#gNuc)" opacity=".55"/>
     <g data-node="export" data-color="#8a9bc4" data-label="${T2('Kernporie (vgl. mRNA-export)', 'Nuclear pore (cf. mRNA export)')}">
-      <path d="M${MEM - 20},-600 V${PORE_Y - 60} Q${MEM - 20},${PORE_Y - 40} ${MEM},${PORE_Y - 40} Q${MEM + 20},${PORE_Y - 40} ${MEM + 20},${PORE_Y - 60} V-600" stroke="#c9a574" stroke-width="7" fill="none" opacity=".75"/>
-      <path d="M${MEM - 20},1500 V${PORE_Y + 60} Q${MEM - 20},${PORE_Y + 40} ${MEM},${PORE_Y + 40} Q${MEM + 20},${PORE_Y + 40} ${MEM + 20},${PORE_Y + 60} V1500" stroke="#c9a574" stroke-width="7" fill="none" opacity=".75"/>
-      <rect x="${MEM - 34}" y="${PORE_Y - 88}" width="68" height="34" rx="12" fill="#3b4a72" stroke="#8a9bc4" stroke-width="3"/>
-      <rect x="${MEM - 34}" y="${PORE_Y + 54}" width="68" height="34" rx="12" fill="#3b4a72" stroke="#8a9bc4" stroke-width="3"/>
+      ${kernEnvelop(ptsLijn(MEM, -600, MEM, 1500), { closed: false, poriën: [(PORE_Y + 600) / 2100], w: 12, gap: 16, poreW: 64, s: 1.3 })}
     </g>
     ${note(MEM - 40, 220, T2('kern', 'nucleus'), C.muted, 20, 'end')}${note(MEM + 40, 220, T2('cytoplasma', 'cytoplasm'), C.muted, 20, 'start')}
     <g data-node="dnahelix" data-color="${C.dna}" data-nolabel><g id="ri-dna"></g></g><g data-node="gen" data-color="${C.dna}" data-nolabel><g id="ri-gen"></g></g><g data-node="rnapol" data-color="${C.prot}" data-nolabel><g id="ri-pol"></g></g><g data-node="rnastructuur" data-color="${C.rna}" data-nolabel><g id="ri-hp"></g></g><g id="ri-enz"></g><g id="ri-ago"></g><g data-node="translatie" data-color="${C.rna}" data-nolabel><g id="ri-tgt"></g></g><g data-node="ribosoom" data-color="${C.rrna}" data-nolabel><g id="ri-rib"></g></g><g data-node="mrnaafbraak" data-color="#8a5a3a" data-nolabel><g id="ri-dec"></g></g>
@@ -108,7 +106,7 @@ export default {
           const k = ease(sub(p, 0, .5));
           dna += `<line x1="-200" y1="560" x2="${MEM - 30}" y2="560" stroke="${C.dna}" stroke-width="7"/><line x1="-200" y1="576" x2="${MEM - 30}" y2="576" stroke="${C.dna2}" stroke-width="5"/>`;
           gen += `<rect x="130" y="542" width="240" height="52" fill="none" stroke="${C.dna}" stroke-width="2" stroke-dasharray="5 4" opacity=".7"/>` + note(250, 614, T2('MIR-gen', 'MIR gene'), C.dna, 18);
-          pol += `<g transform="translate(${f1(lerp(140, 420, k))} 546)"><ellipse cx="0" cy="0" rx="46" ry="38" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/><text x="0" y="6" font-size="16" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">Pol II</text></g>`;
+          pol += `<g transform="translate(${f1(lerp(140, 420, k))} 546)"><path d="${eiwitPad(0, 0, 48, 40, 22, .08)}" fill="#0b1224" fill-opacity=".6"/><path d="${eiwitPad(0, 0, 48, 40, 22, .08)}" fill="${C.prot}" fill-opacity=".28" stroke="${C.prot}" stroke-width="3"/><text x="0" y="6" font-size="16" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">Pol II</text></g>`;
         }
         $('ri-dna').innerHTML = dna; $('ri-gen').innerHTML = gen; $('ri-pol').innerHTML = pol;
 
@@ -142,7 +140,7 @@ export default {
           hp += `<g transform="translate(${f1(org[0])} ${f1(org[1])}) rotate(${f1(rot)})">` + hairpin({ loop: 1 }) + `</g>`;
           const eo = 1 - sub(p, .85, 1);
           const ex = org[0] + 120, ey = org[1] - 2 - 60 * sub(p, .85, 1);
-          enz += `<g opacity="${f1(eo)}"><ellipse cx="${f1(ex)}" cy="${f1(ey)}" rx="150" ry="40" fill="rgba(155,123,255,.22)" stroke="${C.prot}" stroke-width="3"/></g>`;
+          enz += `<g opacity="${f1(eo)}"><path d="${eiwitPad(ex, ey, 150, 42, 55, .05)}" fill="rgba(155,123,255,.22)" stroke="${C.prot}" stroke-width="3"/></g>`;
           enz += note(ex, ey - 50, T2('Exportine-5', 'Exportin-5'), '#c9b8ff', 18, 'middle', eo);
           const gtp = p < .82;
           enz += prot(ex - 150, ey + 42, 98, 30, gtp ? 'Ran·GTP' : 'Ran·GDP', gtp ? '#3fb6c9' : '#5a7a88', eo, 15);
@@ -154,7 +152,7 @@ export default {
           hp += `<g transform="translate(${DB[0]} ${DB[1]}) rotate(90)">` + hairpin({ loop: 0 }) +
             `<g opacity="${f1(lo)}" transform="translate(${f1(30 * (1 - lo))} ${f1(-60 * (1 - lo))})">` + `<path d="M-12,${-NB * BP} L-12,${-NB * BP - 34} C-12,${-NB * BP - 80} 12,${-NB * BP - 80} 12,${-NB * BP - 34} L12,${-NB * BP}" stroke="${C.rna}" stroke-width="7" fill="none"/></g></g>`;
           const k = ease(sub(p, 0, .3)), ko = k * (1 - sub(p, .85, 1));
-          enz += `<g opacity="${f1(ko)}"><path d="M${DB[0] + 60},${DB[1] - 70} h170 q50,0 50,50 v80 q0,40 -40,40 h-180 z" fill="rgba(155,123,255,.2)" stroke="${C.prot}" stroke-width="3"/></g>`;
+          enz += `<g opacity="${f1(ko)}"><path d="${eiwitPad(DB[0] + 168, DB[1] + 10, 116, 70, 63, .06)}" fill="rgba(155,123,255,.2)" stroke="${C.prot}" stroke-width="3"/></g>`;
           enz += note(DB[0] + 150, DB[1] - 84, 'Dicer', '#c9b8ff', 20, 'middle', ko) + prot(DB[0] + 150, DB[1] + 110, 70, 30, 'TRBP', '#5a4bb8', ko, 15);
           enz += snip(DB[0] + NB * BP + 2, DB[1], sub(p, .4, .5) * (1 - sub(p, .6, .7)));
           enz += `<g opacity="${f1(sub(p, .6, .8))}"><path d="M${DB[0] - 12},${DB[1] + 44} v10 H${DB[0] + NB * BP} v-10" stroke="#ffd36b" stroke-width="2.5" fill="none"/></g>` + note(DB[0] + NB * BP / 2, DB[1] + 80, T2('≈ 22 nt', '≈ 22 nt'), '#ffd36b', 18, 'middle', sub(p, .6, .8));
@@ -175,7 +173,7 @@ export default {
         // AGO2 met gids (5' rechts in MID, 3' links in PAZ)
         if (step >= 4) {                                  // lege AGO2 staat al klaar vanaf het begin van stap 4; de gids komt erin
           const x0 = gx(NB) - 50, x1 = gx(1) + 60;
-          ago += `<g><rect x="${x0}" y="${YG - 56}" width="${x1 - x0}" height="120" rx="46" fill="rgba(155,123,255,.18)" stroke="${C.prot}" stroke-width="3"/>`;
+          ago += `<g><path d="${eiwitPad((x0 + x1) / 2, YG + 4, (x1 - x0) / 2 + 4, 62, 77, .035)}" fill="rgba(155,123,255,.18)" stroke="${C.prot}" stroke-width="3"/>`;
           ago += note((x0 + x1) / 2, YG - 68, 'AGO2 (RISC)', '#c9b8ff', 20);
           ago += note(x0 + 30, YG - 28, 'PAZ', '#c9b8ff', 14, 'start') + note(x1 - 30, YG - 28, 'MID', '#c9b8ff', 14, 'end') + `</g><g opacity="${f1(agoOp)}">`;
           for (let i = 1; i <= NB; i++) {

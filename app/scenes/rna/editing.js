@@ -1,5 +1,6 @@
 import { C, BASE, L, T2, svgOpen, cam, FULL, sub, ease, lerp, clamp, f1, aa } from '../../kit.js';
 import { prot, note, arrow, ntBox, ntRow, hb, npairs, hot, setHot } from './_rna.js';
+import { eiwitPad } from '../../bio.js';
 
 /*
  * RNA-editing bij de mens. Links: A→I door ADAR2 (GluA2-pre-mRNA, Q/R-plaats). Rechts: C→U door APOBEC1 (apoB-mRNA, C6666).
@@ -91,7 +92,7 @@ export default {
         let ad = '';
         const adOp = step === 1 ? ease(sub(p, .2, .6)) : step === 2 ? 1 : step === 3 ? 1 - sub(p, 0, .3) : 0;
         if (adOp > 0) {
-          ad += `<g opacity="${f1(adOp)}"><path d="M${tx(2) - 30},${YT - 50} C${tx(2) - 30},${YT - 190} ${tx(6) + 30},${YT - 190} ${tx(6) + 30},${YT - 50} Z" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/>` +
+          ad += `<g opacity="${f1(adOp)}"><path d="${eiwitPad(tx(4), YT - 112, (tx(6) - tx(2)) / 2 + 30, 64, 12, .06)}" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/>` +
             `<text x="${tx(4)}" y="${YT - 118}" font-size="18" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">${T2('deaminase', 'deaminase')}</text>` +
             `<text x="${tx(4)}" y="${YT - 196}" font-size="20" text-anchor="middle" fill="#c9b8ff" font-family="Inter" font-weight="800">ADAR2</text></g>`;
           ad += prot(tx(7) + 20, YB + 70, 84, 30, 'dsRBD1', '#5a4bb8', adOp, 15) + prot(tx(9) + 30, YB + 70, 84, 30, 'dsRBD2', '#5a4bb8', adOp, 15);
@@ -138,7 +139,7 @@ export default {
         let ab = '';
         const eo = step === 4 ? ease(sub(p, .2, .6)) : step === 5 ? 1 : step === 6 ? 1 - sub(p, 0, .2) : 0;
         if (eo > 0) {
-          ab += `<g opacity="${f1(eo)}"><ellipse cx="${AX + 5 * AW}" cy="${AY - 90}" rx="110" ry="48" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/>` +
+          ab += `<g opacity="${f1(eo)}"><path d="${eiwitPad(AX + 5 * AW - 60, AY - 90, 58, 44, 14, .07)}" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/><path d="${eiwitPad(AX + 5 * AW + 60, AY - 90, 58, 44, 15, .07)}" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/>` + /* APOBEC1 als dimeer */
             `<text x="${AX + 5 * AW}" y="${AY - 84}" font-size="18" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="800">APOBEC1 (2×)</text></g>`;
           ab += prot(AX + 11 * AW, AY - 60, 76, 32, 'A1CF', '#5a4bb8', eo, 16);
         }

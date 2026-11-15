@@ -1,6 +1,7 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1, rng } from '../../kit.js';
 import { T } from '../prot/_b_kit.js';
 import { btn } from '../prot/_fate.js';
+import { kernEnvelop, ptsCirkel } from '../../bio.js';
 
 /*
  * X-inactivatie (zijpad epigenetica, 05-11-2026): in vrouwelijke zoogdiercellen wordt vroeg in het embryo per cel
@@ -19,7 +20,10 @@ function xc(x, y, s, col, op = 1) {
     `<rect x="${f1(-w / 2)}" y="${f1(-h / 2)}" width="${f1(w)}" height="${f1(h)}" rx="${f1(w / 2)}" fill="${col}" transform="rotate(-18)"/></g>`;
 }
 const yc = (x, y, s, col) => `<g transform="translate(${f1(x)} ${f1(y)})"><rect x="${f1(-8 * s)}" y="${f1(-22 * s)}" width="${f1(16 * s)}" height="${f1(44 * s)}" rx="${f1(8 * s)}" fill="${col}" transform="rotate(14)"/><rect x="${f1(-8 * s)}" y="${f1(-22 * s)}" width="${f1(16 * s)}" height="${f1(44 * s)}" rx="${f1(8 * s)}" fill="${col}" transform="rotate(-14)"/></g>`;
-const nucleus = (x, y, r, op = 1) => op <= .01 ? '' : `<circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="4" opacity="${f1(op)}"/>`;
+/* kern = dubbel membraan met poriën (bio.js), per (x, y, r) één keer opgebouwd */
+const KE = {};
+const env = (x, y, r) => KE[`${x},${y},${r}`] ??= kernEnvelop(ptsCirkel(x, y, r, Math.max(48, Math.round(r * .5))), { poriën: Array.from({ length: Math.max(6, Math.round(r / 22)) }, (_, i) => (i + .5) / Math.max(6, Math.round(r / 22))), w: r > 150 ? 10 : 6, gap: r > 150 ? 8 : 5, poreW: r > 150 ? 16 : 10, s: r > 150 ? .4 : .25 });
+const nucleus = (x, y, r, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="url(#gNuc)"/>${env(x, y, r)}</g>`;
 
 /* vroeg embryo: 8 cellen; per cel bij toeval welk X stil wordt (vast patroon) */
 const R0 = rng(11), EMB = [[800, 450], ...Array.from({ length: 7 }, (_, i) => [800 + 190 * Math.cos(i * 2 * Math.PI / 7 - 1.4), 450 + 190 * Math.sin(i * 2 * Math.PI / 7 - 1.4)])].map(q => [...q, R0() < .5]);
@@ -83,7 +87,7 @@ export default {
           const kc = step === 1 ? ease(sub(p, .3, .8)) : 1;
           o += `<g opacity="${f1(vB)}">`;
           EMB.forEach(([x, y, momOff]) => {
-            o += `<circle cx="${f1(x)}" cy="${f1(y)}" r="88" fill="rgba(156,192,255,.10)" stroke="#9cc0ff" stroke-width="3"/>`;
+            o += `<circle cx="${f1(x)}" cy="${f1(y)}" r="88" fill="rgba(156,192,255,.10)"/>` + env(x, y, 88);   // kern van één cel
             o += xc(x - 28, y, .8, momOff ? lerp3(MOM, kc) : MOM) + xc(x + 28, y, .8, momOff ? DAD : lerp3(DAD, kc));
           });
           o += '</g>' + T(800, 130, T2('vroeg embryo', 'early embryo'), { size: 30, w: 700, op: vB }) + T(800, 800, T2('grijs = stilgezet X', 'grey = silenced X'), { size: 26, col: C.muted, op: vB * (step === 1 ? ease(sub(p, .6, .9)) : 1) });
@@ -92,7 +96,7 @@ export default {
         const vC = vis(2, 3);
         if (vC > .01) {
           const kx = step === 2 ? ease(sub(p, .15, .9)) : step > 2 ? 1 : 0, kb = step === 3 ? ease(sub(p, .1, .7)) : step > 3 ? 1 : 0;
-          o += `<g opacity="${f1(vC)}">` + `<circle cx="800" cy="470" r="330" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="5"/>`;
+          o += `<g opacity="${f1(vC)}">` + nucleus(800, 470, 330);
           o += xc(640, 470, 3, MOM);
           const bx = lerp(960, 1010, kb), by = lerp(470, 260, kb), sc = lerp(3, 1.5, kb);
           o += xc(bx, by, sc, lerp3(DAD, kb));

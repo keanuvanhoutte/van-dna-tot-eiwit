@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, txt, mono, cam, FULL, sub, ease, lerp, clamp, f1, rng } from '../../kit.js';
 import { ST, nucleo, panel, smooth } from './_a_kit.js';
+import { eiwitPad } from '../../bio.js';
 
 /*
  * Chromosoom: karyogram (46), bouw van een metafasechromosoom (zusterchromatiden, centromeer, telomeren, cohesine, condensine).
@@ -109,7 +110,7 @@ export default {
     }
     cen += `</g>`;
     cen += `<path d="M900,600 L1450,600" stroke="${C.dna}" stroke-width="4" opacity=".0"/>`;
-    cen += `<rect x="920" y="500" width="500" height="40" rx="20" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>` + txt(1170, 526, T2('kinetochoor', 'kinetochore'), '#fff', 18);
+    cen += `<path d="${eiwitPad(1170, 520, 252, 24, 112, .05)}" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>` + txt(1170, 526, T2('kinetochoor', 'kinetochore'), '#fff', 18);
     for (let i = 0; i < 7; i++) cen += `<line x1="${960 + i * 70}" y1="500" x2="${1000 + i * 55}" y2="440" stroke="#7fdc6a" stroke-width="7" stroke-linecap="round"/>`;
     cen += txt(1480, 470, T2('microtubuli', 'microtubules'), '#7fdc6a', 18, 'end');
     cen += txt(1170, 650, T2('α-satelliet-DNA · CENP-A-nucleosomen (paars)', 'α-satellite DNA · CENP-A nucleosomes (purple)'), C.muted, 17);
@@ -123,7 +124,7 @@ export default {
     tel += `<rect x="1400" y="790" width="92" height="30" rx="6" fill="rgba(255,138,61,.25)" stroke="${C.rna}" stroke-width="2" stroke-dasharray="4 3"/>` + mono(1446, 811, rep, C.rna, 16);
     tel += txt(1446, 845, T2("3'-overhang", "3' overhang"), C.rna, 13) + txt(890, 811, "5'", C.text, 15, 'end') + txt(1510, 811, "3'", C.text, 15, 'start');
     tel += `<path d="M900,835 L1390,835" stroke="${C.dna2}" stroke-width="4"/>` + txt(1145, 870, T2('complementaire streng (CCCTAA)ₙ', 'complementary strand (CCCTAA)ₙ'), C.dna2, 13);
-    tel += `<g id="cs-shel">${[960, 1100, 1240].map(x => `<ellipse cx="${x}" cy="775" rx="30" ry="12" fill="#c78bf0" opacity=".8"/>`).join('')}${txt(1330, 772, 'shelterin', '#c78bf0', 14, 'start')}</g>`;
+    tel += `<g id="cs-shel">${[960, 1100, 1240].map(x => `<path d="${eiwitPad(x, 775, 30, 12, 883, .07)}" fill="#c78bf0" opacity=".8"/>`).join('')}${txt(1330, 772, 'shelterin', '#c78bf0', 14, 'start')}</g>`;
 
     // ---- condensinelussen op een arm ----
     let loops = '';
@@ -193,7 +194,7 @@ export default {
         // kinetochoren + microtubuli (stap 4)
         const kin = step >= 4 && step <= 6 ? 1 : 0;
         $('cs-kin').innerHTML = kin ? `<path d="M${BX - 70},${BC} L${BX - 230},${BC - 40} M${BX - 70},${BC} L${BX - 230},${BC} M${BX - 70},${BC} L${BX - 230},${BC + 40} M${BX + 70},${BC} L${BX + 230},${BC - 40} M${BX + 70},${BC} L${BX + 230},${BC} M${BX + 70},${BC} L${BX + 230},${BC + 40}" stroke="#7fdc6a" stroke-width="4"/>` +
-          `<rect x="${BX - 72}" y="${BC - 15}" width="18" height="30" rx="6" fill="${C.prot}"/><rect x="${BX + 54}" y="${BC - 15}" width="18" height="30" rx="6" fill="${C.prot}"/>` : '';
+          `<path d="${eiwitPad(BX - 63, BC, 10, 17, 113, .08)}" fill="${C.prot}"/><path d="${eiwitPad(BX + 63, BC, 10, 17, 114, .08)}" fill="${C.prot}"/>` : '';
         $('cs-cen').setAttribute('opacity', step === 4 ? 1 : step === 0 || step === 1 ? 0 : .2);
         $('cs-tel').setAttribute('opacity', step === 5 ? 1 : step === 0 || step === 1 ? 0 : .2);
         $('cs-shel').setAttribute('opacity', step === 5 ? ease(sub(p, .3, .6)) : 1);

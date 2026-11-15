@@ -1,14 +1,21 @@
 import { C, L, svgOpen, cam, FULL } from '../../kit.js';
+import { kernEnvelop, kernporie, ptsBoog, eiwitPad } from '../../bio.js';
+
+/* kernenvelop bovenaan (ver weg, dus dun): dubbel membraan langs een flauwe boog, kernporie op x = 900 */
+const ENV = ptsBoog(-50, 103, 800, 48, 1650, 103, 60);
+const PORE_T = 950 / 1700;
+const poreAt = (() => { const t = PORE_T, u = 1 - t; const y = u * u * 103 + 2 * u * t * 48 + t * t * 103, dy = 2 * u * (48 - 103) + 2 * t * (103 - 48); return [900, y, Math.atan2(dy, 1700) * 180 / Math.PI]; })();
+/* bobbelig eiwit met naam (vaste vorm per naam) */
+const seedOf = s => { let h = 7; for (const ch of String(s)) h = (h * 31 + ch.charCodeAt(0)) % 9973; return h; };
 
 /* RNA-processing: cap → splicing (2 transesterificaties) → knippen + poly(A) → export. Getekend op ~3 px per nucleotide. */
 function sceneProcessing() {
   const T = (nl, en) => L({ nl, en });
   return svgOpen() + `
     <!-- kernenvelop met porie bovenaan -->
-    <g data-node="kern" data-color="#7aa0d8" data-nolabel><path d="M-50,95 Q800,40 1650,95" stroke="#7aa0d8" stroke-width="5" fill="none" opacity=".7"/>
-    <path d="M-50,112 Q800,57 1650,112" stroke="#9cc0ff" stroke-width="3" fill="none" opacity=".8"/></g>
+    <g data-node="kern" data-color="#7aa0d8" data-nolabel>${kernEnvelop(ENV, { closed: false, poriën: [PORE_T], w: 9, gap: 8, poreW: 24, npc: false })}</g>
     <g data-node="export" data-color="${C.prot}" data-label="${T('Kernporie · export', 'Nuclear pore · export')}">
-      <g transform="translate(900 74)"><rect x="-26" y="-22" width="52" height="44" rx="10" fill="#0b1427" stroke="${C.prot}" stroke-width="3"/><rect x="-14" y="-6" width="28" height="12" rx="4" fill="${C.prot}" opacity=".5"/></g>
+      <rect x="870" y="${(poreAt[1] - 34).toFixed(1)}" width="60" height="68" fill="transparent"/>${kernporie(poreAt[0], poreAt[1], poreAt[2], { H: 26, poreW: 24 })}
     </g>
     <text x="1440" y="40" fill="${C.muted}" font-size="20" font-family="Inter" opacity=".7">${T('cytoplasma', 'cytoplasm')}</text>
     <text x="1440" y="150" fill="${C.muted}" font-size="20" font-family="Inter" opacity=".7">${T('nucleoplasma', 'nucleoplasm')}</text>
@@ -38,7 +45,8 @@ function initProcessing(svg) {
   let ph = 0, P = 0;
   const prog = i => (i < ph ? 1 : i === ph ? P : 0);   // 0..1 binnen stap i
   const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-  const pill = (x, y, w, h, txt, col = C.prot, op = 1) => op <= 0 ? '' : `<g opacity="${op.toFixed(2)}"><rect x="${x - w / 2}" y="${y - h / 2}" width="${w}" height="${h}" rx="${h / 2}" fill="${col}" opacity=".85"/><text x="${x}" y="${y + 4}" font-size="12" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="600">${txt}</text></g>`;
+  const pill = (x, y, w, h, txt, col = C.prot, op = 1) => { if (op <= 0) return ''; const d = eiwitPad(x, y, w / 2 + 2, h / 2 + 2, seedOf(txt), .07);
+    return `<g opacity="${op.toFixed(2)}"><path d="${d}" fill="#0b1224"/><path d="${d}" fill="${col}" fill-opacity=".85" stroke="${col}" stroke-width="1.5"/><text x="${x}" y="${y + 4}" font-size="12" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="600">${txt}</text></g>`; };
   const seg = (x0, x1, y, col, w) => `<line x1="${x0.toFixed(1)}" y1="${y}" x2="${x1.toFixed(1)}" y2="${y}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`;
   const txt = (x, y, s, col = C.text, size = 12) => `<text x="${x.toFixed(1)}" y="${y}" font-size="${size}" text-anchor="middle" fill="${col}" font-family="JetBrains Mono" font-weight="600">${s}</text>`;
 
@@ -61,7 +69,7 @@ function initProcessing(svg) {
     if (ph >= 9) {
       const len = 150 * Math.min(1, pa + (ph > 9 ? 1 : 0));
       m += `<path d="M${X.cut},${Y} q${len * .4},${len * .05} ${len * .7},${len * .25} t${len * .3},${len * .15}" stroke="#ffb27a" stroke-width="5" fill="none" stroke-dasharray="2 3"/>`;
-      for (let k = 12; k < len; k += 26) m += `<circle cx="${(X.cut + k * .95).toFixed(1)}" cy="${(Y + k * .22 + 6).toFixed(1)}" r="6" fill="${C.prot}" opacity=".7"/>`;
+      for (let k = 12; k < len; k += 26) m += `<path d="${eiwitPad(X.cut + k * .95, Y + k * .22 + 6, 7, 6, 30 + k, .09)}" fill="${C.prot}" fill-opacity=".75" stroke="${C.prot}" stroke-width="1"/>`;   // PABPN1 op de staart
       if (len > 60) m += txt(X.cut + 90, Y + 72, 'poly(A)', '#ffb27a', 12);
     }
     m += `</g>`;
@@ -154,8 +162,10 @@ function initProcessing(svg) {
     else if (ds < X.down[1] - 2) dn += seg(ds, X.down[1], Y, '#c07a4a', 5) + `<g opacity="${polOp.toFixed(2)}">${pill(ds - 4, Y - 26, 52, 22, 'Xrn2', '#5a4bb8')}</g>`;
     dn += txt((X.dse[0] + X.dse[1]) / 2, Y + 20, ph < 9 ? L({ nl: 'GU-rijk', en: 'GU-rich' }) : '', '#c07a4a', 10);
     $('pr-down').innerHTML = dn;
-    $('pr-pol').innerHTML = polOp > 0 ? `<g opacity="${polOp.toFixed(2)}" transform="translate(${X.pol} ${Y})"><path d="M-40,-10 C-40,-60 10,-70 40,-50 C70,-30 70,30 40,50 C10,70 -40,60 -40,-10Z" fill="rgba(155,123,255,.22)" stroke="${C.prot}" stroke-width="3"/><text x="0" y="5" font-size="12" text-anchor="middle" fill="${C.text}" font-family="Inter">Pol II</text></g>` : '';
-    $('pr-dna').innerHTML = polOp > 0 ? `<line x1="${X.pol + 10}" y1="${Y + 58}" x2="1650" y2="${Y + 58}" stroke="${C.dna}" stroke-width="5" opacity="${polOp.toFixed(2)}"/>` : '';
+    // Pol II zit op het DNA (dat er dwars door loopt); het RNA komt er aan de linkerkant uit
+    const pd = eiwitPad(0, 4, 50, 56, 22, .08);
+    $('pr-pol').innerHTML = polOp > 0 ? `<g opacity="${polOp.toFixed(2)}" transform="translate(${X.pol} ${Y})"><path d="${pd}" fill="#0b1224" fill-opacity=".7"/><path d="${pd}" fill="${C.prot}" fill-opacity=".28" stroke="${C.prot}" stroke-width="3"/><text x="4" y="-16" font-size="12" text-anchor="middle" fill="${C.text}" font-family="Inter">Pol II</text></g>` : '';
+    $('pr-dna').innerHTML = polOp > 0 ? `<path d="M${X.pol - 120},${Y + 34} C${X.pol - 60},${Y + 34} ${X.pol - 40},${Y + 18} ${X.pol},${Y + 18} S${X.pol + 60},${Y + 34} 1650,${Y + 34}" stroke="${C.dna}" stroke-width="5" fill="none" opacity="${polOp.toFixed(2)}"/>` : '';
   }
   return { update(t, s) { ph = s.step; P = s.p; draw(); } };
 }

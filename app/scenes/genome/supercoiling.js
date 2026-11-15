@@ -1,4 +1,5 @@
 import { C, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
+import { eiwitPad } from '../../bio.js';
 
 /*
  * Een DNA-domein tussen twee vaste punten (uiteinden kunnen niet vrij draaien) als tweestrengig lint.
@@ -119,8 +120,8 @@ export default {
     const menu = (x, y, node, nl, en, col) => `<g data-node="${node}" data-nolabel><rect x="${x - 170}" y="${y - 28}" width="340" height="56" rx="28" fill="#0d1426" stroke="${col}" stroke-width="3"/><circle cx="${x - 142}" cy="${y}" r="8" fill="${col}"/><text x="${x + 10}" y="${y + 8}" font-size="22" text-anchor="middle" fill="#e8edf7" font-family="Inter" font-weight="600">${T2(nl, en)}</text></g>`;
     return svgOpen() + `
       <g id="sc-clamps">
-        <rect x="${X0 - 46}" y="${Y0 - 50}" width="46" height="100" rx="10" fill="${C.histone}" opacity=".85"/>
-        <rect x="${X1}" y="${Y0 - 50}" width="46" height="100" rx="10" fill="${C.histone}" opacity=".85"/>
+        <path d="${eiwitPad(X0 - 23, Y0, 25, 52, 121, .07)}" fill="${C.histone}" opacity=".85"/>
+        <path d="${eiwitPad(X1 + 23, Y0, 25, 52, 122, .07)}" fill="${C.histone}" opacity=".85"/>
         <g id="sc-clamplbl">${txt(X0 - 23, Y0 + 88, T2('vast', 'fixed'), C.muted, 24)}${txt(X1 + 23, Y0 + 88, T2('vast', 'fixed'), C.muted, 24)}</g>
       </g>
       <g id="sc-rib"></g><g id="sc-enz"></g><g id="sc-pol" data-node="transcriptie" data-color="${C.prot}" data-nolabel></g><g id="sc-ann"></g><g id="sc-nucpic" data-node="nucleosoom" data-color="${C.histone}" data-nolabel></g>
@@ -180,13 +181,13 @@ export default {
           // nucleosoom als toroïdale (linkshandige) supercoil
           const k = ease(sub(p, .35, .6));
           nucOp = k;   // opacity op de hotspotgroep zelf, zodat de engine hem pas klikbaar maakt als hij zichtbaar is
-          nucpic += `<g>${box(960, 580, 480, 130)}<ellipse cx="1060" cy="645" rx="55" ry="45" fill="${C.histone}" opacity=".6"/>
+          nucpic += `<g>${box(960, 580, 480, 130)}<path d="${eiwitPad(1060, 645, 55, 45, 1282, .07)}" fill="${C.histone}" opacity=".6"/>
             <path d="M985,630 C1000,580 1120,580 1125,630 C1130,680 1000,695 995,655 C990,615 1100,600 1135,615" stroke="${C.dna}" stroke-width="7" fill="none"/>
             ${txt(1150, 632, T2('nucleosoom', 'nucleosome'), '#fff', 26, 'start', 700)}${txt(1150, 672, T2('linkshandig gewonden', 'left-handed wrap'), C.muted, 24, 'start')}</g>`;
         }
         if (step === 5) {
           const xs = X0 + (X1 - X0) * st.sp;
-          pol += `<g><ellipse cx="${f1(xs)}" cy="${Y0}" rx="70" ry="58" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>${txt(xs, Y0 + 7, 'Pol II', '#fff', 22)}
+          pol += `<g><path d="${eiwitPad(xs, Y0, 70, 58, 1325, .07)}" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>${txt(xs, Y0 + 7, 'Pol II', '#fff', 22)}
             <path d="M${f1(xs + 30)},${Y0 - 70} h70" stroke="${C.prot}" stroke-width="4" marker-end="url(#arrow)"/>
             <path d="M${f1(xs - 20)},${Y0 - 55} C${f1(xs - 60)},${Y0 - 140} ${f1(xs - 140)},${Y0 - 150} ${f1(xs - 200)},${Y0 - 200}" stroke="${C.rna}" stroke-width="6" fill="none"/>${txt(xs - 210, Y0 - 212, 'RNA', C.rna, 20)}</g>`;
           const k = ease(sub(p, .3, .5));
@@ -207,7 +208,7 @@ export default {
         if (step === 7) {
           // enzym op de onderste kruising van de plectoneem
           const cy = Y0 - PH * .25, on = ease(sub(p, .05, .2)) * (1 - ease(sub(p, .9, 1)));
-          enz += `<g opacity="${f1(on)}"><ellipse cx="${XM - 60}" cy="${f1(cy)}" rx="60" ry="80" fill="rgba(111,91,214,.3)" stroke="${C.prot2}" stroke-width="3"/><ellipse cx="${XM + 60}" cy="${f1(cy)}" rx="60" ry="80" fill="rgba(111,91,214,.3)" stroke="${C.prot2}" stroke-width="3"/>
+          enz += `<g opacity="${f1(on)}"><path d="${eiwitPad(XM - 60, cy, 60, 80, 1473, .07)}" fill="rgba(111,91,214,.3)" stroke="${C.prot2}" stroke-width="3"/><path d="${eiwitPad(XM + 60, cy, 60, 80, 1474, .07)}" fill="rgba(111,91,214,.3)" stroke="${C.prot2}" stroke-width="3"/>
             ${txt(XM, f1(cy + 115), T2('TOP2', 'TOP2'), '#fff', 22)}${pill(XM - 110, cy - 95, 60, 26, 'ATP', '#c9a027', sub(p, .15, .25) * (1 - sub(p, .55, .65)), 14)}${pill(XM + 110, cy - 95, 60, 26, 'ATP', '#c9a027', sub(p, .15, .25) * (1 - sub(p, .55, .65)), 14)}</g>`;
           const k1 = ease(sub(p, .2, .35)), k2 = ease(sub(p, .35, .5));
           if (p > .2 && p < .5) ann += `<g opacity="${f1(k1)}"><path d="M${XM - 30},${f1(cy - 20)} L${XM + 30},${f1(cy + 20)}" stroke="#ff6b6b" stroke-width="5"/><path d="M${XM - 30},${f1(cy + 20)} L${XM + 30},${f1(cy - 20)}" stroke="#ff6b6b" stroke-width="5"/>${txt(XM + 150, f1(cy - 130), T2('dubbelstrengbreuk (G-segment)', 'double-strand break (G segment)'), '#ff6b6b', 22, 'start')}

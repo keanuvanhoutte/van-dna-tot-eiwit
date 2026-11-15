@@ -1,5 +1,6 @@
 /* Gedeelde tekenhulpjes voor de RNA-scènes (export, nmd, rnai, mrnaafbraak, editing, rnastructuur). */
 import { C, BASE, f1, clamp, lerp } from '../../kit.js';
+import { eiwitPad } from '../../bio.js';
 
 /* ---------- polylijn met booglengte: punt op afstand s ---------- */
 export function polyPath(pts) {
@@ -28,10 +29,13 @@ export function bez(p0, p1, p2, p3, n = 24) {
 export const dpath = pts => pts.map((p, i) => `${i ? 'L' : 'M'}${f1(p[0])},${f1(p[1])}`).join('');
 
 /* ---------- vormen ---------- */
-/* eiwitblob met naam (afgeronde rechthoek), goed leesbaar */
+/* eiwit met naam: bobbelige eiwitvorm (bio.js-stijl, vaste vorm per naam) i.p.v. een gladde rechthoek; tekst blijft leesbaar */
+const hashSeed = s => { let h = 7; for (const ch of String(s)) h = (h * 31 + ch.charCodeAt(0)) % 9973; return h; };
 export function prot(x, y, w, h, label, col = C.prot, op = 1, fs = 16, extra = '') {
   if (op <= .01) return '';
-  return `<g opacity="${f1(op)}" ${extra}><rect x="${f1(x - w / 2)}" y="${f1(y - h / 2)}" width="${w}" height="${h}" rx="${Math.min(h / 2, 16)}" fill="${col}" fill-opacity=".88" stroke="#0a1224" stroke-width="1.5"/>` +
+  const sd = hashSeed(label), d = eiwitPad(x, y, w / 2 + 3, h / 2 + 2, sd, .07);
+  return `<g opacity="${f1(op)}" ${extra}><path d="${d}" fill="#0b1224"/><path d="${d}" fill="${col}" fill-opacity=".86" stroke="${col}" stroke-width="2"/>` +
+    `<path d="${eiwitPad(x - w * .1, y - h * .14, w * .3, h * .22, sd + 3, .07)}" fill="#fff" fill-opacity=".10"/>` +
     `<text x="${f1(x)}" y="${f1(y + fs * .36)}" font-size="${fs}" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">${label}</text></g>`;
 }
 /* m7G-cap */
@@ -40,13 +44,36 @@ export function capG(x, y, r = 16, op = 1) {
   return `<g opacity="${f1(op)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${C.cap}" stroke="${C.rna}" stroke-width="2"/>` +
     `<text x="${f1(x)}" y="${f1(y + r * .3)}" font-size="${Math.round(r * .68)}" text-anchor="middle" fill="#3a1a05" font-family="Inter" font-weight="700">m⁷G</text></g>`;
 }
-/* ribosoom (80S) schematisch; x,y = midden van de mRNA-bindingsgoot */
-export function ribo(x, y, s = 1, op = 1, lab = '80S') {
+/* ribosoom (zijaanzicht); x,y = plek op het mRNA waar het ribosoom leest.
+ * Twee eenheden die tegen elkaar liggen: de grote (60S, boven) en de kleine (40S, onder). Het mRNA loopt door de spleet
+ * tussen beide en wordt door de kleine eenheid gelezen; twee tRNA's reiken van het codon tot het actieve centrum (PTC) in
+ * de grote eenheid; de keten verlaat de grote eenheid via de uitgangstunnel bovenaan (Alberts/MBoC).
+ * o.keten = lengte (px, ongeschaald) van de groeiende keten (0 = geen); o.mrna = mRNA-stukje door de spleet tekenen;
+ * o.bact = bacterieel 70S (iets kleiner: 50S + 30S); o.tRNA = tRNA's tekenen. lab = tekst op de grote eenheid. */
+export function ribo(x, y, s = 1, op = 1, lab = '80S', o = {}) {
   if (op <= .01) return '';
-  return `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(${s})">
-    <path d="M-62,-8 C-70,-60 -30,-92 5,-92 C45,-92 72,-62 64,-8 Z" fill="rgba(44,198,168,.28)" stroke="${C.rrna}" stroke-width="3"/>
-    <path d="M-50,10 C-52,40 -20,52 4,52 C30,52 54,40 50,10 Z" fill="rgba(44,198,168,.4)" stroke="${C.rrna}" stroke-width="3"/>
-    <text x="2" y="-40" font-size="18" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">${lab}</text></g>`;
+  const { keten = 0, mrna = true, bact = false, tRNA = s >= .55 } = o;
+  const k = bact ? .88 : 1, big = C.rrna, small = '#7fe3cf';
+  let g = `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(${f1(s * k)})">`;
+  const dL = eiwitPad(2, -47, 70, 45, 60, .06), dS = eiwitPad(-4, 24, 56, 24, 40, .07);
+  // grote eenheid + uitgangstunnel (van het PTC naar de top)
+  g += `<path d="${dL}" fill="#0b1224"/><path d="${dL}" fill="${big}" fill-opacity=".42" stroke="${big}" stroke-width="3"/>`;
+  g += `<path d="M6,-22 C18,-44 -6,-66 8,-91" stroke="#0b1224" stroke-opacity=".65" stroke-width="10" fill="none" stroke-linecap="round"/>`;
+  if (keten > 0) {
+    const n = Math.max(1, Math.round(keten / 14));
+    let d = 'M6,-22 C18,-44 -6,-66 8,-91';
+    for (let i = 0; i < n; i++) d += ` q${i % 2 ? -12 : 12},-7 ${i % 2 ? -4 : 4},-14`;
+    g += `<path d="${d}" stroke="${C.chain}" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+  }
+  // kleine eenheid
+  g += `<path d="${dS}" fill="#0b1224"/><path d="${dS}" fill="${small}" fill-opacity=".36" stroke="${small}" stroke-width="3"/>`;
+  // tRNA's in de P- en A-plaats: anticodonarm op het codon, acceptorarm buigt naar het PTC
+  if (tRNA) g += `<path d="M-13,-3 V-13 Q-13,-21 1,-22" stroke="${C.trna}" stroke-width="5" fill="none" stroke-linecap="round"/>` +
+    `<path d="M15,-3 V-13 Q15,-20 10,-22" stroke="#ffe08a" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+  g += `<circle cx="6" cy="-22" r="3.5" fill="#fff" fill-opacity=".85"/>`;
+  if (mrna) g += `<path d="M-66,1 H66" stroke="${C.rna}" stroke-width="7" stroke-linecap="round"/>`;
+  if (lab) g += `<text x="-24" y="-46" font-size="18" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">${lab}</text>`;
+  return g + '</g>';
 }
 /* nucleotiden als rijtje letters langs een horizontale lijn */
 export function ntRow(x0, y, seq, w = 30, h = 30, op = 1, fs) {

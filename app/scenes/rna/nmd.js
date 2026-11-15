@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { prot, capG, ribo, note, arrow, snip, ntRow, hot, setHot } from './_rna.js';
+import { eiwitPad } from '../../bio.js';
 
 /*
  * Nonsense-mediated decay (NMD), voorbeeld: β-globine (HBB), nonsensemutatie codon 39 CAG → UAG (β⁰-thalassemie).
@@ -118,7 +119,7 @@ export default {
         if (step === 3) { rx = lerp(X.cap + 60, X.ptc, ease(sub(p, .05, .6))); rop = sub(p, 0, .1); }
         if (step === 4 || step === 5) { rx = X.ptc; rop = 1; }
         if (step === 6) { rx = X.ptc; rop = 1 - sub(p, 0, .15); }
-        $('nm-ribo').innerHTML = ribo(rx, Y + 2, 1, rop);
+        $('nm-ribo').innerHTML = ribo(rx, Y, 1, rop, '80S', { keten: clamp((rx - X.cap - 60) / 6, 0, 30) });   // groeiende keten uit de grote eenheid
         setHot(svg, 'nm-hT', rop > .5 && step === 3 && p > .6 ? [rx, Y - 30, 120, 150] : null);
 
         // EJC's: in stap 1 weggeduwd door het ribosoom; in het mutante mRNA blijft EJC 2 zitten
@@ -194,7 +195,7 @@ export default {
               `<line x1="600" y1="${y}" x2="720" y2="${y}" stroke="${C.rna}" stroke-width="12" stroke-linecap="round"/><line x1="722" y1="${y}" x2="780" y2="${y}" stroke="${C.cap}" stroke-width="7" stroke-dasharray="3 3"/>` +
               `<line x1="420" y1="${y - 13}" x2="420" y2="${y + 13}" stroke="#fff" stroke-width="2.5"/><line x1="600" y1="${y - 13}" x2="600" y2="${y + 13}" stroke="#fff" stroke-width="2.5"/>` +
               `<rect x="${ptc ? ptc - 11 : 679}" y="${y - 10}" width="22" height="20" rx="4" fill="${ptc ? C.danger : '#fff'}"/>`;
-            if (ejc) r += `<circle cx="584" cy="${y - 20}" r="10" fill="#7a62e0" stroke="#0a1224" stroke-width="1.5"/>`;
+            if (ejc) r += `<path d="${eiwitPad(584, y - 21, 11, 9, 7, .1)}" fill="#7a62e0" stroke="#0a1224" stroke-width="1.5"/>`;
             return r + '</g>' + arrow(810, y, 900, y, C.muted, 3);
           };
           const R1 = 280, R2 = 460, R3 = 640;

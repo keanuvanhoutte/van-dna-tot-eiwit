@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { polyPath, bez, dpath, prot, capG, ribo, note, arrow } from './_rna.js';
+import { kernEnvelopLijn, eiwitPad } from '../../bio.js';
 
 /*
  * mRNA-export door de kernporie (hoofdstuk 13).
@@ -65,12 +66,13 @@ export default {
   ],
   loop: true,
   svg() {
-    // membranen met gat rond het kanaal
-    const mem = (y, dir) => {
-      const g = 108, r = 40;
-      return `<path d="M-400,${y} H${PX - g - r} Q${PX - g},${y} ${PX - g},${y + dir * r}" stroke="#c9a574" stroke-width="7" fill="none" opacity=".75"/>` +
-        `<path d="M${PX + g + r + 0},${y} H2000 M${PX + g + r},${y} Q${PX + g},${y} ${PX + g},${y + dir * r}" stroke="#c9a574" stroke-width="7" fill="none" opacity=".75"/>`;
-    };
+    // kernenvelop: buiten- en binnenmembraan (dubbellagen) met de perinucleaire ruimte ertussen; aan de porie lopen ze in elkaar over
+    const env = kernEnvelopLijn(-600, 2200, (Y_OUT + Y_IN) / 2, { poriën: [PX], poreW: 216, w: 24, gap: Y_IN - Y_OUT - 24, npc: false });
+    // kernporiecomplex: per kant drie eiwitringen (cytoplasmatische ring, binnenring, kernring) in de poriewand
+    const npcWand = [-1, 1].map(k => [[Y_OUT - 4, 26, 20, 1], [(Y_OUT + Y_IN) / 2, 22, 24, 2], [Y_IN + 4, 26, 20, 3]].map(([y, rx, ry, sd]) => {
+      const d = eiwitPad(PX + k * 105, y, rx, ry, 80 + sd + (k > 0 ? 5 : 0), .07);
+      return `<path d="${d}" fill="#0b1224"/><path d="${d}" fill="#3b4a72" stroke="#8a9bc4" stroke-width="3"/>`;
+    }).join('')).join('');
     let fil = '';
     for (const [x0, sgn] of [[PX - 92, -1], [PX - 60, -1], [PX + 60, 1], [PX + 92, 1]])
       fil += `<path d="M${x0},${Y_OUT - 16} C${x0 + sgn * 10},${Y_OUT - 50} ${x0 - sgn * 14},${Y_OUT - 80} ${x0 + sgn * 18},${Y_OUT - 110}" stroke="#8a9bc4" stroke-width="5" fill="none" stroke-linecap="round"/>`;
@@ -80,9 +82,7 @@ export default {
     ${note(60, 110, T2('cytoplasma', 'cytoplasm'), C.muted, 20, 'start')}
     ${note(60, 560, T2('kern (nucleoplasma)', 'nucleus (nucleoplasm)'), C.muted, 20, 'start')}
     <g data-node="kernimport" data-color="#8a9bc4" data-label="${T2('Kernporie (NPC)', 'Nuclear pore complex')}">
-      ${mem(Y_OUT, 1)}${mem(Y_IN, -1)}
-      <rect x="${PX - 128}" y="${Y_OUT - 22}" width="46" height="${Y_IN - Y_OUT + 44}" rx="16" fill="#3b4a72" stroke="#8a9bc4" stroke-width="3"/>
-      <rect x="${PX + 82}" y="${Y_OUT - 22}" width="46" height="${Y_IN - Y_OUT + 44}" rx="16" fill="#3b4a72" stroke="#8a9bc4" stroke-width="3"/>
+      ${env}${npcWand}
       ${fil}${bask}
       <ellipse cx="${PX}" cy="${Y_IN + 142}" rx="58" ry="11" fill="none" stroke="#8a9bc4" stroke-width="5"/>
       <circle data-anchor="kernimport" cx="${PX}" cy="${Y_IN + 156}" r="1" fill="none" data-pos="below"/>
@@ -220,7 +220,7 @@ export default {
 
         // ribosomen
         let rb = '';
-        if (step === 7) { const q = P.at(sOf(Math.max(0, rd))); rb += ribo(q[0], q[1] + 4, .95, sub(p, 0, .12) * (1 - sub(p, .9, 1))); }
+        if (step === 7) { const q = P.at(sOf(Math.max(0, rd))); rb += ribo(q[0], q[1], .95, sub(p, 0, .12) * (1 - sub(p, .9, 1)), '80S', { keten: lerp(0, 50, ease(sub(p, .05, .85))) }); }
         if (step === 8) {
           const a = ease(sub(p, .45, .85));
           const q = P.at(sOf(10));
@@ -229,8 +229,11 @@ export default {
           const pq = side(sOf(684), -22);
           rb += `<path d="M${f1(capP[0] + 112)},${f1(capP[1] - 64)} C${f1(capP[0] + 300)},${f1(capP[1] - 190)} ${f1(pq[0])},${f1(pq[1] - 200)} ${f1(pq[0])},${f1(pq[1] - 16)}" stroke="#7fe0ef" stroke-width="3" fill="none" stroke-dasharray="7 6" opacity="${f1(sub(p, .3, .5))}"/>`;
           rb += note((capP[0] + pq[0]) / 2 + 60, capP[1] - 176, T2('gesloten lus (eIF4G–PABPC1)', 'closed loop (eIF4G–PABPC1)'), '#7fe0ef', 18, 'middle', sub(p, .3, .5));
-          rb += `<g opacity="${f1(a)}" transform="translate(${f1(q[0] + 70)} ${f1(q[1] + 60)})"><path d="M-55,-6 C-57,34 -20,48 4,48 C30,48 58,34 54,-6 Z" fill="rgba(44,198,168,.4)" stroke="${C.rrna}" stroke-width="3"/>` +
-            `<text x="0" y="28" font-size="17" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">43S</text></g>`;
+          // 43S = kleine eenheid (40S) met initiatiefactoren en het start-tRNA, nog zonder grote eenheid
+          const d43 = eiwitPad(0, 22, 56, 25, 40, .07);
+          rb += `<g opacity="${f1(a)}" transform="translate(${f1(q[0] + 70)} ${f1(q[1] + 8)})"><path d="${d43}" fill="#0b1224"/><path d="${d43}" fill="#7fe3cf" fill-opacity=".36" stroke="#7fe3cf" stroke-width="3"/>` +
+            `<path d="M-8,0 l-6,-14 l10,-10" stroke="${C.trna}" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` +
+            `<text x="0" y="30" font-size="17" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">43S</text></g>`;
         }
         $('ex-ribo').innerHTML = rb;
         const rA = step === 8 ? P.at(sOf(10)) : step === 7 ? P.at(sOf(Math.max(0, rd))) : [-9999, -9999];

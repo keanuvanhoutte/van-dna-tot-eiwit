@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { prot, capG, ribo, note, arrow, ntRow, hot, setHot } from './_rna.js';
+import { eiwitPad } from '../../bio.js';
 
 /* mRNA-afbraak in het cytoplasma: deadenylatie → decapping → XRN1 (5'→3') of exosoom (3'→5'). 5' links. */
 const Y = 470;
@@ -71,7 +72,7 @@ export default {
         if (b3 - a3 > 150) m += note(X.u3[0] + 60, Y + 46, "3'-UTR", '#d9854a', 19);
         if (tb - ta > 60) m += note((ta + tb) / 2, Y + 46, 'poly(A)', C.cap, 19);
       }
-      for (let i = 0; i < pab; i++) if (PAB[i] < Math.min(tail, to) && PAB[i] > from) m += `<circle cx="${PAB[i]}" cy="${Y - 22}" r="14" fill="#3fb6c9" stroke="#0a1224" stroke-width="1.5"/>`;
+      for (let i = 0; i < pab; i++) if (PAB[i] < Math.min(tail, to) && PAB[i] > from) m += `<path d="${eiwitPad(PAB[i], Y - 22, 15, 13, 50 + i, .1)}" fill="#3fb6c9" stroke="#0a1224" stroke-width="1.5"/>`;
       if (capOn > .01 && from <= X.u5[0] + 1) m += capG(X.cap, Y, 22, capOn);
       if (from <= X.u5[0] + 1) m += note(X.cap - 32, Y - 14, "5'", C.text, 19, 'end');
       if (to > tail - 2 || to > X.pa[0]) m += note(Math.min(tail, to) + 14, Y + 6, "3'", C.text, 19, 'start');
@@ -112,7 +113,8 @@ export default {
           m += mrna({ capOn: 1, tail: X.pa[0] + 26, pab: 0, to: x, labels: p < .5 });          // hetzelfde gedeadenyleerde mRNA, nu vanaf het 3'-uiteinde
           const eo = sub(p, 0, .06);
           fa += debris(x + 160, X.pa[0] + 40) + note(Math.max(x + 250, 800), Y + 110, T2('losse nucleotiden (NMP)', 'free nucleotides (NMPs)'), C.muted, 19, 'middle', sub(p, .3, .45));
-          fa += `<g opacity="${f1(eo)}"><path d="M${f1(x + 10)},${Y - 42} h116 a18,18 0 0 1 18,18 v48 a18,18 0 0 1 -18,18 h-116 z" fill="#8a5a3a" fill-opacity=".85" stroke="#0a1224" stroke-width="1.5"/>` +
+          fa += `<g opacity="${f1(eo)}"><path d="${eiwitPad(x + 76, Y, 72, 40, 33, .07)}" fill="#0b1224"/><path d="${eiwitPad(x + 76, Y, 72, 40, 33, .07)}" fill="#8a5a3a" fill-opacity=".85" stroke="#8a5a3a" stroke-width="2"/>` +
+            `<path d="M${f1(x + 4)},${Y} H${f1(x + 60)}" stroke="#0b1224" stroke-opacity=".55" stroke-width="14" stroke-linecap="round"/>` +   // het 3'-uiteinde schuift in het kanaal van de exosoomring
             `<text x="${f1(x + 76)}" y="${Y + 7}" font-size="20" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">${T2('exosoom', 'exosome')}</text></g>`;
           fa += prot(x + 64, Y - 70, 139, 36, T2('SKI-complex', 'SKI complex'), '#6b4a33', eo * (1 - sub(p, .76, .84)), 19);
           fa += note(x + 64, Y + 70, "3' → 5'", '#e0b089', 19, 'middle', sub(p, .04, .12) * (1 - sub(p, .8, .87)));
@@ -137,7 +139,7 @@ export default {
           tli += `<path d="M${X.cap + 125},${Y - 84} C${X.cap + 400},${Y - 300} ${PAB[2]},${Y - 280} ${PAB[2]},${Y - 40}" stroke="#7fe0ef" stroke-width="3" fill="none" stroke-dasharray="7 6" opacity="${f1(loopOp)}"/>`;
           tli += note(800, Y - 250, T2('gesloten lus (eIF4G–PABPC1)', 'closed loop (eIF4G–PABPC1)'), '#7fe0ef', 19, 'middle', step === 0 ? 1 : loopOp * (step === 1 ? 0 : 1));
           tli += note(PAB[2] + 20, Y - 58, 'PABPC1', '#7fe0ef', 19, 'start', step === 0 ? sub(p, .2, .4) : 0);
-          for (const rx of [400, 580, 760]) rib += ribo(rx, Y + 2, .85, riboOp);
+          for (const rx of [400, 580, 760]) rib += ribo(rx, Y, .85, riboOp, '', { keten: (rx - 300) / 14 });   // polysoom: verder op het mRNA = langere keten
         }
         if (step === 1) {
           const k = ease(sub(p, .1, .4));
@@ -150,7 +152,7 @@ export default {
           const ph = p < .45;
           fa += prot(tail + 34, Y - 40, ph ? 110 : 110, 30, ph ? 'PAN2–PAN3' : 'CCR4–NOT', '#8a5a3a', sub(p, 0, .1), 19);
           fa += note(tail + 34, Y + 44, 'A A A …', C.cap, 19, 'middle', 1 - sub(p, .8, .9));
-          for (let i = 0; i < 6; i++) { const drop = clamp((PAB[i] - tail) / 50); if (drop > 0 && drop < 1) fa += `<circle cx="${PAB[i] + 20 * drop}" cy="${f1(Y - 22 - 120 * drop)}" r="14" fill="#3fb6c9" opacity="${f1(1 - drop)}"/>`; }
+          for (let i = 0; i < 6; i++) { const drop = clamp((PAB[i] - tail) / 50); if (drop > 0 && drop < 1) fa += `<path d="${eiwitPad(PAB[i] + 20 * drop, Y - 22 - 120 * drop, 15, 13, 50 + i, .1)}" fill="#3fb6c9" opacity="${f1(1 - drop)}"/>`; }
           fa += note(900, Y - 160, T2('translatie stopt', 'translation stops'), '#ffd36b', 19, 'middle', sub(p, .5, .7));
         }
         if (step === 3) {

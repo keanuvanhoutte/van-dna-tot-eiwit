@@ -2,6 +2,8 @@ import { C, T2, svgOpen, FULL, sub, ease, lerp, f1 } from '../../kit.js';
 import { T, smooth } from '../prot/_b_kit.js';
 import { btn } from '../prot/_fate.js';
 import { ribo, arrow } from './_rna.js';
+import { eiwitPad, kernEnvelop, ptsCirkel } from '../../bio.js';
+const KERN = kernEnvelop(ptsCirkel(800, 450, 300, 120), { poriën: [.05, .18, .3, .43, .55, .68, .8, .93], w: 10, gap: 8, poreW: 16, s: .4 });   // dubbel membraan met poriën
 
 /*
  * Lange niet-coderende RNA's (zijpad "Het leven van een RNA", 05-11-2026). Werkingen als steiger, gids en lokaas
@@ -24,7 +26,7 @@ function lnc(x0, x1, y, op = 1, w = 12) {
   for (let x = x0 + 120; x < x1 - 60; x += 240) s += `<path d="M${x - 12},${y} L${x - 12},${y - 46} A12,12 0 0 1 ${x + 12},${y - 46} L${x + 12},${y}" stroke="${LNC}" stroke-width="${f1(w * .8)}" fill="none" stroke-linecap="round"/>`;
   return `<g opacity="${f1(op)}">${s}</g>`;
 }
-const blob = (x, y, rx, ry, col, lab = '', op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}"><ellipse cx="${f1(x)}" cy="${f1(y)}" rx="${rx}" ry="${ry}" fill="${col}" fill-opacity=".9" stroke="#0a1224" stroke-width="2"/>` +
+const blob = (x, y, rx, ry, col, lab = '', op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}"><path d="${eiwitPad(x, y, rx, ry, rx + ry, .09)}" fill="${col}" fill-opacity=".9" stroke="#0a1224" stroke-width="2"/>` +
   (lab ? T(x, y + 8, lab, { size: 22, col: '#0a1224', halo: false, w: 800 }) : '') + '</g>';
 const gene = (x, y, w, col = C.dna, op = 1) => `<rect x="${x}" y="${y - 16}" width="${w}" height="32" rx="8" fill="${col}" opacity="${f1(op)}"/>`;
 const dna = (x0, x1, y) => `<line x1="${x0}" y1="${y - 9}" x2="${x1}" y2="${y - 9}" stroke="${C.dna}" stroke-width="7"/><line x1="${x0}" y1="${y + 9}" x2="${x1}" y2="${y + 9}" stroke="${C.dna2}" stroke-width="7"/>`;
@@ -80,7 +82,7 @@ export default {
           const k1 = step === 0 ? k(.05, .4) : 1, k2 = step === 0 ? k(.4, .75) : 1;
           o += `<g opacity="${f1(v0)}">` + gene(180, 300, 220) + T(290, 260, T2('gen voor een eiwit', 'gene for a protein'), { size: 24, col: C.dna2 }) +
             arrow(420, 300, 500, 300, C.muted, 4, k1) + `<line x1="530" y1="300" x2="830" y2="300" stroke="${LNC}" stroke-width="10" stroke-linecap="round" opacity="${f1(k1)}"/>` +
-            ribo(700, 300, .7, k1, '') + arrow(860, 300, 960, 300, C.muted, 4, k1);
+            ribo(700, 300, .7, k1, '', { keten: 28 }) + arrow(860, 300, 960, 300, C.muted, 4, k1);
           for (let i = 0; i < 7; i++) o += `<circle cx="${1000 + i * 34}" cy="300" r="14" fill="${C.chain}" stroke="#0a1224" stroke-width="2" opacity="${f1(k1)}"/>`;
           o += T(1100, 360, T2('eiwit', 'protein'), { size: 26, col: C.chain, op: k1 });
           o += gene(180, 580, 220) + T(290, 540, T2('gen voor een lang RNA', 'gene for a long RNA'), { size: 24, col: C.dna2 }) +
@@ -136,7 +138,7 @@ export default {
         const v5 = vis([5], step, p);
         if (v5 > .01) {
           const kc = step === 5 ? k(.15, .8) : 1, n = Math.round(14 * kc);
-          o += `<g opacity="${f1(v5)}"><circle cx="800" cy="450" r="300" fill="url(#gNuc)" stroke="#9cc0ff" stroke-width="5"/>` + xc(650, 450, 2.8, MOM) + xc(960, 450, 2.8, n > 10 ? OFF : DAD);
+          o += `<g opacity="${f1(v5)}"><circle cx="800" cy="450" r="296" fill="url(#gNuc)"/>` + KERN + xc(650, 450, 2.8, MOM) + xc(960, 450, 2.8, n > 10 ? OFF : DAD);
           for (let i = 0; i < n; i++) {
             const arm = i % 2 ? 1 : -1, u = ((i >> 1) / 6) * 2 - 1, hy = u * 30 * 2.8, hx = arm * hy * Math.tan(18 * Math.PI / 180);
             o += `<path d="M${f1(960 + hx - 13)},${f1(450 + hy)} q6.5,-9 13,0 t13,0" stroke="${LNC}" stroke-width="5" fill="none" stroke-linecap="round"/>`;
