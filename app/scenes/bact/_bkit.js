@@ -1,6 +1,6 @@
 /* Gedeelde tekenhulpjes voor de bacteriescènes (verhaallijn 3). Hergebruikt prot/panel/arrow uit de transcriptie-kit. */
 import { C, f1 } from '../../kit.js';
-import { bacterieWand, bacterieWandDikte, ptsStaaf, ptsLijn, ribosoomKlein, eiwitPad } from '../../bio.js';
+import { bacterieWand, bacterieWandDikte, ptsStaaf, ptsLijn, ribosoomKlein, eiwitPad, LIPID, PG, LPS } from '../../bio.js';
 export { prot, panel, arrow, blobPath } from '../txn/_txn.js';
 
 /* vaste kleuren binnen de bacterie-route */
@@ -32,11 +32,26 @@ export function arcPath(cx, cy, r, a0, a1) {
 export const onCircle = (cx, cy, r, a) => [cx + r * Math.sin(a * Math.PI / 180), cy - r * Math.cos(a * Math.PI / 180)];
 
 /* staafvormige bacterie met gramnegatieve celenvelop (E. coli): binnenmembraan – periplasma met dunne peptidoglycaanlaag –
- * buitenmembraan met LPS, elk membraan als lipidedubbellaag (bacterieWand uit app/bio.js; Silhavy, Kahne & Walker 2010).
+ * buitenmembraan met LPS, elk membraan als lipidedubbellaag (Silhavy, Kahne & Walker 2010).
  * (x, y, w, h) = omhullende rechthoek zoals vroeger; de buitenrand van de envelop valt op die rechthoek.
+ * Dikte: echt is de envelop ≈ 30–40 nm op een cel van ≈ 0,8–1 µm breed (≈ 4 % per kant). Om leesbaar te blijven is ze hier
+ * ≈ 7–9 % van de celdiameter per kant: membraandikte mw ≈ (0,075·h − 2) / 4, tussen 3,5 en 12 px. Vanaf mw 10 tekent bacterieWand
+ * (app/bio.js) elk membraan met lipidekopjes en staartjes; dunner gaat dat niet, dus daaronder een vereenvoudigde dunne envelop
+ * met dezelfde opbouw (twee lijnen per dubbellaag) en dezelfde maten, zodat rodLagen voor beide klopt.
  * Statisch per maat → opgeslagen, zodat scènes die rodCell in update() oproepen geen rekenwerk per frame hebben. */
-const wandDik = h => Math.max(9, Math.min(12, h * .024));
+const wandDik = h => Math.max(3.5, Math.min(12, (h * .075 - 2) / 4));
 export const rodInner = (x, y, w, h) => { const mw = wandDik(h), d = bacterieWandDikte('neg', mw) + 2; return { cx: x + w / 2, cy: y + h / 2, len: w - 2 * d, r: h / 2 - d, mw, d }; };
+/* dunne envelop rond een staaf (binnenmembraan: middelpunt cx,cy, totale lengte len, straal r); elke laag = afgeronde rechthoek */
+function dunneWand(cx, cy, len, r, m) {
+  const R = (t, sw, col, extra = '') => `<rect x="${f1(cx - len / 2 - t)}" y="${f1(cy - r - t)}" width="${f1(len + 2 * t)}" height="${f1(2 * (r + t))}" rx="${f1(r + t)}" stroke="${col}" stroke-width="${f1(sw)}"${extra}/>`;
+  const hw = Math.max(1.1, m * .22);
+  const mem = t => R(t, m, LIPID.tail, ' stroke-opacity=".45"') + [-1, 1].map(sd => R(t + sd * (m / 2 - hw / 2), hw, LIPID.head,
+    m >= 5 ? ` stroke-linecap="round" stroke-dasharray="0 ${f1(hw * 1.9)}"` : '')).join('');
+  return '<g fill="none">' + R(1.3 * m, 1.6 * m, 'rgba(185,163,227,.10)') +                                   // periplasma
+    R(1.3 * m, Math.max(1.2, m * .25), PG) + R(1.3 * m, Math.max(2, m * .55), PG, ' stroke-dasharray="1.4 4" opacity=".8"') +   // dunne peptidoglycaanlaag
+    mem(0) + mem(2.6 * m) +                                                                                           // binnen- en buitenmembraan
+    R(3.55 * m, .9 * m, LPS, ` stroke-dasharray="1.4 ${f1(Math.max(2.4, m * .45))}" opacity=".9"`) + '</g>';        // LPS op de buitenkant
+}
 const rodCache = new Map();
 export function rodCell(x, y, w, h, op = 1, labelled = false) {
   if (op <= .01) return '';
@@ -44,7 +59,8 @@ export function rodCell(x, y, w, h, op = 1, labelled = false) {
   let body = rodCache.get(key);
   if (!body) {
     const { cx, cy, len, r, mw } = rodInner(x, y, w, h), P = ptsStaaf(cx, cy, len, r);
-    body = `<path d="M${P.map(p => f1(p[0]) + ',' + f1(p[1])).join(' L')}Z" fill="url(#gCyto)"/>` + bacterieWand(P, { type: 'neg', w: mw });
+    body = `<path d="M${P.map(p => f1(p[0]) + ',' + f1(p[1])).join(' L')}Z" fill="url(#gCyto)"/>` +
+      (mw >= 10 ? bacterieWand(P, { type: 'neg', w: mw }) : dunneWand(cx, cy, len, r, mw));
     rodCache.set(key, body);
   }
   return `<g opacity="${f1(op)}">${body}</g>`;

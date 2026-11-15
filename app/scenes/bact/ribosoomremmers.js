@@ -83,7 +83,7 @@ export default {
         if (step === 1) {
           const u = ease(sub(p, .35, .6)), back = ease(sub(p, .6, .9));
           g += trna(SITE.A + 150 * back, lerp(170, 250, u) - 80 * back, TRA, 1 - .5 * back, CH);
-          g += pill(SITE.A, MY + 22, fade);
+          g += pill(SITE.A + 34, MY + 24, fade);   // op de 30S naast de A-plaats, niet over de letter
           if (back > .2) g += `<g opacity="${f1(back)}">` + txt(SITE.A + 190, 150, '✕', DRUG, 40, 'middle', 800) + '</g>';
         }
         if (step === 2) {

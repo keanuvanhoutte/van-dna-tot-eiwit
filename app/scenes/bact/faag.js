@@ -13,7 +13,7 @@ import { T, btn, phage, PHDNA } from '../entry/_corona.js';
 const L3 = (nl, en) => ({ nl, en });
 const A = [60, 330, 560, 400], B = [980, 330, 560, 400];   // twee bacteriën: x, y, w, h
 const AX = 340, BX = 1260, TIP = 338;                      // staartpunt op het celoppervlak
-const MINI = [[200, 470], [290, 430], [390, 450], [480, 480], [230, 600], [330, 640], [440, 610], [530, 590]];
+const MINI = [[205, 420], [475, 420], [280, 500], [340, 500], [400, 500], [240, 570], [340, 575], [440, 570]];   // vrij in het cytoplasma: boven het chromosoom en binnen de lus, niet op de DNA-lijn
 const UV = '#b388ff';
 /* chromosoom als lus; gap = deel van de bovenkant dat roze (ingebouwd faag-DNA) wordt */
 const chrom = (cx, cy, op = 1) => `<ellipse cx="${cx}" cy="${cy}" rx="180" ry="95" fill="none" stroke="${C.dna}" stroke-width="7" opacity="${f1(op)}"/>`;
@@ -83,9 +83,9 @@ export default {
         if (step === 0) fx += T(AX + 90, 175, T2('faag', 'phage'), { size: 30, col: '#c7d2e8', w: 700, anchor: 'start', op: ease(sub(p, .2, .45)) });
         if (inj > .01 && burst < .99) {
           const len = Math.min(1, inj * 1.6);
-          f += `<path d="M${AX},${TIP} L${AX},${f1(TIP + 110 * len)}" stroke="${PHDNA}" stroke-width="6" opacity="${f1((1 - ph(2, 0, .3)) * (1 - burst))}"/>`;
-          f += ring(AX, 470, 30 * ease(sub(inj, .5, 1)), 1 - burst);
-          if (step === 1) fx += T(AX + 60, 470, T2('faag-DNA', 'phage DNA'), { size: 26, col: PHDNA, w: 700, anchor: 'start', op: ease(sub(p, .6, .8)) });
+          f += `<path d="M${AX},${TIP} L${AX},${f1(TIP + 50 * len)}" stroke="${PHDNA}" stroke-width="6" opacity="${f1((1 - ph(2, 0, .3)) * (1 - burst))}"/>`;
+          f += ring(AX, 418, 30 * ease(sub(inj, .5, 1)), 1 - burst);   // los in het cytoplasma, boven het chromosoom
+          if (step === 1) fx += T(AX + 60, 426, T2('faag-DNA', 'phage DNA'), { size: 26, col: PHDNA, w: 700, anchor: 'start', op: ease(sub(p, .6, .8)) });
         }
         /* nieuwe fagen in A (stap 2) en vrij na het openbarsten (stap 3) */
         MINI.forEach(([x, y], i) => {
@@ -94,7 +94,7 @@ export default {
           const dx = (x - AX) * .85 * burst, dy = (y - 540) * .9 * burst - 40 * burst;
           f += phage(x + dx, y + dy + 40, .3, k, 1, (x - AX) * .25 * burst);
         });
-        if (step === 3) fx += T(AX, 250, T2('≈ 20 minuten', '≈ 20 minutes'), { size: 26, col: C.trna, w: 700, op: ease(sub(p, 0, .2)) });
+        if (step === 3) fx += T(AX - 70, 215, T2('≈ 20 minuten', '≈ 20 minutes'), { size: 26, col: C.trna, w: 700, anchor: 'end', op: ease(sub(p, 0, .2)) });
 
         /* faag B: landt, spuit, DNA wordt ingebouwd (stap 4); komt los bij UV (stap 5) */
         let pro = '';
@@ -112,7 +112,7 @@ export default {
             const kU = ease(sub(p, 0, .25));
             fx += `<g opacity="${f1(kU)}"><path d="M1480,170 L1450,240 L1480,240 L1445,320" stroke="${UV}" stroke-width="8" fill="none" stroke-linejoin="round" stroke-linecap="round"/></g>` +
               T(1475, 150, T2('UV-licht', 'UV light'), { size: 26, col: UV, w: 700, op: kU }) +
-              T(BX - 40, 400, T2('komt los → weg 1', 'comes loose → path 1'), { size: 26, col: PHDNA, w: 700, anchor: 'end', op: ease(sub(p, .75, .95)) });
+              T(BX - 70, 300, T2('komt los → weg 1', 'comes loose → path 1'), { size: 26, col: PHDNA, w: 700, anchor: 'end', op: ease(sub(p, .75, .95)) });
           }
         }
         $('fa-pro').innerHTML = pro;

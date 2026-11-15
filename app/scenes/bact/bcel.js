@@ -8,6 +8,7 @@ const CX = 800, CY = 450;                       // midden van de cel / nucleoïd
 const CELL = [130, 215, 1340, 470];             // x, y, b, h van de staaf
 const PLAS = [[390, 330, 26], [1215, 575, 22], [1270, 335, 30]];
 const RX = 300, RY = 150;                       // grootte nucleoïd
+const RR = 150;                                 // straal van de opengevouwen ring (stap 3), binnen het binnenmembraan
 /* ribosomen: vaste, toevallige plekken in het cytoplasma, buiten de nucleoïd */
 const IN = rodInner(...CELL);                   // binnenkant van het binnenmembraan (staaf)
 const RIBOS = (() => {
@@ -30,9 +31,15 @@ function chromPath(m, t) {
     const a = i / n * Math.PI * 2;
     const R = lerp(.6, 1, m), r = lerp(.4, 0, m);
     const x = R * Math.cos(a) + r * Math.cos(-k * a + w), y = R * Math.sin(a) + r * Math.sin(-k * a + w);
-    pts.push([CX + x * lerp(RX, 170, m), CY + y * lerp(RY, 170, m)]);
+    pts.push([CX + x * lerp(RX, RR, m), CY + y * lerp(RY, RR, m)]);
   }
   return pts.map((q, i) => `${i ? 'L' : 'M'}${f1(q[0])},${f1(q[1])}`).join('') + 'Z';
+}
+
+/* punt op het opgevouwen chromosoom (m = 0) waar een buitenste lus linksonder de rand van de nucleoïd raakt */
+function dnaPunt(t) {
+  const a = (t / 9000 + 8 * Math.PI) / 11;          // R·e^{ia} en r·e^{-ika+w} wijzen dezelfde kant op → buitenste punt van een lus
+  return [CX + RX * Math.cos(a), CY + RY * Math.sin(a)];
 }
 
 export default {
@@ -87,20 +94,24 @@ export default {
         $('bc-nucout').innerHTML = no > .01 ? `<ellipse cx="${CX}" cy="${CY}" rx="${RX + 40}" ry="${RY + 38}" fill="${C.dna}" fill-opacity=".06" stroke="${C.dna2}" stroke-width="2" stroke-dasharray="3 9" opacity="${f1(no)}"/>` : '';
         // oriC en ter op de ring (stap 2)
         const ro = step === 2 ? sub(p, .55, .75) : step === 3 ? 1 - sub(p, 0, .2) : 0;
-        $('bc-ring').innerHTML = ro > .01 ? `<g opacity="${f1(ro)}"><circle cx="${CX}" cy="${CY - 170}" r="9" fill="${K.ori}"/>` + txt(CX, CY - 188, 'oriC', K.ori, 24, 'middle', 800) +
-          `<circle cx="${CX}" cy="${CY + 170}" r="7" fill="${C.muted}"/>` + txt(CX, CY + 204, 'ter', C.muted, 22) +
+        $('bc-ring').innerHTML = ro > .01 ? `<g opacity="${f1(ro)}"><circle cx="${CX}" cy="${CY - RR}" r="9" fill="${K.ori}"/>` + txt(CX + 18, CY - RR - 4, 'oriC', K.ori, 24, 'start', 800) +
+          `<circle cx="${CX}" cy="${CY + RR}" r="7" fill="${C.muted}"/>` + txt(CX + 16, CY + RR + 14, 'ter', C.muted, 22, 'start') +
           txt(CX, CY + 8, T2('≈ 4,6 miljoen bp', '≈ 4.6 million bp'), C.text, 26, 'middle', 700) + '</g>' : '';
         // plasmiden
         const pg = step === 3 ? 1 + .25 * ease(sub(p, .1, .4)) : 1;
         $('bc-plas').innerHTML = PLAS.map(([x, y, r]) => dsRing(x, y, r * pg, K.plas, 3, focus.plas)).join('');
         // ribosomen (+ een mRNA met ribosomen aan de rand van de nucleoïd in stap 4)
-        $('bc-ribo').innerHTML = RIBOS.map(([x, y], i) => ribo(x, y, step === 4 ? 1.15 : 1, focus.ribo * (.8 + .2 * Math.sin(i)))).join('');
         const mo = step === 4 ? ease(sub(p, .25, .55)) : 0;
+        const [px, py] = dnaPunt(t);                           // RNA-polymerase op het chromosoom, aan de rand van de nucleoïd
+        const pts = []; for (let i = 0; i <= 30; i++) pts.push([px - 16 - i * 8, py + 14 + i * 2.3 + 8 * Math.sin(i / 3)]);
+        const vrij = (x, y) => mo <= .01 || (Math.hypot(x - px, y - py) > 45 && pts.every(([a, b]) => Math.hypot(x - a, y - b) > 34));   // geen losse ribosomen over het mRNA
+        $('bc-ribo').innerHTML = RIBOS.map(([x, y], i) => ribo(x, y, step === 4 ? 1.15 : 1, focus.ribo * (.8 + .2 * Math.sin(i)) * (vrij(x, y) ? 1 : 1 - mo))).join('');
         let mr = '';
         if (mo > .01) {
-          const pts = []; for (let i = 0; i <= 30; i++) pts.push([560 - i * 8, 545 + i * 2.3 + 10 * Math.sin(i / 3)]);
-          mr = `<g opacity="${f1(mo)}"><path d="${pts.map((q, i) => `${i ? 'L' : 'M'}${f1(q[0])},${f1(q[1])}`).join('')}" stroke="${C.rna}" stroke-width="4" fill="none" stroke-linecap="round"/>` +
-            [8, 17, 26].map(i => ribo(pts[i][0], pts[i][1] - 8, 1.5, 1)).join('') + '</g>';
+          mr = `<g opacity="${f1(mo)}"><path d="M${f1(px)},${f1(py)} ${pts.map(q => `L${f1(q[0])},${f1(q[1])}`).join('')}" stroke="${C.rna}" stroke-width="4" fill="none" stroke-linecap="round"/>` +
+            [8, 17, 26].map(i => ribo(pts[i][0], pts[i][1] - 8, 1.5, 1)).join('') +
+            `<ellipse cx="${f1(px)}" cy="${f1(py)}" rx="17" ry="14" fill="${K.rnap}" fill-opacity=".6" stroke="${K.rnap}" stroke-width="2.5"/>` +
+            txt(px + 26, py - 20, T2('RNA-polymerase', 'RNA polymerase'), K.rnap, 20, 'start', 700) + '</g>';
         }
         $('bc-mrna').innerHTML = mr;
         // labels in beeld
@@ -111,7 +122,7 @@ export default {
             txt(800, 790, T2('≈ 1 µm', '≈ 1 µm'), C.muted, 22) + txt(1470, 722, T2('rand: binnenmembraan · dunne celwand · buitenmembraan', 'edge: inner membrane · thin cell wall · outer membrane'), C.muted, 21, 'end', 600) + txt(800, 175, T2('geen kern: één ruimte (cytoplasma)', 'no nucleus: one space (cytoplasm)'), C.text, 30, 'middle', 700) + '</g>';
         }
         if (step === 1) lab += `<g opacity="${f1(no)}">` + txt(CX, 196, T2('nucleoïd · geen membraan', 'nucleoid · no membrane'), C.dna2, 28, 'middle', 700) + '</g>';
-        if (step === 3) lab += `<g opacity="${f1(sub(p, .3, .5))}">` + txt(390, 280, T2('plasmide', 'plasmid'), K.plas, 24, 'middle', 700) + txt(1270, 270, T2('plasmide', 'plasmid'), K.plas, 24, 'middle', 700) + '</g>';
+        if (step === 3) lab += `<g opacity="${f1(sub(p, .3, .5))}">` + txt(390, 392, T2('plasmide', 'plasmid'), K.plas, 24, 'middle', 700) + txt(1270, 408, T2('plasmide', 'plasmid'), K.plas, 24, 'middle', 700) + '</g>';
         if (step === 4) lab += `<g opacity="${f1(sub(p, .1, .3))}">` + txt(1150, 205, T2('70S-ribosomen', '70S ribosomes'), K.ribo, 28, 'middle', 700) + '</g>' +
           `<g opacity="${f1(sub(p, .5, .7))}">` + txt(330, 700, T2('mRNA + ribosomen', 'mRNA + ribosomes'), C.rna, 24, 'middle', 700) + '</g>';
         $('bc-lab').innerHTML = lab;

@@ -4,7 +4,9 @@ import { membraanLijn, eiwit, PG, LPS, LIPID } from '../../bio.js';
 
 /* Hoe bacteriën resistent worden: mutatie of overname van een gen; doelwit verandert, antibioticum kapot (β-lactamase),
  * minder poorten (porines), pompen; verspreiding via plasmiden en conjugatie.
- * Bronnen: Munita & Arias 2016 (Microbiol Spectr, PMC4888801), Molodtsov et al. 2017 (rifampicine), Lin et al. 2018 (pompen voor tetracycline). */
+ * Bronnen: Munita & Arias 2016 (Microbiol Spectr, PMC4888801), Molodtsov et al. 2017 (rifampicine), Lin et al. 2018 (pompen voor tetracycline),
+ * Du et al. 2014 (Nature 509:512, AcrAB–TolC) en Ann. N.Y. Acad. Sci. 2020 (doi 10.1111/nyas.14239): AcrB neemt zijn substraten op uit het periplasma
+ * en de buitenste laag van het binnenmembraan. */
 const DRUG = '#ff6b6b', MUT = '#ffc247', OM = '#7fc8ff';   // OM = kleur van de porines (poorten in het buitenmembraan)
 const pill = (x, y, op = 1, r = 13) => op <= .01 ? '' : `<g opacity="${f1(op)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${DRUG}" stroke="#fff" stroke-width="2.5"/></g>`;
 const half = (x, y, dx, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}"><path d="M${f1(x - dx)},${f1(y - 13)} a13,13 0 0,0 0,26 z" fill="${DRUG}" stroke="#fff" stroke-width="2"/><path d="M${f1(x + dx)},${f1(y - 13)} a13,13 0 0,1 0,26 z" fill="${DRUG}" stroke="#fff" stroke-width="2"/></g>`;
@@ -40,8 +42,8 @@ export default {
   legend: [[DRUG, { nl: 'antibioticum', en: 'antibiotic' }], [K.rnap, { nl: 'doelwit (bv. RNA-polymerase)', en: 'target (e.g. RNA polymerase)' }], [MUT, { nl: 'mutatie', en: 'mutation' }],
     [K.res, 'β-lactamase'], [LIPID.head, { nl: 'binnen- en buitenmembraan', en: 'inner and outer membrane' }], [LPS, { nl: 'LPS (buitenkant)', en: 'LPS (outer surface)' }], [PG, { nl: 'celwand (peptidoglycaan)', en: 'cell wall (peptidoglycan)' }], [OM, { nl: 'porine (poort)', en: 'porin (pore)' }], [K.tra, { nl: 'pomp', en: 'pump' }], [K.plas, { nl: 'plasmide', en: 'plasmid' }]],
   simplified: {
-    nl: 'Schema, niet op schaal. Vaak werken meerdere manieren samen in dezelfde bacterie, en minder poorten geeft op zich meestal maar een kleine resistentie. Genen gaan ook over via opname van los DNA of via virussen van bacteriën; hier staat alleen conjugatie. De pomp is getekend als één buis door beide membranen, zoals de grote pompen van Gram-negatieve bacteriën. De ruimte tussen beide membranen (periplasma) is breder getekend dan echt.',
-    en: 'Schematic, not to scale. Often several ways work together in the same bacterium, and fewer pores on its own usually gives only low-level resistance. Genes also move by uptake of loose DNA or via viruses of bacteria; only conjugation is shown here. The pump is drawn as one tube through both membranes, like the large pumps of Gram-negative bacteria. The space between the two membranes (periplasm) is drawn wider than it really is.' },
+    nl: 'Schema, niet op schaal. Vaak werken meerdere manieren samen in dezelfde bacterie, en minder poorten geeft op zich meestal maar een kleine resistentie. Genen gaan ook over via opname van los DNA of via virussen van bacteriën; hier staat alleen conjugatie. De pomp is getekend als één buis door beide membranen, zoals de grote pompen van Gram-negatieve bacteriën; zo’n pomp neemt het antibioticum vooral al op in het periplasma en het binnenmembraan, niet uit het cytoplasma zoals getekend. De ruimte tussen beide membranen (periplasma) is breder getekend dan echt.',
+    en: 'Schematic, not to scale. Often several ways work together in the same bacterium, and fewer pores on its own usually gives only low-level resistance. Genes also move by uptake of loose DNA or via viruses of bacteria; only conjugation is shown here. The pump is drawn as one tube through both membranes, like the large pumps of Gram-negative bacteria; such a pump mostly picks up the antibiotic in the periplasm and the inner membrane, not from the cytoplasm as drawn. The space between the two membranes (periplasm) is drawn wider than it really is.' },
   steps: [
     { dur: 8500, cam: FULL, title: { nl: 'Twee wegen naar resistentie', en: 'Two roads to resistance' },
       text: { nl: 'Een bacterie wordt resistent door een mutatie in haar eigen DNA, of door een resistentiegen over te nemen.', en: 'A bacterium becomes resistant through a mutation in its own DNA, or by taking over a resistance gene.' } },
@@ -52,7 +54,7 @@ export default {
     { dur: 9000, cam: FULL, title: { nl: '3 · Minder poorten', en: '3 · Fewer pores' },
       text: { nl: 'Veel antibiotica komen binnen via poorten in het buitenmembraan. Met minder poorten komt er minder binnen.', en: 'Many antibiotics get in through pores in the outer membrane. With fewer pores, less gets in.' } },
     { dur: 9000, cam: FULL, title: { nl: '4 · Naar buiten pompen', en: '4 · Pumping it out' },
-      text: { nl: 'Pompen in de membranen werken het antibioticum weer naar buiten, bijvoorbeeld tetracycline.', en: 'Pumps in the membranes push the antibiotic back out, for example tetracycline.' } },
+      text: { nl: 'Pompen in de membranen werken het antibioticum weer naar buiten.', en: 'Pumps in the membranes push the antibiotic back out.' } },
     { dur: 9500, cam: FULL, title: { nl: 'Resistentie springt over via plasmiden', en: 'Resistance jumps across via plasmids' },
       text: { nl: 'Resistentiegenen zitten vaak op plasmiden. Via conjugatie gaan ze van de ene bacterie naar de andere.', en: 'Resistance genes often sit on plasmids. Through conjugation they pass from one bacterium to another.' } },
   ],

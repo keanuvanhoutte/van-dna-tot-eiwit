@@ -9,7 +9,7 @@ import { PG, LIPID } from '../../bio.js';
 const CEL = [70, 190, 900, 440], LG = rodLagen(...CEL);   // gramnegatieve envelop: buitenmembraan, peptidoglycaan, binnenmembraan
 const PORX = [380, 520, 660], POR = '#7fc8ff';
 const TG = {                          // doelwitten in de cel: [x, y] en kleur
-  wall: [520, LG.pg, PG], gyr: [300, 430, '#5fd3e6'], pol: [545, 372, K.rnap], ribo: [790, 430, K.ribo],
+  wall: [520, LG.pg, PG], gyr: [400, 525, '#5fd3e6'], pol: [545, 372, K.rnap], ribo: [790, 430, K.ribo],
 };
 const DRUG = '#ff6b6b';
 const DNA = 'M190,430 C230,330 330,330 360,400 S470,500 520,420 S600,330 640,400 S660,520 560,520 S330,540 260,500 S170,480 190,430Z';
@@ -20,9 +20,11 @@ function mesh(x, y, cut, op = 1) {
   let s = `<g opacity="${f1(op)}">`;
   for (let r = 0; r < 4; r++) s += `<line x1="${x}" y1="${y + r * 46}" x2="${x + 360}" y2="${y + r * 46}" stroke="#c9d2e4" stroke-width="6" stroke-linecap="round"/>`;
   for (let r = 0; r < 3; r++) for (let c = 0; c < 6; c++) {
-    const bx = x + 30 + c * 60 + (r % 2) * 25, gone = cut > 0 && c >= 2 && c <= 3 && r >= 0 && r <= 2;
-    s += gone ? `<g opacity="${f1(1 - cut)}"><line x1="${bx}" y1="${y + r * 46 + 4}" x2="${bx}" y2="${y + r * 46 + 42}" stroke="#7fdc6a" stroke-width="5"/></g>`
-      : `<line x1="${bx}" y1="${y + r * 46 + 4}" x2="${bx}" y2="${y + r * 46 + 42}" stroke="#7fdc6a" stroke-width="5"/>`;
+    const bx = x + 30 + c * 60 + (r % 2) * 25, nieuw = c >= 2 && c <= 3, y0 = y + r * 46 + 4, y1 = y + r * 46 + 42;
+    // nieuw stuk wand: de bruggen die er nog bij moesten komen, lukken niet meer (gestippeld + ✕); bestaande bruggen blijven
+    s += !nieuw ? `<line x1="${bx}" y1="${y0}" x2="${bx}" y2="${y1}" stroke="#7fdc6a" stroke-width="5"/>`
+      : `<line x1="${bx}" y1="${y0}" x2="${bx}" y2="${y1}" stroke="#7fdc6a" stroke-width="4" stroke-dasharray="4 5" opacity=".55"/>` +
+        (cut > .01 ? `<path d="M${bx - 9},${(y0 + y1) / 2 - 9} l18,18 M${bx + 9},${(y0 + y1) / 2 - 9} l-18,18" stroke="${DRUG}" stroke-width="4" stroke-linecap="round" opacity="${f1(cut)}"/>` : '');
   }
   return s + '</g>';
 }
@@ -54,7 +56,7 @@ export default {
   svg() {
     return svgOpen() + `
     <g id="ab-cell"></g>
-    <g data-node="gyraseremmers" data-color="#5fd3e6" data-label="${T2('Gyrase blijft steken', 'Gyrase gets stuck')}"><circle cx="${TG.gyr[0]}" cy="${TG.gyr[1]}" r="46" fill="transparent"/><circle data-anchor="gyraseremmers" cx="${TG.gyr[0]}" cy="${TG.gyr[1] + 110}" r="1" fill="none"/></g>
+    <g data-node="gyraseremmers" data-color="#5fd3e6" data-label="${T2('Gyrase blijft steken', 'Gyrase gets stuck')}"><circle cx="${TG.gyr[0]}" cy="${TG.gyr[1]}" r="46" fill="transparent"/><circle data-anchor="gyraseremmers" cx="${TG.gyr[0]}" cy="${TG.gyr[1] + 134}" r="1" fill="none"/></g>
     <g data-node="rifampicine" data-color="${K.rnap}" data-label="${T2('Rifampicine in 3D', 'Rifampicin in 3D')}"><circle cx="${TG.pol[0]}" cy="${TG.pol[1]}" r="48" fill="transparent"/><circle data-anchor="rifampicine" cx="${TG.pol[0]}" cy="${TG.pol[1] - 95}" r="1" fill="none"/></g>
     <g data-node="ribosoomremmers" data-color="${K.ribo}" data-label="${T2('Antibiotica op het ribosoom', 'Antibiotics on the ribosome')}"><circle cx="${TG.ribo[0]}" cy="${TG.ribo[1]}" r="50" fill="transparent"/><circle data-anchor="ribosoomremmers" cx="${TG.ribo[0]}" cy="${TG.ribo[1] + 105}" r="1" fill="none"/></g>
     <g id="ab-side"></g>
@@ -75,14 +77,14 @@ export default {
         g += `<g opacity="${f1(op('wall'))}"><rect x="300" y="${f1(LG.pg - 10)}" width="440" height="20" rx="8" fill="none" stroke="${TG.wall[2]}" stroke-width="3" stroke-dasharray="${step === 1 ? '0' : '8 6'}"/></g>`;
         // DNA (nucleoïd, sterk vereenvoudigd) + gyrase
         g += `<path d="${DNA}" fill="none" stroke="${C.dna}" stroke-width="7" opacity="${f1(step === 2 || step === 0 || step === 5 || step === 3 ? 1 : .45)}"/>`;
-        g += `<g opacity="${f1(op('gyr'))}">` + prot(TG.gyr[0], TG.gyr[1], 44, 36, TG.gyr[2], 1, 5, 'gyrase', 22) + '</g>';
+        g += `<g opacity="${f1(op('gyr'))}">` + prot(TG.gyr[0], TG.gyr[1], 44, 36, TG.gyr[2], 1, 5, 'gyrase', 22) + '</g>';   // gyrase zit op het DNA (onderste stuk van de lus loopt hier horizontaal)
         // RNA-polymerase + mRNA naar het ribosoom
         g += `<g opacity="${f1(op('pol'))}">` + prot(TG.pol[0], TG.pol[1], 52, 38, TG.pol[2], 1, 7, 'RNAP', 22) + '</g>';
-        g += `<path d="M590,360 C650,320 700,360 745,410" fill="none" stroke="${C.rna}" stroke-width="5" opacity="${f1(Math.max(op('pol'), op('ribo')))}"/>`;
+        g += `<path d="M590,368 C650,372 680,${TG.ribo[1] + 42} 730,${TG.ribo[1] + 42} L860,${TG.ribo[1] + 42}" fill="none" stroke="${C.rna}" stroke-width="5" opacity="${f1(Math.max(op('pol'), op('ribo')))}"/>`;   // mRNA loopt onder langs de kleine eenheid (30S)
         g += `<g opacity="${f1(op('ribo'))}">` + ribo(TG.ribo[0], TG.ribo[1], 3.6) + '</g>';
         // nummers bij de doelwitten
         const badge = (n, x, y, k) => `<g opacity="${f1(op(k))}"><circle cx="${x}" cy="${y}" r="21" fill="${DRUG}"/>` + txt(x, y + 8, n, '#fff', 22, 'middle', 800) + '</g>';
-        g += badge('1', 760, 166, 'wall') + badge('2', 230, 345, 'gyr') + badge('3', 470, 300, 'pol') + badge('4', 880, 375, 'ribo');
+        g += badge('1', 760, 166, 'wall') + badge('2', 330, 455, 'gyr') + badge('3', 470, 300, 'pol') + badge('4', 880, 375, 'ribo');
         // antibioticum-bolletjes op het actieve doelwit
         const pill = (x, y, r = 11) => `<g opacity="${f1(fade)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${DRUG}" stroke="#fff" stroke-width="2"/></g>`;
         if (step === 1) { const d = ease(sub(p, .1, .45)); g += PORX.map(x => pill(x, LG.top - 40 + (LG.pg - LG.top + 40) * d, 8)).join(''); }   // door de porines naar de celwand
@@ -90,9 +92,9 @@ export default {
         if (step === 3) g += pill(TG.pol[0] + 20, TG.pol[1] - 6);
         if (step === 4) g += pill(TG.ribo[0] - 4, TG.ribo[1] + 26) + pill(TG.ribo[0] + 6, TG.ribo[1] - 30);
         // breuken in het DNA (stap 2) en barstende wand (stap 1)
-        if (step === 2) { const b = ease(sub(p, .55, .8)); if (b > .01) g += `<g opacity="${f1(b)}"><path d="M420,470 l18,-18 M432,478 l18,-18 M600,440 l18,-18 M612,448 l18,-18" stroke="${C.danger}" stroke-width="6" stroke-linecap="round"/></g>`; }
+        if (step === 2) { const b = ease(sub(p, .55, .8)); if (b > .01) g += `<g opacity="${f1(b)}"><path d="M${TG.gyr[0] - 66},${TG.gyr[1] + 13} l14,-26 M${TG.gyr[0] - 54},${TG.gyr[1] + 13} l14,-26 M${TG.gyr[0] + 40},${TG.gyr[1] + 13} l14,-26 M${TG.gyr[0] + 52},${TG.gyr[1] + 13} l14,-26" stroke="${C.danger}" stroke-width="6" stroke-linecap="round"/></g>`; }
         if (step === 1) { const b = ease(sub(p, .6, .85)); if (b > .01) g += `<g opacity="${f1(b)}"><path d="M505,196 l15,-22 l15,22" fill="none" stroke="${C.danger}" stroke-width="6" stroke-linejoin="round"/></g>`; }
-        g += txt(520, 680, T2('bacterie (E. coli)', 'bacterium (E. coli)'), C.muted, 24);
+        g += txt(520, 716, T2('bacterie (E. coli)', 'bacterium (E. coli)'), C.muted, 24);
         $('ab-cell').innerHTML = g;
 
         // ---- rechterpaneel ----
@@ -111,7 +113,8 @@ export default {
           const cut = ease(sub(p, .3, .7));
           sd += mesh(X + 95, 290, cut) + `<g opacity="${f1(cut)}">` + txt(MX, 470, T2('geen nieuwe dwarsbruggen', 'no new cross-links'), C.danger, 24, 'middle', 700) + '</g>';
           sd += `<g opacity="${f1(sub(p, .6, .85))}">` + txt(MX, 540, T2('de wand verzwakt', 'the wall weakens'), C.text, 24) + txt(MX, 580, T2('→ de bacterie barst open', '→ the bacterium bursts'), C.text, 24, 'middle', 700) + '</g>';
-          sd += txt(MX, 636, T2('groen = dwarsbrug, grijs = suikerketen', 'green = cross-link, grey = sugar chain'), C.muted, 22, 'middle', 500);
+          sd += txt(MX, 624, T2('groen = dwarsbrug, grijs = suikerketen', 'green = cross-link, grey = sugar chain'), C.muted, 21, 'middle', 500) +
+            txt(MX, 654, T2('gestippeld = nieuwe brug die er niet bij komt', 'dotted = new cross-link that is not made'), C.muted, 21, 'middle', 500);
         }
         if (step === 2) {
           sd += txt(MX, 205, T2('Fluorochinolonen', 'Fluoroquinolones'), C.text, 30, 'middle', 800) + txt(MX, 242, T2('(ciprofloxacine)', '(ciprofloxacin)'), C.muted, 22);

@@ -50,7 +50,7 @@ export default {
           const a = u * 180;
           if (a > .5) {
             g += `<path d="${arcPath(CX, CY, R - 16, 0, a)}" stroke="${NEW}" stroke-width="6" fill="none"/>` + `<path d="${arcPath(CX, CY, R - 16, 360 - a, 360)}" stroke="${NEW}" stroke-width="6" fill="none"/>`;
-            if (u < .999) for (const ang of [a, 360 - a]) { const [x, y] = onCircle(CX, CY, R - 8, ang); g += `<circle cx="${f1(x)}" cy="${f1(y)}" r="16" fill="${K.rnap}" fill-opacity=".5" stroke="${K.rnap}" stroke-width="2.5"/>`; }
+            if (u < .999) for (const ang of [Math.min(a, 162), 360 - Math.min(a, 162)]) { const [x, y] = onCircle(CX, CY, R - 8, ang); g += `<circle cx="${f1(x)}" cy="${f1(y)}" r="16" fill="${K.rnap}" fill-opacity="${f1(.5 * (1 - sub(u, .9, .999)))}" stroke="${K.rnap}" stroke-width="2.5" opacity="${f1(1 - sub(u, .9, .999))}"/>`; }   // vorken stoppen bij Tus
           }
           // oriC + DnaA (stap 0) + bubbel
           const [ox, oy] = onCircle(CX, CY, R, 0);
@@ -62,7 +62,7 @@ export default {
           }
           const [tx, ty] = onCircle(CX, CY, R, 180);
           g += `<circle cx="${tx}" cy="${ty}" r="9" fill="${C.muted}"/>` + txt(tx, ty + 40, 'ter', C.muted, 26, 'middle', 700);
-          if (step >= 3) g += `<g opacity="${f1(step === 3 ? sub(p, .1, .3) : 1)}">` + [-1, 1].map(sd => { const [x, y] = onCircle(CX, CY, R, 180 + sd * 14); return `<rect x="${f1(x - 9)}" y="${f1(y - 18)}" width="18" height="36" rx="4" fill="${C.danger}" fill-opacity=".8"/>`; }).join('') + txt(tx + 110, ty - 26, 'Tus', C.danger, 24, 'middle', 800) + '</g>';
+          if (step >= 3) g += `<g opacity="${f1(step === 3 ? sub(p, .1, .3) : 1)}">` + [-1, 1].map(sd => { const [x, y] = onCircle(CX, CY, R, 180 + sd * 14); return `<rect x="${f1(x - 9)}" y="${f1(y - 18)}" width="18" height="36" rx="4" fill="${C.danger}" fill-opacity=".8"/>`; }).join('') + txt(tx, ty - 48, 'Tus', C.danger, 24, 'middle', 800) + '</g>';
           if (step === 1) g += `<g opacity="${f1(sub(p, .4, .6))}">` + txt(CX, CY + 10, T2('2 vorken', '2 forks'), K.rnap, 30, 'middle', 800) + '</g>';
         } else {
           // twee ringen schuiven uit elkaar
@@ -86,10 +86,10 @@ export default {
           sd += `<line x1="${hx}" y1="${Yf - 8}" x2="1560" y2="${Yf - 8}" stroke="${C.dna}" stroke-width="5"/><line x1="${hx}" y1="${Yf + 8}" x2="1560" y2="${Yf + 8}" stroke="${C.dna2}" stroke-width="5"/>`;
           sd += `<line x1="${hx}" y1="${Yf - 8}" x2="${X0 + 20}" y2="${Yf - 120}" stroke="${C.dna}" stroke-width="5"/><line x1="${hx}" y1="${Yf + 8}" x2="${X0 + 20}" y2="${Yf + 120}" stroke="${C.dna2}" stroke-width="5"/>`;
           // leidende streng (één stuk) en achterblijvende streng (brokjes)
-          sd += `<line x1="${hx - 30}" y1="${Yf - 26}" x2="${f1(lerp(hx - 30, X0 + 40, 1))}" y2="${Yf - 128 + 16}" stroke="${NEW}" stroke-width="5" marker-end="url(#arrow)"/>`;
+          { const g0 = .25 + .75 * k; sd += `<line x1="${X0 + 40}" y1="${Yf - 112}" x2="${f1(lerp(X0 + 40, hx - 30, g0))}" y2="${f1(lerp(Yf - 112, Yf - 26, g0))}" stroke="${NEW}" stroke-width="5" marker-end="url(#arrow)"/>`; }   // leidende streng groeit mee naar de vork (helicase)
           for (let i = 0; i < 3; i++) { const x1 = hx - 70 - i * 120, x0 = x1 - 100; const y1 = Yf + 26 + (hx - x1) * .28, y0 = Yf + 26 + (hx - x0) * .28; sd += `<line x1="${f1(x1)}" y1="${f1(y1)}" x2="${f1(x0)}" y2="${f1(y0)}" stroke="${NEW}" stroke-width="5" opacity="${f1(sub(k, i * .25, i * .25 + .2))}" marker-end="url(#arrow)"/>`; }
           sd += `<circle cx="${hx}" cy="${Yf}" r="26" fill="${K.rnap}" fill-opacity=".45" stroke="${K.rnap}" stroke-width="2.5"/>` + txt(hx + 4, Yf - 42, T2('helicase', 'helicase'), K.rnap, 22, 'middle', 700);
-          sd += txt(1080, Yf - 150, T2('in één stuk', 'in one piece'), NEW, 22, 'middle', 700) + txt(1080, Yf + 200, T2('in brokjes', 'in chunks'), NEW, 22, 'middle', 700);
+          sd += txt(1080, Yf - 150, T2('in één stuk', 'in one piece'), NEW, 22, 'middle', 700) + txt(1040, Yf + 160, T2('in brokjes', 'in chunks'), NEW, 22, 'middle', 700);
           sd += txt(1250, 690, T2('≈ 1 000 nt/s per vork → ≈ 40 min', '≈ 1,000 nt/s per fork → ≈ 40 min'), C.text, 22, 'middle', 700) + '</g>';
         }
         $('br-side').innerHTML = sd;

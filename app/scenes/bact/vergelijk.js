@@ -17,7 +17,7 @@ const n1 = x => (+x).toFixed(1);
 const TX = {
   nucleus: { nl: 'celkern', en: 'nucleus' }, pore: { nl: 'kernporie', en: 'nuclear pore' }, pre: { nl: 'pre-mRNA', en: 'pre-mRNA' },
   intron: { nl: 'introns eruit', en: 'introns out' }, cap: { nl: '5′-kap', en: '5′ cap' }, tail: { nl: 'poly(A)-staart', en: 'poly(A) tail' },
-  rib: { nl: 'ribosoom', en: 'ribosome' }, prot: { nl: 'eiwit', en: 'protein' }, cyto: { nl: 'cytoplasma', en: 'cytoplasm' },
+  rib: { nl: '80S-ribosoom', en: '80S ribosome' }, rib70: { nl: '70S-ribosoom', en: '70S ribosome' }, prot: { nl: 'eiwit', en: 'protein' }, cyto: { nl: 'cytoplasma', en: 'cytoplasm' },
   nucleoid: { nl: 'nucleoïd: DNA los in het cytoplasma', en: 'nucleoid: DNA free in the cytoplasm' },
   gene: { nl: 'gen', en: 'gene' }, exon: { nl: 'exon', en: 'exon' },
   coupled: { nl: 'ribosomen op een mRNA dat nog gemaakt wordt', en: 'ribosomes on an mRNA still being made' },
@@ -30,10 +30,10 @@ const lbl = (x, y, s, a, o = {}) => a < .01 ? '' : `<text x="${n1(x)}" y="${n1(y
 const strands = (x0, x1, y) => `<line x1="${n1(x0)}" y1="${n1(y - 6)}" x2="${n1(x1)}" y2="${n1(y - 6)}" stroke="${C.dna}" stroke-width="7" stroke-linecap="round"/><line x1="${n1(x0)}" y1="${n1(y + 6)}" x2="${n1(x1)}" y2="${n1(y + 6)}" stroke="${C.dna2}" stroke-width="7" stroke-linecap="round"/>`;
 const pol = (x, y, a) => a < .01 ? '' : eiwit(x, y, 36, 27, K.pol, { seed: 7, op: .92 * a });
 /* ribosoom: twee eenheden tegen elkaar, het mRNA loopt langs de kleine eenheid; de keten komt uit de grote eenheid.
- * up: grote eenheid boven het mRNA (mens: 80S) of eronder (bacterie: 70S, iets kleiner) */
+ * up: grote eenheid boven het mRNA (mens: 80S) of eronder (bacterie: 70S, kleiner: ≈ 20 nm tegenover ≈ 25–30 nm) */
 function ribosome(x, y, a, up) {
   if (a < .01) return '';
-  return up ? ribosoomKlein(x, y - 12, { s: 2.4, rot: 180, op: a, col: K.rib }) : ribosoomKlein(x, y + 12, { s: 2.2, rot: 0, op: a, col: K.rib });
+  return up ? ribosoomKlein(x, y - 12, { s: 2.4, rot: 180, op: a, col: K.rib }) : ribosoomKlein(x, y + 11, { s: 1.95, rot: 0, op: a, col: K.rib });
 }
 /* afgeronde rechthoek als puntenlijst (met de klok mee op het scherm, bovenrand van links naar rechts) */
 function ptsRond(x, y, w, h, r) {
@@ -133,6 +133,7 @@ function bacterium(p) {
       s += ribosome(1300 - u, 440, 1 - ss(pE, pE + .03, p), false);
     }
   });
+  labels.push([1275, 592, L(TX.rib70), win(.08, .12, .64, .68, p), { fill: K.rib }]);
   labels.push([810, 710, L(TX.coupled), win(.16, .2, .64, .68, p), { fill: K.rib }]);
   labels.push([810, 710, L(TX.none), ss(.68, .72, p), { fill: C.muted }]);
   return { s, labels };
@@ -170,9 +171,10 @@ const ROWS = [
   [{ nl: 'Introns eruit knippen', en: 'Cutting out introns' }, { nl: 'ja, spliceosoom', en: 'yes, spliceosome' }, 'splicing', { nl: 'geen spliceosoom', en: 'no spliceosome' }, 'bsplicing'],
   [{ nl: '5′-kap', en: '5′ cap' }, { nl: 'ja', en: 'yes' }, 'capping', { nl: 'geen kap zoals bij de mens', en: 'no cap as in humans' }, 'bmrna'],
   [{ nl: 'Genen per mRNA', en: 'Genes per mRNA' }, { nl: 'meestal één', en: 'usually one' }, 'gen', { nl: 'vaak meerdere (operon)', en: 'often several (operon)' }, 'operon'],
-  [{ nl: 'Wanneer vertalen?', en: 'When translated?' }, { nl: 'na de export', en: 'after export' }, 'translatie', { nl: 'al tijdens het maken', en: 'while being made' }, 'bribosoom'],
+  [{ nl: 'Wanneer vertalen?', en: 'When translated?' }, { nl: 'na de export', en: 'after export' }, 'translatie', { nl: 'al tijdens het maken', en: 'while being made' }, 'bmrna'],
+  [{ nl: 'Ribosoom', en: 'Ribosome' }, { nl: '80S (40S + 60S)', en: '80S (40S + 60S)' }, 'ribosoom', { nl: '70S (30S + 50S), kleiner', en: '70S (30S + 50S), smaller' }, 'bribosoom'],
 ];
-const COLX = [190, 600, 1010], ROW0 = 300, ROWH = 98;
+const COLX = [190, 600, 1010], ROW0 = 296, ROWH = 84;
 function lines(x, y, s, col, size = 24, w = 500) {
   const ls = L(s).split('|');
   return ls.map((l, i) => txt(x, y + i * (size + 6) - (ls.length - 1) * (size + 6) / 2, l, col, size, 'start', w)).join('');
@@ -248,7 +250,7 @@ export default {
     { dur: 8000, title: { nl: 'Bacterie: één mRNA, drie eiwitten', en: 'Bacterium: one mRNA, three proteins' },
       text: { nl: 'Hier draagt één mRNA drie genen, zoals bij het lac-operon. Elk gen geeft een eigen eiwit.', en: 'Here one mRNA carries three genes, as in the lac operon. Each gene gives its own protein.' } },
     { dur: 9000, title: { nl: 'Zelfde recept, andere werkplaats', en: 'Same recipe, different workshop' },
-      text: { nl: 'De vijf grootste verschillen op een rij. Klik op een vak om verder te kijken.', en: 'The five biggest differences side by side. Click a box to look further.' } },
+      text: { nl: 'De zes grootste verschillen op een rij. Klik op een vak om verder te kijken.', en: 'The six biggest differences side by side. Click a box to look further.' } },
   ],
   svg() {
     return svgOpen() + `<g id="vg-art"></g>` +

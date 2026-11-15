@@ -73,7 +73,7 @@ export default {
         a += repeat(AX0);
         if (ins > .01) a += spacer(AX0 + SP / 2, PHDNA, ins) + repeat(AX0 + shift);
         OLD.forEach((col, i) => { const x = AX0 + shift + SP / 2 + i * SP; if (x < 900) a += spacer(x, col, 1) + repeat(x + SP / 2); });
-        a += T(AX0 - 20, AY - 40, T2('CRISPR-rij', 'CRISPR array'), { size: 26, col: C.text, w: 700, anchor: 'start', op: step === 0 ? .6 : 1 });
+        a += T(AX0 + 10, AY - 40, T2('CRISPR-rij', 'CRISPR array'), { size: 26, col: C.text, w: 700, anchor: 'start', op: step === 0 ? .6 : 1 });
         if (step === 1) a += T(560, AY + 70, T2('bij ≈ 4 op 10 bacteriën', 'in ≈ 4 out of 10 bacteria'), { size: 24, col: C.muted, op: ease(sub(p, .7, .9)) });
         $('cr-arr').innerHTML = a;
 
@@ -118,7 +118,7 @@ export default {
           const grow = ph(4, .05, .3), cut = ph(4, .65, .85);
           const x0 = lerp(DX1, DX0, grow), mid = (HIT[0] + HIT[1]) / 2;
           d += `<g opacity="${f1(ph2 * (1 - .6 * ph(4, .9, 1)))}">` + dsDNA(x0, mid - 30 * cut, DY + (step >= 4 ? 0 : 0), PHDNA) + dsDNA(mid + 30 * cut, DX1, DY, PHDNA) + '</g>';
-          if (step === 4) fx += T(mid, DY + 90, T2('past → knip', 'fits → cut'), { size: 28, col: C.danger, w: 800, op: ease(sub(p, .65, .8)) });
+          if (step === 4) fx += T(mid, DY + 74, T2('past → knip', 'fits → cut'), { size: 28, col: C.danger, w: 800, op: ease(sub(p, .65, .8)) });
         }
         $('cr-dna').innerHTML = d;
         $('cr-fx').innerHTML = fx;

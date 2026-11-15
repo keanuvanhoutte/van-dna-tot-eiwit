@@ -6,6 +6,7 @@ import { K, prot, panel, arcPath, rodCell } from './_bkit.js';
  * Bronnen: Aldred, Kerns & Osheroff 2014 (PMC3985860), Kohanski et al. 2010 (PMC2896384), Hooper & Jacoby 2016 (PMC5008060). */
 const GY = '#5fd3e6', DRUG = '#ff6b6b';
 const Y = 470, GX = 800;                 // hoogte van het DNA en plaats van gyrase
+const RC = 185;                          // straal van het chromosoom in stap 4 (binnen het binnenmembraan van de cel)
 
 /* dubbelstrengs DNA van x0 tot x1 */
 const ds = (x0, x1, y, op = 1, col = C.dna) => op <= .01 || x1 <= x0 ? '' :
@@ -68,7 +69,7 @@ export default {
           if (step === 2) {
             const fx = lerp(160, GX - 70, fork);
             g += `<path d="M${f1(fx)},${Y} l-60,-50 M${f1(fx)},${Y} l-60,50" stroke="${K.ori}" stroke-width="9" stroke-linecap="round" fill="none"/>` + prot(fx + 6, Y, 34, 30, K.ori, 1, 4, '', 14);
-            g += `<g opacity="${f1(sub(p, 0, .15))}">` + txt(fx - 40, Y - 80, T2('kopieermachine', 'copying machine'), K.ori, 24, 'middle', 700) + '</g>';
+            g += `<g opacity="${f1(sub(fork, .2, .35))}">` + txt(fx - 75, Y - 62, T2('kopieermachine', 'copying machine'), K.ori, 24, 'end', 700) + '</g>';   // links van de vork, los van het label gyrase
             g += `<g opacity="${f1(perm)}"><path d="M${GX - 40},${Y - 30} l-14,30 l14,30 M${GX + 40},${Y - 30} l14,30 l-14,30" stroke="${DRUG}" stroke-width="7" fill="none" stroke-linejoin="round"/>` + txt(GX, Y + 180, T2('blijvende breuk', 'permanent break'), DRUG, 26, 'middle', 800) + '</g>';
           }
         }
@@ -78,11 +79,11 @@ export default {
           const cuts = [20, 75, 140, 205, 260, 320];
           let a0 = cuts[cuts.length - 1] - 360;
           for (const c of cuts) {
-            const mid = (a0 + c) / 2 * Math.PI / 180, d = 40 * k;
-            g += `<g transform="translate(${f1(Math.sin(mid) * d)} ${f1(-Math.cos(mid) * d)})"><path d="${arcPath(GX, Y - 20, 230, a0 + 4, c - 4)}" stroke="${C.dna}" stroke-width="10" fill="none" stroke-linecap="round"/></g>`;
+            const mid = (a0 + c) / 2 * Math.PI / 180, d = 12 * k;   // stukken schuiven een beetje uit elkaar, binnen het binnenmembraan
+            g += `<g transform="translate(${f1(Math.sin(mid) * d)} ${f1(-Math.cos(mid) * d)})"><path d="${arcPath(GX, Y - 20, RC, a0 + 4, c - 4)}" stroke="${C.dna}" stroke-width="10" fill="none" stroke-linecap="round"/></g>`;
             a0 = c;
           }
-          for (const c of cuts) { const x = GX + 230 * Math.sin(c * Math.PI / 180), y = Y - 20 - 230 * Math.cos(c * Math.PI / 180); g += prot(x, y, 26, 20, GY, 1, 3, '', 12) + pill(x, y, 1, 10); }
+          for (const c of cuts) { const x = GX + RC * Math.sin(c * Math.PI / 180), y = Y - 20 - RC * Math.cos(c * Math.PI / 180); g += prot(x, y, 26, 20, GY, 1, 3, '', 12) + pill(x, y, 1, 10); }
           g += txt(GX, Y - 10, T2('chromosoom', 'chromosome'), C.muted, 26) + `<g opacity="${f1(sub(p, .55, .8))}">` + txt(GX, Y + 32, T2('in stukken', 'in pieces'), DRUG, 26, 'middle', 800) + '</g>';
         }
         if (step >= 4) {
