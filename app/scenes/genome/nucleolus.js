@@ -157,6 +157,10 @@ export default {
 
         // snoRNP-modificaties op het 47S
         let mods = '';
+        /* snoRNP = gids-RNA (haarspeld die met het rRNA paart) + eiwitten, onder de balk zodat de paneltitel vrij blijft */
+        const snoRNP = (x, y, col, lab, seed) => `<path d="M${x - 26},${y - 8} C${x - 30},${y - 50} ${x - 4},${y - 70} ${x + 6},${y - 46} C${x + 14},${y - 30} ${x + 2},${y - 18} ${x + 22},${y - 8}" stroke="${col}" stroke-width="6" fill="none" stroke-linecap="round"/>` +
+          eiwit(x, y + 6, 34, 18, C.prot, { seed, bumps: .1 }) + eiwit(x + 30, y - 10, 13, 11, C.prot2, { seed: seed + 9 }) +
+          txt(x + 54, y + 12, lab, C.text, 15, 'start', 700);
         const mk = step === 4 ? ease(sub(p, .3, .8)) : step > 4 && step < 7 ? 1 : step === 7 ? 1 : 0;
         if (mk > .01) {
           const rr = rng(12);
@@ -166,7 +170,7 @@ export default {
             const x = x0 + 6 + rr() * (seg[1] - 12), me = rr() < .55;
             mods += `<g opacity="${f1(mk * (i / 26 < mk ? 1 : 0))}"><line x1="${f1(x)}" y1="${PRE.y - 18}" x2="${f1(x)}" y2="${PRE.y - 30}" stroke="${me ? C.trna : '#ff8a8a'}" stroke-width="2"/><circle cx="${f1(x)}" cy="${PRE.y - 33}" r="3.5" fill="${me ? C.trna : '#ff8a8a'}"/></g>`;
           }
-          mods += `<g opacity="${f1(step === 4 ? mk : step === 5 ? 1 - ease(sub(p, 0, .3)) : 0)}">${pill(900, 500, 250, 30, T2('box C/D-snoRNP → 2\'-O-Me', 'box C/D snoRNP → 2\'-O-Me'), '#8a6d1c', 1, 14)}${pill(1190, 500, 230, 30, T2('box H/ACA-snoRNP → Ψ', 'box H/ACA snoRNP → Ψ'), '#8a3d3d', 1, 14)}</g>`;
+          mods += `<g opacity="${f1(step === 4 ? mk : step === 5 ? 1 - ease(sub(p, 0, .3)) : 0)}">${snoRNP(860, 740, C.trna, T2('box C/D-snoRNP → 2\'-O-Me', 'box C/D snoRNP → 2\'-O-Me'), 41)}${snoRNP(1190, 740, '#ff8a8a', T2('box H/ACA-snoRNP → Ψ', 'box H/ACA snoRNP → Ψ'), 42)}</g>`;
         }
         $('nl-mods').innerHTML = mods;
 

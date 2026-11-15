@@ -26,8 +26,8 @@ export default {
   steps: [
     ST(8500, cam(800, 520, 1500), 'UGA: stop… of een extra aminozuur', 'UGA: stop… or an extra amino acid', 'In 25 van onze genen betekent UGA niet ‘stop’ maar selenocysteïne: cysteïne met selenium in plaats van zwavel.', 'In 25 human genes UGA does not mean ‘stop’ but selenocysteine: cysteine with selenium instead of sulfur.'),
     ST(9500, cam(800, 330, 1350), 'Gemaakt op zijn eigen tRNA', 'Made on its own tRNA', 'Het tRNA krijgt eerst serine. Twee enzymen maken daar selenocysteïne van: zuurstof wordt selenium.', 'The tRNA is first loaded with serine. Two enzymes turn it into selenocysteine: oxygen becomes selenium.'),
-    ST(9000, cam(1060, 520, 1050), 'Een lus in het mRNA geeft het sein', 'A loop in the mRNA gives the signal', 'Een haarspeldlus achteraan in het mRNA (SECIS) roept via een eiwit een speciale helper met het tRNA erbij.', 'A hairpin loop near the end of the mRNA (SECIS) calls in, via a protein, a special helper carrying the tRNA.'),
-    ST(9000, cam(720, 480, 1050), 'Het ribosoom komt bij UGA', 'The ribosome reaches UGA', 'Die speciale helper levert het tRNA af in plaats van de gewone. Het anticodon past op UGA.', 'That special helper delivers the tRNA instead of the usual one. The anticodon fits UGA.'),
+    ST(9000, cam(920, 460, 1350), 'Een lus in het mRNA geeft het sein', 'A loop in the mRNA gives the signal', 'Een haarspeldlus achteraan in het mRNA (SECIS) roept via een eiwit een speciale helper met het tRNA erbij.', 'A hairpin loop near the end of the mRNA (SECIS) calls in, via a protein, a special helper carrying the tRNA.'),
+    ST(9000, cam(770, 470, 1150), 'Het ribosoom komt bij UGA', 'The ribosome reaches UGA', 'Die speciale helper levert het tRNA af in plaats van de gewone. Het anticodon past op UGA.', 'That special helper delivers the tRNA instead of the usual one. The anticodon fits UGA.'),
     ST(8500, cam(700, 460, 1050), 'Ingebouwd, en verder lezen', 'Built in, and reading on', 'Selenocysteïne wordt gewoon vastgekoppeld en het ribosoom leest door. Zonder selenium of lus stopt het hier meestal.', 'Selenocysteine is linked on as usual and the ribosome reads on. Without selenium or the loop it usually stops here.'),
     ST(9500, cam(800, 470, 1400), 'UAG in sommige microben', 'UAG in some microbes', 'Sommige archaea en enkele bacteriën lezen UAG als pyrrolysine, een aminozuur gemaakt uit twee lysines.', 'Some archaea and a few bacteria read UAG as pyrrolysine, an amino acid made from two lysines.'),
     ST(9000, FULL, 'Aminozuur 21 en 22', 'Amino acids 21 and 22', 'Beide via een stopcodon. Selenocysteïne: in soorten uit alle drie de takken van het leven. Pyrrolysine: enkele microben.', 'Both via a stop codon. Selenocysteine: in species from all three branches of life. Pyrrolysine: a few microbes.'),
@@ -67,7 +67,7 @@ export default {
       if (op <= .01) return '';
       let s = `<g opacity="${f1(op)}"><path d="M${x - 34},${y} L${x - 34},${y - 110} Q${x - 34},${y - 132} ${x - 12},${y - 138} L${x + 34},${y - 150} L${x + 34},${y - 226} L${x + 12},${y - 226} L${x + 12},${y - 166} L${x - 10},${y - 160} L${x - 10},${y} Z" fill="rgba(255,194,71,.2)" stroke="${C.trna}" stroke-width="3" stroke-linejoin="round"/>`;
       ac.split('').forEach((b, j) => { s += ntb(x - 32 + j * 32, y - 2, b, 28); });
-      if (big) s += txt(x - 37, y - 10, "3'", '#fff', 18, 'end') + txt(x + 52, y + 20, "5'", '#fff', 18, 'start');
+      if (big) s += txt(x - 44, y - 30, "3'", '#fff', 18) + txt(x + 44, y - 30, "5'", '#fff', 18);   // boven de hoeken van het anticodon: los van het buur-tRNA
       if (charge) s += bead(x + 26, y - 248, charge[0], charge[1], 24);
       return s + '</g>';
     }
@@ -92,7 +92,7 @@ export default {
       const sx = 1210;
       s += `<path d="M${sx - 22},${YM + 4} V${YM - 150} a22,22 0 0 1 44,0 V${YM + 4}" stroke="${C.rna}" stroke-width="7" fill="none"/>` +
         [0, 1, 2, 3, 4].map(k => `<line x1="${sx - 18}" y1="${YM - 20 - k * 26}" x2="${sx + 18}" y2="${YM - 20 - k * 26}" stroke="#fff" stroke-width="2" opacity=".7"/>`).join('') +
-        txt(sx + 40, YM - 150, 'SECIS', C.rna, 22, 'start', 800) + txt(990 - shift, YM + 90, "3'-UTR", C.muted, 22, 'start') +
+        txt(sx + 40, YM - 150, 'SECIS', C.rna, 22, 'start', 800) + txt(1040 - shift, YM + 90, "3'-UTR", C.muted, 22, 'start') +
         txt(1390, YM + 8, 'AAAA…', C.rna, 22, 'start', 700) + txt(1530, YM + 8, "3'", C.text, 22, 'start');
       return s + '</g>';
     }
@@ -109,7 +109,7 @@ export default {
           const shift = i === 4 ? CW * ease(sub(p, .45, .75)) : 0;
           mr = mrna(shift, 'UGA', i === 0 ? sub(p, .2, .4) : i === 3 ? 1 : 0);
           rb = ribo(P, i === 0 ? sub(p, 0, .2) : 1);
-          $('se-rA').setAttribute('cx', f1(P)); $('se-rA').setAttribute('cy', f1(YM - 340));
+          $('se-rA').setAttribute('cx', f1(P - 170)); $('se-rA').setAttribute('cy', f1(YM - 285));   // links van de keten, zodat 'Met' vrij blijft
           $('se-cA').setAttribute('cx', f1(A - shift)); $('se-cA').setAttribute('cy', f1(YM + (i === 0 ? 122 : 70)));
           // P-plaats-tRNA met keten (Met-Ala-Cys)
           /* keten: nieuwste aminozuur aan de punt van zijn tRNA (bij het PTC), de oudere door de tunnel van de 60S naar buiten (N-uiteinde voorop) */
@@ -126,7 +126,7 @@ export default {
             const bond = i === 4 ? sub(p, .1, .4) : 0, leave = i === 4 ? sub(p, .45, 1) : 0;
             if (i === 4) {
               // na peptidebinding: keten op Sec-tRNA, oude tRNA → E en weg
-              tr += trna(P - shift - 160 * sub(p, .75, 1), yDock - 200 * sub(p, .75, 1), 'ACA', null, 1 - sub(p, .75, 1));
+              tr += trna(P - shift - 160 * sub(p, .75, 1), yDock - 200 * sub(p, .75, 1), 'ACA', null, 1 - sub(p, .75, .9));   // weg vóór het eindbeeld
               const secBead = ['Sec', SEC_COL];
               if (bond < 1) { tr += trna(A - shift, yDock, 'ACU', secBead, 1); chn += chainAt(P + 26 + (A - P) * bond * .5, yDock - 222 - 0 * bond); }
               else { tr += trna(A - shift, yDock, 'ACU', null, 1); chn += chainAt(A - shift + 26, yDock - 222, secBead); }
@@ -150,7 +150,7 @@ export default {
             if (i === 2) {
               const k2 = ease(sub(p, .4, .75));
               const [x, y] = E2([1450, 200], [1140, YM - 120], k2);
-              ftr += trna(x - 40, y, 'ACU', ['Sec', SEC_COL], sub(p, .35, .45)); fac += `<g opacity="${f1(sub(p, .35, .45))}">${factor(x + 90, y - 150, 150, 34, 'eEFSec·GTP', C.prot2, 1, 17)}</g>`;
+              ftr += trna(x - 40, y, 'ACU', ['Sec', SEC_COL], sub(p, .35, .45)); fac += `<g opacity="${f1(sub(p, .35, .45))}">${factor(x + 96, y - 150, 164, 36, 'eEFSec·GTP', C.prot2, 1, 19)}</g>`;
               ov += `<g opacity="${f1(sub(p, .8, .95))}">${textBox(745, 250, 310, [T2('eEFSec vervangt eEF1A', 'eEFSec replaces eEF1A'), T2('alleen voor Sec-tRNA-Sec', 'only for Sec-tRNA-Sec')], { col: C.prot, fs: 19 })}</g>`;
             }
           }
@@ -166,7 +166,7 @@ export default {
           st.forEach(([x, ch, en], j) => {
             const k = j ? sub(p, .05 + j * .2, .2 + j * .2) : 1;           // eerste tRNA meteen; de volgende staan al vaag klaar
             if (j && k < 1) bio += trna(x, 440, 'ACU', null, .5 * (1 - k));
-            bio += `<g opacity="${f1(k)}">` + trna(x, 440, 'ACU', ch, 1) + (j ? `<path d="M${x - 240},300 h130" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>` + en.split('|').map((ln, q) => txt(x - 172, 250 + q * 22, ln, C.prot, 18, 'middle', 700)).join('') : '') + '</g>';
+            bio += `<g opacity="${f1(k)}">` + trna(x, 440, 'ACU', ch, 1, j === 0) + (j ? `<path d="M${x - 240},300 h130" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>` + en.split('|').map((ln, q) => txt(x - 172, 250 + q * 22, ln, C.prot, 18, 'middle', 700)).join('') : '') + '</g>';
           });
           bio += txt(300, 500, 'tRNA-Sec', C.trna, 22, 'middle', 800) + txt(300, 526, T2('anticodon UCA', 'anticodon UCA'), C.muted, 18);
           bio += `<g opacity="${f1(sub(p, .85, 1))}">${txt(770, 580, T2('selenofosfaat komt van SPS2 (uit selenide + ATP)', 'selenophosphate comes from SPS2 (from selenide + ATP)'), C.muted, 20, 'middle', 600)}</g>`;

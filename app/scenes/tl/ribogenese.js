@@ -4,7 +4,7 @@
  */
 import { C, BASE, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, f1 } from '../../kit.js';
 import { hud, placeHud, textBox, factor } from './_tlkit.js';
-import { kernEnvelop, kernporie, ptsEllips, eiwit } from '../../bio.js';
+import { kernEnvelop, kernporie, ptsEllips, eiwit, ribosoom80S } from '../../bio.js';
 
 const NUC = [560, 460, 470, 390], NO = [500, 430, 265, 215];      // kern en nucleolus (ellipsen)
 const PORE1 = [1020, 380], PORE2 = [1020, 540];
@@ -21,6 +21,7 @@ const COL = { sp: '#6b7894', r40: '#8df0dc', r60: C.rrna };
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 const E2 = (a, b, k) => [lerp(a[0], b[0], k), lerp(a[1], b[1], k)];
 const P40 = [400, 500], P60 = [640, 500];                        // plaats van pre-40S / pre-60S in de nucleolus
+const R80 = ribosoom80S(0, 0, { s: .5, tRNAs: 0, mrna: false });   // rijp 80S (bio.js), gespiegeld getekend: 60S boven, 40S onder
 
 export default {
   id: 'ribogenese',
@@ -56,10 +57,10 @@ export default {
     <g data-node="nucleolus" data-color="${C.rrna}" data-label="${T2('Nucleolus', 'Nucleolus')}">
       <ellipse cx="${ox}" cy="${oy}" rx="${orx}" ry="${ory}" fill="rgba(44,198,168,.08)" stroke="${C.rrna}" stroke-width="2.5" stroke-dasharray="3 7"/>
       ${[[360, 330], [620, 320], [420, 600], [640, 590]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="42" fill="rgba(44,198,168,.14)"/><circle cx="${x}" cy="${y}" r="20" fill="rgba(79,143,247,.18)"/>`).join('')}
-      <circle data-anchor="nucleolus" cx="${ox - 60}" cy="${oy - ory + 20}" r="1" fill="none"/>
+      <circle id="rg-nA" data-anchor="nucleolus" cx="${ox - 60}" cy="${oy - ory + 20}" r="1" fill="none"/>
     </g>
     <g id="rg-lab"></g>
-    <g data-node="polymerasen" data-color="${C.dna}" data-label="${T2('RNA-polymerasen I, II, III', 'RNA polymerases I, II, III')}"><g id="rg-rdna"></g><circle id="rg-pA" data-anchor="polymerasen" r="1" fill="none"/></g>
+    <g data-node="polymerasen" data-color="${C.dna}" data-label="${T2('RNA-polymerase I', 'RNA polymerase I')}"><g id="rg-rdna"></g><circle id="rg-pA" data-anchor="polymerasen" r="1" fill="none"/></g>
     <g data-node="rnastructuur" data-color="${C.rrna}" data-label="rRNA" data-href="../atlas/index.html?id=rrna"><g id="rg-bar"></g><circle id="rg-bA" data-anchor="rnastructuur" r="1" fill="none"/></g>
     <g id="rg-sno"></g>
     <g data-node="ribosoom" data-color="${C.rrna}" data-label="${T2('Ribosoom (80S)', 'Ribosome (80S)')}"><g id="rg-part"></g><circle id="rg-rA" data-anchor="ribosoom" r="1" fill="none"/></g>
@@ -117,10 +118,11 @@ export default {
         // vaste labels (overzicht)
         if (i === 0) {
           const k = sub(p, .1, .3);
-          lab += `<g opacity="${f1(k)}">` + txt(NO[0], NO[1] - NO[3] - 16, 'nucleolus', C.rrna, 30, 'middle', 800) + txt(NUC[0] - 250, NUC[1] + 300, T2('kern (nucleoplasma)', 'nucleus (nucleoplasm)'), '#9cc0ff', 24, 'middle', 700) + txt(1300, 200, T2('cytoplasma', 'cytoplasm'), C.muted, 26, 'middle', 700) + txt(1070, PORE1[1] - 40, T2('kernporie', 'nuclear pore'), C.prot, 24, 'start', 700) + '</g>';
+          lab += `<g opacity="${f1(k)}">` + txt(NO[0], NO[1] - NO[3] - 16, 'nucleolus', C.rrna, 30, 'middle', 800) + txt(NUC[0] - 200, NUC[1] + 250, T2('kern (nucleoplasma)', 'nucleus (nucleoplasm)'), '#9cc0ff', 24, 'middle', 700) + txt(1300, 200, T2('cytoplasma', 'cytoplasm'), C.muted, 26, 'middle', 700) + txt(1070, PORE1[1] - 40, T2('kernporie', 'nuclear pore'), C.prot, 24, 'start', 700) + '</g>';
           lab += `<g opacity="${f1(sub(p, .4, .6))}">` + textBox(1110, 420, 440, [T2('FC: rDNA', 'FC: rDNA'), T2('FC/DFC-grens: transcriptie', 'FC/DFC border: transcription'), T2('DFC: processing', 'DFC: processing'), T2('GC: assemblage', 'GC: assembly')], { title: T2('Lagen van de nucleolus', 'Layers of the nucleolus'), col: C.rrna, fs: 23 }) + '</g>';
         }
         $('rg-lab').innerHTML = lab;
+        $('rg-nA').setAttribute('cx', i === 0 ? '-9999' : f1(NO[0] - 60));   // stap 1 heeft de titel 'nucleolus' al op die plek
         // rDNA-kerstboom (stap 1–2)
         if (i <= 2) {
           const op = i === 0 ? .6 : i === 2 ? 1 - .7 * sub(p, 0, .3) : 1;
@@ -139,8 +141,8 @@ export default {
           $('rg-pA').setAttribute('cx', '215'); $('rg-pA').setAttribute('cy', f1(y - 14));
         } else if (i === 5) {
           // 5S-gen (Pol III) in het nucleoplasma
-          rd += `<g opacity="${f1(sub(p, .3, .45))}"><line x1="560" y1="790" x2="780" y2="790" stroke="${C.dna}" stroke-width="7"/><circle cx="640" cy="790" r="9" fill="${C.prot2}" stroke="#0a1224" stroke-width="2"/>${txt(560, 830, T2('5S-gen (chr 1) · Pol III', '5S gene (chr 1) · Pol III'), C.dna2, 18, 'start', 700)}</g>`;
-          $('rg-pA').setAttribute('cx', '670'); $('rg-pA').setAttribute('cy', '760');
+          rd += `<g opacity="${f1(sub(p, .3, .45))}"><line x1="430" y1="720" x2="650" y2="720" stroke="${C.dna}" stroke-width="7"/><circle cx="510" cy="720" r="9" fill="${C.prot2}" stroke="#0a1224" stroke-width="2"/>${txt(430, 758, T2('5S-gen (chr 1) · Pol III', '5S gene (chr 1) · Pol III'), C.dna2, 18, 'start', 700)}</g>`;
+          hide('rg-pA');                                  // de chip hoort bij Pol I op het rDNA; hier staat 'Pol III' al bij het 5S-gen
         } else hide('rg-pA');
         $('rg-rdna').innerHTML = rd;
         // 47S-balk
@@ -177,10 +179,10 @@ export default {
             const t0 = .05 + k * .05, kk = sub(p, t0, t0 + .35), path = kk < .5 ? E2([1400 - k * 20, 250 + k * 50], [PORE1[0] + (k % 2) * 0, (k % 2 ? PORE2 : PORE1)[1]], kk * 2) : E2((k % 2 ? PORE2 : PORE1), k % 2 ? p60 : p40, (kk - .5) * 2);
             if (kk > 0 && kk < 1) part += eiwit(path[0], path[1], 9, 8, C.prot, { seed: 20 + k });
           }
-          const k5 = ease(sub(p, .5, .85)), f5 = E2([700, 770], [p60[0] + 10, p60[1] - 20], k5);
+          const k5 = ease(sub(p, .5, .85)), f5 = E2([560, 710], [p60[0] + 10, p60[1] - 20], k5);
           part += `<g opacity="${f1(sub(p, .45, .5))}"><path d="M${f1(f5[0] - 10)},${f1(f5[1] + 18)} v-26 a10,10 0 0 1 20,0 v26" stroke="#c3f06b" stroke-width="6" fill="none" stroke-linecap="round"/></g>`;
           ov += `<g opacity="${f1(sub(p, .1, .25))}">` + txt(1170, 200, T2('r-eiwitten uit het cytoplasma', 'r-proteins from the cytoplasm'), C.prot, 22, 'middle', 700) + '</g>' +
-            `<g opacity="${f1(sub(p, .6, .75))}">` + txt(p60[0] + 120, p60[1] + 50, T2('5S rRNA (+ uL5, uL18)', '5S rRNA (+ uL5, uL18)'), '#c3f06b', 20, 'start', 700) + '</g>';
+            `<g opacity="${f1(sub(p, .6, .75))}">` + txt(p60[0], p60[1] + 66, T2('5S rRNA (+ uL5, uL18)', '5S rRNA (+ uL5, uL18)'), '#c3f06b', 20, 'middle', 700) + '</g>';
         }
         if (i === 6) {
           const k6 = ease(sub(p, .1, .55)), k4 = ease(sub(p, .4, .85));
@@ -192,13 +194,15 @@ export default {
         }
         if (i === 7) {
           const join = ease(sub(p, .55, .85));
-          const a40 = E2([1250, 350], [1240, 534], join), a60 = E2([1260, 590], [1240, 478], join);   // 60S boven, 40S onder, het mRNA ertussen
-          part += large(a60[0], a60[1], 1, fac, join < .5 ? T2('pre-60S → 60S', 'pre-60S → 60S') : '', true) + small(a40[0], a40[1], 1, fac, join < .5 ? (sub(p, .2, .4) > .5 ? '18S-E → 18S' : '18S-E') : '');
+          const a40 = E2([1250, 350], [1235, 524], join), a60 = E2([1260, 590], [1240, 474], join);   // 60S boven, 40S onder, het mRNA ertussen
+          const mk = sub(p, .8, .92);                       // de losse helften gaan over in één 80S: twee eenheden tegen elkaar, het mRNA ertussen
+          part += `<g opacity="${f1(1 - mk)}">` + large(a60[0], a60[1], 1, fac, join < .5 ? T2('pre-60S → 60S', 'pre-60S → 60S') : '', true) + small(a40[0], a40[1], 1, fac, join < .5 ? (sub(p, .2, .4) > .5 ? '18S-E → 18S' : '18S-E') : '') + '</g>';
+          if (mk > .01) part += `<g opacity="${f1(mk)}" transform="translate(1240 511) scale(1 -1) translate(0 ${f1(-R80.mrnaY)})">${R80.svg}</g>`;
           { const off = ease(sub(p, .15, .45)), fo = 1 - sub(p, .45, .6);   // rijpingsfactoren (klein t.o.v. de subeenheden) zitten er eerst nog op en gaan er dan af
             const fz = (x, y, lab, sd, an) => eiwit(x, y, 13, 10, C.prot2, { seed: sd }) + txt(x + (an === 'end' ? -20 : 20), y + 7, lab, '#c9bfff', 21, an, 700);
             ov += `<g opacity="${f1(fo)}">` + fz(lerp(1282, 1380, off), lerp(362, 320, off), 'NOB1', 31, 'start') +
               fz(lerp(1282, 1400, off), lerp(612, 660, off), 'eIF6', 32, 'start') + fz(lerp(1226, 1120, off), lerp(616, 680, off), 'NMD3', 33, 'end') + '</g>'; }
-          tl += `<g><line x1="1066" y1="511" x2="1500" y2="511" stroke="${C.rna}" stroke-width="7"/>${[...'GCCACCAUGGCUUCAGGAUCUGAAUAA'].map((b, k) => { const bx = 1078 + k * 16; return bx > 1192 && bx < 1288 ? '' : `<rect x="${bx - 6}" y="514" width="12" height="16" rx="3" fill="${BASE[b]}"/>`; }).join('')}${txt(1500, 494, "mRNA", C.rna, 22, "end", 700)}${txt(1066, 545, "5'", C.rna, 20, 'start', 700)}${txt(1500, 545, "3'", C.rna, 20, 'end', 700)}</g>`;
+          tl += `<g><line x1="1066" y1="511" x2="1500" y2="511" stroke="${C.rna}" stroke-width="7"/>${[...'GCCACCAUGGCUUCAGGAUCUGAAUAA'].map((b, k) => { const bx = 1078 + k * 16; return `<rect x="${bx - 6}" y="514" width="12" height="16" rx="3" fill="${BASE[b]}"/>`; }).join('')}${txt(1500, 494, "mRNA", C.rna, 22, "end", 700)}${txt(1066, 545, "5'", C.rna, 20, 'start', 700)}${txt(1500, 545, "3'", C.rna, 20, 'end', 700)}</g>`;
           ov += `<g opacity="${f1(sub(p, .85, .95))}">` + txt(1240, 650, T2('80S: klaar voor translatie', '80S: ready for translation'), '#fff', 24, 'middle', 800) + '</g>';
           $('rg-tA').setAttribute('cx', '1100'); $('rg-tA').setAttribute('cy', '505');
           $('rg-rA').setAttribute('cx', f1(a60[0])); $('rg-rA').setAttribute('cy', f1(a60[1] - 70));

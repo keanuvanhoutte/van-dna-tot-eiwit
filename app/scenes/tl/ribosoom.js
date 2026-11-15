@@ -28,6 +28,7 @@ const K = {
   pal: ['sub', 'sub', 'rp', 's40', 's60', 'sub', 'ptc', 'sub', 'sub'],
   op: [1, 1, 1, 1, 1, .2, .45, .3, 1],
   trna: [0, 0, 0, 0, 0, 1, 1, .8, 0],
+  mrna: [0, 0, 0, 1, 0, 1, 1, .8, 0],  // stap 4 (de kleine helft houdt het mRNA vast): mRNA zichtbaar, nog zonder tRNA's
   pop: [1, 1, .45, .5, .5, 1, .6, 1, 1],
   pos: [[620, 470, 1], [620, 470, 1], [640, 450, .78], [620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [340, 470, .72]],
 };
@@ -131,7 +132,7 @@ export default {
           const e2 = $(id); e2.setAttribute('d', line(T)); e2.setAttribute('stroke', cl); e2.setAttribute('stroke-width', f1(S * 2.2));
         }
         $('rb-tg').setAttribute('opacity', f1(trOp));
-        const m = $('rb-mrna'); m.setAttribute('d', line(P.mrna)); m.setAttribute('stroke', C.rna); m.setAttribute('stroke-width', f1(S * 4.5)); $('rb-mg').setAttribute('opacity', f1(trOp));
+        const m = $('rb-mrna'); m.setAttribute('d', line(P.mrna)); m.setAttribute('stroke', C.rna); m.setAttribute('stroke-width', f1(S * 4.5)); $('rb-mg').setAttribute('opacity', f1(stepVal(K.mrna, s)));
         const L2 = k => proj(LM[k]);
         const [tx, ty] = L2('elA'); $('rb-tAnc').setAttribute('cx', f1(tx + 40)); $('rb-tAnc').setAttribute('cy', f1(ty - 70));
         const mEnd = proj(P.mrna[P.mrna.length - 1]); $('rb-mA').setAttribute('cx', f1(mEnd[0] + 30)); $('rb-mA').setAttribute('cy', f1(mEnd[1] + 16));

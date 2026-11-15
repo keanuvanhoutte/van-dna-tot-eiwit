@@ -99,6 +99,15 @@ export default {
       if (aaChar) s += bead(x + 22, y - 222, aaChar, 21);
       return s + '</g>';
     }
+    /* eRF1 bootst een tRNA na (Song et al. 2000, Cell 100:311): domein N op het stopcodon (zoals de anticodonarm),
+       domein M reikt met het GGQ-motief tot in het actieve centrum (zoals de acceptorarm), domein C aan de zijkant */
+    function eRF1(x, y) {
+      return `<path d="M${x - 4},${y - 26} L${x - 10},${y - 118} L${x - 66},${y - 196}" stroke="#0b1224" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" fill="none"/>` +
+        `<path d="M${x - 4},${y - 26} L${x - 10},${y - 118} L${x - 66},${y - 196}" stroke="${C.prot}" stroke-opacity=".8" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" fill="none"/>` +
+        eiwit(x + 44, y - 120, 36, 28, C.prot, { seed: 33, bumps: .08 }) + eiwit(x - 2, y - 24, 34, 30, C.prot, { seed: 31, bumps: .08 }) +
+        txt(x + 44, y - 113, 'eRF1', '#fff', 19) + txt(x - 2, y - 18, 'N', '#fff', 16) +
+        txt(x - 50, y - 214, 'GGQ', '#fff', 14, 'start', 700);
+    }
     function bead(x, y, a, r = 18) {
       return `<circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${CLASSCOL[AACLASS[a]] ?? '#aaa'}" stroke="#0a1224" stroke-width="2"/>` +
         `<text x="${f1(x)}" y="${f1(y + r * .3)}" font-size="${Math.round(r * .76)}" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="700">${THREE[a]}</text>`;
@@ -129,7 +138,8 @@ export default {
       $('tl-cap').innerHTML = `<circle cx="${f1(capX)}" cy="${YM}" r="23" fill="${C.cap}" stroke="${C.rna}" stroke-width="2"/><text x="${f1(capX)}" y="${YM + 5}" font-size="15" text-anchor="middle" fill="#3a1a05" font-family="Inter" font-weight="700" opacity="${f1(lo)}">m⁷G</text>` + txt(capX, YM - 34, "5'", C.text, f1(18 + 40 * ov));
       const aS = ntX(MRNA.length - POLYA.length, c, v, scan) - NT / 2, aE = x1;
       $('tl-polya').innerHTML = `<rect x="${f1(aS)}" y="${YM - 16}" width="${f1(aE - aS)}" height="70" fill="transparent"/>` + (lo > .01 ? `<g opacity="${f1(lo)}"><path d="M${f1(aS + 4)},${YM + 76} v10 H${f1(aE - 4)} v-10" stroke="${C.rna}" stroke-width="2" fill="none"/>` +
-        txt((aS + aE) / 2, YM + 114, T2('poly(A)-staart (verkort)', 'poly(A) tail (shortened)'), C.rna, 20) + '</g>' : '');
+        (lab3 > .01 ? `<g opacity="${f1(lab3)}">${txt(aS + 8, YM + 112, 'poly(A)', C.rna, 20, 'start', 700)}</g>` :   // stopstappen: het midden van de staart valt buiten beeld
+          txt((aS + aE) / 2, YM + 114, T2('poly(A)-staart (verkort)', 'poly(A) tail (shortened)'), C.rna, 20)) + '</g>' : '');
       $('tl-polyaA').setAttribute('cx', f1((aS + aE) / 2)); $('tl-polyaA').setAttribute('cy', YM + 150 + 60 * ov);
       // UTR-labels (alleen in de stappen waar ze ertoe doen)
       const u5 = (ntX(0, c, v, scan) + ntX(S0 - 1, c, v, scan)) / 2, u3 = (ntX(S0 + CDS.length, c, v, scan) + ntX(MRNA.length - POLYA.length - 1, c, v, scan)) / 2;
@@ -191,8 +201,8 @@ export default {
         if (step <= 4) phase = 'init';
         else if (step <= 9) { c = 0; const [a, b] = CYC[step - 5]; u = lerp(a, b, p); }
         else if (step === 10) { c = 1; u = p; }
-        else if (step === 11) { const k = Math.min(8.999, p * 9); c = 2 + Math.floor(k); u = k - Math.floor(k); }
-        else phase = 'term';
+        else if (step === 11) { const k = Math.min(8.999, sub(p, 0, .94) * 9); c = 2 + Math.floor(k); u = k - Math.floor(k); }
+        else phase = 'term';                              // stap 12 (versneld) eindigt in rust: tRNA's op hun plaats
         if (phase === 'term') c = STOP - 1;
 
         const v = phase === 'elong' ? ease(sub(u, .6, .85)) : 0;
@@ -277,8 +287,7 @@ export default {
           const rin = step === 12 ? ease(sub(p, 0, .5)) : 1;
           const rx = lerp(SITE.A + 380, SITE.A, rin), ry = lerp(yDock - 420, yDock, rin);
           const rop = step === 14 ? 1 - sub(p, 0, .4) : 1;
-          rf = (rop <= .01 ? '' : `<g opacity="${f1(rop)}">` + eiwit(rx, ry - 98, 34, 96, C.prot, { seed: 31, bumps: .07 }) +
-            txt(rx, ry - 90, 'eRF1', '#fff', 20) + '</g>') + factor(rx + 100, ry - 170, 136, 34, 'eRF3·GTP', C.prot2, step === 12 ? sub(p, .1, .4) * (1 - sub(p, .75, 1)) : 0, 18);
+          rf = (rop <= .01 ? '' : `<g opacity="${f1(rop)}">` + eRF1(rx, ry) + '</g>') + factor(rx + 100, ry - 170, 136, 34, 'eRF3·GTP', C.prot2, step === 12 ? sub(p, .1, .4) * (1 - sub(p, .75, 1)) : 0, 18);
           chain = chainSVG([SITE.P + 22, yDock - 222], c + 1, rel);
           if (step === 14) abce += factor(SITE.P, 505, 110, 38, 'ABCE1', C.prot2, sub(p, .2, .45), 22);
         }

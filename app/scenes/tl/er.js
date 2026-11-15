@@ -15,7 +15,11 @@ const MY = (MT + MB) / 2, MW = MB - MT;                   // midden en dikte van
 /* 80S-ribosoom (bio.js): 40S boven met het mRNA, tRNA's tot het PTC, tunnel door de 60S; uitgang op (0,0) → verschoven naar de tunneluitgang */
 const RS = 1.1, R80 = ribosoom80S(0, 0, { s: RS });
 const FREE = [600, 400], DOCK = [PORE, 586];              // uitgang van de tunnel: vrij / gedokt
-const SRA = [985, 572];                                   // SRP-receptor (SRα boven SRβ)
+const SRA = [1080, 572];                                  // SRP-receptor (SRα boven SRβ)
+/* SRP54 zit aan de tunneluitgang (tegen uL23/uL29) en houdt het signaal als helix in zijn groef (Halic et al. 2004; Janda et al. 2010) */
+const S54 = [140, 36];                                    // SRP54 t.o.v. de tunneluitgang
+const RECEP = [SRA[0] - 75 - S54[0], SRA[1] - 67 - S54[1]];   // uitgang wanneer SRP54 op SRα zit: ribosoom bij het membraan, nog níet op Sec61
+const SL7 = '#ff9ecf';                                    // 7SL-RNA (eigen kleur, niet die van het mRNA)
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 const E2 = (a, b, k) => [lerp(a[0], b[0], k), lerp(a[1], b[1], k)];
 /* drieletterige namen op de aminozuren alleen in stappen waar ze leesbaar zijn (ver uitgezoomd: gekleurde bolletjes) */
@@ -42,7 +46,7 @@ export default {
   title: { nl: 'Ruw ER & SRP-route', en: 'Rough ER & SRP pathway' },
   scale: '≈ 30 nm', time: { nl: 'seconden tot minuten (vertraagd)', en: 'seconds to minutes (slowed down)' },
   org: { nl: 'mens (prepro-albumine, levercel)', en: 'human (prepro-albumin, liver cell)' },
-  legend: [[C.rrna, { nl: 'ribosoom', en: 'ribosome' }], [C.rna, 'mRNA / 7SL-RNA'], [C.prot, { nl: 'SRP54, SRP-receptor, Sec61, enzymen', en: 'SRP54, SRP receptor, Sec61, enzymes' }], [C.mem, { nl: 'ER-membraan', en: 'ER membrane' }], ['#7fdc6a', { nl: 'hydrofoob', en: 'hydrophobic' }], ['#4f8ff7', { nl: 'positief', en: 'positive' }], ['#5fd3e6', { nl: 'polair', en: 'polar' }]],
+  legend: [[C.rrna, { nl: 'ribosoom', en: 'ribosome' }], [C.rna, 'mRNA'], [SL7, { nl: '7SL-RNA (in SRP)', en: '7SL RNA (in SRP)' }], [C.prot, { nl: 'SRP54, SRP-receptor, Sec61, enzymen', en: 'SRP54, SRP receptor, Sec61, enzymes' }], [C.mem, { nl: 'ER-membraan', en: 'ER membrane' }], ['#7fdc6a', { nl: 'hydrofoob', en: 'hydrophobic' }], ['#4f8ff7', { nl: 'positief', en: 'positive' }], ['#5fd3e6', { nl: 'polair', en: 'polar' }]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Voorbeeld: humaan serumalbumine (UniProt P02768). Signaalpeptide MKWVTFISLLFLFSSAYS (1–18) wordt in het ER geknipt; het propeptide RGVFRR wordt later, na het ER, verwijderd (waarschijnlijk door furine).</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Example: human serum albumin (UniProt P02768). The signal peptide MKWVTFISLLFLFSSAYS (1–18) is cleaved in the ER; the propeptide RGVFRR is removed later, after the ER (probably by furin).</p>' },
@@ -55,7 +59,7 @@ export default {
     ST(8500, cam(700, 360, 1100), 'Het label wordt herkend', 'The label is recognised', 'Een herkenningsdeeltje (SRP) grijpt het label vast en remt de aanmaak af, zodat er tijd is om het ER te bereiken.', 'A recognition particle (SRP) grabs the label and slows production, giving time to reach the ER.'),
     ST(8500, cam(760, 470, 1250), 'Op weg naar het ER', 'On the way to the ER', 'Ribosoom en herkenningsdeeltje hechten aan een ontvanger (receptor) in het ER-membraan.', 'Ribosome and recognition particle dock onto a receiver (receptor) in the ER membrane.'),
     ST(9000, cam(820, 560, 950), 'Over naar het kanaal', 'Handed over to the channel', 'Het deeltje laat los. Het ribosoom gaat op een kanaal in het ER-membraan zitten; het label opent dat kanaal.', 'The particle lets go. The ribosome sits down on a channel in the ER membrane; the label opens that channel.'),
-    ST(9000, cam(820, 640, 950), 'De keten schuift het ER in', 'The chain threads into the ER', 'De aanmaak gaat verder: de groeiende keten schuift meteen door het kanaal naar de binnenkant van het ER.', 'Production resumes: the growing chain threads straight through the channel into the inside of the ER.'),
+    ST(9000, cam(840, 622, 1040), 'De keten schuift het ER in', 'The chain threads into the ER', 'De aanmaak gaat verder: de groeiende keten schuift meteen door het kanaal naar de binnenkant van het ER.', 'Production resumes: the growing chain threads straight through the channel into the inside of the ER.'),
     ST(8500, cam(820, 660, 950), 'Het label wordt afgeknipt', 'The label is cut off', 'Een knipenzym binnen in het ER knipt het adreslabel af. Dat blijft in het membraan en wordt afgebroken.', 'A cutting enzyme inside the ER cuts off the address label. It stays in the membrane and is broken down.'),
     ST(8500, cam(860, 640, 1100), 'Vooruitblik: suikers erop', 'Preview: adding sugars', 'Een enzym kan een kant-en-klare suikerboom op bepaalde plekken zetten. Albumine heeft zo’n plek niet.', 'An enzyme can put a ready-made sugar tree on certain spots. Albumin has no such spot.'),
     ST(9500, cam(1060, 560, 1150), 'Eiwitten die in het membraan blijven', 'Proteins that stay in the membrane', 'Een waterafstotend stuk dat niet geknipt wordt, glipt zijdelings uit het kanaal en blijft in het membraan.', 'A water-repelling stretch that is not cut off slips sideways out of the channel and stays stuck in the membrane.'),
@@ -71,7 +75,7 @@ export default {
     <g id="er-sec61"></g>
     <g data-node="ribosoom" data-color="${C.rrna}" data-label="${T2('Ribosoom', 'Ribosome')}"><g id="er-ribo"></g><circle id="er-rA" data-anchor="ribosoom" r="1" fill="none"/></g>
     <g data-node="vouwing" data-color="${C.chain}" data-nolabel><g id="er-chain"></g></g>
-    <g data-node="rnastructuur" data-color="${C.rna}" data-label="${T2('SRP (7SL-RNA + eiwitten)', 'SRP (7SL RNA + proteins)')}"><g id="er-srp"></g><circle id="er-sA" data-anchor="rnastructuur" r="1" fill="none"/></g>
+    <g data-node="rnastructuur" data-color="${SL7}" data-label="${T2('SRP (7SL-RNA + eiwitten)', 'SRP (7SL RNA + proteins)')}"><g id="er-srp"></g><circle id="er-sA" data-anchor="rnastructuur" r="1" fill="none"/></g>
     <g data-node="ptm" data-color="${C.prot3}" data-nolabel><g id="er-spc"></g></g>
     <g data-node="glyco" data-color="#4f8ff7" data-label="${T2('Glycosylering', 'Glycosylation')}"><g id="er-ost"></g><circle id="er-gA" data-anchor="glyco" data-pos="below" r="1" fill="none"/></g>
     <g id="er-ov"></g>
@@ -109,6 +113,12 @@ export default {
         const pts = along(path, m, 30);                   // pts[0] = residu m (bij de uitgang)
         return pts.reverse();
       }
+      if (state.k === 'srp') {                          // signaal als helix in de groef van SRP54, vlak bij de tunneluitgang
+        const [ex, ey] = state.exit, out = [], A = [ex + 198, ey - 36], B = [ex + 92, ey + 2];
+        for (let j = 0; j < Math.min(m, NSIG); j++) { const u = j / (NSIG - 1), w = (j % 2 ? 4 : -4); out.push([lerp(A[0], B[0], u) + .34 * w, lerp(A[1], B[1], u) + .94 * w]); }
+        for (let j = NSIG; j < m; j++) { const u = (j - NSIG + 1) / (m - NSIG + 1); out.push([lerp(B[0], ex + 10, u), lerp(B[1], ey + 8, u)]); }
+        return out;
+      }
       // gedokt: signaal als helix in de laterale poort, rest als lus in het lumen
       const out = [];
       for (let i = 1; i <= Math.min(m, NSIG); i++) out.push([GATE + (i % 2) * 8 - 4, MT - 22 + (i - 1) * 6.6]);
@@ -131,13 +141,14 @@ export default {
       update(t, s) {
         placeHud(svg, 'er-hud', .015, .105, STEPS[s.step]?.cam);
         const { step: i, p } = s;
-        const gA = i === 7 ? [420, 850] : i === 8 ? [700, 800] : [330, MB + 130];
+        const gA = i === 7 ? [420, 850] : i === 8 ? [700, 800] : i === 5 ? [520, 770] : [330, MB + 130];
         $('er-golgiA').setAttribute('cx', gA[0]); $('er-golgiA').setAttribute('cy', gA[1]);
         let rb = '', ch = '', srp = '', ost = '', spc = '', ov = '', lab = '';
         // positie van het ribosoom
-        let exit = FREE;
-        if (i === 3) exit = E2(FREE, DOCK, ease(sub(p, .1, .75)));
-        if (i >= 4) exit = DOCK;
+        let exit = FREE;                                  // stap 4: eerst naar de SRP-receptor; stap 5: pas dan op Sec61
+        if (i === 3) exit = E2(FREE, RECEP, ease(sub(p, .1, .75)));
+        if (i === 4) exit = E2(RECEP, DOCK, ease(sub(p, .1, .5)));
+        if (i >= 5) exit = DOCK;
         const showRibo = i <= 7 ? 1 : 1 - sub(p, 0, .2);
         // aantal residuen buiten de tunnel
         const m = i === 0 ? Math.round(lerp(0, 8, sub(p, .3, 1))) : i === 1 ? Math.round(lerp(8, 20, sub(p, 0, .7))) : i <= 3 ? 20 + (i === 3 ? 1 : 0) :
@@ -145,7 +156,7 @@ export default {
         const pause = i === 2 ? sub(p, .5, .7) : i === 3 ? 1 : i === 4 ? 1 - sub(p, .3, .5) : 0;
         if (showRibo > .01) rb = `<g opacity="${f1(showRibo)}">${ribo(exit[0], exit[1], pause, m > 0)}</g>`;
         $('er-rA').setAttribute('cx', showRibo > .5 ? f1(exit[0] - 100) : '-9999'); $('er-rA').setAttribute('cy', f1(exit[1] - 260));
-        const gate = i === 4 ? sub(p, .45, .75) : i >= 5 ? 1 : 0, [xl, xr] = secX(gate);
+        const gate = i === 4 ? sub(p, .3, .55) : i >= 5 ? 1 : 0, [xl, xr] = secX(gate);
         const gaten = [[xl - SW - 1, xr + SW + 1]]; if (i < 8 || p < .1) gaten.push([SRA[0] - 9, SRA[0] + 9]);
         if (i === 6) gaten.push([GATE + 62, GATE + 78]);
         if (i === 7) gaten.push([643, 687]);
@@ -154,9 +165,11 @@ export default {
         $('er-sec61').innerHTML = sec61(gate);
         // keten
         let pos;
-        const free = chainPos({ k: 'free', exit }, m);
-        if (i <= 3) pos = free;
-        else if (i === 4) { const d = chainPos({ k: 'dock' }, m), f = chainPos({ k: 'free', exit }, m), k = ease(sub(p, .35, .8)); pos = f.map((q, j) => E2(q, d[j] ?? q, k)); }
+        const kS = i === 2 ? ease(sub(p, .35, .7)) : i === 3 || (i === 4 && p < .5) ? 1 : 0;   // keten zit in SRP54
+        if (i <= 1) pos = chainPos({ k: 'free', exit }, m);
+        else if (i === 2) { const f = chainPos({ k: 'free', exit }, m), r = chainPos({ k: 'srp', exit }, m); pos = f.map((q, j) => E2(q, r[j], kS)); }
+        else if (i === 3) pos = chainPos({ k: 'srp', exit }, m);
+        else if (i === 4) { const d = chainPos({ k: 'dock' }, m), r = chainPos({ k: 'srp', exit: RECEP }, m), k = ease(sub(p, .1, .5)); pos = r.map((q, j) => E2(q ?? d[j], d[j] ?? q, k)); }
         else if (i === 5) pos = chainPos({ k: 'dock' }, m);
         else if (i === 6) { const d = chainPos({ k: 'dock' }, m), c = chainPos({ k: 'cut' }, m), k = ease(sub(p, .45, .9)); pos = d.map((q, j) => j < NSIG ? q : E2(q, c[j], k)); }
         else pos = chainPos({ k: 'cut' }, m);
@@ -170,8 +183,9 @@ export default {
           ch += `<g opacity="${f1(showRibo)}">${line}`;
           if (i >= 4 && i <= 6) ch += `<rect x="${GATE - 19}" y="${MT - 34}" width="38" height="${17 * 6.6 + 24}" rx="17" fill="rgba(127,220,106,.18)" stroke="${C.chain}" stroke-width="2" opacity="${f1(sigOp * (i === 4 ? sub(p, .6, .8) : 1))}"/>`;
           const lo = i > 0 && LET[i] !== LET[i - 1] ? lerp(LET[i - 1], LET[i], sub(p, 0, .2)) : LET[i];
-          pos.forEach((q, j) => { const o = j < NSIG ? sigOp : 1, inGate = i >= 4 && j < NSIG; if (o > .01) ch += `<g opacity="${f1(o)}">${bead(q[0], q[1], SEQ[j], inGate ? 11 : i === 1 || i === 2 ? 15 : 14, inGate ? 0 : lo)}</g>`; });
-          if (i <= 3 && pos.length) ch += txt(pos[0][0] + 8, pos[0][1] - 20, 'N', '#fff', 20, 'middle', 800);
+          const kB = i === 4 ? 1 - sub(p, .5, .9) : kS;                  // compacte bolletjes zonder letters zodra het signaal een helix is
+          pos.forEach((q, j) => { const o = j < NSIG ? sigOp : 1, inGate = i >= 4 && j < NSIG, r0 = i === 1 || i === 2 ? 15 : 14; if (o > .01) ch += `<g opacity="${f1(o)}">${bead(q[0], q[1], SEQ[j], inGate ? 11 : lerp(r0, 11, kB), inGate ? 0 : lo * (1 - kB))}</g>`; });
+          if (i <= 3 && pos.length) ch += txt(pos[0][0] + (kS > .5 ? -6 : 8), pos[0][1] - 20, 'N', '#fff', 20, 'middle', 800);
           ch += '</g>';
         }
         $('er-chain').innerHTML = ch;
@@ -184,29 +198,29 @@ export default {
         $('er-lab').innerHTML = lab;
         // SRP
         if (i >= 2 && i <= 4) {
-          const k = i === 2 ? ease(sub(p, .05, .5)) : 1, rel = i === 4 ? ease(sub(p, .3, .7)) : 0;
-          const core = pos.slice(3, 13), cxh = core.reduce((a, q) => a + q[0], 0) / core.length, cyh = core.reduce((a, q) => a + q[1], 0) / core.length;
-          const bind = E2([cxh + 260, cyh - 220], [cxh + 30, cyh + 10], k);
-          const off = [rel * 160, -rel * 120];
-          const b54 = [bind[0] + off[0], bind[1] + off[1]], alu = [exit[0] + 128 * RS + off[0], exit[1] - 150 * RS + off[1]];   // Alu-domein in de spleet waar elongatiefactoren binden
-          const srpOp = i === 2 ? sub(p, 0, .15) : i === 3 ? 1 : 1 - sub(p, .6, .9);
+          // SRP als één geheel: SRP54 aan de tunneluitgang, de 7SL-RNA-staaf langs de 60S, het Alu-domein in de spleet tussen de eenheden
+          const k = i === 2 ? ease(sub(p, .05, .45)) : 1, rel = i === 4 ? ease(sub(p, .45, .85)) : 0;
+          const base = i === 4 ? RECEP : exit;              // in stap 5 blijft SRP bij de receptor; het ribosoom schuift naar Sec61
+          const off = [(1 - k) * 300 + rel * 140, -(1 - k) * 220 - rel * 160];
+          const b54 = [base[0] + S54[0] + off[0], base[1] + S54[1] + off[1]], alu = [base[0] + 141 + off[0], base[1] - 165 + off[1]];
+          const srpOp = i === 2 ? sub(p, 0, .15) : i === 3 ? 1 : 1 - sub(p, .45, .8);
           srp += `<g opacity="${f1(srpOp)}">` +
-            `<path d="M${f1(b54[0])},${f1(b54[1])} C${f1(b54[0] + 170)},${f1(b54[1] - 60)} ${f1(alu[0] + 200)},${f1(alu[1] + 60)} ${f1(alu[0])},${f1(alu[1])}" stroke="${C.rna}" stroke-width="10" fill="none" stroke-linecap="round"/>` +
-            eiwit(b54[0], b54[1], 50, 30, C.prot, { seed: 54, label: 'SRP54', fs: 18 }) +
+            `<path d="M${f1(b54[0])},${f1(b54[1])} C${f1(b54[0] + 175)},${f1(b54[1] - 70)} ${f1(alu[0] + 130)},${f1(alu[1] + 40)} ${f1(alu[0])},${f1(alu[1])}" stroke="${SL7}" stroke-width="10" fill="none" stroke-linecap="round"/>` +
+            eiwit(b54[0], b54[1], 62, 28, C.prot, { seed: 54, label: 'SRP54', fs: 18 }) +
             eiwit(alu[0], alu[1], 30, 19, C.prot3, { seed: 14, label: 'Alu', fs: 15 }) +
-            (i === 3 || (i === 4 && p < .4) ? txt(b54[0], b54[1] - 42, 'GTP', '#ffe08a', 16, 'middle', 700) : '') + '</g>';
-          $('er-sA').setAttribute('cx', f1(b54[0] + 150)); $('er-sA').setAttribute('cy', f1(b54[1] - 90));
+            (i === 3 || (i === 4 && p < .45) ? txt(b54[0] - 20, b54[1] + 48, 'GTP', '#ffe08a', 16, 'middle', 700) : '') + '</g>';
+          $('er-sA').setAttribute('cx', f1(alu[0] + 150)); $('er-sA').setAttribute('cy', f1(alu[1] - 30));
         } else hide('er-sA');
         // SRP-receptor
-        srp += `<g opacity="${f1(i === 0 ? sub(p, .1, .3) : i === 8 ? 1 - sub(p, 0, .2) : 1)}">${tmHelix(SRA[0], MT - 6, MB + 6, C.prot2, 1, 15)}${eiwit(SRA[0] + 4, MT - 14, 20, 12, C.prot2, { seed: 33 })}${eiwit(SRA[0], SRA[1] - 34, 44, 26, C.prot2, { seed: 32, label: 'SRα', fs: 17 })}${i >= 3 && i <= 4 ? txt(SRA[0] + 60, SRA[1] - 28, i === 4 && p > .4 ? 'GDP' : 'GTP', '#ffe08a', 16, 'start', 700) : ''}${i >= 3 ? txt(SRA[0] + 22, MB + 22, 'SRβ', C.muted, 15, 'start', 700) : ''}</g>`;
+        srp += `<g opacity="${f1(i === 0 ? sub(p, .1, .3) : i === 8 ? 1 - sub(p, 0, .2) : 1)}">${tmHelix(SRA[0], MT - 6, MB + 6, C.prot2, 1, 15)}${eiwit(SRA[0] + 4, MT - 14, 20, 12, C.prot2, { seed: 33 })}${eiwit(SRA[0], SRA[1] - 34, 44, 26, C.prot2, { seed: 32, label: 'SRα', fs: 17 })}${i >= 3 && i <= 4 ? txt(SRA[0] + 60, SRA[1] - 28, i === 4 && p > .45 ? 'GDP' : 'GTP', '#ffe08a', 16, 'start', 700) : ''}${i >= 3 ? txt(SRA[0] + 22, MB + 22, 'SRβ', C.muted, 15, 'start', 700) : ''}</g>`;
         $('er-srp').innerHTML = srp;
         // signaalpeptidase, OST
         if (i === 6) {
           const k = sub(p, .05, .25), flash = sub(p, .35, .5);
           spc += `<g opacity="${f1(k)}">${tmHelix(GATE + 70, MT - 4, MB + 4, C.prot3, 1, 14)}${eiwit(GATE + 66, MB + 38, 48, 26, C.prot3, { seed: 21, label: 'SPC', fs: 18 })}${txt(GATE + 122, MB + 44, T2('signaalpeptidase', 'signal peptidase'), C.prot, 18, 'start', 700)}</g>`;
-          if (flash > 0 && flash < 1) spc += `<circle cx="${GATE}" cy="${MT + 98}" r=""${f1(16 + 30 * flash)}" fill="none" stroke="#fff" stroke-width="3" opacity="${f1(1 - flash)}"/>`;
-          ov += `<g opacity="${f1(sub(p, .45, .6))}">${txt(GATE - 34, MT + 108, '✂', '#fff', 30, 'middle', 800)}</g>`;
-          ov += `<g opacity="${f1(sub(p, .75, .9))}">${txt(850, 905, T2('N-terminus van pro-albumine: RGVFRR-DAHK…', 'N terminus of pro-albumin: RGVFRR-DAHK…'), '#fff', 20, 'start', 700)}</g>`;
+          if (flash > 0 && flash < 1) spc += `<circle cx="${GATE}" cy="${MT + 98}" r="${f1(16 + 30 * flash)}" fill="none" stroke="#fff" stroke-width="3" opacity="${f1(1 - flash)}"/>`;
+          ov += `<g opacity="${f1(sub(p, .45, .6))}">${txt(GATE - 66, MT + 108, '✂', '#fff', 30, 'middle', 800)}</g>`;
+          ov += `<g opacity="${f1(sub(p, .75, .9))}">${txt(1270, 905, T2('N-terminus van pro-albumine: RGVFRR-DAHK…', 'N terminus of pro-albumin: RGVFRR-DAHK…'), '#fff', 20, 'end', 700)}</g>`;
         }
         if (i === 7) {
           const k = sub(p, .05, .25);
