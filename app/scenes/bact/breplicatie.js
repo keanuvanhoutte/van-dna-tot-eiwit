@@ -4,7 +4,7 @@ import { K, prot, panel, arcPath, onCircle, rodCell } from './_bkit.js';
 /* Bacteriële replicatie: één oorsprong (oriC, DnaA), twee vorken in tegengestelde richting, ≈ 1 000 nt/s per vork (DNA-polymerase III),
  * ontmoeting in de ter-zone (Tus–ter), twee dochterchromosomen. Bronnen: Katayama et al. 2010, Alberts MBoC 4e (DNA Replication Mechanisms),
  * Neylon et al. 2005 (Tus–Ter). */
-const CX = 520, CY = 470, R = 250;
+const CX = 520, CY = 470, R = 222;   // ring binnen het binnenmembraan (gramnegatieve envelop van rodCell)
 const NEW = '#ffc247';
 
 export default {
@@ -66,12 +66,12 @@ export default {
           if (step === 1) g += `<g opacity="${f1(sub(p, .4, .6))}">` + txt(CX, CY + 10, T2('2 vorken', '2 forks'), K.rnap, 30, 'middle', 800) + '</g>';
         } else {
           // twee ringen schuiven uit elkaar
-          const r = lerp(R, 150, sep);
+          const r = lerp(R, 140, sep);
           for (const sd of [-1, 1]) {
-            const cx = CX + sd * lerp(0, 175, sep), cy = CY;
+            const cx = CX + sd * lerp(0, 160, sep), cy = CY;
             g += ring(cx, cy, r) + `<circle cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(r - 14)}" fill="none" stroke="${NEW}" stroke-width="6"/>`;
           }
-          g += `<g opacity="${f1(sub(p, .6, .8))}">` + txt(CX - 175, CY + 8, T2('dochter 1', 'daughter 1'), C.text, 26, 'middle', 700) + txt(CX + 175, CY + 8, T2('dochter 2', 'daughter 2'), C.text, 26, 'middle', 700) + '</g>';
+          g += `<g opacity="${f1(sub(p, .6, .8))}">` + txt(CX - 160, CY + 8, T2('dochter 1', 'daughter 1'), C.text, 26, 'middle', 700) + txt(CX + 160, CY + 8, T2('dochter 2', 'daughter 2'), C.text, 26, 'middle', 700) + '</g>';
         }
         $('br-ring').innerHTML = g;
 

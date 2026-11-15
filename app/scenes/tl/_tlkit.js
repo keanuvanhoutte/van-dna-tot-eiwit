@@ -3,7 +3,8 @@
  *  - hud(): vaste knoppen ("chips") die op het scherm blijven staan terwijl de camera zoomt
  *  - stepper(): vloeiende overgang van waarden tussen stappen (deterministisch uit (step, p))
  */
-import { C, L, f1, ease, sub, lerp } from '../../kit.js';
+import { C, L, f1, ease, sub, lerp, rng } from '../../kit.js';
+import { eiwit } from '../../bio.js';
 
 /* Chips links bovenaan in beeld (of met row:true naast elkaar, bv. onderaan). items: [{ node, label:{nl,en}, color, href? }] */
 export function hud(id, items, { row = false } = {}) {
@@ -50,4 +51,36 @@ export function textBox(x, y, w, lines, { title = null, col = C.rrna, fs = 20, l
   if (title) { s += `<text x="${x + pad}" y="${f1(yy + 2)}" font-size="${f1(fs * 1.2)}" fill="${col}" font-family="Inter" font-weight="700">${title}</text>`; yy += th; }
   for (const l of lines) { s += `<text x="${x + pad}" y="${f1(yy)}" font-size="${fs}" fill="${C.text}" font-family="Inter" font-weight="500">${l}</text>`; yy += fs * lh; }
   return s + '</g>';
+}
+
+/* ---------- schematisch ribosoom in de 'leesweergave' (mRNA horizontaal, 60S erboven, 40S eronder) ----------
+ * Zelfde bouw als ribosoom80S in bio.js, maar groot genoeg om tRNA's met letters in de A-, P- en E-plaats te tonen:
+ * de kleine eenheid (40S) houdt het mRNA vast, de tRNA's reiken van het codon tot het peptidyltransferasecentrum (PTC)
+ * in de grote eenheid (60S), en de uitgangstunnel loopt van het PTC dwars door de 60S naar de buitenkant.
+ * koepelPad: bobbelige halve koepel met een vlakke kant op hoogte yb (dir -1 = koepel naar boven, +1 = naar beneden). */
+export function koepelPad(cx, yb, rx, h, { seed = 1, bumps = .035, dir = -1 } = {}) {
+  const R = rng(seed * 7919 + 17), hs = [2, 3, 5, 7].map(k => [k, (R() - .5) * 2 * bumps / Math.sqrt(k), R() * 6.283]);
+  const N = 40, pts = [];
+  for (let i = 0; i <= N; i++) {
+    const t = i / N * Math.PI; let k = 1;
+    for (const [n, a, ph] of hs) k += a * Math.cos(n * t + ph) * Math.sin(t);           // rand blijft vast op de vlakke kant
+    pts.push([cx - rx * Math.cos(t) * k, yb + dir * h * Math.pow(Math.sin(t), .8) * k]);
+  }
+  const c = 14;   // afgeronde hoeken aan de vlakke kant
+  return 'M' + pts.map(p => f1(p[0]) + ',' + f1(p[1])).join(' L') + ` Q${f1(cx + rx)},${f1(yb)} ${f1(cx + rx - c)},${f1(yb)} L${f1(cx - rx + c)},${f1(yb)} Q${f1(cx - rx)},${f1(yb)} ${f1(pts[0][0])},${f1(pts[0][1])}Z`;
+}
+/* één subeenheid in rRNA-kleur, in dezelfde stijl als eiwit()/ribosoom80S (donkere onderlaag, doorschijnend vlak, rand) */
+export function subeenheid(d, { col = C.rrna, fill = .2, op = 1 } = {}) {
+  return `<g opacity="${f1(op)}"><path d="${d}" fill="#0b1224" fill-opacity=".55"/><path d="${d}" fill="${col}" fill-opacity="${fill}" stroke="${col}" stroke-width="3" stroke-linejoin="round"/></g>`;
+}
+/* uitgangstunnel: donkere buis van het PTC (a) tot de rand van de 60S (b), met een lichte rand */
+export function tunnel(a, b, { w = 34, op = 1 } = {}) {
+  const d = `M${f1(a[0])},${f1(a[1])} C${f1(a[0] + 18)},${f1(lerp(a[1], b[1], .4))} ${f1(b[0] - 14)},${f1(lerp(a[1], b[1], .65))} ${f1(b[0])},${f1(b[1])}`;
+  return `<g opacity="${f1(op)}"><path d="${d}" stroke="${C.rrna}" stroke-opacity=".55" stroke-width="${w + 6}" fill="none" stroke-linecap="butt"/><path d="${d}" stroke="#0b1224" stroke-opacity=".85" stroke-width="${w}" fill="none" stroke-linecap="butt"/>` +
+    `<circle cx="${f1(a[0])}" cy="${f1(a[1])}" r="${f1(w * .62)}" fill="#0b1224" fill-opacity=".85"/></g>`;
+}
+/* factor-eiwit (zelfde aanroep als pill(): midden x,y, breedte, hoogte, tekst) maar als bobbelig eiwit (bio.js) i.p.v. een pil */
+export function factor(x, y, w, h, text, col = C.prot, op = 1, fs = 18, seed = null) {
+  if (op <= .01) return '';
+  return eiwit(x, y, w / 2 + 4, h / 2 + 5, col, { seed: seed ?? (String(text).length * 7 + 3), label: text, fs, op, bumps: .09 });
 }

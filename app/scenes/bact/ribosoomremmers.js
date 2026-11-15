@@ -1,5 +1,5 @@
 import { C, T2, svgOpen, txt, FULL, sub, ease, lerp, f1 } from '../../kit.js';
-import { K, prot, panel } from './_bkit.js';
+import { K, prot, panel, eenheid } from './_bkit.js';
 
 /* Antibiotica op het bacteriële ribosoom: tetracycline (A-plaats, 30S), aminoglycosiden (leesplek, 16S-rRNA), macroliden
  * (uitgangstunnel, 50S), kirromycine (op EF-Tu) en waarom ons ribosoom gespaard blijft.
@@ -17,6 +17,8 @@ function trna(x, y0, col, op = 1, aaCol = null) {
 }
 const pill = (x, y, op = 1, r = 13) => op <= .01 ? '' : `<g opacity="${f1(op)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${DRUG}" stroke="#fff" stroke-width="2.5"/></g>`;
 
+const RIBO = eenheid(S50[0], S50[1], S50[2], S50[3], 50, .22) + eenheid(S30[0], S30[1], S30[2], S30[3], 30, .38);
+
 export default {
   id: 'ribosoomremmers',
   title: { nl: 'Antibiotica op het ribosoom', en: 'Antibiotics on the ribosome' },
@@ -25,8 +27,8 @@ export default {
   legend: [[K.ribo, { nl: '70S-ribosoom (50S boven, 30S onder)', en: '70S ribosome (50S top, 30S bottom)' }], [C.rna, 'mRNA'], [TR, 'tRNA'], [CH, { nl: 'nieuwe eiwitketen', en: 'new protein chain' }],
     [K.rnap, 'EF-Tu'], [DRUG, { nl: 'antibioticum', en: 'antibiotic' }]],
   simplified: {
-    nl: 'Schema, niet op schaal. Echte tRNA’s zijn L-vormig en het ribosoom heeft geen gladde vorm. Elk antibioticum heeft zijn eigen precieze bindingsplek; hier staat de zone waar het zit. Macroliden houden niet elk eiwit tegen: ze remmen vooral bij bepaalde aminozuurvolgordes. Onderzoekers gebruiken kirromycine om EF-Tu op het ribosoom vast te zetten, zoals in de 3D-structuur 5AFI.',
-    en: 'Schematic, not to scale. Real tRNAs are L-shaped and the ribosome has no smooth shape. Each antibiotic has its own precise binding spot; shown is the zone where it sits. Macrolides do not stop every protein: they mainly block at certain amino acid sequences. Researchers use kirromycin to lock EF-Tu on the ribosome, as in the 3D structure 5AFI.' },
+    nl: 'Schema, niet op schaal. Echte tRNA’s zijn L-vormig en de vorm van het ribosoom is vereenvoudigd. Elk antibioticum heeft zijn eigen precieze bindingsplek; hier staat de zone waar het zit. Macroliden houden niet elk eiwit tegen: ze remmen vooral bij bepaalde aminozuurvolgordes. Onderzoekers gebruiken kirromycine om EF-Tu op het ribosoom vast te zetten, zoals in de 3D-structuur 5AFI.',
+    en: 'Schematic, not to scale. Real tRNAs are L-shaped and the shape of the ribosome is simplified. Each antibiotic has its own precise binding spot; shown is the zone where it sits. Macrolides do not stop every protein: they mainly block at certain amino acid sequences. Researchers use kirromycin to lock EF-Tu on the ribosome, as in the 3D structure 5AFI.' },
   steps: [
     { dur: 8500, cam: FULL, title: { nl: 'Het ribosoom: een topdoelwit', en: 'The ribosome: a top target' },
       text: { nl: 'Meer dan de helft van de geneesmiddelen tegen infecties remt het ribosoom van de bacterie.', en: 'More than half of the medicines against infections inhibit the bacterial ribosome.' } },
@@ -57,8 +59,7 @@ export default {
         const fade = sub(p, .12, .35);
         let g = '';
         // ribosoom
-        g += `<ellipse cx="${S50[0]}" cy="${S50[1]}" rx="${S50[2]}" ry="${S50[3]}" fill="${K.ribo}" fill-opacity=".22" stroke="${K.ribo}" stroke-width="3"/>`;
-        g += `<ellipse cx="${S30[0]}" cy="${S30[1]}" rx="${S30[2]}" ry="${S30[3]}" fill="${K.ribo}" fill-opacity=".38" stroke="${K.ribo}" stroke-width="3"/>`;
+        g += RIBO;   // 50S en 30S als bobbelige eenheden die tegen elkaar liggen (mRNA in de spleet ertussen)
         g += txt(S50[0] - 230, S50[1] - 95, '50S', K.ribo, 30, 'middle', 800) + txt(S30[0] - 210, S30[1] + 50, '30S', K.ribo, 30, 'middle', 800);
         // uitgangstunnel
         const tun = step === 3 ? 1 : .55;

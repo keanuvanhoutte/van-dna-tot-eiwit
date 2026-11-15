@@ -6,7 +6,7 @@
 set -u
 SCENE="$1"; STEP="$2"; OUT="$3"; LANGV="${4:-nl}"; EXTRA="${5:-}"; W="${6:-1600}"; H="${7:-900}"
 CHROME="/c/Program Files/Google/Chrome/Application/chrome.exe"
-URL="http://localhost:5173/app/index.html?scene=${SCENE}&lang=${LANGV}&step=${STEP}&freeze=1${EXTRA}"
+URL="http://127.0.0.1:5173/app/index.html?scene=${SCENE}&lang=${LANGV}&step=${STEP}&freeze=1${EXTRA}"
 WOUT="$(cygpath -w "$OUT" 2>/dev/null || echo "$OUT")"
 PROFILE="$(mktemp -d)"
 timeout 90 "$CHROME" --headless=new --use-angle=swiftshader --enable-unsafe-swiftshader --hide-scrollbars --user-data-dir="$(cygpath -w "$PROFILE")" \

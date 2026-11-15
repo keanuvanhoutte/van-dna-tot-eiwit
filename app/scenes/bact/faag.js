@@ -1,5 +1,6 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1 } from '../../kit.js';
 import { rodCell } from './_bkit.js';
+import { membraanPts, ptsBoog, LIPID } from '../../bio.js';
 import { T, btn, phage, PHDNA } from '../entry/_corona.js';
 
 /*
@@ -25,7 +26,7 @@ export default {
   scale: L3('bacterie ≈ 2 µm · faag ≈ 0,2 µm (niet op schaal)', 'bacterium ≈ 2 µm · phage ≈ 0.2 µm (not to scale)'),
   time: L3('weg 1: ≈ 20–30 minuten · weg 2: generaties lang', 'path 1: ≈ 20–30 minutes · path 2: for generations'),
   org: L3('bacterie (Escherichia coli) met fagen zoals T4 en lambda', 'bacterium (Escherichia coli) with phages such as T4 and lambda'),
-  legend: [['#c7d2e8', L3('faag (eiwitjas met staart)', 'phage (protein coat with tail)')], [PHDNA, L3('DNA van de faag', 'DNA of the phage')], [C.dna, L3('chromosoom van de bacterie', 'chromosome of the bacterium')], [C.mem, L3('celenvelop', 'cell envelope')]],
+  legend: [['#c7d2e8', L3('faag (eiwitjas met staart)', 'phage (protein coat with tail)')], [PHDNA, L3('DNA van de faag', 'DNA of the phage')], [C.dna, L3('chromosoom van de bacterie', 'chromosome of the bacterium')], [LIPID.head, L3('celenvelop (twee membranen en een dunne celwand)', 'cell envelope (two membranes and a thin cell wall)')]],
   simplified: {
     nl: 'Niet op schaal en twee fagen in één beeld: weg 1 (lytisch) is getekend zoals bij faag T4, weg 2 (lysogeen) zoals bij faag lambda; lambda kan ook weg 1 kiezen. Echte fagen hechten eerst aan een bepaald eiwit op de buitenkant (zoals een sleutel op een slot). In één bacterie ontstaan veel meer nieuwe fagen dan getekend. Het inbouwen gebeurt op één vaste plaats in het chromosoom.',
     en: 'Not to scale, and two phages in one picture: path 1 (lytic) is drawn as for phage T4, path 2 (lysogenic) as for phage lambda; lambda can also take path 1. Real phages first attach to a specific protein on the outside (like a key in a lock). One bacterium yields many more new phages than drawn. Integration happens at one fixed site in the chromosome.' },
@@ -65,7 +66,8 @@ export default {
         let c = rodCell(...A, 1 - burst * .85) + `<g opacity="${f1(1 - burst)}">${chrom(AX, 560)}</g>`;
         if (burst > .01) for (let k = 0; k < 6; k++) {          // brokstukken van de envelop
           const a = k * 60 + 20, r = 200 + 160 * burst;
-          c += `<path d="M${f1(AX + r * Math.cos(a * Math.PI / 180))},${f1(530 + .55 * r * Math.sin(a * Math.PI / 180))} q22,-18 44,0" stroke="${C.mem}" stroke-width="6" fill="none" opacity="${f1(1 - burst * .6)}"/>`;
+          const x0 = AX + r * Math.cos(a * Math.PI / 180), y0 = 530 + .55 * r * Math.sin(a * Math.PI / 180);
+          c += membraanPts(ptsBoog(x0, y0, x0 + 22, y0 - 18, x0 + 44, y0, 8), { w: 10, op: 1 - burst * .6 });   // stukjes membraan
         }
         if (bOn > .01) c += rodCell(...B, bOn) + `<g opacity="${f1(bOn)}">${chrom(BX, 560)}</g>`;
         c += T(AX, 780, T2('weg 1: kopiëren', 'path 1: copy'), { size: 28, col: C.text, w: 700, op: ph(2, 0, .2) });

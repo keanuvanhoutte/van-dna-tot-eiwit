@@ -3,7 +3,7 @@
  * degeneratie, wobble, leesramen en frameshift, en uitzonderingen (mitochondriën, Sec, Pyl).
  */
 import { C, BASE, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, f1, translate, THREE, AACLASS, CLASSCOL, aa } from '../../kit.js';
-import { hud, placeHud, textBox } from './_tlkit.js';
+import { hud, placeHud, textBox, koepelPad, subeenheid } from './_tlkit.js';
 
 const B = ['U', 'C', 'A', 'G'];
 const CX = 470, CY = 445, R = [0, 72, 150, 214, 330];
@@ -106,7 +106,11 @@ export default {
           const nC = SEQ.length / 3, k = Math.min(nC - 1, Math.floor(sub(p, .05, .95) * nC)), cod = SEQ.slice(k * 3, k * 3 + 3);
           const x0 = 960, dx = 32, y = 250;
           ov += txt(x0 - 30, y + 26, "5'", C.text, 22, 'end', 700) + txt(x0 + SEQ.length * dx - 6, y + 26, "3'", C.text, 22, 'start', 700); mr += strip(x0, y, SEQ, dx);
-          const wx = x0 + k * 3 * dx - dx / 2 - 2;
+          const wx = x0 + k * 3 * dx - dx / 2 - 2, rx = wx + 1.5 * dx;
+          // het ribosoom zit op het codon dat gelezen wordt: kleine eenheid (40S) aan de ene kant van het mRNA, grote (60S) aan de andere;
+          // het nieuwste aminozuur komt uit de grote eenheid (hier onderaan getekend, zodat de keten eronder groeit)
+          mr = subeenheid(koepelPad(rx, y - 10, 82, 38, { seed: 41 }), { fill: .22 }) + subeenheid(koepelPad(rx, y + 42, 96, 46, { seed: 61, dir: 1 }), { fill: .16 }) +
+            txt(rx + 106, y - 18, T2('ribosoom', 'ribosome'), C.rrna, 20, 'start', 700) + mr;
           ov += `<rect x="${f1(wx)}" y="${y - 8}" width="${3 * dx}" height="${dx + 16}" rx="8" fill="none" stroke="#fff" stroke-width="3.5"/>`;
           for (let j = 0; j <= k; j++) { const a = translate(SEQ.slice(j * 3, j * 3 + 3)); pep += aa(x0 + j * 3 * dx + dx - 2, y + 110, a, 30); if (j) pep += `<line x1="${x0 + (j - 1) * 3 * dx + dx + 28}" y1="${y + 110}" x2="${x0 + j * 3 * dx + dx - 32}" y2="${y + 110}" stroke="${C.chain}" stroke-width="5"/>`; }
           ov += txt(x0 + k * 3 * dx + dx - 2, y + 175, cod, '#fff', 22, 'middle', 800);

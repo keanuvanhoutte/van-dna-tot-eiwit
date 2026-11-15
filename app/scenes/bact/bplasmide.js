@@ -74,8 +74,8 @@ export default {
         if (step === 1) {
           const o = sub(p, .5, .7);
           sd += `<g opacity="${f1(o)}">` + panel(960, 170, 590, 560) + txt(1255, 225, T2('Hoeveel kopieën per cel?', 'How many copies per cell?'), C.text, 28, 'middle', 700) +
-            rodCell(1000, 270, 240, 140) + dsRing(1120, 340, 22, K.plas, 3) + txt(1120, 450, T2('groot plasmide (F)', 'large plasmid (F)'), C.text, 22) + txt(1120, 482, T2('1–2 per cel', '1–2 per cell'), K.ori, 24, 'middle', 800) +
-            rodCell(1290, 270, 240, 140) + [[1340, 315], [1380, 345], [1420, 310], [1460, 350], [1350, 365], [1410, 375], [1470, 315], [1440, 290]].map(([x, y]) => dsRing(x, y, 11, K.plas, 2)).join('') +
+            rodCell(1000, 255, 240, 170) + dsRing(1120, 340, 22, K.plas, 3) + txt(1120, 450, T2('groot plasmide (F)', 'large plasmid (F)'), C.text, 22) + txt(1120, 482, T2('1–2 per cel', '1–2 per cell'), K.ori, 24, 'middle', 800) +
+            rodCell(1290, 255, 240, 170) + [[1340, 315], [1380, 345], [1420, 310], [1460, 350], [1350, 365], [1410, 375], [1470, 315], [1440, 290]].map(([x, y]) => dsRing(1410 + (x - 1410) * .7, 340 + (y - 340) * .7, 10, K.plas, 2)).join('') +
             txt(1410, 450, T2('klein plasmide', 'small plasmid'), C.text, 22) + txt(1410, 482, T2('tientallen of meer', 'tens or more'), K.ori, 24, 'middle', 800) +
             txt(1255, 560, T2('ori + regeleiwitten of -RNA’s', 'ori + control proteins or RNAs'), C.muted, 22) + txt(1255, 594, T2('houden het aantal constant', 'keep the number constant'), C.muted, 22) + '</g>';
         }

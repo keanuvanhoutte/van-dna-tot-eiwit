@@ -1,12 +1,15 @@
 import { C, T2, svgOpen, txt, cam, FULL, sub, ease, f1 } from '../../kit.js';
-import { K, ribo, rodCell, prot, panel, arrow } from './_bkit.js';
+import { K, ribo, rodCell, rodLagen, porine, prot, panel, arrow } from './_bkit.js';
+import { PG, LIPID } from '../../bio.js';
 
 /* Overzicht: waar antibiotica een bacterie raken en waarom onze cellen gespaard blijven.
  * Bronnen (shared/details/bact3.js): Kohanski, Dwyer & Collins 2010 (vier doelwitten, werking per klasse), Vollmer et al. 2008
  * (peptidoglycaan uniek voor bacteriën), Aldred et al. 2014 (menselijk topoisomerase II mist de ankerplaatsen), Lin et al. 2018
  * (G1408 en G2058 in ons ribosoom), Molodtsov et al. 2017 (rifampicineholte niet bewaard bij eukaryoten). */
+const CEL = [70, 190, 900, 440], LG = rodLagen(...CEL);   // gramnegatieve envelop: buitenmembraan, peptidoglycaan, binnenmembraan
+const PORX = [380, 520, 660], POR = '#7fc8ff';
 const TG = {                          // doelwitten in de cel: [x, y] en kleur
-  wall: [520, 211, '#c9d2e4'], gyr: [300, 430, '#5fd3e6'], pol: [545, 372, K.rnap], ribo: [790, 430, K.ribo],
+  wall: [520, LG.pg, PG], gyr: [300, 430, '#5fd3e6'], pol: [545, 372, K.rnap], ribo: [790, 430, K.ribo],
 };
 const DRUG = '#ff6b6b';
 const DNA = 'M190,430 C230,330 330,330 360,400 S470,500 520,420 S600,330 640,400 S660,520 560,520 S330,540 260,500 S170,480 190,430Z';
@@ -29,11 +32,11 @@ export default {
   title: { nl: 'Waar antibiotica een bacterie raken', en: 'Where antibiotics hit a bacterium' },
   scale: { nl: 'cel ≈ 2 µm', en: 'cell ≈ 2 µm' }, time: { nl: 'werking: verschilt per middel en per soort', en: 'effect: differs per drug and per species' },
   org: { nl: 'bacterie (Escherichia coli) en mens', en: 'bacterium (Escherichia coli) and human' },
-  legend: [['#c9d2e4', { nl: 'celwand (peptidoglycaan)', en: 'cell wall (peptidoglycan)' }], [C.dna, 'DNA'], ['#5fd3e6', 'gyrase'], [K.rnap, { nl: 'RNA-polymerase', en: 'RNA polymerase' }],
+  legend: [[LIPID.head, { nl: 'binnen- en buitenmembraan', en: 'inner and outer membrane' }], [PG, { nl: 'celwand (peptidoglycaan)', en: 'cell wall (peptidoglycan)' }], [POR, { nl: 'porine (poort in het buitenmembraan)', en: 'porin (pore in the outer membrane)' }], [C.dna, 'DNA'], ['#5fd3e6', 'gyrase'], [K.rnap, { nl: 'RNA-polymerase', en: 'RNA polymerase' }],
     [K.ribo, { nl: '70S-ribosoom', en: '70S ribosome' }], [C.rna, 'mRNA'], [DRUG, { nl: 'antibioticum', en: 'antibiotic' }]],
   simplified: {
-    nl: 'Niet op schaal; één exemplaar van elk doelwit. Er zijn nog andere klassen (bv. middelen die het celmembraan aantasten, zoals daptomycine); hier staan de vier groepen uit de bron. Of een antibioticum de bacterie doodt of alleen de groei remt, verschilt per middel en per soort. "Gespaard" betekent niet "zonder bijwerkingen": sommige antibiotica, zoals chlooramfenicol, remmen ook de ribosomen in onze mitochondriën.',
-    en: 'Not to scale; one copy of each target. There are other classes too (e.g. drugs that damage the cell membrane, such as daptomycin); shown here are the four groups from the source. Whether an antibiotic kills the bacterium or only stops its growth differs per drug and per species. "Spared" does not mean "without side effects": some antibiotics, such as chloramphenicol, also inhibit the ribosomes in our mitochondria.' },
+    nl: 'Niet op schaal; één exemplaar van elk doelwit. E. coli is gramnegatief: de dunne celwand ligt tussen het binnen- en het buitenmembraan, en penicilline-achtigen komen er vooral via porines (poorten in het buitenmembraan). Er zijn nog andere klassen (bv. middelen die het celmembraan aantasten, zoals daptomycine); hier staan de vier groepen uit de bron. Of een antibioticum de bacterie doodt of alleen de groei remt, verschilt per middel en per soort. "Gespaard" betekent niet "zonder bijwerkingen": sommige antibiotica, zoals chlooramfenicol, remmen ook de ribosomen in onze mitochondriën.',
+    en: 'Not to scale; one copy of each target. E. coli is Gram-negative: the thin cell wall lies between the inner and the outer membrane, and penicillin-like drugs reach it mainly through porins (pores in the outer membrane). There are other classes too (e.g. drugs that damage the cell membrane, such as daptomycin); shown here are the four groups from the source. Whether an antibiotic kills the bacterium or only stops its growth differs per drug and per species. "Spared" does not mean "without side effects": some antibiotics, such as chloramphenicol, also inhibit the ribosomes in our mitochondria.' },
   steps: [
     { dur: 8000, cam: FULL, title: { nl: 'Vier plekken waar antibiotica aangrijpen', en: 'Four places where antibiotics strike' },
       text: { nl: 'De meeste antibiotica die bacteriën doden, remmen één van vier dingen: de celwand, het DNA, het maken van RNA of het maken van eiwit.', en: 'Most antibiotics that kill bacteria block one of four things: the cell wall, the DNA, making RNA or making protein.' } },
@@ -67,9 +70,9 @@ export default {
         const op = k => (on(k) ? 1 : .25);
         const fade = sub(p, .15, .4);
         // ---- de cel met de vier doelwitten ----
-        let g = rodCell(70, 190, 900, 440);
-        // celwand-markering bovenaan
-        g += `<g opacity="${f1(op('wall'))}"><rect x="300" y="196" width="440" height="30" rx="8" fill="none" stroke="${TG.wall[2]}" stroke-width="3" stroke-dasharray="${step === 1 ? '0' : '8 6'}"/></g>`;
+        let g = rodCell(...CEL) + PORX.map(x => porine(x, LG.om, LG.mw + 10, { col: POR })).join('');
+        // celwand-markering bovenaan: de peptidoglycaanlaag tussen beide membranen
+        g += `<g opacity="${f1(op('wall'))}"><rect x="300" y="${f1(LG.pg - 10)}" width="440" height="20" rx="8" fill="none" stroke="${TG.wall[2]}" stroke-width="3" stroke-dasharray="${step === 1 ? '0' : '8 6'}"/></g>`;
         // DNA (nucleoïd, sterk vereenvoudigd) + gyrase
         g += `<path d="${DNA}" fill="none" stroke="${C.dna}" stroke-width="7" opacity="${f1(step === 2 || step === 0 || step === 5 || step === 3 ? 1 : .45)}"/>`;
         g += `<g opacity="${f1(op('gyr'))}">` + prot(TG.gyr[0], TG.gyr[1], 44, 36, TG.gyr[2], 1, 5, 'gyrase', 22) + '</g>';
@@ -81,8 +84,8 @@ export default {
         const badge = (n, x, y, k) => `<g opacity="${f1(op(k))}"><circle cx="${x}" cy="${y}" r="21" fill="${DRUG}"/>` + txt(x, y + 8, n, '#fff', 22, 'middle', 800) + '</g>';
         g += badge('1', 760, 166, 'wall') + badge('2', 230, 345, 'gyr') + badge('3', 470, 300, 'pol') + badge('4', 880, 375, 'ribo');
         // antibioticum-bolletjes op het actieve doelwit
-        const pill = (x, y) => `<g opacity="${f1(fade)}"><circle cx="${x}" cy="${y}" r="11" fill="${DRUG}" stroke="#fff" stroke-width="2"/></g>`;
-        if (step === 1) g += pill(380, 211) + pill(520, 211) + pill(660, 211);
+        const pill = (x, y, r = 11) => `<g opacity="${f1(fade)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${DRUG}" stroke="#fff" stroke-width="2"/></g>`;
+        if (step === 1) { const d = ease(sub(p, .1, .45)); g += PORX.map(x => pill(x, LG.top - 40 + (LG.pg - LG.top + 40) * d, 8)).join(''); }   // door de porines naar de celwand
         if (step === 2) g += pill(TG.gyr[0] + 30, TG.gyr[1] - 22);
         if (step === 3) g += pill(TG.pol[0] + 20, TG.pol[1] - 6);
         if (step === 4) g += pill(TG.ribo[0] - 4, TG.ribo[1] + 26) + pill(TG.ribo[0] + 6, TG.ribo[1] - 30);

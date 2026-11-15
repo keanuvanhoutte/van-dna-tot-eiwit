@@ -1,5 +1,5 @@
 import { C, L, T2, svgOpen, txt, mono, nt, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { K, ribo, prot, panel } from './_bkit.js';
+import { K, ribo, prot, panel, eenheid } from './_bkit.js';
 
 /* Bacterieel mRNA: gekoppelde transcriptie–translatie, Shine-Dalgarno ↔ 16S-rRNA, fMet-tRNA, 30S + 50S = 70S,
  * polycistronisch mRNA, en een vergelijkingstabel mens ↔ bacterie.
@@ -100,11 +100,11 @@ export default {
           const a = (step === 1 ? ease(sub(p, .15, .4)) : 1) * clA;
           cl += `<g opacity="${f1(a)}">`;
           // 30S
-          cl += `<ellipse cx="${bx(11)}" cy="${NY + 90}" rx="560" ry="105" fill="${K.ribo}" fill-opacity=".14" stroke="${K.ribo}" stroke-width="3"/>` + txt(bx(19) + 40, NY + 160, '30S', K.ribo, 30, 'middle', 800);
+          cl += eenheid(bx(11), NY + 90, 560, 105, 30, .14) + txt(bx(19) + 40, NY + 160, '30S', K.ribo, 30, 'middle', 800);
           // 50S (stap 3)
           if (step === 3) {
             const d = ease(sub(p, .1, .55));
-            cl += `<g transform="translate(0 ${f1(lerp(-260, 0, d))})" opacity="${f1(sub(p, .05, .2))}"><ellipse cx="${bx(11)}" cy="${NY - 150}" rx="580" ry="150" fill="${K.ribo}" fill-opacity=".2" stroke="${K.ribo}" stroke-width="3"/>` + txt(bx(1), NY - 230, '50S', K.ribo, 30, 'middle', 800) + '</g>';
+            cl += `<g transform="translate(0 ${f1(lerp(-260, 0, d))})" opacity="${f1(sub(p, .05, .2))}">` + eenheid(bx(11), NY - 150, 580, 150, 50, .2) + txt(bx(1), NY - 230, '50S', K.ribo, 30, 'middle', 800) + '</g>';
             const e = sub(p, .6, .8);
             cl += `<g opacity="${f1(e)}">` + txt(bx(11), NY - 330, T2('70S-ribosoom', '70S ribosome'), K.ribo, 34, 'middle', 800) +
               [['E', 12], ['P', 15], ['A', 18]].map(([l, i]) => `<rect x="${bx(i - 1) - 24}" y="${NY - 140}" width="${3 * NW - 4}" height="34" rx="8" fill="#0b1224" stroke="${C.muted}"/>` + txt(bx(i), NY - 116, l, C.text, 22, 'middle', 800)).join('') + '</g>';

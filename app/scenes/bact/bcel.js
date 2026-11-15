@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, txt, cam, sub, ease, lerp, clamp, rng, f1 } from '../../kit.js';
-import { K, ribo, dsRing, rodCell, panel } from './_bkit.js';
+import { K, ribo, dsRing, rodCell, rodInner, panel } from './_bkit.js';
+import { PG, LPS, LIPID } from '../../bio.js';
 
 /* E. coli-cel: geen kern, nucleoïd, één ringvormig chromosoom, plasmiden, 70S-ribosomen.
  * Bronnen: Blattner et al. 1997 (genoom K-12), Alberts MBoC 4e, Cooper The Cell 2e (zie shared/details/bact.js). */
@@ -8,11 +9,12 @@ const CELL = [130, 215, 1340, 470];             // x, y, b, h van de staaf
 const PLAS = [[390, 330, 26], [1215, 575, 22], [1270, 335, 30]];
 const RX = 300, RY = 150;                       // grootte nucleoïd
 /* ribosomen: vaste, toevallige plekken in het cytoplasma, buiten de nucleoïd */
+const IN = rodInner(...CELL);                   // binnenkant van het binnenmembraan (staaf)
 const RIBOS = (() => {
-  const r = rng(42), out = [];
+  const r = rng(42), out = [], a = IN.len / 2 - IN.r, rIn = IN.r - 26;
   while (out.length < 90) {
     const x = 210 + r() * 1180, y = 270 + r() * 360;
-    const inCell = ((x - CX) / 610) ** 2 + ((y - CY) / 205) ** 2 < 1 || (x > 345 && x < 1255 && y > 262 && y < 638);
+    const dx = Math.max(0, Math.abs(x - IN.cx) - a), inCell = Math.hypot(dx, y - IN.cy) < rIn;
     const inNuc = ((x - CX) / (RX + 50)) ** 2 + ((y - CY) / (RY + 45)) ** 2 < 1;
     const nearPl = PLAS.some(([px, py, pr]) => Math.hypot(x - px, y - py) < pr + 22);
     if (inCell && !inNuc && !nearPl && !out.some(([a, b]) => Math.hypot(a - x, b - y) < 30)) out.push([x, y]);
@@ -38,7 +40,7 @@ export default {
   title: { nl: 'Een bacterie heeft geen kern', en: 'A bacterium has no nucleus' },
   scale: { nl: '≈ 2 µm lang', en: '≈ 2 µm long' }, time: { nl: 'deling ≈ 20–60 min (bij goede groei)', en: 'division ≈ 20–60 min (in good growth)' },
   org: { nl: 'bacterie (Escherichia coli)', en: 'bacterium (Escherichia coli)' },
-  legend: [[C.mem, { nl: 'membranen (binnen en buiten)', en: 'membranes (inner and outer)' }], ['#8a93a8', { nl: 'celwand (peptidoglycaan)', en: 'cell wall (peptidoglycan)' }],
+  legend: [[LIPID.head, { nl: 'binnen- en buitenmembraan', en: 'inner and outer membrane' }], [PG, { nl: 'dunne celwand (peptidoglycaan)', en: 'thin cell wall (peptidoglycan)' }], [LPS, { nl: 'LPS (buitenkant)', en: 'LPS (outer surface)' }],
     [C.dna, { nl: 'chromosoom (nucleoïd)', en: 'chromosome (nucleoid)' }], [K.plas, { nl: 'plasmiden', en: 'plasmids' }], [K.ribo, { nl: '70S-ribosomen', en: '70S ribosomes' }], [C.rna, 'mRNA']],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Verhaal 3: dezelfde weg van DNA tot eiwit, maar in een bacterie. Vergelijk telkens met de menselijke cel.</p>',
@@ -96,7 +98,7 @@ export default {
         const mo = step === 4 ? ease(sub(p, .25, .55)) : 0;
         let mr = '';
         if (mo > .01) {
-          const pts = []; for (let i = 0; i <= 30; i++) pts.push([560 - i * 9, 560 + i * 3 + 10 * Math.sin(i / 3)]);
+          const pts = []; for (let i = 0; i <= 30; i++) pts.push([560 - i * 8, 545 + i * 2.3 + 10 * Math.sin(i / 3)]);
           mr = `<g opacity="${f1(mo)}"><path d="${pts.map((q, i) => `${i ? 'L' : 'M'}${f1(q[0])},${f1(q[1])}`).join('')}" stroke="${C.rna}" stroke-width="4" fill="none" stroke-linecap="round"/>` +
             [8, 17, 26].map(i => ribo(pts[i][0], pts[i][1] - 8, 1.5, 1)).join('') + '</g>';
         }
@@ -106,7 +108,7 @@ export default {
         if (step === 0) {
           const o = sub(p, .2, .45);
           lab += `<g opacity="${f1(o)}">` + `<line x1="470" y1="745" x2="1130" y2="745" stroke="${C.muted}" stroke-width="3"/><line x1="470" y1="735" x2="470" y2="755" stroke="${C.muted}" stroke-width="3"/><line x1="1130" y1="735" x2="1130" y2="755" stroke="${C.muted}" stroke-width="3"/>` +
-            txt(800, 790, T2('≈ 1 µm', '≈ 1 µm'), C.muted, 22) + txt(800, 175, T2('geen kern: één ruimte (cytoplasma)', 'no nucleus: one space (cytoplasm)'), C.text, 30, 'middle', 700) + '</g>';
+            txt(800, 790, T2('≈ 1 µm', '≈ 1 µm'), C.muted, 22) + txt(1470, 722, T2('rand: binnenmembraan · dunne celwand · buitenmembraan', 'edge: inner membrane · thin cell wall · outer membrane'), C.muted, 21, 'end', 600) + txt(800, 175, T2('geen kern: één ruimte (cytoplasma)', 'no nucleus: one space (cytoplasm)'), C.text, 30, 'middle', 700) + '</g>';
         }
         if (step === 1) lab += `<g opacity="${f1(no)}">` + txt(CX, 196, T2('nucleoïd · geen membraan', 'nucleoid · no membrane'), C.dna2, 28, 'middle', 700) + '</g>';
         if (step === 3) lab += `<g opacity="${f1(sub(p, .3, .5))}">` + txt(390, 280, T2('plasmide', 'plasmid'), K.plas, 24, 'middle', 700) + txt(1270, 270, T2('plasmide', 'plasmid'), K.plas, 24, 'middle', 700) + '</g>';

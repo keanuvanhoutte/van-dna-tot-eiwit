@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, txt, mono, pill, cam, FULL, sub, ease, lerp, clamp, f1, rng } from '../../kit.js';
 import { ST, panel, smooth } from './_a_kit.js';
+import { kernEnvelop, ptsBoog, eiwit } from '../../bio.js';
 
 /* K(): tekst die ook in het overzichtsbeeld (laatste stap) zichtbaar blijft */
 const K = h => h.replace('<text', '<text class="keep"');
@@ -111,8 +112,7 @@ export default {
       <path d="M${FCS[1][0] + 60},${FCS[1][1] - 60} L720,90 M${FCS[1][0] + 60},${FCS[1][1] + 60} L720,420" stroke="#fff" stroke-width="1.5" stroke-dasharray="6 5" opacity=".4"/>
     </g>
     <g id="nl-envelope">
-      <g data-node="kernimport" data-color="${C.prot}" data-nolabel><path d="M40,830 Q420,760 820,830" stroke="#7aa0d8" stroke-width="5" fill="none"/><path d="M40,846 Q420,776 820,846" stroke="#7aa0d8" stroke-width="5" fill="none"/>
-      <rect x="395" y="770" width="46" height="70" rx="12" fill="#0b1427" stroke="${C.prot}" stroke-width="3"/></g>
+      <g data-node="kernimport" data-color="${C.prot}" data-nolabel>${kernEnvelop(ptsBoog(40, 838, 420, 768, 820, 838, 40), { closed: false, poriën: [.495], poreW: 58, w: 11, gap: 11, binnen: -1, s: 1.1 })}</g>
       ${txt(560, 770, T2('kernenvelop · kernporie', 'nuclear envelope · pore'), C.muted, 15, 'start')}
       ${txt(140, 862, T2('cytoplasma ↓', 'cytoplasm ↓'), C.muted, 15)}
     </g>
@@ -183,8 +183,8 @@ export default {
             txt(1428, y + 40, T2('(Pol III, chr 1)', '(Pol III, chr 1)'), C.muted, 13) + '</g>';
           const as = step === 5 ? ease(sub(p, .5, .9)) : 1;
           pr += `<g opacity="${f1(as)}">` +
-            `<ellipse cx="885" cy="820" rx="80" ry="30" fill="rgba(44,198,168,.3)" stroke="${C.rrna}" stroke-width="3"/>` + K(txt(885, 827, 'pre-40S', '#fff', 21, 'middle', 700)) +
-            `<ellipse cx="1250" cy="820" rx="120" ry="34" fill="rgba(31,163,138,.3)" stroke="#1fa38a" stroke-width="3"/>` + K(txt(1250, 827, 'pre-60S', '#fff', 21, 'middle', 700)) +
+            eiwit(885, 820, 78, 30, C.rrna, { seed: 40, bumps: .07 }) + eiwit(820, 842, 13, 10, C.prot, { seed: 3 }) + eiwit(952, 838, 12, 10, C.prot, { seed: 4 }) + K(txt(885, 827, 'pre-40S', '#fff', 21, 'middle', 700)) +
+            eiwit(1250, 820, 118, 34, '#1fa38a', { seed: 60, bumps: .07 }) + eiwit(1150, 796, 13, 10, C.prot, { seed: 5 }) + eiwit(1352, 800, 13, 10, C.prot, { seed: 6 }) + eiwit(1260, 848, 12, 10, C.prot, { seed: 7 }) + K(txt(1250, 827, 'pre-60S', '#fff', 21, 'middle', 700)) +
             txt(1480, 812, T2('+ ~80 ribosomale', '+ ~80 ribosomal'), C.muted, 15) + txt(1480, 832, T2('eiwitten (import)', 'proteins (imported)'), C.muted, 15) + '</g>';
         }
         $('nl-prod').innerHTML = pr;
@@ -195,10 +195,11 @@ export default {
         if (step >= 6) {
           [[0, 'pre-40S', 22, C.rrna, 365], [.35, 'pre-60S', 30, '#1fa38a', 475]].forEach(([d, n, rr0, c, xe]) => {
             const k = clamp((ek - d) / .6);
-            const pts = [[470, 640], [430, 730], [418, 805], [xe, 872]];   // na de porie uit elkaar
+            const pts = [[470, 640], [430, 730], [418, 803], [xe, 872]];   // na de porie uit elkaar
             const seg = Math.min(2.999, k * 3), i = Math.floor(seg), f = seg - i;
             const x = lerp(pts[i][0], pts[i + 1][0], f), y = lerp(pts[i][1], pts[i + 1][1], f);
-            ex += `<g opacity="${f1(k > 0 && k < 1 ? 1 : step === 7 ? 1 : k >= 1 ? .8 : 0)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${rr0}" fill="${c}" stroke="#0a1224" stroke-width="2"/>${n === 'pre-40S' ? txt(x - rr0 - 8, y + 5, n, '#fff', 15, 'end', 700) : txt(x + rr0 + 8, y + 5, n, '#fff', 15, 'start', 700)}</g>`;
+            const kl = n === 'pre-40S', rx = kl ? 22 : 27;   // kleine en grote subeenheid apart, elk smal genoeg voor de porie
+            ex += `<g opacity="${f1(k > 0 && k < 1 ? 1 : step === 7 ? 1 : k >= 1 ? .8 : 0)}">${eiwit(x, y, rx, kl ? 13 : 19, c, { seed: kl ? 40 : 60, bumps: .08 })}${kl ? txt(x - rx - 8, y + 5, n, '#fff', 15, 'end', 700) : txt(x + rx + 8, y + 5, n, '#fff', 15, 'start', 700)}</g>`;
           });
           ex += `<g opacity="${f1(step === 6 ? sub(p, .1, .3) : 1 - ease(sub(p, 0, .3)))}">${pill(300, 760, 130, 30, 'CRM1 (XPO1)', C.prot2, 1, 14)}</g>`;
         }

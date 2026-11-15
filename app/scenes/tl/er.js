@@ -4,12 +4,16 @@
  */
 import { C, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, f1, aa, AACLASS, CLASSCOL } from '../../kit.js';
 import { hud, placeHud, textBox } from './_tlkit.js';
+import { membraanLijn, ribosoom80S, eiwit, eiwitPad, tmHelix } from '../../bio.js';
 
 /* humaan serumalbumine (UniProt P02768): signaal 1–18 · propeptide 19–24 · begin rijp eiwit */
 const SEQ = 'MKWVTFISLLFLFSSAYS' + 'RGVFRR' + 'DAHKSEVAHRFKDLGEENFKALVLIAFAQYLQQ';
 const NSIG = 18;
 const MT = 600, MB = 650;                                 // membraan boven/onder
-const PORE = 800, GATE = 852;                             // Sec61-porie en laterale poort
+const PORE = 800, GATE = 828;                             // Sec61-porie en laterale poort (signaalhelix)
+const MY = (MT + MB) / 2, MW = MB - MT;                   // midden en dikte van de ER-membraan (lipidedubbellaag)
+/* 80S-ribosoom (bio.js): 40S boven met het mRNA, tRNA's tot het PTC, tunnel door de 60S; uitgang op (0,0) → verschoven naar de tunneluitgang */
+const RS = 1.1, R80 = ribosoom80S(0, 0, { s: RS });
 const FREE = [600, 400], DOCK = [PORE, 586];              // uitgang van de tunnel: vrij / gedokt
 const SRA = [985, 572];                                   // SRP-receptor (SRα boven SRβ)
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
@@ -43,8 +47,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">Voorbeeld: humaan serumalbumine (UniProt P02768). Signaalpeptide MKWVTFISLLFLFSSAYS (1–18) wordt in het ER geknipt; het propeptide RGVFRR wordt later, na het ER, verwijderd (waarschijnlijk door furine).</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Example: human serum albumin (UniProt P02768). The signal peptide MKWVTFISLLFLFSSAYS (1–18) is cleaved in the ER; the propeptide RGVFRR is removed later, after the ER (probably by furin).</p>' },
   simplified: {
-    nl: 'Schematisch: het ribosoom is gekanteld getekend, de keten in de tunnel is weggelaten en aminozuren zijn bolletjes (geen helix-geometrie). SRP bestaat uit 7SL-RNA + 6 eiwitten; hier alleen de RNA-staaf, SRP54 en het Alu-domein. GTP-hydrolyse, TRAP/TRAM, BiP en de exacte topologie in de laterale poort zijn vereenvoudigd.',
-    en: 'Schematic: the ribosome is drawn tilted, the chain inside the tunnel is omitted and amino acids are beads (no helix geometry). SRP consists of 7SL RNA + 6 proteins; only the RNA rod, SRP54 and the Alu domain are shown. GTP hydrolysis, TRAP/TRAM, BiP and the exact topology in the lateral gate are simplified.' },
+    nl: 'Schematisch: het ribosoom is een 2D-schets (40S boven met het mRNA, 60S onder; de keten loopt als lijn door de tunnel van de 60S) en aminozuren zijn bolletjes (geen helix-geometrie). SRP bestaat uit 7SL-RNA + 6 eiwitten; hier alleen de RNA-staaf, SRP54 en het Alu-domein. GTP-hydrolyse, TRAP/TRAM, BiP en de exacte topologie in de laterale poort zijn vereenvoudigd.',
+    en: 'Schematic: the ribosome is a 2D sketch (40S on top with the mRNA, 60S below; the chain runs as a line through the 60S tunnel) and amino acids are beads (no helix geometry). SRP consists of 7SL RNA + 6 proteins; only the RNA rod, SRP54 and the Alu domain are shown. GTP hydrolysis, TRAP/TRAM, BiP and the exact topology in the lateral gate are simplified.' },
   steps: [
     ST(8500, FULL, 'Waar moet dit eiwit naartoe?', 'Where does this protein go?', 'Een ribosoom maakt albumine, dat de cel uit moet. Eerst moet het in het ER, een netwerk van membranen.', 'A ribosome makes albumin, which must leave the cell. So it first has to enter the ER: a network of membranes.'),
     ST(9000, cam(700, 340, 1100), 'Het adreslabel', 'The address label', 'De eerste ≈ 18 aminozuren vormen een adreslabel (signaalpeptide), met in het midden een waterafstotend stuk.', 'The first ≈ 18 amino acids form an address label (signal peptide), with a water-repelling stretch in the middle.'),
@@ -57,13 +61,10 @@ export default {
     ST(9500, cam(1060, 560, 1150), 'Eiwitten die in het membraan blijven', 'Proteins that stay in the membrane', 'Een waterafstotend stuk dat niet geknipt wordt, glipt zijdelings uit het kanaal en blijft in het membraan.', 'A water-repelling stretch that is not cut off slips sideways out of the channel and stays stuck in the membrane.'),
   ],
   svg() {
-    let heads = '';
-    for (let x = -300; x < 1900; x += 16) heads += `<circle cx="${x}" cy="${MT + 5}" r="6"/><circle cx="${x}" cy="${MB - 5}" r="6"/>`;
     return svgOpen() + `
     <rect x="-300" y="${MB}" width="2200" height="700" fill="rgba(201,165,116,.07)"/>
     <g data-node="golgi" data-color="${C.mem}" data-label="${T2('Verder naar het Golgi', 'On to the Golgi')}">
-      <rect x="-300" y="${MT}" width="2200" height="${MB - MT}" fill="rgba(201,165,116,.18)"/>
-      <g fill="${C.mem}" opacity=".85">${heads}</g>
+      <rect x="-300" y="${MT}" width="2200" height="${MW}" fill="rgba(0,0,0,0)"/><g id="er-mem"></g>
       <circle id="er-golgiA" data-anchor="golgi" cx="330" cy="${MB + 130}" r="1" fill="none"/>
     </g>
     <g id="er-lab"></g>
@@ -87,14 +88,18 @@ export default {
     const STEPS = this?.steps ?? [];
     const $ = id => svg.getElementById(id);
     const hide = id => $(id).setAttribute('cx', '-9999');
-    /* ribosoom gekanteld: grote subeenheid onder (tunneluitgang op (ex, ey)), kleine erboven, mRNA ertussen */
-    const ribo = (ex, ey, pause = 0) => `<g transform="translate(${f1(ex)} ${f1(ey)}) scale(.78) translate(${f1(-ex)} ${f1(-ey)})"><path d="M${ex - 170},${ey - 6} C${ex - 210},${ey - 120} ${ex - 130},${ey - 215} ${ex},${ey - 220} C${ex + 130},${ey - 215} ${ex + 210},${ey - 120} ${ex + 170},${ey - 6} Z" fill="rgba(44,198,168,.15)" stroke="${C.rrna}" stroke-width="3"/>` +
-      `<path d="M${ex - 150},${ey - 240} C${ex - 150},${ey - 320} ${ex + 150},${ey - 320} ${ex + 150},${ey - 240} Z" fill="rgba(44,198,168,.22)" stroke="${C.rrna}" stroke-width="3"/>` +
-      `<line x1="${ex - 280}" y1="${ey - 232}" x2="${ex + 280}" y2="${ey - 232}" stroke="${C.rna}" stroke-width="6"/>` + txt(ex - 290, ey - 224, "5'", C.rna, 24, 'end') + txt(ex + 290, ey - 224, "3'", C.rna, 24, 'start') +
-      `<path d="M${ex},${ey - 150} L${ex},${ey - 6}" stroke="rgba(44,198,168,.5)" stroke-width="20" stroke-linecap="round"/>` +
-      (pause > .01 ? `<g opacity="${f1(pause)}">${txt(ex + 200, ey - 300, T2('⏸ elongatie geremd', '⏸ elongation arrested'), '#fff', 26, 'start', 700)}</g>` : '') + '</g>';
-    const sec61 = (gate = 0) => `<rect x="${PORE - 58}" y="${MT - 12}" width="40" height="${MB - MT + 24}" rx="10" fill="${C.prot}" opacity=".85"/>` +
-      `<rect x="${PORE + 18 + gate * 26}" y="${MT - 12}" width="40" height="${MB - MT + 24}" rx="10" fill="${C.prot}" opacity=".85"/>`;
+    /* 80S-ribosoom met de tunneluitgang op (ex, ey): 40S boven (leest het mRNA), 60S onder; de keten loopt van het PTC door de tunnel */
+    const ribo = (ex, ey, pause = 0, keten = true) => `<g transform="translate(${f1(ex)} ${f1(ey)})">${R80.svg}` +
+      (keten ? `<path d="${R80.tunnelD}" stroke="${C.chain}" stroke-width="4" fill="none"/>` : '') +
+      txt(-226 * RS, R80.mrnaY + 8, "5'", C.rna, 22, 'end', 700) + txt(226 * RS, R80.mrnaY + 8, "3'", C.rna, 22, 'start', 700) +
+      (pause > .01 ? `<g opacity="${f1(pause)}">${txt(150, -250, T2('⏸ elongatie geremd', '⏸ elongation arrested'), '#fff', 26, 'start', 700)}</g>` : '') + '</g>';
+    /* Sec61: twee helften in de membraan met de porie ertussen; gate opent de laterale poort (rechterhelft schuift opzij) */
+    const SW = 24, secX = gate => [PORE - 30, PORE + 30 + gate * 44];
+    const half = (cx, seed) => { const d = eiwitPad(cx, MY, SW, MW / 2 + 12, seed, .06); return `<path d="${d}" fill="#0b1224"/><path d="${d}" fill="${C.prot}" fill-opacity=".62" stroke="${C.prot}" stroke-width="2.2"/>`; };
+    const sec61 = (gate = 0) => { const [xl, xr] = secX(gate); return half(xl, 61) + half(xr, 62); };
+    /* membraan als lipidedubbellaag, met openingen waar eiwitten erdoor steken (statisch per toestand, dus gebufferd) */
+    const memCache = {};
+    const membraan = (gaten) => { const k = gaten.map(g => g.map(Math.round).join(',')).join(';'); return memCache[k] ??= membraanLijn(-300, 1900, MY, { w: MW, gaten }); };
 
     function chainPos(state, m, t0, clv) {
       // posities voor residuen 1..m; state: 'free' (t.o.v. uitgang), 'dock' (lus in lumen), 'cut' (rijpe keten hangt)
@@ -106,17 +111,17 @@ export default {
       }
       // gedokt: signaal als helix in de laterale poort, rest als lus in het lumen
       const out = [];
-      for (let i = 1; i <= Math.min(m, NSIG); i++) out.push([GATE + 20 + (i % 2) * 10 - 5, MT - 60 + (i - 1) * 9]);
+      for (let i = 1; i <= Math.min(m, NSIG); i++) out.push([GATE + (i % 2) * 8 - 4, MT - 22 + (i - 1) * 6.6]);
       if (m <= NSIG) return out;
       const n = m - NSIG, need = (n - 1) * 26;
       if (state.k === 'dock') {
-        const path = [[GATE + 20, MT - 60 + 17 * 9], [940, 770], [1000, 810], [990, 860], [900, 872], [820, 850], [780, 800], [PORE, 740], [PORE, 690], [PORE, 660], [PORE, 630], [PORE, 600]];
+        const path = [[GATE, MT - 22 + 17 * 6.6], [950, 790], [1010, 830], [990, 875], [900, 885], [820, 855], [780, 800], [PORE, 740], [PORE, 690], [PORE, 660], [PORE, 630], [PORE, 600]];
         const Ltot = path.slice(1).reduce((a, q, j) => a + Math.hypot(q[0] - path[j][0], q[1] - path[j][1]), 0);
         const pts = along(path.slice().reverse(), n, Math.min(26, Ltot / Math.max(1, n - 1)));
         pts.reverse(); for (const q of pts) out.push(q);
         return out;
       }
-      const path = [[PORE, 600], [PORE, 690], [770, 760], [700, 800], [630, 790], [580, 740], [560, 680], [540, 740], [490, 800], [420, 790]];
+      const path = [[PORE, 600], [PORE, 690], [792, 775], [762, 848], [690, 892], [610, 900], [540, 888], [480, 868], [420, 878], [390, 870]];   // onder de suikerboom van stap 7 door
       const pts = along(path, n, 26).reverse();
       for (const q of pts) out.push(q);
       return out;
@@ -138,9 +143,15 @@ export default {
         const m = i === 0 ? Math.round(lerp(0, 8, sub(p, .3, 1))) : i === 1 ? Math.round(lerp(8, 20, sub(p, 0, .7))) : i <= 3 ? 20 + (i === 3 ? 1 : 0) :
           i === 4 ? 21 + Math.round(4 * sub(p, .5, 1)) : i === 5 ? Math.round(lerp(25, 44, sub(p, .1, .95))) : 44;
         const pause = i === 2 ? sub(p, .5, .7) : i === 3 ? 1 : i === 4 ? 1 - sub(p, .3, .5) : 0;
-        if (showRibo > .01) rb = `<g opacity="${f1(showRibo)}">${ribo(exit[0], exit[1], pause)}</g>`;
+        if (showRibo > .01) rb = `<g opacity="${f1(showRibo)}">${ribo(exit[0], exit[1], pause, m > 0)}</g>`;
         $('er-rA').setAttribute('cx', showRibo > .5 ? f1(exit[0] - 100) : '-9999'); $('er-rA').setAttribute('cy', f1(exit[1] - 260));
-        $('er-sec61').innerHTML = sec61(i === 4 ? sub(p, .45, .75) : i >= 5 && i <= 7 ? 1 : i === 8 ? 1 : 0);
+        const gate = i === 4 ? sub(p, .45, .75) : i >= 5 ? 1 : 0, [xl, xr] = secX(gate);
+        const gaten = [[xl - SW - 1, xr + SW + 1]]; if (i < 8 || p < .1) gaten.push([SRA[0] - 9, SRA[0] + 9]);
+        if (i === 6) gaten.push([GATE + 62, GATE + 78]);
+        if (i === 7) gaten.push([643, 687]);
+        if (i === 8) gaten.push([1105, 1135], [1385, 1415]);
+        $('er-mem').innerHTML = membraan(gaten);
+        $('er-sec61').innerHTML = sec61(gate);
         // keten
         let pos;
         const free = chainPos({ k: 'free', exit }, m);
@@ -157,7 +168,7 @@ export default {
           // laatste residu naar de tunnel
           const last = pos[pos.length - 1]; line += `<line x1="${f1(last[0])}" y1="${f1(last[1])}" x2="${f1(exit[0])}" y2="${f1(exit[1] - 4)}" stroke="${C.chain}" stroke-width="4"/>`;
           ch += `<g opacity="${f1(showRibo)}">${line}`;
-          if (i >= 4 && i <= 6) ch += `<rect x="${GATE + 4}" y="${MT - 70}" width="42" height="${17 * 9 + 22}" rx="18" fill="rgba(127,220,106,.18)" stroke="${C.chain}" stroke-width="2" opacity="${f1(sigOp * (i === 4 ? sub(p, .6, .8) : 1))}"/>`;
+          if (i >= 4 && i <= 6) ch += `<rect x="${GATE - 19}" y="${MT - 34}" width="38" height="${17 * 6.6 + 24}" rx="17" fill="rgba(127,220,106,.18)" stroke="${C.chain}" stroke-width="2" opacity="${f1(sigOp * (i === 4 ? sub(p, .6, .8) : 1))}"/>`;
           const lo = i > 0 && LET[i] !== LET[i - 1] ? lerp(LET[i - 1], LET[i], sub(p, 0, .2)) : LET[i];
           pos.forEach((q, j) => { const o = j < NSIG ? sigOp : 1, inGate = i >= 4 && j < NSIG; if (o > .01) ch += `<g opacity="${f1(o)}">${bead(q[0], q[1], SEQ[j], inGate ? 11 : i === 1 || i === 2 ? 15 : 14, inGate ? 0 : lo)}</g>`; });
           if (i <= 3 && pos.length) ch += txt(pos[0][0] + 8, pos[0][1] - 20, 'N', '#fff', 20, 'middle', 800);
@@ -177,29 +188,29 @@ export default {
           const core = pos.slice(3, 13), cxh = core.reduce((a, q) => a + q[0], 0) / core.length, cyh = core.reduce((a, q) => a + q[1], 0) / core.length;
           const bind = E2([cxh + 260, cyh - 220], [cxh + 30, cyh + 10], k);
           const off = [rel * 160, -rel * 120];
-          const b54 = [bind[0] + off[0], bind[1] + off[1]], alu = [exit[0] + 24 + off[0], exit[1] - 181 + off[1]];
+          const b54 = [bind[0] + off[0], bind[1] + off[1]], alu = [exit[0] + 128 * RS + off[0], exit[1] - 150 * RS + off[1]];   // Alu-domein in de spleet waar elongatiefactoren binden
           const srpOp = i === 2 ? sub(p, 0, .15) : i === 3 ? 1 : 1 - sub(p, .6, .9);
           srp += `<g opacity="${f1(srpOp)}">` +
             `<path d="M${f1(b54[0])},${f1(b54[1])} C${f1(b54[0] + 170)},${f1(b54[1] - 60)} ${f1(alu[0] + 200)},${f1(alu[1] + 60)} ${f1(alu[0])},${f1(alu[1])}" stroke="${C.rna}" stroke-width="10" fill="none" stroke-linecap="round"/>` +
-            `<ellipse cx="${f1(b54[0])}" cy="${f1(b54[1])}" rx="50" ry="30" fill="${C.prot}" opacity=".9"/>${txt(b54[0], b54[1] + 7, 'SRP54', '#fff', 18, 'middle', 800)}` +
-            `<ellipse cx="${f1(alu[0])}" cy="${f1(alu[1])}" rx="30" ry="18" fill="${C.prot3}"/>${txt(alu[0], alu[1] + 6, 'Alu', '#fff', 15, 'middle', 700)}` +
+            eiwit(b54[0], b54[1], 50, 30, C.prot, { seed: 54, label: 'SRP54', fs: 18 }) +
+            eiwit(alu[0], alu[1], 30, 19, C.prot3, { seed: 14, label: 'Alu', fs: 15 }) +
             (i === 3 || (i === 4 && p < .4) ? txt(b54[0], b54[1] - 42, 'GTP', '#ffe08a', 16, 'middle', 700) : '') + '</g>';
           $('er-sA').setAttribute('cx', f1(b54[0] + 150)); $('er-sA').setAttribute('cy', f1(b54[1] - 90));
         } else hide('er-sA');
         // SRP-receptor
-        srp += `<g opacity="${f1(i === 0 ? sub(p, .1, .3) : i === 8 ? 1 - sub(p, 0, .2) : 1)}"><rect x="${SRA[0] - 14}" y="${MT - 6}" width="28" height="${MB - MT + 12}" rx="8" fill="${C.prot2}"/><ellipse cx="${SRA[0]}" cy="${SRA[1] - 24}" rx="44" ry="26" fill="${C.prot2}"/>${txt(SRA[0], SRA[1] - 18, 'SRα', '#fff', 17, 'middle', 800)}${i >= 3 && i <= 4 ? txt(SRA[0] + 60, SRA[1] - 18, i === 4 && p > .4 ? 'GDP' : 'GTP', '#ffe08a', 16, 'start', 700) : ''}${i >= 3 ? txt(SRA[0] + 22, MB + 22, 'SRβ', C.muted, 15, 'start', 700) : ''}</g>`;
+        srp += `<g opacity="${f1(i === 0 ? sub(p, .1, .3) : i === 8 ? 1 - sub(p, 0, .2) : 1)}">${tmHelix(SRA[0], MT - 6, MB + 6, C.prot2, 1, 15)}${eiwit(SRA[0] + 4, MT - 14, 20, 12, C.prot2, { seed: 33 })}${eiwit(SRA[0], SRA[1] - 34, 44, 26, C.prot2, { seed: 32, label: 'SRα', fs: 17 })}${i >= 3 && i <= 4 ? txt(SRA[0] + 60, SRA[1] - 28, i === 4 && p > .4 ? 'GDP' : 'GTP', '#ffe08a', 16, 'start', 700) : ''}${i >= 3 ? txt(SRA[0] + 22, MB + 22, 'SRβ', C.muted, 15, 'start', 700) : ''}</g>`;
         $('er-srp').innerHTML = srp;
         // signaalpeptidase, OST
         if (i === 6) {
           const k = sub(p, .05, .25), flash = sub(p, .35, .5);
-          spc += `<g opacity="${f1(k)}"><ellipse cx="${GATE + 110}" cy="${MB + 60}" rx="62" ry="28" fill="${C.prot3}"/>${txt(GATE + 110, MB + 66, 'SPC', '#fff', 18, 'middle', 800)}${txt(GATE + 185, MB + 66, T2('signaalpeptidase', 'signal peptidase'), C.prot, 18, 'start', 700)}</g>`;
-          if (flash > 0 && flash < 1) spc += `<circle cx="${GATE + 28}" cy="${MT + 100}" r="${f1(16 + 30 * flash)}" fill="none" stroke="#fff" stroke-width="3" opacity="${f1(1 - flash)}"/>`;
-          ov += `<g opacity="${f1(sub(p, .45, .6))}">${txt(GATE + 60, MT + 104, '✂', '#fff', 30, 'middle', 800)}</g>`;
-          ov += `<g opacity="${f1(sub(p, .75, .9))}">${txt(420, 860, T2('N-terminus van pro-albumine: RGVFRR-DAHK…', 'N terminus of pro-albumin: RGVFRR-DAHK…'), '#fff', 20, 'start', 700)}</g>`;
+          spc += `<g opacity="${f1(k)}">${tmHelix(GATE + 70, MT - 4, MB + 4, C.prot3, 1, 14)}${eiwit(GATE + 66, MB + 38, 48, 26, C.prot3, { seed: 21, label: 'SPC', fs: 18 })}${txt(GATE + 122, MB + 44, T2('signaalpeptidase', 'signal peptidase'), C.prot, 18, 'start', 700)}</g>`;
+          if (flash > 0 && flash < 1) spc += `<circle cx="${GATE}" cy="${MT + 98}" r=""${f1(16 + 30 * flash)}" fill="none" stroke="#fff" stroke-width="3" opacity="${f1(1 - flash)}"/>`;
+          ov += `<g opacity="${f1(sub(p, .45, .6))}">${txt(GATE - 34, MT + 108, '✂', '#fff', 30, 'middle', 800)}</g>`;
+          ov += `<g opacity="${f1(sub(p, .75, .9))}">${txt(850, 905, T2('N-terminus van pro-albumine: RGVFRR-DAHK…', 'N terminus of pro-albumin: RGVFRR-DAHK…'), '#fff', 20, 'start', 700)}</g>`;
         }
         if (i === 7) {
           const k = sub(p, .05, .25);
-          ost += `<g opacity="${f1(k)}"><rect x="630" y="${MT - 10}" width="70" height="${MB - MT + 20}" rx="12" fill="${C.prot2}"/><ellipse cx="665" cy="${MB + 30}" rx="60" ry="26" fill="${C.prot2}"/>${txt(665, MB + 37, 'OST', '#fff', 18, 'middle', 800)}</g>`;
+          ost += `<g opacity="${f1(k)}">${tmHelix(653, MT - 6, MB + 6, C.prot2, 1, 14)}${tmHelix(677, MT - 6, MB + 6, C.prot2, 1, 14)}${eiwit(665, MB + 36, 60, 28, C.prot2, { seed: 48, label: 'OST', fs: 18 })}</g>`;
           // lipide-gekoppelde suikerboom (SNFG: GlcNAc blauw vierkant, Man groen rond, Glc blauw rond)
           const gx = 560, gy = MB + 10, g = sub(p, .2, .4);
           let tree = `<line x1="${gx}" y1="${MT + 10}" x2="${gx}" y2="${gy}" stroke="${C.mem}" stroke-width="4"/>`;
@@ -213,7 +224,7 @@ export default {
         } else hide('er-gA');
         if (i === 8) {
           const k = sub(p, .15, .35), k2 = sub(p, .5, .7);
-          const tm = (x, nUp, lab, op) => `<g opacity="${f1(op)}"><rect x="${x - 16}" y="${MT - 16}" width="32" height="${MB - MT + 32}" rx="14" fill="${C.chain}" opacity=".9"/>` +
+          const tm = (x, nUp, lab, op) => `<g opacity="${f1(op)}">${tmHelix(x, MT - 16, MB + 16, C.chain, .95, 26)}` +
             `<path d="M${x},${MT - 16} C${x},${MT - 80} ${x + 50},${MT - 80} ${x + 60},${MT - 120}" stroke="${C.chain}" stroke-width="5" fill="none"/>` +
             `<path d="M${x},${MB + 16} C${x},${MB + 80} ${x - 50},${MB + 80} ${x - 60},${MB + 120}" stroke="${C.chain}" stroke-width="5" fill="none"/>` +
             txt(x + 72, MT - 126, nUp ? 'N' : 'C', '#fff', 22, 'start', 800) + txt(x - 72, MB + 140, nUp ? 'C' : 'N', '#fff', 22, 'end', 800) +

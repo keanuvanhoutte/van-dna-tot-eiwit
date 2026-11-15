@@ -3,7 +3,8 @@
  * en van UAG (PylRS laadt tRNA-Pyl rechtstreeks) — mens vs. methanogene archaea.
  */
 import { C, BASE, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, f1, aa } from '../../kit.js';
-import { hud, placeHud, textBox } from './_tlkit.js';
+import { hud, placeHud, textBox, koepelPad, subeenheid, tunnel, factor } from './_tlkit.js';
+import { eiwit } from '../../bio.js';
 
 const YM = 620, CW = 96;                                   // hoogte mRNA, breedte van één codon
 const COD = ['AUG', 'GCU', 'UGU', 'UGA', 'GGU', 'AAC', 'UAA'];   // illustratief leesraam met UGA in het midden
@@ -20,8 +21,8 @@ export default {
   org: { nl: 'mens (Sec) · methanogene archaea (Pyl)', en: 'human (Sec) · methanogenic archaea (Pyl)' },
   legend: [[C.rna, 'mRNA'], [C.trna, 'tRNA'], [C.rrna, { nl: 'ribosoom', en: 'ribosome' }], [C.prot, { nl: 'factoren (SBP2, eEFSec, enzymen)', en: 'factors (SBP2, eEFSec, enzymes)' }], [SEC_COL, { nl: 'selenocysteïne (Sec, U)', en: 'selenocysteine (Sec, U)' }], [PYL_COL, { nl: 'pyrrolysine (Pyl, O)', en: 'pyrrolysine (Pyl, O)' }]],
   simplified: {
-    nl: 'De codons rond UGA zijn illustratief (geen echt gen). In werkelijkheid ligt het SECIS-element veel verder, in de 3\'-UTR; hier is de verbinding met het ribosoom een gestippelde lijn. Andere factoren (o.a. ribosomaal eiwit eL30, nucleoline) zijn weggelaten. Hoe vaak Sec wordt ingebouwd in plaats van te stoppen, hangt o.a. af van het SECIS-element.',
-    en: 'The codons around UGA are illustrative (not a real gene). In reality the SECIS element lies much further downstream, in the 3\' UTR; here its link to the ribosome is a dotted line. Other factors (e.g. ribosomal protein eL30, nucleolin) are omitted. How often Sec is inserted instead of stopping depends, among other things, on the SECIS element.' },
+    nl: 'De codons rond UGA zijn illustratief (geen echt gen); het ribosoom is een 2D-schets (40S met het mRNA onder, 60S met de uitgangstunnel boven). In werkelijkheid ligt het SECIS-element veel verder, in de 3\'-UTR; hier is de verbinding met het ribosoom een gestippelde lijn. Andere factoren (o.a. ribosomaal eiwit eL30, nucleoline) zijn weggelaten. Hoe vaak Sec wordt ingebouwd in plaats van te stoppen, hangt o.a. af van het SECIS-element.',
+    en: 'The codons around UGA are illustrative (not a real gene); the ribosome is a 2D sketch (40S with the mRNA below, 60S with the exit tunnel above). In reality the SECIS element lies much further downstream, in the 3\' UTR; here its link to the ribosome is a dotted line. Other factors (e.g. ribosomal protein eL30, nucleolin) are omitted. How often Sec is inserted instead of stopping depends, among other things, on the SECIS element.' },
   steps: [
     ST(8500, cam(800, 520, 1500), 'UGA: stop… of een extra aminozuur', 'UGA: stop… or an extra amino acid', 'In 25 van onze genen betekent UGA niet ‘stop’ maar selenocysteïne: cysteïne met selenium in plaats van zwavel.', 'In 25 human genes UGA does not mean ‘stop’ but selenocysteine: cysteine with selenium instead of sulfur.'),
     ST(9500, cam(800, 330, 1350), 'Gemaakt op zijn eigen tRNA', 'Made on its own tRNA', 'Het tRNA krijgt eerst serine. Twee enzymen maken daar selenocysteïne van: zuurstof wordt selenium.', 'The tRNA is first loaded with serine. Two enzymes turn it into selenocysteine: oxygen becomes selenium.'),
@@ -66,15 +67,18 @@ export default {
       if (op <= .01) return '';
       let s = `<g opacity="${f1(op)}"><path d="M${x - 34},${y} L${x - 34},${y - 110} Q${x - 34},${y - 132} ${x - 12},${y - 138} L${x + 34},${y - 150} L${x + 34},${y - 226} L${x + 12},${y - 226} L${x + 12},${y - 166} L${x - 10},${y - 160} L${x - 10},${y} Z" fill="rgba(255,194,71,.2)" stroke="${C.trna}" stroke-width="3" stroke-linejoin="round"/>`;
       ac.split('').forEach((b, j) => { s += ntb(x - 32 + j * 32, y - 2, b, 28); });
-      if (big) s += txt(x - 64, y + 20, "3'", '#fff', 18, 'end') + txt(x + 64, y + 20, "5'", '#fff', 18, 'start');
+      if (big) s += txt(x - 37, y - 10, "3'", '#fff', 18, 'end') + txt(x + 52, y + 20, "5'", '#fff', 18, 'start');
       if (charge) s += bead(x + 26, y - 248, charge[0], charge[1], 24);
       return s + '</g>';
     }
+    /* 80S in leesweergave: 60S boven (met de tunnel van het PTC naar buiten), 40S onder met het mRNA; statisch per x */
+    const riboCache = {};
     function ribo(x, op = 1) {
       if (op <= .01) return '';
-      return `<g opacity="${f1(op)}"><path d="M${x - 250},${YM - 12} C${x - 290},${YM - 170} ${x - 170},${YM - 330} ${x},${YM - 336} C${x + 170},${YM - 330} ${x + 290},${YM - 170} ${x + 250},${YM - 12} Z" fill="rgba(44,198,168,.13)" stroke="${C.rrna}" stroke-width="3"/>` +
-        `<path d="M${x - 230},${YM + 44} C${x - 230},${YM + 120} ${x + 230},${YM + 120} ${x + 230},${YM + 44} Z" fill="rgba(44,198,168,.2)" stroke="${C.rrna}" stroke-width="3"/>` +
-        `<g font-family="JetBrains Mono" font-size="22" font-weight="700" fill="${C.text}" text-anchor="middle" opacity=".8"><text x="${x - CW}" y="${YM - 290}">E</text><text x="${x}" y="${YM - 290}">P</text><text x="${x + CW}" y="${YM - 290}">A</text></g></g>`;
+      riboCache[x] ??= subeenheid(koepelPad(x, YM - 12, 250, 324, { seed: 61 }), { fill: .1 }) + tunnel([x + 22, YM - 288], [x + 26, YM - 338], { w: 40 }) +
+        subeenheid(koepelPad(x, YM + 44, 230, 76, { seed: 41, dir: 1 }), { fill: .16 }) +
+        `<g font-family="JetBrains Mono" font-size="22" font-weight="700" fill="${C.text}" text-anchor="middle" opacity=".8"><text x="${x - CW + 22}" y="${YM - 44}">E</text><text x="${x + 22}" y="${YM - 44}">P</text><text x="${x + CW + 22}" y="${YM - 44}">A</text></g>`;
+      return `<g opacity="${f1(op)}">${riboCache[x]}</g>`;
     }
     function mrna(shift = 0, uga = 'UGA', hiUGA = 0, op = 1) {
       let s = `<g opacity="${f1(op)}"><line x1="${90 - shift}" y1="${YM + 18}" x2="1520" y2="${YM + 18}" stroke="${C.rna}" stroke-width="6"/>`;
@@ -108,7 +112,9 @@ export default {
           $('se-rA').setAttribute('cx', f1(P)); $('se-rA').setAttribute('cy', f1(YM - 340));
           $('se-cA').setAttribute('cx', f1(A - shift)); $('se-cA').setAttribute('cy', f1(YM + (i === 0 ? 122 : 70)));
           // P-plaats-tRNA met keten (Met-Ala-Cys)
-          const chainAt = (x, y, extra) => { const beads = [['Cys', '#5fd3e6'], ['Ala', '#7fdc6a'], ['Met', '#7fdc6a']]; if (extra) beads.unshift(extra); let c = ''; beads.forEach((b, j) => { const bx = x - 10 - j * 52, by = y - 30 - j * 26; if (j) c += `<line x1="${f1(bx + 52)}" y1="${f1(by + 26)}" x2="${f1(bx)}" y2="${f1(by)}" stroke="${C.chain}" stroke-width="5"/>`; c += bead(bx, by, b[0], b[1], 22); }); return c; };
+          /* keten: nieuwste aminozuur aan de punt van zijn tRNA (bij het PTC), de oudere door de tunnel van de 60S naar buiten (N-uiteinde voorop) */
+          const SLOT = [[P + 26, YM - 334], [P + 36, YM - 382], [P + 52, YM - 428]];
+          const chainAt = (x, y, extra) => { const beads = [['Cys', '#5fd3e6'], ['Ala', '#7fdc6a'], ['Met', '#7fdc6a']]; if (extra) beads.unshift(extra); const pos = beads.map((b, j) => j ? SLOT[j - 1] : [x - 10, y - 30]); let c = ''; beads.forEach((b, j) => { const [bx, by] = pos[j]; if (j) c += `<line x1="${f1(pos[j - 1][0])}" y1="${f1(pos[j - 1][1])}" x2="${f1(bx)}" y2="${f1(by)}" stroke="${C.chain}" stroke-width="5"/>`; }); beads.forEach((b, j) => { c += bead(pos[j][0], pos[j][1], b[0], b[1], 22); }); return c; };
           const yDock = YM - 32;
           if (i < 4) {
             tr += trna(P, yDock, 'ACA', null);
@@ -123,12 +129,12 @@ export default {
               tr += trna(P - shift - 160 * sub(p, .75, 1), yDock - 200 * sub(p, .75, 1), 'ACA', null, 1 - sub(p, .75, 1));
               const secBead = ['Sec', SEC_COL];
               if (bond < 1) { tr += trna(A - shift, yDock, 'ACU', secBead, 1); chn += chainAt(P + 26 + (A - P) * bond * .5, yDock - 222 - 0 * bond); }
-              else { tr += trna(A - shift, yDock, 'ACU', null, 1); chn += chainAt(A - shift + 26 + 52, yDock - 222 + 26, secBead); }
+              else { tr += trna(A - shift, yDock, 'ACU', null, 1); chn += chainAt(A - shift + 26, yDock - 222, secBead); }
               ov += `<g opacity="${f1(sub(p, .15, .35) * (1 - sub(p, .7, .8)))}">${txt(A + 140, yDock - 320, T2('peptidebinding', 'peptide bond'), '#fff', 22, 'start', 700)}</g>`;
               ov += `<g opacity="${f1(sub(p, .8, .95))}">` + textBox(755, 180, 460, [T2('Zonder Se of SECIS: meestal stop', 'Without Se or SECIS: usually stop'), T2('→ afgeknot eiwit', '→ truncated protein')], { col: C.danger, fs: 21 }) + '</g>';
             } else {
               tr += trna(x, y, 'ACU', ['Sec', SEC_COL], 1, k > .95);
-              fac += `<g opacity="${f1(1 - sub(p, .7, .9))}">${pill(x + 110, y - 150, 150, 34, 'eEFSec·GTP', C.prot2, 1, 17)}</g>`;
+              fac += `<g opacity="${f1(1 - sub(p, .7, .9))}">${factor(x + 110, y - 150, 150, 34, 'eEFSec·GTP', C.prot2, 1, 17)}</g>`;
               // paring UCA–UGA
               const pr = sub(p, .55, .7);
               if (pr > 0) for (let j = 0; j < 3; j++) { const n = 'UGA'[j] === 'G' ? 3 : 2; for (let q = 0; q < n; q++) fac += `<line x1="${f1(A - 32 + j * 32 + (q - (n - 1) / 2) * 7)}" y1="${YM - 4}" x2="${f1(A - 32 + j * 32 + (q - (n - 1) / 2) * 7)}" y2="${YM + 4}" stroke="#fff" stroke-width="2.5" opacity="${f1(pr)}"/>`; }
@@ -140,11 +146,11 @@ export default {
           } else hide('se-tA');
           if (i >= 2 && i <= 3) {
             const k = i === 2 ? ease(sub(p, .1, .35)) : 1;
-            fac += `<g opacity="${f1(k)}"><ellipse cx="1210" cy="${YM - 205}" rx="64" ry="30" fill="${C.prot}"/>${txt(1210, YM - 198, 'SBP2', '#fff', 20, 'middle', 800)}</g>`;
+            fac += `<g opacity="${f1(k)}">${eiwit(1210, YM - 205, 64, 30, C.prot, { seed: 22, label: 'SBP2', fs: 20 })}</g>`;
             if (i === 2) {
               const k2 = ease(sub(p, .4, .75));
               const [x, y] = E2([1450, 200], [1140, YM - 120], k2);
-              ftr += trna(x - 40, y, 'ACU', ['Sec', SEC_COL], sub(p, .35, .45)); fac += `<g opacity="${f1(sub(p, .35, .45))}">${pill(x + 90, y - 150, 150, 34, 'eEFSec·GTP', C.prot2, 1, 17)}</g>`;
+              ftr += trna(x - 40, y, 'ACU', ['Sec', SEC_COL], sub(p, .35, .45)); fac += `<g opacity="${f1(sub(p, .35, .45))}">${factor(x + 90, y - 150, 150, 34, 'eEFSec·GTP', C.prot2, 1, 17)}</g>`;
               ov += `<g opacity="${f1(sub(p, .8, .95))}">${textBox(745, 250, 310, [T2('eEFSec vervangt eEF1A', 'eEFSec replaces eEF1A'), T2('alleen voor Sec-tRNA-Sec', 'only for Sec-tRNA-Sec')], { col: C.prot, fs: 19 })}</g>`;
             }
           }

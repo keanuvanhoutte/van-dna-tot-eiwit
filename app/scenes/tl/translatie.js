@@ -1,4 +1,6 @@
 import { C, BASE, RNA_PAIR, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, clamp, f1, translate, THREE, AACLASS, CLASSCOL } from '../../kit.js';
+import { koepelPad, subeenheid, tunnel, factor } from './_tlkit.js';
+import { eiwit } from '../../bio.js';
 
 /* mRNA 5'→3': 5'-UTR zonder AUG · Kozak GCCACC·AUG·G · 12 codons + stop UAA · 3'-UTR · poly(A) (verkort) */
 const UTR5 = 'GGAUCCAGCUUCGAAUUCGCCACC', CDS = 'AUGGCUUUCAAGGAUUGGCACGGACUGACCGAAAGCUAA', UTR3 = 'GCGGCCUCUAGC', POLYA = 'A'.repeat(18);
@@ -12,6 +14,7 @@ const NT = 40, COD = 120, YM = 600, PC = 800;               // nucleotidebreedte
 const SITE = { E: PC - COD, P: PC, A: PC + COD };
 const SCAN0 = (S0 + 1) * NT - 240;                          // bij binding aan de cap ligt het AUG zoveel px verder
 const TUNNEL = [830, 175];
+const TUBE = [[839, 284], [834, 240], [830, 196]];           // plaatsen in de tunnel: van het PTC naar de uitgang bovenaan de 60S
 
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 
@@ -25,8 +28,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">De aminozuren worden niet getekend maar berekend uit de genetische code; anticodons zijn complementair en antiparallel (3\'→5\' gelezen). A–U-paren tonen 2, G–C-paren 3 waterstofbruggen.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">The amino acids are not drawn by hand but computed from the genetic code; anticodons are complementary and antiparallel (read 3\'→5\'). A–U pairs show 2, G–C pairs 3 hydrogen bonds.</p>' },
   simplified: {
-    nl: 'Het ribosoom is een 2D-schets (echte structuur: PDB 4UG0, humaan 80S); tRNA\'s zijn vereenvoudigde L-vormen. Het mRNA schuift hier langs een vast ribosoom (in werkelijkheid beweegt het ribosoom). Hybride toestanden, GTP-hydrolyse en de gesloten lus (eIF4G–PABP) zijn weggelaten; de poly(A)-staart is ingekort. Aminozuurkleuren volgen de cursusindeling; His staat bij positief (pH-afhankelijk).',
-    en: 'The ribosome is a 2D sketch (real structure: PDB 4UG0, human 80S); tRNAs are simplified L shapes. Here the mRNA slides past a fixed ribosome (in reality the ribosome moves). Hybrid states, GTP hydrolysis and the closed loop (eIF4G–PABP) are omitted; the poly(A) tail is shortened. Amino-acid colours follow the course grouping; His is shown as positive (pH-dependent).' },
+    nl: 'Het ribosoom is een 2D-schets (echte structuur: PDB 4UG0, humaan 80S): 40S onder met het mRNA, 60S erboven met de tunnel van het actieve centrum naar buiten; tRNA\'s zijn vereenvoudigde L-vormen. Het mRNA schuift hier langs een vast ribosoom (in werkelijkheid beweegt het ribosoom). Hybride toestanden, GTP-hydrolyse en de gesloten lus (eIF4G–PABP) zijn weggelaten; de poly(A)-staart is ingekort. Aminozuurkleuren volgen de cursusindeling; His staat bij positief (pH-afhankelijk).',
+    en: 'The ribosome is a 2D sketch (real structure: PDB 4UG0, human 80S): 40S below holding the mRNA, 60S above with the tunnel from the active centre to the outside; tRNAs are simplified L shapes. Here the mRNA slides past a fixed ribosome (in reality the ribosome moves). Hybrid states, GTP hydrolysis and the closed loop (eIF4G–PABP) are omitted; the poly(A) tail is shortened. Amino-acid colours follow the course grouping; His is shown as positive (pH-dependent).' },
   steps: [
     ST(8000, cam(2350, 600, 4000), 'Het mRNA met de boodschap', 'The mRNA carries the message', 'Alleen het middenstuk, van het startsein (AUG) tot het stopsein (UAA), wordt vertaald in een eiwit.', 'Only the middle part, from the start signal (AUG) to the stop signal (UAA), is translated into protein.'),
     ST(8000, cam(520, 560, 1150), 'Het ribosoom begint vooraan', 'The ribosome starts at the front', 'De kleine helft van het ribosoom bindt vooraan op het mRNA, samen met een eerste tRNA dat methionine draagt.', 'The small half of the ribosome binds at the front of the mRNA, together with a first tRNA carrying methionine.'),
@@ -48,8 +51,8 @@ export default {
     return svgOpen() + `
     <g data-node="ribosoom" data-color="${C.rrna}" data-label="${T2('Ribosoom (80S)', 'Ribosome (80S)')}">
       <g id="tl-large">
-        <path d="M470,585 C420,420 520,235 790,215 C1060,195 1190,330 1170,490 C1162,560 1120,585 1080,588 L520,588 C495,588 478,588 470,585Z" fill="rgba(44,198,168,.15)" stroke="${C.rrna}" stroke-width="3"/>
-        <path d="M800,262 C788,222 800,190 832,150" stroke="rgba(44,198,168,.45)" stroke-width="30" fill="none" stroke-linecap="round"/>
+        ${subeenheid(koepelPad(820, 588, 350, 373, { seed: 60 }), { fill: .16 })}
+        ${tunnel([841, 300], [830, 206])}
         <g id="tl-l60" opacity="0">${txt(1110, 262, T2('grote subeenheid (60S)', 'large subunit (60S)'), C.rrna, 24, 'start', 700)}</g>
         <g id="tl-ltun" opacity="0">${txt(866, 158, T2('uitgangstunnel', 'exit tunnel'), C.text, 22, 'start')}</g>
         <g font-family="JetBrains Mono" font-size="22" font-weight="700" fill="${C.text}" text-anchor="middle" opacity=".8">
@@ -58,7 +61,7 @@ export default {
         <circle data-anchor="ribosoom" cx="1010" cy="258" r="1" fill="none"/>
       </g>
       <g id="tl-small">
-        <path d="M500,648 C500,720 620,772 800,774 C980,776 1100,730 1100,650 Z" fill="rgba(44,198,168,.22)" stroke="${C.rrna}" stroke-width="3"/>
+        ${subeenheid(koepelPad(800, 648, 300, 126, { seed: 40, dir: 1 }), { fill: .24 })}
         <g id="tl-l40" opacity="0">${txt(800, 818, T2('kleine subeenheid (40S)', 'small subunit (40S)'), C.rrna, 24, 'middle', 700)}</g>
       </g>
     </g>
@@ -163,7 +166,7 @@ export default {
       for (let s = 0; s < n; s++) {
         let x, y;
         if (s === 0) { x = anchor[0]; y = anchor[1]; }
-        else if (s < 4) { x = lerp(anchor[0], TUNNEL[0], s / 4); y = lerp(anchor[1], TUNNEL[1], s / 4); }
+        else if (s < 4) { [x, y] = TUBE[s - 1]; }                   // in de uitgangstunnel van de 60S (vast, het uiteinde bij het PTC beweegt)
         else { const u = s - 4; x = TUNNEL[0] - 24 - u * 44; y = TUNNEL[1] - 34 - u * 12 + Math.cos(u * 1.4) * 12; }
         if (released > 0) {
           const i = n - 1 - s, ang = i * 2.4, rad = 27 * Math.sqrt(i + .3);   // zonnebloemspiraal: compact, zonder overlap
@@ -215,13 +218,13 @@ export default {
 
         // initiatiefactoren
         let eif = '';
-        if (step >= 1 && step <= 2) eif += pill(capX + 70, YM - 50, 90, 34, 'eIF4F', C.prot2, step === 1 ? sub(p, 0, .3) : 1 - sub(p, .6, 1), 18);
+        if (step >= 1 && step <= 2) eif += factor(capX + 70, YM - 50, 90, 34, 'eIF4F', C.prot2, step === 1 ? sub(p, 0, .3) : 1 - sub(p, .6, 1), 18);
         if (step >= 1 && step <= 4) {
           const o1 = step === 1 ? sub(p, .3, .6) : 1;
-          eif += pill(1000, 705, 80, 34, 'eIF3', C.prot3, step === 4 ? o1 * (1 - sub(p, .4, .8)) : o1, 18);
-          eif += pill(SITE.P - 130, 330, 130, 34, 'eIF2·GTP', C.prot2, step === 3 ? o1 * (1 - sub(p, .5, .9)) : step === 4 ? 0 : o1, 18);
-          eif += pill(SITE.P - 180, 705, 76, 34, 'eIF1', C.prot3, step === 3 ? o1 * (1 - sub(p, .5, .9)) : step === 4 ? 0 : o1, 18);
-          if (step === 4) eif += pill(SITE.A + 40, 150 - 160 * (1 - ease(sub(p, 0, .6))), 146, 34, 'eIF5B·GTP', C.prot2, 1 - sub(p, .7, 1), 18);
+          eif += factor(1000, 705, 80, 34, 'eIF3', C.prot3, step === 4 ? o1 * (1 - sub(p, .4, .8)) : o1, 18);
+          eif += factor(SITE.P - 130, 330, 130, 34, 'eIF2·GTP', C.prot2, step === 3 ? o1 * (1 - sub(p, .5, .9)) : step === 4 ? 0 : o1, 18);
+          eif += factor(SITE.P - 180, 705, 76, 34, 'eIF1', C.prot3, step === 3 ? o1 * (1 - sub(p, .5, .9)) : step === 4 ? 0 : o1, 18);
+          if (step === 4) eif += factor(SITE.A + 40, 150 - 160 * (1 - ease(sub(p, 0, .6))), 146, 34, 'eIF5B·GTP', C.prot2, 1 - sub(p, .7, 1), 18);
         }
         if (step === 2) eif += `<path d="M${SITE.P - 180},${YM + 150} h360" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>` + txt(SITE.P, YM + 196, T2("scannen 5'→3'", "scanning 5'→3'"), C.text, 22);
         $('tl-eif').innerHTML = eif;
@@ -252,8 +255,8 @@ export default {
           inc += trna(ix, iy, c + 1, carriesOwnAa ? AAS[c + 1] : null, sub(u, 0, .08) * 1, step === 6);
           const eA = u < .4 ? [ix + 84, iy - 176] : u >= .62 && u < .82 ? [SITE.A + 190 - shift, 352] : [-9999, 0];
           $('tl-eefA').setAttribute('cx', f1(eA[0])); $('tl-eefA').setAttribute('cy', f1(eA[1]));
-          if (u < .45) eef = pill(ix + 84, iy - 150, 150, 34, 'eEF1A·GTP', C.prot2, 1 - sub(u, .38, .45), 19);
-          if (u >= .6 && u < .85) eef = pill(SITE.A + 70 - shift, 360, 136, 34, 'eEF2·GTP', C.prot2, sub(u, .6, .64) * (1 - sub(u, .8, .85)), 19);
+          if (u < .45) eef = factor(ix + 84, iy - 150, 150, 34, 'eEF1A·GTP', C.prot2, 1 - sub(u, .38, .45), 19);
+          if (u >= .6 && u < .85) eef = factor(SITE.A + 70 - shift, 360, 136, 34, 'eEF2·GTP', C.prot2, sub(u, .6, .64) * (1 - sub(u, .8, .85)), 19);
           pairs += pairLines(aX, CODONS[c + 1], sub(u, .3, .38));
           if (u < .85) pairs += pairLines(pX, CODONS[c], .55);
           // keten: vóór binding aan P-tRNA (c+1 residuen), erna aan het nieuwe tRNA (c+2 residuen)
@@ -274,10 +277,10 @@ export default {
           const rin = step === 12 ? ease(sub(p, 0, .5)) : 1;
           const rx = lerp(SITE.A + 380, SITE.A, rin), ry = lerp(yDock - 420, yDock, rin);
           const rop = step === 14 ? 1 - sub(p, 0, .4) : 1;
-          rf = (rop <= .01 ? '' : `<g opacity="${f1(rop)}"><path d="M${rx - 30},${ry} L${rx - 30},${ry - 190} L${rx + 30},${ry - 190} L${rx + 30},${ry} Z" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>` +
-            txt(rx, ry - 90, 'eRF1', '#fff', 20) + '</g>') + pill(rx + 100, ry - 170, 136, 34, 'eRF3·GTP', C.prot2, step === 12 ? sub(p, .1, .4) * (1 - sub(p, .75, 1)) : 0, 18);
+          rf = (rop <= .01 ? '' : `<g opacity="${f1(rop)}">` + eiwit(rx, ry - 98, 34, 96, C.prot, { seed: 31, bumps: .07 }) +
+            txt(rx, ry - 90, 'eRF1', '#fff', 20) + '</g>') + factor(rx + 100, ry - 170, 136, 34, 'eRF3·GTP', C.prot2, step === 12 ? sub(p, .1, .4) * (1 - sub(p, .75, 1)) : 0, 18);
           chain = chainSVG([SITE.P + 22, yDock - 222], c + 1, rel);
-          if (step === 14) abce += pill(SITE.P, 505, 110, 38, 'ABCE1', C.prot2, sub(p, .2, .45), 22);
+          if (step === 14) abce += factor(SITE.P, 505, 110, 38, 'ABCE1', C.prot2, sub(p, .2, .45), 22);
         }
         $('tl-trnas').innerHTML = tr; $('tl-inc').innerHTML = inc; $('tl-eef').innerHTML = eef; $('tl-rf').innerHTML = rf;
         $('tl-pairs').innerHTML = pairs; $('tl-ptc').innerHTML = ptc; $('tl-abce').innerHTML = abce; $('tl-chain').innerHTML = chain;

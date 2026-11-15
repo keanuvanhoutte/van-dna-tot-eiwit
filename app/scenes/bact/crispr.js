@@ -1,5 +1,6 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1 } from '../../kit.js';
 import { rodCell } from './_bkit.js';
+import { eiwitPad } from '../../bio.js';
 import { T, btn, hbtn, phage, PHDNA, rnaWave } from '../entry/_corona.js';
 
 /*
@@ -10,7 +11,7 @@ import { T, btn, hbtn, phage, PHDNA, rnaWave } from '../entry/_corona.js';
  * CRISPR–cas in 42,3 % van de bacteriële en 85,2 % van de archaeagenomen (Makarova et al. 2020).
  */
 const L3 = (nl, en) => ({ nl, en });
-const AY = 300, AX0 = 170, SP = 112;                         // CRISPR-rij: hoogte, begin, afstand tussen herhalingen
+const AY = 300, AX0 = 220, SP = 112;                         // CRISPR-rij: hoogte, begin, afstand tussen herhalingen
 const OLD = ['#5fd3e6', '#ffc247', '#9cc0ff', '#7fdc6a', '#ffb27a'];
 const DY = 560, DX0 = 560, DX1 = 1050;                       // faag-DNA in de cel
 const HIT = [740, 840];                                      // stuk van het faag-DNA dat bewaard wordt / later past
@@ -18,7 +19,7 @@ const CAS = C.prot, REP = '#93a0bb';
 const spacer = (x, col, op = 1, w = 70) => op <= .01 ? '' : `<rect x="${f1(x - w / 2)}" y="${AY - 15}" width="${w}" height="30" rx="6" fill="${col}" opacity="${f1(op)}"/>`;
 const repeat = (x, op = 1) => op <= .01 ? '' : `<path d="M${f1(x)},${AY - 18} l12,18 l-12,18 l-12,-18 z" fill="${REP}" opacity="${f1(op)}"/>`;
 const dsDNA = (x0, x1, y, col, op = 1) => op <= .01 || x1 <= x0 ? '' : `<g opacity="${f1(op)}"><path d="M${f1(x0)},${f1(y - 7)} L${f1(x1)},${f1(y - 7)} M${f1(x0)},${f1(y + 7)} L${f1(x1)},${f1(y + 7)}" stroke="${col}" stroke-width="6" stroke-linecap="round"/></g>`;
-const casBlob = (x, y, op = 1, lab = '') => op <= .01 ? '' : `<g opacity="${f1(op)}"><ellipse cx="${f1(x)}" cy="${f1(y)}" rx="78" ry="50" fill="rgba(155,123,255,.22)" stroke="${CAS}" stroke-width="4"/>${lab}</g>`;
+const casBlob = (x, y, op = 1, lab = '') => op <= .01 ? '' : `<g opacity="${f1(op)}"><path d="${eiwitPad(x, y, 78, 50, 9, .08)}" fill="rgba(155,123,255,.22)" stroke="${CAS}" stroke-width="4"/>${lab}</g>`;
 
 export default {
   id: 'crispr',
@@ -66,13 +67,13 @@ export default {
 
         /* CRISPR-rij: leider + herhalingen + stukjes; het nieuwe roze stukje schuift vooraan in (stap 1) */
         const ins = ph(1, .2, .75);
-        let a = `<path d="M${AX0 - 80},${AY} L1000,${AY}" stroke="${C.dna}" stroke-width="8"/>`;
-        a += `<rect x="${AX0 - 70}" y="${AY - 15}" width="50" height="30" rx="6" fill="#3a4a6a"/>`;
+        let a = `<path d="M${AX0 - 55},${AY} L970,${AY}" stroke="${C.dna}" stroke-width="8"/>`;
+        a += `<rect x="${AX0 - 50}" y="${AY - 15}" width="36" height="30" rx="6" fill="#3a4a6a"/>`;
         const shift = SP * ins;
         a += repeat(AX0);
         if (ins > .01) a += spacer(AX0 + SP / 2, PHDNA, ins) + repeat(AX0 + shift);
-        OLD.forEach((col, i) => { const x = AX0 + shift + SP / 2 + i * SP; if (x < 980) a += spacer(x, col, 1) + repeat(x + SP / 2); });
-        a += T(AX0 - 50, AY - 40, T2('CRISPR-rij', 'CRISPR array'), { size: 26, col: C.text, w: 700, anchor: 'start', op: step === 0 ? .6 : 1 });
+        OLD.forEach((col, i) => { const x = AX0 + shift + SP / 2 + i * SP; if (x < 900) a += spacer(x, col, 1) + repeat(x + SP / 2); });
+        a += T(AX0 - 20, AY - 40, T2('CRISPR-rij', 'CRISPR array'), { size: 26, col: C.text, w: 700, anchor: 'start', op: step === 0 ? .6 : 1 });
         if (step === 1) a += T(560, AY + 70, T2('bij ≈ 4 op 10 bacteriën', 'in ≈ 4 out of 10 bacteria'), { size: 24, col: C.muted, op: ease(sub(p, .7, .9)) });
         $('cr-arr').innerHTML = a;
 

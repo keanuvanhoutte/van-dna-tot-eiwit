@@ -4,6 +4,7 @@
  */
 import { C, BASE, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, f1, aa } from '../../kit.js';
 import { hud, placeHud, textBox } from './_tlkit.js';
+import { eiwit } from '../../bio.js';
 
 const SYN = [812, 432], EDIT = [1040, 292], ACD = [612, 770];      // synthese-plaats, editeerplaats (CP1), anticodonbindend domein
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
@@ -19,8 +20,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">Proef (Chapeville e.a., 1962): Cys-tRNA-Cys werd chemisch omgezet in Ala-tRNA-Cys; daarna verscheen Ala op Cys-codons. Het ribosoom controleert dus het anticodon, niet het aminozuur.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Experiment (Chapeville et al., 1962): Cys-tRNA-Cys was chemically converted into Ala-tRNA-Cys; Ala then appeared at Cys codons. So the ribosome checks the anticodon, not the amino acid.</p>' },
   simplified: {
-    nl: 'Het enzym is een schematische vorm (echte IleRS: ≈ 900–1300 aminozuren; PDB 1FFY = IleRS van S. aureus, 917 aminozuren). Het tRNA is een vereenvoudigde L-vorm. Proeflezen gebeurt zowel vóór (aa-AMP) als na de overdracht (aa-tRNA); hier tonen we de post-transfer-route. Klasse-I-enzymen laden meestal de 2\'-OH, klasse II de 3\'-OH (uitzondering: PheRS, klasse II, 2\'-OH).',
-    en: 'The enzyme is a schematic shape (real IleRS: ≈ 900–1300 amino acids; PDB 1FFY = S. aureus IleRS, 917 amino acids). The tRNA is a simplified L shape. Editing happens both before (aa-AMP) and after transfer (aa-tRNA); here we show the post-transfer route. Class I enzymes usually charge the 2\'-OH, class II the 3\'-OH (exception: PheRS, class II, 2\'-OH).' },
+    nl: 'Het enzym is schematisch getekend als enkele domeinen (katalytisch domein, editeerdomein CP1, anticodonbindend domein; echte IleRS: ≈ 900–1300 aminozuren; PDB 1FFY = IleRS van S. aureus, 917 aminozuren). Het tRNA is een vereenvoudigde L-vorm. Proeflezen gebeurt zowel vóór (aa-AMP) als na de overdracht (aa-tRNA); hier tonen we de post-transfer-route. Klasse-I-enzymen laden meestal de 2\'-OH, klasse II de 3\'-OH (uitzondering: PheRS, klasse II, 2\'-OH).',
+    en: 'The enzyme is drawn schematically as a few domains (catalytic domain, CP1 editing domain, anticodon-binding domain; real IleRS: ≈ 900–1300 amino acids; PDB 1FFY = S. aureus IleRS, 917 amino acids). The tRNA is a simplified L shape. Editing happens both before (aa-AMP) and after transfer (aa-tRNA); here we show the post-transfer route. Class I enzymes usually charge the 2\'-OH, class II the 3\'-OH (exception: PheRS, class II, 2\'-OH).' },
   steps: [
     ST(8000, cam(820, 470, 1500), 'Een eigen enzym per aminozuur', 'Its own enzyme for each amino acid', 'Elk aminozuur heeft een eigen enzym dat het aan de juiste tRNA’s hangt. Hier wordt de code echt vertaald.', 'Each amino acid has its own enzyme that attaches it to the right tRNAs. This is where the code is really translated.'),
     ST(9000, cam(900, 460, 1000), 'Stap 1: het aminozuur klaarmaken', 'Step 1: getting the amino acid ready', 'Het enzym activeert het aminozuur (isoleucine) met energie uit ATP.', 'The enzyme activates the amino acid (isoleucine) with energy from ATP.'),
@@ -32,10 +33,12 @@ export default {
     ST(8500, cam(820, 470, 1500), 'Naar het ribosoom', 'Off to the ribosome', 'Een hulpeiwit brengt het geladen tRNA naar het ribosoom. Dat controleert alleen het codon, niet het aminozuur.', 'A helper protein brings the loaded tRNA to the ribosome. It checks only the codon, not the amino acid.'),
   ],
   svg() {
-    const body = `M640,700 C560,640 600,520 660,470 C700,330 760,260 880,250 C930,190 1010,180 1090,200 C1170,225 1190,330 1150,380 C1190,470 1180,620 1100,700 C1020,780 870,790 760,800 C700,860 560,860 520,800 C495,760 560,720 640,700Z`;
     return svgOpen() + `
     <g data-node="aars" data-nolabel id="rs-enz">
-      <path d="${body}" fill="rgba(155,123,255,.18)" stroke="${C.prot}" stroke-width="3.5"/>
+      ${eiwit(960, 640, 190, 150, '#7d66e0', { seed: 12, bumps: .07 })}
+      ${eiwit(ACD[0] + 10, ACD[1] - 4, 135, 74, C.prot2, { seed: 14, bumps: .08 })}
+      ${eiwit(SYN[0] + 30, SYN[1] - 10, 215, 175, C.prot, { seed: 11, bumps: .06 })}
+      ${eiwit(EDIT[0] + 10, EDIT[1] - 6, 118, 92, '#b49bff', { seed: 13, bumps: .08 })}
       <ellipse cx="${SYN[0] + 14}" cy="${SYN[1] + 16}" rx="70" ry="54" fill="rgba(7,11,22,.75)" stroke="${C.prot}" stroke-dasharray="7 6" stroke-width="2.5"/>
       <ellipse cx="${EDIT[0]}" cy="${EDIT[1]}" rx="52" ry="40" fill="rgba(7,11,22,.75)" stroke="#ff6b6b" stroke-dasharray="7 6" stroke-width="2.5"/>
       <ellipse cx="${ACD[0]}" cy="${ACD[1]}" rx="92" ry="44" fill="rgba(155,123,255,.22)" stroke="${C.prot}" stroke-width="2"/>
@@ -93,7 +96,7 @@ export default {
         const gl = (k, sv) => lv(k) > .01 ? `<g opacity="${f1(lv(k))}">${sv}</g>` : '';
         $('rs-enz').setAttribute('opacity', i === 4 ? '1' : i === 7 ? f1(1 - .5 * sub(p, .2, .6)) : '1');
         $('rs-lab').innerHTML = gl('syn', txt(SYN[0] - 66, SYN[1] + 24, T2('synthese-plaats', 'synthetic site'), '#d6ccff', 22, 'end', 700)) +
-          gl('edit', txt(EDIT[0] + 64, EDIT[1] + 8, T2('editeerplaats (CP1)', 'editing site (CP1)'), '#ff9a9a', 22, 'start', 700)) +
+          gl('edit', txt(EDIT[0] + 132, EDIT[1] + 8, T2('editeerplaats (CP1)', 'editing site (CP1)'), '#ff9a9a', 22, 'start', 700)) +
           gl('acd', txt(ACD[0] + 110, ACD[1] + 70, T2('anticodonbindend domein', 'anticodon-binding domain'), '#d6ccff', 22, 'start', 700)) +
           gl('name', txt(1060, 640, 'IleRS', C.prot, 34, 'middle', 800));
         
@@ -169,7 +172,7 @@ export default {
           const go = ease(sub(p, .15, .8));
           tr = trna(lerp(0, 380, go), lerp(0, -60, go), [lerp(tipSyn[0], tipSyn[0] + 380, go), lerp(tipSyn[1], tipSyn[1] - 60, go)], { a: 'I', dx: 30, dy: -26 }, 1);
           const ex = tipSyn[0] + 330, ey = tipSyn[1] - 245;
-          eef = `<g opacity="${f1(sub(p, .55, .75))}">${pill(ex, ey, 170, 40, 'eEF1A·GTP', C.prot2, 1, 22)}</g>` +
+          eef = `<g opacity="${f1(sub(p, .55, .75))}">${eiwit(ex, ey, 98, 30, C.prot2, { seed: 15, label: 'eEF1A·GTP', fs: 21 })}</g>` +
             `<g opacity="${f1(sub(p, .75, .9))}"><path d="M${ex + 90},${ey} h160" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>${txt(ex + 170, ey + 40, T2('naar de A-plaats', 'to the A site'), C.rrna, 22, 'middle', 700)}</g>`;
           $('rs-eA').setAttribute('cx', f1(ex)); $('rs-eA').setAttribute('cy', f1(ey - 24));
         } else { $('rs-eA').setAttribute('cx', '-9999'); }

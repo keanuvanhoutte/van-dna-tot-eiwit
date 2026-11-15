@@ -2,11 +2,17 @@
  * Ribosoombiogenese (mens) — rDNA → 47S pre-rRNA (Pol I) → snoRNP-modificaties → knippen (90S/SSU-processoom)
  * → r-eiwitten + 5S (Pol III) → aparte export van pre-40S en pre-60S → rijping in het cytoplasma.
  */
-import { C, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, f1 } from '../../kit.js';
-import { hud, placeHud, textBox } from './_tlkit.js';
+import { C, BASE, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, f1 } from '../../kit.js';
+import { hud, placeHud, textBox, factor } from './_tlkit.js';
+import { kernEnvelop, kernporie, ptsEllips, eiwit } from '../../bio.js';
 
 const NUC = [560, 460, 470, 390], NO = [500, 430, 265, 215];      // kern en nucleolus (ellipsen)
-const PORE1 = [1022, 380], PORE2 = [1022, 540];
+const PORE1 = [1020, 380], PORE2 = [1020, 540];
+/* kernenvelop (dubbel membraan) langs de ellips van de kern; poriën als fractie van de omtrek (gemeten vanaf de rechterkant, met de klok mee) */
+const PW = 82, NUCP = ptsEllips(NUC[0], NUC[1], NUC[2], NUC[3], 260);
+const POREF = (() => { const L = [0]; for (let i = 1; i <= NUCP.length; i++) { const a = NUCP[i - 1], b = NUCP[i % NUCP.length]; L.push(L[i - 1] + Math.hypot(b[0] - a[0], b[1] - a[1])); }
+  const tot = L[L.length - 1]; return [PORE1, PORE2].map(([px, py]) => { let bi = 0, bd = 1e9; NUCP.forEach((q, i) => { const d = Math.hypot(q[0] - px, q[1] - py); if (d < bd) { bd = d; bi = i; } }); return L[bi] / tot; }); })();
+const PANG = [PORE1, PORE2].map(([px, py]) => { const a = Math.atan2((py - NUC[1]) / NUC[3], (px - NUC[0]) / NUC[2]); return Math.atan2(NUC[3] * Math.cos(a), -NUC[2] * Math.sin(a)) * 180 / Math.PI; });
 /* 47S pre-rRNA (≈ 13,4 kb): segmenten met lengte in kb */
 const SEG = [['5′ETS', 3.66, 'sp'], ['18S', 1.87, 'r40'], ['ITS1', 1.08, 'sp'], ['5.8S', .16, 'r60'], ['ITS2', 1.17, 'sp'], ['28S', 5.07, 'r60'], ['3′ETS', .36, 'sp']];
 const BX = 180, BY = 250, KB = 47;                               // balk: begin x, hoogte, px per kb
@@ -40,14 +46,13 @@ export default {
   ],
   svg() {
     const [nx, ny, nrx, nry] = NUC, [ox, oy, orx, ory] = NO;
-    const pore = ([x, y]) => `<rect x="${x - 10}" y="${y - 22}" width="20" height="44" rx="8" fill="#0c1530"/><path d="M${x - 8},${y - 24} v-8 M${x - 8},${y + 24} v8 M${x + 8},${y - 24} v-8 M${x + 8},${y + 24} v8" stroke="${C.prot}" stroke-width="5" stroke-linecap="round"/>`;
     return svgOpen() + `
     <path d="M${nx + nrx},-200 h1200 v1300 h-1200 Z" fill="url(#gCyto)" opacity=".5"/>
     <g data-node="kern" data-color="${C.dna}" data-label="${T2('Celkern', 'Nucleus')}" data-nolabel>
-      <ellipse cx="${nx}" cy="${ny}" rx="${nrx}" ry="${nry}" fill="url(#gNuc)" stroke="#6c8fc9" stroke-width="10" stroke-opacity=".55"/>
-      <ellipse cx="${nx}" cy="${ny}" rx="${nrx - 12}" ry="${nry - 12}" fill="none" stroke="#6c8fc9" stroke-width="3" stroke-opacity=".4"/>
+      <ellipse cx="${nx}" cy="${ny}" rx="${nrx}" ry="${nry}" fill="url(#gNuc)"/>
+      ${kernEnvelop(NUCP, { poriën: POREF, poreW: PW, w: 12, gap: 12, npc: false })}
     </g>
-    <g data-node="kernimport" data-color="${C.prot}" data-label="${T2('Kernporie', 'Nuclear pore')}" data-nolabel>${pore(PORE1)}${pore(PORE2)}</g>
+    <g data-node="kernimport" data-color="${C.prot}" data-label="${T2('Kernporie', 'Nuclear pore')}" data-nolabel>${[PORE1, PORE2].map(([x, y], k) => kernporie(x, y, PANG[k], { s: 1.3, H: 36, poreW: PW })).join('')}</g>
     <g data-node="nucleolus" data-color="${C.rrna}" data-label="${T2('Nucleolus', 'Nucleolus')}">
       <ellipse cx="${ox}" cy="${oy}" rx="${orx}" ry="${ory}" fill="rgba(44,198,168,.08)" stroke="${C.rrna}" stroke-width="2.5" stroke-dasharray="3 7"/>
       ${[[360, 330], [620, 320], [420, 600], [640, 590]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="42" fill="rgba(44,198,168,.14)"/><circle cx="${x}" cy="${y}" r="20" fill="rgba(79,143,247,.18)"/>`).join('')}
@@ -72,12 +77,13 @@ export default {
     const $ = id => svg.getElementById(id);
     const hide = id => $(id).setAttribute('cx', '-9999');
     /* deeltjes: kleine (pre-)40S en grote (pre-)60S subeenheid, met factoren (grijs-paarse bolletjes) */
-    const SC = 1.35, small = (x, y, op = 1, f = 1, lab = '') => op <= .01 ? '' : `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(${SC}) translate(${f1(-x)} ${f1(-y)})"><path d="M${x - 58},${y - 6} C${x - 58},${y + 34} ${x + 58},${y + 34} ${x + 58},${y - 6} Z" fill="rgba(141,240,220,.3)" stroke="#8df0dc" stroke-width="3"/>` +
-      (f > .01 ? `<g opacity="${f1(f)}"><circle cx="${x - 40}" cy="${y + 26}" r="10" fill="${C.prot3}"/><circle cx="${x + 44}" cy="${y + 22}" r="9" fill="${C.prot3}"/><circle cx="${x + 6}" cy="${y + 36}" r="9" fill="${C.prot3}"/></g>` : '') +
+    /* pre-40S (klein) en pre-60S (groot): rRNA met r-eiwitten, als bobbelige deeltjes; f = assemblagefactoren (paarse eiwitjes) */
+    const small = (x, y, op = 1, f = 1, lab = '') => op <= .01 ? '' : `<g opacity="${f1(op)}">${eiwit(x, y, 30, 18, '#8df0dc', { seed: 40, bumps: .08 })}` +
+      (f > .01 ? `<g opacity="${f1(f)}">${eiwit(x - 27, y + 14, 9, 7, C.prot3, { seed: 3 })}${eiwit(x + 27, y + 13, 8, 7, C.prot3, { seed: 4 })}</g>` : '') +
       (lab ? txt(x, y - 30, lab, '#8df0dc', 20, 'middle', 700) : '') + '</g>';
-    const large = (x, y, op = 1, f = 1, lab = '') => op <= .01 ? '' : `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(${SC}) translate(${f1(-x)} ${f1(-y)})"><path d="M${x - 72},${y + 20} C${x - 80},${y - 40} ${x - 30},${y - 66} ${x},${y - 66} C${x + 40},${y - 66} ${x + 80},${y - 40} ${x + 72},${y + 20} Z" fill="rgba(44,198,168,.3)" stroke="${C.rrna}" stroke-width="3"/>` +
-      (f > .01 ? `<g opacity="${f1(f)}"><circle cx="${x - 62}" cy="${y - 36}" r="11" fill="${C.prot3}"/><circle cx="${x + 64}" cy="${y - 30}" r="10" fill="${C.prot3}"/><circle cx="${x + 20}" cy="${y - 74}" r="10" fill="${C.prot3}"/></g>` : '') +
-      (lab ? txt(x, y - 92, lab, C.rrna, 20, 'middle', 700) : '') + '</g>';
+    const large = (x, y, op = 1, f = 1, lab = '', onder = false) => op <= .01 ? '' : `<g opacity="${f1(op)}">${eiwit(x, y, 38, 27, C.rrna, { seed: 60, bumps: .07 })}` +
+      (f > .01 ? `<g opacity="${f1(f)}">${eiwit(x - 33, y - 17, 9, 8, C.prot3, { seed: 5 })}${eiwit(x + 34, y - 12, 9, 7, C.prot3, { seed: 6 })}${eiwit(x + 4, y - 29, 9, 7, C.prot3, { seed: 7 })}</g>` : '') +
+      (lab ? txt(x, onder ? y + 64 : y - 50, lab, C.rrna, 20, 'middle', 700) : '') + '</g>';
     /* de 47S-balk; cut = 0..1 (knippen en uit elkaar), marks = modificaties */
     function bar(op, cut, marks) {
       if (op <= .01) return '';
@@ -169,7 +175,7 @@ export default {
           // r-eiwitten importeren
           for (let k = 0; k < 10; k++) {
             const t0 = .05 + k * .05, kk = sub(p, t0, t0 + .35), path = kk < .5 ? E2([1400 - k * 20, 250 + k * 50], [PORE1[0] + (k % 2) * 0, (k % 2 ? PORE2 : PORE1)[1]], kk * 2) : E2((k % 2 ? PORE2 : PORE1), k % 2 ? p60 : p40, (kk - .5) * 2);
-            if (kk > 0 && kk < 1) part += `<circle cx="${f1(path[0])}" cy="${f1(path[1])}" r="9" fill="${C.prot}" stroke="#0a1224" stroke-width="2"/>`;
+            if (kk > 0 && kk < 1) part += eiwit(path[0], path[1], 9, 8, C.prot, { seed: 20 + k });
           }
           const k5 = ease(sub(p, .5, .85)), f5 = E2([700, 770], [p60[0] + 10, p60[1] - 20], k5);
           part += `<g opacity="${f1(sub(p, .45, .5))}"><path d="M${f1(f5[0] - 10)},${f1(f5[1] + 18)} v-26 a10,10 0 0 1 20,0 v26" stroke="#c3f06b" stroke-width="6" fill="none" stroke-linecap="round"/></g>`;
@@ -180,19 +186,22 @@ export default {
           const k6 = ease(sub(p, .1, .55)), k4 = ease(sub(p, .4, .85));
           const q60 = k6 < .5 ? E2(p60, PORE2, k6 * 2) : E2(PORE2, [1260, 590], (k6 - .5) * 2), q40 = k4 < .5 ? E2(p40, PORE1, k4 * 2) : E2(PORE1, [1250, 350], (k4 - .5) * 2);
           part += large(q60[0], q60[1], 1, 1, T2('pre-60S', 'pre-60S')) + small(q40[0], q40[1], 1, 1, T2('pre-40S', 'pre-40S'));
-          part += `<g opacity="${f1(sub(p, .1, .2) * (1 - sub(p, .6, .7)))}">${pill(q60[0], q60[1] + 50, 140, 30, 'CRM1 · NMD3', C.prot2, 1, 15)}</g>`;
-          part += `<g opacity="${f1(sub(p, .4, .5) * (1 - sub(p, .88, .95)))}">${pill(q40[0], q40[1] - 44, 90, 30, 'CRM1', C.prot2, 1, 15)}</g>`;
+          part += `<g opacity="${f1(sub(p, .1, .2) * (1 - sub(p, .6, .7)))}">${factor(q60[0], q60[1] + 54, 128, 26, 'CRM1 · NMD3', C.prot2, 1, 15)}</g>`;
+          part += `<g opacity="${f1(sub(p, .4, .5) * (1 - sub(p, .88, .95)))}">${factor(q40[0], q40[1] - 80, 70, 26, 'CRM1', C.prot2, 1, 15)}</g>`;
           ov += `<g opacity="${f1(sub(p, .85, 1))}">` + txt(1250, 780, T2('apart, niet als 80S!', 'separately, not as 80S!'), '#fff', 24, 'middle', 800) + '</g>';
         }
         if (i === 7) {
           const join = ease(sub(p, .55, .85));
-          const a40 = E2([1250, 350], [1240, 520], join), a60 = E2([1260, 590], [1240, 470], join);
-          part += large(a60[0], a60[1], 1, fac, join < .5 ? T2('pre-60S → 60S', 'pre-60S → 60S') : '') + small(a40[0], a40[1], 1, fac, join < .5 ? (sub(p, .2, .4) > .5 ? '18S-E → 18S' : '18S-E') : '');
-          ov += `<g opacity="${f1(sub(p, .15, .3) * (1 - sub(p, .5, .6)))}">` + pill(1400, 330, 80, 30, 'NOB1', C.prot2, 1, 15) + pill(1420, 560, 160, 30, T2('eIF6, NMD3 los', 'eIF6, NMD3 off'), C.prot2, 1, 15) + '</g>';
-          tl += `<g opacity="${f1(sub(p, .55, .7))}"><line x1="1030" y1="520" x2="1460" y2="520" stroke="${C.rna}" stroke-width="6"/>${txt(1030, 555, "5'", C.rna, 20, 'start', 700)}${txt(1460, 555, "3'", C.rna, 20, 'end', 700)}</g>`;
+          const a40 = E2([1250, 350], [1240, 534], join), a60 = E2([1260, 590], [1240, 478], join);   // 60S boven, 40S onder, het mRNA ertussen
+          part += large(a60[0], a60[1], 1, fac, join < .5 ? T2('pre-60S → 60S', 'pre-60S → 60S') : '', true) + small(a40[0], a40[1], 1, fac, join < .5 ? (sub(p, .2, .4) > .5 ? '18S-E → 18S' : '18S-E') : '');
+          { const off = ease(sub(p, .15, .45)), fo = 1 - sub(p, .45, .6);   // rijpingsfactoren (klein t.o.v. de subeenheden) zitten er eerst nog op en gaan er dan af
+            const fz = (x, y, lab, sd, an) => eiwit(x, y, 13, 10, C.prot2, { seed: sd }) + txt(x + (an === 'end' ? -20 : 20), y + 7, lab, '#c9bfff', 21, an, 700);
+            ov += `<g opacity="${f1(fo)}">` + fz(lerp(1282, 1380, off), lerp(362, 320, off), 'NOB1', 31, 'start') +
+              fz(lerp(1282, 1400, off), lerp(612, 660, off), 'eIF6', 32, 'start') + fz(lerp(1226, 1120, off), lerp(616, 680, off), 'NMD3', 33, 'end') + '</g>'; }
+          tl += `<g><line x1="1066" y1="511" x2="1500" y2="511" stroke="${C.rna}" stroke-width="7"/>${[...'GCCACCAUGGCUUCAGGAUCUGAAUAA'].map((b, k) => { const bx = 1078 + k * 16; return bx > 1192 && bx < 1288 ? '' : `<rect x="${bx - 6}" y="514" width="12" height="16" rx="3" fill="${BASE[b]}"/>`; }).join('')}${txt(1500, 494, "mRNA", C.rna, 22, "end", 700)}${txt(1066, 545, "5'", C.rna, 20, 'start', 700)}${txt(1500, 545, "3'", C.rna, 20, 'end', 700)}</g>`;
           ov += `<g opacity="${f1(sub(p, .85, .95))}">` + txt(1240, 650, T2('80S: klaar voor translatie', '80S: ready for translation'), '#fff', 24, 'middle', 800) + '</g>';
           $('rg-tA').setAttribute('cx', '1100'); $('rg-tA').setAttribute('cy', '505');
-          $('rg-rA').setAttribute('cx', f1(a60[0])); $('rg-rA').setAttribute('cy', f1(a60[1] - 110));
+          $('rg-rA').setAttribute('cx', f1(a60[0])); $('rg-rA').setAttribute('cy', f1(a60[1] - 70));
         } else { hide('rg-tA'); hide('rg-rA'); }
         $('rg-part').innerHTML = part; $('rg-tl').innerHTML = tl; $('rg-ov').innerHTML = ov;
       },

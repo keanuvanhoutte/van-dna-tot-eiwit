@@ -1,4 +1,5 @@
 import { C, L, T2, svgOpen, txt, clamp, lerp } from '../../kit.js';
+import { membraanPts, bacterieWand, kernEnvelop, ptsCirkel, eiwit, ribosoomKlein, LIPID } from '../../bio.js';
 
 /* Mens ⇄ bacterie: "van gen tot eiwit" naast elkaar (fase 4, uit poc/03-diepte/tab-c.js).
  * Het beeld is een pure functie draw(hp, bp, s): hp/bp = voortgang bij mens/bacterie (0..1), s = wissel (0 = mens, 1 = bacterie).
@@ -27,12 +28,23 @@ const lbl = (x, y, s, a, o = {}) => a < .01 ? '' : `<text x="${n1(x)}" y="${n1(y
 
 /* ---------- vormpjes ---------- */
 const strands = (x0, x1, y) => `<line x1="${n1(x0)}" y1="${n1(y - 6)}" x2="${n1(x1)}" y2="${n1(y - 6)}" stroke="${C.dna}" stroke-width="7" stroke-linecap="round"/><line x1="${n1(x0)}" y1="${n1(y + 6)}" x2="${n1(x1)}" y2="${n1(y + 6)}" stroke="${C.dna2}" stroke-width="7" stroke-linecap="round"/>`;
-const pol = (x, y, a) => a < .01 ? '' : `<ellipse cx="${n1(x)}" cy="${y}" rx="36" ry="27" fill="${K.pol}" opacity="${(.92 * a).toFixed(3)}"/>`;
-function ribosome(x, y, a, up) {      /* up: grote eenheid boven het mRNA (mens) of eronder (bacterie) */
+const pol = (x, y, a) => a < .01 ? '' : eiwit(x, y, 36, 27, K.pol, { seed: 7, op: .92 * a });
+/* ribosoom: twee eenheden tegen elkaar, het mRNA loopt langs de kleine eenheid; de keten komt uit de grote eenheid.
+ * up: grote eenheid boven het mRNA (mens: 80S) of eronder (bacterie: 70S, iets kleiner) */
+function ribosome(x, y, a, up) {
   if (a < .01) return '';
-  const big = up ? y - 20 : y + 22, small = up ? y + 13 : y - 12;
-  return `<g opacity="${a.toFixed(3)}"><ellipse cx="${n1(x)}" cy="${big}" rx="32" ry="21" fill="${K.rib}"/><ellipse cx="${n1(x)}" cy="${small}" rx="25" ry="12" fill="${K.rib2}"/></g>`;
+  return up ? ribosoomKlein(x, y - 12, { s: 2.4, rot: 180, op: a, col: K.rib }) : ribosoomKlein(x, y + 12, { s: 2.2, rot: 0, op: a, col: K.rib });
 }
+/* afgeronde rechthoek als puntenlijst (met de klok mee op het scherm, bovenrand van links naar rechts) */
+function ptsRond(x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2); const P = [], seg = (x0, y0, x1, y1) => { const n = Math.max(1, Math.round(Math.hypot(x1 - x0, y1 - y0) / 14)); for (let i = 0; i < n; i++) P.push([x0 + (x1 - x0) * i / n, y0 + (y1 - y0) * i / n]); };
+  const boog = (cx, cy, a0) => { for (let i = 0; i < 12; i++) { const a = a0 + Math.PI / 2 * i / 12; P.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); } };
+  seg(x + r, y, x + w - r, y); boog(x + w - r, y + r, -Math.PI / 2); seg(x + w, y + r, x + w, y + h - r); boog(x + w - r, y + h - r, 0);
+  seg(x + w - r, y + h, x + r, y + h); boog(x + r, y + h - r, Math.PI / 2); seg(x, y + h - r, x, y + r); boog(x + r, y + r, Math.PI);
+  return P;
+}
+/* kernenvelop (dubbel membraan) met één porie rechts, waar het mRNA de kern verlaat; statisch */
+const KERN = kernEnvelop(ptsCirkel(470, 490, 300, 90), { poriën: [0], w: 10, gap: 12, poreW: 30 });
 function chain(x, y, n, dir, col) {   /* groeiende eiwitketen: kraaltjes die van het ribosoom weg kronkelen */
   if (n < 1) return '';
   let s = '';
@@ -49,8 +61,7 @@ function human(p) {
   const labels = [], fl = ss(0, .03, p);
   const cx = 470, cy = 490, gap = 4.2 * Math.PI / 180;
   const arc = r => `M${n1(cx + r * Math.cos(gap))},${n1(cy - r * Math.sin(gap))} A${r},${r} 0 1 0 ${n1(cx + r * Math.cos(gap))},${n1(cy + r * Math.sin(gap))}`;
-  s += `<circle cx="${cx}" cy="${cy}" r="300" fill="rgba(138,147,168,.09)"/><path d="${arc(300)}" fill="none" stroke="${K.env}" stroke-width="5"/><path d="${arc(286)}" fill="none" stroke="${K.env}" stroke-width="4"/>`;
-  s += `<rect x="780" y="458" width="18" height="12" rx="4" fill="${K.env}"/><rect x="780" y="510" width="18" height="12" rx="4" fill="${K.env}"/>`;
+  s += `<circle cx="${cx}" cy="${cy}" r="300" fill="rgba(138,147,168,.09)"/>` + KERN;
   labels.push([470, 248, L(TX.nucleus), 1, { w: 700 }]);
   labels.push([805, 598, L(TX.pore), win(.41, .43, .62, .65, p), { anchor: 'start' }]);
   /* gen: exons (oranje) en introns (grijs) op het DNA (de strengen zelf zijn gedeeld, zie draw) */
@@ -132,9 +143,10 @@ function draw(hp, bp, sw) {
   const aH = 1 - ss(0, .3, sw), m = ss(.3, .7, sw), aB = ss(.7, 1, sw);
   /* gedeeld: cel (rond → staafje) en het DNA */
   const R = { x: lerp(40, 90, m), y: lerp(110, 190, m), w: lerp(1520, 1420, m), h: lerp(760, 560, m), rx: lerp(200, 280, m) };
-  const memC = mixC(C.mem, K.bact, m);
-  let out = `<rect x="${n1(R.x)}" y="${n1(R.y)}" width="${n1(R.w)}" height="${n1(R.h)}" rx="${n1(R.rx)}" fill="rgba(201,165,116,.05)" stroke="${memC}" stroke-width="6"/>`;
-  out += `<rect x="${n1(R.x + 14)}" y="${n1(R.y + 14)}" width="${n1(R.w - 28)}" height="${n1(R.h - 28)}" rx="${n1(R.rx - 14)}" fill="none" stroke="${memC}" stroke-width="3" opacity="${aB.toFixed(3)}"/>`;
+  /* celrand: celmembraan (dubbellaag); bij de bacterie komen er een dunne celwand en een buitenmembraan met LPS bij (gramnegatief) */
+  const P = ptsRond(R.x, R.y, R.w, R.h, R.rx);
+  let out = `<path d="M${P.map(q => n1(q[0]) + ',' + n1(q[1])).join(' L')}Z" fill="rgba(201,165,116,.05)"/>` + membraanPts(P, { w: 14, closed: true });
+  if (aB > .005) out += bacterieWand(P, { type: 'neg', w: 14, op: aB });
   const X0 = lerp(HD.x0, BD.x0, m), X1 = lerp(HD.x1, BD.x1, m), Y = lerp(HD.y, BD.y, m);
   const map = D => { const sx = (X1 - X0) / (D.x1 - D.x0); return { sx, tx: X0 - D.x0 * sx, ty: Y - D.y, f: (x, y) => [X0 + (x - D.x0) * sx, y + Y - D.y] }; };
   const layers = [[aH > .005 ? human(hp) : null, map(HD), aH], [aB > .005 ? bacterium(bp) : null, map(BD), aB]];
@@ -215,7 +227,7 @@ export default {
   scale: { nl: 'niet op schaal (mens ≈ 20 µm, E. coli ≈ 2 µm)', en: 'not to scale (human ≈ 20 µm, E. coli ≈ 2 µm)' },
   time: { nl: 'minuten; hier sterk versneld', en: 'minutes; strongly accelerated here' },
   org: { nl: 'mens en bacterie (Escherichia coli)', en: 'human and bacterium (Escherichia coli)' },
-  legend: [[C.dna, 'DNA'], [C.rna, { nl: 'mRNA (exons)', en: 'mRNA (exons)' }], [K.intron, 'intron'], [K.pol, { nl: 'RNA-polymerase', en: 'RNA polymerase' }],
+  legend: [[LIPID.head, { nl: 'membranen (kern: dubbel; bacterie: binnen- en buitenmembraan)', en: 'membranes (nucleus: double; bacterium: inner and outer membrane)' }], [C.dna, 'DNA'], [C.rna, { nl: 'mRNA (exons)', en: 'mRNA (exons)' }], [K.intron, 'intron'], [K.pol, { nl: 'RNA-polymerase', en: 'RNA polymerase' }],
     [K.cap, { nl: '5′-kap en poly(A)-staart', en: '5′ cap and poly(A) tail' }], [K.rib, { nl: 'ribosoom', en: 'ribosome' }], [PROT[0], { nl: 'eiwitketen', en: 'protein chain' }]],
   simplified: {
     nl: 'Niet op schaal: een menselijke cel is ongeveer tien keer zo groot als E. coli, en de genen zijn hier heel kort. Echte genen van de mens hebben vaak veel meer en langere introns. Bij de mens beginnen kap, splicing en staart al tijdens de transcriptie; hier staan ze na elkaar om ze apart te tonen. Op één mRNA zitten in beide cellen vaak veel meer ribosomen tegelijk dan getekend.',
