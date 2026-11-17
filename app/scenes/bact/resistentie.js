@@ -5,8 +5,8 @@ import { membraanLijn, eiwit, PG, LPS, LIPID } from '../../bio.js';
 /* Hoe bacteriën resistent worden: mutatie of overname van een gen; doelwit verandert, antibioticum kapot (β-lactamase),
  * minder poorten (porines), pompen; verspreiding via plasmiden en conjugatie.
  * Bronnen: Munita & Arias 2016 (Microbiol Spectr, PMC4888801), Molodtsov et al. 2017 (rifampicine), Lin et al. 2018 (pompen voor tetracycline),
- * Du et al. 2014 (Nature 509:512, AcrAB–TolC) en Ann. N.Y. Acad. Sci. 2020 (doi 10.1111/nyas.14239): AcrB neemt zijn substraten op uit het periplasma
- * en de buitenste laag van het binnenmembraan. */
+ * Oswald, Tam & Pos 2016 (Nat Commun 7:13819, PMC5171871): AcrB neemt geneesmiddelen op uit het periplasma en de buitenste laag van het
+ * binnenmembraan; daarom stappen de bolletjes in stap 5 daar in de pomp, niet uit het cytoplasma. */
 const DRUG = '#ff6b6b', MUT = '#ffc247', OM = '#7fc8ff';   // OM = kleur van de porines (poorten in het buitenmembraan)
 const pill = (x, y, op = 1, r = 13) => op <= .01 ? '' : `<g opacity="${f1(op)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${DRUG}" stroke="#fff" stroke-width="2.5"/></g>`;
 const half = (x, y, dx, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}"><path d="M${f1(x - dx)},${f1(y - 13)} a13,13 0 0,0 0,26 z" fill="${DRUG}" stroke="#fff" stroke-width="2"/><path d="M${f1(x + dx)},${f1(y - 13)} a13,13 0 0,1 0,26 z" fill="${DRUG}" stroke="#fff" stroke-width="2"/></g>`;
@@ -42,8 +42,8 @@ export default {
   legend: [[DRUG, { nl: 'antibioticum', en: 'antibiotic' }], [K.rnap, { nl: 'doelwit (bv. RNA-polymerase)', en: 'target (e.g. RNA polymerase)' }], [MUT, { nl: 'mutatie', en: 'mutation' }],
     [K.res, 'β-lactamase'], [LIPID.head, { nl: 'binnen- en buitenmembraan', en: 'inner and outer membrane' }], [LPS, { nl: 'LPS (buitenkant)', en: 'LPS (outer surface)' }], [PG, { nl: 'celwand (peptidoglycaan)', en: 'cell wall (peptidoglycan)' }], [OM, { nl: 'porine (poort)', en: 'porin (pore)' }], [K.tra, { nl: 'pomp', en: 'pump' }], [K.plas, { nl: 'plasmide', en: 'plasmid' }]],
   simplified: {
-    nl: 'Schema, niet op schaal. Vaak werken meerdere manieren samen in dezelfde bacterie, en minder poorten geeft op zich meestal maar een kleine resistentie. Genen gaan ook over via opname van los DNA of via virussen van bacteriën; hier staat alleen conjugatie. De pomp is getekend als één buis door beide membranen, zoals de grote pompen van Gram-negatieve bacteriën; zo’n pomp neemt het antibioticum vooral al op in het periplasma en het binnenmembraan, niet uit het cytoplasma zoals getekend. De ruimte tussen beide membranen (periplasma) is breder getekend dan echt.',
-    en: 'Schematic, not to scale. Often several ways work together in the same bacterium, and fewer pores on its own usually gives only low-level resistance. Genes also move by uptake of loose DNA or via viruses of bacteria; only conjugation is shown here. The pump is drawn as one tube through both membranes, like the large pumps of Gram-negative bacteria; such a pump mostly picks up the antibiotic in the periplasm and the inner membrane, not from the cytoplasm as drawn. The space between the two membranes (periplasm) is drawn wider than it really is.' },
+    nl: 'Schema, niet op schaal. Vaak werken meerdere manieren samen in dezelfde bacterie, en minder poorten geeft op zich meestal maar een kleine resistentie. Genen gaan ook over via opname van los DNA of via virussen van bacteriën; hier staat alleen conjugatie. De pomp is getekend als één buis door beide membranen, zoals de grote pompen van Gram-negatieve bacteriën; zo’n pomp neemt het antibioticum op uit het periplasma en de buitenste laag van het binnenmembraan. De ruimte tussen beide membranen (periplasma) is breder getekend dan echt.',
+    en: 'Schematic, not to scale. Often several ways work together in the same bacterium, and fewer pores on its own usually gives only low-level resistance. Genes also move by uptake of loose DNA or via viruses of bacteria; only conjugation is shown here. The pump is drawn as one tube through both membranes, like the large pumps of Gram-negative bacteria; such a pump picks up the antibiotic from the periplasm and the outer leaflet of the inner membrane. The space between the two membranes (periplasm) is drawn wider than it really is.' },
   steps: [
     { dur: 8500, cam: FULL, title: { nl: 'Twee wegen naar resistentie', en: 'Two roads to resistance' },
       text: { nl: 'Een bacterie wordt resistent door een mutatie in haar eigen DNA, of door een resistentiegen over te nemen.', en: 'A bacterium becomes resistant through a mutation in its own DNA, or by taking over a resistance gene.' } },
@@ -123,11 +123,13 @@ export default {
             // pomp met drie delen: buis door het buitenmembraan, verbindingsstuk in het periplasma, pompdeel in het binnenmembraan
             g += eiwit(520, YI - 6, 50, 52, K.tra, { seed: 17, bumps: .06 }) + `<rect x="494" y="${YO + 70}" width="52" height="${YI - YO - 116}" rx="10" fill="${K.tra}" fill-opacity=".3" stroke="${K.tra}" stroke-width="2.5"/>` +
               `<rect x="488" y="250" width="64" height="${YO - 250 + 80}" rx="18" fill="#0b1224"/><rect x="488" y="250" width="64" height="${YO - 250 + 80}" rx="18" fill="${K.tra}" fill-opacity=".45" stroke="${K.tra}" stroke-width="3"/>` +
-              `<rect x="512" y="256" width="16" height="${YI - 256}" rx="8" fill="#0b1224" fill-opacity=".55"/>` + txt(620, 420, T2('pomp', 'pump'), K.tra, 26, 'start', 800);
+              `<rect x="512" y="256" width="16" height="${YI - 286}" rx="8" fill="#0b1224" fill-opacity=".55"/>` + txt(620, 420, T2('pomp', 'pump'), K.tra, 26, 'start', 800);   // kanaal dicht naar het cytoplasma
+            // de bolletjes stappen in de pomp vanuit het periplasma of de buitenste laag van het binnenmembraan (Oswald et al. 2016)
+            const IN = [[300, 455], [350, YI - 5], [400, 420]];
             for (let i = 0; i < 3; i++) {
-              const u = clamp(sub(p, .1 + i * .2, .45 + i * .2));
-              const y = u < .3 ? lerp(640, 560, u / .3) : lerp(560, 190, (u - .3) / .7);
-              const x = u < .3 ? lerp(380 + i * 40, 520, u / .3) : lerp(520, 520 + (i - 1) * 70, clamp((u - .85) / .15));
+              const u = clamp(sub(p, .1 + i * .2, .45 + i * .2)), [x0, y0] = IN[i];
+              const y = u < .3 ? lerp(y0, YI - 40, u / .3) : lerp(YI - 40, 190, (u - .3) / .7);
+              const x = u < .3 ? lerp(x0, 520, u / .3) : lerp(520, 520 + (i - 1) * 70, clamp((u - .85) / .15));
               g += pill(x, y, 1, 12);
             }
             g += arrow(520, 248, 520, 212, K.tra, 4);

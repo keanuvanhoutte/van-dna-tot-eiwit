@@ -95,7 +95,7 @@ function human(p) {
   const capA = clamp(uT / 20);
   rna += capA > 0 ? `<circle cx="${n1(hx + 8)}" cy="${n1(hy)}" r="10" fill="${K.cap}" opacity="${capA}"/>` : '';
   rna += zigzag(hx - L5, hy, 56 * ss(.30, .40, p));
-  labels.push([hx + 8, hy - 26, L(TX.cap), win(.26, .29, .5, .54, p), { fill: K.cap, size: 26 }]);
+  labels.push([hx - 12, hy - 26, L(TX.cap), win(.26, .29, .5, .54, p), { fill: K.cap, size: 26 }]);
   labels.push([hx - L5 - 30, hy + 44, L(TX.tail), win(.32, .35, .5, .54, p), { fill: K.cap, size: 26 }]);
   s += `<g opacity="${fl.toFixed(3)}">${rna}</g>`;
   /* translatie in het cytoplasma */

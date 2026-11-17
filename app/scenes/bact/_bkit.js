@@ -48,7 +48,7 @@ function dunneWand(cx, cy, len, r, m) {
   const mem = t => R(t, m, LIPID.tail, ' stroke-opacity=".45"') + [-1, 1].map(sd => R(t + sd * (m / 2 - hw / 2), hw, LIPID.head,
     m >= 5 ? ` stroke-linecap="round" stroke-dasharray="0 ${f1(hw * 1.9)}"` : '')).join('');
   return '<g fill="none">' + R(1.3 * m, 1.6 * m, 'rgba(185,163,227,.10)') +                                   // periplasma
-    R(1.3 * m, Math.max(1.2, m * .25), PG) + R(1.3 * m, Math.max(2, m * .55), PG, ' stroke-dasharray="1.4 4" opacity=".8"') +   // dunne peptidoglycaanlaag
+    R(1.8 * m, Math.max(1.2, m * .25), PG) + R(1.8 * m, Math.max(2, m * .55), PG, ' stroke-dasharray="1.4 4" opacity=".8"') +   // dunne peptidoglycaanlaag, dicht bij het buitenmembraan (Braun-lipoproteïne)
     mem(0) + mem(2.6 * m) +                                                                                           // binnen- en buitenmembraan
     R(3.55 * m, .9 * m, LPS, ` stroke-dasharray="1.4 ${f1(Math.max(2.4, m * .45))}" opacity=".9"`) + '</g>';        // LPS op de buitenkant
 }
@@ -69,7 +69,7 @@ export function rodCell(x, y, w, h, op = 1, labelled = false) {
 export const wandLijn = (x0, x1, y, w = 14, op = 1) => bacterieWand(ptsLijn(x0, y, x1, y, Math.max(2, Math.round((x1 - x0) / 12))), { type: 'neg', closed: false, w, op });
 /* hoogtes van de lagen aan de bovenkant van een rodCell (recht stuk): buitenmembraan (om), peptidoglycaan (pg),
  * binnenmembraan (im), bovenrand LPS (top) en membraandikte (mw) */
-export const rodLagen = (x, y, w, h) => { const mw = wandDik(h); return { top: y + 2, om: y + 2 + 1.4 * mw, pg: y + 2 + 2.7 * mw, im: y + 2 + 4 * mw, mw }; };
+export const rodLagen = (x, y, w, h) => { const mw = wandDik(h); return { top: y + 2, om: y + 2 + 1.4 * mw, pg: y + 2 + (mw >= 10 ? 2.7 : 2.2) * mw, im: y + 2 + 4 * mw, mw }; };
 
 /* porine (bv. OmpF) in het buitenmembraan, zijaanzicht: β-vat met een waterkanaal in het midden.
  * (x, y) = midden in het membraan, h = hoogte (iets meer dan de membraandikte). rot in graden (0 = membraan horizontaal). */

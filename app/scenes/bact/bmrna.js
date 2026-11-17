@@ -75,7 +75,7 @@ export default {
         const d = len - 120 - k * 170;           // afgelegde weg van ribosoom k vanaf het 5′-uiteinde
         if (d < 0) break;
         const q = pts[Math.min(pts.length - 1, Math.floor((len - d) / 6))];
-        const ch = Math.min(70, d * .25);
+        const ch = Math.min(110, 8 + d * .09);   // langer naarmate het ribosoom verder is (dichter bij RNAP = eerst begonnen)
         g += `<path d="M${f1(q[0])},${f1(q[1] - 28)} q${f1(ch * .3)},${f1(-ch * .5)} 0,${f1(-ch)}" stroke="${C.chain}" stroke-width="4" fill="none"/>` + ribo(q[0], q[1] - 6, 2, 1);
       }
       g += prot(x, Y - 30, 60, 40, K.rnap, 1, 31, 'RNAP', 22) + '</g>';

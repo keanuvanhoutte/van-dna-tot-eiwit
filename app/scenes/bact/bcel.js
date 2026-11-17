@@ -70,11 +70,11 @@ export default {
   svg() {
     return svgOpen() + rodCell(...CELL) + `
     <g id="bc-nucout"></g>
-    <g data-node="bnucleoid" data-color="${C.dna}" data-label="${T2('Nucleoïd van dichtbij (3D)', 'Nucleoid up close (3D)')}"><path id="bc-chrom" fill="none" stroke="${C.dna}" stroke-width="4" stroke-linejoin="round"/><circle data-anchor="bnucleoid" cx="${CX}" cy="${CY - 120}" r="1" fill="none"/></g>
-    <g data-node="breplicatie" data-color="${K.ori}" data-label="${T2('Hoe het chromosoom gekopieerd wordt', 'How the chromosome is copied')}" data-pos="below"><circle data-anchor="breplicatie" cx="${CX}" cy="${CY + 120}" r="1" fill="none"/><rect x="${CX}" y="${CY + 119}" width="1" height="1" fill="none"/></g>
+    <g data-node="bnucleoid" data-color="${C.dna}" data-label="${T2('Nucleoïd van dichtbij (3D)', 'Nucleoid up close (3D)')}"><path id="bc-chrom" fill="none" stroke="${C.dna}" stroke-width="4" stroke-linejoin="round"/><circle data-anchor="bnucleoid" cx="${CX}" cy="${CY - RR - 4}" r="1" fill="none"/></g>
+    <g data-node="breplicatie" data-color="${K.ori}" data-label="${T2('Hoe het chromosoom gekopieerd wordt', 'How the chromosome is copied')}" data-pos="below"><circle data-anchor="breplicatie" cx="${CX}" cy="${CY + RR + 50}" r="1" fill="none"/><rect x="${CX}" y="${CY + RR + 49}" width="1" height="1" fill="none"/></g>
     <g id="bc-ring"></g>
     <g data-node="bplasmide" data-color="${K.plas}" data-label="${T2('Plasmiden', 'Plasmids')}"><g id="bc-plas"></g><circle data-anchor="bplasmide" cx="1270" cy="290" r="1" fill="none"/></g>
-    <g data-node="bmrna" data-color="${K.ribo}" data-label="${T2('mRNA & 70S-ribosoom', 'mRNA & 70S ribosome')}"><g id="bc-ribo"></g><g id="bc-mrna"></g><circle data-anchor="bmrna" cx="560" cy="640" r="1" fill="none"/></g>
+    <g data-node="bmrna" data-color="${K.ribo}" data-label="${T2('mRNA & 70S-ribosoom', 'mRNA & 70S ribosome')}"><g id="bc-ribo"></g><g id="bc-mrna"></g><circle data-anchor="bmrna" cx="430" cy="652" r="1" fill="none"/></g>
     <g data-node="cel" data-color="${C.text}" data-label="${T2('Vergelijk: menselijke cel', 'Compare: human cell')}" data-pos="below"><rect x="1330" y="720" width="1" height="1" fill="none"/><circle data-anchor="cel" cx="1330" cy="730" r="1" fill="none"/></g>
     <g id="bc-lab"></g>
     </svg>`;
@@ -94,8 +94,8 @@ export default {
         $('bc-nucout').innerHTML = no > .01 ? `<ellipse cx="${CX}" cy="${CY}" rx="${RX + 40}" ry="${RY + 38}" fill="${C.dna}" fill-opacity=".06" stroke="${C.dna2}" stroke-width="2" stroke-dasharray="3 9" opacity="${f1(no)}"/>` : '';
         // oriC en ter op de ring (stap 2)
         const ro = step === 2 ? sub(p, .55, .75) : step === 3 ? 1 - sub(p, 0, .2) : 0;
-        $('bc-ring').innerHTML = ro > .01 ? `<g opacity="${f1(ro)}"><circle cx="${CX}" cy="${CY - RR}" r="9" fill="${K.ori}"/>` + txt(CX + 18, CY - RR - 4, 'oriC', K.ori, 24, 'start', 800) +
-          `<circle cx="${CX}" cy="${CY + RR}" r="7" fill="${C.muted}"/>` + txt(CX + 16, CY + RR + 14, 'ter', C.muted, 22, 'start') +
+        $('bc-ring').innerHTML = ro > .01 ? `<g opacity="${f1(ro)}"><circle cx="${CX}" cy="${CY - RR}" r="9" fill="${K.ori}"/>` + txt(CX, CY - RR + 40, 'oriC', K.ori, 24, 'middle', 800) +
+          `<circle cx="${CX}" cy="${CY + RR}" r="7" fill="${C.muted}"/>` + txt(CX, CY + RR - 22, 'ter', C.muted, 22) +
           txt(CX, CY + 8, T2('≈ 4,6 miljoen bp', '≈ 4.6 million bp'), C.text, 26, 'middle', 700) + '</g>' : '';
         // plasmiden
         const pg = step === 3 ? 1 + .25 * ease(sub(p, .1, .4)) : 1;

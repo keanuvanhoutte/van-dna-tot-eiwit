@@ -17,6 +17,7 @@ const S = {
   wilson: { t: 'Wilson (2014) Ribosome-targeting antibiotics and mechanisms of bacterial resistance. Nat Rev Microbiol 12:35 (PubMed 24336183)', url: 'https://pubmed.ncbi.nlm.nih.gov/24336183/' },
   aldred: { t: 'Aldred, Kerns & Osheroff (2014) Mechanism of quinolone action and resistance. Biochemistry 53:1565 (PMC3985860)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3985860/' },
   hooper: { t: 'Hooper & Jacoby (2016) Topoisomerase inhibitors: fluoroquinolone mechanisms of action and resistance. Cold Spring Harb Perspect Med 6:a025320 (PMC5008060)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5008060/' },
+  oswald: { t: 'Oswald, Tam & Pos (2016) Transport of lipophilic carboxylates is mediated by transmembrane helix 2 in multidrug transporter AcrB. Nat Commun 7:13819 (PMC5171871)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5171871/' },
   munita: { t: 'Munita & Arias (2016) Mechanisms of antibiotic resistance. Microbiol Spectr 4(2):VMBF-0016-2015 (PMC4888801)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4888801/' },
 };
 
@@ -186,6 +187,6 @@ export default {
       facts: [['Two genetic routes', 'mutation or acquiring genes'], ['β-lactamases', 'more than 1,000 described'], ['TEM-1', 'plasmid β-lactamase, found in Gram-negative bacteria in the 1960s'], ['Often combined', 'fewer porins + pumps + degrading enzyme']],
       why: 'Resistance explains why antibiotics must be used with care. Because resistance genes jump from bacterium to bacterium on plasmids, resistance can also reach bacteria that never had the mutation themselves; conjugation is a very efficient route for this.',
     },
-    sources: [S.munita, S.lin, S.molodtsov, S.hooper],
+    sources: [S.munita, S.lin, S.molodtsov, S.hooper, S.oswald],
   },
 };
