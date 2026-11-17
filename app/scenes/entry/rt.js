@@ -15,16 +15,16 @@ const strand = (a, b, y, col, op = 1, w = 6) =>
   `<line x1="${f1(a)}" y1="${f1(y)}" x2="${f1(b)}" y2="${f1(y)}" stroke="${col}" stroke-width="${w}" stroke-linecap="round" opacity="${f1(op)}"/>`;
 const gone = (a, b, y, col) => `<line x1="${f1(a)}" y1="${f1(y)}" x2="${f1(b)}" y2="${f1(y)}" stroke="${col}" stroke-width="6" stroke-dasharray="4 12" opacity=".35" stroke-linecap="round"/>`;
 /* tRNA-Lys3 als kleine L-vorm */
-const trna = (x, y, op = 1) => `<g transform="translate(${f1(x)} ${f1(y)})" opacity="${f1(op)}">
-  <path d="M0,0 L-34,-16 M-34,-16 L-30,-42" stroke="${TRC}" stroke-width="7" fill="none" stroke-linecap="round"/>
-  <circle cx="-30" cy="-46" r="7" fill="${TRC}"/>${txt(-30, -62, 'tRNA-Lys3', TRC, 18)}</g>`;
+const trna = (x, y, op = 1, d = 1) => `<g transform="translate(${f1(x)} ${f1(y)})" opacity="${f1(op)}">
+  <path d="M0,0 L${34 * d},-16 M${34 * d},-16 L${30 * d},-42" stroke="${TRC}" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <circle cx="${30 * d}" cy="-46" r="7" fill="${TRC}"/>${txt(30 * d, -62, 'tRNA-Lys3', TRC, 18)}</g>`;   /* d = 1: naar rechts, niet over de letters van het PBS-vak; d = -1 aan de rechterrand */
 const enz = (x, y, lab, col) => `<g transform="translate(${f1(x)} ${f1(y)})"><ellipse rx="${Math.max(34, lab.length * 6.5)}" ry="24" fill="rgba(155,123,255,.22)" stroke="${col}" stroke-width="2.5"/>${txt(0, 6, lab, col, 18)}</g>`;
 
 /* tRNA-primer na de strengoverdracht: klikbaar (zelfde doel als de tRNA-hotspot in stap 1–2), zonder extra label */
 /* 5'/3'-labels aan de uiteinden van een streng (nodig om de sprongen te volgen) */
 const P5 = "5'", P3 = "3'";
 const end = (x, y, lab, col) => txt(x, y + 6, lab, col, 17);
-const trnaHot = (x, y) => `<g data-node="trna" data-href="../atlas/index.html?id=trna" data-color="${TRC}" data-nolabel>${trna(x, y)}</g>`;
+const trnaHot = (x, y) => `<g data-node="trna" data-href="../atlas/index.html?id=trna" data-color="${TRC}" data-nolabel>${trna(x, y, 1, -1)}</g>`;
 
 export default {
   id: 'rt',

@@ -109,7 +109,7 @@ export default {
         // en snoert af (p = .75): het nieuwe virus heeft dat stukje membraan als envelop
         const kn = step === 2 && p < .75 ? .97 * ease(sub(p, .25, .72)) : 0;
         /* stap 3: een transportblaasje knopt rechts uit het ERGIC, met het nieuwe virus erin (p .05–.35), en reist naar de celrand */
-        const kV = step === 3 && p < .35 ? .97 * ease(sub(p, .05, .33)) : 0;
+        const kV = step === 3 && p < .35 ? .97 * ease(sub(p, .05, .33)) : step === 4 && p < .25 ? .97 * ease(sub(p, .03, .24)) : 0;
         const mE = ergicPts(kn, kV);
         let eg = '';
         eg += `<path d="${ptsPad(mE, true)}" fill="rgba(201,165,116,.08)"/>` + membraanPts(mE, { w: 16, closed: true });
@@ -155,20 +155,25 @@ export default {
           /* een tweede nieuw virus gaat in een blaasje van het ERGIC naar een lysosoom (stippellijn = de weg); het lysosoom
              wordt minder zuur en schuift daarna naar de celrand */
           const k = step === 4 ? ease(sub(p, .0, .25)) : 1;
-          const tr = step === 4 ? ease(sub(p, .1, .45)) : 1, go = step === 4 ? ease(sub(p, .5, 1)) : 1;
+          const go = step === 4 ? ease(sub(p, .56, 1)) : 1;
           const lx = lerp(1190, 1250, go), lyy = lerp(620, 500, go);
-          if (step === 4 && tr < 1) {
-            ly += `<path d="M${ex + erx + 50},${ey + 40} Q${ex + erx + 110},${ey + 80} ${1190 - 92},${620 + 10}" stroke="${LYSO}" stroke-width="3" fill="none" stroke-dasharray="8 7" opacity="${f1(k * (1 - tr) * .8)}"/>`;
-            const bx = lerp(ex + erx + 50, 1190 - 40, tr), by = lerp(ey + 40, 630, tr);
-            ly += vesicle(bx, by, 44, C.mem, k * (1 - ease(sub(p, .38, .45)))) + corona(bx, by, 22, k);
+          if (step === 4 && p < .56) {
+            /* het tweede virus knopt in een blaasje rechts uit het ERGIC (p 0–.25), reist naar het lysosoom (.25–.45) en het
+               blaasje versmelt ermee: zijn membraan gaat op in dat van het lysosoom (straal → 0) en het virus komt erin (.45–.55) */
+            const inKnop = p < .25, x0 = xbV + VB * .94, tx = 1190 - 92 - VB * .45, ty = 612;
+            const mv = ease(sub(p, .25, .45)), fu = ease(sub(p, .45, .55));
+            const bx = inKnop ? Math.max(lerp(ex + 60, xbV - 20, ease(sub(p, 0, .06))), xbV + VB * (2 * kV - 1)) : lerp(x0, tx, mv) + (tx + VB * .45 - tx) * fu;
+            const by = inKnop ? ey - 5 : lerp(ey - 5, ty, mv);
+            if (!inKnop) ly += vesicle(bx, by, VB * (1 - fu), C.mem, 1);
+            ly += corona(lerp(bx, 1160, fu), lerp(by, 600, fu), 26, ease(sub(p, 0, .06)));
           }
-          ly += `<g opacity="${f1(k)}">` + vesicle(lx, lyy, 92, LYSO, 1) + corona(lx + 30, lyy + 24, 24) + corona(lx - 30, lyy - 20, 22, ease(sub(step === 4 ? p : 1, .4, .46))) + '</g>';   // het aangevoerde virus zit nu ook in het lysosoom
+          ly += `<g opacity="${f1(k)}">` + vesicle(lx, lyy, 92, LYSO, 1) + corona(lx + 30, lyy + 24, 24) + (step === 5 || p >= .56 ? corona(lx - 30, lyy - 20, 26) : '') + '</g>';   // het aangevoerde virus zit nu ook in het lysosoom
           ly += T(lx - 70, lyy + 140, T2('lysosoom: minder zuur', 'lysosome: less acidic'), { size: 26, col: LYSO, w: 700, op: k });
         }
         if (step === 5) {
+          /* geen extra virus buiten zonder exocytose: het label wijst naar het virus dat in stap 4 naar buiten kwam */
           const k = ease(sub(p, .1, .5));
-          ly += corona(1500, 300, 26, k);
-          fx += T(1590, 190, T2('→ volgende cel', '→ next cell'), { size: 28, col: SPIKE, w: 700, anchor: 'end', op: k });
+          fx += T(1590, 400, T2('→ volgende cel', '→ next cell'), { size: 21, col: SPIKE, w: 700, anchor: 'end', op: k });
         }
         $('as-lys').innerHTML = ly;
         const kF = step === 3 ? .97 * (1 - ease(sub(p, .6, .85))) : 0, fz = step === 3 && ph(3, .6, .85) >= .02 && kF > .005;

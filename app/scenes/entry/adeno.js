@@ -1,5 +1,5 @@
 import { C, L, T2, svgOpen, pill, txt, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { blaasje, membraanPts, kernEnvelop, ptsCirkel } from '../../bio.js';
+import { blaasje, membraanPts, kernEnvelop, ptsCirkel, eiwit } from '../../bio.js';
 import { capsid, viralGenome, padPts, knopPts, ptsPad, blaasjeOpen, car, integrin, triskelion, microtubule, motor, kinesineGreep, linDNA, capsidBreuk, npc, PINK, FIBRE } from './_bits.js';
 
 /* Hoofdstuk 2 van het verhaal: het adenovirus (HAdV-C5) hecht aan een epitheelcel en wordt opgenomen.
@@ -87,7 +87,7 @@ export default {
       <circle data-anchor="kernimport" data-pos="below" cx="${PORE[0] - 165}" cy="${PORE[1] + 20}" r="1" fill="none"/>
     </g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Pol II leest de virale genen', 'Pol II reads the viral genes')}" id="ad-txn" opacity="0">
-      <circle data-anchor="transcriptie" cx="1110" cy="826" r="1" fill="none"/>
+      <circle data-anchor="transcriptie" cx="1190" cy="812" r="1" fill="none"/>
       <g id="ad-episome"></g>
     </g>
 
@@ -238,7 +238,7 @@ export default {
         }
         const vOp = step < 2 ? 0 : step === 7 && p > .75 ? 1 - ease(sub(p, .75, 1)) * .55 : 1;
         $('ad-virus').innerHTML = vOp <= .01 ? '' :
-          `<g transform="translate(${f1(vx)} ${f1(vy)}) rotate(${f1(step >= 6 ? 14 : 0)})">${step === 7 ? `<g opacity="${f1(vOp)}">${capsidBreuk(vR, ease(sub(p, .45, .8)), 'ad-brk', { fibre: fib, missing })}</g>` : capsid(vR, { fibre: fib, bend, missing, op: vOp })}${step >= 6 ? viralGenome(VR * .8, .9) : gOp > .01 ? viralGenome(vR * .8, gOp) : ''}</g>`;
+          `<g transform="translate(${f1(vx)} ${f1(vy)}) rotate(${f1(step >= 6 ? 14 : 0)})">${step === 7 ? `<g opacity="${f1(vOp)}">${capsidBreuk(vR, ease(sub(p, .45, .8)), 'ad-brk', { fibre: fib, missing })}</g>` : capsid(vR, { fibre: fib, bend, missing, op: vOp })}${step === 6 ? viralGenome(VR * .8, .9) : step === 7 ? viralGenome(VR * .8, .9 * (1 - ease(sub(p, .5, .65)))) : gOp > .01 ? viralGenome(vR * .8, gOp) : ''}</g>`;
 
         /* ── blaasje / endosoom ───────────────────────────── */
         let ves = '';
@@ -250,12 +250,13 @@ export default {
         }
         $('ad-ves').innerHTML = ves;
         $('ad-ves-a').setAttribute('cy', step >= 5 ? '540' : '500');
+        $('ad-ves-a').setAttribute('opacity', step === 7 ? '0' : '1');   // in stap 8 is er geen endosoom meer: geen label
 
         /* ── kern, microtubule, porie ─────────────────────── */
         const nucOp = step >= 6 ? (step === 6 ? ease(clamp(p / .3)) : 1) : 0;
         $('ad-nuc').setAttribute('opacity', f1(nucOp));
         $('ad-pore').setAttribute('opacity', f1(nucOp));
-        $('ad-mt').setAttribute('opacity', f1(step === 6 ? ease(clamp(p / .25)) : step === 7 ? 1 : 0));
+        $('ad-mt').setAttribute('opacity', f1(step === 6 ? ease(clamp(p / .25)) : step === 7 ? 1 - ease(sub(p, .2, .5)) : 0));
         if (nucOp > .01) $('ad-mt').innerHTML = microtubule(MT0[0], MT0[1], PORE[0] + 20, PORE[1] - 70, 16);
 
         /* ── notities per stap ────────────────────────────── */
@@ -274,23 +275,30 @@ export default {
         }
         if (step === 7) {
           const k1 = ease(sub(p, .1, .4)), k2 = ease(sub(p, .45, .8));
-          no += `<g opacity="${f1(k1)}">${txt(890, PORE[1] - 155, 'hexon ↔ Nup214', C.prot, 22)}
-            <line x1="${890}" y1="${PORE[1] - 146}" x2="${PORE[0] - 46}" y2="${PORE[1] - 86}" stroke="${C.prot}" stroke-width="2"/>
+          no += `<g opacity="${f1(k1 * (1 - ease(sub(p, .45, .6))))}">${txt(890, PORE[1] - 155, 'hexon ↔ Nup214', C.prot, 22)}
+            <line x1="${890}" y1="${PORE[1] - 146}" x2="${PORE[0] - 46}" y2="${PORE[1] - 86}" stroke="${C.prot}" stroke-width="2"/></g>
+            <g opacity="${f1(k1)}">
             ${txt(1330, PORE[1] - 250, T2('kinesine-1 trekt de jas open', 'kinesin-1 pulls the coat apart'), '#b9a6ff', 22)}
             <line x1="1300" y1="${PORE[1] - 240}" x2="${PORE[0] + 150}" y2="${PORE[1] - 190}" stroke="#b9a6ff" stroke-width="2"/>
             ${microtubule(PORE[0] + 60, PORE[1] - 250, PORE[0] + 330, PORE[1] - 150, 14)}
             ${kinesineGreep(PORE[0] + 150, PORE[1] - 186, 200, 1.3, '#b9a6ff', tt * 6, [[PORE[0] + 30, PORE[1] - 118], [PORE[0] + 52, PORE[1] - 76]])}</g>`;
-          no += `<g opacity="${f1(k2)}">${txt(1400, PORE[1] + 130, T2('DNA + proteïne VII → kern', 'DNA + protein VII → nucleus'), PINK, 22)}</g>`;
+          no += `<g opacity="${f1(k2 * (1 - ease(sub(p, .65, .8))))}">${txt(1400, PORE[1] + 130, T2('DNA + proteïne VII → kern', 'DNA + protein VII → nucleus'), PINK, 22)}</g>`;
+          /* het DNA verlaat de opengebroken jas als één draad door de porie de kern in (zelfde verhaal als in kernimport) */
+          const th = ease(sub(p, .45, .7)), thOp = 1 - ease(sub(p, .78, .92));
+          if (th > .01 && thOp > .01) no += `<path d="M${PORE[0] - 10},${PORE[1] - 92} C${PORE[0] - 2},${PORE[1] - 40} ${PORE[0] + 6},${PORE[1] + 10} ${PORE[0] + 4},${PORE[1] + 40} S1040,840 1000,846" pathLength="1000" stroke="${PINK}" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="1000" stroke-dashoffset="${f1(1000 * (1 - th))}" opacity="${f1(thOp)}"/>`;
         }
         $('ad-notes').innerHTML = no;
         /* 'extracellulair'/'cytosol' alleen in het overzicht (stap 6); ingezoomd staan ze in de weg */
         const regOp = step === 6 ? ease(clamp(p / .3)) * .7 : 0;
         $('ad-reg1').setAttribute('opacity', f1(regOp)); $('ad-reg2').setAttribute('opacity', f1(regOp));
 
-        const txnOp = step === 7 ? ease(sub(p, .5, .9)) : 0;
+        const txnOp = step === 7 ? ease(sub(p, .65, .9)) : 0;
         $('ad-txn').setAttribute('opacity', f1(txnOp));
+        /* in de kern: lineair DNA; Pol II zit erop en maakt viraal mRNA (het label belooft dat) */
         $('ad-episome').innerHTML = txnOp > .01
-          ? `${linDNA(1000, 1230, 846, { vii: 4 })}${txt(1115, 900, T2('lineair viraal DNA', 'linear viral DNA'), PINK, 21)}` : '';
+          ? `${linDNA(1000, 1230, 846, { vii: 4 })}${eiwit(1150, 842, 34, 26, C.prot, { seed: 12, bumps: .1 })}${txt(1150, 849, 'Pol II', '#e8edf7', 17)}
+             <path d="M1176,858 q26,24 58,24 t46,16" stroke="${C.rna}" stroke-width="5" fill="none" stroke-linecap="round"/>${txt(1290, 912, T2('viraal mRNA', 'viral mRNA'), C.rna, 20, 'start')}
+             ${txt(1080, 900, T2('lineair viraal DNA', 'linear viral DNA'), PINK, 21)}` : '';
       },
     };
   },

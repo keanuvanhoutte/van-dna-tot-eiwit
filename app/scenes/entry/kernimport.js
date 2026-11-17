@@ -225,7 +225,7 @@ export default {
           ${txt(PX - 330, 250, T2('capside ≈ 90 nm', 'capsid ≈ 90 nm'), C.muted, 21)}${txt(PX - 330, 280, T2('kanaal ~40 nm', 'channel ~40 nm'), C.muted, 21)}</g>`;
         if (step === 6 || step === 7 || step === 8) {
           /* kinesine-1: koppen op een microtubule, armen naar Nup358 (filament van de porie) en naar het capside */
-          const k = step === 6 ? 0 : step === 7 ? ease(sub(p, .05, .35)) : 1 - ease(sub(p, .3, .6));
+          const k = step === 6 ? 0 : step === 7 ? ease(sub(p, .05, .35)) : 1 - ease(sub(p, .05, .3));   // verdwijnt vóór het capside
           if (k > .01) {
             const bx = brk * CR * .5;
             no += `<g opacity="${f1(k)}">${microtubule(PX + 150, 150, PX + 560, 270, 16)}

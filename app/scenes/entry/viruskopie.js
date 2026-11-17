@@ -79,8 +79,8 @@ export default {
             `<g transform="rotate(12 1500 820)">${cisterne(1500, 820, { len: 290, dik: 24, buig: 6, vert: false, w: 8, op: kEr, lumen: 'rgba(143,179,232,.14)' })}</g>`;
           DV.forEach(([x, y, r], i) => { er += dmv(x, y, r * (i ? ph(4, .2, .55) : ph(4, .05, .4)), kEr); });
           er += T(1270, 878, T2('ER → blaasjes met dubbel membraan', 'ER → vesicles with a double membrane'), { size: 24, col: C.mem, op: ph(4, .4, .6) });
-          // poortje bovenaan het grote blaasje (stap 5)
-          const kP = ph(5, 0, .25);
+          // poortje (nsp3) bovenaan het grote blaasje: al in stap 4 zichtbaar, vóór er RNA door het membraan gaat (Wolff et al. 2020)
+          const kP = ph(4, .2, .35);
           if (kP > .01) er += `<g opacity="${f1(kP)}"><rect x="1250" y="512" width="40" height="34" rx="6" fill="${C.prot2}" stroke="#0a1224" stroke-width="2"/>${[0, 1, 2, 3].map(i => `<rect x="${1248 + i * 12}" y="500" width="8" height="14" rx="3" fill="${C.prot2}"/>`).join('')}</g>` +
             T(1360, 500, T2('poortje', 'gate'), { size: 24, col: C.text, anchor: 'start', op: kP });
         }
@@ -152,6 +152,7 @@ export default {
            binnenin groeit de kopie ertegenaan (dubbelstrengig RNA). Stap 5: kopieën gaan door het poortje naar het cytosol. */
         if (step >= 4) {
           const kT = ph(4, .35, .55), kC = step === 4 ? ease(sub(p, .55, .95)) : 1, cy0 = DV[0][1];
+          fx += `<path d="M${X1},${RY} C1190,262 1236,330 ${MX - 22},${MY - 46}" stroke="${C.rna}" stroke-width="4" fill="none" stroke-dasharray="7 6" opacity="${f1(kT * .8)}"/>`;   // het genoom is de matrijs
           fx += `<path d="M${MX - 10},${MY + 40} C${MX - 10},${cy0 - 60} ${MX - 60},${cy0 - 40} ${MX - 70},${cy0}" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round" opacity="${f1(kT)}"/>`;
           fx += rnaWave(MX - 70, MX + 60, cy0, kT, 6);
           fx += rnaWave(MX - 70, MX - 70 + 130 * kC, cy0 + 16, kC > .02 ? 1 : 0, 6, '#ffc9a3');

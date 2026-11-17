@@ -55,7 +55,7 @@ export function capsidBreuk(R, k, id, o = {}) {
   const z = R * 1.6, d = R * .5 * k, P = [[[-z, -z], [z * .15, -z], [R * .1, -R * .2], [-R * .2, R * .15], [-z, R * .05]],
     [[z * .15, -z], [z, -z], [z, R * .3], [R * .25, R * .05], [R * .1, -R * .2]],
     [[-z, R * .05], [-R * .2, R * .15], [R * .1, -R * .2], [R * .25, R * .05], [z, R * .3], [z, z], [-z, z]]];
-  const dir = [[-1, -.8], [1, -.6], [0, 1]];
+  const dir = [[-1, -.8], [1, -.6], [0, .2]];   // het onderste stuk blijft op de porie liggen in plaats van erin te zakken
   return P.map((poly, i) => `<clipPath id="${id}-${i}"><polygon points="${poly.map(q => q.map(f1).join(',')).join(' ')}"/></clipPath>` +
     `<g transform="translate(${f1(dir[i][0] * d)} ${f1(dir[i][1] * d)}) rotate(${f1(dir[i][0] * 12 * k)})"><g clip-path="url(#${id}-${i})">${capsid(R, o)}</g></g>`).join('');
 }

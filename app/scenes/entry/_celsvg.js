@@ -77,7 +77,9 @@ export function sceneCel() {
   const [px, py] = P(215, nr + 4);
   const vPath = `M395,300 C470,300 520,315 ${mtoc[0] - 20},${mtoc[1] + 10} S${px - 30},${py - 20} ${px - 16},${py - 10}`;
   const lPath = `M400,650 C470,640 520,610 560,600 S650,640 700,690`;
-  const mPath = `M${P(-20, nr)[0].toFixed(0)},${P(-20, nr)[1].toFixed(0)} C1000,390 1060,380 1110,400`;
+  // mRNA-export: vertrekt uit een kernporie (hoek 290°, buiten het ER-gebied −50…124°) en loopt boven het ER om naar de polysomen
+  const [ex0, ey0] = P(290, nr + 5);
+  const mPath = `M${ex0.toFixed(0)},${ey0.toFixed(0)} C900,200 1050,230 1110,380`;
   const [ma, mb] = memAt(96);
 
   return `<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg">${defs}
@@ -107,7 +109,7 @@ export function sceneCel() {
       <g data-node="chromatine" data-color="${C.dna}" data-nolabel>${chrom}</g><g data-node="kernimport" data-color="${C.prot}" data-nolabel>${pores}</g>
     </g>
     <g data-node="export" data-color="${C.rna}" data-label="${L({ nl: 'mRNA-export', en: 'mRNA export' })}">
-      <circle data-anchor="export" cx="1010" cy="380" r="1" fill="none"/>
+      <circle data-anchor="export" cx="975" cy="232" r="1" fill="none"/>
       <path d="${mPath}" stroke="transparent" stroke-width="26" fill="none"/>
       ${[0, 1.3, 2.6].map(b => `<path d="M-9,0 q4,-6 9,0 t9,0" stroke="${C.rna}" stroke-width="3" fill="none"><animateMotion dur="4s" begin="-${b}s" repeatCount="indefinite" path="${mPath}" rotate="auto"/></path>`).join('')}
     </g>

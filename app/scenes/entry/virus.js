@@ -150,6 +150,7 @@ export default {
         if (step >= 4) lOp = step === 4 ? 1 - ease(sub(p, .45, .9)) * .6 : .4;
         $('vi-left').innerHTML = `<g transform="translate(${LX} ${f1(ly)})">${capsid(66, { fibre: lfib, op: lOp, missing: lmiss })}</g>`;
         $('vi-left-a').setAttribute('cy', f1(ly - 128));
+        $('vi-left-a').setAttribute('opacity', step === 6 ? '0' : '1');   // stap 7: geen label over het gat en de uittredende capsiden
 
         /* endosoom links: afgesnoerd blaasje met één dubbellaag; in stap 4 breekt het open */
         let endo = '';

@@ -150,15 +150,15 @@ export default {
         const rOn = step === 4 ? ease(sub(p, .6, 1)) : step >= 5 ? 1 : 0;
         $('ln-ribo').setAttribute('opacity', f1(rOn));
         $('ln-ribo-body').innerHTML = rOn > .01
-          ? `<path d="M${px - 60},${f1(py + 90)} Q900,740 820,760" stroke="${C.rna}" stroke-width="4" fill="none" stroke-dasharray="10 8" opacity=".5"/>
-             <path d="M760,760 q26,-20 52,0 t52,0 t52,0 t52,0" stroke="${C.rna}" stroke-width="6" fill="none"/>
-             ${[0, 1, 2, 3].map(i => { const x = 786 + i * 52, y = 760 + (i % 2 ? 17 : -3);   // ribosoom (twee eenheden), mRNA tussen beide
+          ? `<path d="M${px - 60},${f1(py + 90)} Q960,740 880,760" stroke="${C.rna}" stroke-width="4" fill="none" stroke-dasharray="10 8" opacity=".5"/>
+             <path d="M820,760 q26,-20 52,0 t52,0 t52,0 t52,0" stroke="${C.rna}" stroke-width="6" fill="none"/>
+             ${[0, 1, 2, 3].map(i => { const x = 846 + i * 52,   /* volledig rechts van de celrand: translatie in het cytosol */ y = 760 + (i % 2 ? 17 : -3);   // ribosoom (twee eenheden), mRNA tussen beide
                const kc = step >= 5 ? (step === 5 ? ease(sub(p, .1, .7)) : 1) : .25, L = (10 + i * 12) * kc;   // keten groeit uit de grote eenheid
                return ribosoomKlein(x, y, { s: 1.9 }) + `<path d="M${x},${y + 24} q${f1(-L * .4)},${f1(L * .5)} ${f1(L * .1)},${f1(L)}" stroke="${C.chain}" stroke-width="4" fill="none" stroke-linecap="round"/>`; }).join('')}
              ${step >= 5 ? `<g opacity="${f1(step === 5 ? ease(sub(p, .45, .85)) : 1)}">
-               <path d="M${f1(942)},${f1(784)} q10,-30 26,-52" stroke="${C.chain}" stroke-width="3" fill="none" stroke-dasharray="5 6" opacity=".7"/>
-               ${eiwit(1000, 712, 32, 23, C.prot, { seed: 33, bumps: .14 })}${eiwit(1068, 728, 26, 20, C.prot, { seed: 34, bumps: .14 })}
-               ${txt(1235, 705, T2('antigeen-eiwit', 'antigen protein'), C.prot, 21)}</g>` : ''}` : '';
+               <path d="M${f1(1002)},${f1(784)} q14,-30 34,-52" stroke="${C.chain}" stroke-width="3" fill="none" stroke-dasharray="5 6" opacity=".7"/>
+               ${eiwit(1066, 708, 32, 23, C.prot, { seed: 33, bumps: .14 })}${eiwit(1132, 728, 26, 20, C.prot, { seed: 34, bumps: .14 })}
+               ${txt(1270, 700, T2('antigeen-eiwit', 'antigen protein'), C.prot, 21, 'start')}</g>` : ''}` : '';
 
         /* kern-uitsluiting */
         const nOn = step === 6 ? ease(sub(p, .15, .5)) : 0;
@@ -174,7 +174,7 @@ export default {
         if (step === 4) no += `<g opacity="${f1(ease(sub(p, .25, .6)))}">${txt(RX - 330, 600, T2('+ lading bindt het', '+ charge binds the'), LIP, 22)}
           ${txt(RX - 330, 630, T2('negatieve membraan', 'negative membrane'), LIP, 22)}
           ${txt(RX + 150, 700, T2('orde van grootte: enkele % ontsnapt', 'order of magnitude: a few % escapes'), C.muted, 20)}</g>`;
-        if (step === 6) no += `<g opacity="${f1(ease(sub(p, .3, .7)))}">${txt(1000, 250, T2('geen reverse transcriptase · geen integratie', 'no reverse transcriptase · no integration'), C.danger, 23)}
+        if (step === 6) no += `<g opacity="${f1(ease(sub(p, .3, .7)))}">${txt(1140, 300, T2('geen reverse transcriptase · geen integratie', 'no reverse transcriptase · no integration'), C.danger, 21)}
 </g>`;
         $('ln-notes').innerHTML = no;
       },

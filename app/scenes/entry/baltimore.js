@@ -4,7 +4,11 @@ import { PINK } from './_bits.js';
 /* Zijpad: de zeven Baltimore-klassen. Eén rij per klasse; elke stap licht er één uit.
  * Klasse VII (hepatitis B): het cccDNA in de kern wordt door het RNA-polymerase II van de cel afgeschreven tot de mRNA's
  * en het pregenomisch RNA (pgRNA); reverse transcriptase (P-eiwit) zet het pgRNA pas bij de replicatie, in het capside,
- * om naar nieuw DNA (Beck & Nassal, World J Gastroenterol 2007, 13:48–64; Baltimore, Bacteriol Rev 1971). */
+ * om naar nieuw DNA (Beck & Nassal, World J Gastroenterol 2007, 13:48–64; Baltimore, Bacteriol Rev 1971).
+ * Expliciet in Beck & Nassal 2007 (PMC4065876, volledige tekst gelezen): "from the cccDNA, several genomic and subgenomic
+ * RNAs are transcribed by cellular RNA polymerase II".
+ * Ook bij klasse I, II en VI maakt het RNA-polymerase II van de cel het mRNA (van het virale dsDNA, het aangevulde DNA of het
+ * provirus); daarom staat daar een klein "Pol II" boven de laatste pijl (uitzondering: pokkenvirussen, zie 'simplified'). */
 const POL2 = '#5fd3e6';
 const Y0 = 170, DY = 108;
 const rowY = i => Y0 + i * DY;
@@ -102,6 +106,7 @@ export default {
         mid += arrow(x + 5, k < c.mid.length - 1 ? x + 50 : XR - 15, y);
         x += 60;
       });
+      if (['I', 'II', 'VI'].includes(c.n)) det += txt(XR - 34, y - 14, 'Pol II', POL2, 18);   // het enzym van de cel dat het mRNA maakt
       rows += `<g id="bal-row-${i}">
         <circle cx="${XN}" cy="${f1(y)}" r="28" fill="rgba(255,255,255,.06)" stroke="${C.text}" stroke-width="2"/>${txt(XN, y + 9, c.n, C.text, 25)}
         ${hot(GENOME_NODE[c.g], c.g.includes('RNA') ? C.rna : C.dna, nuc(XG, y, WG, c.g))}
