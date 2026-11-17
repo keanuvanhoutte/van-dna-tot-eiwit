@@ -105,7 +105,7 @@ export default {
           let b = `<g opacity="${f1(kDis)}"><rect x="1060" y="130" width="500" height="200" rx="18" fill="rgba(13,20,38,.9)" stroke="${C.danger}" stroke-width="2"/>`;
           for (let i = 0; i < 5; i++) {
             const x = 1130 + i * 90, col = i === 0 ? C.danger : '#58677f';
-            b += `<circle cx="${x}" cy="190" r="22" fill="${col}"/><path d="M${x - 30},262 Q${x - 30},222 ${x},222 Q${x + 30},222 ${x + 30},262Z" fill="${col}"/>`;
+            b += `<path d="${eiwitPad(x, 220, 34, 30, 90 + i, .16)}" fill="${col}"/>`;   // één tumor (klomp cellen), geen mensje
           }
           b += '</g>' + T(1310, 310, T2('≈ 1 op 5 tumoren', '≈ 1 in 5 tumours'), { size: 28, col: C.danger, w: 700, op: kDis });
           fx += b;

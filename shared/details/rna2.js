@@ -26,7 +26,7 @@ const MCC = S('McCown et al. (2017) RNA 23:995 (PMC)', 'overzicht van alle beken
 export default {
   lokalisatie: {
     nl: {
-      kort: 'Sommige mRNA’s hebben een adreslabel in hun staart. Een eiwit leest dat label, motoreiwitten brengen het mRNA naar de juiste plek, en pas daar wordt het vertaald. Zo ontstaat het eiwit precies waar het nodig is.',
+      kort: 'Sommige mRNA’s hebben een adreslabel in het stuk achter het stopsein. Een eiwit leest dat label, motoreiwitten brengen het mRNA naar de juiste plek, en pas daar wordt het vertaald. Zo ontstaat het eiwit precies waar het nodig is.',
       what: 'Veel mRNA’s dragen in het stuk achter het stopcodon (de 3′-UTR) een adreslabel of ‘zipcode’: een korte volgorde of vorm die RNA-bindende eiwitten herkennen. Het mRNA wordt met die eiwitten ingepakt en door motoreiwitten langs het cytoskelet vervoerd. Onderweg blijft de translatie geremd; op de bestemming wordt ze vrijgegeven (lokale translatie).',
       how: [
         'Het adreslabel van β-actine-mRNA (54 letters, vlak na het stopcodon) werd gevonden in fibroblasten van kippenembryo’s; het stuurt het mRNA naar de voorste rand.',
@@ -39,7 +39,7 @@ export default {
       why: 'Zo kan een cel één deel van zichzelf anders maken dan de rest: de voorste rand bouwt actine, een zenuwuitloper maakt eiwitten bij één contactpunt. Wordt het adreslabel geblokkeerd, dan raakt het β-actine-mRNA verspreid en verandert de vorm van de rand.',
     },
     en: {
-      kort: 'Some mRNAs carry an address label in their tail. A protein reads that label, motor proteins take the mRNA to the right spot, and only there is it translated. That way the protein is made exactly where it is needed.',
+      kort: 'Some mRNAs carry an address label in the part after the stop signal. A protein reads that label, motor proteins take the mRNA to the right spot, and only there is it translated. That way the protein is made exactly where it is needed.',
       what: 'Many mRNAs carry an address label or ‘zipcode’ in the part behind the stop codon (the 3′ UTR): a short sequence or shape recognised by RNA-binding proteins. The mRNA is packed with those proteins and carried along the cytoskeleton by motor proteins. On the way, translation stays blocked; at the destination it is released (local translation).',
       how: [
         'The address label of β-actin mRNA (54 letters, right after the stop codon) was found in chicken embryo fibroblasts; it sends the mRNA to the leading edge.',

@@ -40,13 +40,13 @@ function initProcessing(svg) {
   const T = (nl, en) => L({ nl, en });
   const Y = 520;
   // oorspronkelijke posities (px) langs het pre-mRNA; ~3 px per nucleotide
-  const X = { cap: 146, e1: [160, 360], i1: [360, 680], br1: 640, e2: [680, 850], i2: [850, 1010], e3: [1010, 1200], utr: [1200, 1330], pas: [1250, 1292], cut: 1330, dse: [1362, 1404], down: [1330, 1500], pol: 1535 };
+  const X = { cap: 146, e1: [160, 360], i1: [360, 680], br1: 590, e2: [680, 850], i2: [850, 1010], e3: [1010, 1200], utr: [1200, 1330], pas: [1250, 1292], cut: 1330, dse: [1362, 1404], down: [1330, 1500], pol: 1535 };
   const L1 = X.i1[1] - X.i1[0], L2 = X.i2[1] - X.i2[0];
-  let ph = 0, P = 0;
+  let ph = 0, P = 0, noTxt = false;   // noTxt: kleine namen weglaten als het mRNP verkleind naar de porie gaat
   const prog = i => (i < ph ? 1 : i === ph ? P : 0);   // 0..1 binnen stap i
   const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
   const pill = (x, y, w, h, txt, col = C.prot, op = 1) => { if (op <= 0) return ''; const d = eiwitPad(x, y, w / 2 + 2, h / 2 + 2, seedOf(txt), .07);
-    return `<g opacity="${op.toFixed(2)}"><path d="${d}" fill="#0b1224"/><path d="${d}" fill="${col}" fill-opacity=".85" stroke="${col}" stroke-width="1.5"/><text x="${x}" y="${y + 4}" font-size="12" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="600">${txt}</text></g>`; };
+    return `<g opacity="${op.toFixed(2)}"><path d="${d}" fill="#0b1224"/><path d="${d}" fill="${col}" fill-opacity=".85" stroke="${col}" stroke-width="1.5"/>${noTxt ? '' : `<text x="${x}" y="${y + 4}" font-size="12" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="600">${txt}</text>`}</g>`; };
   const seg = (x0, x1, y, col, w) => `<line x1="${x0.toFixed(1)}" y1="${y}" x2="${x1.toFixed(1)}" y2="${y}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`;
   const txt = (x, y, s, col = C.text, size = 12) => `<text x="${x.toFixed(1)}" y="${y}" font-size="${size}" text-anchor="middle" fill="${col}" font-family="JetBrains Mono" font-weight="600">${s}</text>`;
 
@@ -55,32 +55,37 @@ function initProcessing(svg) {
     const lig1 = ease(prog(5)), lig2 = ease(prog(6));        // exon 1 schuift naar exon 2; daarna exon 1+2 naar exon 3
     const off = x => x + (x <= X.e1[1] + .1 ? lig1 * L1 : 0) + (x <= X.e2[1] + .1 ? lig2 * L2 : 0);
     const cut = prog(8) > .35, gone = ease(prog(10));
-    const moveY = -330 * gone, fade = 1 - Math.max(0, (gone - .6) / .4);
-    const up = `transform="translate(0 ${moveY.toFixed(1)})" opacity="${fade.toFixed(2)}"`;
+    // stap 11: het mRNP wordt met de 5'-kant (cap + CBC) voorop naar de kernporie gebracht en blijft daar aan de korf liggen
+    const cap0 = off(X.cap), sc = 1 - .5 * gone, poreIn = poreAt[1] + 46;
+    const dx = cap0 + (900 - cap0) * gone - sc * cap0, dy = Y + (poreIn - Y) * gone - sc * Y;
+    const upT = gone > 0 ? `translate(${dx.toFixed(1)} ${dy.toFixed(1)}) scale(${sc.toFixed(3)})` : '';
+    const lab = (1 - Math.min(1, gone * 2.5)).toFixed(2);
+    noTxt = gone > .35;   // kleine labels vervagen bij het verkleinen
+    const up = `transform="${upT}"`;
 
     // mRNA-exonen (+ 3'-UTR)
     let m = `<g ${up}>`;
     m += seg(off(X.e1[0]), off(X.e1[1]), Y, C.rna, 9) + seg(off(X.e2[0]), off(X.e2[1]), Y, C.rna, 9) + seg(X.e3[0], X.e3[1], Y, C.rna, 9);
     m += seg(X.utr[0], X.utr[1], Y, '#d9854a', 6);
-    m += txt(off((X.e1[0] + X.e1[1]) / 2), Y + 34, 'exon 1', C.rna) + txt(off((X.e2[0] + X.e2[1]) / 2), Y + 34, 'exon 2', C.rna) + txt((X.e3[0] + X.e3[1]) / 2, Y + 34, 'exon 3', C.rna);
-    m += txt((X.pas[0] + X.pas[1]) / 2, Y - 16, 'AAUAAA', '#ffb27a', 13) + txt(X.utr[0] + 30, Y + 34, "3'-UTR", '#d9854a', 13);
+    m += `<g opacity="${lab}">` + txt(off((X.e1[0] + X.e1[1]) / 2), Y + 34, 'exon 1', C.rna) + txt(off((X.e2[0] + X.e2[1]) / 2), Y + 34, 'exon 2', C.rna) + txt((X.e3[0] + X.e3[1]) / 2, Y + 34, 'exon 3', C.rna);
+    m += txt((X.pas[0] + X.pas[1]) / 2, Y - 16, 'AAUAAA', '#ffb27a', 13) + txt(X.utr[0] + 30, Y + 34, "3'-UTR", '#d9854a', 13) + '</g>';
     // poly(A)-staart
     const pa = ease(prog(9));
     if (ph >= 9) {
       const len = 150 * Math.min(1, pa + (ph > 9 ? 1 : 0));
       m += `<path d="M${X.cut},${Y} q${len * .4},${len * .05} ${len * .7},${len * .25} t${len * .3},${len * .15}" stroke="#ffb27a" stroke-width="5" fill="none" stroke-dasharray="2 3"/>`;
       for (let k = 12; k < len; k += 26) m += `<path d="${eiwitPad(X.cut + k * .95, Y + k * .22 + 6, 7, 6, 30 + k, .09)}" fill="${C.prot}" fill-opacity=".75" stroke="${C.prot}" stroke-width="1"/>`;   // PABPN1 op de staart
-      if (len > 60) m += txt(X.cut + 90, Y + 72, 'poly(A)', '#ffb27a', 12);
+      if (len > 60) m += `<g opacity="${lab}">` + txt(X.cut + 90, Y + 72, 'poly(A)', '#ffb27a', 12) + '</g>';
     }
     m += `</g>`;
     $('pr-mrna').innerHTML = m;
 
     // 5'-cap (+ CBC)
     const capOp = Math.min(1, prog(0) * 1.6), capX = off(X.cap);
-    $('pr-cap').innerHTML = `<g ${up}>` + (capOp > 0 ? `<g opacity="${capOp}"><circle cx="${capX}" cy="${Y}" r="13" fill="#ffb27a" stroke="${C.rna}" stroke-width="2"/><text x="${capX}" y="${Y + 4}" font-size="9" text-anchor="middle" fill="#3a1a05" font-family="Inter" font-weight="700">m⁷G</text></g>` : '')
+    $('pr-cap').innerHTML = `<g ${up}>` + (capOp > 0 ? `<g opacity="${capOp}"><circle cx="${capX}" cy="${Y}" r="13" fill="#ffb27a" stroke="${C.rna}" stroke-width="2"/><text x="${capX}" y="${Y + 4}" font-size="9" text-anchor="middle" fill="#3a1a05" font-family="Inter" font-weight="700" opacity="${lab}">m⁷G</text></g>` : '')
       + pill(capX + 6, Y - 52, 110, 24, 'RNGTT · RNMT', C.prot, ph === 0 ? 1 - Math.max(0, (prog(0) - .75) / .25) : 0)
       + pill(capX - 4, Y - 30, 46, 20, 'CBC', '#6f5bd6', ph >= 1 ? 1 : 0)
-      + txt(capX - 10, Y - 60, "5'", C.text, 13) + `</g>`;
+      + `<g opacity="${lab}">` + txt(capX - 10, Y - 60, "5'", C.text, 13) + `</g></g>`;
 
     // introns: intron 1 vormt de lariat, intron 2 wordt korter en verdwijnt
     const lar = ease(prog(4));                                // 0 = recht, 1 = lariat
@@ -101,9 +106,9 @@ function initProcessing(svg) {
       intr += `<g transform="translate(0 ${(-170 * rel).toFixed(1)})" opacity="${(1 - rel * .9).toFixed(2)}">
         <path d="${d}" stroke="#a9876f" stroke-width="4" fill="none" stroke-linejoin="round"/>
         ${txt(a0 + 14, Y - 14, lar < .3 ? 'GU' : '', '#ffc247', 11)}
-        ${txt(bx, Y - 30 * lar - 10, 'A', '#5ad17a', 13)}
-        ${txt(a1 - 18, Y - 14, 'AG', '#ffc247', 11)}
-        ${lar < .1 ? txt(a1 - 58, Y + 22, '(Py)n', '#a9876f', 11) : ''}
+        <circle cx="${bx}" cy="${(Y - 18 * lar).toFixed(1)}" r="10" fill="#5ad17a" stroke="#0b1224" stroke-width="1.5"/>${txt(bx, Y - 18 * lar + 4.5, 'A', '#0b1224', 13)}
+        ${txt(a1 - 14, Y - 14, 'AG', '#ffc247', 11)}
+        ${lar < .1 ? txt((bx + a1) / 2 - 8, Y - 14, '(Py)n', '#a9876f', 11) : ''}
       </g>`;
     }
     if (ph <= 6) {
@@ -116,19 +121,25 @@ function initProcessing(svg) {
     // snRNP's rond intron 1
     const fadeIn = (i, t0 = 0) => Math.min(1, Math.max(0, (prog(i) - t0) * 3));
     const u1 = ph < 1 ? 0 : ph <= 2 ? fadeIn(1) : ph === 3 ? 1 - prog(3) * 1.5 : 0;
-    const u2af = ph < 1 ? 0 : ph <= 3 ? fadeIn(1) : ph === 4 ? 1 - prog(4) * 2 : 0;
+    const u2af = ph < 1 ? 0 : ph === 1 ? fadeIn(1) : ph === 2 ? 1 - prog(2) * 2 : 0;   // U2AF verlaat het complex al zodra U2 stevig zit (complex A)
     const u2 = ph < 1 ? 0 : ph === 1 ? fadeIn(1, .4) : ph <= 5 ? 1 - (ph === 5 ? prog(5) : 0) : 0;
     const tri = ph < 2 ? 0 : ph === 2 ? fadeIn(2) : ph <= 5 ? 1 - (ph === 5 ? prog(5) : 0) : 0;
     const u4 = ph < 2 ? 0 : ph === 2 ? fadeIn(2) : ph === 3 ? 1 - prog(3) * 1.5 : 0;
     const lyUp = -170 * rel;
     let sn = '';
-    if (tri > 0) sn += `<g opacity="${tri.toFixed(2)}" transform="translate(0 ${lyUp.toFixed(1)})"><ellipse cx="${(X.i1[0] + X.br1) / 2 + 20}" cy="${Y - 110}" rx="170" ry="62" fill="rgba(155,123,255,.16)" stroke="${C.prot}" stroke-width="2" stroke-dasharray="6 4"/></g>`;
+    // U1 op de 5'-splitsplaats (GU), U2 op het vertakkings-A, U2AF op (Py)n + AG: alle drie onder tegen het RNA.
+    // Het tri-snRNP (U4/U6·U5) zakt in stap 3 op het intron tussen U1 en U2; samen vormen ze één complex (gestippelde rand).
+    const triDrop = ph === 2 ? -90 * (1 - ease(Math.min(1, prog(2) * 1.4))) : 0;
+    const act = ph < 3 ? 0 : ph === 3 ? ease(prog(3)) : 1;    // U6 neemt de 5'-splitsplaats over van U1
+    if (tri > 0) sn += `<g opacity="${tri.toFixed(2)}" transform="translate(0 ${(lyUp + triDrop).toFixed(1)})"><ellipse cx="${(X.i1[0] + X.br1) / 2 + 10}" cy="${Y - 4}" rx="${(X.br1 - X.i1[0]) / 2 + 58}" ry="54" fill="rgba(155,123,255,.13)" stroke="${C.prot}" stroke-width="2" stroke-dasharray="6 4"/></g>`;
     sn += `<g transform="translate(0 ${lyUp.toFixed(1)})">`;
-    sn += pill(X.i1[0] + 6, Y - 34, 44, 24, 'U1', '#8e6cf0', Math.max(0, u1));
-    sn += pill(X.br1, Y + 34, 44, 24, 'U2', '#6f5bd6', Math.max(0, u2));
-    sn += pill(X.i1[1] - 28, Y + 60, 64, 22, 'U2AF', '#5a4bb8', Math.max(0, u2af));
-    sn += pill(X.i1[0] + 110, Y - 132, 86, 24, 'U6·U5', '#8e6cf0', tri);
-    sn += pill(X.i1[0] + 220, Y - 132, 50, 24, 'U4', '#5a4bb8', Math.max(0, u4));
+    sn += pill(X.i1[0] + 12, Y + 14, 44, 24, 'U1', '#8e6cf0', Math.max(0, u1));
+    sn += pill(X.br1, Y + 26 - 18 * lar, 44, 24, 'U2', '#6f5bd6', Math.max(0, u2));
+    sn += pill((X.br1 + X.i1[1]) / 2 + 12, Y + 14, 60, 22, 'U2AF', '#5a4bb8', Math.max(0, u2af));
+    sn += `<g transform="translate(0 ${triDrop.toFixed(1)})">`;
+    sn += pill(X.i1[0] + 100 - 50 * act, Y - 16 - 6 * act, 86, 24, 'U6·U5', '#8e6cf0', tri);
+    sn += pill(X.i1[0] + 190, Y - 16 - (ph === 3 ? 60 * prog(3) : 0), 50, 24, 'U4', '#5a4bb8', Math.max(0, u4));
+    sn += `</g>`;
     sn += `</g>`;
     $('pr-snrnp').innerHTML = sn;
 
@@ -140,7 +151,7 @@ function initProcessing(svg) {
     // label 'EJC → NMD-controle' boven de laatst gevormde EJC (niet boven het midden van de groep, dat soms buiten beeld valt)
     const ea = $('pr-ejc-a'), ex = ejc.length ? ejc[ejc.length - 1] : 0;
     ea.setAttribute('x', ex - 22); ea.setAttribute('y', Y - 36); ea.setAttribute('width', ejc.length ? 44 : 0); ea.setAttribute('height', ejc.length ? 20 : 0);
-    ea.setAttribute('transform', `translate(0 ${moveY.toFixed(1)})`); ea.setAttribute('opacity', fade.toFixed(2));
+    if (upT) ea.setAttribute('transform', upT); else ea.removeAttribute('transform');
 
     // 3'-uiteinde: CPSF/CstF, knippen, PAP, Xrn2-torpedo op het stroomafwaartse RNA, Pol II
     const f3 = ph < 7 ? 0 : ph === 7 ? fadeIn(7) : ph <= 9 ? 1 : 0;
@@ -148,7 +159,7 @@ function initProcessing(svg) {
     let p3 = `<g ${up}>`;
     p3 += pill((X.pas[0] + X.pas[1]) / 2, Y - 46, 64, 24, 'CPSF', '#8e6cf0', f3);
     p3 += `</g>`;
-    p3 += pill((X.dse[0] + X.dse[1]) / 2, Y + 40, 60, 22, 'CstF', '#5a4bb8', cstf);
+    p3 += pill((X.dse[0] + X.dse[1]) / 2, Y - 14, 60, 22, 'CstF', '#5a4bb8', cstf);   // CstF op het GU-rijke RNA stroomafwaarts van de knipplaats
     if (ph === 8 && prog(8) > .3 && prog(8) < .6) p3 += `<path d="M${X.cut - 10},${Y - 22} l20,44 M${X.cut + 10},${Y - 22} l-20,44" stroke="#fff" stroke-width="3" opacity=".9"/>`;
     if (ph === 9) p3 += pill(X.cut + 40 + 120 * ease(prog(9)), Y + 18 + 30 * ease(prog(9)), 50, 22, 'PAP', '#6f5bd6');
     $('pr-pa').innerHTML = p3;
@@ -163,9 +174,11 @@ function initProcessing(svg) {
     dn += txt((X.dse[0] + X.dse[1]) / 2, Y + 20, ph < 9 ? L({ nl: 'GU-rijk', en: 'GU-rich' }) : '', '#c07a4a', 10);
     $('pr-down').innerHTML = dn;
     // Pol II zit op het DNA (dat er dwars door loopt); het RNA komt er aan de linkerkant uit
-    const pd = eiwitPad(0, 4, 50, 56, 22, .08);
-    $('pr-pol').innerHTML = polOp > 0 ? `<g opacity="${polOp.toFixed(2)}" transform="translate(${X.pol} ${Y})"><path d="${pd}" fill="#0b1224" fill-opacity=".7"/><path d="${pd}" fill="${C.prot}" fill-opacity=".28" stroke="${C.prot}" stroke-width="3"/><text x="4" y="-16" font-size="12" text-anchor="middle" fill="${C.text}" font-family="Inter">Pol II</text></g>` : '';
-    $('pr-dna').innerHTML = polOp > 0 ? `<path d="M${X.pol - 120},${Y + 34} C${X.pol - 60},${Y + 34} ${X.pol - 40},${Y + 18} ${X.pol},${Y + 18} S${X.pol + 60},${Y + 34} 1650,${Y + 34}" stroke="${C.dna}" stroke-width="5" fill="none" opacity="${polOp.toFixed(2)}"/>` : '';
+    // Pol II als twee lobben (klem boven, kaak onder) met het DNA in de spleet ertussen
+    const pdU = eiwitPad(0, -16, 52, 32, 22, .09), pdD = eiwitPad(6, 42, 44, 18, 23, .09);
+    $('pr-pol').innerHTML = polOp > 0 ? `<g opacity="${polOp.toFixed(2)}" transform="translate(${X.pol} ${Y})">` + [pdU, pdD].map(pd => `<path d="${pd}" fill="#0b1224" fill-opacity=".7"/><path d="${pd}" fill="${C.prot}" fill-opacity=".28" stroke="${C.prot}" stroke-width="3"/>`).join('') + `<text x="4" y="-20" font-size="12" text-anchor="middle" fill="${C.text}" font-family="Inter">Pol II</text></g>` : '';
+    $('pr-dna').innerHTML = polOp > 0 ? `<linearGradient id="pr-dnag" gradientUnits="userSpaceOnUse" x1="${X.pol - 210}" y1="0" x2="${X.pol - 110}" y2="0"><stop offset="0" stop-color="${C.dna}" stop-opacity="0"/><stop offset="1" stop-color="${C.dna}"/></linearGradient>` +
+      `<path d="M${X.pol - 210},${Y + 34} H${X.pol - 120}" stroke="url(#pr-dnag)" stroke-width="5" opacity="${polOp.toFixed(2)}"/><path d="M${X.pol - 120},${Y + 34} C${X.pol - 60},${Y + 34} ${X.pol - 40},${Y + 18} ${X.pol},${Y + 18} S${X.pol + 60},${Y + 34} 1650,${Y + 34}" stroke="${C.dna}" stroke-width="5" fill="none" opacity="${polOp.toFixed(2)}"/>` : '';
   }
   return { update(t, s) { ph = s.step; P = s.p; draw(); } };
 }

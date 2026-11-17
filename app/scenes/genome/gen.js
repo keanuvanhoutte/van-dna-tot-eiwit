@@ -53,8 +53,8 @@ export default {
       'Het signaal AATAAA geeft het einde aan. Iets verder wordt het RNA geknipt en krijgt het een staart van A’s.',
       'The signal AATAAA marks the end. A little further on, the RNA is cut and gets a tail of A’s.'),
     ST(9000, cam(800, 564, 1300), 'Van ruw RNA naar mRNA', 'From raw RNA to mRNA',
-      'Het eerste RNA wordt afgewerkt: het krijgt een kapje en een A-staart, en de intronen worden eruit geknipt.',
-      'The first RNA is finished off: it gets a cap and an A tail, and the introns are cut out.'),
+      'Het RNA kreeg al tijdens het maken een kapje. Nu gaan de intronen eruit en komt er een A-staart aan.',
+      'The RNA already got a cap while it was being made. Now the introns are cut out and an A tail is added.'),
     ST(7000, FULL, 'Klaar om af te lezen', 'Ready to be read',
       'Dit geheel leest het enzym dat RNA maakt. Hierna: het gen wordt aangezet en afgelezen.',
       'This whole unit is read by the enzyme that makes RNA. Next: the gene is switched on and read.'),
@@ -109,7 +109,7 @@ export default {
       <g id="gn-loop"></g>
       <g data-node="genregulatie" data-color="${col.enh}" data-label="${T2('Enhancer → genregulatie', 'Enhancer → gene regulation')}">
         <g id="gn-enh">${`<rect x="${ENH[0]}" y="${Y - 20}" width="${ENH[1] - ENH[0]}" height="40" rx="10" fill="#4a3d1c" stroke="${col.enh}" stroke-width="3"/>`}${txt((ENH[0] + ENH[1]) / 2, Y + 7, 'enhancer', '#fff', 21, 'middle', 700)}
-        <circle data-anchor="genregulatie" cx="${(ENH[0] + ENH[1]) / 2}" cy="${Y + 30}" r="1" fill="none" data-pos="below"/></g>
+        <circle data-anchor="genregulatie" cx="${(ENH[0] + ENH[1]) / 2 - 36}" cy="${Y + 30}" r="1" fill="none" data-pos="below"/></g>
       </g>
       <g data-node="promoter" data-color="${col.prom}" data-label="${T2('Promoter', 'Promoter')}">
         <rect x="${PROM[0]}" y="${Y - 22}" width="${PROM[1] - PROM[0]}" height="44" rx="10" fill="#2e2556" stroke="${col.prom}" stroke-width="3"/>
@@ -132,9 +132,15 @@ export default {
       <g id="gn-tss">
         <path d="M${TSS},${Y - 24} v-40 h60" stroke="#fff" stroke-width="4" fill="none" marker-end="url(#arrow)"/>${D(txt(TSS, Y - 72, 'TSS (+1)', '#fff', 17))}
       </g>
+      <!-- stap 3: TFIID op de TATA-box en Pol II op de promoter, rond de startplaats (+1) -->
+      <g id="gn-pic" opacity="0" data-node="rnapol" data-color="${C.prot}" data-nolabel>
+        <path d="${eiwitPad(360, Y - 40, 34, 16, 77, .08)}" fill="#7a62e0" fill-opacity=".9" stroke="${C.prot}" stroke-width="2"/>${txt(360, Y - 35, 'TFIID', '#fff', 15, 'middle', 700)}
+        <path d="${eiwitPad(432, Y + 2, 36, 34, 22, .08)}" fill="rgba(155,123,255,.30)" stroke="${C.prot}" stroke-width="3"/>
+        ${txt(474, Y + 36, 'Pol II', '#c9b8ff', 17, 'start', 700)}
+      </g>
     </g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Transcriptie →', 'Transcription →')}" id="gn-pre">${pre}<circle data-anchor="transcriptie" cx="${CUT - 60}" cy="${YP + 30}" r="1" fill="none" data-pos="below"/></g>
-    <g id="gn-arrow" data-node="rnaprocessing" data-color="${C.muted}" data-nolabel><path d="M800,${YP + 40} L800,${YM - 60}" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>${D(txt(815, (YP + YM) / 2 - 6, T2('capping · splicing · polyadenylatie', 'capping · splicing · polyadenylation'), C.muted, 18, 'start'))}</g>
+    <g id="gn-arrow" data-node="rnaprocessing" data-color="${C.muted}" data-nolabel><path d="M800,${YP + 40} L800,${YM - 60}" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>${D(txt(815, (YP + YM) / 2 - 6, T2('splicing · polyadenylatie', 'splicing · polyadenylation'), C.muted, 18, 'start'))}</g>
     <g id="gn-mat" data-node="translatie" data-color="${C.rna}" data-nolabel>${mat}</g>
     <g id="gn-dnalab">${txt(800, 190, T2("DNA (coderende streng 5'→3')", "DNA (coding strand 5'→3')"), C.dna2, 21)}</g>
     </svg>`;
@@ -157,14 +163,16 @@ export default {
           g += `<ellipse cx="${f1((eR + PROM[0]) / 2)}" cy="${Y - 34}" rx="${f1(10 + (PROM[0] - eR) / 2 + 8)}" ry="11" fill="none" stroke="#ffc247" stroke-width="5" opacity="${f1(k)}"/>`;
           if (step === 1) g += txt((eR + PROM[0]) / 2 - 40, Y - 62, T2('cohesine', 'cohesin'), '#ffc247', 15, 'end');
           const mo = step === 1 ? sub(p, .55, .8) : 0;
-          if (mo > .01) g += `<g opacity="${f1(mo)}"><path d="${eiwitPad((eR + PROM[0]) / 2 + 30, Y + 96, 70, 24, 1114, .07)}" fill="rgba(155,123,255,.55)" stroke="${C.prot}" stroke-width="2"/><path d="M${f1((eR + PROM[0]) / 2 + 30)},${Y + 72} L${f1((eR + PROM[0]) / 2 + 20)},${Y + 22}" stroke="${C.prot}" stroke-width="3"/>${txt((eR + PROM[0]) / 2 + 30, Y + 102, 'Mediator', '#fff', 17, 'middle', 700)}</g>`;
+          // activator op de enhancer; Mediator overbrugt enhancer en promoter (raakt beide)
+          if (mo > .01) g += `<g opacity="${f1(mo)}"><path d="${eiwitPad((ENH[0] + ENH[1]) / 2 + dx, Y - 36, 44, 16, 1117, .08)}" fill="#c98a1e" stroke="${col.enh}" stroke-width="2"/>${txt((ENH[0] + ENH[1]) / 2 + dx, Y - 31, 'activator', '#fff', 15, 'middle', 700)}` +
+            `<path d="${eiwitPad(PROM[0] + 22, Y + 42, 54, 20, 1114, .07)}" fill="rgba(155,123,255,.55)" stroke="${C.prot}" stroke-width="2"/>${txt(PROM[0] + 22, Y + 48, 'Mediator', '#fff', 17, 'middle', 700)}</g>`;
         }
         $('gn-loop').innerHTML = g;
         // markeringen per stap
         const hl = (id, on) => $(id)?.setAttribute('opacity', on ? 1 : .35);
         const ov = step === 0 || step === 7;                    // overzichtsbeelden: alleen hoofdlabels
         // detailgroepen: alleen zichtbaar in hun eigen stap; vloeiende overgang vanaf het eindbeeld van de vorige stap
-        const LV = { 'gn-gtag0': [3], 'gn-gtag1': [3], 'gn-codons': [4], 'gn-pas': [5], 'gn-promlab': [2], 'gn-tata': [2] };
+        const LV = { 'gn-gtag0': [3], 'gn-gtag1': [3], 'gn-codons': [4], 'gn-pas': [5], 'gn-promlab': [2], 'gn-tata': [2], 'gn-pic': [2, 3, 4, 5] };
         const fin = ease(sub(p, 0, .3));
         for (const [id, on] of Object.entries(LV)) {
           const lv = k => k < 0 ? 0 : on.includes(k) ? 1 : 0;

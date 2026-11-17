@@ -1,7 +1,7 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1, rng } from '../../kit.js';
 import { T } from '../prot/_b_kit.js';
 import { btn } from '../prot/_fate.js';
-import { kernEnvelop, ptsCirkel } from '../../bio.js';
+import { kernEnvelop, ptsCirkel, membraanPts } from '../../bio.js';
 
 /*
  * X-inactivatie (zijpad epigenetica, 05-11-2026): in vrouwelijke zoogdiercellen wordt vroeg in het embryo per cel
@@ -10,7 +10,7 @@ import { kernEnvelop, ptsCirkel } from '../../bio.js';
  * 2025). ≈ 15 % van de X-genen ontsnapt, nog ≈ 10 % wisselend (Carrel & Willard 2005).
  */
 const L3 = (nl, en) => ({ nl, en });
-const MOM = '#ff9ec7', DAD = '#6fd3ff', OFF = '#4a5470', XIST = C.rna, ORANGE = '#ff9a3c', BLACK = '#1d1d24';
+const MOM = '#ff9ec7', DAD = '#6fd3ff', YCOL = '#e8d48a', OFF = '#4a5470', XIST = C.rna, ORANGE = '#ff9a3c', BLACK = '#1d1d24';
 
 /* X-chromosoom (twee chromatiden, kruisvorm) */
 function xc(x, y, s, col, op = 1) {
@@ -26,7 +26,9 @@ const env = (x, y, r) => KE[`${x},${y},${r}`] ??= kernEnvelop(ptsCirkel(x, y, r,
 const nucleus = (x, y, r, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="url(#gNuc)"/>${env(x, y, r)}</g>`;
 
 /* vroeg embryo: 8 cellen; per cel bij toeval welk X stil wordt (vast patroon) */
-const R0 = rng(11), EMB = [[800, 450], ...Array.from({ length: 7 }, (_, i) => [800 + 190 * Math.cos(i * 2 * Math.PI / 7 - 1.4), 450 + 190 * Math.sin(i * 2 * Math.PI / 7 - 1.4)])].map(q => [...q, R0() < .5]);
+const R0 = rng(11), EMB = [[800, 450], ...Array.from({ length: 7 }, (_, i) => [800 + 186 * Math.cos(i * 2 * Math.PI / 7 - 1.4), 450 + 186 * Math.sin(i * 2 * Math.PI / 7 - 1.4)])].map(q => [...q, R0() < .5]);
+/* celmembraan van elke embryocel (r = 80), één keer opgebouwd */
+const EMB_MEM = EMB.map(([x, y]) => membraanPts(ptsCirkel(x, y, 80, 44), { w: 8, closed: true })).join('');
 /* weefsel: vlekken (klonen) rond 11 kiemcellen */
 const R1 = rng(4), SEEDS = Array.from({ length: 11 }, () => [180 + R1() * 1240, 190 + R1() * 480, R1() < .5]);
 /* lapjeskat: vlekken */
@@ -78,7 +80,8 @@ export default {
         const vA = vis(0, 0);
         if (vA > .01) {
           o += `<g opacity="${f1(vA)}">` + nucleus(480, 470, 230) + nucleus(1120, 470, 230) +
-            xc(430, 470, 1.6, MOM) + yc(540, 480, 1.4, '#8a93a8') + xc(1060, 470, 1.6, MOM) + xc(1190, 470, 1.6, DAD, 1) + '</g>' +
+            xc(430, 470, 1.6, MOM) + yc(540, 480, 1.4, YCOL) + xc(1060, 470, 1.6, MOM) + xc(1190, 470, 1.6, DAD, 1) +
+            T(430, 390, 'X', { size: 30, col: MOM, w: 800 }) + T(540, 420, 'Y', { size: 30, col: YCOL, w: 800 }) + T(1060, 390, 'X', { size: 30, col: MOM, w: 800 }) + T(1190, 390, 'X', { size: 30, col: DAD, w: 800 }) + '</g>' +
             T(480, 780, T2('man: X + Y', 'man: X + Y'), { size: 30, w: 700, op: vA }) + T(1120, 780, T2('vrouw: X + X', 'woman: X + X'), { size: 30, w: 700, op: vA });
         }
         // B: embryo, elke cel kiest
@@ -86,8 +89,9 @@ export default {
         if (vB > .01) {
           const kc = step === 1 ? ease(sub(p, .3, .8)) : 1;
           o += `<g opacity="${f1(vB)}">`;
+          o += EMB.map(([x, y]) => `<circle cx="${f1(x)}" cy="${f1(y)}" r="80" fill="rgba(19,33,67,.75)"/>`).join('') + EMB_MEM;   // cellen met hun celmembraan
           EMB.forEach(([x, y, momOff]) => {
-            o += `<circle cx="${f1(x)}" cy="${f1(y)}" r="88" fill="rgba(156,192,255,.10)"/>` + env(x, y, 88);   // kern van één cel
+            o += `<circle cx="${f1(x)}" cy="${f1(y)}" r="58" fill="url(#gNuc)"/>` + env(x, y, 58);   // kern van één cel
             o += xc(x - 28, y, .8, momOff ? lerp3(MOM, kc) : MOM) + xc(x + 28, y, .8, momOff ? DAD : lerp3(DAD, kc));
           });
           o += '</g>' + T(800, 130, T2('vroeg embryo', 'early embryo'), { size: 30, w: 700, op: vB }) + T(800, 800, T2('grijs = stilgezet X', 'grey = silenced X'), { size: 26, col: C.muted, op: vB * (step === 1 ? ease(sub(p, .6, .9)) : 1) });
@@ -98,8 +102,10 @@ export default {
           const kx = step === 2 ? ease(sub(p, .15, .9)) : step > 2 ? 1 : 0, kb = step === 3 ? ease(sub(p, .1, .7)) : step > 3 ? 1 : 0;
           o += `<g opacity="${f1(vC)}">` + nucleus(800, 470, 330);
           o += xc(640, 470, 3, MOM);
-          const bx = lerp(960, 1010, kb), by = lerp(470, 260, kb), sc = lerp(3, 1.5, kb);
-          o += xc(bx, by, sc, lerp3(DAD, kb));
+          // het stille X krimpt tot een compact bolletje binnen de kern, tegen de kernenvelop (Barr-lichaampje)
+          const bx = lerp(960, 999, kb), by = lerp(470, 284, kb), sc = lerp(3, 1.3, kb);
+          o += xc(bx, by, sc, lerp3(DAD, kb), 1 - kb * kb);
+          if (kb > .01) o += `<ellipse cx="${f1(bx)}" cy="${f1(by)}" rx="${f1(lerp(20, 48, kb))}" ry="${f1(lerp(16, 38, kb))}" fill="#2c3448" stroke="${OFF}" stroke-width="4" opacity="${f1(kb)}"/>`;
           const n = Math.round(16 * kx);
           for (let i = 0; i < n; i++) {
             // langs de twee armen van het X verdeeld (u = -1 … 1 van boven naar onder)
@@ -107,8 +113,8 @@ export default {
             o += `<path d="M${f1(bx + hx - 2 * q)},${f1(by + hy)} q${f1(q)},${f1(-1.4 * q)} ${f1(2 * q)},0 t${f1(2 * q)},0" stroke="${XIST}" stroke-width="${f1(2.2 * sc / 3 + 2)}" fill="none" stroke-linecap="round"/>`;
           }
           o += '</g>' + T(640, 640, T2('actief X', 'active X'), { size: 28, col: MOM, w: 700, op: vC });
-          o += T(960, 640, T2('RNA bedekt dit X', 'RNA coats this X'), { size: 28, col: XIST, w: 700, op: vC * (step === 2 ? ease(sub(p, .5, .8)) : 1 - kb) });
-          o += T(1010, 360, T2('Barr-lichaampje', 'Barr body'), { size: 28, col: C.text, w: 700, op: vC * kb });
+          o += T(915, 335, T2('XIST-RNA bedekt dit X', 'XIST RNA coats this X'), { size: 26, col: XIST, w: 700, op: vC * (step === 2 ? ease(sub(p, .5, .8)) : 1 - kb) });
+          o += T(960, 380, T2('Barr-lichaampje', 'Barr body'), { size: 28, col: C.text, w: 700, op: vC * kb });
         }
         // D: weefsel als mozaïek
         const vD = vis(4, 4);
@@ -128,7 +134,7 @@ export default {
           o += `<g opacity="${f1(vE)}"><g clip-path="url(#xi-cat)"><rect x="300" y="100" width="1000" height="650" fill="#f2efe8"/>` +
             PATCH.map(([x, y, r, c]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${c}"/>`).join('') + '</g>' +
             `<circle cx="1095" cy="320" r="10" fill="#2f8f4f"/><circle cx="1165" cy="320" r="10" fill="#2f8f4f"/></g>` +
-            T(820, 800, T2('oranje en zwart: twee X-chromosomen aan het werk', 'orange and black: two X chromosomes at work'), { size: 28, w: 700, op: vE });
+            T(820, 800, T2('oranje of zwart: in elke vlek werkt een ander X', 'orange or black: in each patch a different X works'), { size: 28, w: 700, op: vE });
         }
         // F: genen op het stille X, enkele blijven aan
         const vF = vis(6, 6);

@@ -89,6 +89,7 @@ export default {
       const y = 290 + i * 70;
       tr += `<g class="dm-tetn" id="dm-tet${i}">${pill(1300, y, 150, 44, n, col, 1, 20)}</g>`;
       if (i < 4) tr += `<path d="M1300,${y + 24} L1300,${y + 52}" stroke="#fff" stroke-width="3" marker-end="url(#arrow)"/>` + txt(1390, y + 45, i < 3 ? 'TET' : 'TDG + BER', i < 3 ? '#c9b8ff' : '#7fdc6a', 16, 'start', 700);
+      if (i === 2) tr += txt(1215, y + 6, T2('ook: TDG + BER', 'also: TDG + BER'), '#7fdc6a', 15, 'end', 700);   // TDG knipt 5fC én 5caC weg (Wu & Zhang 2017)
     });
     tr += txt(1392, 590, T2('ook passief:', 'also passive:'), C.muted, 13, 'start') + txt(1392, 607, T2('verdunning bij', 'dilution during'), C.muted, 13, 'start') + txt(1392, 624, T2('replicatie', 'replication'), C.muted, 13, 'start') + '</g>';
 
@@ -110,7 +111,7 @@ export default {
     prom += `<g data-node="genregulatie" data-color="${C.ok}" data-label="${T2('Actief gen → genregulatie', 'Active gene → gene regulation')}"><path d="${eiwitPad(760, 738, 50, 26, 764, .07)}" fill="rgba(155,123,255,.4)" stroke="${C.prot}" stroke-width="2"/>${txt(760, 745, 'Pol II', '#fff', 19, 'middle', 700)}` +
       `<path d="M800,735 q30,-30 60,-8" stroke="${C.rna}" stroke-width="4" fill="none" marker-end="url(#arrow)"/>${txt(1440, 712, T2('AAN', 'ON'), C.ok, 22, 'end', 800)}<circle data-anchor="genregulatie" cx="760" cy="712" r="1" fill="none"/></g>`;
     prom += `<g>${[420, 520, 620].map(x => `<path d="${eiwitPad(x, 800, 44, 18, 779, .07)}" fill="rgba(240,107,192,.4)" stroke="#f06bc0" stroke-width="2"/>`).join('')}` +
-      txt(420, 806, 'MBD', '#fff', 18, 'middle', 700) + txt(520, 806, 'MeCP2', '#fff', 18, 'middle', 700) + txt(620, 806, 'HDAC', '#fff', 18, 'middle', 700) +
+      txt(420, 806, 'MBD2', '#fff', 18, 'middle', 700) + txt(520, 806, 'MeCP2', '#fff', 18, 'middle', 700) + txt(620, 806, 'HDAC', '#fff', 18, 'middle', 700) +
       `<path d="M780,815 l30,30 M810,815 l-30,30" stroke="${C.danger}" stroke-width="5"/>${txt(1440, 876, T2('UIT', 'OFF'), C.danger, 22, 'end', 800)}</g>`;
 
     return svgOpen() + `

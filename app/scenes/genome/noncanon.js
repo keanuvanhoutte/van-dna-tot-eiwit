@@ -212,9 +212,9 @@ export default {
           m += hp(-1, C.dna, y1) + hp(1, C.dna2, y2);
           // rungs in de haarspelden
           for (let s2 = 30; s2 < stem; s2 += 30) { m += `<line x1="${cx - 8}" y1="${f1(y1 - s2)}" x2="${cx + 8}" y2="${f1(y1 - s2)}" stroke="#fff" stroke-width="3"/><line x1="${cx - 8}" y1="${f1(y2 + s2)}" x2="${cx + 8}" y2="${f1(y2 + s2)}" stroke="#fff" stroke-width="3"/>`; }
-          if (k < .3) ann += `<g opacity="${f1(1 - k / .3)}"><rect x="${cx - half}" y="${y1 - 22}" width="${2 * half}" height="74" rx="8" fill="none" stroke="#ffc247" stroke-dasharray="7 5"/>${txt(cx - half / 2, y1 - 34, '→ GAATTC', '#ffc247', 22, 'middle', 700, 'JetBrains Mono')}${txt(cx + half / 2, y1 - 34, 'GAATTC ←', '#ffc247', 22, 'middle', 700, 'JetBrains Mono')}</g>`;
+          if (k < .3) ann += `<g opacity="${f1(1 - k / .3)}"><rect x="${cx - half}" y="${y1 - 22}" width="${2 * half}" height="74" rx="8" fill="none" stroke="#ffc247" stroke-dasharray="7 5"/>${txt(cx - half / 2, y1 - 34, '→ …GAATTC', '#ffc247', 22, 'middle', 700, 'JetBrains Mono')}${txt(cx + half / 2, y1 - 34, 'GAATTC… ←', '#ffc247', 22, 'middle', 700, 'JetBrains Mono')}</g>`;
           ann += `<g opacity="${f1(ease(sub(p, .7, .85)))}">${txt(cx + 60, y1 - 120, T2('haarspeld', 'hairpin'), C.dna, 24, 'start')}${txt(cx + 60, y2 + 140, T2('haarspeld', 'hairpin'), C.dna2, 24, 'start')}${txt(cx - 40, y2 + 50, T2('vierwegsknooppunt', 'four-way junction'), '#fff', 24, 'end')}</g>`;
-          ann += txt(800, 160, T2('palindroom: 5′-GAATTC-3′ op beide strengen', 'palindrome: 5′-GAATTC-3′ on both strands'), C.muted, 26);
+          ann += txt(800, 160, T2('lange omgekeerde herhaling: leest op beide strengen hetzelfde', 'long inverted repeat: reads the same on both strands'), C.muted, 26);
         } else if (step === 8) {
           const v = { S: 40, ox: 800 - 2.8 * 40, oy: 420 };
           const hk = ease(sub(p, .2, .45));

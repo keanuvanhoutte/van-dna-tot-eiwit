@@ -85,7 +85,7 @@ export default {
       ${env}${npcWand}
       ${fil}${bask}
       <ellipse cx="${PX}" cy="${Y_IN + 142}" rx="58" ry="11" fill="none" stroke="#8a9bc4" stroke-width="5"/>
-      <circle data-anchor="kernimport" cx="${PX}" cy="${Y_IN + 156}" r="1" fill="none" data-pos="below"/>
+      <circle data-anchor="kernimport" cx="${PX + 170}" cy="${Y_IN + 150}" r="1" fill="none" data-pos="below"/>
       <g id="ex-fg"></g>
     </g>
     <g id="ex-nplab"></g>
@@ -150,7 +150,8 @@ export default {
         const tail = P.at(sOf(LEN));
         m += note(c5[0] + (step >= 6 ? -26 : 34), c5[1] + (step >= 6 ? -18 : 42), "5'", C.text, 20) + note(tail[0] + (step >= 6 ? 10 : -22), tail[1] + (step >= 6 ? 36 : -18), "3'", C.text, 20);
         $('ex-mrna').innerHTML = m;
-        const mid = step <= 3 ? side(sOf(520), 30) : step >= 6 ? side(sOf(300), -40) : [-9999, -9999]; $('ex-mA').setAttribute('cx', f1(mid[0])); $('ex-mA').setAttribute('cy', f1(mid[1]));
+        // stap 8: label voorbij het stopcodon, niet over het ribosoom
+        const mid = step <= 3 ? side(sOf(520), 30) : step === 7 ? side(sOf(620), 64) : step >= 6 ? side(sOf(300), -40) : [-9999, -9999]; $('ex-mA').setAttribute('cx', f1(mid[0])); $('ex-mA').setAttribute('cy', f1(mid[1]));
 
         // poly(A) + PABPN1 → PABPC1
         const exch = step === 8 ? ease(sub(p, .1, .5)) : 0;
@@ -161,10 +162,10 @@ export default {
         });
         const pl = side(sOf(684), -56);
         pa += note(pl[0], pl[1] + 6, exch > .5 ? 'PABPC1' : 'PABPN1', exch > .5 ? '#7fe0ef' : '#b9a8ff', 19, 'middle', step >= 6 ? 1 : (step <= 2 ? 1 : 0));
-        const pt = P.at(sOf(560)); pa += step <= 1 ? note(pt[0] + 10, pt[1] + 36, 'poly(A)', C.cap, 18) : '';
+        const pt = side(sOf(680), 26); pa += step <= 1 ? note(pt[0], pt[1], 'poly(A)', C.cap, 18) : '';   // boven de staart zelf
         $('ex-pa').innerHTML = pa;
         const pA = side(sOf(684), step >= 6 ? -90 : -80); $('ex-pA').setAttribute('cx', f1(pA[0])); $('ex-pA').setAttribute('cy', f1(pA[1]));
-        const lA = step === 8 && p > .5 ? side(sOf(600), 60) : [-9999, -9999]; $('ex-lA').setAttribute('cx', f1(lA[0])); $('ex-lA').setAttribute('cy', f1(lA[1]));   // zijpad RNA-lot
+        const lA = step === 8 && p > .5 ? side(sOf(660), 96) : [-9999, -9999]; $('ex-lA').setAttribute('cx', f1(lA[0])); $('ex-lA').setAttribute('cy', f1(lA[1]));   // zijpad RNA-lot
         svg.querySelector('[data-node="mrnaafbraak"]').setAttribute('opacity', step === 8 ? f1(sub(p, .5, .7)) : '0');
 
         // cap + CBC / eIF4E
@@ -194,7 +195,9 @@ export default {
           const op = nxfIn * (1 - k);
           pr += prot(q[0], q[1], 110, 32, 'NXF1·NXT1', '#d06bd8', op, 15);
         });
-        if (step === 6) pr += arrow(PX + 190, 330, PX + 190, 620, '#d06bd8', 3, sub(p, .2, .5)) + note(PX + 210, 480, T2('NXF1–NXT1 → kern', 'NXF1–NXT1 → nucleus'), '#e7a6ee', 20, 'start', sub(p, .2, .5));
+        // NXF1–NXT1 keert terug door het centrale kanaal van de porie (niet door de envelop)
+        if (step === 6) pr += `<path d="M${PX + 180},330 C${PX + 50},336 ${PX + 22},366 ${PX + 22},420 L${PX + 22},600" stroke="#d06bd8" stroke-width="3" fill="none" marker-end="url(#arrow)" opacity="${f1(sub(p, .2, .5))}"/>` +
+          note(PX + 130, 610, T2('NXF1–NXT1 → kern', 'NXF1–NXT1 → nucleus'), '#e7a6ee', 20, 'start', sub(p, .2, .5));
         // DDX19 + Gle1 aan de filamenten
         const ddxOp = step >= 3 ? 1 : 0;
         const pulse = step === 5 ? .5 + .5 * Math.sin(t / 160) : 0;

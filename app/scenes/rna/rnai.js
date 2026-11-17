@@ -102,16 +102,20 @@ export default {
         const { step, p } = s;
         // ---------- stap 0–1: transcriptie + Microprocessor ----------
         let pol = '', dna = '', gen = '';
+        const base0 = [250, 410];
         if (step === 0) {
           const k = ease(sub(p, 0, .5));
-          dna += `<line x1="-200" y1="560" x2="${MEM - 30}" y2="560" stroke="${C.dna}" stroke-width="7"/><line x1="-200" y1="576" x2="${MEM - 30}" y2="576" stroke="${C.dna2}" stroke-width="5"/>`;
+          // het DNA loopt verder (vervaagt), het stopt niet tegen de envelop
+          dna += `<linearGradient id="ri-dg" gradientUnits="userSpaceOnUse" x1="${MEM - 120}" y1="0" x2="${MEM - 40}" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><mask id="ri-dm"><rect x="-300" y="500" width="${MEM + 300}" height="120" fill="url(#ri-dg)"/></mask>` +
+            `<g mask="url(#ri-dm)"><line x1="-200" y1="560" x2="${MEM - 40}" y2="560" stroke="${C.dna}" stroke-width="7"/><line x1="-200" y1="576" x2="${MEM - 40}" y2="576" stroke="${C.dna2}" stroke-width="5"/></g>`;
           gen += `<rect x="130" y="542" width="240" height="52" fill="none" stroke="${C.dna}" stroke-width="2" stroke-dasharray="5 4" opacity=".7"/>` + note(250, 614, T2('MIR-gen', 'MIR gene'), C.dna, 18);
-          pol += `<g transform="translate(${f1(lerp(140, 420, k))} 546)"><path d="${eiwitPad(0, 0, 48, 40, 22, .08)}" fill="#0b1224" fill-opacity=".6"/><path d="${eiwitPad(0, 0, 48, 40, 22, .08)}" fill="${C.prot}" fill-opacity=".28" stroke="${C.prot}" stroke-width="3"/><text x="0" y="6" font-size="16" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">Pol II</text></g>`;
+          // Pol II eindigt op het 3'-uiteinde van het pri-miRNA (het RNA komt eruit), met het DNA door de onderkant
+          const px = lerp(140, 425, k);
+          pol += `<g transform="translate(${f1(px)} 532)"><path d="${eiwitPad(0, 0, 48, 46, 22, .08)}" fill="#0b1224" fill-opacity=".45"/><path d="${eiwitPad(0, 0, 48, 46, 22, .08)}" fill="${C.prot}" fill-opacity=".28" stroke="${C.prot}" stroke-width="3"/><text x="0" y="6" font-size="16" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">Pol II</text></g>`;
         }
         $('ri-dna').innerHTML = dna; $('ri-gen').innerHTML = gen; $('ri-pol').innerHTML = pol;
 
         let hp = '', enz = '';
-        const base0 = [250, 410];
         if (step <= 1) {
           const grow = step === 0 ? ease(sub(p, .15, .7)) : 1;
           const cut = step === 1 && p > .55;
@@ -140,7 +144,7 @@ export default {
           hp += `<g transform="translate(${f1(org[0])} ${f1(org[1])}) rotate(${f1(rot)})">` + hairpin({ loop: 1 }) + `</g>`;
           const eo = 1 - sub(p, .85, 1);
           const ex = org[0] + 120, ey = org[1] - 2 - 60 * sub(p, .85, 1);
-          enz += `<g opacity="${f1(eo)}"><path d="${eiwitPad(ex, ey, 150, 42, 55, .05)}" fill="rgba(155,123,255,.22)" stroke="${C.prot}" stroke-width="3"/></g>`;
+          enz += `<g opacity="${f1(eo)}"><path d="${eiwitPad(ex, ey, 150, 23, 55, .05)}" fill="rgba(155,123,255,.22)" stroke="${C.prot}" stroke-width="3"/></g>`;
           enz += note(ex, ey - 50, T2('Exportine-5', 'Exportin-5'), '#c9b8ff', 18, 'middle', eo);
           const gtp = p < .82;
           enz += prot(ex - 150, ey + 42, 98, 30, gtp ? 'Ran·GTP' : 'Ran·GDP', gtp ? '#3fb6c9' : '#5a7a88', eo, 15);
@@ -175,7 +179,7 @@ export default {
           const x0 = gx(NB) - 50, x1 = gx(1) + 60;
           ago += `<g><path d="${eiwitPad((x0 + x1) / 2, YG + 4, (x1 - x0) / 2 + 4, 62, 77, .035)}" fill="rgba(155,123,255,.18)" stroke="${C.prot}" stroke-width="3"/>`;
           ago += note((x0 + x1) / 2, YG - 68, 'AGO2 (RISC)', '#c9b8ff', 20);
-          ago += note(x0 + 30, YG - 28, 'PAZ', '#c9b8ff', 14, 'start') + note(x1 - 30, YG - 28, 'MID', '#c9b8ff', 14, 'end') + `</g><g opacity="${f1(agoOp)}">`;
+          ago += note(x0 + 30, YG - 28, 'PAZ', '#c9b8ff', 14, 'start') + note(x1 - 30, YG - 28, 'MID', '#c9b8ff', 14, 'end') + `</g><g opacity="${f1(step === 4 ? sub(p, .6, .8) : agoOp)}">`;   // gids verschijnt in AGO2 terwijl hij uit het duplex verdwijnt (nooit dubbel)
           for (let i = 1; i <= NB; i++) {
             const seed = i >= 2 && i <= 8, x = gx(i);
             ago += `<rect x="${x - 13}" y="${YG}" width="26" height="30" rx="5" fill="${BASE[GUIDE[i - 1]]}" ${seed && step >= 5 ? 'stroke="#fff" stroke-width="2.5"' : ''}/>` +
@@ -217,7 +221,7 @@ export default {
           // ribosomen op het ORF (links) — remming bij miRNA
           const rOp = step === 6 ? 1 - ease(sub(p, .45, .9)) : 1;
           if (step === 6) {
-            for (const rx of [680, 820]) rib += ribo(rx, YT + 17, .8, rOp);
+            for (const rx of [680, 820]) rib += ribo(rx, YT + 17, .8, rOp, '80S', { keten: (rx - 600) * .5 });   // polysoom: keten langer richting 3'
             tg += note(750, YT - 90, T2('translatie geremd', 'translation repressed'), '#ffd36b', 20, 'middle', sub(p, .5, .7));
             const g = ease(sub(p, 0, .3));
             dec += prot(gx(NB) + 60, YG - 96, 116, 36, 'GW182', '#b44f7c', g, 20);

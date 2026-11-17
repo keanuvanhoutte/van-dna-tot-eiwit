@@ -54,15 +54,15 @@ export default {
       'Na het kopiëren heeft een chromosoom twee gelijke helften. Ze hangen samen aan een insnoering: het centromeer.',
       'After copying, a chromosome has two identical halves. They are joined at a narrow point: the centromere.'),
     ST(8500, cam(430, 628, 820), 'Ringen houden de helften samen', 'Rings hold the halves together',
-      'Eiwitringen houden de twee helften bij elkaar. Bij de deling knipt een enzym de laatste ringen door.',
-      'Protein rings hold the two halves together. At division an enzyme cuts the last rings.'),
+      'Eiwitringen houden de twee helften bij elkaar. Pas bij de deling knipt een enzym (separase) de laatste ringen door.',
+      'Protein rings hold the two halves together. Only at division does an enzyme (separase) cut the last rings.'),
     ST(8500, cam(1200, 560, 760), 'Hier haken de trekdraden aan', 'Where the pulling fibres attach',
       'Op het centromeer zit een eiwitcomplex (kinetochoor). Daar haken de draden aan die de helften uiteentrekken.',
       'A protein complex (kinetochore) sits on the centromere. The fibres that pull the halves apart attach there.'),
     ST(8500, cam(1200, 780, 760), 'Beschermde uiteinden', 'Protected ends',
       'De uiteinden (telomeren) zijn veel herhalingen van TTAGGG. Eiwitten schermen ze af; een enzym kan ze verlengen.',
       'The ends (telomeres) are many repeats of TTAGGG. Proteins shield them; an enzyme can lengthen them.'),
-    ST(8500, cam(380, 500, 520), 'Opvouwen voor de deling', 'Folding up for division',
+    ST(8500, cam(400, 628, 900), 'Opvouwen voor de deling', 'Folding up for division',
       'Bij de celdeling vouwt een eiwit elke helft tot een rij lussen. Het DNA is dan ~10 000 keer korter.',
       'During cell division a protein folds each half into a row of loops. The DNA is then ~10,000 times shorter.'),
     ST(7500, cam(430, 628, 900), 'Weer uitgevouwen', 'Unfolded again',
@@ -103,13 +103,12 @@ export default {
     // ---- inzet centromeer ----
     let cen = panel(860, 400, 680, 300, T2('Centromeer', 'Centromere'), '#2a3a60', 20);
     // α-satelliet-array met CENP-A-nucleosomen
-    cen += `<g data-node="nucleosoom" data-color="${C.histone}" data-nolabel>`;
+    cen += `<g data-node="nucleosoom" data-color="${C.histone}" data-nolabel><path d="M900,590 L1450,590" stroke="${C.dna}" stroke-width="4"/>`;   // DNA dat van nucleosoom naar nucleosoom loopt
     for (let i = 0; i < 9; i++) {
       const x = 930 + i * 58, nu = nucleo(x, 590, 20, { rot: -90 + i * 25, w: 5, core: i % 3 === 1 ? C.histone : '#c78bf0' });
       cen += nu.svg;
     }
     cen += `</g>`;
-    cen += `<path d="M900,600 L1450,600" stroke="${C.dna}" stroke-width="4" opacity=".0"/>`;
     cen += `<path d="${eiwitPad(1170, 520, 252, 24, 112, .05)}" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>` + txt(1170, 526, T2('kinetochoor', 'kinetochore'), '#fff', 18);
     for (let i = 0; i < 7; i++) cen += `<line x1="${960 + i * 70}" y1="500" x2="${1000 + i * 55}" y2="440" stroke="#7fdc6a" stroke-width="7" stroke-linecap="round"/>`;
     cen += txt(1480, 470, T2('microtubuli', 'microtubules'), '#7fdc6a', 18, 'end');
@@ -122,8 +121,11 @@ export default {
       tel += `<rect x="${900 + i * 100}" y="790" width="92" height="30" rx="6" fill="rgba(255,138,61,.25)" stroke="${C.rna}" stroke-width="2"/>` + mono(946 + i * 100, 811, rep, C.rna, 16);
     }
     tel += `<rect x="1400" y="790" width="92" height="30" rx="6" fill="rgba(255,138,61,.25)" stroke="${C.rna}" stroke-width="2" stroke-dasharray="4 3"/>` + mono(1446, 811, rep, C.rna, 16);
-    tel += txt(1446, 845, T2("3'-overhang", "3' overhang"), C.rna, 13) + txt(890, 811, "5'", C.text, 15, 'end') + txt(1510, 811, "3'", C.text, 15, 'start');
-    tel += `<path d="M900,835 L1390,835" stroke="${C.dna2}" stroke-width="4"/>` + txt(1145, 870, T2('complementaire streng (CCCTAA)ₙ', 'complementary strand (CCCTAA)ₙ'), C.dna2, 13);
+    tel += txt(1452, 864, T2("3'-overhang", "3' overhang"), C.rna, 13) + txt(890, 811, "5'", C.text, 15, 'end') + txt(1510, 811, "3'", C.text, 15, 'start');
+    tel += `<path d="M900,835 L1390,835" stroke="${C.dna2}" stroke-width="4"/>` + txt(1145, 870, T2('complementaire streng (CCCTAA)ₙ', 'complementary strand (CCCTAA)ₙ'), C.dna2, 13) +
+      txt(890, 840, "3'", C.text, 15, 'end') + txt(1398, 840, "5'", C.text, 15, 'start');
+    // telomerase op het uitstekende 3'-uiteinde (verlengt het met nieuwe TTAGGG-herhalingen)
+    tel += `<g id="cs-tert"><path d="${eiwitPad(1446, 768, 44, 15, 884, .07)}" fill="#3fb6c9" stroke="#0a1224" stroke-width="1.5"/>${txt(1446, 773, 'telomerase', '#0a1224', 13, 'middle', 700)}</g>`;
     tel += `<g id="cs-shel">${[960, 1100, 1240].map(x => `<path d="${eiwitPad(x, 775, 30, 12, 883, .07)}" fill="#c78bf0" opacity=".8"/>`).join('')}${txt(1330, 772, 'shelterin', '#c78bf0', 14, 'start')}</g>`;
 
     // ---- condensinelussen op een arm ----
@@ -140,8 +142,8 @@ export default {
     return svgOpen() + `
     <g id="cs-kar">${kar}</g>
     <g id="cs-big">
-      <g data-node="replicatie" data-color="${C.dna}" data-label="${T2('Zusterchromatiden (na replicatie)', 'Sister chromatids (after replication)')}">${big}<circle data-anchor="replicatie" cx="${BX + 170}" cy="${top + 70}" r="1" fill="none"/></g>
-      <g data-node="telomeren" data-color="${C.rna}" data-label="${T2('Telomeren', 'Telomeres')}">${telo}<circle data-anchor="telomeren" cx="${BX + 110}" cy="${top + len + 5}" r="1" fill="none"/></g>
+      <g id="cs-rep" data-node="replicatie" data-color="${C.dna}" data-label="${T2('Zusterchromatiden (na replicatie)', 'Sister chromatids (after replication)')}">${big}<circle data-anchor="replicatie" cx="${BX + 170}" cy="${top + 70}" r="1" fill="none"/></g>
+      <g id="cs-telo" data-node="telomeren" data-color="${C.rna}" data-label="${T2('Telomeren', 'Telomeres')}">${telo}<circle data-anchor="telomeren" cx="${BX + 110}" cy="${top + len + 5}" r="1" fill="none"/></g>
       <g id="cs-coh"></g>
       <g id="cs-kin"></g>
       <g id="cs-loops" data-node="chromatine" data-color="${C.dna2}" data-nolabel opacity="0">${loops}</g>
@@ -180,6 +182,9 @@ export default {
         const inter = step === 7 ? ease(sub(p, .15, .8)) : 0;
         $('cs-big').setAttribute('opacity', f1(step <= 1 ? 0 : 1));
         ['cs-sisA', 'cs-sisB'].forEach(id => $(id).setAttribute('opacity', f1((1 - inter) * (step === 6 && id === 'cs-sisA' ? 1 - .75 * ease(sub(p, .1, .5)) : 1))));
+        // na de deling (stap 8): één chromatide, dus geen zusterchromatiden-label en geen losse telomeerkappen meer
+        $('cs-rep').setAttribute('opacity', f1(1 - inter)); $('cs-telo').setAttribute('opacity', f1(1 - inter));
+        $('cs-tert').setAttribute('opacity', step === 5 ? f1(ease(sub(p, .55, .8))) : 0);
         $('cs-lab').setAttribute('opacity', f1((step >= 2 && step <= 3 ? 1 : step >= 6 ? 0 : .2) * (1 - inter)));
         // cohesine: armen verdwijnen in stap 3 (profase), centromeer blijft
         let coh = '';

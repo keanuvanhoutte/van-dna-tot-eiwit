@@ -1,7 +1,7 @@
 import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, clamp, f1, rng, squiggle } from '../../kit.js';
 import { ST, HC, nucleo, flag, smooth, panel } from './_a_kit.js';
 import { kernEnvelop, ptsCirkel, eiwitPad } from '../../bio.js';
-const KERN = kernEnvelop(ptsCirkel(290, 450, 218, 140), { poriën: Array.from({ length: 14 }, (_, i) => (i + .3) / 14), w: 5, gap: 4, poreW: 9, s: .28 });   // dubbel membraan met poriën
+const KERN = kernEnvelop(ptsCirkel(290, 450, 218, 140), { poriën: Array.from({ length: 14 }, (_, i) => (i + .3) / 14), w: 6, gap: 8, poreW: 12, s: .28 });   // dubbel membraan met poriën
 
 /*
  * Chromatine: van chromosoomterritorium → lussen/TADs → eu- vs heterochromatine → 10 nm-vezel → (30 nm?) → nucleosoom.
@@ -39,8 +39,8 @@ export default {
       'Een eiwitring (cohesine) trekt het DNA tot een steeds grotere lus, tot hij aan elke kant een stop-eiwit raakt.',
       'A protein ring (cohesin) pulls the DNA into an ever larger loop, until it meets a stop protein on each side.'),
     ST(8000, cam(840, 308, 730), 'Het DNA vormt buurten', 'The DNA forms neighbourhoods',
-      'Zo ontstaan buurten waar DNA-stukken elkaar vaak raken. Op de kaart is elke buurt een donkere driehoek.',
-      'This creates neighbourhoods where pieces of DNA often touch. On the map each one is a dark triangle.'),
+      'Zo ontstaan buurten waar DNA-stukken elkaar vaak raken. Op de kaart is elke buurt een heldere driehoek.',
+      'This creates neighbourhoods where pieces of DNA often touch. On the map each one is a bright triangle.'),
     ST(8500, cam(840, 672, 600), 'Open en dicht chromatine', 'Open and closed chromatin',
       'Open chromatine wordt afgelezen. Compact chromatine is meestal stil: chemische merktekens houden het dicht.',
       'Open chromatin is read. Compact chromatin is mostly silent: chemical marks keep it closed.'),
@@ -77,7 +77,9 @@ export default {
       eu += nucleo(x, y, 15, { rot: -90 + i * 40, w: 3.2 }).svg;
       if (i % 2 === 0) eu += flag(x + 4, y - 14, 'Ac', C.chain, 1, 9);
     });
-    eu += `<path d="M700,745 C 690,705 730,690 745,720" stroke="${C.rna}" stroke-width="3" fill="none"/>`;
+    // naakt DNA aan het einde van de vezel, waarop Pol II zit; het RNA komt uit Pol II
+    eu += `<path d="M820,660 C832,690 812,712 792,748" stroke="${C.dna}" stroke-width="3" fill="none"/>`;
+    eu += `<path d="M786,722 C768,732 752,752 724,748" stroke="${C.rna}" stroke-width="3" fill="none"/>`;
     const hPts = [];
     const r2 = rng(3);
     for (let i = 0; i < 16; i++) hPts.push([900 + (i % 4) * 36 + (r2() - .5) * 10 + (Math.floor(i / 4) % 2) * 16, 610 + Math.floor(i / 4) * 34 + (r2() - .5) * 8]);
@@ -91,7 +93,9 @@ export default {
     });
     let me = '';
     [[905, 612], [1013, 646], [925, 681], [1008, 716]].forEach(([x, y]) => { me += flag(x, y, 'K9me3', C.danger, 1, 8); });
-    [[1055, 600], [1062, 745]].forEach(([x, y]) => { me += `<circle cx="${x}" cy="${y}" r="5" fill="${C.danger}" stroke="#0a1224" stroke-width="1.5"/><text x="${x + 8}" y="${y + 3}" font-size="8" fill="${C.danger}" font-family="Inter" font-weight="700">5mC</text>`; });
+    // 5mC op het DNA zelf: op de linker tussen twee nucleosomen
+    [[1, 2], [13, 14]].forEach(([a, b]) => { const x = (hPts[a][0] + hPts[b][0]) / 2, y = (hPts[a][1] + hPts[b][1]) / 2;
+      me += `<circle cx="${f1(x)}" cy="${f1(y)}" r="4.5" fill="${C.danger}" stroke="#0a1224" stroke-width="1.5"/><text x="${f1(x)}" y="${f1(y - 8)}" font-size="9" text-anchor="middle" fill="${C.danger}" font-family="Inter" font-weight="700" stroke="#0a1224" stroke-width="2.5" paint-order="stroke">5mC</text>`; });
 
     // ---------- paneel D: 10 nm-vezel ----------
     let bead = '';
@@ -148,8 +152,8 @@ export default {
       ${panel(560, 520, 560, 290, T2('③ Eu- en heterochromatine', '③ Eu- and heterochromatin'), '#2a3a60', 21)}
       <g data-node="histonmod" data-color="${C.chain}" data-label="${T2('Histonmodificaties', 'Histone modifications')}">${eu}<circle data-anchor="histonmod" cx="640" cy="600" r="1" fill="none"/></g>
       <g data-node="rnapol" data-color="${C.prot}" data-label="${T2('RNA-polymerase II', 'RNA polymerase II')}" data-nolabel>
-        <path d="${eiwitPad(735, 742, 27, 19, 22, .08)}" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="2"/>
-        <text x="735" y="746" font-size="10" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">Pol II</text>
+        <path d="${eiwitPad(805, 722, 26, 18, 22, .08)}" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="2"/>
+        <text x="805" y="726" font-size="10" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">Pol II</text>
       </g>
       <g data-node="dnamethyl" data-color="${C.danger}" data-label="${T2('DNA-methylatie', 'DNA methylation')}">${hetc}${hp1}${me}<circle data-anchor="dnamethyl" cx="1000" cy="590" r="1" fill="none"/></g>
       ${txt(700, 790, T2('euchromatine: open, actief', 'euchromatin: open, active'), C.chain, 14)}

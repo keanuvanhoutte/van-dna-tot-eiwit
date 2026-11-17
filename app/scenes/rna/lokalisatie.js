@@ -25,7 +25,16 @@ const LAB = '#ffd166', HOLD = '#b48cff', MOT = '#ff7ab6', TRACK = '#7c8aa8', ACT
 
 /* cel met voorste rand rechts; e = 0..1 hoe ver de rand al vooruit kroop */
 const cellPath = e => `M210,450 C210,230 520,150 860,165 C1130,178 ${f1(1330 + e * 40)},230 ${f1(1440 + e * 60)},450 C${f1(1330 + e * 40)},670 1130,722 860,735 C520,750 210,670 210,450Z`;
-const TR = [[[650, 390], [1370, 300]], [[650, 450], [1350, 450]], [[650, 510], [1370, 600]]];
+const TR = [[[650, 390], [1290, 310]], [[650, 450], [1350, 450]], [[650, 510], [1290, 590]]];   // sporen eindigen binnen de cel, onder het membraan
+/* x van de rechterrand van de cel (binnenkant membraan niet meegerekend) op hoogte y, voor rand e */
+const edgeX = (y, e) => {
+  const P = cellPts(e).slice(22, 67);
+  for (let i = 0; i < P.length - 1; i++) {
+    const [[xa, ya], [xb, yb]] = [P[i], P[i + 1]];
+    if ((y - ya) * (y - yb) <= 0 && ya !== yb) return lerp(xa, xb, (y - ya) / (yb - ya));
+  }
+  return 1200;
+};
 const along = (k, u) => { const [[x0, y0], [x1, y1]] = TR[k]; return [lerp(x0, x1, u), lerp(y0, y1, u), Math.atan2(y1 - y0, x1 - x0) * 180 / Math.PI]; };
 
 /* pakketje: kort opgerold mRNA met een geel label en het paarse eiwit dat het label vasthoudt */
@@ -64,7 +73,7 @@ export default {
   steps: [
     { dur: 8000, cam: FULL, title: L3('Sommige mRNA’s moeten naar één plek', 'Some mRNAs have to go to one place'),
       text: L3('Veel mRNA’s worden overal in de cel vertaald. Sommige moeten eerst naar een vaste plek.', 'Many mRNAs are translated all over the cell. Some first have to go to a fixed place.') },
-    { dur: 8500, cam: FULL, title: L3('Het adres zit in de staart', 'The address is in the tail'),
+    { dur: 8500, cam: FULL, title: L3('Het adres ligt achter het stopsein', 'The address lies behind the stop signal'),
       text: L3('Achter het stopsein ligt een stuk dat niet vertaald wordt. Daarin zit een adreslabel: een korte reeks letters.', 'Behind the stop signal lies a part that is not translated. It holds an address label: a short string of letters.') },
     { dur: 8500, cam: FULL, title: L3('Een eiwit leest het label en houdt het mRNA stil', 'A protein reads the label and keeps the mRNA quiet'),
       text: L3('Een eiwit klemt zich op het label vast. Zolang het vastzit, kan geen ribosoom het mRNA aflezen.', 'A protein clamps onto the label. As long as it holds on, no ribosome can read the mRNA.') },
@@ -95,7 +104,7 @@ export default {
         if (vA > .01) {
           const grow = ph(5, .45, .95);
           o += `<g opacity="${f1(vA)}"><path d="${cellPath(grow)}" fill="rgba(19,33,67,.65)"/>` + membraanPts(cellPts(grow), { w: 10, closed: true }) +
-            `<circle cx="470" cy="450" r="156" fill="url(#gNuc)"/>` + KERN_A + T(470, 600, T2('kern', 'nucleus'), { size: 28, col: C.dna2 });
+            `<circle cx="470" cy="450" r="156" fill="url(#gNuc)"/>` + KERN_A + T(470, 560, T2('kern', 'nucleus'), { size: 28, col: C.dna2 });
           o += TR.map(([[x0, y0], [x1, y1]]) => microtubule(x0, y0, x1, y1, 14, TRACK)).join('');
           o += T(1500, 140, T2('rand die vooruit kruipt', 'edge that crawls forward'), { size: 26, anchor: 'end', col: C.muted, op: step >= 4 ? 0 : 1 });   // buiten beeld bij het inzoomen (stap 4–5)
           // andere mRNA's, die overal vertaald worden (stap 0)
@@ -120,29 +129,33 @@ export default {
             // aan de rand: eiwit laat los, mRNA gaat open, ribosomen lezen
             const kLet = ph(4, .05, .4), kOpen = ph(4, .25, .55);
             const [x, y] = along(1, .92);
-            o += packet(x, y - 78, 1.2, 1 - kLet, 1 - kOpen) + `<path d="${eiwitPad(x + 35, y - 120 - 60 * kLet, 26, 18, 9, .1)}" fill="${HOLD}" opacity="${f1(kLet * (1 - ph(4, .6, .9)))}"/>`;
-            const mx0 = 1180, mx1 = 1400, my = 372;
+            o += packet(x, y - 78, 1.2, 1 - kLet, 1 - kOpen) + `<path d="${eiwitPad(x + 35 - 100 * kLet, y - 120 - 20 * kLet, 26, 18, 9, .1)}" fill="${HOLD}" opacity="${f1(kLet * (1 - ph(4, .6, .9)))}"/>`;
+            // mRNA: cap · coderend deel tot het stopsein (rood) · 3′-UTR met adreslabel; ribosomen enkel op het coderende deel
+            const mx0 = 1060, mx1 = 1320, my = 410, mStop = 1245;
             o += `<g opacity="${f1(kOpen)}"><line x1="${mx0}" y1="${my}" x2="${mx1}" y2="${my}" stroke="${C.rna}" stroke-width="9" stroke-linecap="round"/>` + capG(mx0 - 18, my, 18) +
-              `<rect x="${mx1 - 70}" y="${my - 10}" width="34" height="20" rx="5" fill="${LAB}"/></g>`;
+              `<rect x="${mStop - 4}" y="${my - 14}" width="8" height="28" rx="3" fill="${C.danger}"/>` +
+              `<rect x="${mx1 - 58}" y="${my - 10}" width="34" height="20" rx="5" fill="${LAB}"/></g>`;
             [0, 1, 2].forEach(i => {
-              const kr = ph(4, .45 + i * .14, .6 + i * .14), rx = mx0 + 40 + i * 85;
+              const kr = ph(4, .45 + i * .14, .6 + i * .14), rx = mx0 + 32 + i * 58;
               o += ribo(rx, my, .42, kr, '');
               const kc = ph(5, .05 + i * .1, .45 + i * .1);
               if (kc > .01) {
-                const n = Math.round(1 + 6 * kc);
-                for (let j = 0; j < n; j++) o += `<circle cx="${f1(rx + 4 + 6 * Math.sin(j * 1.3))}" cy="${f1(my - 48 - j * 16)}" r="7" fill="${ACT}" stroke="#0a1224" stroke-width="1.5"/>`;
+                // het ribosoom dat het verst (dichtst bij het stopsein) staat, heeft de langste keten
+                const n = Math.round(1 + (2 + 2 * i) * kc);
+                for (let j = 0; j < n; j++) o += `<circle cx="${f1(rx + 4 + 6 * Math.sin(j * 1.3))}" cy="${f1(my - 48 - j * 15)}" r="7" fill="${ACT}" stroke="#0a1224" stroke-width="1.5"/>`;
               }
             });
-            o += T(1290, 300, T2('ribosomen lezen hier', 'ribosomes read here'), { size: 24, col: C.rrna, op: step === 4 ? sub(p, .7, .85) : 0 });
+            o += T(1150, 300, T2('ribosomen lezen hier', 'ribosomes read here'), { size: 24, col: C.rrna, op: step === 4 ? sub(p, .7, .85) : 0 });
             // actinedraden in de rand (stap 5)
             const kF = ph(5, .35, .85);
             if (kF > .01) {
               for (let i = 0; i < 9; i++) {
-                const yy = 250 + i * 50, xx = 1380 + 40 * Math.sin(i * .9) + 50 * grow * (1 - Math.abs(yy - 450) / 260);
-                const l = 90 * kF;
-                o += `<line x1="${f1(xx - l)}" y1="${f1(yy + 14)}" x2="${f1(xx)}" y2="${f1(yy)}" stroke="${ACT}" stroke-width="6" stroke-linecap="round" opacity=".85"/>`;
+                // actinedraden in het cytosol, net onder het membraan van de rand (Pollard & Borisy 2003)
+                const yy = 270 + i * 45, xx = edgeX(yy, grow) - 20 - 8 * Math.abs(Math.sin(i * .9));
+                const l = 80 * kF;
+                o += `<line x1="${f1(xx - l)}" y1="${f1(yy + 12)}" x2="${f1(xx)}" y2="${f1(yy)}" stroke="${ACT}" stroke-width="6" stroke-linecap="round" opacity=".85"/>`;
               }
-              o += T(1250, 640, T2('actine bouwt de rand', 'actin builds the edge'), { size: 26, col: ACT, w: 700, op: kF });
+              o += T(1000, 640, T2('actine bouwt de rand', 'actin builds the edge'), { size: 26, col: ACT, w: 700, op: kF });
             }
           }
         }

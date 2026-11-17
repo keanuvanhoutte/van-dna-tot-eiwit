@@ -22,11 +22,11 @@ export function sceneKern() {
   const env = kernEnvelop(ptsCirkel(cx, cy, RE, 220), { poriën: PA.map(a => a / 360), w: 9, gap: 7, poreW: 20, npc: false });
   let npc = '';
   for (const a of PA) { const [x, y] = P(a, RE); npc += kernporie(x, y, a + 90, { s: .7, H: 25, poreW: 20 }); }
-  // cytoplasma: ER-zakken (één membraan rond een lumen) + polysomen rechts
+  // cytoplasma: vrije polysomen naast de kern, ER-zakken (één membraan rond een lumen) verder naar rechts (niet over elkaar)
   let cyto = '';
-  for (let k = 0; k < 3; k++) cyto += cisterne(1228 + k * 62, 470, { len: 660, dik: 22, buig: 14 * (k % 2 ? -1 : 1), w: 7, lumen: 'rgba(143,179,232,.12)', op: .8 });
+  for (let k = 0; k < 3; k++) cyto += cisterne(1450 + k * 56, 470, { len: 660, dik: 22, buig: 14 * (k % 2 ? -1 : 1), w: 7, lumen: 'rgba(143,179,232,.12)', op: .8 });
   let poly = '';
-  for (const [x, y] of [[1270, 300], [1330, 520], [1250, 690], [1420, 380]]) {
+  for (const [x, y] of [[1195, 310], [1215, 520], [1165, 690], [1240, 410]]) {
     poly += `<path d="M${x},${y} q25,-16 50,0 t50,0 t50,0" stroke="${C.rna}" stroke-width="2.5" fill="none"/>`;
     // ribosomen op het mRNA: grote + kleine eenheid; het mRNA loopt tussen beide (de golf ligt op y ± 6)
     for (let i = 0; i < 6; i++) { const xx = x + 12 + i * 25, u = xx - x, t = (u % 50) / 50, yy = y + (Math.floor(u / 50) % 2 ? 1 : -1) * 32 * t * (1 - t); poly += ribosoomKlein(xx, yy + 3, { s: .85 }); }
@@ -45,7 +45,7 @@ export function sceneKern() {
     <rect x="-800" y="-500" width="3200" height="1900" fill="#0c1530" opacity=".6"/>
     <g data-node="er" data-color="#8fb3e8" data-nolabel>${cyto}</g>
     <g data-node="translatie" data-color="${C.rrna}" data-label="${L({ nl: 'Polysomen · translatie', en: 'Polysomes · translation' })}">
-      <rect x="1230" y="250" width="330" height="480" fill="transparent"/>${poly}
+      <rect x="1160" y="260" width="260" height="470" fill="transparent"/>${poly}
     </g>
     <!-- kernenvelop: dubbel membraan met perinucleaire ruimte -->
     <circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#gNuc)"/>
@@ -74,9 +74,12 @@ export function sceneKern() {
         <polygon points="${[30, 90, 150, 210, 270, 330].map(a => `${(Math.cos(a * Math.PI / 180) * 30).toFixed(1)},${(Math.sin(a * Math.PI / 180) * 30).toFixed(1)}`).join(' ')}" fill="#4a2440" stroke="${C.tdna}" stroke-width="3" opacity=".75"/>
       </g>
       <path d="${importPath}" stroke="transparent" stroke-width="26" fill="none"/>
+      <path d="${importPath}" stroke="${C.tdna}" stroke-width="2.5" fill="none" stroke-dasharray="5 7" opacity=".55"/>
       <path id="adenoDNA" d="${importPath}" stroke="${C.tdna}" stroke-width="3.5" fill="none" stroke-dasharray="900" stroke-dashoffset="900">
         <animate attributeName="stroke-dashoffset" values="900;0;0" keyTimes="0;.6;1" dur="6s" repeatCount="indefinite"/></path>
-      <path d="M520,575 q-30,30 0,55 q40,25 70,-10 q20,-30 -20,-50 q-30,-12 -50,5" stroke="${C.tdna}" stroke-width="3.5" fill="none" opacity=".85" filter="url(#glow)"/>
+      <!-- lineair dubbelstrengs genoom met aan elk uiteinde het terminale eiwit -->
+      <path d="M520,575 q20,40 60,30 q40,-10 50,30 q8,30 40,28" stroke="${C.tdna}" stroke-width="3.5" fill="none" opacity=".85" filter="url(#glow)"/>
+      <circle cx="520" cy="575" r="6" fill="${C.prot}"/><circle cx="670" cy="663" r="6" fill="${C.prot}"/>
       <circle data-anchor="adeno" cx="555" cy="560" r="1" fill="none"/>
     </g>
     <text x="${cx}" y="${cy + R - 60}" fill="${C.muted}" font-size="22" text-anchor="middle" font-family="Inter" opacity=".75">${L({ nl: 'nucleoplasma', en: 'nucleoplasm' })}</text>

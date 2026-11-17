@@ -36,7 +36,8 @@ const vis = (set, step, p) => {
   return set.includes(step) ? (set.includes(step - 1) || step === 0 ? 1 : k) : set.includes(step - 1) ? 1 - k : 0;
 };
 const squig = (x, y, s, rot, op = 1, w = 7) => op <= .01 ? '' : `<path transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(rot)}) scale(${f1(s)})" d="M-60,0 q10,-16 20,0 t20,0 t20,0 t20,0 t20,0 t20,0" stroke="${C.rna}" stroke-width="${f1(w / s)}" fill="none" stroke-linecap="round" opacity="${f1(op)}"/>`;
-const pac = (x, y, r = 14, op = 1) => op <= .01 ? '' : `<path d="M${f1(x)},${f1(y)} L${f1(x + r * .87)},${f1(y - r * .5)} A${r},${r} 0 1 0 ${f1(x + r * .87)},${f1(y + r * .5)} Z" fill="${C.danger}" opacity="${f1(op)}"/>`;
+/* afbraakeiwit (bobbelig eiwit, geen 'pac-man': in P-bodies worden mRNA's vooral bewaard, Hubstenberger et al. 2017) */
+const pac = (x, y, r = 14, op = 1) => op <= .01 ? '' : `<path d="${eiwitPad(x, y, r, r * .8, 61 + Math.round(x) % 7, .12)}" fill="${C.danger}" opacity="${f1(op)}"/>`;
 
 export default {
   id: 'korrels',
@@ -47,8 +48,8 @@ export default {
   legend: [[C.rna, 'mRNA'], [C.rrna, L3('ribosoom', 'ribosome')], [STICK, L3('kleverig eiwit', 'sticky protein')], [SG, L3('druppel bij stress', 'droplet under stress')],
     [PB, L3('druppel met afbraakeiwitten', 'droplet with breakdown proteins')], [C.danger, L3('afbraakeiwit', 'breakdown protein')]],
   simplified: {
-    nl: 'Schematisch en niet op schaal: een echte druppel bevat honderden soorten eiwitten en duizenden mRNA’s, en een cel kan tientallen druppels hebben. Dat ze ontstaan zoals olie in water (fasescheiding) is het huidige model; de details worden nog onderzocht. Ribosomen laten niet allemaal tegelijk los, en een deel van de mRNA’s blijft buiten de druppels. Of P-bodies mRNA’s vooral bewaren of afbreken, is niet beslist. De klonters bij ALS zijn vereenvoudigd tot één vorm.',
-    en: 'Schematic and not to scale: a real droplet contains hundreds of kinds of proteins and thousands of mRNAs, and a cell can have dozens of droplets. That they form like oil in water (phase separation) is the current model; the details are still being studied. Ribosomes do not all let go at once, and some of the mRNAs stay outside the droplets. Whether P-bodies mainly store or break down mRNAs has not been settled. The clumps in ALS are simplified to one shape.' },
+    nl: 'Schematisch en niet op schaal: een echte druppel bevat honderden soorten eiwitten en duizenden mRNA’s, en een cel kan tientallen druppels hebben. Dat ze ontstaan zoals olie in water (fasescheiding) is het huidige model; de details worden nog onderzocht. Ribosomen laten niet allemaal tegelijk los, en een deel van de mRNA’s blijft buiten de druppels. Gezuiverde P-bodies bevatten vooral onderdrukte, niet afgebroken mRNA’s; hoeveel afbraak er zelf gebeurt, wordt nog onderzocht. De klonters bij ALS zijn vereenvoudigd tot één vorm.',
+    en: 'Schematic and not to scale: a real droplet contains hundreds of kinds of proteins and thousands of mRNAs, and a cell can have dozens of droplets. That they form like oil in water (phase separation) is the current model; the details are still being studied. Ribosomes do not all let go at once, and some of the mRNAs stay outside the droplets. Purified P-bodies mainly contain repressed, not degraded mRNAs; how much breakdown happens inside them is still being studied. The clumps in ALS are simplified to one shape.' },
   steps: [
     { dur: 7500, cam: FULL, title: L3('In een gezonde cel lezen ribosomen mRNA’s af', 'In a healthy cell ribosomes read mRNAs'),
       text: L3('Op elk mRNA lezen meerdere ribosomen tegelijk. Zo maakt de cel voortdurend eiwitten.', 'Several ribosomes read each mRNA at once. That is how the cell keeps making proteins.') },
@@ -63,7 +64,7 @@ export default {
     { dur: 8000, cam: FULL, title: L3('Andere druppels zijn er altijd', 'Other droplets are always there'),
       text: L3('Ook zonder stress heeft de cel kleine druppels. Daarin liggen mRNA’s samen met afbraakeiwitten.', 'Even without stress the cell has small droplets. In them, mRNAs lie together with breakdown proteins.') },
     { dur: 9000, cam: cam(450, 360, 900), title: L3('Afbreken of bewaren?', 'Break down or store?'),
-      text: L3('Lang dacht men dat mRNA’s hier afgebroken worden. Recent onderzoek wijst eerder op bewaren.', 'For a long time people thought mRNAs were broken down here. Recent research points more to storage.') },
+      text: L3('Lang dacht men dat mRNA’s hier afgebroken worden. Recent onderzoek toont dat ze er vooral bewaard worden.', 'For a long time people thought mRNAs were broken down here. Recent research shows they are mainly stored there.') },
     { dur: 9500, cam: FULL, title: L3('Een mogelijk verband met ziekte', 'A possible link with disease'),
       text: L3('Bij de ziekte ALS zitten in zenuwcellen klonters van eiwitten die ook in deze druppels voorkomen. Of de druppels die klonters veroorzaken, wordt nog onderzocht.', 'In the disease ALS, nerve cells contain clumps of proteins that also occur in these droplets. Whether the droplets cause those clumps is still being studied.') },
   ],
@@ -92,7 +93,7 @@ export default {
           o += T(170, 730, 'cytosol', { size: 24, anchor: 'start', col: C.muted });
           // druppels bij stress
           D.forEach(([x, y], i) => {
-            if (drop > .01) o += `<circle cx="${x}" cy="${y}" r="${f1(Math.max(0, 70 + 55 * drop))}" fill="rgba(95,211,230,.14)" stroke="${SG}" stroke-width="3" opacity="${f1(drop)}"/>`;
+            if (drop > .01) o += `<circle cx="${x}" cy="${y}" r="${f1(Math.max(0, 70 + 55 * drop))}" fill="rgba(95,211,230,.14)" stroke="${SG}" stroke-width="2.5" stroke-dasharray="8 7" stroke-opacity=".7" opacity="${f1(drop)}"/>`;   // vage rand: geen wand
             if (i === 0) o += T(x, y - 145, T2('druppel zonder membraan', 'droplet without a membrane'), { size: 24, col: SG, op: drop * (step === 2 ? sub(p, .8, .95) : step === 3 ? 0 : 1) });
           });
           // P-bodies (stap 5 en 6)
@@ -102,9 +103,10 @@ export default {
             const x = lerp(m.hx, m.tx, gather), y = lerp(m.hy, m.ty, gather), sc = lerp(1, .5, gather), rot = lerp(m.rot, i * 30, gather);
             o += `<g opacity="${f1(dim)}">` + squig(x, y, sc, rot);
             const rad = rot * Math.PI / 180, ca = Math.cos(rad), sa = Math.sin(rad);
-            [-40, 0, 40].forEach((d, j) => {
+            [-46, 0, 46].forEach((d, j) => {
+              // polysoom: hoe verder richting 3', hoe langer de keten uit de grote eenheid
               const dd = d + 70 * runoff, op = 1 - sub(runoff, .3 + j * .15, .7 + j * .1);
-              if (op > .01) o += ribo(x + dd * ca * sc, y + dd * sa * sc - 4, .3, op, '');
+              if (op > .01) o += ribo(x + dd * ca * sc, y + dd * sa * sc - 4, .3, op, '', { keten: (25 + 30 * j) * (1 - runoff) });
             });
             if (stick > .01) [-30, 20].forEach((d, j) => { o += stk(x + d * ca * sc, y + d * sa * sc - 10, 10, stick, i * 2 + j); });
             o += '</g>';

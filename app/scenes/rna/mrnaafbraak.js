@@ -40,9 +40,9 @@ export default {
     ST(8500, cam(760, 450, 1350), "Of: afbraak vanaf het einde", "Or: breakdown from the end",
       "Of een afbraakcomplex (het exosoom) breekt het mRNA af vanaf het andere uiteinde.",
       "Or a breakdown complex (the exosome) breaks down the mRNA from the other end."),
-    ST(8000, cam(800, 460, 1000), "Afbraakdruppels", "Breakdown droplets",
-      "Ongebruikte mRNA’s en afbraakeiwitten klonteren samen in P-bodies: druppels zonder membraan.",
-      "Unused mRNAs and breakdown proteins cluster in P-bodies: droplets without a membrane."),
+    ST(8000, cam(800, 460, 1000), "Druppels met afbraakeiwitten", "Droplets with breakdown proteins",
+      "Ongebruikte mRNA’s klonteren met afbraakeiwitten samen in P-bodies. Daar worden ze vooral bewaard, niet meteen afgebroken.",
+      "Unused mRNAs cluster with breakdown proteins in P-bodies. There they are mainly stored, not broken down right away."),
   ],
   svg() {
     return svgOpen() + `
@@ -128,7 +128,7 @@ export default {
           const cur = (cx, cy, r0) => `<path d="M${cx - 110},${cy} C${cx - 60},${cy - 40 * r0} ${cx},${cy + 40 * r0} ${cx + 100},${cy - 10}" stroke="${C.rna}" stroke-width="8" fill="none" stroke-linecap="round"/>`;
           fa += cur(760, 390, 1) + cur(830, 480, -1) + cur(740, 540, .6);
           const pk = i => ease(sub(p, .04 + i * .07, .14 + i * .07));          // factoren komen er één voor één bij
-          fa += prot(900, 370, 95, 34, 'DCP2', '#8a5a3a', pk(0), 19) + prot(640, 460, 87, 34, 'XRN1', '#8a5a3a', pk(1), 19) + prot(940, 540, 103, 34, 'LSm1–7', '#6b4a33', pk(2), 19) + prot(700, 330, 95, 34, 'DDX6', '#6b4a33', pk(3), 19) + prot(860, 600, 81, 34, 'AGO2', '#b44f7c', pk(4), 19);
+          fa += prot(900, 370, 95, 34, 'DCP2', '#8a5a3a', pk(0), 19) + prot(640, 460, 87, 34, 'XRN1', '#8a5a3a', pk(1), 19) + prot(940, 540, 103, 34, 'LSm1–7', '#6b4a33', pk(2), 19) + prot(700, 330, 95, 34, 'DDX6', '#6b4a33', pk(3), 19) + prot(990, 455, 81, 34, 'AGO2', '#b44f7c', pk(4), 19);
           fa += note(800, 250, 'P-body', '#ff9ec3', 24) + '</g>';
         }
 
@@ -139,7 +139,7 @@ export default {
           tli += `<path d="M${X.cap + 125},${Y - 84} C${X.cap + 400},${Y - 300} ${PAB[2]},${Y - 280} ${PAB[2]},${Y - 40}" stroke="#7fe0ef" stroke-width="3" fill="none" stroke-dasharray="7 6" opacity="${f1(loopOp)}"/>`;
           tli += note(800, Y - 250, T2('gesloten lus (eIF4G–PABPC1)', 'closed loop (eIF4G–PABPC1)'), '#7fe0ef', 19, 'middle', step === 0 ? 1 : loopOp * (step === 1 ? 0 : 1));
           tli += note(PAB[2] + 20, Y - 58, 'PABPC1', '#7fe0ef', 19, 'start', step === 0 ? sub(p, .2, .4) : 0);
-          for (const rx of [400, 580, 760]) rib += ribo(rx, Y, .85, riboOp, '', { keten: (rx - 300) / 14 });   // polysoom: verder op het mRNA = langere keten
+          for (const rx of [400, 580, 760]) rib += ribo(rx, Y, .85, riboOp, '', { keten: (rx - 300) * .25 });   // polysoom: verder op het mRNA = langere keten
         }
         if (step === 1) {
           const k = ease(sub(p, .1, .4));
@@ -152,7 +152,7 @@ export default {
           const ph = p < .45;
           fa += prot(tail + 34, Y - 40, ph ? 110 : 110, 30, ph ? 'PAN2–PAN3' : 'CCR4–NOT', '#8a5a3a', sub(p, 0, .1), 19);
           fa += note(tail + 34, Y + 44, 'A A A …', C.cap, 19, 'middle', 1 - sub(p, .8, .9));
-          for (let i = 0; i < 6; i++) { const drop = clamp((PAB[i] - tail) / 50); if (drop > 0 && drop < 1) fa += `<path d="${eiwitPad(PAB[i] + 20 * drop, Y - 22 - 120 * drop, 15, 13, 50 + i, .1)}" fill="#3fb6c9" opacity="${f1(1 - drop)}"/>`; }
+          for (let i = 0; i < 6; i++) { const drop = clamp((PAB[i] - tail) / 50); if (drop > 0 && drop < 1) fa += `<path d="${eiwitPad(PAB[i] + 20 * drop, Y - 22 - 120 * drop, 15, 13, 50 + i, .1)}" fill="#3fb6c9" opacity="${f1((1 - drop) * (1 - sub(p, .85, .95)))}"/>`; }   // losgelaten PABPC1 drijft weg en blijft niet zweven
           fa += note(900, Y - 160, T2('translatie stopt', 'translation stops'), '#ffd36b', 19, 'middle', sub(p, .5, .7));
         }
         if (step === 3) {
@@ -166,7 +166,7 @@ export default {
         setHot(svg, 'md-mA', step === 0 ? [575, Y + 70, 200, 26] : null);
         // hotspots naar miRNA en NMD
         $('md-mi').innerHTML = step === 2 ? prot(1260, Y + 110, 160, 36, 'miRNA·AGO2', '#e0679a', sub(p, .5, .7), 19) : '';
-        setHot(svg, 'md-iA', step === 2 && p > .6 ? [1260, Y + 110, 118, 30] : step === 6 && p > .3 ? [860, 600, 60, 28] : null);
+        setHot(svg, 'md-iA', step === 2 && p > .6 ? [1260, Y + 110, 118, 30] : step === 6 && p > .3 ? [990, 455, 60, 28] : null);
         $('md-nmd').innerHTML = step === 4 ? prot(1250, 250, 204, 36, T2('NMD (SMG6-knip)', 'NMD (SMG6 cut)'), '#e0679a', sub(p, .3, .5), 19) : '';
         setHot(svg, 'md-nA', step === 4 && p > .4 ? [1250, 250, 150, 30] : null);
         setHot(svg, 'md-kA', step === 6 && p > .5 ? [800, 242, 110, 30] : null);   // zijpad RNA-lot: P-body → druppels bij stress
