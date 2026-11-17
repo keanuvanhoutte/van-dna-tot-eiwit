@@ -105,7 +105,7 @@ const SCENE = {
     <g data-node="rtk" data-color="${K.grb}" data-nolabel><g id="mk-sos"></g></g>
     <g id="mk-ras"></g>
     <g id="mk-kin"></g>
-    <g data-node="srf" data-color="${K.erk}" data-label="${T2('Elk-1 & FOS-gen →', 'Elk-1 & FOS gene →')}"><g id="mk-nuc"></g><g id="mk-srfA"><circle data-anchor="srf" cx="${E0_DEST[0]}" cy="${E0_DEST[1] - 30}" r="1" fill="none"/></g></g>
+    <g data-node="srf" data-color="${K.erk}" data-label="${T2('Elk-1 & FOS-gen →', 'Elk-1 & FOS gene →')}"><g id="mk-nuc"></g><g id="mk-srfA"><circle data-anchor="srf" cx="${E0_DEST[0] - 150}" cy="${E0_DEST[1] - 40}" r="1" fill="none"/></g></g>
     <g data-node="ptm" data-color="${PHOS}" data-label="${T2('Fosforylering (PTM)', 'Phosphorylation (PTM)')}"><g id="mk-ptmHit"></g><g id="mk-ptmA"><circle data-anchor="ptm" cx="${MEK_B[0] + 60}" cy="${MEK_B[1] - 40}" r="1" fill="none"/></g></g>
     <g id="mk-fx"></g>
     <g id="mk-lbl"></g>
@@ -134,10 +134,11 @@ const SCENE = {
         const off = step < 7 ? 0 : step === 7 ? ease(sub(p, .25, .6)) : 1;           // GAP: GTP → GDP
         const rasOn = step < 7 ? gef : 1 - off;
         let rs = ras(RAS[0], RAS[1], MB, { on: rasOn, nuc: rasOn > .5 ? 'GTP' : 'GDP', nucOp: step === 1 ? 1 - Math.sin(Math.PI * sub(p, .25, .65)) * .9 : 1 });
+        let nucTags = '';                                       // GDP/GTP-pilletjes: boven Raf getekend (in mk-fx)
         if (step === 1) {
           const out = ease(sub(p, .15, .5)), inn = ease(sub(p, .45, .8));
-          if (out > 0 && out < 1) rs += tag(lerp(RAS[0], RAS[0] + 110, out), lerp(RAS[1] + 4, RAS[1] + 140, out), 'GDP', K.gdp, { fs: 17, op: 1 - out * .6 });
-          if (inn < 1 && p > .4) rs += tag(lerp(RAS[0] + 170, RAS[0], inn), lerp(RAS[1] + 190, RAS[1] + 4, inn), 'GTP', K.gtp, { fs: 17 });
+          if (out > 0 && out < 1) nucTags += tag(lerp(RAS[0], RAS[0] + 110, out), lerp(RAS[1] + 4, RAS[1] + 140, out), 'GDP', K.gdp, { fs: 17, op: 1 - out * .6 });
+          if (inn < 1 && p > .4) nucTags += tag(lerp(RAS[0] + 170, RAS[0], inn), lerp(RAS[1] + 190, RAS[1] + 4, inn), 'GTP', K.gtp, { fs: 17 });
         }
         if (step === 7 || step === 8) {
           const g = step === 8 ? 1 - ease(sub(p, 0, .2)) : ease(sub(p, 0, .25));
@@ -214,15 +215,15 @@ const SCENE = {
         $('mk-kin').innerHTML = ks;
         $('mk-nuc').innerHTML = nuc + (step >= 6 ? `<rect x="900" y="770" width="560" height="130" fill="transparent"/>` : '');
         $('mk-srfA').setAttribute('opacity', step >= 6 && e0k >= .95 ? 1 : 0);
-        $('mk-srfA').firstElementChild.setAttribute('cy', step === 8 ? 700 : E0_DEST[1] - 30);
-        $('mk-srfA').firstElementChild.setAttribute('cx', step === 8 ? PORES[1] : E0_DEST[0]);
+        $('mk-srfA').firstElementChild.setAttribute('cy', step === 8 ? 700 : E0_DEST[1] - 40);
+        $('mk-srfA').firstElementChild.setAttribute('cx', step === 8 ? PORES[1] : E0_DEST[0] - 150);
         $('mk-kiA').setAttribute('opacity', step === 6 ? 1 : 0);
         $('mk-rtkA').setAttribute('opacity', step === 0 ? 1 : 0);
         $('mk-ptmA').setAttribute('opacity', step === 3 ? sub(p, .8, .9) : 0);
         $('mk-ptmHit').innerHTML = step === 3 || step === 4 ? `<circle cx="${f1(mx + 50)}" cy="${f1(my + 60)}" r="34" fill="transparent"/>` : '';
 
         /* ---- effecten: pijlen, ATP ---- */
-        let fx = '';
+        let fx = nucTags;
         if (step === 2) fx += spark(RBD_ON[0], RBD_ON[1], sub(p, .55, .85), K.ras);
         if (step === 3) {
           fx += arr(RAF_ON[0] + 40, RAF_ON[1] + 70, MEK_D[0] + 30, MEK_D[1] + 38, '#fff', 'mk-w', { w: 3.5, bend: -.3, op: sub(p, .28, .35) * (1 - sub(p, .65, .75)) });
@@ -247,7 +248,7 @@ const SCENE = {
           const k = step === 7 ? sub(p, .45, .85) : 1;
           const E = ERKS[4];
           const po = step === 7 ? ease(sub(p, .2, .4)) : 1 - sub(p, 0, .2);
-          fx += `<ellipse cx="${E[0] + 105}" cy="${E[1] - 10}" rx="48" ry="30" fill="#ffb3c7" fill-opacity=".22" stroke="#ffb3c7" stroke-width="3" opacity="${f1(po)}"/>`;
+          fx += eiwit(E[0] + 105, E[1] - 10, 48, 30, '#ffb3c7', { seed: 89, op: po });
           if (k > 0 && k < 1) fx += T(E[0] + 160 + 40 * k, E[1] - 20 - 40 * k, 'Pᵢ', { size: 22, col: PHOS, w: 800, op: 1 - k });
         }
         $('mk-fx').innerHTML = fx;
@@ -256,7 +257,7 @@ const SCENE = {
         let lb = '';
         const L = (x, y, s, o = {}) => { lb += T(x, y, s, { size: 24, ...o }); };
         if (step === 0 || step === 5 || step === 8) {
-          L(1560, 150, T2('plasmamembraan', 'plasma membrane'), { anchor: 'end', col: '#e3c89c', size: 22 });
+          L(1560, MT - 16, T2('plasmamembraan', 'plasma membrane'), { anchor: 'end', col: '#e3c89c', size: 22 });
           L(40, 690, 'cytosol', { anchor: 'start', col: C.muted, w: 500 });
           L(40, 800, T2('kern', 'nucleus'), { anchor: 'start', col: '#9cc0ff', w: 500 });
         }

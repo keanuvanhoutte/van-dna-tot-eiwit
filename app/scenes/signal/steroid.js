@@ -32,8 +32,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">3D: DNA-bindend domein van GR op een GRE, PDB <a href="https://www.rcsb.org/structure/1R4R" target="_blank" rel="noopener">1R4R</a> (rat-GR, dat in dit domein nagenoeg gelijk is aan het menselijke).</p>',
     en: '<p style="font-size:13px;color:#93a0bb">3D: GR DNA-binding domain on a GRE, PDB <a href="https://www.rcsb.org/structure/1R4R" target="_blank" rel="noopener">1R4R</a> (rat GR, nearly identical to human in this domain).</p>' },
   simplified: {
-    nl: 'GR is getekend als drie blokjes: een ongeordend N-terminaal domein, het DNA-bindend domein (twee zinkvingers) en het ligandbindend domein. Het chaperonecomplex telt in werkelijkheid meer onderdelen (o.a. Hsp70 tijdens het opbouwen); volgens nieuwere gegevens blijft Hsp90 soms nog gebonden tijdens het transport naar de kern (FKBP51 wordt dan vervangen door FKBP52). De tweede GR van het dimeer komt uit een ander complex. GR kan genen ook remmen (bv. door NF-κB en AP-1 te binden); dat is weggelaten. Niet op schaal.',
-    en: 'GR is drawn as three blocks: a disordered N-terminal domain, the DNA-binding domain (two zinc fingers) and the ligand-binding domain. The real chaperone complex has more parts (e.g. Hsp70 during assembly); newer data suggest that Hsp90 sometimes stays bound during transport to the nucleus (FKBP51 is then replaced by FKBP52). The second GR of the dimer comes from another complex. GR can also repress genes (e.g. by binding NF-κB and AP-1); this is left out. Not to scale.' },
+    nl: 'GR is getekend als drie blokjes: een ongeordend N-terminaal domein, het DNA-bindend domein (twee zinkvingers) en het ligandbindend domein. Het chaperonecomplex telt in werkelijkheid meer onderdelen (o.a. Hsp70 tijdens het opbouwen); volgens nieuwere gegevens blijft Hsp90 soms nog gebonden tijdens het transport naar de kern (FKBP51 wordt dan vervangen door FKBP52). De tweede GR van het dimeer komt uit een ander complex en gaat langs een andere kernporie naar binnen. GR kan genen ook remmen (bv. door NF-κB en AP-1 te binden); dat is weggelaten. Niet op schaal.',
+    en: 'GR is drawn as three blocks: a disordered N-terminal domain, the DNA-binding domain (two zinc fingers) and the ligand-binding domain. The real chaperone complex has more parts (e.g. Hsp70 during assembly); newer data suggest that Hsp90 sometimes stays bound during transport to the nucleus (FKBP51 is then replaced by FKBP52). The second GR of the dimer comes from another complex and enters through another nuclear pore. GR can also repress genes (e.g. by binding NF-κB and AP-1); this is left out. Not to scale.' },
   steps: [
     ST(7000, cam(560, 280, 1000), 'Cortisol lost op in vet', 'Cortisol dissolves in fat',
       'Cortisol is een hormoon gemaakt uit cholesterol. Het lost op in vet, dus het past in het membraan.',
@@ -119,9 +119,11 @@ export default {
         const rot = track(g, [[4.3, 0], [4.5, -90], [4.9, -90], [5.25, 0]])[0], th = rot * Math.PI / 180;
         const bind = K(g, 5.3, 5.5);
         let R = gr(pos[0], pos[1], { lig, nls: nls * (1 - bind), sc: SC, op: 1 - bind, rot });
-        const p2 = track(g, [[4.7, 1240, 690], [5.05, 1240, 690], [5.4, H2 + 40, 700]]);
-        const in2 = K(g, 4.7, 4.95);
-        R += gr(p2[0], p2[1], { lig: 1, sc: SC, op: in2 * (1 - K(g, 5.35, 5.55)), flip: -1 });
+        /* tweede GR (uit een ander complex) komt ook met importine door een kernporie (x 1420) binnen */
+        const p2 = track(g, [[4.5, 1420, 450], [4.65, 1420, 470], [5.05, 1420, 690], [5.4, H2 + 40, 700]]);
+        const rot2 = track(g, [[4.5, -90], [5.05, -90], [5.3, 0]])[0], th2 = rot2 * Math.PI / 180;
+        const in2 = K(g, 4.45, 4.6);
+        R += gr(p2[0], p2[1], { lig: 1, nls: 1 - K(g, 5.3, 5.45), sc: SC, op: in2 * (1 - K(g, 5.35, 5.55)), rot: rot2 });
         R += grBound(H1, -1, bind) + grBound(H2, 1, K(g, 5.4, 5.6));
         $('st-gr').innerHTML = R;
 
@@ -129,15 +131,19 @@ export default {
         const imp = K(g, 4.05, 4.3) * (1 - K(g, 4.85, 5.0));
         const io = track(g, [[4.85, 0, 0], [5.0, 60, -40]]);
         const ox = -4.5, oy = -58;
-        $('st-imp').innerHTML = importin(pos[0] + ox * Math.cos(th) - oy * Math.sin(th) + io[0], pos[1] + ox * Math.sin(th) + oy * Math.cos(th) + io[1], imp, rot);
+        const imp2 = K(g, 4.45, 4.6) * (1 - K(g, 5.05, 5.2));
+        const io2 = track(g, [[5.05, 0, 0], [5.2, 60, -40]]);
+        $('st-imp').innerHTML = importin(pos[0] + ox * Math.cos(th) - oy * Math.sin(th) + io[0], pos[1] + ox * Math.sin(th) + oy * Math.cos(th) + io[1], imp, rot) +
+          importin(p2[0] + ox * Math.cos(th2) - oy * Math.sin(th2) + io2[0], p2[1] + ox * Math.sin(th2) + oy * Math.cos(th2) + io2[1], imp2, rot2);
 
         /* ---------- kern: GRE, co-activatoren, Pol II ---------- */
         let N = '';
+        /* GRE-consensus AGAACAnnnTGTTCT: twee omgekeerde halve plaatsen (palindroom) met 3 nt ertussen (Lodish, Molecular Cell Biology; Meijsing et al., Science 2009) */
         const gk = K(g, 5.05, 5.4);
-        N += `<g opacity="${f1(.35 + .65 * gk)}"><text x="${H1}" y="${DY + 50}" font-size="23" text-anchor="middle" fill="#cfe0ff" font-family="JetBrains Mono" font-weight="700">GGAACA</text>` +
+        N += `<g opacity="${f1(.35 + .65 * gk)}"><text x="${H1}" y="${DY + 50}" font-size="23" text-anchor="middle" fill="#cfe0ff" font-family="JetBrains Mono" font-weight="700">AGAACA</text>` +
           `<text x="1000" y="${DY + 50}" font-size="22" text-anchor="middle" fill="${C.muted}" font-family="JetBrains Mono" font-weight="700">nnn</text>` +
           `<text x="${H2}" y="${DY + 50}" font-size="23" text-anchor="middle" fill="#cfe0ff" font-family="JetBrains Mono" font-weight="700">TGTTCT</text></g>`;
-        const co = track(g, [[6.05, 1200, 540, 0], [6.4, 1000, 612, 1]]);
+        const co = track(g, [[6.05, 1150, 660, 0], [6.4, 1000, 612, 1]]);   // kerneiwitten: verschijnen in de kern
         if (co[2] > .01) N += `<g opacity="${f1(co[2])}">${eiwit(co[0], co[1], 108, 32, COAC, { seed: 63, bumps: .08 })}` +
           `<text x="${f1(co[0])}" y="${f1(co[1] + 8)}" font-size="22" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">CBP/p300 · SRC</text></g>`;
         const pol = K(g, 6.3, 6.5);
@@ -166,7 +172,7 @@ export default {
           T(700, MY + MH / 2 + 8, T2('hydrofobe kern', 'hydrophobic core'), { size: 20, col: '#f1d7a8', op: k, anchor: 'start' });
         k = on(2.2, 2.5, 3.02, 3.2);
         if (k > .01) L += T(GX - 60, GY + 70, 'GR', { size: 24, col: C.prot, op: k }) +
-          T(GX + 45, GY + 100, 'Hsp90', { size: 22, col: HSPC, op: k }) +
+          T(GX + 105, GY + 92, 'Hsp90', { size: 22, col: HSPC, op: k, anchor: 'start' }) +
           T(GX + 80, GY - 110, 'p23', { size: 22, col: P23C, op: k, anchor: 'start' }) +
           T(GX + 155, GY - 50, 'FKBP51', { size: 22, col: FKBPC, op: k, anchor: 'start' }) +
           T(GX - 110, GY + 35, 'NTD', { size: 18, col: C.muted, op: k }) + T(GX - 40, GY + 35, 'DBD', { size: 18, col: C.muted, op: k }) + T(GX + 112, GY + 34, 'LBD', { size: 18, col: C.muted, op: k, anchor: 'start' });
@@ -180,7 +186,7 @@ export default {
         k = on(5.3, 5.6, 6.02, 6.2);
         if (k > .01) L += T(1165, 690, T2('GR-homodimeer', 'GR homodimer'), { size: 24, col: C.prot, op: k, anchor: 'start' }) +
           T(1000, DY + 88, 'GRE', { size: 24, col: '#cfe0ff', op: k }) +
-          T(H2 + 70, DY + 50, T2('← zinkvingers', '← zinc fingers'), { size: 20, col: '#cfd6e6', op: k, anchor: 'start' });
+          T(H2 + 36, DY - 30, T2('← zinkvingers', '← zinc fingers'), { size: 20, col: '#cfd6e6', op: k, anchor: 'start' });
         k = on(6.2, 6.5, 7.02, 7.2);
         if (k > .01) L += T(1122, 618, T2('co-activatoren', 'co-activators'), { size: 22, col: COAC, op: k, anchor: 'start' }) +
           T(1330, DY + 58, T2('doelgen', 'target gene'), { size: 22, col: C.text, op: k * K(g, 6.4, 6.6) }) +

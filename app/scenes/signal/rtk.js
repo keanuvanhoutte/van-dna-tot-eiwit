@@ -245,7 +245,7 @@ const SCENE = {
         if (step === 0 || step === 7) {
           L(80, 380, T2('buiten de cel', 'outside the cell'), { anchor: 'start', col: C.muted, w: 500 });
           L(80, 520, 'cytosol', { anchor: 'start', col: C.muted, w: 500 });
-          L(1530, 444, T2('plasmamembraan', 'plasma membrane'), { anchor: 'end', col: '#e3c89c' });
+          L(1530, MT - 16, T2('plasmamembraan', 'plasma membrane'), { anchor: 'end', col: '#e3c89c' });
         }
         if (step === 0) {
           L(E1[0] - 40, E1[1] + 9, 'EGF', { col: K.egf, size: 26, w: 800, anchor: 'end' });

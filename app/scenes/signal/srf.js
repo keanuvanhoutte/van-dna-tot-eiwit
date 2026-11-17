@@ -200,7 +200,7 @@ const SCENE = {
         let lb = '';
         const L = (x, y, s, o = {}) => { lb += T(x, y, s, { size: 24, ...o }); };
         if (step === 0 || step === 8) {
-          L(1300, DY + 70, T2('FOS-gen', 'FOS gene'), { col: C.dna2, size: 28, w: 800 });
+          L(1300, DY + 98, T2('FOS-gen', 'FOS gene'), { col: C.dna2, size: 28, w: 800 });
           L(430, DY + 80, 'SRE', { col: '#fff', size: 28, w: 800 });
           L(BRK, DY + 80, '≈ 300 bp', { col: C.muted, size: 22 });
           L(TATA[0] + 20, DY + 80, 'TATA', { col: '#ffc247', size: 22 });

@@ -25,8 +25,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">3D: β2-adrenerge receptor met Gs, PDB <a href="https://www.rcsb.org/structure/3SN6" target="_blank" rel="noopener">3SN6</a>.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">3D: β2-adrenergic receptor with Gs, PDB <a href="https://www.rcsb.org/structure/3SN6" target="_blank" rel="noopener">3SN6</a>.</p>' },
   simplified: {
-    nl: 'De receptor is getekend als 7 staafjes; adenylylcyclase (12 TM-helices, twee katalytische domeinen) staat symbolisch met enkele helices. Gβγ geeft zelf ook signalen door (niet getoond). Dat Gαs volledig loskomt van Gβγ is het klassieke model; recenter werk toont dat ze soms eerder herschikken dan echt scheiden. PKA zit in cellen vaak via AKAP-eiwitten op een vaste plek en de C-subeenheden laten in werkelijkheid niet altijd volledig los. We tonen één C-subeenheid die de kern in gaat en één CREB-dimeer; CREB wordt ook door andere kinasen gefosforyleerd. Desensitisatie van de receptor (GRK, β-arrestine) is weggelaten. Moleculen zijn niet op schaal.',
-    en: 'The receptor is drawn as 7 rods; adenylyl cyclase (12 TM helices, two catalytic domains) is shown symbolically with a few helices. Gβγ also relays signals itself (not shown). Gαs fully separating from Gβγ is the classic model; more recent work shows they sometimes rearrange rather than truly separate. In cells PKA is often anchored at fixed sites by AKAP proteins, and the C subunits do not always fully dissociate. We show one C subunit entering the nucleus and one CREB dimer; CREB is also phosphorylated by other kinases. Receptor desensitisation (GRK, β-arrestin) is left out. Molecules are not to scale.' },
+    nl: 'De receptor is getekend als 7 staafjes; adenylylcyclase is getekend met 12 staafjes (TM-helices) en twee katalytische domeinen. Gβγ geeft zelf ook signalen door (niet getoond). Dat Gαs volledig loskomt van Gβγ is het klassieke model; recenter werk toont dat ze soms eerder herschikken dan echt scheiden. PKA zit in cellen vaak via AKAP-eiwitten op een vaste plek en de C-subeenheden laten in werkelijkheid niet altijd volledig los. We tonen één C-subeenheid die de kern in gaat en één CREB-dimeer; CREB wordt ook door andere kinasen gefosforyleerd. Desensitisatie van de receptor (GRK, β-arrestine) is weggelaten. Moleculen zijn niet op schaal.',
+    en: 'The receptor is drawn as 7 rods; adenylyl cyclase is drawn with 12 rods (TM helices) and two catalytic domains. Gβγ also relays signals itself (not shown). Gαs fully separating from Gβγ is the classic model; more recent work shows they sometimes rearrange rather than truly separate. In cells PKA is often anchored at fixed sites by AKAP proteins, and the C subunits do not always fully dissociate. We show one C subunit entering the nucleus and one CREB dimer; CREB is also phosphorylated by other kinases. Receptor desensitisation (GRK, β-arrestin) is left out. Molecules are not to scale.' },
   steps: [
     ST(7000, cam(520, 330, 1000), 'Adrenaline komt aan', 'Adrenaline arrives',
       'Het hormoon adrenaline nadert zijn receptor. Eronder wacht een schakelaar-eiwit (G-eiwit), nog uit.',
@@ -58,14 +58,15 @@ export default {
   ],
 
   svg() {
-    const ac = [756, 770, 784, 818, 832, 846].map(x => tmHelix(x, MY - 12, MY + MH + 12, ACC, .85, 11)).join('') +
+    /* adenylylcyclase: 2 × 6 TM-helices, elk gevolgd door een cytosolisch katalytisch domein (C1, C2) dat samen het actieve centrum vormt (Tesmer et al., Science 1997) */
+    const ac = [741, 750.5, 760, 769.5, 779, 788.5, 811.5, 821, 830.5, 840, 849.5, 859].map(x => tmHelix(x, MY - 12, MY + MH + 12, ACC, .85, 8)).join('') +
       `<path d="M770,${MY + MH + 10} L775,${MY + MH + 22} M832,${MY + MH + 10} L830,${MY + MH + 24}" stroke="${ACC}" stroke-width="5"/>` +
       eiwit(775, MY + MH + 44, 32, 26, ACC, { seed: 41 }) + eiwit(830, MY + MH + 48, 30, 26, ACC, { seed: 42 });
     return svgOpen() + `
       <rect x="-600" y="-600" width="2800" height="${MY + 610}" fill="#0b1226"/>
       <rect x="-600" y="${MY + MH - 4}" width="2800" height="${NY - MY - MH + 8}" fill="url(#gCyto)"/>
       <rect x="-600" y="${NY + 14}" width="2800" height="900" fill="url(#gNuc)"/>
-      ${bilayer(-600, 2200, MY, { h: MH, skip: [[RX - 75, RX + 75], [745, 857]] })}
+      ${bilayer(-600, 2200, MY, { h: MH, skip: [[RX - 75, RX + 75], [733, 867]] })}
       ${nucEnv(-600, 2200, NY, [640, PORE, 1500])}
       <g id="gp-gene"></g>
       ${hot('dnahelix', C.dna, dna(-600, 2200, DY))}
@@ -77,11 +78,12 @@ export default {
       <g id="gp-g"></g>
       <g id="gp-camp"></g>
       <g id="gp-pka"></g>
+      <g id="gp-campR"></g>
       <g id="gp-nuc"></g>
       <g id="gp-lab"></g>
       <g id="gp-hot" opacity="0">
         <g data-node="srf" data-color="${C.dna}" data-label="${T2('Vergelijk: EGF-route (SRE)', 'Compare: EGF route (SRE)')}">
-          <rect x="700" y="${DY - 30}" width="330" height="70" fill="transparent"/>${anchor('srf', 990, DY - 40)}</g>
+          <rect x="700" y="${DY - 30}" width="330" height="70" fill="transparent"/>${anchor('srf', 800, DY - 40)}</g>
         <g data-node="genregulatie" data-color="${CBPC}" data-label="${T2('Genregulatie', 'Gene regulation')}">
           <rect x="1120" y="${NY + 20}" width="260" height="${DY - NY}" fill="transparent"/>${anchor('genregulatie', CRX + 8, NY + 34)}</g>
       </g>
@@ -123,7 +125,7 @@ export default {
         $('gp-g').innerHTML = G;
 
         /* ---------- cAMP ---------- */
-        let A = '';
+        let A = '', AR = '';
         const nMade = Math.floor(18 * K(g, 4.1, 4.9) + .001);
         const pde = K(g, 8.1, 8.3), deg = K(g, 8.3, 8.85);
         // ATP-pilletjes die binnenkomen (stap 4)
@@ -138,10 +140,10 @@ export default {
           const born = 4.1 + (i / 18) * .8, kb = K(g, born, born + .1);
           let px = 805 + (x - 805) * kb, py = 420 + (y - 420) * kb;
           px += Math.sin(tt * 1.1 + i) * 3; py += Math.cos(tt * .9 + i * 1.7) * 3;
-          if (i < 4) {                                     // deze vier binden aan R
+          if (i < 4) {                                     // deze vier binden aan R (2 per R); boven PKA getekend
             const kr = K(g, 5.05 + i * .06, 5.3 + i * .06);
             px = px + (RSITE[i][0] - px) * kr; py = py + (RSITE[i][1] - py) * kr;
-            A += cAMP(px, py, 1 - K(g, 8.5, 8.85), 10);
+            AR += cAMP(px, py, 1 - K(g, 8.5, 8.85), 10);
             return;
           }
           const col = deg > .5 ? AMPC : GTPC;
@@ -150,6 +152,7 @@ export default {
         if (pde > .01) A += `<g opacity="${f1(pde)}">${eiwit(940, 585, 40, 28, '#ff9d5c', { seed: 43 })}` +
           `<text x="940" y="592" font-size="18" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">PDE</text></g>`;
         $('gp-camp').innerHTML = A;
+        $('gp-campR').innerHTML = AR;
 
         /* ---------- PKA ---------- */
         let P = '';
@@ -168,7 +171,8 @@ export default {
         N += `<g>${eiwit(CRX - 22, DY - 38, 24, 22, CREBC, { seed: 47 })}${eiwit(CRX + 22, DY - 38, 24, 22, CREBC, { seed: 48 })}` +
           `<path d="M${CRX - 14},${DY - 18} l-6,26 M${CRX + 14},${DY - 18} l6,26" stroke="${CREBC}" stroke-width="6" stroke-linecap="round"/></g>`;
         N += phos(CRX - 40, DY - 58, 15, pS);
-        const cbp = track(g, [[7.05, 1360, 620, 0], [7.4, CRX + 8, DY - 112, 1], [8.55, CRX + 8, DY - 112, 1], [8.9, 1360, 620, 0]]);
+        /* CBP/p300 is een kerneiwit: verschijnt in het nucleoplasma en gaat daar ook weer weg */
+        const cbp = track(g, [[7.05, 1400, 750, 0], [7.4, CRX + 8, DY - 112, 1], [8.55, CRX + 8, DY - 112, 1], [8.9, 1400, 750, 0]]);
         if (cbp[2] > .01) N += eiwit(cbp[0], cbp[1], 62, 34, CBPC, { seed: 49, op: cbp[2] });
         const pol = K(g, 7.3, 7.5) * (1 - K(g, 8.55, 8.9));
         if (pol > .01) N += `<g opacity="${f1(pol)}">${eiwit(1335, DY - 22, 52, 36, C.prot3, { seed: 50, stroke: C.prot })}` +

@@ -103,7 +103,7 @@ export default {
       <rect x="-600" y="-600" width="2800" height="${MY + 610}" fill="#0b1226"/>
       <rect x="-600" y="${MY + MH - 4}" width="2800" height="${NY - MY - MH + 8}" fill="url(#gCyto)"/>
       <rect x="-600" y="${NY + 14}" width="2800" height="900" fill="url(#gNuc)"/>
-      ${bilayer(-600, 2200, MY, { h: MH, skip: [[XB - 75, XB + 75], [960, 1010]] })}
+      ${bilayer(-600, 2200, MY, { h: MH, skip: [[XB - 75, XB + 75], [932, 1044]] })}
       ${nucEnv(-600, 2200, NY, [-80, XA, XB, XC, 1700])}
       ${hot('dnahelix', C.dna, dna(-600, 2200, DY))}
       ${T(1585, 60, T2('buiten de cel', 'outside the cell'), { size: 24, col: C.muted, anchor: 'end', w: 500 })}
@@ -187,10 +187,10 @@ export default {
         const dimB = 1 - .78 * K(g, 7.05, 7.4);
         const tilt = 8 * K(g, 2.55, 2.85);
         let B = gpcr7(XB, MY, MH, tilt, 1);
-        // adenylylcyclase (2 × 6 TM, symbolisch) + katalytisch deel
-        B += `<g opacity=".95">${[964, 976, 988].map(x => tmHelix(x, MY - 10, MY + MH + 10, '#b58cff', .85, 10)).join('')}` +
-          eiwit(985, MY + MH + 36, 34, 24, '#b58cff', { seed: 41 }) +
-          `<text x="985" y="${MY + MH + 42}" font-size="16" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">AC</text></g>`;
+        // adenylylcyclase: 2 × 6 TM-helices met elk een cytosolisch katalytisch domein (C1, C2), zoals in de gpcr-scène (Tesmer et al., Science 1997)
+        B += `<g opacity=".95">${[940, 948, 956, 964, 972, 980, 996, 1004, 1012, 1020, 1028, 1036].map(x => tmHelix(x, MY - 10, MY + MH + 10, '#b58cff', .85, 7)).join('')}` +
+          eiwit(962, MY + MH + 34, 26, 22, '#b58cff', { seed: 41 }) + eiwit(1016, MY + MH + 36, 26, 22, '#b58cff', { seed: 42 }) +
+          `<text x="989" y="${MY + MH + 76}" font-size="16" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">AC</text></g>`;
         /* G-eiwit aan de binnenkant van het membraan: Gβγ (prenylanker) en Gαs (vetzuuranker), dat naar het enzym schuift */
         const gs = track(g, [[5.1, 846, 420], [5.35, 958, 452]]);
         B += gBG(912, 418, MY + MH, { r: 22, lab: "" }) + gAlpha(gs[0], gs[1], MY + MH, { fs: 17 });
