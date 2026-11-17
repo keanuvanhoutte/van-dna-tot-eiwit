@@ -22,8 +22,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">3D: GroEL–GroES–(ADP)7, PDB <a href="https://www.rcsb.org/structure/1AON" target="_blank" rel="noopener">1AON</a> (E. coli).</p><p style="font-size:13px;color:#93a0bb">Netwerk: Hsp70 + Hsp40 helpen veel nieuwe ketens; chaperoninen (mens: TRiC/CCT) een deel; Hsp90 rijpt o.a. kinasen en steroïdreceptoren. Wat blijvend misvouwt, wordt via een E3 (bv. CHIP) gemerkt voor afbraak; faalt alles, dan aggregeert het.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">3D: GroEL–GroES–(ADP)7, PDB <a href="https://www.rcsb.org/structure/1AON" target="_blank" rel="noopener">1AON</a> (E. coli).</p><p style="font-size:13px;color:#93a0bb">Network: Hsp70 + Hsp40 help many new chains; chaperonins (human: TRiC/CCT) a subset; Hsp90 matures e.g. kinases and steroid receptors. What stays misfolded is tagged for degradation via an E3 (e.g. CHIP); if everything fails, it aggregates.</p>' },
   simplified: {
-    nl: 'Hsp70 is getekend als nucleotide-bindend domein (NBD) plus substraatbindend domein met een helixdeksel; de echte vorm is complexer. Het chaperonine is in doorsnede getekend met 2 van de 7 subeenheden per ring. In menselijke cellen vervult TRiC/CCT (8 verschillende subeenheden per ring, ingebouwd deksel) die rol in het cytosol; GroEL–GroES (E. coli) is het best bestudeerde model en wordt hier getoond. Hsp90 wordt enkel in het netwerk vermeld.',
-    en: 'Hsp70 is drawn as a nucleotide-binding domain (NBD) plus a substrate-binding domain with a helical lid; the real shape is more complex. The chaperonin is drawn in cross-section showing 2 of the 7 subunits per ring. In human cells TRiC/CCT (8 different subunits per ring, built-in lid) plays this role in the cytosol; GroEL–GroES (E. coli) is the best-studied model and is shown here. Hsp90 is only mentioned in the network.' },
+    nl: 'Hsp70 is getekend als nucleotide-bindend domein (NBD) plus substraatbindend domein met een helixdeksel; de echte vorm is complexer. Het chaperonine is in doorsnede getekend met 2 van de 7 subeenheden per ring. In menselijke cellen vervult TRiC/CCT (8 verschillende subeenheden per ring, ingebouwd deksel) die rol in het cytosol; GroEL–GroES (E. coli) is het best bestudeerde model en wordt hier getoond. Hsp90 wordt enkel in het netwerk vermeld. In bacteriën heten de tegenhangers van het 80S-ribosoom en Hsp70 het 70S-ribosoom en DnaK.',
+    en: 'Hsp70 is drawn as a nucleotide-binding domain (NBD) plus a substrate-binding domain with a helical lid; the real shape is more complex. The chaperonin is drawn in cross-section showing 2 of the 7 subunits per ring. In human cells TRiC/CCT (8 different subunits per ring, built-in lid) plays this role in the cytosol; GroEL–GroES (E. coli) is the best-studied model and is shown here. Hsp90 is only mentioned in the network. In bacteria the counterparts of the 80S ribosome and Hsp70 are the 70S ribosome and DnaK.' },
   steps: [
     ST(8000, cam(760, 420, 1600), 'Het gevaar: klonteren', 'The danger: clumping',
       'Een nieuwe keten heeft waterschuwe stukken. In de drukke cel kunnen die aan andere ketens blijven plakken.',
@@ -77,7 +77,7 @@ export default {
     ${crowd}
     <g data-node="translatie" data-color="${C.rrna}" data-label="${T2('Ribosoom (translatie)', 'Ribosome (translation)')}">
       <g transform="rotate(-90 300 250)">${ribosoom80S(300, 252, { s: .82 }).svg}</g>
-      ${T(255, 400, T2('ribosoom', 'ribosome'), { size: 22, col: C.rrna })}
+      ${T(255, 400, T2('ribosoom', 'ribosome'), { size: 22, col: C.rrna })}<g id="ch-r70">${T(250, 432, T2('mens 80S · bacterie 70S', 'human 80S · bacteria 70S'), { size: 22, col: C.muted, anchor: 'start' })}</g>
     </g>
     <g data-node="misvouwing" data-color="${C.danger}" data-nolabel><g id="ch-agg"></g></g>
     <g id="ch-hsp"></g>
@@ -124,6 +124,7 @@ export default {
         // hydrofoob segment: tussen punten 5 en 7
         cs += `<path d="${smooth(pts.slice(5, 8))}" stroke="${HYD}" stroke-width="12" fill="none" stroke-linecap="round" opacity=".9"/>`;
         $('ch-chain').innerHTML = cs;
+        $('ch-r70').setAttribute('opacity', step === 0 ? 1 : 0);   // enkel in het overzicht (de ingezoomde camera's snijden het af)
         $('ch-chainA').setAttribute('cx', 520); $('ch-chainA').setAttribute('cy', step <= 3 ? 330 : -9999);
         // Hsp70
         let hs = enz(760, 560, 130, 95, 'NBD', { fs: 24, dy: 20 }) + enz(930, 470, 78, 55, 'SBDβ', { fs: 21, dy: 30 });
@@ -131,13 +132,13 @@ export default {
         if (step === 2) hs += spark(760, 530, sub(p, .25, .5));
         if (step === 3 && p > .3 && p < .55) hs += tag(lerp(760, 600, sub(p, .3, .5)), lerp(530, 700, sub(p, .3, .5)), 'ADP', ATPC, { fs: 18, op: 1 - sub(p, .45, .55) });
         if (step === 3 && p > .4 && p < .6) hs += tag(lerp(560, 760, sub(p, .4, .5)), lerp(720, 530, sub(p, .4, .5)), 'ATP', ATPC, { fs: 18 });
-        hs += T(615, 480, 'Hsp70', { size: 30, col: C.prot, w: 800, anchor: 'end' });
+        hs += T(615, 480, 'Hsp70', { size: 30, col: C.prot, w: 800, anchor: 'end' }) + T(615, 514, T2('bacterie: DnaK', 'bacteria: DnaK'), { size: 22, col: C.muted, anchor: 'end' });
         $('ch-hsp').innerHTML = step <= 3 ? hs : hs.replace('<g ', '<g ');
-        // deksel (helixdomein), scharnier HINGE
-        const th = lerp(-70, -172, lid) * Math.PI / 180;
+        // deksel (helixdomein), scharnier HINGE; open (ATP) = weggeklapt naar rechtsonder, weg van de bindingsgroef en de keten
+        const th = lerp(60, -172, lid) * Math.PI / 180;
         const lx = HINGE[0] + Math.cos(th) * LID_L, ly = HINGE[1] + Math.sin(th) * LID_L;
         $('ch-lid').innerHTML = `<path d="M${HINGE[0]},${HINGE[1]} L${f1(lx)},${f1(ly)}" stroke="${C.prot}" stroke-width="34" stroke-linecap="round" opacity=".55"/>` +
-          `<path d="M${HINGE[0]},${HINGE[1]} L${f1(lx)},${f1(ly)}" stroke="${C.prot}" stroke-width="3" fill="none"/>` + T((HINGE[0] + lx) / 2 + (lid > .5 ? 0 : 44), (HINGE[1] + ly) / 2 - (lid > .5 ? 26 : 0), T2('deksel', 'lid'), { size: 21, col: '#c9b8ff', op: step === 0 ? 0 : step === 1 ? sub(p, 0, .2) : 1 });
+          `<path d="M${HINGE[0]},${HINGE[1]} L${f1(lx)},${f1(ly)}" stroke="${C.prot}" stroke-width="3" fill="none"/>` + T((HINGE[0] + lx) / 2 + (lid > .5 ? 0 : 52), (HINGE[1] + ly) / 2 - (lid > .5 ? 26 : 0), T2('deksel', 'lid'), { size: 21, col: '#c9b8ff', op: step === 0 ? 0 : step === 1 ? sub(p, 0, .2) : 1 });
         // co-chaperones
         let co = '';
         if (h40 > .01) co += enz(lerp(700, 850, h40), lerp(300, 380, h40), 70, 36, 'Hsp40', { col: C.prot2, fs: 20, op: h40, fillOp: .5 });
@@ -148,8 +149,8 @@ export default {
         if (step === 0) {
           lb += T(820, 250, T2('hydrofoob segment blootgesteld', 'hydrophobic segment exposed'), { size: 22, col: HYD });
         }
-        if (step === 1) lb += tag(1180, 560, T2('lage affiniteit', 'low affinity'), '#8a93a8', { fs: 20, op: sub(p, .5, .7) });
-        if (step === 2) lb += tag(1180, 560, T2('hoge affiniteit', 'high affinity'), C.ok, { fs: 20, op: sub(p, .6, .8) });
+        if (step === 1) lb += tag(1200, 660, T2('lage affiniteit', 'low affinity'), '#8a93a8', { fs: 20, op: sub(p, .5, .7) });
+        if (step === 2) lb += tag(1200, 660, T2('hoge affiniteit', 'high affinity'), C.ok, { fs: 20, op: sub(p, .6, .8) });
         if (step === 3) lb += T(1100, 250, T2('vrij → vouwen of opnieuw binden', 'free → fold or bind again'), { size: 22, col: C.chain, op: rel });
         $('ch-lbl').innerHTML = lb;
         // aggregaat (stap 0)
@@ -159,7 +160,7 @@ export default {
           ag += chain([[1250, 640], [1300, 600], [1280, 560], [1340, 540], [1330, 600], [1390, 620]], { col: '#8fbf86', w: 7, op: .8 }) + chain([[1270, 540], [1320, 580], [1370, 560], [1360, 500], [1410, 520]], { col: '#6f9a68', w: 7, op: .8 }) +
             chain([[1230, 590], [1290, 620], [1350, 640], [1400, 580]], { col: '#a3c79b', w: 7, op: .8 });
           ag += T(1320, 700, T2('aggregaat', 'aggregate'), { size: 22, col: C.danger, op: k });
-          ag += T(760, 800, T2('zeer vol: in E. coli ~300–400 g/L macromoleculen', 'very crowded: in E. coli ~300–400 g/L macromolecules'), { size: 24, col: C.muted, op: k });
+          ag += T(760, 800, T2('zeer vol: overal andere eiwitten en grote moleculen', 'very crowded: other proteins and large molecules everywhere'), { size: 24, col: C.muted, op: k });
         }
         $('ch-agg').innerHTML = ag;
 
@@ -176,8 +177,10 @@ export default {
         // ATP
         const atpOn = step === 6 ? sub(p, .05, .2) : step === 7 ? 1 : 0;
         const adp = step === 7 && p > .3;
-        for (const sx of [-1, 1]) g += tag(CX + sx * 205 - (sx * 38 * cisK), EQ - 38, adp ? 'ADP' : 'ATP', ATPC, { fs: 15, op: atpOn });
-        if (atpOn > .5) g += T(CX, EQ - 20, adp ? T2('7 ADP', '7 ADP') : T2('7 ATP', '7 ATP'), { size: 20, col: ATPC, w: 800 });
+        // ADP komt samen met GroES en het eiwit vrij zodra ATP aan de trans-ring bindt (Hartl et al., Nature 2011)
+        const nucOp = atpOn * (step === 7 ? 1 - ease(sub(p, .5, .75)) : 1);
+        for (const sx of [-1, 1]) g += tag(CX + sx * 205 - (sx * 38 * cisK), EQ - 38, adp ? 'ADP' : 'ATP', ATPC, { fs: 15, op: nucOp });
+        if (nucOp > .5) g += T(CX, EQ - 20, adp ? T2('7 ADP', '7 ADP') : T2('7 ATP', '7 ATP'), { size: 20, col: ATPC, w: 800 });
         if (step === 7) { g += tag(CX + 205, EQ + 38, 'ATP', ATPC, { fs: 15, op: sub(p, .35, .45) }) + tag(CX - 205, EQ + 38, 'ATP', ATPC, { fs: 15, op: sub(p, .35, .45) }); g += spark(CX + 205, EQ - 38, sub(p, .1, .35)); }
         // substraat
         if (step === 4) g += unf(CX, 150, 1.2);

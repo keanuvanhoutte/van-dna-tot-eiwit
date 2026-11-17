@@ -6,7 +6,8 @@ import { membraanLijn, eiwitPad } from '../../bio.js';
  * Paneel B (x 1700–3300): MAP-kinasecascade  ·  Paneel C (x 3380–5000): overzicht PTM's  ·  Paneel D (x 5100–6700): collageen */
 const BODY = [[600, 400], [520, 405], [455, 450], [425, 530], [440, 615], [500, 680], [600, 712], [720, 706], [820, 660], [880, 575], [880, 490], [835, 425], [760, 400], [705, 404], [672, 432], [650, 442], [628, 432]];
 const LID_OFF = [[760, 400], [735, 350], [662, 326], [598, 345], [580, 392]];
-const LID_ON = [[760, 400], [792, 344], [862, 318], [930, 334], [955, 378]];
+const LID_ON = [[760, 400], [790, 350], [845, 345], [905, 372], [935, 425]];   // lus weggeklapt: fosfo-Ser ligt bij de twee Arg
+const ARGS = [[812, 424], [852, 449]];
 const SER = 2;                       // index van Ser in de lus
 const KIN = [540, 180];              // kinase-positie in gebonden toestand
 const LYS = [585, 708];
@@ -101,7 +102,7 @@ export default {
       <circle data-anchor="vouwing" cx="440" cy="640" r="1" fill="none" data-pos="below"/>
     </g>
     <g id="pt-glow"></g>
-    ${[[812, 424], [872, 470]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="20" fill="${CLASSCOL['+']}" stroke="#0a1224" stroke-width="2"/>` + T(x, y + 6, 'Arg', { size: 16, col: '#0a1224', halo: false, w: 700 })).join('')}
+    ${ARGS.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="20" fill="${CLASSCOL['+']}" stroke="#0a1224" stroke-width="2"/>` + T(x, y + 6, 'Arg', { size: 16, col: '#0a1224', halo: false, w: 700 })).join('')}
     <g id="pt-argl"></g>
     <circle cx="${LYS[0]}" cy="${LYS[1]}" r="19" fill="${CLASSCOL['+']}" stroke="#0a1224" stroke-width="2"/>${T(LYS[0], LYS[1] + 6, 'Lys', { size: 14, col: '#0a1224', halo: false, w: 700 })}
     <g id="pt-lid"></g>
@@ -147,11 +148,16 @@ export default {
         if (step === 4) { ppK = ease(sub(p, 0, .3)) * (1 - ease(sub(p, .85, 1))); piK = sub(p, .35, .65); lidK = 1 - ease(sub(p, .55, .9)); glow = 1 - sub(p, .5, .7); }
         const lid = lerpPts(LID_OFF, LID_ON, lidK);
         const ser = lid[SER];
-        if (step === 3 || (step === 4 && piK === 0)) pPos = [ser[0], ser[1] - 34];
+        // het fosfaat wijst eerst omhoog; als de lus wegklapt, draait het naar de twee positieve Arg (zoutbrug)
+        if (step === 3 || (step === 4 && piK === 0)) pPos = [ser[0] + 10 * lidK, ser[1] + lerp(-34, 44, lidK)];
         let lidS = chain(lid, { w: 11 }) + `<circle cx="${f1(ser[0])}" cy="${f1(ser[1])}" r="20" fill="${CLASSCOL.p}" stroke="#0a1224" stroke-width="2"/>` + T(ser[0], ser[1] + 6, 'Ser', { size: 16, col: '#0a1224', halo: false, w: 700 });
-        if (step === 4 && piK > 0) { const k = ease(piK); lidS += phos(ser[0] + 60 + 220 * k, ser[1] - 60 - 120 * k, 18, 1 - sub(p, .8, 1)) + T(ser[0] + 60 + 220 * k, ser[1] - 90 - 120 * k, 'Pᵢ', { size: 22, op: 1 - sub(p, .8, 1) }); }
-        if (pPos) lidS += `<line x1="${f1(ser[0])}" y1="${f1(ser[1] - 18)}" x2="${f1(pPos[0])}" y2="${f1(pPos[1] + 14)}" stroke="#fff" stroke-width="3" opacity="${step === 2 ? f1(sub(p, .5, .55)) : 1}"/>` + phos(pPos[0], pPos[1], 18) +
-          T(pPos[0] + 36, pPos[1] - 10, '2−', { size: 20, col: PHOS, w: 800, op: step >= 3 || p > .55 ? 1 : 0 });
+        if (step === 4 && piK > 0) { const k = ease(piK); const px = ser[0] + lerp(10, 280, k), py = ser[1] + lerp(44, -180, k); lidS += phos(px, py, 18, 1 - sub(p, .8, 1)) + T(px, py - 30, 'Pᵢ', { size: 22, op: 1 - sub(p, .8, 1) }); }
+        if (pPos) {
+          const dx = pPos[0] - ser[0], dy = pPos[1] - ser[1], d = Math.hypot(dx, dy) || 1;
+          if (lidK > .5) lidS += ARGS.map(([x, y]) => `<line x1="${f1(pPos[0])}" y1="${f1(pPos[1])}" x2="${x}" y2="${y}" stroke="#fff" stroke-width="2.5" stroke-dasharray="5 5" opacity="${f1((lidK - .5) * 2)}"/>`).join('');
+          lidS += `<line x1="${f1(ser[0] + dx / d * 18)}" y1="${f1(ser[1] + dy / d * 18)}" x2="${f1(pPos[0] - dx / d * 14)}" y2="${f1(pPos[1] - dy / d * 14)}" stroke="#fff" stroke-width="3" opacity="${step === 2 ? f1(sub(p, .5, .55)) : 1}"/>` + phos(pPos[0], pPos[1], 18) +
+            T(pPos[0] + 36, pPos[1] - 10, '2−', { size: 20, col: PHOS, w: 800, op: step >= 3 || p > .55 ? 1 : 0 });
+        }
         $('pt-lid').innerHTML = lidS;
         $('pt-glow').innerHTML = glow > .01 ? `<circle cx="650" cy="408" r="30" fill="rgba(255,194,71,.3)" stroke="#ffc247" stroke-width="4" opacity="${f1(glow)}"/>` + T(560, 330, T2('actieve plaats vrij', 'active site exposed'), { size: 20, col: '#ffc247', op: glow }) : '';
         // uitleg-labels bij paneel A

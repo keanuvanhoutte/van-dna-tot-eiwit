@@ -1,7 +1,7 @@
 import { C, T2, svgOpen, FULL, cam, sub, ease, lerp, f1 } from '../../kit.js';
 import { T } from './_b_kit.js';
-import { DEST, icon, beads, btn } from './_fate.js';
-import { blaasje, eiwitPad } from '../../bio.js';
+import { DEST, icon, beads, btn, at } from './_fate.js';
+import { eiwitPad, membraanPts } from '../../bio.js';
 const prot = (x, y, rx, ry, sd, col = C.chain, fo = .25) => { const d = eiwitPad(x, y, rx, ry, sd, .09); return `<path d="${d}" fill="#0b1224" fill-opacity=".5"/><path d="${d}" fill="${col}" fill-opacity="${fo}" stroke="${col}" stroke-width="3" stroke-linejoin="round"/>`; };
 
 /*
@@ -13,6 +13,12 @@ const L3 = (nl, en) => ({ nl, en });
 const PX = DEST.perox, RECV = '#ffc247', DOCK = C.prot, FA = '#e8c37a';
 const PC = [1150, 470], PR = 210, GATE = [PC[0] - PR, PC[1]];
 const START = [420, 470], INSIDE = [1130, 530];
+/* membraan van het peroxisoom als boog met een opening bij de aanmeerplaats (half = halve breedte van de opening in px) */
+const memArc = half => { const g = half / PR, P = []; for (let i = 0; i <= 120; i++) { const a = Math.PI + g + (2 * Math.PI - 2 * g) * i / 120; P.push([PC[0] + PR * Math.cos(a), PC[1] + PR * Math.sin(a)]); } return P; };
+/* aanmeerplaats (PEX13/PEX14): twee eiwitten in het membraan die opzij wijken (open = 0 … 1) als er iets doorheen gaat */
+const DOCKY = o => 40 + 42 * o;
+/* terugweg van de drager: van binnen via de aanmeerplaats terug naar het cytosol (niet door de lipiden) */
+const BACK = t => [t, [GATE[0] + 60, GATE[1]], [GATE[0] - 70, GATE[1]], [760, 300]];
 
 /* gevouwen eiwit: twee delen (een complex van twee) met aan één deel de staart S-K-L */
 function cargo(x, y, { op = 1, letters = 0, two = true } = {}) {
@@ -36,8 +42,8 @@ export default {
   org: { nl: 'mens', en: 'human' },
   legend: [[PX, L3('peroxisoom en het label S-K-L', 'peroxisome and the S-K-L label')], [C.chain, L3('gevouwen eiwit (hier een paar van twee)', 'folded protein (here a pair of two)')], [RECV, L3('drager (receptor PEX5)', 'carrier (receptor PEX5)')], [DOCK, L3('aanmeerplaats in het membraan', 'docking site in the membrane')], [FA, L3('zeer lange vetzuren', 'very long fatty acids')]],
   simplified: {
-    nl: 'Schematisch en niet op schaal. Hoe de drager precies door het membraan gaat, is nog niet helemaal bekend; hier schuift hij gewoon door een aanmeerplaats. Er bestaat ook een tweede, zeldzamer label (vooraan in het eiwit) met een eigen hulpdrager. De drager wordt voor de terugweg met een klein label (ubiquitine) gemerkt; dat is niet getekend.',
-    en: 'Schematic and not to scale. Exactly how the carrier crosses the membrane is not yet fully known; here it simply slides through a docking site. There is also a second, rarer label (at the start of the protein) with its own helper carrier. For the way back the carrier is marked with a small tag (ubiquitin); that is not drawn.' },
+    nl: 'Schematisch en niet op schaal. Hoe de drager precies door het membraan gaat, is nog niet helemaal bekend; hier gaat hij door een opening tussen de eiwitten van de aanmeerplaats, heen en terug. Er bestaat ook een tweede, zeldzamer label (vooraan in het eiwit) met een eigen hulpdrager. De drager wordt voor de terugweg met een klein label (ubiquitine) gemerkt; dat is niet getekend.',
+    en: 'Schematic and not to scale. Exactly how the carrier crosses the membrane is not yet fully known; here it passes through an opening between the proteins of the docking site, in and back out. There is also a second, rarer label (at the start of the protein) with its own helper carrier. For the way back the carrier is marked with a small tag (ubiquitin); that is not drawn.' },
   steps: [
     { dur: 7500, cam: FULL, title: L3('Het peroxisoom breekt lange vetzuren af', 'The peroxisome breaks down long fatty acids'),
       text: L3('Een peroxisoom is een klein blaasje met één membraan. Het breekt onder meer zeer lange vetzuren af.', 'A peroxisome is a small vesicle with one membrane. Among other things it breaks down very long fatty acids.') },
@@ -55,12 +61,9 @@ export default {
       text: L3('Werkt een bouwgen van het peroxisoom niet, dan stapelen zeer lange vetzuren op. Dat kan al bij baby’s ernstig zijn.', 'If a building gene of the peroxisome fails, very long fatty acids pile up. This can already be severe in babies.') },
   ],
   svg() {
-    // één membraan (lipidedubbellaag) rond het lumen; aanmeerplaats (PEX13/PEX14) als eiwitten in het membraan
-    let mem = blaasje(PC[0], PC[1], PR, { w: 24, lumen: 'rgba(95,211,230,.07)', rand: PX });
-    const dockSvg = prot(GATE[0], GATE[1] - 40, 22, 30, 14, DOCK, .45) + prot(GATE[0], GATE[1] + 40, 22, 30, 13, DOCK, .45);
+    // één membraan (lipidedubbellaag) rond het lumen; aanmeerplaats (PEX13/PEX14) als eiwitten in het membraan (getekend in update)
     return svgOpen() + `
-    <g id="px-org">${mem}
-      ${dockSvg}</g>
+    <g id="px-org"><circle cx="${PC[0]}" cy="${PC[1]}" r="${PR}" fill="rgba(95,211,230,.07)"/><g id="px-mem"></g></g>
     ${T(PC[0], PC[1] + PR + 50, T2('peroxisoom', 'peroxisome'), { size: 30, col: PX, w: 700 })}
     ${T(80, 820, T2('cytosol', 'cytosol'), { size: 28, anchor: 'start', col: C.muted })}
     <g id="px-in"></g><g id="px-mv"></g><g id="px-fx"></g>
@@ -78,6 +81,7 @@ export default {
   },
   init(svg) {
     const $ = id => svg.getElementById(id);
+    let oPrev = -1;
     return {
       update(t, s) {
         const { step, p } = s;
@@ -96,19 +100,29 @@ export default {
         $('px-org').setAttribute('opacity', f1(1 - .65 * kZw));
         // het eiwit en de drager
         let mv = '';
-        const cx = lerp(START[0], INSIDE[0], kMove), cy = lerp(START[1], INSIDE[1], kMove) - 30 * Math.sin(Math.PI * kMove);
+        const cx = lerp(START[0], INSIDE[0], kMove), cy = lerp(START[1], INSIDE[1], ease(sub(kMove, .8, 1)));   // recht door de aanmeerplaats
         const cOp = 1 - kZw;
         mv += cargo(cx, cy, { op: cOp, letters: kLet * (1 - kRec) });
-        // drager: komt van boven, klemt de staart, gaat mee naar binnen en daarna terug
+        // drager: komt van boven, klemt de staart, gaat mee naar binnen en daarna via de aanmeerplaats terug
         const tail = [cx + 126, cy - 4];
         let rx = lerp(START[0] + 140, tail[0], kRec), ry = lerp(200, tail[1], kRec);
-        if (kBack > 0) { rx = lerp(tail[0], 760, kBack); ry = lerp(tail[1], 250, kBack) - 60 * Math.sin(Math.PI * kBack); }
+        if (kBack > 0) { const B = BACK(tail), Lb = B.reduce((a, q, i) => i ? a + Math.hypot(q[0] - B[i - 1][0], q[1] - B[i - 1][1]) : 0, 0); [rx, ry] = at(B, Lb * kBack); }
+        // aanmeerplaats gaat open als het eiwit (stap 3) of de drager (stap 4) erdoor gaat
+        const win = (k, a, b, c, d) => ease(sub(k, a, b)) * (1 - ease(sub(k, c, d)));
+        const open = step === 3 ? win(kMove, .38, .55, .86, .99) : step === 4 ? win(kBack, .12, .3, .62, .8) : 0;
+        if (Math.abs(open - oPrev) > .004) {
+          oPrev = open;
+          const dy = DOCKY(open);
+          $('px-mem').innerHTML = membraanPts(memArc(dy + 24), { w: 24 }) +
+            `<path d="${(() => { const P = memArc(dy + 24); return 'M' + P.map(q => { const a = Math.atan2(q[1] - PC[1], q[0] - PC[0]); return `${f1(PC[0] + (PR + 14) * Math.cos(a))},${f1(PC[1] + (PR + 14) * Math.sin(a))}`; }).join(' L'); })()}" stroke="${PX}" stroke-width="2.4" fill="none" opacity=".9"/>` +
+            prot(GATE[0] + 2, GATE[1] - dy, 22, 30, 14, DOCK, .45) + prot(GATE[0] + 2, GATE[1] + dy, 22, 30, 13, DOCK, .45);
+        }
         mv += receptor(rx, ry, ph(2, 0, .1) * (1 - kZw) * (1 - ph(5, 0, .3)));
         if (step === 2) mv += T(rx + 10, ry - 60, T2('drager', 'carrier'), { size: 26, col: RECV, op: ease(sub(p, .3, .6)) });
-        if (step === 4) mv += T(rx, ry - 60, T2('terug', 'back'), { size: 26, col: RECV, op: ease(sub(p, .4, .7)) });
+        if (step === 4) mv += T(rx - 62, ry + 10, T2('terug', 'back'), { size: 26, col: RECV, anchor: 'end', op: ease(sub(p, .4, .7)) });
         $('px-mv').innerHTML = mv;
         let fx = '';
-        if (step === 3) fx += T(GATE[0], GATE[1] - 90, T2('gevouwen erdoor', 'through, folded'), { size: 26, col: C.text, op: ease(sub(p, .3, .6)) * (1 - ease(sub(p, .85, 1))) });
+        if (step === 3) fx += T(GATE[0] - 40, GATE[1] - 160, T2('gevouwen erdoor', 'through, folded'), { size: 26, col: C.text, op: ease(sub(p, .3, .6)) * (1 - ease(sub(p, .85, 1))) });
         $('px-fx').innerHTML = fx;
         $('px-cmp').setAttribute('opacity', f1(kCmp));
       },

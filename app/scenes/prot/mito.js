@@ -139,7 +139,7 @@ export default {
         if (k0 > .01) {
           bg += `<g opacity="${f1(k0)}"><circle cx="1180" cy="680" r="46" fill="none" stroke="${C.dna}" stroke-width="7"/>${ribosoomKlein(1100, 610, { s: 1.6 })}${ribosoomKlein(1150, 600, { s: 1.6, rot: 20 })}` + T(1180, 692, '13', { size: 32, col: C.text, w: 800 }) +
             T(1250, 690, T2('eigen DNA: 13 eiwitten', 'own DNA: 13 proteins'), { size: 26, anchor: 'start', col: C.dna2 });
-          for (let i = 0; i < 6; i++) bg += `<path d="${eiwitPad(700 + i * 80, 150 + (i % 2) * 40, 21, 18, 40 + i, .1)}" fill="rgba(127,220,106,.25)" stroke="${C.chain}" stroke-width="3"/>`;
+          for (let i = 0; i < 6; i++) bg += `<path d="${eiwitPad(680 + i * 72, 150 + (i % 2) * 40, 21, 18, 40 + i, .1)}" fill="rgba(127,220,106,.25)" stroke="${C.chain}" stroke-width="3"/>`;
           bg += T(900, 250, T2('> 1000 eiwitten van buiten', '> 1000 proteins from outside'), { size: 26, col: C.chain }) + arrow(900, 270, 900, OM - 40, C.chain, 4) + '</g>';
         }
         // + en − over de binnenmembraan (stap 5 en later)

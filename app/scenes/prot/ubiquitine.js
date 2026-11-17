@@ -8,7 +8,8 @@ const LYS_OFF = [-92, 52];
 const UBOFF = [[-52, -26], [-100, -58], [-146, -92], [-190, -128]];
 const REC = [[808, 318], [848, 282], [896, 262], [946, 258]];    // ubiquitinereceptoren op het 19S-deeltje
 const CH_Y = 420, IN_X = 960, OUT_X = 1432;                        // kanaal door ATPase-ring en 20S
-const BETA = [[1180, 402, 'β1'], [1275, 440, 'β2'], [1180, 440, 'β5']];
+/* elke β-ring heeft drie soorten actieve plaatsen (β1, β2, β5): samen 6 per 20S (Groll et al., Nature 1997) */
+const BETA = [[1160, 392, 'β1', -1], [1204, 392, 'β2', -1], [1182, 450, 'β5', 1], [1256, 450, 'β1', 1], [1300, 450, 'β2', 1], [1278, 392, 'β5', -1]];
 const PEP = [[5, 1750, 360], [8, 1775, 440], [3, 1760, 510], [6, 1790, 300], [4, 1800, 560], [7, 1785, 385]];
 
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
@@ -30,7 +31,7 @@ export default {
     ST(7500, cam(880, 440, 1760), 'Elk eiwit wordt ooit afgebroken', 'Every protein is eventually broken down',
       'Beschadigde of overbodige eiwitten krijgen een label (het eiwitje ubiquitine) en worden in stukjes geknipt.',
       'Damaged or unneeded proteins get a label, the small protein ubiquitin, and are then cut into pieces.'),
-    ST(8000, cam(270, 280, 820), 'Enzym 1 laadt het label', 'Enzyme 1 loads the label',
+    ST(8000, cam(340, 320, 920), 'Enzym 1 laadt het label', 'Enzyme 1 loads the label',
       'Drie enzymen (E1, E2, E3) hangen het label aan. E1 neemt het op met energie uit ATP.',
       'Three enzymes (E1, E2, E3) attach the label. E1 picks it up using energy from ATP.'),
     ST(7500, cam(330, 432, 900), 'Doorgeven aan enzym 2', 'Passing it to enzyme 2',
@@ -173,7 +174,7 @@ export default {
           if (step === 7) ss += spark(1000, 330, (p * 3) % 1) + tag(1000, 290, 'ATP', ATPC, { fs: 17, op: sub(p, .3, .4) }) + T(1000, 250, T2('ontvouwen', 'unfolding'), { size: 20, col: '#2cc6a8', op: sub(p, .35, .5) });
         }
         $('ub-sub').innerHTML = ss;
-        $('ub-subA').setAttribute('cx', f1(S[0] + 150)); $('ub-subA').setAttribute('cy', f1(S[1] - (step < 6 ? 10 : 9999)));
+        $('ub-subA').setAttribute('cx', f1(S[0] + 20)); $('ub-subA').setAttribute('cy', f1(S[1] - (step < 6 ? 95 : 9999)));
 
         /* E1 */
         let e1 = enz(E1[0], E1[1], 120, 66, 'E1', { fs: 30, dy: -18 });
@@ -220,7 +221,7 @@ export default {
         /* actieve plaatsen in de β-ringen */
         const actOn = step === 8 ? 1 : step === 0 ? 1 : 0;
         $('ub-beta').innerHTML = BETA.map(([x, y, l]) => `<circle cx="${x}" cy="${y}" r="9" fill="${C.danger}" opacity="${actOn ? 1 : .55}"/>`).join('') +
-          (step === 8 ? T(1180, 375, 'β1 · β5', { size: 18, col: C.danger, w: 700 }) + T(1275, 480, 'β2', { size: 18, col: C.danger, w: 700 }) + T(1236, 650, T2('actieve plaats: Thr aan het N-uiteinde van β1, β2, β5', 'active site: N-terminal Thr of β1, β2, β5'), { size: 19, col: '#c9d2e4' }) : '');
+          (step === 8 ? BETA.map(([x, y, l, d]) => T(x, y + (d < 0 ? -18 : 32), l, { size: 18, col: C.danger, w: 700 })).join('') + T(1236, 650, T2('actieve plaats: Thr aan het N-uiteinde van β1, β2, β5', 'active site: N-terminal Thr of β1, β2, β5'), { size: 19, col: '#c9d2e4' }) : '');
 
         /* peptiden en aminozuren */
         let pp = '', aa = '';
@@ -240,7 +241,7 @@ export default {
         $('ub-pep').innerHTML = pp;
         if (step === 9) aa += T(1760, 780, T2('aminozuren', 'amino acids'), { size: 27, col: C.chain, op: sub(p, .4, .6) });
         $('ub-aa').innerHTML = aa + (step === 9 ? `<rect x="1640" y="560" width="220" height="200" fill="transparent"/>` : '');
-        $('ub-aaA').setAttribute('cx', 1660); $('ub-aaA').setAttribute('cy', step === 9 && p > .45 ? 720 : -9999);
+        $('ub-aaA').setAttribute('cx', 1480); $('ub-aaA').setAttribute('cy', step === 9 && p > .45 ? 730 : -9999);
 
         /* misgevouwen eiwit (overzicht) */
         let mis = '';

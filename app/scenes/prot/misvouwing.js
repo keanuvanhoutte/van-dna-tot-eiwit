@@ -1,9 +1,11 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, panel, phos, ub, blob } from './_b_kit.js';
+import { bilayer, knop } from './_fate.js';
 
 /* Panelen naast elkaar: A (0–1600) kwaliteitscontrole & aggregatie · B (1700–3300) kinetiek · C (3400–5000) cross-β
  * D (5100–6700) ziekten · E (6800–8400) prionen · F (8500–10100) UPR */
 const HYD = '#ff9f43', BAD = '#ff6b6b', SC = '#e07b5a';
+const ERY = 422, ERW = 44, AX = 9800, AVR = 74;      // ER-membraan (paneel F) en het COPII-blaasje van ATF6
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 
 const native = (x, y, s = 1, op = 1) => `<g opacity="${f1(op)}">${blob(f1(x), f1(y), f1(62 * s), f1(50 * s), { fill: 'rgba(127,220,106,.2)', stroke: C.chain, sw: 4, seed: 105 })}` +
@@ -64,7 +66,7 @@ export default {
       cd += node ? `<g data-node="${node}" data-color="${C.chain}" data-label="${T2('Aβ en α-synucleïne zijn IDP\'s', 'Aβ and α-synuclein are IDPs')}">${b}<circle data-anchor="${node}" cx="${cx}" cy="${y0 + 4}" r="1" fill="none"/></g>` : b;
     });
     /* paneel F: ER-membraan */
-    const erm = `<rect x="8540" y="400" width="1520" height="44" fill="${C.mem}" opacity=".22"/><line x1="8540" y1="400" x2="10060" y2="400" stroke="${C.mem}" stroke-width="3"/><line x1="8540" y1="444" x2="10060" y2="444" stroke="${C.mem}" stroke-width="3"/>` +
+    const erm = `<rect x="8540" y="444" width="1520" height="420" fill="rgba(201,165,116,.06)"/><g id="mf-erm">${bilayer(8540, 10060, ERY, { h: ERW })}</g>` +
       T(8560, 382, 'cytosol', { size: 25, col: C.muted, anchor: 'start' }) + T(8560, 482, T2('ER-lumen', 'ER lumen'), { size: 25, col: C.mem, anchor: 'start' });
     return svgOpen(arrowDefs('mf', { m: C.muted, g: C.ok, r: BAD, w: '#fff' })) + `
     <g id="mf-a"></g>
@@ -83,6 +85,7 @@ export default {
   init(svg) {
     const $ = id => svg.getElementById(id);
     const sig = (u, m = .5, k = 13) => 1 / (1 + Math.exp(-(u - m) * k));
+    let ermKey = '';
     return {
       update(t, s) {
         const { step, p } = s;
@@ -193,16 +196,38 @@ export default {
           for (let i = 0; i < 9; i++) { const x = 8700 + i * 150 + (i % 2) * 40, y = 640 + (i % 3) * 50; up += `<g opacity="${f1(clamp(unf * 9 - i))}">` + chain([[x - 40, y], [x - 15, y - 25], [x + 10, y + 10], [x + 40, y - 18]], { w: 6, dash: '10 5' }) + '</g>'; }
           up += T(9300, 820, T2('ongevouwen eiwitten hopen zich op', 'unfolded proteins pile up'), { size: 25, col: HYD, op: unf });
           const SENS = [[8800, 'IRE1'], [9300, 'PERK'], [9800, 'ATF6']];
+          // ATF6 reist in een COPII-blaasje naar het Golgi (daar knippen S1P/S2P): het blaasje knopt af uit het ER-membraan
+          const kBud = ease(sub(q, .66, .84)), kGo = ease(sub(q, .84, .97));
+          const bud = kBud > 0 ? knop([AX, ERY], [0, -1], AVR, kBud, { hole: 'none', w: ERW, gap: 30, lumen: 'rgba(201,165,116,.10)' }) : null;
+          let gap = null;
+          if (bud) { const rho = bud.c[1] - bud.top[1], d = ERY - bud.c[1]; if (d < rho) { const h = Math.sqrt(rho * rho - d * d); gap = [AX - h, AX + h]; } }
+          const key = gap ? `${f1(gap[0])}` : '';
+          if (key !== ermKey) { ermKey = key; $('mf-erm').innerHTML = gap ? bilayer(8540, gap[0], ERY, { h: ERW }) + bilayer(gap[1], 10060, ERY, { h: ERW }) : bilayer(8540, 10060, ERY, { h: ERW }); }
+          const V = [60 * kGo, -10 * kGo];
+          if (bud) up += `<g transform="translate(${f1(V[0])} ${f1(V[1])})">${bud.svg}</g>`;
           SENS.forEach(([x, lab], i) => {
             const a2 = act[i];
-            const move = i === 2 ? ease(sub(q, .7, .85)) : 0;
-            const sx = x + 170 * move, sy = -110 * move;
-            up += `<g transform="translate(0 ${f1(sy)})" opacity="${f1(1 - move * .85)}"><rect x="${sx - 14}" y="392" width="28" height="60" rx="8" fill="rgba(155,123,255,.45)" stroke="${C.prot}" stroke-width="3"/>` +
-              enz(sx, 500, 46, 34, '', { col: C.prot }) + enz(sx, 330, 60, 44, '', { col: C.prot, fillOp: a2 > .5 ? .55 : .25 }) + (i < 2 ? enz(sx + 70 * a2, 330, 60, 44, '', { col: C.prot, op: a2, fillOp: .55 }) + enz(sx + 70 * a2, 500, 46, 34, '', { col: C.prot, op: a2 }) : '') +
-              T(sx, 262, lab, { size: 27, col: '#c9b8ff', w: 800 }) + '</g>';
+            const tm = (xx, o = 1) => `<rect x="${f1(xx - 14)}" y="${ERY - 30}" width="28" height="60" rx="8" fill="rgba(155,123,255,.45)" stroke="${C.prot}" stroke-width="3" opacity="${f1(o)}"/>`;
+            if (i < 2) {
+              // dimeer: elk monomeer heeft een luminaal deel, één transmembraanhelix en een cytosolisch deel
+              up += tm(x) + enz(x, 500, 46, 34, '', { col: C.prot }) + enz(x, 330, 60, 44, '', { col: C.prot, fillOp: a2 > .5 ? .55 : .25 }) +
+                (a2 > .01 ? tm(x + 70 * a2, a2) + enz(x + 70 * a2, 330, 60, 44, '', { col: C.prot, op: a2, fillOp: .55 }) + enz(x + 70 * a2, 500, 46, 34, '', { col: C.prot, op: a2 }) : '') +
+                T(x, 262, lab, { size: 27, col: '#c9b8ff', w: 800 });
+            } else {
+              // ATF6 zit in de wand van de knop: luminaal deel in het blaasje, cytosolisch deel erbuiten
+              // plek op de knop: draait tijdens het afknoppen naar rechtsboven, zodat het cytosolische deel naast het blaasje uitsteekt
+              let P = [x, ERY], ang = 0;
+              if (bud) {
+                const rho = bud.c[1] - bud.top[1], a = (-90 + 65 * kBud) * Math.PI / 180, Q = [bud.c[0] + rho * Math.cos(a), bud.c[1] + rho * Math.sin(a)], w = Math.min(1, kBud / .1);
+                P = [lerp(x, Q[0], w) + V[0], lerp(ERY, Q[1], w) + V[1]]; ang = 65 * kBud;
+              }
+              up += `<g transform="translate(${f1(P[0])} ${f1(P[1])}) rotate(${f1(ang)}) translate(${-x} ${-ERY})">` + tm(x) + enz(x, 500, 46, 34, '', { col: C.prot }) + enz(x, 330, 60, 44, '', { col: C.prot, fillOp: a2 > .5 ? .55 : .25 }) + '</g>' +
+                T(x, 262, lab, { size: 27, col: '#c9b8ff', w: 800, op: 1 - kBud });
+              if (bud) up += T(bud.c[0] + V[0] - AVR - 40, bud.c[1] + V[1] - 30, T2('COPII-blaasje met ATF6', 'COPII vesicle with ATF6'), { size: 22, col: C.mem, anchor: 'end', op: kGo });
+            }
             // BiP gebonden → los
-            bip += enz(sx - 50 + (-80 * rel), 540 + 60 * rel, 40, 26, 'BiP', { col: C.prot2, fs: 19, fillOp: .6 });
-            if (i < 2) up += phos(sx + 35, 300, 16, a2);
+            bip += enz(x - 50 + (-80 * rel), 540 + 60 * rel, 40, 26, 'BiP', { col: C.prot2, fs: 19, fillOp: .6 });
+            if (i < 2) up += phos(x + 35, 300, 16, a2);
           });
           // uitkomsten
           up += T(8800, 212, T2('XBP1-mRNA splicen', 'splice XBP1 mRNA'), { size: 23, col: C.text, op: act[0] });

@@ -242,8 +242,8 @@ export default {
           if (step === 6) { mode = 'psi'; psi = -45 + 180 * Math.sin(p * Math.PI * 2) * ease(sub(p, 0, .15)); }
           if (step === 7) {
             mode = 'clash';
-            // pad: α-helix → β → verboden (φ > 0 met grote ψ) → terug
-            const path = [[-60, -45], [-120, 130], [60, -120], [0, 0], [-60, -45]];
+            // pad: α-helix → β → verboden (φ > 0 met grote ψ) → eindigt op een verboden hoek, zodat het eindbeeld de botsing toont
+            const path = [[-60, -45], [-120, 130], [0, 0], [60, -120]];
             const k = clamp(p) * (path.length - 1), i = Math.min(path.length - 2, Math.floor(k)), f = ease(k - i);
             phi = lerp(path[i][0], path[i + 1][0], f); psi = lerp(path[i][1], path[i + 1][1], f);
           }

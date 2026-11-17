@@ -241,7 +241,7 @@ export default {
             else if (u < .8) { c = pl(SEC, (u - .15) / .65); kn += ves(c, CR, sec); ep = add(c, [0, 14]); }
             else {
               const b = knop(MP, NP, CR, 1 - sub(u, .8, .9), HOLE.out, sec); kn += b.svg; c = b.c;
-              ep = mix(mix(add(c, [0, 14]), [1566, MP[1] + 14], sub(u, .84, .94)), [1566, 250 + i * 115], sub(u, .93, 1));
+              ep = mix(mix(add(c, [0, 14]), [1566, MP[1] + 14], sub(u, .84, .94)), [1583 - 6 * (i % 2), 250 + i * 115], sub(u, .93, 1));   // los in de ruimte buiten de cel, niet tegen het membraan
             }
             g += enzyme(...ep, { tag: 0, op: sec });
           }

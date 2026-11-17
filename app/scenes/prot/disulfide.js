@@ -120,7 +120,9 @@ export default {
         cs += cys(B[0], B[1], step <= 1 || step === 5 ? 'Cys 58' : '', bondAB < .5 ? 'R' : '');
         if (showC) cs += cys(Cc[0], Cc[1], 'Cys 30', bondAC < .5 ? 'R' : '', 1);
         $('ds-chain').innerHTML = cs;
-        $('ds-chainA').setAttribute('cx', f1(pts[10][0] + 40)); $('ds-chainA').setAttribute('cy', f1(pts[10][1] - 20));
+        // label in de lus onder de brug (niet op PDI)
+        const anc = step >= 2 ? [(A[0] + B[0]) / 2, A[1] + 62] : [pts[10][0] + 40, pts[10][1] - 20];
+        $('ds-chainA').setAttribute('cx', f1(anc[0])); $('ds-chainA').setAttribute('cy', f1(anc[1]));
         let bd = '';
         if (bondAB > .01) bd += `<line x1="${f1(A[0] + 24)}" y1="${f1(A[1])}" x2="${f1(B[0] - 24)}" y2="${f1(B[1])}" stroke="${SS}" stroke-width="10" opacity="${f1(bondAB)}"/>` + T((A[0] + B[0]) / 2, A[1] - 16, 'S–S', { size: 22, col: SS, w: 800, op: bondAB });
         if (bondAC > .01) bd += `<line x1="${f1(A[0] + 10)}" y1="${f1(A[1] + 22)}" x2="${f1(Cc[0] - 10)}" y2="${f1(Cc[1] - 22)}" stroke="${C.danger}" stroke-width="10" opacity="${f1(bondAC)}"/>` + T((A[0] + Cc[0]) / 2 - 50, (A[1] + Cc[1]) / 2, T2('fout', 'wrong'), { size: 20, col: C.danger, w: 800, op: bondAC });

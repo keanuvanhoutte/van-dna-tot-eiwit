@@ -45,13 +45,37 @@ function fagofoor(cx, cy, a0, a1, op = 1) {
   const D = 'M' + P.map(q => f1(q[0]) + ',' + f1(q[1])).join(' L') + 'Z';
   return `<g opacity="${f1(op)}"><path d="${D}" fill="rgba(201,165,116,.14)"/>${membraanPts(P, { w: MW, closed: true })}</g>`;
 }
-/* lysosoom: één membraan, knipenzymen binnen, protonpompen in het membraan */
-function lysosoom(x, y, r, op = 1, enzymes = 1) {
+/* lysosoom: één membraan, knipenzymen binnen, protonpompen (V-ATPase) en transporteiwitten in het membraan (rechterkant) */
+const RF = 240;                                                     // het verteerblaasje na het versmelten
+const A0 = [FUSE[0] - 120, OC[1]], L0 = [FUSE[0] - 120 + RO + LR + 11, OC[1]];   // autofagosoom en lysosoom raken elkaar
+const VA = [-1.3, -.5, .3], TR = [-.9, -.1, .7], TRC = '#b48cff';
+const ENZ = [[-.4, -.3], [.25, -.4], [.45, .15], [-.1, .3], [-.45, .25]];
+const ENZF = [-40, -15, 10, 35, 60].map(a => a * Math.PI / 180), ENZIN = [70, 110, 60, 100, 85];
+const mix = (a, b, k) => [lerp(a[0], b[0], k), lerp(a[1], b[1], k)];
+const enzym = (x, y, i, op = 1) => `<path d="${eiwitPad(x, y, 13, 10, 200 + i, .12)}" fill="${LYS}" fill-opacity="${f1(.7 * op)}"/>`;
+function lysProt(c, r, op = 1) {
   if (op <= .01) return '';
-  let g = blaasje(x, y, r, { w: 12, lumen: 'rgba(255,107,107,.12)', rand: LYS });
-  if (enzymes > .01) g += `<g opacity="${f1(enzymes)}">` + [[-.4, -.3], [.25, -.4], [.45, .15], [-.1, .3], [-.45, .25]].map(([dx, dy], i) => { const d = eiwitPad(x + dx * r, y + dy * r, 13, 10, 200 + i, .12); return `<path d="${d}" fill="${LYS}" fill-opacity=".7"/>`; }).join('') + '</g>';
-  for (const a of [-2.2, -.9, .45]) g += vATPase(x + Math.cos(a) * r, y + Math.sin(a) * r, a, { s: .6, k: 0 });
+  let g = `<g opacity="${f1(op)}">`;
+  for (const a of VA) g += vATPase(c[0] + Math.cos(a) * r, c[1] + Math.sin(a) * r, a, { s: .6, k: 0 });
+  for (const [j, a] of TR.entries()) g += `<g transform="translate(${f1(c[0] + Math.cos(a) * r)} ${f1(c[1] + Math.sin(a) * r)}) rotate(${f1(a * 180 / Math.PI)})"><path d="${eiwitPad(0, 0, 15, 9, 500 + j, .08)}" fill="${TRC}" fill-opacity=".8" stroke="#0a1224" stroke-width="1.5"/></g>`;
+  return g + '</g>';
+}
+function lysosoom(c, r, op = 1) {
+  if (op <= .01) return '';
+  const g = blaasje(c[0], c[1], r, { w: 12, lumen: 'rgba(255,107,107,.12)', rand: LYS }) + ENZ.map(([dx, dy], i) => enzym(c[0] + dx * r, c[1] + dy * r, i)).join('') + lysProt(c, r);
   return `<g opacity="${f1(op)}">${g}</g>`;
+}
+/* versmelten via contact: de omtrek van twee overlappende cirkels (buitenmembraan van het autofagosoom c1/r1 en het lysosoom
+ * c2/r2), met een afgeronde hals (de fusieporie wordt breder). k = 0 … 1: de hals vloeit open tot één rond blaasje. */
+function fusieOmtrek(c1, r1, c2, r2, k, off = 0) {
+  const d = Math.hypot(c2[0] - c1[0], c2[1] - c1[1]), ux = d > .01 ? (c2[0] - c1[0]) / d : 1, uy = d > .01 ? (c2[1] - c1[1]) / d : 0;
+  const tr = d > .01 ? (d * d + r1 * r1 - r2 * r2) / (2 * d) : 0, O = [c1[0] + ux * tr, c1[1] + uy * tr];   // punt op de radicaallijn (in beide cirkels)
+  const hit = (c, r, u) => { const dx = c[0] - O[0], dy = c[1] - O[1], b = u[0] * dx + u[1] * dy, q = b * b - dx * dx - dy * dy + r * r; return q > 0 ? Math.max(0, b + Math.sqrt(q)) : 0; };
+  return Array.from({ length: 120 }, (_, i) => {
+    const a = i / 120 * 2 * Math.PI, u = [Math.cos(a), Math.sin(a)], t1 = hit(c1, r1, u), t2 = hit(c2, r2, u);
+    const R = lerp(Math.pow(t1 ** 6 + t2 ** 6, 1 / 6), Math.max(t1, t2), k) + off;
+    return [O[0] + u[0] * R, O[1] + u[1] * R];
+  });
 }
 export default {
   id: 'autofagie',
@@ -60,7 +84,7 @@ export default {
   time: { nl: 'schematisch', en: 'schematic' },
   org: { nl: 'mens', en: 'human' },
   legend: [[PHAG, L3('membraan van het zakje (fagofoor → autofagosoom)', 'membrane of the pouch (phagophore → autophagosome)')], ['#a0968c', L3('kapot mitochondrion (gezwollen, twee membranen)', 'damaged mitochondrion (swollen, two membranes)')], [AGG, L3('klont eiwitten', 'protein clump')],
-    [LYS, L3('lysosoom', 'lysosome')], [BB, L3('bouwstenen (o.a. aminozuren)', 'building blocks (e.g. amino acids)')]],
+    [LYS, L3('lysosoom', 'lysosome')], [TRC, L3('transporteiwit (bouwstenen naar buiten)', 'transporter (building blocks out)')], [BB, L3('bouwstenen (o.a. aminozuren)', 'building blocks (e.g. amino acids)')]],
   simplified: {
     nl: 'Schematisch en niet op schaal. Het zakje groeit uit een stukje membraan met hulp van veel eiwitten (o.a. LC3 op het membraan), die niet getekend zijn. Hier wordt een kapot mitochondrion en een klont samen ingepakt; in de cel wordt afval vaak apart en gericht ingepakt, of wordt bij honger een willekeurig stuk cytoplasma opgenomen. Er bestaan ook kleinere vormen van autofagie.',
     en: 'Schematic and not to scale. The pouch grows from a piece of membrane with the help of many proteins (e.g. LC3 on the membrane), which are not drawn. Here a damaged mitochondrion and a clump are wrapped together; in the cell waste is often wrapped separately and selectively, or in starvation a random piece of cytoplasm is taken up. Smaller forms of autophagy also exist.' },
@@ -72,9 +96,9 @@ export default {
     { dur: 7500, cam: FULL, title: L3('Het zakje gaat dicht', 'The pouch closes'),
       text: L3('De kom sluit zich. Nu zit het afval in een blaasje met twee membranen.', 'The bowl closes. Now the waste sits in a vesicle with two membranes.') },
     { dur: 8500, cam: FULL, title: L3('Het blaasje versmelt met het lysosoom', 'The vesicle fuses with the lysosome'),
-      text: L3('Het blaasje versmelt met een lysosoom. Zo komen de knipenzymen bij het afval.', 'The vesicle fuses with a lysosome. This brings the cutting enzymes to the waste.') },
+      text: L3('Het buitenste membraan raakt een lysosoom en versmelt ermee. Zo komen de knipenzymen rond het afval.', 'The outer membrane touches a lysosome and fuses with it. This brings the cutting enzymes around the waste.') },
     { dur: 9000, cam: FULL, title: L3('Afbreken en hergebruiken', 'Break down and reuse'),
-      text: L3('Het afval wordt afgebroken. De bouwstenen gaan terug naar het cytosol en worden opnieuw gebruikt.', 'The waste is broken down. The building blocks go back to the cytosol and are used again.') },
+      text: L3('De enzymen breken eerst het binnenste membraan af, dan het afval. De bouwstenen gaan terug naar het cytosol.', 'The enzymes first break down the inner membrane, then the waste. The building blocks go back to the cytosol.') },
     { dur: 8500, cam: FULL, title: L3('Honger zet het aan', 'Hunger switches it on'),
       text: L3('Bij honger valt een voedingssensor in de cel stil. Dan maakt de cel veel meer van deze blaasjes.', 'In hunger a nutrient sensor in the cell goes quiet. Then the cell makes many more of these vesicles.') },
     { dur: 9000, cam: FULL, title: L3('Ook gewoon: dagelijkse schoonmaak', 'Also routine: daily cleaning'),
@@ -98,46 +122,68 @@ export default {
       update(t, s) {
         const { step, p } = s;
         const ph = (i, a, b) => step > i ? 1 : step < i ? 0 : ease(sub(p, a, b));
-        const kGrow = ph(1, .05, .9), kClose = ph(2, .1, .7), kMove = ph(3, .05, .55), kFuse = ph(3, .55, .9), kDig = ph(4, .05, .5), kOut = ph(4, .5, .95);
+        const kGrow = ph(1, .05, .9), kClose = ph(2, .1, .7), kMove = ph(3, .05, .45), kFuse = ph(3, .45, .95);
+        const kInner = ph(4, .05, .3), kEnz = ph(4, .2, .45), kDig = ph(4, .35, .6), kOut = ph(4, .55, .95);
         const kHung = step === 5 ? ease(sub(p, .05, .9)) : step === 6 ? 1 - ease(sub(p, 0, .4)) : 0, kDaily = ph(6, .3, .9);
-        // waar het blaasje zit
-        const bx = lerp(OC[0], FUSE[0] - 60, kMove), by = OC[1];
-        const lx = lerp(LC[0], FUSE[0] + 60, kMove);
-        const cx = lerp(bx, FUSE[0], kFuse), mx = lerp(lx, FUSE[0], kFuse);
+        // waar het autofagosoom (c1) en het lysosoom (c2) zitten: eerst naar elkaar toe tot ze elkaar raken, dan versmelten
+        const c1 = kFuse > 0 ? mix(A0, FUSE, kFuse) : mix(OC, A0, kMove), c2 = kFuse > 0 ? mix(L0, FUSE, kFuse) : mix(LC, L0, kMove);
+        const r1 = lerp(RO, RF, kFuse), r2 = lerp(LR, RF, kFuse), by = OC[1];
         const contentOp = 1 - kDig;
-        const dx = cx - OC[0];
+        const dx = c1[0] - OC[0];
         const dim = step >= 5 ? 1 - .6 * Math.max(kHung, step === 6 ? 1 : 0) : 1;
         $('af-mito').innerHTML = damagedMito(MITO[0] + dx, MITO[1], step >= 2 ? .9 : 1, contentOp * dim);
         $('af-agg').innerHTML = clump(AGGC[0] + dx - 20 * kClose, AGGC[1] - 10 * kClose, 1, contentOp * dim);
-        if (contentOp > .5 && step <= 3) { put('af-mA', MITO[0] + dx, MITO[1] - 70); put('af-aA', AGGC[0] + dx, AGGC[1] + 50); } else { put('af-mA', -99, -99); put('af-aA', -99, -99); }
-        // membraan: kom die groeit en sluit
+        // labels binnen het zakje (niet op het membraan); na het versmelten weg
+        if (step <= 3 && kFuse <= 0) { put('af-mA', MITO[0] + dx + 40, MITO[1] - 58); put('af-aA', AGGC[0] + dx - 50 - 20 * kClose, AGGC[1] + 42); } else { put('af-mA', -99, -99); put('af-aA', -99, -99); }
+        // membraan: kom die groeit en sluit (stap 1–2), daarna autofagosoom met twee membranen
         let mem = '';
-        if (step >= 1 && kFuse < .99) {
+        if (step >= 1 && kFuse <= 0) {
           const ext = lerp(40, 330, kGrow) + 30 * kClose, a0 = -90 - ext / 2, a1 = -90 + ext / 2;
-          const op = (1 - kFuse) * dim;
-          mem += fagofoor(cx, by, a0, a1, op);
-          if (step === 1) mem += T(cx, by - OR - 50, T2('groeiend membraan', 'growing membrane'), { size: 26, col: PHAG, op: ease(sub(p, .3, .6)) });
-          if (step === 2) mem += T(cx, by - OR - 50, T2('twee membranen', 'two membranes'), { size: 26, col: PHAG, op: ease(sub(p, .5, .8)) });
+          mem += fagofoor(c1[0], by, a0, a1, dim);
+          if (step === 1) mem += T(c1[0], by - OR - 50, T2('groeiend membraan', 'growing membrane'), { size: 26, col: PHAG, op: ease(sub(p, .3, .6)) });
+          if (step === 2) mem += T(c1[0], by - OR - 50, T2('twee membranen', 'two membranes'), { size: 26, col: PHAG, op: ease(sub(p, .5, .8)) });
         }
-        // lysosoom (en na versmelten: één groot verteerblaasje)
+        // lysosoom; bij het versmelten gaat het buitenmembraan van het autofagosoom over in het lysosoommembraan (fusieporie);
+        // het binnenmembraan blijft eerst rond de inhoud, met de knipenzymen ertussen
         let lys = '';
-        const lr = LR;
-        // vóór het versmelten: lysosoom naast het autofagosoom; erna: één verteerblaasje met één membraan (het buitenmembraan
-        // van het autofagosoom is versmolten met dat van het lysosoom), het binnenmembraan zit nog rond de inhoud
-        lys += lysosoom(mx, by, lr, dim * (1 - kFuse), 1);
-        if (kFuse > .01) lys += lysosoom(FUSE[0], by, OR + 30, dim * kFuse, 1 - kDig * .3) +
-          `<g opacity="${f1(kFuse * (1 - kDig) * dim)}">${membraanPts(Array.from({ length: 64 }, (_, i) => [FUSE[0] + RI * Math.cos(i / 64 * 6.2832), by + RI * Math.sin(i / 64 * 6.2832)]), { w: MW, closed: true })}</g>`;
-        lys += T(mx, by + lr + 46, kFuse > .5 ? T2('verteren', 'digesting') : T2('lysosoom', 'lysosome'), { size: 28, col: LYS, w: 700, op: dim });
-        if (kFuse > .5 || step < 3) put('af-lA', mx + lr * .6, by - lr - 6); else put('af-lA', -99, -99);
+        if (kFuse <= 0) lys += lysosoom(c2, LR, dim);
+        else {
+          const P = fusieOmtrek(c1, r1, c2, r2, kFuse), Pr = fusieOmtrek(c1, r1, c2, r2, kFuse, 8);
+          const D = 'M' + P.map(q => f1(q[0]) + ',' + f1(q[1])).join(' L') + 'Z';
+          lys += `<g opacity="${f1(dim)}"><path d="${D}" fill="rgba(201,165,116,.12)" opacity="${f1(1 - kFuse)}"/><path d="${D}" fill="rgba(255,107,107,.12)" opacity="${f1(kFuse)}"/>` +
+            `<path d="M${Pr.map(q => f1(q[0]) + ',' + f1(q[1])).join(' L')}Z" fill="none" stroke="${LYS}" stroke-width="2.4" opacity="${f1(.9 * kFuse)}"/>` +
+            membraanPts(P, { w: 11, closed: true }) + lysProt(c2, r2) + '</g>';
+          // binnenmembraan: eerst heel, in stap 4 knippen de enzymen het in stukjes
+          const kIn = kInner, segs = 8;
+          let inner = `<circle cx="${f1(c1[0])}" cy="${f1(by)}" r="${f1(RI - MW / 2)}" fill="rgba(201,165,116,.08)" opacity="${f1(1 - kIn)}"/>`;
+          for (let j = 0; j < segs; j++) {
+            const half = Math.PI / segs * (1 - .75 * kIn), cA = j * 2 * Math.PI / segs + .2;
+            inner += membraanPts(Array.from({ length: 13 }, (_, i) => { const a = cA - half + 2 * half * i / 12; return [c1[0] + RI * Math.cos(a), by + RI * Math.sin(a)]; }), { w: MW, op: 1 - ease(sub(kIn, .45, 1)) });
+          }
+          lys += `<g opacity="${f1(dim)}">${inner}</g>`;
+        }
+        // knipenzymen: in het lysosoom → tussen binnen- en buitenmembraan → (stap 4) naar de inhoud
+        if (kFuse > 0) {
+          lys += `<g opacity="${f1(dim)}">` + ENZ.map(([ex, ey], i) => {
+            const e0 = [L0[0] + ex * LR - A0[0], L0[1] + ey * LR - A0[1]], rho0 = Math.hypot(e0[0], e0[1]), th0 = Math.atan2(e0[1], e0[0]);
+            const rho = lerp(lerp(rho0, (RI + RF) / 2 + 2, ease(sub(kFuse, 0, .6))), ENZIN[i], kEnz), th = lerp(th0, ENZF[i], ease(sub(kFuse, .4, 1)));
+            return enzym(c1[0] + rho * Math.cos(th), by + rho * Math.sin(th), i);
+          }).join('') + '</g>';
+        }
+        const lc = kFuse > .5 ? [FUSE[0], by + RF + 46] : [c2[0], by + r2 + 46];
+        lys += T(lc[0], lc[1], kFuse > .5 ? T2('verteren', 'digesting') : T2('lysosoom', 'lysosome'), { size: 28, col: LYS, w: 700, op: dim });
+        if (kFuse <= 0) put('af-lA', c2[0] + LR * .6, by - LR - 6); else if (kFuse > .5) put('af-lA', FUSE[0] + (RF + 24) * Math.cos(-2.1), by + (RF + 24) * Math.sin(-2.1)); else put('af-lA', -99, -99);
         $('af-lys').innerHTML = lys;
         $('af-mem').innerHTML = mem;
-        // bouwstenen die naar buiten gaan
+        // bouwstenen gaan via transporteiwitten in het membraan terug naar het cytosol
         let fx = '';
         if (kDig > .01 && step <= 4) {
           for (let i = 0; i < 18; i++) {
-            const a = i * 2.39, r0 = 30 + (i % 6) * 22, u = sub(kOut, (i % 6) * .08, .5 + (i % 6) * .08);
-            const r = r0 + u * (OR + 160);
-            fx += `<circle cx="${f1(FUSE[0] + Math.cos(a) * r)}" cy="${f1(by + Math.sin(a) * r * .8)}" r="7" fill="${BB}" opacity="${f1(kDig)}"/>`;
+            const a = i * 2.39, r0 = 30 + (i % 6) * 22, u = ease(sub(kOut, (i % 6) * .07, .55 + (i % 6) * .07)), ph2 = TR[i % 3];
+            const S0 = [FUSE[0] + Math.cos(a) * r0, by + Math.sin(a) * r0 * .8], E = [FUSE[0] + Math.cos(ph2) * RF, by + Math.sin(ph2) * RF];
+            const Ox = [FUSE[0] + Math.cos(ph2 + (i % 5 - 2) * .06) * (RF + 70 + 18 * (i % 4)), by + Math.sin(ph2 + (i % 5 - 2) * .06) * (RF + 70 + 18 * (i % 4))];
+            const q = u < .6 ? mix(S0, E, u / .6) : mix(E, Ox, (u - .6) / .4);
+            fx += `<circle cx="${f1(q[0])}" cy="${f1(q[1])}" r="7" fill="${BB}" opacity="${f1(kDig)}"/>`;
           }
           fx += T(FUSE[0], 140, T2('bouwstenen terug naar het cytosol', 'building blocks back to the cytosol'), { size: 26, col: BB, op: ease(sub(kOut, .3, .7)) });
         }

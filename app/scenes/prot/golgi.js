@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1, FULL } from '../../kit.js';
 import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, panel, sugar } from './_b_kit.js';
+import { knop } from './_fate.js';
 import { membraanPts, blaasje, cisterne, ribosoomKlein, kernEnvelop, ptsCirkel, ptsBoog, eiwitPad } from '../../bio.js';
 
 /* detailronde 15-11-2026: membranen als lipidedubbellaag (bio.js). bandPts = gesloten omtrek van een buis/zak rond een
@@ -23,6 +24,9 @@ const COPII = '#ffb27a', COPI = '#5fd3e6', CLATH = '#e8edf7', CARGO = C.chain, G
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 
 /* deterministische vesikelbeweging langs een pad (kwadratische Bézier) */
+/* x van het plasmamembraan (kwadratische boog van (PMX, 40) via (PMX + 40, 450) naar (PMX, 860)) op hoogte y */
+const pmX = y => { const t = clamp((y - 40) / 820); return PMX + 80 * t * (1 - t); };
+const OUT = '#0a101f';                                 // kleur van de ruimte buiten de cel (achter de fusieporie)
 const qb = (a, c, b, u) => [(1 - u) * (1 - u) * a[0] + 2 * (1 - u) * u * c[0] + u * u * b[0], (1 - u) * (1 - u) * a[1] + 2 * (1 - u) * u * c[1] + u * u * b[1]];
 
 export default {
@@ -71,7 +75,7 @@ export default {
       for (let a = -1; a <= 1; a += .16) er += ribosoomKlein(-60 + (r + 21) * Math.cos(a), 450 + (r + 21) * Math.sin(a), { s: .55, rot: a * 180 / Math.PI + 90 });
     });
     // plasmamembraan
-    const pm = membraanPts(ptsBoog(PMX, 40, PMX + 40, 450, PMX, 860, 50), { w: 20 }) + TL(PMX + 70, 250, [T2('buiten', 'outside'), T2('de cel', 'the cell')], { size: 22, col: C.muted });
+    const pm = membraanPts(ptsBoog(PMX, 40, PMX + 40, 450, PMX, 860, 50), { w: 20 }) + TL(PMX + 70, 540, [T2('buiten', 'outside'), T2('de cel', 'the cell')], { size: 22, col: C.muted });
     // endosoom en lysosoom
     const el = blaasje(ENDO[0], ENDO[1], 44, { w: 9, lumen: 'rgba(255,138,61,.12)', rand: '#ff8a3d' }) + `<g id="go-ell1">` + TL(ENDO[0], ENDO[1] + 78, [T2('endosoom', 'endosome'), T2('pH ≈ 5,5–6,5', 'pH ≈ 5.5–6.5')], { size: 22, col: '#ff8a3d' }) + '</g>' +
       blaasje(LYSO[0], LYSO[1], 54, { w: 9, lumen: 'rgba(214,90,90,.15)', rand: C.bact }) + `<g id="go-ell2">` + TL(LYSO[0], LYSO[1] + 88, [T2('lysosoom', 'lysosome'), T2('pH ≈ 4,5–5', 'pH ≈ 4.5–5')], { size: 22, col: C.danger }) + '</g>';
@@ -79,9 +83,9 @@ export default {
     <g data-node="kern" data-color="${C.dna}" data-nolabel>${nuc}</g>
     <g data-node="er" data-color="${C.mem}" data-label="${T2('Ruw ER', 'Rough ER')}">${er}<circle data-anchor="er" cx="240" cy="200" r="1" fill="none"/></g>
     ${pm}
-    <g data-node="endocytose" data-color="#ff8a3d" data-label="${T2('Endocytose (endosoom)', 'Endocytosis (endosome)')}">${el}<circle data-anchor="endocytose" cx="${ENDO[0] + 100}" cy="${ENDO[1] - 70}" r="1" fill="none"/></g>
-    <g data-node="lysosoom" data-color="${C.danger}" data-label="${T2('Lysosoom: het suikerlabel', 'Lysosome: the sugar tag')}"><circle cx="${LYSO[0]}" cy="${LYSO[1]}" r="56" fill="transparent"/><circle data-anchor="lysosoom" cx="${LYSO[0] + 40}" cy="${LYSO[1] - 90}" r="1" fill="none"/></g>
-    <g data-node="glyco" data-color="#00A651" data-label="${T2('Glycanen bewerken', 'Processing glycans')}"><g id="go-cis"></g><circle data-anchor="glyco" cx="${X0 + 1.5 * SPC}" cy="${GY + GH + 20}" r="1" fill="none"/></g>
+    <g data-node="endocytose" data-color="#ff8a3d" data-label="${T2('Endocytose (endosoom)', 'Endocytosis (endosome)')}">${el}<circle id="go-endoA" data-anchor="endocytose" cx="${ENDO[0] - 50}" cy="${ENDO[1] - 70}" r="1" fill="none"/></g>
+    <g data-node="lysosoom" data-color="${C.danger}" data-label="${T2('Lysosoom: het suikerlabel', 'Lysosome: the sugar tag')}"><circle cx="${LYSO[0]}" cy="${LYSO[1]}" r="56" fill="transparent"/><circle id="go-lysoA" data-anchor="lysosoom" cx="${LYSO[0] - 30}" cy="${LYSO[1] - 70}" r="1" fill="none"/></g>
+    <g data-node="glyco" data-color="#00A651" data-label="${T2('Glycanen bewerken', 'Processing glycans')}"><g id="go-cis"></g><circle data-anchor="glyco" cx="${X0 + 1.5 * SPC}" cy="${GY + GH + 50}" r="1" fill="none"/></g>
     <g id="go-ergic"></g>
     <g id="go-ves"></g>
     <g id="go-lbl"></g>
@@ -151,7 +155,10 @@ export default {
             const a = [TGN[0] + 40, GY - 10 + k * 10], b = [PMX - 20, 440 + k * 40];
             if (u > 0) {
               if (u < .85) { const pos = qb(a, [1250, 420 + k * 20], b, u / .85); v += ves(pos[0], pos[1], C.mem, CARGO, 16); }
-              else { const f = (u - .85) / .15; v += blaasje(PMX - 20 + 12 * f, b[1], 16 * (1 - .5 * f), { w: 7, op: 1 - f, lumen: 'rgba(201,165,116,.18)' }) + `<circle cx="${f1(PMX + 20 + 40 * f)}" cy="${b[1]}" r="7" fill="${CARGO}" opacity="${f1(1 - f * .5)}"/>`; }
+              else {   // versmelten: het blaasje wordt een knop van het plasmamembraan die openvloeit (k 1 → 0); de vracht komt buiten
+                const f = (u - .85) / .15, m = [pmX(b[1]), b[1]], kb = knop(m, [-1, 0], 16, 1 - f, { hole: OUT, w: 7, lumen: 'rgba(201,165,116,.18)' });
+                v += kb.svg + `<circle cx="${f1(lerp(kb.c[0], m[0] + 34, ease(sub(f, .4, 1))))}" cy="${b[1]}" r="7" fill="${CARGO}"/>`;
+              }
             }
           }
           // gereguleerd: granules sparen zich op en versmelten na Ca²⁺
@@ -160,10 +167,19 @@ export default {
           gr.forEach(([x, y], k) => {
             const arrive = step === 5 ? ease(sub(p, .3 + k * .1, .6 + k * .1)) : 1;
             const gx = lerp(TGN[0] + 30, x, arrive), gy = lerp(GY - 110, y, arrive);
-            if (fuse < 1) v += `<g opacity="${f1((1 - fuse) * (arrive > 0 ? 1 : 0))}">${blaasje(lerp(gx, PMX - 26, fuse), gy, 22, { w: 8, lumen: 'rgba(240,107,192,.3)', rand: GRAN })}<circle cx="${f1(lerp(gx, PMX - 26, fuse))}" cy="${f1(gy)}" r="11" fill="${GRAN}"/></g>`;
-            if (fuse > 0) v += `<circle cx="${f1(PMX + 30 + 60 * fuse + k * 12)}" cy="${f1(y + (k - 1.5) * 20 * fuse)}" r="8" fill="${GRAN}" opacity="${f1(fuse)}"/>`;
+            // na het Ca²⁺-signaal: naar het membraan, dan versmelten (knop die openvloeit) en de inhoud komt buiten de cel
+            const go = step === 6 ? ease(sub(p, .6, .72)) : step === 7 ? 1 : 0, kf = step === 6 ? ease(sub(p, .72, .9)) : step === 7 ? 1 : 0;
+            const m = [pmX(gy), gy], dock = [m[0] - 22 - 14, gy];
+            if (arrive > 0) {
+              if (kf <= 0) v += blaasje(lerp(gx, dock[0], go), gy, 22, { w: 8, lumen: 'rgba(240,107,192,.3)', rand: GRAN }) + `<circle cx="${f1(lerp(gx, dock[0], go))}" cy="${f1(gy)}" r="11" fill="${GRAN}"/>`;
+              else {
+                const kb = knop(m, [-1, 0], 22, 1 - kf, { hole: OUT, w: 8, lumen: 'rgba(240,107,192,.3)' });
+                const c = [lerp(kb.c[0], m[0] + 40 + k * 14, ease(sub(kf, .45, 1))), lerp(gy, gy + (k - 1.5) * 16, ease(sub(kf, .45, 1)))];
+                v += kb.svg + `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="9" fill="${GRAN}"/>`;
+              }
+            }
           });
-          if (step === 6) v += T(1540, 330, 'Ca²⁺', { size: 26, col: '#ffe08a', w: 800, op: sub(p, .5, .6) * (1 - sub(p, .9, 1)) }) + (p > .5 && p < .9 ? `<circle cx="1540" cy="322" r="${f1(20 + 40 * ((p - .5) / .4))}" fill="none" stroke="#ffe08a" stroke-width="3" opacity="${f1(1 - (p - .5) / .4)}"/>` : '');
+          if (step === 6) v += T(1540, 400, 'Ca²⁺', { size: 26, col: '#ffe08a', w: 800, op: sub(p, .5, .6) * (1 - sub(p, .9, 1)) }) + (p > .5 && p < .9 ? `<circle cx="1540" cy="392" r="${f1(20 + 40 * ((p - .5) / .4))}" fill="none" stroke="#ffe08a" stroke-width="3" opacity="${f1(1 - (p - .5) / .4)}"/>` : '');
           // lysosomaal: TGN → endosoom (clathrine) → lysosoom; receptor terug
           const lp = step === 7 ? p : step === 5 ? p * .5 : 0;
           for (let k = 0; k < 2; k++) {
@@ -186,7 +202,7 @@ export default {
         if (step !== 1) names.forEach(([n, i]) => lb += T(X0 + i * SPC, GY - GH - 34, n, { size: 23, col: C.mem, w: 700 }));
         if (step === 0) {
           lb += T(ERGIC[0], ERGIC[1] + 110, 'ERGIC', { size: 23, col: C.mem });
-          lb += T(X0 + 1.5 * SPC, GY + GH + 70, T2('Golgi-apparaat', 'Golgi apparatus'), { size: 24, col: C.mem, w: 700 });
+          lb += T(X0 + 1.5 * SPC, GY + GH + 84, T2('Golgi-apparaat', 'Golgi apparatus'), { size: 24, col: C.mem, w: 700 });
           lb += T(1330, 330, T2('granules', 'granules'), { size: 22, col: GRAN });
         }
         if (step === 1) {
@@ -194,12 +210,12 @@ export default {
           lb += T(460, 360, 'COPII', { size: 24, col: COPII, w: 800 });
           lb += T(ERGIC[0] + 10, ERGIC[1] + 110, 'ERGIC', { size: 22, col: C.mem, w: 700 });
           lb += T(X0, GY - GH - 34, 'cis-Golgi', { size: 22, col: C.mem, w: 700 });
-          lb += T(470, 250, T2('alleen goed gevouwen eiwitten mogen mee', 'only correctly folded proteins may leave'), { size: 20, col: C.chain });
+          lb += T(610, 640, T2('alleen goed gevouwen eiwitten mogen mee', 'only correctly folded proteins may leave'), { size: 20, col: C.chain });
         }
         if (step === 2) {
           lb += T(530, 205, T2('COPI (retrograad)', 'COPI (retrograde)'), { size: 24, col: COPI, w: 800 });
           lb += T(X0 - 40, GY - 205, T2('KDEL-receptor', 'KDEL receptor'), { size: 18, col: COPI, anchor: 'end' });
-          lb += T(420, 640, T2('bv. BiP en PDI dragen de staart …KDEL', 'e.g. BiP and PDI carry the tail …KDEL'), { size: 20, col: '#c9b8ff' });
+          lb += T(560, 600, T2('bv. BiP en PDI dragen de staart …KDEL', 'e.g. BiP and PDI carry the tail …KDEL'), { size: 20, col: '#c9b8ff' });
         }
         if (step === 3) lb += arr(X0 - 20, 180, X0 + 3 * SPC + 20, 180, C.mem, 'go-m', { w: 5 }) + T(X0 + 3 * SPC + 50, 188, T2('de cisterne zelf rijpt', 'the cisterna itself matures'), { size: 20, col: C.mem, anchor: 'start' }) +
           T(X0 - 60, GY - GH + 30, T2('COPI: enzymen', 'COPI: enzymes'), { size: 20, col: COPI, op: sub(p, .2, .3), anchor: 'end' }) + T(X0 - 60, GY - GH + 56, T2('één cisterne terug', 'one cisterna back'), { size: 20, col: COPI, op: sub(p, .2, .3), anchor: 'end' });
@@ -212,15 +228,18 @@ export default {
         if (step === 5) {
           lb += T(1320, 540, T2('constitutief', 'constitutive'), { size: 20, col: C.mem, op: sub(p, .1, .3) });
           lb += T(1345, 358, T2('gereguleerd (granules)', 'regulated (granules)'), { size: 20, col: GRAN, op: sub(p, .3, .5) });
-          lb += T(1040, 600, T2('lysosomaal (M6P)', 'lysosomal (M6P)'), { size: 20, col: '#ff8a3d', op: sub(p, .5, .7), anchor: 'start' });
+          lb += T(1030, 690, T2('lysosomaal (M6P)', 'lysosomal (M6P)'), { size: 20, col: '#ff8a3d', op: sub(p, .5, .7), anchor: 'end' });
         }
         if (step === 6) lb += T(1440, 580, T2('continu', 'continuously'), { size: 20, col: C.mem, anchor: 'end' }) + T(1470, 360, T2('op signaal', 'on signal'), { size: 20, col: GRAN, op: sub(p, .55, .7), anchor: 'end' });
         if (step === 7) {
           lb += T(1040, 700, T2('M6P-receptor + enzym', 'M6P receptor + enzyme'), { size: 19, col: '#ff8a3d', anchor: 'end', op: sub(p, 0, .15) });
           lb += T(ENDO[0] + 60, ENDO[1] + 146, T2('zuur → enzym laat los', 'acidic → enzyme released'), { size: 20, col: '#ff8a3d', op: sub(p, .5, .6), anchor: 'end' });
-          lb += T(1080, 520, T2('receptor terug', 'receptor returns'), { size: 18, col: C.mem, op: sub(p, .6, .7), anchor: 'start' });
+          lb += T(1110, 578, T2('receptor terug', 'receptor returns'), { size: 18, col: C.mem, op: sub(p, .6, .7), anchor: 'start' });
         }
         $('go-lbl').innerHTML = lb;
+        // namen endosoom/lysosoom (klikbaar): in stap 8 weg van de pijl "receptor terug"
+        $('go-endoA').setAttribute('cx', step === 7 ? ENDO[0] - 130 : step === 4 ? ENDO[0] - 70 : ENDO[0] - 40); $('go-endoA').setAttribute('cy', step === 7 ? ENDO[1] + 80 : ENDO[1] - 70);
+        $('go-lysoA').setAttribute('cx', step === 7 ? LYSO[0] : step === 4 ? LYSO[0] - 40 : LYSO[0] + 30); $('go-lysoA').setAttribute('cy', step === 7 ? LYSO[1] - 80 : LYSO[1] - 70);
         const ellOp = f1(step === 0 ? 1 : step === 7 ? sub(p, 0, .15) : 0);   // namen endosoom/lysosoom alleen waar ze volledig in beeld zijn
         $('go-ell1').setAttribute('opacity', ellOp); $('go-ell2').setAttribute('opacity', ellOp);
         // hotspot-overlay op de granules

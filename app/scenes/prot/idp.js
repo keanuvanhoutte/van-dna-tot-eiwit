@@ -145,7 +145,7 @@ export default {
           sq += T(2690, 410, T2('boven: 14 van 25 hydrofoob · onder: 0 hydrofoob, 11 geladen', 'top: 14 of 25 hydrophobic · bottom: 0 hydrophobic, 11 charged'), { size: 22, op: k });
         }
         $('id-seq').innerHTML = sq;
-        $('id-plot').setAttribute('opacity', step === 2 ? '0.15' : step === 3 ? f1(.15 + .85 * sub(p, 0, .25)) : '1');
+        $('id-plot').setAttribute('opacity', step === 2 ? '0' : step === 3 ? f1(sub(p, 0, .25)) : '1');   // grafiek pas in stap 4 (niet half afgesneden onder de reeksen)
         $('id-seqB').setAttribute('opacity', step <= 2 ? '1' : step === 3 ? f1(1 - sub(p, 0, .06)) : '0');
 
         /* ---------- paneel C: CREB-KID + KIX ---------- */
