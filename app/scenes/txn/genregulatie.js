@@ -156,7 +156,7 @@ export default {
         const e = pt(XE), pr = pt(TATA), tss = pt(TSS);
         let marks = `<g opacity="${f1(1 - .6 * k)}">` +
           `<rect x="${f1(e[0] - 34)}" y="${f1(e[1] - 22)}" width="68" height="44" rx="8" fill="rgba(255,194,71,.10)" stroke="${C.trna}" stroke-dasharray="5 4" stroke-width="2"/></g>` +
-          (k > .5 ? txt(e[0] - 44, e[1] + 88, 'enhancer', C.trna, 21, 'end') : txt(e[0], e[1] + 62, 'enhancer', C.trna, 21));
+          (k > .5 ? txt(e[0] - 36, e[1] - 96, 'enhancer', C.trna, 21, 'end') : txt(e[0], e[1] + 62, 'enhancer', C.trna, 21));
         if (step === 0) marks += txt((e[0] + pr[0]) / 2, Y0 + 64, T2('… afstand sterk ingekort …', '… distance strongly shortened …'), C.muted, 21);
         $('gr-marks').innerHTML = marks;
         $('gr-prom').innerHTML = `<rect x="${f1(pr[0] - 40)}" y="${f1(pr[1] - 22)}" width="72" height="44" rx="8" fill="rgba(155,123,255,.12)" stroke="${C.prot}" stroke-dasharray="5 4" stroke-width="2"/>` +
@@ -235,11 +235,12 @@ export default {
         gtf += ePill(P[0] + 56, P[1] + 32, 70, 26, 'TFIIB', '#6f5bd6', f(.25, .38), 15);
         pic += prot(P[0] + 95, P[1] - 60, 70, 52, M.pol, f(.4, .58), 52, 'Pol II', 17) +   // met de CTD-staart (enkel Pol II heeft die)
           (f(.4, .58) > .01 ? `<path d="M${f1(P[0] + 60)},${f1(P[1] - 108)} q-18,-16 -6,-32 q12,-16 -6,-32" stroke="${M.pol}" stroke-width="3" fill="none" opacity="${f1(f(.4, .58) * .85)}"/>` + txt(P[0] + 60, P[1] - 180, 'CTD', M.pol, 15, 'middle', 700).replace('<text', `<text opacity="${f1(f(.4, .58))}"`) : '');
-        gtf += ePill(P[0] + 182, P[1] - 92, 70, 26, 'TFIIF', '#5a4bb8', f(.45, .6), 15);
-        gtf += ePill(P[0] + 174, P[1] - 36, 70, 26, 'TFIIE', '#5a4bb8', f(.6, .72), 15);
-        gtf += ePill(P[0] + 176, P[1] - 148, 74, 28, 'TFIIH', '#8e6cf0', f(.7, .85), 15);
+        // rechterkolom boven het +1-nucleosoom (niet erover): TFIIF, TFIIE, TFIIH (TFIIE haalt TFIIH binnen)
+        gtf += ePill(P[0] + 186, P[1] - 74, 70, 26, 'TFIIF', '#5a4bb8', f(.45, .6), 15);
+        gtf += ePill(P[0] + 152, P[1] - 128, 70, 26, 'TFIIE', '#5a4bb8', f(.6, .72), 15);
+        gtf += ePill(P[0] + 206, P[1] - 162, 74, 28, 'TFIIH', '#8e6cf0', f(.7, .85), 15);
         $('gr-pic').innerHTML = pic; $('gr-gtf').innerHTML = gtf;
-        setA('gr-polA', P[0] + 120, P[1] - 124, step === 7 && p > .5);
+        setA('gr-polA', P[0] + 300, P[1] - 110, step === 7 && p > .5);
 
         // zijpad-knop
         const bx0 = step === 6 ? 380 : 110, by0 = step === 6 ? 120 : 200;

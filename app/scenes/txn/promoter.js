@@ -53,11 +53,11 @@ export default {
       text: { nl: 'Het enzym dat RNA maakt (RNA-polymerase II) komt aan en wordt precies boven het startpunt gezet.', en: 'The enzyme that makes RNA (RNA polymerase II) arrives and is placed right above the start point.' } },
     { dur: 7000, cam: cam(720, 430, 1300), title: { nl: 'De startmachine is compleet', en: 'The start machine is complete' },
       text: { nl: 'Nog twee hulpeiwitten komen erbij. De startmachine is nu klaar, maar het DNA is nog dicht.', en: 'Two more helper proteins join. The start machine is now ready, but the DNA is still closed.' } },
-    { dur: 8000, cam: cam(815, 470, 1030), title: { nl: 'Het DNA gaat open', en: 'The DNA opens' },
+    { dur: 8000, cam: cam(760, 460, 1200), title: { nl: 'Het DNA gaat open', en: 'The DNA opens' },
       text: { nl: 'Een hulpeiwit opent met energie (ATP) het DNA bij het startpunt. Het enzym koppelt de eerste RNA-bouwstenen.', en: 'A helper protein uses energy (ATP) to open the DNA at the start point. The enzyme joins the first RNA building blocks.' } },
     { dur: 8000, cam: cam(900, 450, 1200), title: { nl: 'Een fosfaat op de staart', en: 'A phosphate on the tail' },
       text: { nl: 'Het enzym krijgt fosfaatgroepjes op zijn lange staart. Daarna laat het de meeste hulpeiwitten los en vertrekt.', en: 'The enzyme gets phosphate groups on its long tail. It then lets go of most helper proteins and sets off.' } },
-    { dur: 8000, cam: cam(878, 450, 1150), title: { nl: 'Een korte pauze', en: 'A short pause' },
+    { dur: 8000, cam: cam(848, 450, 1290), title: { nl: 'Een korte pauze', en: 'A short pause' },
       text: { nl: 'Na ~25–50 bouwstenen houden twee eiwitten het enzym even vast. Bij veel menselijke genen is dit een controlepunt.', en: 'After ~25–50 building blocks, two proteins hold the enzyme in place. For many human genes this is a checkpoint.' } },
     { dur: 9000, cam: cam(1200, 450, 1300), title: { nl: 'Het enzym mag verder', en: 'The enzyme may move on' },
       text: { nl: 'Een enzym zet fosfaten op de staart en de pauze-eiwitten. Eén vertrekt, het andere rijdt mee → volgend hoofdstuk.', en: 'An enzyme adds phosphates to the tail and the pause proteins. One leaves, the other rides along → next chapter.' } },
@@ -181,7 +181,8 @@ export default {
         // Mediator
         const mOp = fin(3, .5, .8) * (1 - (step === 6 ? ease(sub(p, .4, .9)) : step > 6 ? 1 : 0));
         $('pr-med').innerHTML = prot(bx(-6), 240, 130, 54, G.med, mOp, 81, 'Mediator', 20) +
-          (mOp > .05 ? `<g opacity="${f1(mOp)}"><line x1="${bx(-6) - 90}" y1="220" x2="${bx(-30)}" y2="170" stroke="${G.med}" stroke-width="3" stroke-dasharray="5 5"/></g>` : '');
+          (mOp > .05 ? `<g opacity="${f1(mOp)}"><line x1="${bx(-6) - 128}" y1="230" x2="${bx(-6) - 196}" y2="204" stroke="${G.med}" stroke-width="3" stroke-dasharray="5 5" marker-end="url(#arrow)"/>` +
+            txt(bx(-6) - 206, 202, T2('activatoren', 'activators'), '#c9b8ff', 18, 'end') + '</g>' : '');   // kort naar de (niet getekende) activatoren verderop
         setA('pr-medA', bx(-6), 190, mOp > .5);
 
         // Pol II + CTD
@@ -202,7 +203,7 @@ export default {
           pol += '</g>';
         }
         $('pr-pol').innerHTML = pol;
-        setA('pr-polA', step === 7 ? px + 120 : px + 20, step === 7 ? py - 60 : py - 128, polOp > .5);
+        setA('pr-polA', step === 7 ? px + 80 : px + 20, step === 7 ? py + 30 : py - 128, polOp > .5);
 
         // RNA
         let rna = '';

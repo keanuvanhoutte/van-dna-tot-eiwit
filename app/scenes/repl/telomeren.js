@@ -161,12 +161,13 @@ const scene = {
           // shelterin (stap 7)
           if (step === 7) {
             const k = i => ease(sub(p, .05 + i * .1, .2 + i * .1));
-            m += prot(xOf(4), YT - 62, 84, 32, C.prot, 'TRF1', 21, k(0)) + prot(xOf(4), YB + BH + 62, 84, 32, C.prot, 'TRF1', 21, k(0));
-            m += prot(xOf(15), YT - 62, 84, 32, C.prot2, 'TRF2', 21, k(1)) + prot(xOf(15), YB + BH + 62, 84, 32, C.prot2, 'TRF2', 21, k(1));
-            m += prot(xOf(15) + 150, YB + BH + 122, 74, 30, C.prot3, 'RAP1', 20, k(2));
-            m += prot(xOf(9) + 10, YT - 136, 74, 30, C.prot3, 'TIN2', 20, k(3));
-            m += prot(xOf(ND + 20), YB + 12, 76, 30, '#b07cf0', 'POT1', 21, k(4)) + prot(xOf(ND + 20), YB + 80, 74, 30, C.prot3, 'TPP1', 20, k(4));
-            m += tag(760, 190, T2('shelterin (6 eiwitten)', 'shelterin (6 proteins)'), C.text, 28, 'middle', sub(p, .55, .7));
+            // 6 eiwitten, 6 vormen; TRF1 en TRF2 elk één homodimeer op het dubbelstrengige TTAGGG. TIN2 is de brug tussen TRF1, TRF2
+            // en TPP1; TPP1 houdt POT1 vast, dat het enkelstrengige 3'-uiteinde bindt; RAP1 zit op TRF2 (de Lange, Genes Dev 2005).
+            m += prot(870, 490, 76, 30, C.prot2, 'TRF2', 20, k(0)) + prot(1030, 490, 76, 30, C.prot, 'TRF1', 20, k(0));
+            m += prot(760, 548, 62, 28, C.prot3, 'RAP1', 20, k(1));
+            m += prot(1030, 548, 96, 28, C.prot3, 'TIN2', 20, k(2));
+            m += prot(1180, 506, 64, 28, C.prot3, 'TPP1', 20, k(3)) + prot(1290, 446, 76, 30, '#b07cf0', 'POT1', 21, k(3));
+            m += tag(760, 190, T2('shelterin (6 eiwitten; TRF1 en TRF2 elk als dimeer)', 'shelterin (6 proteins; TRF1 and TRF2 each as a dimer)'), C.text, 28, 'middle', sub(p, .55, .7));
           }
         } else place('tl-rta', -99, -99);
         $('tl-tert').innerHTML = tertS ? `<g opacity="${f1(mainOp)}">${tertS}</g>` : '';

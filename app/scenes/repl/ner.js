@@ -9,7 +9,8 @@ import { with3d } from './_mix3d.js';
  */
 const SEQ = 'GACTCGATCCGTTACGGATCCTAG';           // posities 11 en 12 = TT
 const N = SEQ.length, BP = 54, X0 = (1600 - N * BP) / 2, Y = 470, GAP = 100, D = 11;
-const E0 = D - 6, E1 = D + 7;                       // uitgeknipt stuk (ingekort getekend: 14 i.p.v. 24–32 nt)
+const E0 = D - 9, E1 = D + 4;                       // uitgeknipt stuk (ingekort getekend: 14 i.p.v. 24–32 nt); XPF knipt ver aan de 5'-kant (~20 nt), XPG dichtbij aan de 3'-kant (~5 nt) (Huang et al., PNAS 1992)
+const OC = (E0 + E1) / 2;                           // midden van de open bel: rond het stuk dat eruit gaat (asymmetrisch rond het dimeer)
 const xi = i => X0 + BP / 2 + i * BP;
 const bell = (i, c, w) => clamp(1 - Math.abs(i - c) / w) ** .7;
 const XPA_C = '#ffc247';
@@ -69,8 +70,8 @@ const scene = {
         const opn = 30 * kOpen * (1 - ph(5, .7, .95));
         const removed = i => i >= E0 && i <= E1 && kOut > .02 && (i - E0 + .5) / (E1 - E0 + 1) >= kFill;
         const refilled = i => i >= E0 && i <= E1 && kFill > 0 && !removed(i);
-        const upTop = i => bump * bell(i, D + .5, 4) + opn * bell(i, D + .5, 8.5);
-        const downBot = i => -bump * bell(i, D + .5, 4) * .6 + opn * bell(i, D + .5, 8.5);
+        const upTop = i => bump * bell(i, D + .5, 4) + opn * bell(i, OC, 9);
+        const downBot = i => -bump * bell(i, D + .5, 4) * .6 + opn * bell(i, OC, 9);
         let dna = '', fx = '', rp = '';
         // ruggengraten + basen
         const top = [], bot = [];
@@ -84,7 +85,7 @@ const scene = {
           if (col) seg0.push([x, yt]);
           if (i === N - 1 && col) seg0.push([x + BP / 2, yt]);
           bot.push([x, yb]); if (i === 0) bot.unshift([x - BP / 2, yb]); if (i === N - 1) bot.push([x + BP / 2, yb]);
-          const b = SEQ[i], m = COMP[b], sep = opn * bell(i, D + .5, 8.5) > 8;
+          const b = SEQ[i], m = COMP[b], sep = opn * bell(i, OC, 9) > 8;
           if (!removed(i)) {
             dna += seg(x, yt, x, sep ? yt + 22 : (yt + yb) / 2 - 2, BASE[b], 7);
             dna += txt(x, yt - 16, b, BASE[b], 26, 'middle', 700, 'JetBrains Mono');
@@ -117,7 +118,7 @@ const scene = {
         fx += prot(xd, Y + GAP / 2 + 120 + 60 * (1 - kSpot), 120, 40, SPOT, T2('herkenner', 'spotter'), 24, spotOp);
         fx += prot(xd, Y - GAP / 2 - 150, 120, 40, OPEN, T2('opener', 'opener'), 24, kOpen * (1 - ph(3, .55, .85)));
         const cutOp = kCut * (1 - ph(4, 0, .35));
-        fx += prot(xi(E0) - 6, Y - GAP / 2 - 140, 100, 38, CUT, T2('schaar', 'scissors'), 22, cutOp) + prot(xi(E1) + 6, Y - GAP / 2 - 140, 100, 38, CUT, T2('schaar', 'scissors'), 22, cutOp);
+        fx += prot(xi(E0) - 6, Y - GAP / 2 - 140, 100, 40, CUT, 'ERCC1–XPF', 22, cutOp) + prot(xi(E1) + 6, Y - GAP / 2 - 140, 100, 40, CUT, 'XPG', 22, cutOp);
         if (cutOp > .01) fx += `<g opacity="${f1(cutOp)}">${txt(xi(E0) - BP / 2, Y - GAP / 2 - 70, '✂', '#fff', 34)}${txt(xi(E1) + BP / 2, Y - GAP / 2 - 70, '✂', '#fff', 34)}</g>`;
         const px = lerp(xi(E0), xi(E1), kFill);
         fx += prot(px, Y - GAP / 2 - 120, 120, 38, POL, 'polymerase', 22, ph(5, 0, .12) * (1 - ph(5, .75, .85)));

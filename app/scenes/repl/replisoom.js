@@ -252,8 +252,8 @@ const scene = {
         pr += tag(1068, 626, 'CMG', '#fff', 26, 'start');                     // componenten + richting: in de ondertitel van stap 0
         pr += arrow(1060, 660, 1150, 660, C.prot, 3.5, 1);
         // Pol ε + PCNA op de leidende streng
-        const polEy = step === 8 ? 740 : 718;
-        pr += step === 8 ? prot(LEAD3 + 22, 752, 92, 40, C.prot2, 'Pol ε', 18) : prot(LEAD3 - 48, polEy + 6, 80, 38, C.prot2, 'Pol ε', 24);
+        // Pol ε houdt het 3'-uiteinde van de leidende streng vast en zit rechtstreeks tegen CMG aan (Langston et al., PNAS 2014; Zhou et al., PNAS 2017)
+        pr += step === 8 ? prot(LEAD3 + 22, 752, 92, 40, C.prot2, 'Pol ε', 18) : `<g transform="translate(902 684) rotate(-28)">${prot(0, 0, 92, 42, C.prot2, '', 24)}</g>` + txt(900, 716, 'Pol ε', '#fff', 24, 'middle', 700);
         pr += clamp3(step === 8 ? 640 : LEAD3 - 120, (BOTY + NBOT) / 2, 13, 44, PCNA, 1);
         // Pol α-primase
         const aOp = step < 3 ? (step === 0 ? .0 : 0) : step === 3 ? ease(sub(p, 0, .15)) : step === 4 ? 1 - sub(p, .05, .3) : 0;   // polymerasewissel: Pol α laat los vóór RFC de klem plaatst

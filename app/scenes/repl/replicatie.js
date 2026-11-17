@@ -258,7 +258,7 @@ export default {
             }
           });
         }
-        if (step === 4) pr += tag(800, 330, T2('vroege origin: grote bel · latere: kleine bellen', 'early origin: large bubble · later: small bubbles'), C.text, 23, 'middle', sub(p, .1, .3));
+        if (step === 4) pr += tag(800, 330, T2('vroege origin: grote bel · latere: kleinere bellen, die ermee versmelten', 'early origin: large bubble · later: smaller bubbles that merge with it'), C.text, 23, 'middle', sub(p, .1, .3));
         if (step === 5) pr += tag(800, 330, T2('vorken komen samen → terminatie', 'forks meet → termination'), C.text, 24, 'middle', sub(p, .05, .2));
         $('rp-prot').innerHTML = pr;
         { const a = $('rp-oanchor'), on = step === 1 && p > .9;   // label naar de 3D-scène 'origins' zodra de dubbelhexameer ligt (rechtsboven de ringen, Cdt1 is dan weg)

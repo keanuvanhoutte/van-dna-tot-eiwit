@@ -2,7 +2,9 @@ import { C, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, clamp, f1 } f
 import { helixAlong, prot, panel, arrow } from './_txn.js';
 import { bacterieWand, ptsStaaf, ribosoomKlein } from '../../bio.js';
 
-/* E. coli lac-operon. Posities in scènecoördinaten (niet op schaal in bp). */
+/* E. coli lac-operon. Posities in scènecoördinaten (niet op schaal in bp).
+ * lac-promoter: −35 TTTACA, −10 TATGTT (lacUV5 verschilt enkel in −10 → TATAAT); bron: Wikipedia 'LacUV5' (GenBank E. coli lac-
+ * sequentie; Studier & Moffatt, J Mol Biol 1986), gelezen; σ70-consensus TTGACA / TATAAT. */
 const Y0 = 470, TSS = 520;
 const EL = {
   lacI: [120, 262], cap: [292, 346], m35: [364, 408], m10: [452, 496], op: [506, 570],
@@ -87,6 +89,13 @@ export default {
     el += `<g id="op-promlab">` + txt(430, Y0 + 92, 'promoter', K.sig, 20) + '</g>';
     $('op-elems').innerHTML = el;
 
+    // groeiende eiwitketen: hoe verder het ribosoom van het 5'-uiteinde (d), hoe langer de keten
+    const chainAt = (x, y, d) => {
+      const n = Math.max(1, Math.min(9, Math.round(d / 45)));
+      let dd = `M${f1(x)},${f1(y)}`;
+      for (let k = 0; k < n; k++) dd += ` q${k % 2 ? -8 : 8},-6 0,-11`;
+      return `<path d="${dd}" stroke="${C.chain}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    };
     function mrnaAt(x0, len, withRibo, t) {
       // mRNA hangt boven het DNA, 5'-uiteinde het verst van de polymerase
       if (len <= 4) return '';
@@ -99,14 +108,14 @@ export default {
           const q = pts[Math.floor((len - d) / 8)] ?? pts[pts.length - 1];
           // 70S: grote eenheid (50S) boven, kleine (30S) onder, mRNA ertussen; de keten komt uit de grote eenheid
           g += ribosoomKlein(q[0], q[1] + 2, { s: 1.5, rot: 180, col: K.ribo }) +
-            `<path d="M${f1(q[0])},${f1(q[1] - 17)} q8,-12 0,-22 q-8,-10 2,-20" stroke="${C.chain}" stroke-width="3" fill="none"/>`;
+            chainAt(q[0], q[1] - 17, d);
         }
       }
       return g;
     }
     const rnap = (x, op, sigma = 1, blocked = 0) => op <= .01 ? '' : `<g opacity="${f1(op)}">` + prot(x - 20, Y0 - 60, 70, 48, K.rnap, 1, 91, 'RNAP', 19) +
       (sigma > .01 ? `<g opacity="${f1(sigma)}">${prot(x - 74, Y0 - 30, 38, 24, K.sig, 1, 92, 'σ70', 16)}</g>` : '') +
-      (blocked > .01 ? `<g opacity="${f1(blocked)}" stroke="${C.danger}" stroke-width="5"><line x1="${x + 40}" y1="${Y0 - 80}" x2="${x + 70}" y2="${Y0 - 50}"/><line x1="${x + 70}" y1="${Y0 - 80}" x2="${x + 40}" y2="${Y0 - 50}"/></g>` : '') + '</g>';
+      (blocked > .01 ? `<g opacity="${f1(blocked)}" stroke="${C.danger}" stroke-width="5"><line x1="${x + 84}" y1="${Y0 - 100}" x2="${x + 112}" y2="${Y0 - 72}"/><line x1="${x + 112}" y1="${Y0 - 100}" x2="${x + 84}" y2="${Y0 - 72}"/></g>` : '') + '</g>';
     const laci = (x, y, op, allo = 0) => op <= .01 ? '' : `<g opacity="${f1(op)}">` +
       [[-22, -16], [22, -16], [-22, 16], [22, 16]].map(([dx, dy], i) => prot(x + dx, y + dy, 22, 16, K.laci, 1, 60 + i)).join('') + txt(x, y + 7, 'LacI', '#fff', 19) +
       (allo > .01 ? [[-44, -30], [44, -30], [-44, 30], [44, 30]].map(([dx, dy]) => hex(x + dx, y + dy, 8, K.allo, allo)).join('') : '') + '</g>';
@@ -132,15 +141,19 @@ export default {
         $('op-lcap').setAttribute('opacity', step === 1 || step === 6 ? 0 : 1);
         $('op-lop').setAttribute('opacity', step === 1 || step === 6 ? 0 : 1);
         $('op-cell').setAttribute('opacity', step === 0 ? .8 : 0);
-        $('op-seq').innerHTML = sq > .01 ? `<g opacity="${f1(sq)}">` + `<rect x="320" y="${Y0 + 70}" width="200" height="92" rx="10" fill="#0b1224" opacity=".95"/>` + txt(386, Y0 + 100, 'TTGACA', K.sig, 17, 'middle', 700, 'JetBrains Mono') + txt(474, Y0 + 100, 'TATAAT', K.sig, 17, 'middle', 700, 'JetBrains Mono') +
-          `<path d="M410,${Y0 + 110} v8 H450 v-8" stroke="${C.muted}" fill="none" stroke-width="1.5"/>` + txt(430, Y0 + 144, '~17 bp', C.muted, 17) + '</g>' : '';
+        // echte lac-promoter (bovenste rij) met de afwijkingen van de σ70-consensus (onderste rij) in rood
+        const mm = (seq, cons) => [...seq].map((c, i) => c === cons[i] ? c : `<tspan fill="${C.danger}">${c}</tspan>`).join('');
+        $('op-seq').innerHTML = sq > .01 ? `<g opacity="${f1(sq)}">` + `<rect x="236" y="${Y0 + 68}" width="290" height="106" rx="10" fill="#0b1224" opacity=".95"/>` +
+          txt(350, Y0 + 96, 'lac', C.text, 16, 'end', 700) + txt(386, Y0 + 96, mm('TTTACA', 'TTGACA'), K.sig, 17, 'middle', 700, 'JetBrains Mono') + txt(474, Y0 + 96, mm('TATGTT', 'TATAAT'), K.sig, 17, 'middle', 700, 'JetBrains Mono') +
+          txt(350, Y0 + 120, T2('consensus', 'consensus'), C.muted, 14, 'end') + txt(386, Y0 + 120, 'TTGACA', C.muted, 15, 'middle', 600, 'JetBrains Mono') + txt(474, Y0 + 120, 'TATAAT', C.muted, 15, 'middle', 600, 'JetBrains Mono') +
+          `<path d="M410,${Y0 + 130} v8 H450 v-8" stroke="${C.muted}" fill="none" stroke-width="1.5"/>` + txt(430, Y0 + 160, '~17 bp', C.muted, 16) + '</g>' : '';
 
         // eiwitten
         let pr = '';
         pr += capP(st.cap, 1);
         if (st.cap > .5 && step >= 5) pr += `<line x1="330" y1="${Y0 - 60}" x2="380" y2="${Y0 - 70}" stroke="${K.cap}" stroke-width="2.5" stroke-dasharray="4 3"/>` + (step === 5 ? txt(372, Y0 - 108, 'αCTD', K.cap, 19) : '');
         pr += laci(541, Y0 + 44, st.laci, st.allo ?? (st.lac ? 1 : 0) * (1 - st.laci));
-        if (step === 3 && st.laci < .99) pr += laci(541, Y0 + 44 + 120 * (1 - st.laci), 1 - st.laci, 1);
+        if (step === 3 && st.laci < .99) pr += laci(541 + 150 * Math.sqrt(1 - st.laci), Y0 + 44 + 106 * (1 - st.laci), 1 - st.laci, 1);   // losgelaten LacI drijft weg naar rechtsonder, niet over het operatorlabel
         // RNAP aan de promoter (wacht), plus bewegende polymerasen bij expressie
         const blocked = st.laci > .5 ? 1 : 0;
         pr += rnap(470, st.rn, 1, blocked);

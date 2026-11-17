@@ -4,6 +4,7 @@ import { prot, panel } from './_txn.js';
 const COLX = [290, 800, 1310];
 const PC = ['#7f9cf5', '#9b7bff', '#d98cf0'];
 /* α-amanitine: 50 % remming (µg/ml) in humane KB-cellen (Weinmann, Raskas & Roeder, PNAS 1974) */
+const SHR = '#b8c0d0';   // gedeelde subeenheden (grijs), enkel in de enzymen gebruikt
 const AMA = [{ n: 'Pol II', c: .02, col: PC[1] }, { n: 'Pol III', c: 20, col: PC[2] }, { n: 'Pol I', c: 200, col: PC[0], res: true }];
 const ax = c => 470 + (Math.log10(c) + 2) * 180;
 
@@ -12,7 +13,7 @@ export default {
   title: { nl: 'RNA-polymerase I, II en III', en: 'RNA polymerases I, II and III' },
   scale: { nl: '≈ 15 nm (per enzym)', en: '≈ 15 nm (per enzyme)' }, time: { nl: 'overzicht (geen echte tijd)', en: 'overview (no real time)' },
   org: { nl: 'mens (eukaryoot)', en: 'human (eukaryote)' },
-  legend: [[PC[0], 'Pol I (13)'], [PC[1], 'Pol II (12)'], [PC[2], 'Pol III (17)'], [C.histone, { nl: 'gedeelde subeenheden', en: 'shared subunits' }], [C.rna, 'RNA'], [C.dna, 'DNA'], ['#ffc247', { nl: 'promoterelement', en: 'promoter element' }]],
+  legend: [[PC[0], 'Pol I (13)'], [PC[1], 'Pol II (12)'], [PC[2], 'Pol III (17)'], [SHR, { nl: 'gedeelde subeenheden', en: 'shared subunits' }], [C.rna, 'RNA'], [C.dna, 'DNA'], ['#ffc247', { nl: 'promoterelement', en: 'promoter element' }]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Mitochondriën hebben nog een vierde, heel ander RNA-polymerase (POLRMT), in de verte verwant aan dat van bacteriofaag T7.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Mitochondria have yet a fourth, very different RNA polymerase (POLRMT), distantly related to that of bacteriophage T7.</p>' },
@@ -45,11 +46,10 @@ export default {
       s += `<g data-node="${nodes[i]}" data-color="${PC[i]}" data-label="${labels[i]}">` + prot(x, 280, 120, 78, PC[i], 1, 100 + i * 7, '', 15) +
         txt(x, 270, `Pol ${['I', 'II', 'III'][i]}`, '#fff', 26, 'middle', 800) + txt(x, 304, `${nsub[i]} ${L({ nl: 'subeenheden', en: 'subunits' })}`, '#fff', 19) +
         `<circle id="pc-a${i}" data-anchor="${nodes[i]}" cx="${x}" cy="206" r="1" fill="none"/></g>`;
-      // chromatine onder het enzym: DNA (blauw) gewonden rond histonkernen (nucleosomen), geen losse bolletjes
-      s += `<path d="M${x - 76},330 ${[0, 1, 2, 3, 4].map(k => `C${x - 58 + k * 24},316 ${x - 50 + k * 24},344 ${x - 40 + k * 24},330`).join(' ')} L${x + 76},330" stroke="${C.dna}" stroke-width="3" fill="none"/>`;
-      for (let k = 0; k < 5; k++) s += `<circle cx="${x - 48 + k * 24}" cy="330" r="8" fill="${C.histone}" stroke="#0a1224" stroke-width="1.5"/><path d="M${x - 56 + k * 24},333 a8,8 0 0 0 16,0" stroke="${C.dna}" stroke-width="2.5" fill="none"/>`;
+      // 5 gedeelde subeenheden (Rpb5, 6, 8, 10, 12): grijze vlekjes IN elk enzym (zelfde grijs als de legende)
+      for (let k = 0; k < 5; k++) s += `<ellipse cx="${x - 44 + k * 22}" cy="${336 - (k % 2) * 4}" rx="10" ry="8" fill="${SHR}" stroke="#0a1224" stroke-width="1.5"/>`;
       if (i === 1) s += `<path d="M${x + 60},${340} q20,30 0,55 q-20,25 5,50" stroke="${PC[1]}" stroke-width="3" fill="none"/>` + txt(x + 95, 420, 'CTD', PC[1], 20, 'start');
-      s += `<g data-node="${i === 0 ? 'nucleolus' : 'kern'}" data-nolabel data-color="${C.muted}">` + pill(x, 397, 196, 32, loc[i], i === 0 ? '#58677f' : '#44516a', 1, 19) + '</g>';
+      s += `<g id="pc-loc${i}" data-node="${i === 0 ? 'nucleolus' : 'kern'}" data-nolabel data-color="${C.muted}">` + pill(x, 397, 196, 32, loc[i], i === 0 ? '#58677f' : '#44516a', 1, 19) + '</g>';
       s += '</g>';
     });
     s += `<g id="pc-shared">` + txt(800, 385, '', C.muted, 14) + '</g>';
@@ -74,10 +74,11 @@ export default {
         COLX.forEach((x, i) => {
           const focus = step >= 1 && step <= 3 ? (step - 1 === i ? 1 : .2) : step >= 4 ? .2 : 1;
           $('pc-col' + i).setAttribute('opacity', f1(focus)); $('pc-a' + i).setAttribute('opacity', step === 0 || step - 1 === i ? 1 : 0);
+          $('pc-loc' + i).setAttribute('display', step >= 4 ? 'none' : 'inline');   // pillen niet half onder de panelen van stap 5–6
         });
         // gedeelde subeenheden (stap 0)
         $('pc-shr').innerHTML = step === 0 ? `<g opacity="${f1(sub(p, .45, .65))}">` + panel(430, 480, 740, 70) +
-          txt(800, 523, T2('grijs = 5 gedeelde subeenheden (Rpb5, 6, 8, 10, 12)', 'grey = 5 shared subunits (Rpb5, 6, 8, 10, 12)'), C.text, 21) + '</g>' : '';
+          txt(800, 523, T2('grijze vlekjes = 5 gedeelde subeenheden (Rpb5, 6, 8, 10, 12)', 'grey spots = 5 shared subunits (Rpb5, 6, 8, 10, 12)'), C.text, 21) + '</g>' : '';
 
         // producten
         let pr = '', pr0 = '';

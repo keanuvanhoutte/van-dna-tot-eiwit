@@ -55,15 +55,13 @@ export default {
       <rect x="112" y="432" width="150" height="76" rx="10" fill="rgba(155,123,255,.10)" stroke="${C.prot}" stroke-dasharray="5 4"/>
       <circle data-anchor="promoter" cx="187" cy="600" r="1" fill="none"/>
     </g>
-    <g data-node="promoter" data-nolabel data-color="${C.prot}"><text id="tx-tata" x="187" y="592" text-anchor="middle" font-family="JetBrains Mono" font-size="18" fill="#c9b8ff">TATAAAA</text>
-    <g id="tx-gtf"></g></g>
     <g data-node="rnaprocessing" data-color="${C.rna}" data-label="${T2('pre-mRNA → processing', 'pre-mRNA → processing')}">
       <path id="tx-rna-hit" stroke="transparent" stroke-width="26" fill="none"/>
       <g id="tx-rna-bases"></g>
       <path id="tx-rna" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round"/>
     </g>
-    <g data-node="capping" data-color="${C.rna}" data-label="${T2("5'-cap (m⁷G)", "5' cap (m⁷G)")}"><g id="tx-cap"></g></g>
     <g data-node="capping" data-nolabel data-color="${C.prot2}"><g id="tx-capenz"></g></g>
+    <g data-node="capping" data-color="${C.rna}" data-label="${T2("5'-cap (m⁷G)", "5' cap (m⁷G)")}"><g id="tx-cap"></g></g>
     <g data-node="rnapol" data-color="${C.prot}" data-label="${T2('RNA-polymerase II', 'RNA polymerase II')}">
       <g id="tx-pol">
         <path d="${eiwitPad(0, -12, 150, 128, 77, .06)}" fill="rgba(155,123,255,.20)" stroke="${C.prot}" stroke-width="3"/>
@@ -71,9 +69,12 @@ export default {
         ${[0, 1, 2, 3, 4, 5].map(i => `<circle cx="${-62 + (i % 2 ? 6 : -6)}" cy="${128 + i * 14}" r="4" fill="${C.prot}"/>`).join('')}
         <g id="tx-ctdp"></g>
         <text id="tx-ctdlab" x="-20" y="240" fill="${C.muted}" font-size="18" font-family="Inter">CTD (YSPTSPS)×52</text>
-        <circle cx="96" cy="0" r="7" fill="#fff" opacity=".85" filter="url(#glow)"/>
+        <circle id="tx-act" cx="96" cy="0" r="7" fill="#fff" opacity=".85" filter="url(#glow)"/>
       </g>
     </g>
+    <!-- factoren boven Pol II: de omtrek van Pol II loopt niet door hun labels -->
+    <g data-node="promoter" data-nolabel data-color="${C.prot}"><text id="tx-tata" x="187" y="592" text-anchor="middle" font-family="JetBrains Mono" font-size="18" fill="#c9b8ff">TATAAAA</text>
+    <g id="tx-gtf"></g></g>
     <g data-node="supercoiling" data-color="${C.dna2}" data-label="${T2('Supercoiling', 'Supercoiling')}" id="tx-sc"></g>
     <g font-family="JetBrains Mono, monospace" font-size="16" fill="${C.text}">
       <text x="44" y="408">5'</text><text x="1545" y="408">3'</text><text x="44" y="560">3'</text><text x="1545" y="560">5'</text>
@@ -140,14 +141,16 @@ export default {
           }
         }
         $('tx-rna-bases').innerHTML = rb;
+        $('tx-act').setAttribute('cy', f1(yH + 8 - CY));   // actief centrum: aan het 3'-uiteinde van het RNA, tegen de matrijs
 
         // cap: verschijnt bij ~25 nt (550 px)
         const end = pts[pts.length - 1] ?? [active, yH];
         const capOn = rnaLen > 25 * BP;
         const capK = capOn ? clamp((rnaLen - 25 * BP) / 60) : 0;
         $('tx-cap').innerHTML = capK > 0 ? `<g transform="translate(${f1(end[0] - 8)} ${f1(end[1])})" opacity="${f1(capK)}"><circle r="19" fill="${C.cap}" stroke="${C.rna}" stroke-width="2"/><text y="5" font-size="14" text-anchor="middle" fill="#3a1a05" font-family="Inter" font-weight="700">m⁷G</text></g>` : '';
-        const enzK = (rnaLen > 19 * BP ? clamp(1 - Math.max(0, rnaLen - 26 * BP) / 120) : 0) * (step === 7 ? 1 - sub(p, 0, .05) : step > 7 ? 0 : 1);
-        $('tx-capenz').innerHTML = ePill(end[0] - 130, end[1] + 4, 170, 30, T2('cappingenzym', 'capping enzyme'), C.prot2, enzK, 16);
+        // cappingenzym grijpt het 5'-uiteinde vast in de kap-stap en laat los zodra het kapje erop zit
+        const enzK = step === 6 ? ease(sub(p, 0, .2)) : 0;
+        $('tx-capenz').innerHTML = ePill(end[0] - 95, end[1], 180, 30, T2('cappingenzym', 'capping enzyme'), C.prot2, enzK, 16);
 
         // Pol II + CTD-fosforylatie
         const pol = $('tx-pol');
@@ -157,7 +160,8 @@ export default {
         $('tx-tata').setAttribute('opacity', step <= 3 ? 1 : 0);
         $('tx-ctdp').setAttribute('opacity', step === 8 ? f1(1 - sub(p, 0, .3)) : 1);
         $('tx-ctdlab').setAttribute('opacity', step === 2 || step === 7 ? 1 : 0);
-        $('tx-strandlab').setAttribute('opacity', step === 0 || step === 4 || step === 8 ? 1 : 0);
+        $('tx-strandlab').setAttribute('opacity', step === 0 || step === 8 ? 1 : step === 4 ? f1(sub(p, .45, .6)) : 0);
+        $('tx-strandlab').setAttribute('transform', step === 4 ? 'translate(-190 0)' : '');   // in stap 5 links van Pol II en het RNA
 
         // algemene transcriptiefactoren
         const g = [];
