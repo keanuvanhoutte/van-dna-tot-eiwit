@@ -72,7 +72,8 @@ export default {
         const x2 = lerp(N2, N2B, kSlide);
         let n = nucleo(N1, Y, R, { rot: -90 }).svg + nucleo(x2, Y, R, { rot: -90 + 140 * kSlide }).svg + nucleo(N4, Y, R, { rot: -90 }).svg;
         n += nucleo(N3, Y, R, { rot: -90, op: 1 - kLift }).svg;
-        if (kLift > .01) n += `<circle cx="${N3}" cy="${f1(Y - 230 * kLift)}" r="${R * .86}" fill="${C.histone}" stroke="#0a1224" stroke-width="2" opacity="${f1(1 - sub(kLift, .6, 1))}"/>`;
+        // het opgetilde octameer verdwijnt niet ter plaatse maar wordt zichtbaar weggevoerd, uit beeld
+        if (kLift > .01 && step <= 3) n += `<circle cx="${f1(N3 + 320 * kLift)}" cy="${f1(Y - 520 * kLift)}" r="${R * .86}" fill="${C.histone}" stroke="#0a1224" stroke-width="2"/>`;
         $('rm-nuc').innerHTML = n;
         // begin van het gen: pijl onder het DNA, groen zodra het vrij ligt
         const free = kSlide;

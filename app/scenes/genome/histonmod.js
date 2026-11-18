@@ -94,7 +94,7 @@ export default {
     </g>
     <g id="hm-enz"></g>
     <g id="hm-chem"></g>
-    <g id="hm-tab" data-node="genregulatie" data-color="${C.prot}" data-label="${T2('Genregulatie →', 'Gene regulation →')}"><g id="hm-rows">${tab}</g><g id="hm-tabsum" opacity="0">${txt(1115, 690, T2('schrijvers · wissers · lezers', 'writers · erasers · readers'), '#fff', 28, 'middle', 700)}${txt(1115, 740, T2('bepalen samen welke genen actief zijn', 'together decide which genes are active'), C.muted, 22)}</g><circle data-anchor="genregulatie" cx="1400" cy="570" r="1" fill="none"/></g>
+    <g id="hm-tab" data-node="genregulatie" data-color="${C.prot}" data-label="${T2('Genregulatie →', 'Gene regulation →')}"><g id="hm-rows">${tab}</g><g id="hm-tabsum" opacity="0">${txt(1115, 600, T2('schrijvers · wissers · lezers', 'writers · erasers · readers'), '#fff', 28, 'middle', 700)}${[[860, T2('schrijvers', 'writers'), 'HAT · KMT', COLS.ac], [1115, T2('wissers', 'erasers'), T2('HDAC · demethylase', 'HDAC · demethylase'), C.danger], [1375, T2('lezers', 'readers'), T2('bromo · chromo · PHD', 'bromo · chromo · PHD'), COLS.act]].map(([x, h, v, c]) => txt(x, 660, h, c, 28, 'middle', 700) + txt(x, 700, v, '#fff', 22)).join('')}${txt(1115, 752, T2('bepalen samen welke genen actief zijn', 'together decide which genes are active'), C.muted, 25)}</g><circle data-anchor="genregulatie" cx="1400" cy="570" r="1" fill="none"/></g>
     <g id="hm-sum"></g>
     <g data-node="chromatine" data-color="${C.dna}" data-label="${T2('Chromatine: open ↔ dicht', 'Chromatin: open ↔ closed')}" id="hm-chrom" opacity="0">
       ${pill(340, 720, 600, 50, T2('H3K4me3 · H3K27ac → open, actief', 'H3K4me3 · H3K27ac → open, active'), '#1f7a5c', 1, 22)}
@@ -137,6 +137,7 @@ export default {
             `<text x="${f1(x)}" y="${f1(y + (isK ? 6 : 4))}" font-size="${isK ? 16 : 12}" text-anchor="middle" fill="#0a1224" font-family="JetBrains Mono" font-weight="700" opacity="${f1(1 - fade)}">${aa}</text>`;
           if (isK || i === 1 || i % 5 === 0) g += `<g opacity="${f1(1 - fade)}">${txt(x, y + (isK ? 36 : 30), String(i), isK ? '#fff' : C.muted, isK ? 14 : 12, 'middle', isK ? 700 : 500)}</g>`;
           if (isK && !mark[i] && step >= 1 && step <= 3) g += txt(x + 12, y - 14, '+', '#fff', 15, 'middle', 800);
+          if (isK && mark[i] && mark[i].startsWith('me') && step >= 4 && step <= 6) g += txt(x - 12, y - 14, '+', '#fff', 15, 'middle', 800);   // methyl-lysine blijft positief: '+' links van de vlag
           const m = mark[i];
           const ffs = lerp(13, 17, fade);
           if (m === 'ac') g += flag(x, y - 16, 'ac', COLS.ac, 1, ffs);
@@ -154,9 +155,12 @@ export default {
 
         // --- enzymen ---
         let e = '';
-        const enz = (x, y, label, op, col = C.prot) => op < .01 ? '' : `<g opacity="${f1(op)}"><path d="${eiwitPad(x, y, 14 + label.length * 5.2, 28, 1093, .07)}" fill="rgba(155,123,255,.3)" stroke="${col}" stroke-width="3"/>${txt(x, y + 6, label, '#fff', 17, 'middle', 700)}</g>`;
-        if (step === 2) { const k = ease(sub(p, 0, .3)); e += enz(lerp(1650, rx(14), k), TY + 100, 'HAT', 1 - sub(p, .8, 1)); }
-        if (step === 3) { const k = ease(sub(p, 0, .3)); e += enz(lerp(1650, rx(18), k), TY + 100, 'HDAC', 1 - sub(p, .8, 1)); }
+        // arm van het enzym tot tegen de lysine (actieve plaats), langs het nummerlabel
+        const arm = (x, y, op) => op < .9 ? '' : `<path d="M${f1(x + 14)},${f1(y + 50)} Q${f1(x + 16)},${f1(y + 28)} ${f1(x + 9)},${f1(y + 12)}" stroke="${C.prot}" stroke-width="7" stroke-linecap="round" fill="none"/>`;
+        // enzym (bobbelig) dat met een arm tegen de staart ligt
+        const enz = (x, y, label, op, col = C.prot) => op < .01 ? '' : `<g opacity="${f1(op)}"><path d="${eiwitPad(x, y, 14 + label.length * 5.2, 28, 1093 + label.length, .14)}" fill="rgba(155,123,255,.3)" stroke="${col}" stroke-width="3"/>${txt(x, y + 6, label, '#fff', 17, 'middle', 700)}</g>`;
+        if (step === 2) { const k = ease(sub(p, 0, .3)); e += enz(lerp(1650, rx(14) + 24, k), pts[13][1] + 74, 'HAT', 1 - sub(p, .8, 1)) + arm(rx(14), pts[13][1], k * (1 - sub(p, .8, 1))); }
+        if (step === 3) { const k = ease(sub(p, 0, .3)); e += enz(lerp(1650, rx(18) + 24, k), pts[17][1] + 74, 'HDAC', 1 - sub(p, .8, 1)) + arm(rx(18), pts[17][1], k * (1 - sub(p, .8, 1))); }
         if (step === 4) e += enz(rx(4) - 30, TY + 100, T2('KMT (bv. SET1)', 'KMT (e.g. SET1)'), sub(p, 0, .2) * (1 - sub(p, .85, 1)));
         if (step === 5) { e += enz(rx(9), TY + 100, 'SUV39H1', sub(p, 0, .2)); e += enz(rx(27), TY + 100, 'PRC2 (EZH2)', sub(p, .2, .4)); }
         if (step === 6) {

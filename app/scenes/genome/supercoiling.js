@@ -93,8 +93,9 @@ function state(step, p) {
   }
   if (step === 7) {
     st.fade = sub(p, 0, .1);
-    const k = ease(sub(p, .5, .9));
-    st.w = 1 - k; st.tw = 12; st.lk = p < .5 ? 10 : 12;
+    // na de doorgang (p ≈ .5) springt Lk met 2; de kronkel ontspant meteen mee, zodat teller en vorm overeenkomen
+    const k = ease(sub(p, .5, .62));
+    st.w = 1 - k; st.tw = 12; st.lk = k < .5 ? 10 : 12;
   }
   if (step === 8) { st.tw = 12; st.w = 0; }
   if (step >= 5 && step !== 7) { if (step !== 6) st.lk = 12; }
@@ -187,7 +188,8 @@ export default {
         }
         if (step === 5) {
           const xs = X0 + (X1 - X0) * st.sp;
-          pol += `<g><path d="${eiwitPad(xs, Y0, 70, 58, 1325, .07)}" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>${txt(xs, Y0 + 7, 'Pol II', '#fff', 22)}
+          // Pol II als klem: grote lob boven, kaak onder, het DNA loopt door de spleet ertussen
+          pol += `<g>${[eiwitPad(xs, Y0 - 34, 72, 36, 1325, .1), eiwitPad(xs + 6, Y0 + 40, 60, 24, 1326, .1)].map(d => `<path d="${d}" fill="rgba(155,123,255,.45)" stroke="${C.prot}" stroke-width="3"/>`).join('')}${txt(xs, Y0 - 28, 'Pol II', '#fff', 22, 'middle', 700)}
             <path d="M${f1(xs + 30)},${Y0 - 70} h70" stroke="${C.prot}" stroke-width="4" marker-end="url(#arrow)"/>
             <path d="M${f1(xs - 20)},${Y0 - 55} C${f1(xs - 60)},${Y0 - 140} ${f1(xs - 140)},${Y0 - 150} ${f1(xs - 200)},${Y0 - 200}" stroke="${C.rna}" stroke-width="6" fill="none"/>${txt(xs - 210, Y0 - 212, 'RNA', C.rna, 20)}</g>`;
           const k = ease(sub(p, .3, .5));

@@ -15,7 +15,8 @@ const ENH = '#ffb27a', ACT = C.prot, MED = '#5fd3e6', POL = '#6f5bd6', GENE = C.
 const E0 = [230, Y], E1 = [600, Y], P0 = [1060, Y], P1 = [800, Y];   // versterker en startplaats: voor en na de lus
 
 const box = (x, y, w, col, lab, op = 1) => op <= .01 ? '' : `<rect x="${f1(x - w / 2)}" y="${f1(y - 22)}" width="${w}" height="44" rx="10" fill="${col}" opacity="${f1(op)}"/>` + T(x, y + 9, lab, { size: 22, col: '#0a1224', w: 700, halo: false, op });
-const blob = (x, y, rx, ry, col, lab, op = 1, fs = 22) => op <= .01 ? '' : `<path d="${eiwitPad(x, y, rx, ry, 120, .07)}" fill="${col}" fill-opacity=".3" stroke="${col}" stroke-width="3" opacity="${f1(op)}"/>` + (lab ? T(x, y + fs * .36, lab, { size: fs, op }) : '');
+// eiwit met donkere ondergrond: de DNA-lus loopt er zichtbaar áchter langs, niet doorheen
+const blob = (x, y, rx, ry, col, lab, op = 1, fs = 22) => op <= .01 ? '' : `<g opacity="${f1(op)}"><path d="${eiwitPad(x, y, rx, ry, 120, .07)}" fill="#0b1224"/><path d="${eiwitPad(x, y, rx, ry, 120, .07)}" fill="${col}" fill-opacity=".35" stroke="${col}" stroke-width="3"/></g>` + (lab ? T(x, y + fs * .36, lab, { size: fs, op }) : '');
 
 export default {
   id: 'enhancer',
@@ -88,12 +89,13 @@ export default {
         if (step === 2) fx += T(E[0], Y - 120, T2('activatoren', 'activators'), { size: 26, col: ACT, w: 700, op: ease(sub(p, .5, .8)) });
         if (kM > .01) {
           const mx = (E[0] + P[0]) / 2;
-          fx += blob(mx, Y - 140, 100, 44, MED, T2('brug', 'bridge'), kM, 24);
+          fx += blob(mx, Y - 122, 100, 44, MED, T2('brug', 'bridge'), kM, 24);
         }
         if (kR > .01) {
           const len = 400 * kR;
-          fx += `<path d="M${f1(gx)},${Y + 36} L${f1(gx + len)},${Y + 36}" stroke="${C.rna}" stroke-width="8" stroke-linecap="round"/>` +
-            T(gx + 210, Y + 120, T2('✓ veel RNA', '✓ lots of RNA'), { size: 26, col: C.rna, w: 700, op: sub(kR, .6, 1) });
+          // het RNA komt uit de aflezer en groeit langs het gen
+          fx += `<path d="M${f1(P[0] + 50)},${Y - 56} Q${f1(P[0] + 100)},${Y - 40} ${f1(gx + 20)},${Y - 40} L${f1(gx + 20 + len)},${Y - 40}" stroke="${C.rna}" stroke-width="8" fill="none" stroke-linecap="round"/>` +
+            T(gx + 210, Y - 66, T2('✓ veel RNA', '✓ lots of RNA'), { size: 26, col: C.rna, w: 700, op: sub(kR, .6, 1) });
         }
         // stap 5: hand met een extra vinger (schematisch)
         if (kF > .01) {

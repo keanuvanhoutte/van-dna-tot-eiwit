@@ -246,6 +246,9 @@ export default {
         pts[key] = { base: [x, y], tip: tp, ang: r };
         if (key !== 'acc') s += loopC(tp[0] + Math.cos(r) * 30, tp[1] + Math.sin(r) * 30, 30, A.col);
       }
+      // L-vorm: de D-arm en de anticodonarm liggen in één doorlopende staaf; de twee strengen lopen ononderbroken door
+      if (m > .01) { const bx = CX - 210, y0 = CY - 30, y1 = CY + 4;
+        s += `<g opacity="${f1(m)}">` + [-17, 17].map(dx => `<line x1="${bx + dx}" y1="${y0}" x2="${bx + dx}" y2="${y1}" stroke="#e8a93a" stroke-width="6" stroke-linecap="round"/>`).join('') + '</g>'; }
       // junctie (backbone-verbinding)
       s += `<circle cx="${CX}" cy="${CY}" r="40" fill="none" stroke="${C.trna}" stroke-width="4" stroke-dasharray="6 6" opacity="${f1(.6 * (1 - m))}"/>`;
       // CCA-uiteinde en anticodon

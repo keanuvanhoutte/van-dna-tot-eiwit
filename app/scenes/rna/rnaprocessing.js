@@ -73,9 +73,10 @@ function initProcessing(svg) {
     const pa = ease(prog(9));
     if (ph >= 9) {
       const len = 150 * Math.min(1, pa + (ph > 9 ? 1 : 0));
-      m += `<path d="M${X.cut},${Y} q${len * .4},${len * .05} ${len * .7},${len * .25} t${len * .3},${len * .15}" stroke="#ffb27a" stroke-width="5" fill="none" stroke-dasharray="2 3"/>`;
-      for (let k = 12; k < len; k += 26) m += `<path d="${eiwitPad(X.cut + k * .95, Y + k * .22 + 6, 7, 6, 30 + k, .09)}" fill="${C.prot}" fill-opacity=".75" stroke="${C.prot}" stroke-width="1"/>`;   // PABPN1 op de staart
-      if (len > 60) m += `<g opacity="${lab}">` + txt(X.cut + 90, Y + 72, 'poly(A)', '#ffb27a', 12) + '</g>';
+      // de staart buigt omhoog, weg van het DNA en Pol II
+      m += `<path d="M${X.cut},${Y} q${len * .4},${-len * .02} ${len * .7},${-len * .1} t${len * .3},${-len * .06}" stroke="#ffb27a" stroke-width="5" fill="none" stroke-dasharray="2 3"/>`;
+      for (let k = 12; k < len; k += 26) m += `<path d="${eiwitPad(X.cut + k * .95, Y - k * .12 - 9, 7, 6, 30 + k, .09)}" fill="${C.prot}" fill-opacity=".75" stroke="${C.prot}" stroke-width="1"/>`;   // PABPN1 op de staart
+      if (len > 60) m += `<g opacity="${lab}">` + txt(X.cut + 90, Y + 22, 'poly(A)', '#ffb27a', 12) + '</g>';
     }
     m += `</g>`;
     $('pr-mrna').innerHTML = m;
@@ -162,7 +163,7 @@ function initProcessing(svg) {
     p3 += `</g>`;
     p3 += pill((X.dse[0] + X.dse[1]) / 2, Y - 14, 60, 22, 'CstF', '#5a4bb8', cstf);   // CstF op het GU-rijke RNA stroomafwaarts van de knipplaats
     if (ph === 8 && prog(8) > .3 && prog(8) < .6) p3 += `<path d="M${X.cut - 10},${Y - 22} l20,44 M${X.cut + 10},${Y - 22} l-20,44" stroke="#fff" stroke-width="3" opacity=".9"/>`;
-    if (ph === 9) p3 += pill(X.cut + 40 + 120 * ease(prog(9)), Y + 18 + 30 * ease(prog(9)), 50, 22, 'PAP', '#6f5bd6');
+    if (ph === 9) p3 += pill(X.cut + 40 + 85 * ease(prog(9)), Y - 40 - 10 * ease(prog(9)), 50, 22, 'PAP', '#6f5bd6');
     $('pr-pa').innerHTML = p3;
 
     // stroomafwaarts RNA naar Pol II + Xrn2

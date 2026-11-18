@@ -221,7 +221,7 @@ export default {
           // ribosomen op het ORF (links) — remming bij miRNA
           const rOp = step === 6 ? 1 - ease(sub(p, .45, .9)) : 1;
           if (step === 6) {
-            for (const rx of [680, 820]) rib += ribo(rx, YT + 17, .8, rOp, '80S', { keten: (rx - 600) * .5 });   // polysoom: keten langer richting 3'
+            for (const rx of [655, 760]) rib += ribo(rx, YT + 17, .7, rOp, '80S', { keten: (rx - 600) * .6 });   // links van AGO2, niet eronder   // polysoom: keten langer richting 3'
             tg += note(750, YT - 90, T2('translatie geremd', 'translation repressed'), '#ffd36b', 20, 'middle', sub(p, .5, .7));
             const g = ease(sub(p, 0, .3));
             dec += prot(gx(NB) + 60, YG - 96, 116, 36, 'GW182', '#b44f7c', g, 20);

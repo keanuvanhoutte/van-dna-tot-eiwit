@@ -1,7 +1,10 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1 } from '../../kit.js';
 import { T } from '../prot/_b_kit.js';
 import { btn } from '../prot/_fate.js';
-import { membraanPts, ptsCirkel, ptsEllips } from '../../bio.js';
+import { membraanPts, ptsCirkel, ptsEllips, kernEnvelop } from '../../bio.js';
+/* kern van de eicel en van de zaadcelkop: het DNA ligt in een kern (dubbel membraan) */
+const NUC_EGG = kernEnvelop(ptsCirkel(460, 490, 92, 60), { poriën: [.1, .35, .6, .85], w: 6, gap: 5, poreW: 10, s: .25 });
+const NUC_SP = kernEnvelop(ptsEllips(1110, 470, 92, 62, 56), { poriën: [], w: 5, gap: 4, s: .22 });
 const EGG = membraanPts(ptsCirkel(460, 460, 200, 110), { w: 12, closed: true }), SPERM = membraanPts(ptsEllips(1110, 460, 110, 80, 70), { w: 10, closed: true });   // celmembranen (dubbellaag)
 
 /*
@@ -77,8 +80,9 @@ export default {
         if (vB > .01) {
           const km = step === 2 ? ease(sub(p, .3, .75)) : 1;
           o += `<g opacity="${f1(vB)}"><circle cx="460" cy="460" r="200" fill="${MOM}" fill-opacity=".14"/>${EGG}` +
-            `<ellipse cx="1110" cy="460" rx="110" ry="80" fill="${DAD}" fill-opacity=".16"/>${SPERM}<path d="M1220,460 C1300,420 1360,500 1450,450" stroke="${DAD}" stroke-width="6" fill="none"/></g>`;
-          o += bar(340, 580, 500, MOM, vB, 30) + bar(1030, 1190, 500, DAD, vB, 30) + marks(1110, 500, 3, vB * km);
+            `<ellipse cx="1110" cy="460" rx="110" ry="80" fill="${DAD}" fill-opacity=".16"/>${SPERM}<path d="M1220,460 C1300,420 1360,500 1450,450" stroke="${DAD}" stroke-width="6" fill="none"/>` +
+            `<circle cx="460" cy="490" r="90" fill="url(#gNuc)"/>${NUC_EGG}<ellipse cx="1110" cy="470" rx="90" ry="60" fill="url(#gNuc)"/>${NUC_SP}</g>`;
+          o += bar(395, 525, 500, MOM, vB, 30) + bar(1045, 1175, 490, DAD, vB, 26) + marks(1110, 490, 3, vB * km);   // DNA binnen de kern
           o += T(460, 720, T2('eicel', 'egg'), { size: 30, col: MOM, w: 700, op: vB }) + T(1110, 720, T2('zaadcel', 'sperm'), { size: 30, col: DAD, w: 700, op: vB });
           o += T(1110, 360, T2('merkteken', 'mark'), { size: 28, col: ME, w: 700, op: vB * km });
           o += T(800, 200, T2('dit stukje: alleen in de zaadcel gemerkt', 'this piece: marked only in the sperm'), { size: 26, op: vB * km });

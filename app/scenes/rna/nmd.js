@@ -145,20 +145,20 @@ export default {
         // NMD-factoren
         let fa = '', erf = '';
         const ejx = EJC[1];
-        if (step === 3) erf += prot(X.ptc + 78, Y - 98, 109, 34, 'eRF1·eRF3', '#6f5bd6', sub(p, .6, .75), 17);
+        if (step === 3) erf += prot(X.ptc + 52, Y - 40, 109, 34, 'eRF1·eRF3', '#6f5bd6', sub(p, .6, .75), 17);
         if (step >= 4 && step <= 6) {
           const k = step === 4 ? ease(sub(p, 0, .35)) : step === 6 ? 1 - sub(p, 0, .25) : 1;
-          erf += prot(X.ptc + 78, Y - 98, 109, 34, 'eRF1·eRF3', '#6f5bd6', step === 4 ? 1 - sub(p, .7, 1) : 0, 17);
-          const ux = X.ptc + 110, uy = Y - 140;
+          erf += prot(X.ptc + 52, Y - 40, 109, 34, 'eRF1·eRF3', '#6f5bd6', step === 4 ? 1 - sub(p, .7, 1) : 0, 17);
+          const ux = X.ptc + 120, uy = Y - 84;   // UPF1 tegen eRF3 aan (SURF-complex)
           fa += prot(ux, uy, 76, 34, 'UPF1', '#e0679a', k, 17);
-          fa += prot(ux - 80, uy - 30, 79, 32, 'SMG1', '#b44f7c', k, 17);
+          fa += prot(ux + 30, uy - 38, 79, 32, 'SMG1', '#b44f7c', k, 17);
           const k2 = step === 4 ? ease(sub(p, .35, .6)) : k;
           fa += prot(ejx, Y - 84, 79, 34, 'UPF3B', '#c9577f', k2, 17) + prot(ejx - 20, Y - 124, 75, 34, 'UPF2', '#c9577f', k2, 17);
           const k3 = step === 4 ? sub(p, .6, .8) : k;
           fa += `<path d="M${ux + 38},${uy} C${ux + 160},${uy - 30} ${ejx - 180},${Y - 150} ${ejx - 54},${Y - 128}" stroke="#ffb3cf" stroke-width="3.5" fill="none" stroke-dasharray="8 6" opacity="${f1(k3)}"/>`;
           if (step >= 5) {
             const kp = step === 5 ? ease(sub(p, .2, .5)) : k;
-            [[-16, -22], [10, -26], [36, -22]].forEach(([dx, dy], i) => {
+            [[-22, 30], [4, 33], [30, 30]].forEach(([dx, dy], i) => {
               const o = step === 5 ? sub(p, .2 + i * .1, .35 + i * .1) : k;
               fa += `<g opacity="${f1(o)}"><circle cx="${ux + dx}" cy="${uy + dy - 8}" r="11" fill="#ffd36b" stroke="#0a1224" stroke-width="1.5"/><text x="${ux + dx}" y="${uy + dy - 3}" font-size="13" text-anchor="middle" font-family="Inter" font-weight="800" fill="#0a1224">P</text></g>`;
             });
@@ -183,7 +183,7 @@ export default {
           const k = sub(p, 0, .15);
           sm += prot(X.ptc + 20, Y - 70, 79, 34, 'SMG6', '#e0679a', k * (1 - sub(p, .5, .7)), 17) + snip(X.ptc + 6, Y, sub(p, .12, .2) * (1 - sub(p, .3, .4)));
           sm += prot(X.ptc + 200, Y - 120, 125, 34, 'SMG5·SMG7', '#b44f7c', k * (1 - sub(p, .7, .9)), 17);
-          sm += note(X.ptc + 200, Y - 158, T2('→ CCR4–NOT, decapping', '→ CCR4–NOT, decapping'), '#ffb3cf', 17, 'middle', k * (1 - sub(p, .7, .9)));
+          sm += note(X.ptc + 200, Y - 190, T2('→ CCR4–NOT, decapping', '→ CCR4–NOT, decapping'), '#ffb3cf', 17, 'middle', k * (1 - sub(p, .7, .9)));
           if (cut) dg += remains(leftEnd, rightStart, chew, 1);
         }
         if (step === 7) {
@@ -212,7 +212,7 @@ export default {
             note(800, R3 + 58, T2('PTC in laatste exon → geen NMD → afgeknot eiwit', 'PTC in last exon → no NMD → truncated protein'), '#ffd36b', 20) + '</g>';
         }
         $('nm-smg').innerHTML = sm; $('nm-deg').innerHTML = dg; $('nm-dec').innerHTML = de;
-        setHot(svg, 'nm-hD', step === 6 && p > .2 && p < .7 ? [X.ptc + 200, Y - 120, 110, 30] : step === 7 && p > .3 ? [1300, 470, 12, 12] : null);
+        setHot(svg, 'nm-hD', step === 6 && p > .2 && p < .7 ? [X.ptc + 330, Y - 105, 16, 16] : step === 7 && p > .3 ? [1300, 470, 12, 12] : null);
       },
     };
   },

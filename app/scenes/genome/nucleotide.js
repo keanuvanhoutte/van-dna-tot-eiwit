@@ -152,7 +152,7 @@ export default {
           // fosfaat los, schuift naar O5'
           const P = at({ ...vb, ox: vb.ox - 150 * sep, oy: vb.oy - 60 * sep }, P1);
           m += phosphate(P, vb.S, k);
-          ann += `<g opacity="${f1(ease(sub(p, .05, .25)))}">` + txt(1250, 250, T2('base (adenine)', 'base (adenine)'), BASE.A, 30) + txt(760, 640, T2("suiker (2′-deoxyribose)", "sugar (2′-deoxyribose)"), '#e2c9a0', 30, 'end') + txt(560, 330, T2('fosfaat', 'phosphate'), '#ff9f43', 30) + '</g>';
+          ann += `<g opacity="${f1(ease(sub(p, .7, .85)))}">` + txt(1250, 250, T2('base (adenine)', 'base (adenine)'), BASE.A, 30) + txt(760, 640, T2("suiker (2′-deoxyribose)", "sugar (2′-deoxyribose)"), '#e2c9a0', 30, 'end') + txt(560, 330, T2('fosfaat', 'phosphate'), '#ff9f43', 30) + '</g>';
           ann += `<g opacity="${f1(ease(sub(p, .8, .95)))}">${txt(900, 168, T2('= deoxyadenosinemonofosfaat (dAMP)', '= deoxyadenosine monophosphate (dAMP)'), '#fff', 26)}</g>`;
         } else if (step === 1) {
           const rk = ease(sub(p, .55, .65)) * (1 - ease(sub(p, .88, .97)));
@@ -259,7 +259,9 @@ export default {
           const fs = S * .42, o = (dx, dy) => [P[0] + dx * S, P[1] - dy * S];
           const l = (a, b) => `<line x1="${f1(a[0])}" y1="${f1(a[1])}" x2="${f1(b[0])}" y2="${f1(b[1])}" stroke="#d7def0" stroke-width="4"/>`;
           const A = (q, s2, col) => `<circle cx="${f1(q[0])}" cy="${f1(q[1])}" r="${f1(fs * .72)}" fill="#0b1224"/>` + txt(q[0], q[1] + fs * .36, s2, col, fs, 'middle', 700);
-          return l(P, o(0, 1.5)) + l(P, o(0, -1.5)) + l(P, o(-1.6, 0)) + l(P, o(1.6 * k, 0)) +
+          // P=O: dubbele binding naar de bovenste O (tweede, verschoven lijn)
+          const d2 = `<line x1="${f1(P[0] + S * .18)}" y1="${f1(P[1])}" x2="${f1(P[0] + S * .18)}" y2="${f1(P[1] - 1.5 * S)}" stroke="#d7def0" stroke-width="4"/>`;
+          return d2 + l(P, o(0, 1.5)) + l(P, o(0, -1.5)) + l(P, o(-1.6, 0)) + l(P, o(1.6 * k, 0)) +
             `<circle cx="${f1(P[0])}" cy="${f1(P[1])}" r="${f1(fs * 1.05)}" fill="#ff9f43" fill-opacity=".25" stroke="#ff9f43" stroke-width="2"/>` + A(P, 'P', '#ffb46b') + A(o(0, 1.5), 'O', ELCOL.O) + A(o(0, -1.5), 'O⁻', ELCOL.O) + A(o(-1.6, 0), 'O⁻', ELCOL.O);
         }
         function pucker(cx, cy, which, k) {

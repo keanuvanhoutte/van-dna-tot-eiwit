@@ -113,8 +113,10 @@ export default {
       ${T(670, 700, T2('3D-structuur laden…', 'loading 3D structure…'), { size: 24, col: C.muted, w: 500 })}
       ${T(1230, 200, T2('Het echte complex', 'The real complex'), { size: 28, anchor: 'start', w: 700 })}
       ${T(1230, 238, T2('mens · PDB 7W1M', 'human · PDB 7W1M'), { size: 24, anchor: 'start', col: C.muted, w: 500 })}
-      ${T(1230, 320, T2('● ring', '● ring'), { size: 26, anchor: 'start', col: RING })}
-      ${T(1230, 362, T2('● helper', '● helper'), { size: 26, anchor: 'start', col: HELP })}
+      <g id="lu-legA">${T(1230, 320, T2('● ring', '● ring'), { size: 26, anchor: 'start', col: RING })}
+      ${T(1230, 362, T2('● helper', '● helper'), { size: 26, anchor: 'start', col: HELP })}</g>
+      <g id="lu-legB" opacity="0">${T(1230, 320, T2('● ring + helper', '● ring + helper'), { size: 26, anchor: 'start', col: '#8d9ab8' })}
+      ${T(1230, 362, T2('  (hier grijs)', '  (grey here)'), { size: 24, anchor: 'start', col: '#8d9ab8' })}</g>
       ${T(1230, 404, T2('● DNA', '● DNA'), { size: 26, anchor: 'start', col: C.dna2 })}
       ${T(1230, 446, T2('● stop-eiwit', '● stop protein'), { size: 26, anchor: 'start', col: STOP })}
       ${T(1230, 488, T2('● grijpplaats', '● grip site'), { size: 26, anchor: 'start', col: SA })}
@@ -131,6 +133,7 @@ export default {
         const { step, p } = s;
         const op3 = v3.update(s);
         $('lu-3d').setAttribute('opacity', f1(op3));
+        $('lu-legA').setAttribute('opacity', step === 4 ? 0 : 1); $('lu-legB').setAttribute('opacity', step === 4 ? 1 : 0);   // stap 5: ring en helper zijn grijs gedimd
         $('lu-2d').setAttribute('opacity', f1(1 - op3));
         const ph = (i, a, b) => step > i ? 1 : step < i ? 0 : ease(sub(p, a, b));
         const g = 200 * ph(1, .25, .95) + 100 * ph(3, .1, .7);

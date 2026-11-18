@@ -114,7 +114,7 @@ export default {
         /* 3: gids */
         const v3 = vis([3], step, p);
         if (v3 > .01) {
-          const km = step === 3 ? k(.15, .75) : 1, x = lerp(420, 1000, km), y = lerp(300, 520, km);
+          const km = step === 3 ? k(.15, .75) : 1, x = lerp(420, 1000, km), y = lerp(300, 578, km);   // het gids-RNA legt zich op de aangeduide plek van het DNA
           o += `<g opacity="${f1(v3)}">` + dna(150, 1450, 650) + `<rect x="880" y="625" width="250" height="50" rx="10" fill="none" stroke="${BAIT}" stroke-width="4" stroke-dasharray="10 6"/>` +
             T(1005, 720, T2('juiste plek op het DNA', 'right spot on the DNA'), { size: 24, col: BAIT }) +
             lnc(x - 200, x + 120, y + 40) + blob(x + 10, y - 30, 90, 46, PA, T2('eiwitten', 'proteins')) +
@@ -124,10 +124,10 @@ export default {
         const v4 = vis([4], step, p);
         if (v4 > .01) {
           o += `<g opacity="${f1(v4)}">` + dna(150, 1450, 680) + gene(1050, 680, 280, '#2a5bb0') + T(1190, 740, T2('doelwit', 'target'), { size: 24, col: C.dna2 }) +
-            lnc(260, 820, 470) + T(540, 580, T2('lokaas', 'decoy'), { size: 28, col: LNC, w: 700 });
+            lnc(200, 920, 470) + T(560, 580, T2('lokaas', 'decoy'), { size: 28, col: LNC, w: 700 });
           [0, 1, 2].forEach(i => {
             const kk = step === 4 ? k(.1 + i * .15, .5 + i * .15) : 1;
-            const x = lerp(900 + i * 140, [380, 620, 770][i], kk), y = lerp(230, i < 2 ? 410 : 440, kk);
+            const x = lerp(900 + i * 140, [320, 560, 800][i], kk), y = lerp(230, 410, kk);   // elk weggevangen eiwit op een haarspeld van het RNA
             o += blob(x, y, 40, 28, BAIT);
           });
           const kx = step === 4 ? k(.75, .9) : 1;
@@ -143,7 +143,7 @@ export default {
             const arm = i % 2 ? 1 : -1, u = ((i >> 1) / 6) * 2 - 1, hy = u * 30 * 2.8, hx = arm * hy * Math.tan(18 * Math.PI / 180);
             o += `<path d="M${f1(960 + hx - 13)},${f1(450 + hy)} q6.5,-9 13,0 t13,0" stroke="${LNC}" stroke-width="5" fill="none" stroke-linecap="round"/>`;
           }
-          o += '</g>' + T(650, 610, T2('actief X', 'active X'), { size: 26, col: MOM, op: v5 }) + T(960, 610, T2('XIST bedekt dit X', 'XIST coats this X'), { size: 26, col: LNC, w: 700, op: v5 * kc });
+          o += '</g>' + T(630, 600, T2('actief X', 'active X'), { size: 26, col: MOM, op: v5 }) + T(870, 600, T2('XIST bedekt dit X', 'XIST coats this X'), { size: 24, col: LNC, w: 700, op: v5 * kc });
         }
         /* 6: van de meeste weten we het niet */
         const v6 = vis([6], step, p);

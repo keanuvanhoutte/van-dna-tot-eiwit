@@ -20,11 +20,12 @@ const NUC = { hetflag: false };
 const CART = col => ({ cartoon: { color: col } });
 const BASE3 = [{ sel: NUC, style: CART(RNA) }, { sel: { resn: 'ADE' }, style: { sphere: { color: ADE, radius: 1 } } }, { sel: { resn: 'MG' }, style: {} }];
 const GREYALL = { sel: NUC, style: CART(GREY) };
+/* stap 5: ruimer inzoomen (residuen 20–80), zodat de kern van de vanger binnen het kader blijft */
 const S3 = {
   2: { spin: .012 },
-  3: { spin: .01, focus: [GREYALL, { sel: { resi: range(25, 45) }, style: CART(ARM1), label: L3('arm 1', 'arm 1') }, { sel: { resi: range(54, 72) }, style: CART(ARM2) },
+  3: { spin: .01, focus: [GREYALL, { sel: { resi: range(25, 45) }, style: CART(ARM1), label: L3('arm 1', 'arm 1') }, { sel: { resi: range(54, 72) }, style: CART(ARM2), label: L3('arm 2', 'arm 2') },
     { sel: { resi: [37, 38, 60, 61] }, style: { cartoon: { color: '#ffffff' }, stick: { color: '#ffffff', radius: .3 } }, label: L3('lussen raken elkaar', 'loops touch') }] },
-  4: { spin: .006, zoom: { resi: [22, 47, 51, 74, 90] }, focus: [GREYALL, { sel: { resn: 'ADE' }, style: { sphere: { color: ADE, radius: 1.1 } }, label: L3('adenine', 'adenine') },
+  4: { spin: .006, zoom: { resi: range(20, 80) }, focus: [GREYALL, { sel: { resn: 'ADE' }, style: { sphere: { color: ADE, radius: 1.1 } }, label: L3('adenine', 'adenine') },
     { sel: { resi: 74, ...NUC }, style: { cartoon: { color: U74 }, stick: { color: U74, radius: .35 } }, label: L3('U', 'U') }] },
   5: { spin: .012 },
 };
@@ -78,8 +79,13 @@ export default {
       ${T(670, 640, T2('3D-structuur laden…', '3D structure loading…'), { size: 24, col: C.muted, w: 500 })}
       ${T(1230, 330, T2('Het echte vanggedeelte', 'The real catching part'), { size: 28, anchor: 'start', w: 700 })}
       ${T(1230, 370, T2('bacterie · PDB 1Y26', 'bacterium · PDB 1Y26'), { size: 24, anchor: 'start', col: C.muted, w: 500 })}
-      ${T(1230, 430, T2('oranje: RNA', 'orange: RNA'), { size: 24, anchor: 'start', col: RNA })}
-      ${T(1230, 466, T2('blauw: adenine', 'blue: adenine'), { size: 24, anchor: 'start', col: ADE })}
+      <g id="rw-leg0">${T(1230, 430, T2('oranje: RNA', 'orange: RNA'), { size: 24, anchor: 'start', col: RNA })}
+      ${T(1230, 466, T2('blauw: adenine', 'blue: adenine'), { size: 24, anchor: 'start', col: ADE })}</g>
+      <g id="rw-leg3" opacity="0">${T(1230, 430, T2('arm 1 en arm 2', 'arm 1 and arm 2'), { size: 24, anchor: 'start', col: ARM1 })}
+      ${T(1230, 466, T2('grijs: rest van het RNA', 'grey: rest of the RNA'), { size: 24, anchor: 'start', col: '#8d9ab8' })}</g>
+      <g id="rw-leg4" opacity="0">${T(1230, 430, T2('blauw: adenine', 'blue: adenine'), { size: 24, anchor: 'start', col: ADE })}
+      ${T(1230, 466, T2('rood: de U die ermee paart', 'red: the U that pairs with it'), { size: 24, anchor: 'start', col: U74 })}
+      ${T(1230, 502, T2('grijs: rest van het RNA', 'grey: rest of the RNA'), { size: 24, anchor: 'start', col: '#8d9ab8' })}</g>
     </g>
     ${btn('rnastructuur', 40, 330, T2('↑ hoe RNA zich vouwt', '↑ how RNA folds'), C.rna)}
     ${btn('btrp', 560, 400, T2('vergelijk: het trp-operon', 'compare: the trp operon'), '#d65a5a')}
@@ -95,6 +101,8 @@ export default {
         const op3 = v3.update(s);
         $('rw-3d').setAttribute('opacity', f1(op3));
         $('rw-2d').setAttribute('opacity', f1(1 - op3));
+        // legende volgt de kleuren van de stap (stap 4: armen, stap 5: adenine + U, anders RNA + adenine)
+        $('rw-leg0').setAttribute('opacity', step === 3 || step === 4 ? 0 : 1); $('rw-leg3').setAttribute('opacity', step === 3 ? 1 : 0); $('rw-leg4').setAttribute('opacity', step === 4 ? 1 : 0);
         if (op3 > .995) { $('rw-v').innerHTML = ''; return; }
         const ph = (i, a, b) => step > i ? 1 : step < i ? 0 : ease(sub(p, a, b));
         const kA = ph(1, .05, .35), kOn = ph(1, .35, .6), kR = ph(1, .6, .8), kP = ph(1, .8, 1);
