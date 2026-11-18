@@ -132,8 +132,8 @@ export default {
           if (step === 6) {
             const [x, y] = PBS[0], kL = ease(sub(p, .15, .45)), kR = ease(sub(p, .45, .8));
             o += arrow(x - 70, y - 20, x - 190, y - 90, PB, 4, kL) + arrow(x + 70, y - 20, x + 190, y - 90, C.rrna, 4, kR);
-            if (kL > .01) for (let j = 0; j < 4; j++) o += `<line x1="${f1(x - 270 + j * 26)}" y1="${f1(y - 120 + (j % 2) * 12)}" x2="${f1(x - 254 + j * 26)}" y2="${f1(y - 120 + (j % 2) * 12)}" stroke="${C.rna}" stroke-width="7" stroke-linecap="round" opacity="${f1(kL)}"/>`;
-            o += T(x - 230, y - 160, T2('afbreken?', 'break down?'), { size: 26, col: PB, w: 700, op: kL }) +
+            if (kL > .01) for (let j = 0; j < 4; j++) o += `<line x1="${f1(x - 270 + j * 26)}" y1="${f1(y - 150 + (j % 2) * 12)}" x2="${f1(x - 254 + j * 26)}" y2="${f1(y - 150 + (j % 2) * 12)}" stroke="${C.rna}" stroke-width="7" stroke-linecap="round" opacity="${f1(kL)}"/>`;
+            o += T(x - 230, y - 180, T2('afbreken?', 'break down?'), { size: 26, col: PB, w: 700, op: kL }) +
               squig(x + 245, y - 118, .6, 0, kR) + ribo(x + 245, y - 122, .3, kR, '') + T(x + 245, y - 160, T2('bewaren?', 'store?'), { size: 26, col: C.rrna, w: 700, op: kR });
           }
           // thermometer

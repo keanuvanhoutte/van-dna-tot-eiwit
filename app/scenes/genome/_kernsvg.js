@@ -57,7 +57,7 @@ export function sceneKern() {
       ${Array.from({ length: 40 }, () => `<circle cx="${(660 + r() * 120).toFixed(1)}" cy="${(390 + r() * 120).toFixed(1)}" r="${(1.5 + r() * 2.5).toFixed(1)}" fill="${C.rrna}" opacity=".55"/>`).join('')}
       <circle cx="690" cy="440" r="14" fill="#1b2a47"/><circle cx="740" cy="470" r="11" fill="#1b2a47"/>
     </g>
-    <g data-node="kernimport" data-color="${C.prot}" data-label="${L({ nl: 'Kernporiecomplex', en: 'Nuclear pore complex' })}">${npc}<circle data-anchor="kernimport" cx="${P(195, R + 20)[0]}" cy="${P(195, R + 20)[1] - 20}" r="1" fill="none"/></g>
+    <g data-node="kernimport" data-color="${C.prot}" data-label="${L({ nl: 'Kernporiecomplex', en: 'Nuclear pore complex' })}">${npc}<circle data-anchor="kernimport" cx="${P(225, R + 14)[0]}" cy="${P(225, R + 14)[1] - 6}" r="1" fill="none"/></g>
 
     <g data-node="transcriptie" data-color="${C.prot}" data-label="${L({ nl: 'Transcriptie van een gen', en: 'Transcription of a gene' })}">
       <rect x="${gx0 - 50}" y="${gy - 90}" width="${gx1 - gx0 + 100}" height="130" fill="transparent"/>${tree}

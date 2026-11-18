@@ -89,7 +89,7 @@ export default {
       const y = 290 + i * 70;
       tr += `<g class="dm-tetn" id="dm-tet${i}">${pill(1300, y, 150, 44, n, col, 1, 20)}</g>`;
       if (i < 4) tr += `<path d="M1300,${y + 24} L1300,${y + 52}" stroke="#fff" stroke-width="3" marker-end="url(#arrow)"/>` + txt(1390, y + 45, i < 3 ? 'TET' : 'TDG + BER', i < 3 ? '#c9b8ff' : '#7fdc6a', 16, 'start', 700);
-      if (i === 2) tr += txt(1215, y + 6, T2('ook: TDG + BER', 'also: TDG + BER'), '#7fdc6a', 15, 'end', 700);   // TDG knipt 5fC én 5caC weg (Wu & Zhang 2017)
+      if (i === 2) tr += txt(1215, y + 6, T2('ook: TDG + BER', 'also: TDG + BER'), '#7fdc6a', 15, 'end', 700);   // TDG knipt 5fC én 5caC weg (Maiti & Drohat 2011, J Biol Chem 286:35334; overzicht Wu & Zhang 2017)
     });
     tr += txt(1392, 590, T2('ook passief:', 'also passive:'), C.muted, 13, 'start') + txt(1392, 607, T2('verdunning bij', 'dilution during'), C.muted, 13, 'start') + txt(1392, 624, T2('replicatie', 'replication'), C.muted, 13, 'start') + '</g>';
 
@@ -173,7 +173,7 @@ export default {
           e += pill(x, 262, 150, 36, 'DNMT3A/B', C.prot2, 1 - sub(p, .9, 1), 17) + pill(x, 488, 150, 36, 'DNMT3A/B', C.prot2, 1 - sub(p, .9, 1), 17);
           e += txt(560, 560, 'SAM → SAH', C.muted, 18);
         }
-        if (step === 4) e += pill(dx + 60, 500, 170, 36, 'DNMT1 + UHRF1', C.prot2, 1, 16);
+        if (step === 4) e += pill(Math.min(dx + 60, bx(N - 1) - 60), 500, 170, 36, 'DNMT1 + UHRF1', C.prot2, 1, 16);   // blijft binnen beeld (stopt bij de laatste CpG)
         $('dm-enz').innerHTML = e;
         // inzetten
         $('dm-me').setAttribute('opacity', step === 1 ? ease(sub(p, .25, .5)) : 1);

@@ -39,8 +39,8 @@ export default {
   svg() {
     const btn = (x, y, id, nl, en, col) => `<g data-node="dnavormen" data-href="../atlas/index.html?id=${id}" data-nolabel class="vf-at"><rect x="${x - 125}" y="${y - 25}" width="250" height="50" rx="25" fill="#0d1426" stroke="${col}" stroke-width="3"/><text x="${x}" y="${y + 8}" font-size="21" text-anchor="middle" fill="${col}" font-family="Inter" font-weight="700">${T2(nl, en)}</text></g>`;
     return svgOpen() + `<g id="vf-main"><g id="vf-mA"></g><g id="vf-mB" data-node="dnahelix" data-color="${C.dna}" data-nolabel></g><g id="vf-mZ"></g></g><g id="vf-ann"></g>
-      <g id="vf-hs-rna" data-node="rnastructuur" data-color="${C.rna}" data-label="${T2('dsRNA is A-vorm → RNA-structuur', 'dsRNA is A-form → RNA structure')}"><circle data-anchor="rnastructuur" cx="330" cy="150" r="20" fill="transparent"/></g>
-      <g id="vf-hs-sc" data-node="supercoiling" data-color="${C.dna}" data-label="${T2('Z-DNA ← negatieve supercoiling', 'Z-DNA ← negative supercoiling')}"><circle data-anchor="supercoiling" cx="1270" cy="150" r="20" fill="transparent"/></g>
+      <g id="vf-hs-rna" data-node="rnastructuur" data-color="${C.rna}" data-label="${T2('dsRNA is A-vorm → RNA-structuur', 'dsRNA is A-form → RNA structure')}"><circle data-anchor="rnastructuur" cx="150" cy="420" r="20" fill="transparent"/></g>
+      <g id="vf-hs-sc" data-node="supercoiling" data-color="${C.dna}" data-label="${T2('Z-DNA ← negatieve supercoiling', 'Z-DNA ← negative supercoiling')}"><circle data-anchor="supercoiling" cx="1440" cy="420" r="20" fill="transparent"/></g>
       <g id="vf-hs-nt" data-node="nucleotide" data-color="#c9a574" data-label="${T2('Suikerpuckering (nucleotide)', 'Sugar pucker (nucleotide)')}"><circle data-anchor="nucleotide" cx="800" cy="100" r="20" fill="transparent"/></g>
       <g id="vf-atlas">${btn(330, 790, 'adna', 'A-DNA in 3D ↗', 'A-DNA in 3D ↗', '#ffb27a')}${btn(800, 790, 'bdna', 'B-DNA in 3D ↗', 'B-DNA in 3D ↗', C.dna)}${btn(1270, 790, 'zdna', 'Z-DNA in 3D ↗', 'Z-DNA in 3D ↗', '#f06bc0')}</g>
       </svg>`;
@@ -73,7 +73,7 @@ export default {
         const heads = { A: ['A-DNA', T2('rechtshandig', 'right-handed')], B: ['B-DNA', T2('rechtshandig', 'right-handed')], Z: ['Z-DNA', T2('linkshandig', 'left-handed')] };
         if (step !== 5 && step !== 6) for (const [k, h] of Object.entries(HX)) {
           const op = focus && focus !== k ? .3 : 1, top = CY - h.H.L / 2 * S - 60;
-          ann += `<g opacity="${f1(op)}">${txt(h.x, Math.min(top, 190), heads[k][0], h.col, 34, 'middle', 800)}</g>`;
+          ann += `<g opacity="${f1(op)}">${txt(h.x, step >= 1 && step <= 3 ? Math.max(Math.min(top, 190), 230) : Math.min(top, 190), heads[k][0], h.col, 34, 'middle', 800)}</g>`;   // bij inzoomen niet tegen de bovenrand
         } else if (step === 5) for (const [k, h] of Object.entries(HX)) ann += txt(h.x, 200, heads[k][0], h.col, 34, 'middle', 800);
         // lengte-aanduiding (zelfde 16 bp)
         if (step === 0) {

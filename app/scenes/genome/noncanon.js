@@ -151,7 +151,8 @@ export default {
             m += '</g>';
             if (i < 2) m += kion(cx + 20, cy + (.5 - i) * gap * (0.4 + .6 * k1) - 10, 24, k2);
           }
-          ann += `<g opacity="${f1(k1)}"><path d="M${cx + 420},${cy + gap + 30} V${cy + 30}" stroke="#fff" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)"/>${txt(cx + 440, cy + gap / 2 + 38, '≈ 3,4 Å'.replace(',', L({ nl: ',', en: '.' })), '#fff', 24, 'start', 700)}</g>`;
+          // maatpijl tussen twee naburige lagen; stippellijnen tonen welke twee vlakken bedoeld zijn
+          ann += `<g opacity="${f1(k1)}"><path d="M${cx + w / 2 - 130},${cy + gap + 40} H${cx + 440} M${cx + w / 2 - 130},${cy + 40} H${cx + 440}" stroke="#fff" stroke-width="1.5" stroke-dasharray="5 5" opacity=".6"/><path d="M${cx + 420},${cy + gap + 30} V${cy + 50}" stroke="#fff" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)"/>${txt(cx + 440, cy + gap / 2 + 38, '≈ 3,4 Å'.replace(',', L({ nl: ',', en: '.' })), '#fff', 24, 'start', 700)}</g>`;
           ann += `<g opacity="${f1(ease(sub(p, .6, .8)))}">${txt(800, 210, T2('K⁺ tussen twee lagen (8 × O6)', 'K⁺ between two layers (8 × O6)'), '#fff', 28)}</g>`;
         } else if (step === 3) {
           const k1 = ease(sub(p, .05, .5)), k2 = ease(sub(p, .3, .75));

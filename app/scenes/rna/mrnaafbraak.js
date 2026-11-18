@@ -128,7 +128,7 @@ export default {
           const cur = (cx, cy, r0) => `<path d="M${cx - 110},${cy} C${cx - 60},${cy - 40 * r0} ${cx},${cy + 40 * r0} ${cx + 100},${cy - 10}" stroke="${C.rna}" stroke-width="8" fill="none" stroke-linecap="round"/>`;
           fa += cur(760, 390, 1) + cur(830, 480, -1) + cur(740, 540, .6);
           const pk = i => ease(sub(p, .04 + i * .07, .14 + i * .07));          // factoren komen er één voor één bij
-          fa += prot(900, 370, 95, 34, 'DCP2', '#8a5a3a', pk(0), 19) + prot(640, 460, 87, 34, 'XRN1', '#8a5a3a', pk(1), 19) + prot(940, 540, 103, 34, 'LSm1–7', '#6b4a33', pk(2), 19) + prot(700, 330, 95, 34, 'DDX6', '#6b4a33', pk(3), 19) + prot(990, 455, 81, 34, 'AGO2', '#b44f7c', pk(4), 19);
+          fa += prot(900, 370, 95, 34, 'DCP2', '#8a5a3a', pk(0), 19) + prot(640, 460, 87, 34, 'XRN1', '#8a5a3a', pk(1), 19) + prot(940, 540, 103, 34, 'LSm1–7', '#6b4a33', pk(2), 19) + prot(700, 330, 95, 34, 'DDX6', '#6b4a33', pk(3), 19) + prot(905, 445, 81, 34, 'AGO2', '#b44f7c', pk(4), 19);
           fa += note(800, 250, 'P-body', '#ff9ec3', 24) + '</g>';
         }
 
@@ -166,7 +166,7 @@ export default {
         setHot(svg, 'md-mA', step === 0 ? [575, Y + 70, 200, 26] : null);
         // hotspots naar miRNA en NMD
         $('md-mi').innerHTML = step === 2 ? prot(1260, Y + 110, 160, 36, 'miRNA·AGO2', '#e0679a', sub(p, .5, .7), 19) : '';
-        setHot(svg, 'md-iA', step === 2 && p > .6 ? [1260, Y + 110, 118, 30] : step === 6 && p > .3 ? [990, 455, 60, 28] : null);
+        setHot(svg, 'md-iA', step === 2 && p > .6 ? [1260, Y + 110, 118, 30] : step === 6 && p > .3 ? [905, 445, 60, 28] : null);
         $('md-nmd').innerHTML = step === 4 ? prot(1250, 250, 204, 36, T2('NMD (SMG6-knip)', 'NMD (SMG6 cut)'), '#e0679a', sub(p, .3, .5), 19) : '';
         setHot(svg, 'md-nA', step === 4 && p > .4 ? [1250, 250, 150, 30] : null);
         setHot(svg, 'md-kA', step === 6 && p > .5 ? [800, 242, 110, 30] : null);   // zijpad RNA-lot: P-body → druppels bij stress

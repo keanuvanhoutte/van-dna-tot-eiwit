@@ -62,7 +62,7 @@ export default structure3d({
       text: { nl: 'Histonen pakken de buitenkant van het DNA vast, niet de letters. Daarom past bijna elk stuk DNA eromheen.', en: 'Histones grip the outside of the DNA, not the letters. That is why almost any piece of DNA can wrap around them.' } },
     { dur: 7500, spin: .02, focus: null, zoom: {},
       title: { nl: 'Verder inzoomen op het DNA', en: 'Zooming further into the DNA' },
-      text: { nl: 'Tussen twee nucleosomen ligt telkens een stukje vrij DNA. Hierna: de DNA-dubbelhelix zelf.', en: 'Between two nucleosomes there is always a short piece of free DNA. Next: the DNA double helix itself.' } },
+      text: { nl: 'Dit is één nucleosoom; in de cel loopt het DNA verder naar het volgende. Hierna: de DNA-dubbelhelix zelf.', en: 'This is one nucleosome; in the cell the DNA runs on to the next one. Next: the DNA double helix itself.' } },
   ],
   hotspots: [
     { node: 'dnahelix', label: { nl: 'DNA-dubbelhelix →', en: 'DNA double helix →' }, color: C.dna },

@@ -113,8 +113,8 @@ export default {
             o += `<path d="M${f1(bx + hx - 2 * q)},${f1(by + hy)} q${f1(q)},${f1(-1.4 * q)} ${f1(2 * q)},0 t${f1(2 * q)},0" stroke="${XIST}" stroke-width="${f1(2.2 * sc / 3 + 2)}" fill="none" stroke-linecap="round"/>`;
           }
           o += '</g>' + T(640, 640, T2('actief X', 'active X'), { size: 28, col: MOM, w: 700, op: vC });
-          o += T(915, 335, T2('XIST-RNA bedekt dit X', 'XIST RNA coats this X'), { size: 26, col: XIST, w: 700, op: vC * (step === 2 ? ease(sub(p, .5, .8)) : 1 - kb) });
-          o += T(960, 380, T2('Barr-lichaampje', 'Barr body'), { size: 28, col: C.text, w: 700, op: vC * kb });
+          o += T(915, 335, T2('XIST-RNA bedekt dit X', 'XIST RNA coats this X'), { size: 26, col: XIST, w: 700, op: vC * (step === 2 ? ease(sub(p, .5, .8)) : 1 - ease(sub(p, 0, .15))) });   // weg vóór het Barr-label verschijnt
+          o += T(960, 380, T2('Barr-lichaampje', 'Barr body'), { size: 28, col: C.text, w: 700, op: vC * (step === 3 ? ease(sub(p, .2, .7)) : 1) });
         }
         // D: weefsel als mozaïek
         const vD = vis(4, 4);
@@ -134,7 +134,7 @@ export default {
           o += `<g opacity="${f1(vE)}"><g clip-path="url(#xi-cat)"><rect x="300" y="100" width="1000" height="650" fill="#f2efe8"/>` +
             PATCH.map(([x, y, r, c]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${c}"/>`).join('') + '</g>' +
             `<circle cx="1095" cy="320" r="10" fill="#2f8f4f"/><circle cx="1165" cy="320" r="10" fill="#2f8f4f"/></g>` +
-            T(820, 800, T2('oranje of zwart: in elke vlek werkt een ander X', 'orange or black: in each patch a different X works'), { size: 28, w: 700, op: vE });
+            T(820, 800, T2('oranje of zwart: per vlek werkt het ene of het andere X', 'orange or black: in each patch one X or the other works'), { size: 28, w: 700, op: vE });
         }
         // F: genen op het stille X, enkele blijven aan
         const vF = vis(6, 6);

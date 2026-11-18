@@ -164,7 +164,8 @@ export default {
         pa += note(pl[0], pl[1] + 6, exch > .5 ? 'PABPC1' : 'PABPN1', exch > .5 ? '#7fe0ef' : '#b9a8ff', 19, 'middle', step >= 6 ? 1 : (step <= 2 ? 1 : 0));
         const pt = side(sOf(680), 26); pa += step <= 1 ? note(pt[0], pt[1], 'poly(A)', C.cap, 18) : '';   // boven de staart zelf
         $('ex-pa').innerHTML = pa;
-        const pA = side(sOf(684), step >= 6 ? -90 : -80); $('ex-pA').setAttribute('cx', f1(pA[0])); $('ex-pA').setAttribute('cy', f1(pA[1]));
+        // stap 9: label naast de staart, niet op de lus-lijn
+        const pA = step === 8 ? (q => [q[0] + 120, q[1] + 10])(P.at(sOf(LEN))) : side(sOf(684), step >= 6 ? -90 : -80); $('ex-pA').setAttribute('cx', f1(pA[0])); $('ex-pA').setAttribute('cy', f1(pA[1]));
         const lA = step === 8 && p > .5 ? side(sOf(660), 96) : [-9999, -9999]; $('ex-lA').setAttribute('cx', f1(lA[0])); $('ex-lA').setAttribute('cy', f1(lA[1]));   // zijpad RNA-lot
         svg.querySelector('[data-node="mrnaafbraak"]').setAttribute('opacity', step === 8 ? f1(sub(p, .5, .7)) : '0');
 

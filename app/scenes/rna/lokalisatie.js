@@ -113,7 +113,7 @@ export default {
           if (step === 0) {
             // ons mRNA komt uit de kern
             const k = ease(sub(p, .15, .8));
-            o += packet(lerp(560, 700, k), 375, 1.2, 0, sub(p, .05, .2)) + T(700, 330, T2('dit mRNA moet naar de rand', 'this mRNA must go to the edge'), { size: 24, col: LAB, op: sub(p, .6, .8) });
+            o += packet(lerp(560, 700, k), 375, 1.2, 0, sub(p, .05, .2)) + T(820, 300, T2('dit mRNA moet naar de rand', 'this mRNA must go to the edge'), { size: 24, col: LAB, op: sub(p, .6, .8) });
           }
           if (step >= 3) {
             const k = step === 3 ? ease(sub(p, .12, .92)) : 1;
@@ -123,7 +123,7 @@ export default {
               if (i === 0 && step >= 4) return;            // ons pakketje wordt in stap 4 een open mRNA
               o += `<g transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(a)})">` + motor(0, -30, 0, 1.1, MOT, u * 40) + packet(0, -78, i ? .9 : 1.2, 1, i ? .75 : 1) + '</g>';
             });
-            o += T(1000, 400, T2('motoreiwit op een spoor', 'motor protein on a track'), { size: 24, col: MOT, op: step === 3 ? sub(p, .3, .5) : 0 });
+            o += T(900, 640, T2('motoreiwit op een spoor', 'motor protein on a track'), { size: 24, col: MOT, op: step === 3 ? sub(p, .3, .5) : 0 });
           }
           if (step >= 4) {
             // aan de rand: eiwit laat los, mRNA gaat open, ribosomen lezen
@@ -145,7 +145,7 @@ export default {
                 for (let j = 0; j < n; j++) o += `<circle cx="${f1(rx + 4 + 6 * Math.sin(j * 1.3))}" cy="${f1(my - 48 - j * 15)}" r="7" fill="${ACT}" stroke="#0a1224" stroke-width="1.5"/>`;
               }
             });
-            o += T(1150, 300, T2('ribosomen lezen hier', 'ribosomes read here'), { size: 24, col: C.rrna, op: step === 4 ? sub(p, .7, .85) : 0 });
+            o += T(1022, 418, T2('ribosomen lezen hier', 'ribosomes read here'), { size: 24, col: C.rrna, anchor: 'end', op: step === 4 ? sub(p, .7, .85) : 0 });
             // actinedraden in de rand (stap 5)
             const kF = ph(5, .35, .85);
             if (kF > .01) {

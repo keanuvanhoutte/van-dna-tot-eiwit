@@ -109,7 +109,7 @@ export default {
       <g id="gn-loop"></g>
       <g data-node="genregulatie" data-color="${col.enh}" data-label="${T2('Enhancer → genregulatie', 'Enhancer → gene regulation')}">
         <g id="gn-enh">${`<rect x="${ENH[0]}" y="${Y - 20}" width="${ENH[1] - ENH[0]}" height="40" rx="10" fill="#4a3d1c" stroke="${col.enh}" stroke-width="3"/>`}${txt((ENH[0] + ENH[1]) / 2, Y + 7, 'enhancer', '#fff', 21, 'middle', 700)}
-        <circle data-anchor="genregulatie" cx="${(ENH[0] + ENH[1]) / 2 - 36}" cy="${Y + 30}" r="1" fill="none" data-pos="below"/></g>
+        <circle data-anchor="genregulatie" cx="${(ENH[0] + ENH[1]) / 2 - 36}" cy="${Y + 62}" r="1" fill="none" data-pos="below"/></g>
       </g>
       <g data-node="promoter" data-color="${col.prom}" data-label="${T2('Promoter', 'Promoter')}">
         <rect x="${PROM[0]}" y="${Y - 22}" width="${PROM[1] - PROM[0]}" height="44" rx="10" fill="#2e2556" stroke="${col.prom}" stroke-width="3"/>
@@ -122,7 +122,7 @@ export default {
       <g id="gn-codons">
         ${mono(ATG + 22, Y + 44, 'ATG', BASE.A, 20)}${txt(ATG + 22, Y + 68, 'start', BASE.A, 15)}
         ${mono(STOP - 22, Y + 44, 'TAA', BASE.T, 20)}${txt(STOP - 22, Y + 68, 'stop', BASE.T, 15)}
-        ${txt((TSS + ATG) / 2, Y + 44, "5'-UTR", col.utr, 16)}${txt((STOP + CUT) / 2 + 12, Y + 70, "3'-UTR", col.utr, 16)}
+        ${txt((TSS + ATG) / 2 + 12, Y + 70, "5'-UTR", col.utr, 16)}${txt((STOP + CUT) / 2 + 12, Y + 70, "3'-UTR", col.utr, 16)}
       </g>
       <g data-node="polya" data-color="${C.rna}" data-label="${T2('Poly(A)-signaal', 'Poly(A) signal')}">
         <g id="gn-pas">${mono(PAS - 16, Y + 44, 'AATAAA', C.rna, 17)}
@@ -135,8 +135,8 @@ export default {
       <!-- stap 3: TFIID op de TATA-box en Pol II op de promoter, rond de startplaats (+1) -->
       <g id="gn-pic" opacity="0" data-node="rnapol" data-color="${C.prot}" data-nolabel>
         <path d="${eiwitPad(360, Y - 40, 34, 16, 77, .08)}" fill="#7a62e0" fill-opacity=".9" stroke="${C.prot}" stroke-width="2"/>${txt(360, Y - 35, 'TFIID', '#fff', 15, 'middle', 700)}
-        <path d="${eiwitPad(432, Y + 2, 36, 34, 22, .08)}" fill="rgba(155,123,255,.30)" stroke="${C.prot}" stroke-width="3"/>
-        ${txt(474, Y + 36, 'Pol II', '#c9b8ff', 17, 'start', 700)}
+        <path d="${eiwitPad(446, Y + 2, 34, 34, 22, .08)}" fill="rgba(70,52,140,.85)" stroke="${C.prot}" stroke-width="3"/>
+        ${txt(446, Y + 8, 'Pol II', '#fff', 16, 'middle', 700)}
       </g>
     </g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Transcriptie →', 'Transcription →')}" id="gn-pre">${pre}<circle data-anchor="transcriptie" cx="${CUT - 60}" cy="${YP + 30}" r="1" fill="none" data-pos="below"/></g>
@@ -164,8 +164,8 @@ export default {
           if (step === 1) g += txt((eR + PROM[0]) / 2 - 40, Y - 62, T2('cohesine', 'cohesin'), '#ffc247', 15, 'end');
           const mo = step === 1 ? sub(p, .55, .8) : 0;
           // activator op de enhancer; Mediator overbrugt enhancer en promoter (raakt beide)
-          if (mo > .01) g += `<g opacity="${f1(mo)}"><path d="${eiwitPad((ENH[0] + ENH[1]) / 2 + dx, Y - 36, 44, 16, 1117, .08)}" fill="#c98a1e" stroke="${col.enh}" stroke-width="2"/>${txt((ENH[0] + ENH[1]) / 2 + dx, Y - 31, 'activator', '#fff', 15, 'middle', 700)}` +
-            `<path d="${eiwitPad(PROM[0] + 22, Y + 42, 54, 20, 1114, .07)}" fill="rgba(155,123,255,.55)" stroke="${C.prot}" stroke-width="2"/>${txt(PROM[0] + 22, Y + 48, 'Mediator', '#fff', 17, 'middle', 700)}</g>`;
+          if (mo > .01) g += `<g opacity="${f1(mo)}"><path d="${eiwitPad((ENH[0] + ENH[1]) / 2 + dx + 4, Y + 38, 52, 17, 1117, .08)}" fill="#c98a1e" stroke="${col.enh}" stroke-width="2"/>${txt((ENH[0] + ENH[1]) / 2 + dx + 4, Y + 44, 'activator', '#fff', 15, 'middle', 700)}` +
+            `<path d="${eiwitPad(PROM[0] + 22, Y + 40, 56, 22, 1114, .07)}" fill="rgba(155,123,255,.75)" stroke="${C.prot}" stroke-width="2"/>${txt(PROM[0] + 22, Y + 46, 'Mediator', '#fff', 17, 'middle', 700)}</g>`;
         }
         $('gn-loop').innerHTML = g;
         // markeringen per stap

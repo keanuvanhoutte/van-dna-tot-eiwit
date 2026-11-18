@@ -85,7 +85,7 @@ function initProcessing(svg) {
     $('pr-cap').innerHTML = `<g ${up}>` + (capOp > 0 ? `<g opacity="${capOp}"><circle cx="${capX}" cy="${Y}" r="13" fill="#ffb27a" stroke="${C.rna}" stroke-width="2"/><text x="${capX}" y="${Y + 4}" font-size="9" text-anchor="middle" fill="#3a1a05" font-family="Inter" font-weight="700" opacity="${lab}">m⁷G</text></g>` : '')
       + pill(capX + 6, Y - 52, 110, 24, 'RNGTT · RNMT', C.prot, ph === 0 ? 1 - Math.max(0, (prog(0) - .75) / .25) : 0)
       + pill(capX - 4, Y - 30, 46, 20, 'CBC', '#6f5bd6', ph >= 1 ? 1 : 0)
-      + `<g opacity="${lab}">` + txt(capX - 10, Y - 60, "5'", C.text, 13) + `</g></g>`;
+      + `<g opacity="${lab}">` + txt(capX - 10, Y + 30, "5'", C.text, 13) + `</g></g>`;
 
     // introns: intron 1 vormt de lariat, intron 2 wordt korter en verdwijnt
     const lar = ease(prog(4));                                // 0 = recht, 1 = lariat
@@ -150,7 +150,8 @@ function initProcessing(svg) {
     $('pr-ejc').innerHTML = `<g ${up}>` + ejc.map(x => pill(x, Y - 26, 44, 20, 'EJC', '#7a62e0')).join('') + `</g>`;
     // label 'EJC → NMD-controle' boven de laatst gevormde EJC (niet boven het midden van de groep, dat soms buiten beeld valt)
     const ea = $('pr-ejc-a'), ex = ejc.length ? ejc[ejc.length - 1] : 0;
-    ea.setAttribute('x', ex - 22); ea.setAttribute('y', Y - 36); ea.setAttribute('width', ejc.length ? 44 : 0); ea.setAttribute('height', ejc.length ? 20 : 0);
+    const eOn = ejc.length && ph < 10;   // stap 11: geen los zwevend label boven het verkleinde mRNP
+    ea.setAttribute('x', ex - 22); ea.setAttribute('y', Y - 36); ea.setAttribute('width', eOn ? 44 : 0); ea.setAttribute('height', eOn ? 20 : 0);
     if (upT) ea.setAttribute('transform', upT); else ea.removeAttribute('transform');
 
     // 3'-uiteinde: CPSF/CstF, knippen, PAP, Xrn2-torpedo op het stroomafwaartse RNA, Pol II

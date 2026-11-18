@@ -110,7 +110,7 @@ export default {
             `<g mask="url(#ri-dm)"><line x1="-200" y1="560" x2="${MEM - 40}" y2="560" stroke="${C.dna}" stroke-width="7"/><line x1="-200" y1="576" x2="${MEM - 40}" y2="576" stroke="${C.dna2}" stroke-width="5"/></g>`;
           gen += `<rect x="130" y="542" width="240" height="52" fill="none" stroke="${C.dna}" stroke-width="2" stroke-dasharray="5 4" opacity=".7"/>` + note(250, 614, T2('MIR-gen', 'MIR gene'), C.dna, 18);
           // Pol II eindigt op het 3'-uiteinde van het pri-miRNA (het RNA komt eruit), met het DNA door de onderkant
-          const px = lerp(140, 425, k);
+          const px = lerp(140, 412, k);   // niet tegen de kernenvelop
           pol += `<g transform="translate(${f1(px)} 532)"><path d="${eiwitPad(0, 0, 48, 46, 22, .08)}" fill="#0b1224" fill-opacity=".45"/><path d="${eiwitPad(0, 0, 48, 46, 22, .08)}" fill="${C.prot}" fill-opacity=".28" stroke="${C.prot}" stroke-width="3"/><text x="0" y="6" font-size="16" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">Pol II</text></g>`;
         }
         $('ri-dna').innerHTML = dna; $('ri-gen').innerHTML = gen; $('ri-pol').innerHTML = pol;

@@ -95,7 +95,7 @@ export default {
     [[905, 612], [1013, 646], [925, 681], [1008, 716]].forEach(([x, y]) => { me += flag(x, y, 'K9me3', C.danger, 1, 8); });
     // 5mC op het DNA zelf: op de linker tussen twee nucleosomen
     [[1, 2], [13, 14]].forEach(([a, b]) => { const x = (hPts[a][0] + hPts[b][0]) / 2, y = (hPts[a][1] + hPts[b][1]) / 2;
-      me += `<circle cx="${f1(x)}" cy="${f1(y)}" r="4.5" fill="${C.danger}" stroke="#0a1224" stroke-width="1.5"/><text x="${f1(x)}" y="${f1(y - 8)}" font-size="9" text-anchor="middle" fill="${C.danger}" font-family="Inter" font-weight="700" stroke="#0a1224" stroke-width="2.5" paint-order="stroke">5mC</text>`; });
+      me += `<circle cx="${f1(x)}" cy="${f1(y)}" r="4.5" fill="${C.danger}" stroke="#0a1224" stroke-width="1.5"/><text x="${f1(x)}" y="${f1(y + 15)}" font-size="9" text-anchor="middle" fill="${C.danger}" font-family="Inter" font-weight="700" stroke="#0a1224" stroke-width="2.5" paint-order="stroke">5mC</text>`; });   // label onder het bolletje, weg van de K9me3-vlaggen
 
     // ---------- paneel D: 10 nm-vezel ----------
     let bead = '';
@@ -135,7 +135,7 @@ export default {
       ${het}
       <g data-node="nucleolus" data-color="${C.rrna}" data-nolabel><path d="M232,420 C236,392 285,388 297,412 C310,438 282,462 255,458 C235,455 229,440 232,420Z" fill="#2a3d63" stroke="#4d6aa0" stroke-width="2"/>
       <text x="266" y="400" font-size="13" text-anchor="middle" fill="#cfdcf5" font-family="Inter" font-weight="700" stroke="#0a1224" stroke-width="3" paint-order="stroke">${T2('nucleolus', 'nucleolus')}</text></g>
-      <g data-node="chromosoom" data-color="${C.dna}" data-label="${T2('Chromosoom', 'Chromosome')}">${terr}<circle data-anchor="chromosoom" cx="335" cy="265" r="1" fill="none"/></g>
+      <g data-node="chromosoom" data-color="${C.dna}" data-label="${T2('Chromosoom', 'Chromosome')}">${terr}<circle data-anchor="chromosoom" cx="335" cy="300" r="1" fill="none"/></g>
       <rect x="360" y="410" width="80" height="80" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="6 4"/>
     </g>
     <path d="M440,410 L560,110 M440,490 L560,480" stroke="#fff" stroke-width="1.5" stroke-dasharray="6 5" opacity=".45"/>
