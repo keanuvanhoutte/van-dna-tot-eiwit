@@ -125,11 +125,11 @@ export default {
         $('mb-chan').innerHTML = half(CX - 48 + cl, 61) + half(CX + 48 + open - cl, 62) + plug + T(CX - 120, MB + 50, T2('kanaal', 'channel'), { size: 24, col: SECA, anchor: 'end', op: step === 5 ? 0 : 1 });
         // ribosoom: de tunneluitgang van de grote eenheid zit op het kanaal; laat pas los als de keten af is (einde van stap 4)
         const rb = ribosoom80S(CX, MT - 14, { s: .9 });
-        $('mb-ribo').innerHTML = `<g opacity="${f1(1 - kOff * .85)}" transform="translate(${f1(lerp(0, -260, kOff))} ${f1(-lerp(0, 120, kOff))})">${rb.svg}</g>` + T(CX - 130, 300, T2('ribosoom', 'ribosome'), { size: 24, col: C.rrna, anchor: 'end', op: 1 - kOff });
+        $('mb-ribo').innerHTML = `<g opacity="${f1(1 - kOff)}" transform="translate(${f1(lerp(0, -260, kOff))} ${f1(-lerp(0, 120, kOff))})">${rb.svg}</g>` + T(CX - 150 - 260 * kOff, 255 - 120 * kOff, T2('ribosoom', 'ribosome'), { size: 24, col: C.rrna, anchor: 'end', op: 1 - kOff });
         // blaasje (stap 6): knopt uit het ER-membraan zelf (knop uit _fate.js), met de helix in het stuk membraan dat afsnoert
         const bud = kBud > 0 ? knop([HX, MY], [0, -1], VR, kBud, { hole: 'none', w: VW, gap: 70, lumen: 'rgba(201,165,116,.08)' }) : null;
         let gap2 = null;
-        if (bud) { const rho = bud.c[1] - bud.top[1], d = MY - bud.c[1]; if (d < rho) { const h = Math.sqrt(rho * rho - d * d); gap2 = [HX - h, HX + h]; } }
+        if (bud) { const rho = bud.c[1] - bud.top[1], d = MY - bud.c[1]; if (d < rho) { const h = Math.sqrt(rho * rho - d * d); gap2 = [HX - h - VW * .55, HX + h + VW * .55]; } }   // het vlakke membraan stopt waar de knopwand begint (geen dubbele kopjes)
         const V = [lerp(0, 130, kMove), lerp(0, -25, kMove)];
         const S = bud ? [bud.top[0] - HX + V[0], bud.top[1] - MY + V[1]] : [0, 0];        // verschuiving van de helix (en het deel in het cytosol)
         const mv = q => [q[0] + S[0], q[1] + S[1]];
@@ -181,7 +181,7 @@ export default {
         if (kSide > .5) fx = tmHelix(hc[0], hc[1] - MH / 2 + 2, hc[1] + MH / 2 - 2, HYD, (kSide - .5) * 2 * .45, 50) + fx;
         const kLab = 1 - ease(sub(kBud, 0, .3));
         if (pts.length && step >= 2) fx += T(pts[0][0], pts[0][1] + 48, T2('begin', 'start'), { size: 24, col: C.text, op: ease(sub(kTail, .7, 1)) * kLab });
-        if (nTail > 1) fx += T(pts[pts.length - 1][0] - 10, pts[pts.length - 1][1] - 30, T2('einde', 'end'), { size: 24, col: C.text, op: kOff * kLab });
+        if (nTail > 1) fx += T(pts[pts.length - 1][0] - 22, pts[pts.length - 1][1] - 6, T2('einde', 'end'), { size: 24, col: C.text, anchor: 'end', op: ease(sub(kOff, .6, 1)) * kLab });
         if (step === 3) fx += T(HX + 80, MT - 40, T2('vettig stuk', 'greasy stretch'), { size: 26, col: HYD, anchor: 'start', op: ease(sub(p, .55, .8)) });
         if (kZoom > .01) {
           const o = kZoom * kLab, rx = HX + 70;
@@ -196,7 +196,7 @@ export default {
           const c = [bud.c[0] + V[0], bud.c[1] + V[1]], oA = ease(sub(kMove, .4, 1)), xr = c[0] + VR + VW / 2;
           ves += arrow(xr + 20, c[1], xr + 130, c[1], C.mem, 5, oA) + T(xr + 75, c[1] - 30, 'Golgi', { size: 28, col: C.mem, op: oA });
           const vis = kBud > .95;
-          va.setAttribute('cx', vis ? f1(c[0] + VR + 120) : -99); va.setAttribute('cy', vis ? f1(c[1] + 95) : -99);
+          va.setAttribute('cx', vis ? f1(c[0] + VR + 160) : -99); va.setAttribute('cy', vis ? f1(c[1] + 140) : -99);
         } else { va.setAttribute('cx', -99); va.setAttribute('cy', -99); }
         $('mb-chain').innerHTML = ch; $('mb-fx').innerHTML = fx; $('mb-ves').innerHTML = ves;
       },

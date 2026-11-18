@@ -222,7 +222,7 @@ export default {
                 P = [lerp(x, Q[0], w) + V[0], lerp(ERY, Q[1], w) + V[1]]; ang = 65 * kBud;
               }
               up += `<g transform="translate(${f1(P[0])} ${f1(P[1])}) rotate(${f1(ang)}) translate(${-x} ${-ERY})">` + tm(x) + enz(x, 500, 46, 34, '', { col: C.prot }) + enz(x, 330, 60, 44, '', { col: C.prot, fillOp: a2 > .5 ? .55 : .25 }) + '</g>' +
-                T(x, 262, lab, { size: 27, col: '#c9b8ff', w: 800, op: 1 - kBud });
+                T(x, 262, lab, { size: 27, col: '#c9b8ff', w: 800, op: 1 - ease(sub(q, .6, .67)) });   // weg vóór de knop het domein optilt
               if (bud) up += T(bud.c[0] + V[0] - AVR - 40, bud.c[1] + V[1] - 30, T2('COPII-blaasje met ATF6', 'COPII vesicle with ATF6'), { size: 22, col: C.mem, anchor: 'end', op: kGo });
             }
             // BiP gebonden → los
@@ -232,7 +232,7 @@ export default {
           // uitkomsten
           up += T(8800, 212, T2('XBP1-mRNA splicen', 'splice XBP1 mRNA'), { size: 23, col: C.text, op: act[0] });
           up += T(9300, 212, T2('eIF2α-P → translatie ↓', 'eIF2α-P → translation ↓'), { size: 23, col: C.text, op: act[1] });
-          up += T(9800, 212, T2('naar Golgi → ATF6(N)', 'to Golgi → ATF6(N)'), { size: 23, col: C.text, op: act[2] });
+          up += T(9780, 212, T2('naar Golgi → ATF6(N)', 'to Golgi → ATF6(N)'), { size: 23, col: C.text, anchor: 'end', op: act[2] });
           up += panel(8700, 100, 1200, 66, { op: fin, col: C.ok }) + T(9300, 142, T2('meer chaperones + ERAD · <tspan fill="#ff6b6b">te lang → apoptose</tspan>', 'more chaperones + ERAD · <tspan fill="#ff6b6b">too long → apoptosis</tspan>'), { size: 25, col: C.ok, op: fin });
         }
         $('mf-upr').innerHTML = up; $('mf-bip').innerHTML = bip;

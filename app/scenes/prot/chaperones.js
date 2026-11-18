@@ -4,7 +4,7 @@ import { ribosoom80S } from '../../bio.js';
 
 /* Paneel A (x 0–1600): Hsp70-cyclus · Paneel B (x 1700–3300): chaperonine (GroEL–GroES) · Paneel C (x 3400–5000): netwerk */
 const HYD = '#ff9f43';                                   // hydrofoob segment
-const HINGE = [1010, 404], LID_L = 160;
+const HINGE = [992, 440];                               // scharnier van het deksel (SBDα) op het SBDβ-domein
 const CH_FREE = [[300, 250], [380, 330], [520, 300], [640, 360], [760, 320], [880, 330], [990, 320], [1080, 360], [1150, 330]];
 const CH_BOUND = [[300, 250], [380, 330], [520, 300], [640, 350], [760, 390], [880, 398], [990, 398], [1080, 420], [1150, 395]];
 const CX = 2500, EQ = 470;                               // chaperonine: middenas en evenaar
@@ -81,8 +81,8 @@ export default {
     </g>
     <g data-node="misvouwing" data-color="${C.danger}" data-nolabel><g id="ch-agg"></g></g>
     <g id="ch-hsp"></g>
-    <g data-node="vouwing" data-color="${C.chain}" data-label="${T2('Nieuwe keten → vouwing', 'New chain → folding')}"><g id="ch-chain"></g><circle id="ch-chainA" data-anchor="vouwing" r="1" fill="none"/></g>
     <g id="ch-lid"></g>
+    <g data-node="vouwing" data-color="${C.chain}" data-label="${T2('Nieuwe keten → vouwing', 'New chain → folding')}"><g id="ch-chain"></g><circle id="ch-chainA" data-anchor="vouwing" r="1" fill="none"/></g>
     <g id="ch-co"></g>
     <g id="ch-lbl"></g>
     <!-- paneel B -->
@@ -134,11 +134,13 @@ export default {
         if (step === 3 && p > .4 && p < .6) hs += tag(lerp(560, 760, sub(p, .4, .5)), lerp(720, 530, sub(p, .4, .5)), 'ATP', ATPC, { fs: 18 });
         hs += T(615, 480, 'Hsp70', { size: 30, col: C.prot, w: 800, anchor: 'end' }) + T(615, 514, T2('bacterie: DnaK', 'bacteria: DnaK'), { size: 22, col: C.muted, anchor: 'end' });
         $('ch-hsp').innerHTML = step <= 3 ? hs : hs.replace('<g ', '<g ');
-        // deksel (helixdomein), scharnier HINGE; open (ATP) = weggeklapt naar rechtsonder, weg van de bindingsgroef en de keten
-        const th = lerp(60, -172, lid) * Math.PI / 180;
-        const lx = HINGE[0] + Math.cos(th) * LID_L, ly = HINGE[1] + Math.sin(th) * LID_L;
-        $('ch-lid').innerHTML = `<path d="M${HINGE[0]},${HINGE[1]} L${f1(lx)},${f1(ly)}" stroke="${C.prot}" stroke-width="34" stroke-linecap="round" opacity=".55"/>` +
-          `<path d="M${HINGE[0]},${HINGE[1]} L${f1(lx)},${f1(ly)}" stroke="${C.prot}" stroke-width="3" fill="none"/>` + T((HINGE[0] + lx) / 2 + (lid > .5 ? 0 : 52), (HINGE[1] + ly) / 2 - (lid > .5 ? 26 : 0), T2('deksel', 'lid'), { size: 21, col: '#c9b8ff', op: step === 0 ? 0 : step === 1 ? sub(p, 0, .2) : 1 });
+        // deksel (SBDα, helixdomein) hangt met zijn scharnier aan SBDβ; open (ATP) = weggeklapt naar rechtsonder,
+        // dicht (ADP) = over de keten die in de groef van SBDβ ligt (Mayer & Bukau 2005). Getekend achter de keten.
+        const ctl = [lerp(1030, 1062, lid), lerp(505, 338, lid)], end = [lerp(1067, 858, lid), lerp(570, 352, lid)];
+        const ld = `M${HINGE[0]},${HINGE[1]} Q${f1(ctl[0])},${f1(ctl[1])} ${f1(end[0])},${f1(end[1])}`;
+        $('ch-lid').innerHTML = `<path d="${ld}" stroke="${C.prot}" stroke-width="34" stroke-linecap="round" fill="none" opacity=".55"/>` +
+          `<path d="${ld}" stroke="${C.prot}" stroke-width="3" fill="none"/>` +
+          T(lerp(1105, 940, lid), lerp(560, 318, lid), T2('deksel', 'lid'), { size: 21, col: '#c9b8ff', anchor: lid > .5 ? 'middle' : 'start', op: step === 0 ? 0 : step === 1 ? sub(p, 0, .2) : 1 });
         // co-chaperones
         let co = '';
         if (h40 > .01) co += enz(lerp(700, 850, h40), lerp(300, 380, h40), 70, 36, 'Hsp40', { col: C.prot2, fs: 20, op: h40, fillOp: .5 });
@@ -177,7 +179,7 @@ export default {
         // ATP
         const atpOn = step === 6 ? sub(p, .05, .2) : step === 7 ? 1 : 0;
         const adp = step === 7 && p > .3;
-        // ADP komt samen met GroES en het eiwit vrij zodra ATP aan de trans-ring bindt (Hartl et al., Nature 2011)
+        // ADP komt samen met GroES en het eiwit vrij zodra ATP aan de trans-ring bindt (Koike-Takeshita et al., J Biol Chem 2008)
         const nucOp = atpOn * (step === 7 ? 1 - ease(sub(p, .5, .75)) : 1);
         for (const sx of [-1, 1]) g += tag(CX + sx * 205 - (sx * 38 * cisK), EQ - 38, adp ? 'ADP' : 'ATP', ATPC, { fs: 15, op: nucOp });
         if (nucOp > .5) g += T(CX, EQ - 20, adp ? T2('7 ADP', '7 ADP') : T2('7 ATP', '7 ATP'), { size: 20, col: ATPC, w: 800 });

@@ -122,7 +122,7 @@ export default {
         if (step === 4) mv += T(rx - 62, ry + 10, T2('terug', 'back'), { size: 26, col: RECV, anchor: 'end', op: ease(sub(p, .4, .7)) });
         $('px-mv').innerHTML = mv;
         let fx = '';
-        if (step === 3) fx += T(GATE[0] - 40, GATE[1] - 160, T2('gevouwen erdoor', 'through, folded'), { size: 26, col: C.text, op: ease(sub(p, .3, .6)) * (1 - ease(sub(p, .85, 1))) });
+        if (step === 3) fx += T(GATE[0] - 130, GATE[1] - 150, T2('gevouwen erdoor', 'through, folded'), { size: 26, col: C.text, op: ease(sub(p, .3, .6)) * (1 - ease(sub(p, .85, 1))) });
         $('px-fx').innerHTML = fx;
         $('px-cmp').setAttribute('opacity', f1(kCmp));
       },

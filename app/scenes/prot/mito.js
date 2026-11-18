@@ -167,7 +167,7 @@ export default {
             const off = [lerp(0, 120, kAway), lerp(0, 60, kAway)];
             const preP = pre.map(q => [q[0] + off[0] * (kCut > .99 ? 1 : 0), q[1] + off[1] * (kCut > .99 ? 1 : 0)]);
             if (kCut < .99 && rest.length) ch += `<line x1="${f1(pre[pre.length - 1][0])}" y1="${f1(pre[pre.length - 1][1])}" x2="${f1(rest[0][0])}" y2="${f1(rest[0][1])}" stroke="${C.chain}" stroke-width="5"/>`;
-            ch += beadsAt(preP, () => PRE, R, 1 - kAway * .8, PRE);
+            ch += beadsAt(preP, () => PRE, R, (1 - kAway * .8) * (1 - ph(7, 0, .3)), PRE);   // het losse label verdwijnt (wordt afgebroken)
           }
           // wat nog in het cytosol als kluwen zit
           const left = NB - nIn;

@@ -75,7 +75,7 @@ export default {
       for (let a = -1; a <= 1; a += .16) er += ribosoomKlein(-60 + (r + 21) * Math.cos(a), 450 + (r + 21) * Math.sin(a), { s: .55, rot: a * 180 / Math.PI + 90 });
     });
     // plasmamembraan
-    const pm = membraanPts(ptsBoog(PMX, 40, PMX + 40, 450, PMX, 860, 50), { w: 20 }) + TL(PMX + 70, 540, [T2('buiten', 'outside'), T2('de cel', 'the cell')], { size: 22, col: C.muted });
+    const pm = membraanPts(ptsBoog(PMX, 40, PMX + 40, 450, PMX, 860, 50), { w: 20 }) + TL(PMX + 70, 590, [T2('buiten', 'outside'), T2('de cel', 'the cell')], { size: 22, col: C.muted });
     // endosoom en lysosoom
     const el = blaasje(ENDO[0], ENDO[1], 44, { w: 9, lumen: 'rgba(255,138,61,.12)', rand: '#ff8a3d' }) + `<g id="go-ell1">` + TL(ENDO[0], ENDO[1] + 78, [T2('endosoom', 'endosome'), T2('pH ≈ 5,5–6,5', 'pH ≈ 5.5–6.5')], { size: 22, col: '#ff8a3d' }) + '</g>' +
       blaasje(LYSO[0], LYSO[1], 54, { w: 9, lumen: 'rgba(214,90,90,.15)', rand: C.bact }) + `<g id="go-ell2">` + TL(LYSO[0], LYSO[1] + 88, [T2('lysosoom', 'lysosome'), T2('pH ≈ 4,5–5', 'pH ≈ 4.5–5')], { size: 22, col: C.danger }) + '</g>';
@@ -127,7 +127,10 @@ export default {
         if (step <= 3) {
           for (let k = 0; k < 4; k++) {
             const u = ((p * (step === 1 ? 2 : 1)) + k / 4) % 1;
-            const pos = u < .5 ? qb(EXIT, [460, 420 + k * 12], ERGIC, u * 2) : qb(ERGIC, [610, 470 - k * 10], [X0 - 20, GY - 60 + k * 40], (u - .5) * 2);
+            // aankomst: het blaasje versmelt met de cis-cisterne (knop die openvloeit), niet erbovenop
+            const yy = GY - 60 + k * 40, q2 = (yy - GY) / GH, m = [X0 - 33 + 30 * q2 * q2, yy], end = [m[0] - 24.5, yy];
+            if (step <= 2 && u > .9) { const kb = knop(m, [-1, 0], 15, 1 - (u - .9) / .1, { hole: '#49433c', w: 7, lumen: 'rgba(201,165,116,.18)' }); v += kb.svg; continue; }
+            const pos = u < .5 ? qb(EXIT, [460, 420 + k * 12], ERGIC, u * 2) : qb(ERGIC, [610, 470 - k * 10], end, Math.min(1, (u - .5) * 2 / .8));
             v += ves(pos[0], pos[1], u < .5 ? COPII : C.mem, CARGO, 15, step === 3 ? .5 : 1);
           }
         }
@@ -163,18 +166,18 @@ export default {
           }
           // gereguleerd: granules sparen zich op en versmelten na Ca²⁺
           const fuse = step === 6 ? ease(sub(p, .6, .9)) : step === 7 ? 1 : 0;
-          const gr = [[1320, 230], [1370, 280], [1290, 300], [1400, 200]];
+          const gr = [[1320, 230], [1370, 280], [1290, 300], [1400, 200]], DOCKY = [240, 300, 360, 180];   // elk een eigen plek aan het membraan
           gr.forEach(([x, y], k) => {
             const arrive = step === 5 ? ease(sub(p, .3 + k * .1, .6 + k * .1)) : 1;
             const gx = lerp(TGN[0] + 30, x, arrive), gy = lerp(GY - 110, y, arrive);
             // na het Ca²⁺-signaal: naar het membraan, dan versmelten (knop die openvloeit) en de inhoud komt buiten de cel
             const go = step === 6 ? ease(sub(p, .6, .72)) : step === 7 ? 1 : 0, kf = step === 6 ? ease(sub(p, .72, .9)) : step === 7 ? 1 : 0;
-            const m = [pmX(gy), gy], dock = [m[0] - 22 - 14, gy];
+            const dy = lerp(gy, DOCKY[k], go), m = [pmX(DOCKY[k]), DOCKY[k]], dock = [m[0] - 22 - 14, DOCKY[k]];
             if (arrive > 0) {
-              if (kf <= 0) v += blaasje(lerp(gx, dock[0], go), gy, 22, { w: 8, lumen: 'rgba(240,107,192,.3)', rand: GRAN }) + `<circle cx="${f1(lerp(gx, dock[0], go))}" cy="${f1(gy)}" r="11" fill="${GRAN}"/>`;
+              if (kf <= 0) v += blaasje(lerp(gx, dock[0], go), dy, 22, { w: 8, lumen: 'rgba(240,107,192,.3)', rand: GRAN }) + `<circle cx="${f1(lerp(gx, dock[0], go))}" cy="${f1(dy)}" r="11" fill="${GRAN}"/>`;
               else {
                 const kb = knop(m, [-1, 0], 22, 1 - kf, { hole: OUT, w: 8, lumen: 'rgba(240,107,192,.3)' });
-                const c = [lerp(kb.c[0], m[0] + 40 + k * 14, ease(sub(kf, .45, 1))), lerp(gy, gy + (k - 1.5) * 16, ease(sub(kf, .45, 1)))];
+                const c = [lerp(kb.c[0], m[0] + 40 + k * 14, ease(sub(kf, .45, 1))), m[1]];
                 v += kb.svg + `<circle cx="${f1(c[0])}" cy="${f1(c[1])}" r="9" fill="${GRAN}"/>`;
               }
             }
@@ -203,7 +206,6 @@ export default {
         if (step === 0) {
           lb += T(ERGIC[0], ERGIC[1] + 110, 'ERGIC', { size: 23, col: C.mem });
           lb += T(X0 + 1.5 * SPC, GY + GH + 84, T2('Golgi-apparaat', 'Golgi apparatus'), { size: 24, col: C.mem, w: 700 });
-          lb += T(1330, 330, T2('granules', 'granules'), { size: 22, col: GRAN });
         }
         if (step === 1) {
           lb += T(EXIT[0] + 10, EXIT[1] + 80, T2('ER-uitgang', 'ER exit site'), { size: 20, col: COPII });
@@ -215,7 +217,7 @@ export default {
         if (step === 2) {
           lb += T(530, 205, T2('COPI (retrograad)', 'COPI (retrograde)'), { size: 24, col: COPI, w: 800 });
           lb += T(X0 - 40, GY - 205, T2('KDEL-receptor', 'KDEL receptor'), { size: 18, col: COPI, anchor: 'end' });
-          lb += T(560, 600, T2('bv. BiP en PDI dragen de staart …KDEL', 'e.g. BiP and PDI carry the tail …KDEL'), { size: 20, col: '#c9b8ff' });
+          lb += TL(470, 600, [T2('bv. BiP en PDI dragen', 'e.g. BiP and PDI carry'), T2('de staart …KDEL', 'the tail …KDEL')], { size: 20, col: '#c9b8ff' });
         }
         if (step === 3) lb += arr(X0 - 20, 180, X0 + 3 * SPC + 20, 180, C.mem, 'go-m', { w: 5 }) + T(X0 + 3 * SPC + 50, 188, T2('de cisterne zelf rijpt', 'the cisterna itself matures'), { size: 20, col: C.mem, anchor: 'start' }) +
           T(X0 - 60, GY - GH + 30, T2('COPI: enzymen', 'COPI: enzymes'), { size: 20, col: COPI, op: sub(p, .2, .3), anchor: 'end' }) + T(X0 - 60, GY - GH + 56, T2('één cisterne terug', 'one cisterna back'), { size: 20, col: COPI, op: sub(p, .2, .3), anchor: 'end' });
@@ -230,7 +232,7 @@ export default {
           lb += T(1345, 358, T2('gereguleerd (granules)', 'regulated (granules)'), { size: 20, col: GRAN, op: sub(p, .3, .5) });
           lb += T(1030, 690, T2('lysosomaal (M6P)', 'lysosomal (M6P)'), { size: 20, col: '#ff8a3d', op: sub(p, .5, .7), anchor: 'end' });
         }
-        if (step === 6) lb += T(1440, 580, T2('continu', 'continuously'), { size: 20, col: C.mem, anchor: 'end' }) + T(1470, 360, T2('op signaal', 'on signal'), { size: 20, col: GRAN, op: sub(p, .55, .7), anchor: 'end' });
+        if (step === 6) lb += T(1440, 580, T2('continu', 'continuously'), { size: 20, col: C.mem, anchor: 'end' }) + T(1380, 178, T2('op signaal', 'on signal'), { size: 20, col: GRAN, op: sub(p, .55, .7), anchor: 'end' });
         if (step === 7) {
           lb += T(1040, 700, T2('M6P-receptor + enzym', 'M6P receptor + enzyme'), { size: 19, col: '#ff8a3d', anchor: 'end', op: sub(p, 0, .15) });
           lb += T(ENDO[0] + 60, ENDO[1] + 146, T2('zuur → enzym laat los', 'acidic → enzyme released'), { size: 20, col: '#ff8a3d', op: sub(p, .5, .6), anchor: 'end' });
@@ -238,8 +240,8 @@ export default {
         }
         $('go-lbl').innerHTML = lb;
         // namen endosoom/lysosoom (klikbaar): in stap 8 weg van de pijl "receptor terug"
-        $('go-endoA').setAttribute('cx', step === 7 ? ENDO[0] - 130 : step === 4 ? ENDO[0] - 70 : ENDO[0] - 40); $('go-endoA').setAttribute('cy', step === 7 ? ENDO[1] + 80 : ENDO[1] - 70);
-        $('go-lysoA').setAttribute('cx', step === 7 ? LYSO[0] : step === 4 ? LYSO[0] - 40 : LYSO[0] + 30); $('go-lysoA').setAttribute('cy', step === 7 ? LYSO[1] - 80 : LYSO[1] - 70);
+        $('go-endoA').setAttribute('cx', step === 7 ? ENDO[0] - 130 : step === 4 ? ENDO[0] - 70 : step === 5 ? ENDO[0] + 40 : ENDO[0] - 40); $('go-endoA').setAttribute('cy', step === 7 ? ENDO[1] + 80 : step === 5 ? ENDO[1] - 60 : ENDO[1] - 70);
+        $('go-lysoA').setAttribute('cx', step === 7 ? LYSO[0] : step === 4 ? LYSO[0] - 40 : step === 5 ? LYSO[0] + 60 : LYSO[0] + 30); $('go-lysoA').setAttribute('cy', step === 7 ? LYSO[1] - 80 : step === 5 ? LYSO[1] - 62 : LYSO[1] - 70);
         const ellOp = f1(step === 0 ? 1 : step === 7 ? sub(p, 0, .15) : 0);   // namen endosoom/lysosoom alleen waar ze volledig in beeld zijn
         $('go-ell1').setAttribute('opacity', ellOp); $('go-ell2').setAttribute('opacity', ellOp);
         // hotspot-overlay op de granules
