@@ -102,7 +102,7 @@ export default {
     [0, 1, 2, 3].forEach(i => golgi += cisterne(1970, 190 + i * 42, { len: 340 - i * 24, dik: 20, buig: 15, vert: false, w: 9 }));   // platte zakken: dubbellaag rond een lumen
     golgi += T(2180, 200, 'cis', { size: 18, col: C.muted, anchor: 'start' }) + T(2160, 330, 'trans', { size: 18, col: C.muted, anchor: 'start' });
     return svgOpen(arrowDefs('gl', { m: C.muted, g: C.ok, r: C.danger })) + `
-    <g id="gl-er"><rect x="-200" y="${MEM + MEMH}" width="2100" height="700" fill="rgba(201,165,116,.05)"/>
+    <g id="gl-er"><rect x="-200" y="${MEM + MEMH}" width="2100" height="700" fill="rgba(143,179,232,.08)"/>
     <g data-node="er" data-color="${C.mem}" data-nolabel>${mem}</g></g>
     <g data-node="er" data-color="${C.rrna}" data-label="${T2('Ribosoom op het ER (SRP-route)', 'Ribosome on the ER (SRP route)')}">
       ${RIB.svg}
@@ -277,21 +277,24 @@ export default {
           er += `<g opacity="${f1(km * (1 - .55 * kt))}"><ellipse cx="${MX}" cy="${MY}" rx="68" ry="50" fill="rgba(255,107,107,.10)" stroke="${C.chain}" stroke-width="4" stroke-dasharray="14 8"/>` +
             chain([[MX - 40, MY + 10], [MX - 15, MY - 25], [MX + 10, MY + 15], [MX + 35, MY - 20]], { w: 5, op: .6 }) + '</g>';
           er += `<g opacity="${f1(ke)}">${sec61(RX, MEM + MEMH / 2, { mw: MEMH, col: C.danger })}`;
-          [0, 1, 2, 3].forEach(i => er += `<rect x="${RX - 24}" y="${254 + i * 21}" width="48" height="19" rx="6" fill="${C.danger}" fill-opacity=".35" stroke="${C.danger}" stroke-width="2"/>`);
-          er += eiwit(RX, 246, 30, 12, C.danger, { seed: 81, bumps: .1 }) + eiwit(RX, 342, 30, 12, C.danger, { seed: 82, bumps: .1 }) + '</g>';
-          if (kt > .01) er += `<path d="M${MX},${MY - 50} C${MX - 2},${MY - 120} ${RX},${MEM + MEMH + 50} ${RX},${MEM + MEMH} L${RX},354" pathLength="1" stroke="${C.chain}" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="${f1(kt)} 2"/>`;
+          // proteasoom in dezelfde kleuren als in ubiquitine/proteasoom (20S grijs, 19S teal), vrij in het cytosol; de ATPase p97 (VCP)
+          // trekt de keten uit het retrotranslocon en geeft ze door (Christianson & Ye 2014)
+          [0, 1, 2, 3].forEach(i => er += `<rect x="${RX - 24}" y="${252 + i * 17}" width="48" height="15" rx="5" fill="#b3bccf" fill-opacity=".35" stroke="#b3bccf" stroke-width="2"/>`);
+          er += eiwit(RX, 244, 30, 11, '#2cc6a8', { seed: 81, bumps: .1 }) + eiwit(RX, 330, 30, 11, '#2cc6a8', { seed: 82, bumps: .1 });
+          er += eiwit(RX - 19, 355, 15, 10, '#c9d2e4', { seed: 83, bumps: .08 }) + eiwit(RX + 19, 355, 15, 10, '#c9d2e4', { seed: 84, bumps: .08 }) + T(RX + 42, 361, 'p97', { size: 17, col: '#c9d2e4', anchor: 'start', w: 700 }) + '</g>';
+          if (kt > .01) er += `<path d="M${MX},${MY - 50} C${MX - 2},${MY - 120} ${RX},${MEM + MEMH + 50} ${RX},${MEM + MEMH} L${RX},256" pathLength="1" stroke="${C.chain}" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="${f1(kt)} 2"/>`;
           const ku = sub(p, .8, .9);
           [0, 1, 2].forEach(i => er += `<circle cx="${RX - 20 - i * 15}" cy="${362 - i * 9}" r="8" fill="#ffd166" stroke="#0a1224" stroke-width="1.5" opacity="${f1(ku)}"/>`);
           er += T(RX - 66, 336, T2('ubiquitine', 'ubiquitin'), { size: 16, col: '#ffd166', anchor: 'end', op: ku });
           er += T(RX - 34, MEM + MEMH + 34, 'retrotranslocon', { size: 17, col: C.danger, anchor: 'end', op: ke }) + T(RX + 18, MEM + MEMH + 80, 'ERAD', { size: 22, col: C.danger, anchor: 'start', w: 800, op: ke });
-          er += T(RX + 50, 290, T2('proteasoom', 'proteasome'), { size: 21, col: C.danger, anchor: 'start', op: ke }) + T(RX + 50, 314, T2('breekt het eiwit af', 'breaks the protein down'), { size: 18, col: C.muted, anchor: 'start', op: ke });
+          er += T(RX + 50, 280, T2('proteasoom', 'proteasome'), { size: 21, col: '#2cc6a8', anchor: 'start', op: ke }) + T(RX + 50, 304, T2('breekt het eiwit af', 'breaks the protein down'), { size: 18, col: C.muted, anchor: 'start', op: ke });
           er += T(780, 790, T2('blijvend misgevouwen → terug naar het cytosol', 'permanently misfolded → back to the cytosol'), { size: 21, col: C.danger, anchor: 'start', op: sub(p, .6, .75) });
           er += `<rect x="770" y="755" width="560" height="50" fill="transparent"/>`;
         }
         $('gl-erad').innerHTML = er;
         $('gl-eradA').setAttribute('cx', 1050); $('gl-eradA').setAttribute('cy', step === 6 && p > .6 ? 760 : -9999);
         // labels per stap: welke kant van het ER-membraan is wat
-        if (step <= 6) lb += T(SIDE[step][0], MEM - 35, 'cytosol', { size: 22, col: C.muted, anchor: 'start' }) + T(SIDE[step][1], MEM + MEMH + 44, T2('ER-lumen', 'ER lumen'), { size: 22, col: C.mem, anchor: 'start' });
+        if (step <= 6) lb += T(SIDE[step][0], MEM - 35, 'cytosol', { size: 22, col: C.muted, anchor: 'start' }) + T(SIDE[step][1], MEM + MEMH + 44, T2('ER-lumen', 'ER lumen'), { size: 22, col: '#8fb3e8', anchor: 'start' });
         $('gl-er').setAttribute('opacity', f1(step === 7 ? 1 - ease(sub(p, 0, .2)) : 1));
         if (step === 0) lb += T(640, 800, T2('keten groeit het lumen in', 'chain grows into the lumen'), { size: 22, col: C.chain, op: sub(p, .3, .5) });
         if (step === 2) {

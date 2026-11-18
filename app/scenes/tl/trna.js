@@ -57,11 +57,11 @@ export default {
   org: { nl: 'gist-tRNA-Phe (PDB 1EHZ); humane tRNA\'s zijn gelijkaardig', en: 'yeast tRNA-Phe (PDB 1EHZ); human tRNAs are similar' },
   legend: [['#ffc247', { nl: 'acceptorstam + CCA', en: 'acceptor stem + CCA' }], ['#4fb0ff', 'D-arm'], ['#f06bc0', { nl: 'anticodonarm', en: 'anticodon arm' }], ['#c9a574', { nl: 'variabele lus', en: 'variable loop' }], ['#7fdc6a', { nl: 'TΨC-arm', en: 'TΨC arm' }], [BASE.A, 'A'], [BASE.U, 'U'], [BASE.G, 'G'], [BASE.C, 'C']],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">De 3D-posities zijn de C4\'-atomen uit de kristalstructuur van gist-tRNA<sup>Phe</sup> (PDB 1EHZ, 1,93 Å; Shi & Moore 2000). tRNA<sup>Phe</sup> was in 1974 de eerste RNA-structuur die ooit werd opgelost; 1EHZ is de latere, nauwkeurigere bepaling. De afstand anticodon (35) → A76 is in deze structuur ≈ 72 Å (C4\'–C4\').</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">The 3D positions are the C4\' atoms from the crystal structure of yeast tRNA<sup>Phe</sup> (PDB 1EHZ, 1.93 Å; Shi & Moore 2000). tRNA<sup>Phe</sup> was the first RNA structure ever solved, in 1974; 1EHZ is the later, more accurate determination. The anticodon (35) → A76 distance in this structure is ≈ 72 Å (C4\'–C4\').</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">De 3D-posities zijn de C4′-atomen uit de kristalstructuur van gist-tRNA<sup>Phe</sup> (PDB 1EHZ, 1,93 Å; Shi & Moore 2000). tRNA<sup>Phe</sup> was in 1974 de eerste RNA-structuur die ooit werd opgelost; 1EHZ is de latere, nauwkeurigere bepaling. De afstand anticodon (35) → A76 is in deze structuur ≈ 72 Å (C4′–C4′).</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">The 3D positions are the C4′ atoms from the crystal structure of yeast tRNA<sup>Phe</sup> (PDB 1EHZ, 1.93 Å; Shi & Moore 2000). tRNA<sup>Phe</sup> was the first RNA structure ever solved, in 1974; 1EHZ is the later, more accurate determination. The anticodon (35) → A76 distance in this structure is ≈ 72 Å (C4′–C4′).</p>' },
   simplified: {
-    nl: 'Nucleotiden zijn bolletjes op de C4\'-positie; basen, suikers en fosfaten zijn niet apart getekend. Alleen de stampparen en twee elleboog-interacties worden getoond (er zijn meer tertiaire contacten). De morf is een lineaire interpolatie, geen echt vouwpad. Het aminozuur hangt bij tRNA-Phe aan de 2\'-OH en verschuift snel naar de 3\'-OH.',
-    en: 'Nucleotides are beads at the C4\' position; bases, sugars and phosphates are not drawn separately. Only stem pairs and two elbow interactions are shown (there are more tertiary contacts). The morph is a linear interpolation, not a real folding path. In tRNA-Phe the amino acid is attached to the 2\'-OH and quickly migrates to the 3\'-OH.' },
+    nl: 'Nucleotiden zijn bolletjes op de C4′-positie; basen, suikers en fosfaten zijn niet apart getekend. Alleen de stampparen en twee elleboog-interacties worden getoond (er zijn meer tertiaire contacten). De morf is een lineaire interpolatie, geen echt vouwpad. Het aminozuur hangt bij tRNA-Phe aan de 2′-OH en verschuift snel naar de 3′-OH. Bij het anticodon ligt het codon met 3′ links en 5′ rechts: zo ligt het antiparallel onder het anticodon van dit rechtop getekende tRNA. In de andere scènes loopt het mRNA van 5′ links naar 3′ rechts.',
+    en: 'Nucleotides are beads at the C4′ position; bases, sugars and phosphates are not drawn separately. Only stem pairs and two elbow interactions are shown (there are more tertiary contacts). The morph is a linear interpolation, not a real folding path. In tRNA-Phe the amino acid is attached to the 2′-OH and quickly migrates to the 3′-OH. At the anticodon the codon runs with 3′ on the left and 5′ on the right: that way it lies antiparallel under the anticodon of this upright tRNA. In the other scenes the mRNA runs from 5′ on the left to 3′ on the right.' },
   steps: [
     ST(8000, cam(800, 430, 1400), 'Het tRNA: de vertaler', 'The tRNA: the translator', 'Een kort RNA dat een codon koppelt aan het juiste aminozuur. Hier: het tRNA voor fenylalanine (gist).', 'A short RNA that links a codon to the right amino acid. Here: the tRNA for phenylalanine (yeast).'),
     ST(8500, cam(800, 430, 1400), 'Een klaverblad met vier armen', 'A cloverleaf with four arms', 'Het tRNA plakt deels aan zichzelf vast. Plat getekend lijkt het op een klaverblad met vier armen.', 'The tRNA partly sticks to itself. Drawn flat, it looks like a cloverleaf with four arms.'),
@@ -140,8 +140,8 @@ export default {
         // overlays
         let o = '';
         const fade = sub(p, .12, .3), pc = pos[1], p76 = pos[76];
-        if (built >= 1) o += txt(pc[0] - 24 + 10 * m, pc[1] + 6 + 26 * m, "5'", '#fff', 24, 'end', 700);
-        if (built >= 76) o += txt(p76[0] + 22, p76[1] - 8, "3'", '#fff', 24, 'start', 700);
+        if (built >= 1) o += txt(pc[0] - 24 + 10 * m, pc[1] + 6 + 26 * m, "5′", '#fff', 24, 'end', 700);
+        if (built >= 76) o += txt(p76[0] + 22, p76[1] - 8, "3′", '#fff', 24, 'start', 700);
         if (i0 === 0) o += txt(800, 820, `${built} / 76 nt`, C.muted, 26, 'middle', 700);
         if (i0 === 1) {
           const lab = [['acc', [750, 250], 'end'], ['d', [470, 330], 'middle'], ['t', [1130, 330], 'middle'], ['ac', [930, 700], 'start'], ['v', [960, 560], 'start']];
@@ -163,7 +163,7 @@ export default {
             txt(pos[74][0] - 44, (pos[74][1] + pos[76][1]) / 2 + 8, 'CCA', '#fff', 24, 'end', 800) +
             txt(pos[73][0] + 28, pos[73][1] + 8, T2('A73 = discriminatorbase', 'A73 = discriminator base'), C.muted, 18, 'start') +
             txt(705, 290, T2('7 bp', '7 bp'), '#ffc247', 22, 'end', 700) + '</g>' +
-            `<g opacity="${f1(sub(p, .6, .8))}">` + txt(p76[0] + 40, p76[1] + 14, T2('esterbinding aan', 'ester bond to'), C.chain, 18, 'start', 600) + txt(p76[0] + 40, p76[1] + 36, T2("2'/3'-OH van A76", "2'/3'-OH of A76"), C.chain, 18, 'start', 600) + '</g>';
+            `<g opacity="${f1(sub(p, .6, .8))}">` + txt(p76[0] + 40, p76[1] + 14, T2('esterbinding aan', 'ester bond to'), C.chain, 18, 'start', 600) + txt(p76[0] + 40, p76[1] + 36, T2("2′/3′-OH van A76", "2′/3′-OH of A76"), C.chain, 18, 'start', 600) + '</g>';
         }
         // codon onder het anticodon
         let cd = '';
@@ -180,11 +180,11 @@ export default {
           const x0 = pos[34][0] - 80, x1 = pos[36][0] + 80;
           cd += `<line x1="${f1(x0)}" y1="${f1(yb + 14)}" x2="${f1(x1)}" y2="${f1(yb + 14)}" stroke="${C.rna}" stroke-width="5" opacity="${f1(k * .8)}"/>`;
           cd = `<line x1="${f1(x0)}" y1="${f1(yb + 14)}" x2="${f1(x1)}" y2="${f1(yb + 14)}" stroke="${C.rna}" stroke-width="5" opacity="${f1(k * .8)}"/>` + cd;
-          cd += `<g opacity="${f1(k)}">${txt(x0 - 12, yb + 22, "3'", C.rna, 22, 'end', 700)}${txt(x1 + 12, yb + 22, "5'", C.rna, 22, 'start', 700)}${txt((x0 + x1) / 2, yb + 70, T2("codon 5'-UUC-3' (lees ←)", "codon 5'-UUC-3' (read ←)"), C.rna, 22, 'middle', 700)}</g>`;
+          cd += `<g opacity="${f1(k)}">${txt(x0 - 12, yb + 22, "3′", C.rna, 22, 'end', 700)}${txt(x1 + 12, yb + 22, "5′", C.rna, 22, 'start', 700)}${txt((x0 + x1) / 2, yb + 70, T2("codon 5′-UUC-3′ (lees ←)", "codon 5′-UUC-3′ (read ←)"), C.rna, 22, 'middle', 700)}</g>`;
           $('tr-cA').setAttribute('cx', f1(x1 + 60)); $('tr-cA').setAttribute('cy', f1(yb + 30));
           o += `<g opacity="${f1(sub(p, .55, .75))}">` + txt(pos[34][0] - 30, pos[34][1] + 8, T2('Gm34 = wobble', 'Gm34 = wobble'), '#fff', 20, 'end', 700) +
             txt(pos[36][0] + 150, pos[35][1] - 120, T2('anticodon', 'anticodon'), '#f06bc0', 24, 'start', 800) +
-            txt(pos[36][0] + 150, pos[35][1] - 92, "5'-GmAA-3'", '#fff', 22, 'start', 700) +
+            txt(pos[36][0] + 150, pos[35][1] - 92, "5′-GmAA-3′", '#fff', 22, 'start', 700) +
             '</g>';
         } else { $('tr-cA').setAttribute('cx', '-9999'); }
         $('tr-codon').innerHTML = cd;

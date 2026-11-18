@@ -32,7 +32,7 @@ export default structure3d({
     { dur: 8000, title: L3('DNA opvouwen zonder histonen', 'Folding DNA without histones'), focus: null, zoom: {}, spin: .012,
       text: L3('E. coli en de meeste bacteriën hebben geen histonen. Kleine eiwitten buigen en bundelen hun DNA.', 'E. coli and most bacteria have no histones. Small proteins bend and bundle their DNA.') },
     { dur: 8000, title: L3('IHF: twee kleine eiwitten samen', 'IHF: two small proteins together'), zoom: {}, spin: .012,
-      focus: [{ sel: { chain: 'A' }, style: { cartoon: { color: COL.A } }, label: 'IHFα' }, { sel: { chain: 'B' }, style: { cartoon: { color: COL.B } }, label: 'IHFβ' }],
+      focus: [{ sel: { chain: 'A' }, style: { cartoon: { color: COL.A } }, label: 'IHFα', labelColor: COL.A, labelOff: [-80, -18] }, { sel: { chain: 'B' }, style: { cartoon: { color: COL.B } }, label: 'IHFβ', labelColor: COL.B, labelOff: [80, 18] }],
       text: L3('IHF bestaat uit twee verwante eiwitten, α en β. Samen grijpen ze het DNA.', 'IHF consists of two related proteins, α and β. Together they grip the DNA.') },
     { dur: 9000, title: L3('Het DNA maakt een U-bocht', 'The DNA makes a U-turn'), zoom: {}, spin: .01,
       focus: DNA.map((d, i) => i ? d : { ...d, label: L3('DNA, meer dan 160° geplooid', 'DNA, bent more than 160°') }),

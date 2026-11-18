@@ -95,7 +95,7 @@ const scene = {
         }
         flush(seg0, curCol);
         dna = pth(bot, C.dna2, 8) + top.join('') + dna;
-        dna += endl(X0 - 28, Y - GAP / 2 + 7, "5'", C.dna, 24) + endl(X0 + N * BP + 28, Y - GAP / 2 + 7, "3'", C.dna, 24) + endl(X0 - 28, Y + GAP / 2 + 7, "3'", C.dna2, 24) + endl(X0 + N * BP + 28, Y + GAP / 2 + 7, "5'", C.dna2, 24);
+        dna += endl(X0 - 28, Y - GAP / 2 + 7, "5′", C.dna, 24) + endl(X0 + N * BP + 28, Y - GAP / 2 + 7, "3′", C.dna, 24) + endl(X0 - 28, Y + GAP / 2 + 7, "3′", C.dna2, 24) + endl(X0 + N * BP + 28, Y + GAP / 2 + 7, "5′", C.dna2, 24);
         // het dimeer: rode kader + koppelstreep (op de streng, of mee met het uitgeknipte stuk)
         const xd = (xi(D) + xi(D + 1)) / 2, yd = Y - GAP / 2 - upTop(D);
         if (kOut < .02) {
@@ -115,14 +115,15 @@ const scene = {
         }
         // eiwitten (enkel het label in de figuur; namen staan in de legende / uitleg)
         const spotOp = kSpot * (1 - ph(2, .5, .8));
-        fx += prot(xd, Y + GAP / 2 + 120 + 60 * (1 - kSpot), 120, 40, SPOT, T2('herkenner', 'spotter'), 24, spotOp);
-        fx += prot(xd, Y - GAP / 2 - 150, 120, 40, OPEN, T2('opener', 'opener'), 24, kOpen * (1 - ph(3, .55, .85)));
+        // alle eiwitten raken de streng die ze bewerken (XPC tegenover de schade, TFIIH op de bel, XPF/XPG op de randen, Pol/ligase in het gat)
+        fx += prot(xd, Y + GAP / 2 + 64 + 60 * (1 - kSpot), 120, 40, SPOT, T2('herkenner', 'spotter'), 24, spotOp);
+        fx += prot(xd, Y - GAP / 2 - upTop(D) - 70, 120, 40, OPEN, T2('opener', 'opener'), 24, kOpen * (1 - ph(3, .55, .85)));
         const cutOp = kCut * (1 - ph(4, 0, .35));
-        fx += prot(xi(E0) - 6, Y - GAP / 2 - 140, 100, 40, CUT, 'ERCC1–XPF', 22, cutOp) + prot(xi(E1) + 6, Y - GAP / 2 - 140, 100, 40, CUT, 'XPG', 22, cutOp);
-        if (cutOp > .01) fx += `<g opacity="${f1(cutOp)}">${txt(xi(E0) - BP / 2, Y - GAP / 2 - 70, '✂', '#fff', 34)}${txt(xi(E1) + BP / 2, Y - GAP / 2 - 70, '✂', '#fff', 34)}</g>`;
+        fx += prot(xi(E0) - 6, Y - GAP / 2 - upTop(E0) - 70, 100, 40, CUT, 'ERCC1–XPF', 22, cutOp) + prot(xi(E1) + 6, Y - GAP / 2 - upTop(E1) - 70, 100, 40, CUT, 'XPG', 22, cutOp);
+        if (cutOp > .01) fx += `<g opacity="${f1(cutOp)}">${txt(xi(E0) - BP / 2, Y - GAP / 2 - upTop(E0) - 4, '✂', '#fff', 30)}${txt(xi(E1) + BP / 2, Y - GAP / 2 - upTop(E1) - 4, '✂', '#fff', 30)}</g>`;
         const px = lerp(xi(E0), xi(E1), kFill);
-        fx += prot(px, Y - GAP / 2 - 120, 120, 38, POL, 'polymerase', 22, ph(5, 0, .12) * (1 - ph(5, .75, .85)));
-        fx += prot(xi(E1) + BP / 2, Y - GAP / 2 - 120, 90, 36, LIG, 'ligase', 22, kLig * (1 - ph(6, 0, .3)));
+        fx += prot(px, Y - GAP / 2 - 44, 120, 38, POL, 'polymerase', 22, ph(5, 0, .12) * (1 - ph(5, .75, .85)));
+        fx += prot(xi(E1) + BP / 2, Y - GAP / 2 - 62, 90, 36, LIG, 'ligase', 22, kLig * (1 - ph(6, 0, .3)));
         // beschermers op de onderste streng
         const rpaOp = kRpa * (1 - ph(5, .7, .95));
         rp = rpaRow(xi(E0) - BP / 2, xi(E1) + BP / 2, Y + GAP / 2 + downBot(D) + 70, rpaOp, 76, 20);

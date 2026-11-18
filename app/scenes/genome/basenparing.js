@@ -34,13 +34,13 @@ export default {
   scale: { nl: '≈ 1 nm (één basenpaar)', en: '≈ 1 nm (one base pair)' },
   time: { nl: 'basenparen openen spontaan, één voor één: levensduur ≈ ms', en: 'base pairs open spontaneously, one at a time: lifetime ≈ ms' },
   org: { nl: 'alle organismen', en: 'all organisms' },
-  legend: [[BASE.A, 'adenine'], [BASE.T, 'thymine / uracil'], [BASE.G, 'guanine'], [BASE.C, 'cytosine'], ['#8fb3ff', { nl: 'N (stikstof)', en: 'N (nitrogen)' }], ['#ff8f8f', { nl: 'O (zuurstof)', en: 'O (oxygen)' }], ['#fff', { nl: '- - - waterstofbrug', en: '- - - hydrogen bond' }], [C.dna, "C1' (suiker)"]],
+  legend: [[BASE.A, 'adenine'], [BASE.T, 'thymine / uracil'], [BASE.G, 'guanine'], [BASE.C, 'cytosine'], ['#8fb3ff', { nl: 'N (stikstof)', en: 'N (nitrogen)' }], ['#ff8f8f', { nl: 'O (zuurstof)', en: 'O (oxygen)' }], ['#fff', { nl: '- - - waterstofbrug', en: '- - - hydrogen bond' }], [C.dna, "C1′ (suiker)"]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Kekulé-structuren van de gebruikelijke (amino/keto) tautomeren. De Hoogsteen-positie is niet getekend maar berekend: het programma zoekt de ligging waarin N7 en N6 op ≈ 2,9 Å van N3 en O4 van thymine liggen.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Kekulé structures of the usual (amino/keto) tautomers. The Hoogsteen position is not drawn by hand but computed: the program searches the placement in which N7 and N6 lie ≈ 2.9 Å from N3 and O4 of thymine.</p>' },
   simplified: {
-    nl: 'Ringen zijn als regelmatige veelhoeken getekend (echte bindingslengtes en -hoeken verschillen licht), waardoor de getekende C1\'–C1\'-afstand iets groter is dan de werkelijke ≈ 10,5 Å. Waterstofatomen op koolstof zijn weggelaten. De percentages van Chargaff gelden voor het hele menselijke genoom; lokaal varieert het GC-gehalte sterk (isochoren, CpG-eilanden).',
-    en: 'Rings are drawn as regular polygons (real bond lengths and angles differ slightly), so the drawn C1\'–C1\' distance is a little larger than the real ≈ 10.5 Å. Hydrogens on carbon are omitted. Chargaff percentages apply to the whole human genome; locally the GC content varies strongly (isochores, CpG islands).' },
+    nl: 'Ringen zijn als regelmatige veelhoeken getekend (echte bindingslengtes en -hoeken verschillen licht), waardoor de getekende C1′–C1′-afstand iets groter is dan de werkelijke ≈ 10,5 Å. Waterstofatomen op koolstof zijn weggelaten. De percentages van Chargaff gelden voor het hele menselijke genoom; lokaal varieert het GC-gehalte sterk (isochoren, CpG-eilanden).',
+    en: 'Rings are drawn as regular polygons (real bond lengths and angles differ slightly), so the drawn C1′–C1′ distance is a little larger than the real ≈ 10.5 Å. Hydrogens on carbon are omitted. Chargaff percentages apply to the whole human genome; locally the GC content varies strongly (isochores, CpG islands).' },
   steps: STEPS,
   svg() {
     const menu = (x, y, node, nl, en, col, w = 340) => `<g data-node="${node}" data-nolabel><rect x="${x - w / 2}" y="${y - 28}" width="${w}" height="56" rx="28" fill="#0d1426" stroke="${col}" stroke-width="3"/><circle cx="${x - w / 2 + 28}" cy="${y}" r="8" fill="${col}"/><text x="${x + 12}" y="${y + 8}" font-size="22" text-anchor="middle" fill="#e8edf7" font-family="Inter" font-weight="600">${T2(nl, en)}</text></g>`;

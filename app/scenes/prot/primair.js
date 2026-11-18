@@ -85,7 +85,7 @@ export default {
           // 10 codons (incl. AUG) en hun residuen
           const n = Math.min(10, 1 + Math.floor(clamp(p / .8) * 10));
           const cx0 = 250, cw = 112, y = 280;
-          cod += txt(cx0 - 60, y + 22, "5'", C.text, 22) + `<line x1="${cx0 - 40}" y1="${y + 34}" x2="${cx0 + 10 * cw + 20}" y2="${y + 34}" stroke="${C.rna}" stroke-width="5"/>` + txt(cx0 + 10 * cw + 44, y + 22, "3'", C.text, 22);
+          cod += txt(cx0 - 60, y + 22, "5′", C.text, 22) + `<line x1="${cx0 - 40}" y1="${y + 34}" x2="${cx0 + 10 * cw + 20}" y2="${y + 34}" stroke="${C.rna}" stroke-width="5"/>` + txt(cx0 + 10 * cw + 44, y + 22, "3′", C.text, 22);
           for (let k = 0; k < 10; k++) {
             const x = cx0 + k * cw, codon = CDS.slice(3 * k, 3 * k + 3), a = translate(codon);
             for (let j = 0; j < 3; j++) cod += `<rect x="${x + j * 34}" y="${y}" width="32" height="30" rx="5" fill="${BASE[codon[j]]}" opacity="${k < n ? 1 : .35}"/><text x="${x + j * 34 + 16}" y="${y + 22}" font-size="19" text-anchor="middle" fill="#0a1224" font-family="JetBrains Mono" font-weight="700">${codon[j]}</text>`;

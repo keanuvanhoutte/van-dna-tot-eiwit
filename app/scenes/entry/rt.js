@@ -1,9 +1,10 @@
 import { C, L, T2, svgOpen, txt, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { PINK } from './_bits.js';
+import { eiwitPad } from '../../bio.js';
 
 /* Zijpad: reverse transcriptie bij HIV-1, stap voor stap als een ladder van toestanden. */
 const Y0 = 128, DY = 100, laneY = i => Y0 + i * DY;
-const RNAC = C.rna, DNAC = C.dna, TRC = C.trna;
+const VENZ = '#d98cf0', RNAC = C.rna, DNAC = PINK, DNA2 = '#f9b8e0', TRC = C.trna;   // viraal DNA roze (vreemd DNA, zoals in integratie en cel): (−)-streng PINK, (+)-streng lichtroze
 /* segmentgrenzen langs het genoom (5'→3', links→rechts) */
 const SEG = { R5: [320, 382], U5: [382, 452], PBS: [452, 524], BODY: [524, 1126], PPT: [1126, 1190], U3: [1190, 1312], R3: [1312, 1374] };
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
@@ -18,11 +19,14 @@ const gone = (a, b, y, col) => `<line x1="${f1(a)}" y1="${f1(y)}" x2="${f1(b)}" 
 const trna = (x, y, op = 1, d = 1) => `<g transform="translate(${f1(x)} ${f1(y)})" opacity="${f1(op)}">
   <path d="M0,0 L${34 * d},-16 M${34 * d},-16 L${30 * d},-42" stroke="${TRC}" stroke-width="7" fill="none" stroke-linecap="round"/>
   <circle cx="${30 * d}" cy="-46" r="7" fill="${TRC}"/>${txt(30 * d, -62, 'tRNA-Lys3', TRC, 18)}</g>`;   /* d = 1: naar rechts, niet over de letters van het PBS-vak; d = -1 aan de rechterrand */
-const enz = (x, y, lab, col) => `<g transform="translate(${f1(x)} ${f1(y)})"><ellipse rx="${Math.max(34, lab.length * 6.5)}" ry="24" fill="rgba(155,123,255,.22)" stroke="${col}" stroke-width="2.5"/>${txt(0, 6, lab, col, 18)}</g>`;
+const enz = (x, y, lab, col) => `<g transform="translate(${f1(x)} ${f1(y)})"><path d="${eiwitPad(0, 0, Math.max(34, lab.length * 6.5), 24, 23, .1)}" fill="rgba(155,123,255,.22)" stroke="${col}" stroke-width="2.5"/>${txt(0, 6, lab, col, 18)}</g>`;
+/* RT met zijn RNase H-domein: één enzym, twee lobben (het RNase H-domein zit aan het C-uiteinde van RT; Hu & Hughes 2012) */
+const rtH = (x, y, col) => `<g transform="translate(${f1(x)} ${f1(y)})"><path d="${eiwitPad(-30, 0, 40, 25, 23, .1)}" fill="rgba(155,123,255,.22)" stroke="${col}" stroke-width="2.5"/>` +
+  `<path d="${eiwitPad(48, 2, 52, 23, 24, .1)}" fill="rgba(155,123,255,.38)" stroke="${col}" stroke-width="2.5"/>${txt(-32, 6, 'RT', col, 18)}${txt(48, 8, 'RNase H', '#fff', 17)}</g>`;
 
 /* tRNA-primer na de strengoverdracht: klikbaar (zelfde doel als de tRNA-hotspot in stap 1–2), zonder extra label */
 /* 5'/3'-labels aan de uiteinden van een streng (nodig om de sprongen te volgen) */
-const P5 = "5'", P3 = "3'";
+const P5 = "5′", P3 = "3′";
 const end = (x, y, lab, col) => txt(x, y + 6, lab, col, 17);
 /* tRNA dat met zijn 3′-uiteinde (18 nt) gepaard ligt op het PBS: een kort tRNA-stuk onder het PBS-vak, met basenparen,
  * dat aan de linkerkant (het 3′-OH) overloopt in het nieuwe DNA; rechts gaat het over in het L-vormige tRNA */
@@ -36,10 +40,10 @@ export default {
   scale: { nl: '≈ 9,7 kb genoom', en: '≈ 9.7 kb genome' },
   time: { nl: 'uren (in T-cellen sneller dan in macrofagen)', en: 'hours (faster in T cells than in macrophages)' },
   org: { nl: 'HIV-1 in CD4⁺-T-cellen en macrofagen', en: 'HIV-1 in CD4⁺ T cells and macrophages' },
-  legend: [[RNAC, { nl: 'viraal (+)RNA', en: 'viral (+)RNA' }], [DNAC, 'DNA'], [TRC, 'tRNA-Lys3'], [C.prot, { nl: 'reverse transcriptase / RNase H', en: 'reverse transcriptase / RNase H' }]],
+  legend: [[RNAC, { nl: 'viraal (+)RNA', en: 'viral (+)RNA' }], [DNAC, L({ nl: 'viraal DNA, (−)-streng', en: 'viral DNA, (−) strand' })], [DNA2, L({ nl: 'viraal DNA, (+)-streng', en: 'viral DNA, (+) strand' })], [TRC, 'tRNA-Lys3'], [VENZ, { nl: 'reverse transcriptase / RNase H (viraal enzym)', en: 'reverse transcriptase / RNase H (viral enzyme)' }]],
   simplified: {
-    nl: 'Het genoom is als één rechte lijn getekend; in werkelijkheid zijn er twee RNA-kopieën per virusdeeltje en gebeurt dit grotendeels binnen het capside. De genen (gag, pol, env en de regulatorgenen) zijn samengevat in één blok, en RT wordt maar op enkele plaatsen getoond — in werkelijkheid doet hetzelfde enzym alle syntheses en alle RNase H-knippen.',
-    en: 'The genome is drawn as a single straight line; in reality there are two RNA copies per virion and most of this happens inside the capsid. The genes (gag, pol, env and the regulatory genes) are summarised in one block, and RT is shown only at a few places — in reality the same enzyme performs every synthesis and every RNase H cut.' },
+    nl: 'Het genoom is als één rechte lijn getekend; in werkelijkheid zijn er twee RNA-kopieën per virusdeeltje en gebeurt dit grotendeels binnen het capside. De genen (gag, pol, env en de regulatorgenen) zijn samengevat in één blok, en RT wordt maar op enkele plaatsen getoond — in werkelijkheid doet hetzelfde enzym alle syntheses en alle RNase H-knippen. Na de eerste sprong is het nieuwe DNA iets langer dan R: het U5-stuk dat al gekopieerd was, steekt voorbij het 3′-uiteinde van het RNA uit; dat is niet apart getekend.',
+    en: 'The genome is drawn as a single straight line; in reality there are two RNA copies per virion and most of this happens inside the capsid. The genes (gag, pol, env and the regulatory genes) are summarised in one block, and RT is shown only at a few places — in reality the same enzyme performs every synthesis and every RNase H cut. After the first jump the new DNA is a little longer than R: the U5 piece already copied sticks out beyond the 3′ end of the RNA; this is not drawn separately.' },
   steps: [
     ST(7000, cam(870, 440, 1240), 'HIV-1 draagt RNA', 'HIV-1 carries RNA',
       'HIV-1 draagt twee kopieën van zijn RNA. Het enzym reverse transcriptase (RT) maakt er DNA van.',
@@ -77,7 +81,7 @@ export default {
       ${box(...SEG.R5, laneY(0), 'R', RNAC)}${box(...SEG.U5, laneY(0), 'U5', RNAC)}${box(...SEG.PBS, laneY(0), 'PBS', '#ffb27a')}
       ${box(SEG.BODY[0], SEG.BODY[1], laneY(0), L({ nl: 'gag · pol · env', en: 'gag · pol · env' }), RNAC)}
       ${box(...SEG.PPT, laneY(0), 'PPT', '#ffb27a')}${box(...SEG.U3, laneY(0), 'U3', RNAC)}${box(...SEG.R3, laneY(0), 'R', RNAC)}
-      ${txt(SEG.R5[0] - 46, laneY(0) + 7, "5'", C.text, 18)}${txt(SEG.R3[1] + 46, laneY(0) + 7, "3'", C.text, 18)}
+      ${txt(SEG.R5[0] - 46, laneY(0) + 7, "5′", C.text, 18)}${txt(SEG.R3[1] + 46, laneY(0) + 7, "3′", C.text, 18)}
       ${txt(SEG.R3[1], laneY(0) + 48, T2('×2 per deeltje', '×2 per particle'), C.muted, 18, 'end')}`);
 
     /* 1 — tRNA + strong-stop DNA */
@@ -87,7 +91,7 @@ export default {
       ${trnaPBS(laneY(1), laneY(1) + 30)}${trna(SEG.PBS[1], laneY(1) + 30)}
       ${strand(SEG.R5[0], SEG.PBS[0], laneY(1) + 30, DNAC, 1, 7)}
       ${txt(SEG.R5[0] + 52, laneY(1) + 62, L({ nl: 'nieuw DNA (R-U5)', en: 'new DNA (R-U5)' }), DNAC, 18, 'start')}
-      ${enz(SEG.R5[0] + 6, laneY(1) + 62, 'RT', C.prot)}
+      ${enz(SEG.R5[0] + 6, laneY(1) + 62, 'RT', VENZ)}
       ${end(SEG.R5[0] - 24, laneY(1), P5, RNAC)}${end(SEG.R3[1] + 24, laneY(1), P3, RNAC)}${end(SEG.R5[0] - 24, laneY(1) + 30, P3, DNAC)}`);
 
     /* 2 — RNase H */
@@ -96,8 +100,8 @@ export default {
       ${strand(SEG.PBS[0], SEG.R3[1], laneY(2), RNAC, .8, 6)}
       ${box(...SEG.PBS, laneY(2), 'PBS', '#ffb27a')}${trnaPBS(laneY(2), laneY(2) + 30)}
       ${strand(SEG.R5[0], SEG.PBS[0], laneY(2) + 30, DNAC, 1, 7)}${trna(SEG.PBS[1], laneY(2) + 30)}
-      ${enz(SEG.R5[0] + 20, laneY(2) - 40, 'RNase H', C.prot)}
-      ${txt((SEG.R5[0] + SEG.U5[1]) / 2, laneY(2) + 58, L({ nl: 'RNA afgebroken', en: 'RNA degraded' }), C.muted, 18)}
+      ${rtH(SEG.R5[0] + 44, laneY(2) - 66, VENZ)}
+      ${txt((SEG.R5[0] + SEG.U5[1]) / 2, laneY(2) - 14, L({ nl: 'RNA afgebroken', en: 'RNA degraded' }), C.muted, 18)}
       ${end(SEG.R3[1] + 24, laneY(2), P3, RNAC)}${end(SEG.R5[0] - 24, laneY(2) + 30, P3, DNAC)}`);
 
     /* 3 — eerste strengoverdracht */
@@ -114,36 +118,36 @@ export default {
       ${box(...SEG.PPT, laneY(4), 'PPT', '#ffb27a')}
       ${strand(SEG.PBS[0], SEG.R3[1], laneY(4) + 30, DNAC, 1, 7)}${trnaHot(SEG.R3[1] + 72, laneY(4) + 30)}
       ${txt(760, laneY(4) + 56, L({ nl: '(−)-DNA-streng', en: '(−) DNA strand' }), DNAC, 18)}
-      ${enz(SEG.PBS[0] - 70, laneY(4) + 14, 'RT', C.prot)}
+      ${enz(SEG.PBS[0] - 70, laneY(4) + 14, 'RT', VENZ)}
       ${end(SEG.PBS[0] - 20, laneY(4) + 52, P3, DNAC)}`);
 
     /* 5 — (+)-streng vanaf de PPT */
     lanes.push(`${T(5, L({ nl: '(+)-streng start', en: '(+) strand starts' }))}
       ${strand(SEG.PBS[0], SEG.R3[1], laneY(5) + 16, DNAC, 1, 7)}${trnaHot(SEG.R3[1] + 72, laneY(5) + 16)}
       ${box(...SEG.PPT, laneY(5) - 16, 'PPT', '#ffb27a')}
-      ${strand(SEG.PPT[1], SEG.R3[1] + 60, laneY(5) - 16, C.dna2, 1, 7)}
-      ${txt(1170, laneY(5) - 52, L({ nl: '(+)-DNA: U3-R-U5-PBS', en: '(+) DNA: U3-R-U5-PBS' }), C.dna2, 18)}
-      ${end(SEG.PBS[0] - 24, laneY(5) + 16, P3, DNAC)}${end(SEG.R3[1] + 84, laneY(5) - 16, P3, C.dna2)}`);
+      ${strand(SEG.PPT[1], SEG.R3[1] + 60, laneY(5) - 16, DNA2, 1, 7)}
+      ${txt(1170, laneY(5) - 52, L({ nl: '(+)-DNA: U3-R-U5-PBS', en: '(+) DNA: U3-R-U5-PBS' }), DNA2, 18)}
+      ${end(SEG.PBS[0] - 24, laneY(5) + 16, P3, DNAC)}${end(SEG.R3[1] + 84, laneY(5) - 16, P3, DNA2)}`);
 
     /* 6 — tweede strengoverdracht */
     lanes.push(`${T(6, L({ nl: '2ᵉ strengoverdracht', en: '2nd strand transfer' }))}
       ${strand(SEG.PBS[0], SEG.R3[1], laneY(6) + 16, DNAC, 1, 7)}
-      ${box(SEG.PBS[0], SEG.PBS[1], laneY(6) + 16, 'PBS', '#8fb3ff')}
-      ${strand(SEG.PPT[1], SEG.R3[1] + 60, laneY(6) - 16, C.dna2, 1, 7)}
-      ${box(SEG.R3[1] - 10, SEG.R3[1] + 60, laneY(6) - 16, 'PBS', '#8fb3ff')}
+      ${box(SEG.PBS[0], SEG.PBS[1], laneY(6) + 16, 'PBS', '#f7b6dc')}
+      ${strand(SEG.PPT[1], SEG.R3[1] + 60, laneY(6) - 16, DNA2, 1, 7)}
+      ${box(SEG.R3[1] - 10, SEG.R3[1] + 60, laneY(6) - 16, 'PBS', '#f7b6dc')}
       <path d="M${SEG.R3[1] + 25},${laneY(6) - 34} C1250,${laneY(6) - 80} 560,${laneY(6) - 80} ${(SEG.PBS[0] + SEG.PBS[1]) / 2},${laneY(6) - 2}" stroke="#8fb3ff" stroke-width="3" fill="none" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
       ${txt(880, laneY(6) + 60, L({ nl: 'tRNA en PPT weggeknipt', en: 'tRNA and PPT removed' }), C.muted, 18)}
-      ${end(SEG.PBS[0] - 24, laneY(6) + 16, P3, DNAC)}${end(SEG.R3[1] + 24, laneY(6) + 16, P5, DNAC)}${end(SEG.PPT[1] - 24, laneY(6) - 16, P5, C.dna2)}`);
+      ${end(SEG.PBS[0] - 24, laneY(6) + 16, P3, DNAC)}${end(SEG.R3[1] + 24, laneY(6) + 16, P5, DNAC)}${end(SEG.PPT[1] - 24, laneY(6) - 16, P5, DNA2)}`);
 
     /* 7 — lineair dsDNA met LTR's */
     const L1 = [330, 560], L2 = [1130, 1360];
     lanes.push(`${T(7, L({ nl: 'provirus-DNA', en: 'provirus DNA' }))}
-      ${strand(L1[0], L2[1], laneY(7) - 9, DNAC, 1, 7)}${strand(L1[0], L2[1], laneY(7) + 9, C.dna2, 1, 7)}
-      ${box(L1[0], L1[1], laneY(7), 'LTR: U3-R-U5', '#8fb3ff', 1, 26)}
-      ${box(L2[0], L2[1], laneY(7), 'LTR: U3-R-U5', '#8fb3ff', 1, 26)}
+      ${strand(L1[0], L2[1], laneY(7) + 9, DNAC, 1, 7)}${strand(L1[0], L2[1], laneY(7) - 9, DNA2, 1, 7)}
+      ${box(L1[0], L1[1], laneY(7), 'LTR: U3-R-U5', '#f7b6dc', 1, 26)}
+      ${box(L2[0], L2[1], laneY(7), 'LTR: U3-R-U5', '#f7b6dc', 1, 26)}
       ${txt((L1[1] + L2[0]) / 2, laneY(7) - 24, L({ nl: 'gag · pol · env', en: 'gag · pol · env' }), C.text, 18)}
       ${txt(880, laneY(7) + 52, L({ nl: 'dubbelstrengig DNA — klaar voor integratie', en: 'double-stranded DNA — ready for integration' }), C.text, 18)}
-      ${end(L1[0] - 24, laneY(7) - 9, P3, DNAC)}${end(L2[1] + 24, laneY(7) - 9, P5, DNAC)}${end(L1[0] - 24, laneY(7) + 13, P5, C.dna2)}${end(L2[1] + 24, laneY(7) + 13, P3, C.dna2)}`);
+      ${end(L1[0] - 24, laneY(7) + 13, P3, DNAC)}${end(L2[1] + 24, laneY(7) + 13, P5, DNAC)}${end(L1[0] - 24, laneY(7) - 9, P5, DNA2)}${end(L2[1] + 24, laneY(7) - 9, P3, DNA2)}`);
 
     return svgOpen() + `
     ${txt(620, 206, T2('Van (+)RNA naar dubbelstrengig DNA', 'From (+)RNA to double-stranded DNA'), C.muted, 20)}

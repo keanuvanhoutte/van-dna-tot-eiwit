@@ -45,8 +45,8 @@ export default structure3d({
       focus: [{ sel: { chain: 'A' }, style: { cartoon: { color: COL.A } }, label: L3('Rpb1', 'Rpb1') }, { sel: { chain: 'B' }, style: { cartoon: { color: COL.B } }, label: L3('Rpb2', 'Rpb2') }],
       text: L3('Rpb1 en Rpb2 vormen samen twee kaken rond een diepe kloof. Een beweeglijke klem sluit zich over het DNA.', 'Rpb1 and Rpb2 together form two jaws around a deep cleft. A movable clamp closes over the DNA.') },
     { dur: 8000, title: L3('Het DNA in de kloof', 'The DNA in the cleft'), zoom: { chain: ['T', 'N', 'P'] }, spin: .01,
-      focus: [{ sel: { chain: 'T' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .2 } }, label: L3('matrijsstreng', 'template strand') },
-        { sel: { chain: 'N' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .2 } }, label: L3('niet-matrijsstreng', 'non-template strand') }],
+      focus: [{ sel: { chain: 'T' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .2 } }, label: L3('matrijsstreng', 'template strand'), labelColor: C.dna2, labelOff: [-90, 22] },
+        { sel: { chain: 'N' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .2 } }, label: L3('niet-matrijsstreng', 'non-template strand'), labelColor: C.dna, labelOff: [90, -22] }],
       text: L3('Het DNA komt dubbel binnen en gaat open. Alleen de afgelezen streng (de matrijs) loopt door naar binnen.', 'The DNA enters double and opens up. Only the strand being read (the template) runs on inside.') },
     { dur: 8000, title: L3('Het RNA gaat naar buiten', 'The RNA heads out'), zoom: { chain: ['T', 'P'] }, spin: .01,
       focus: [{ sel: { chain: 'P' }, style: { cartoon: { color: C.rna }, stick: { color: C.rna, radius: .25 } }, label: 'RNA' }, { sel: { chain: 'T' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .2 } } }],
@@ -69,7 +69,7 @@ export default structure3d({
   hotspots: [
     { node: 'promoter', label: L3('← Promoter & PIC', '← Promoter & PIC'), color: C.prot },
     { node: 'transcriptie', label: L3('Transcriptie →', 'Transcription →'), color: C.rna },
-    { node: 'capping', label: L3('CTD → 5\'-capping', 'CTD → 5\' capping'), color: C.rna },
+    { node: 'capping', label: L3('CTD → 5′-capping', 'CTD → 5′ capping'), color: C.rna },
     { node: 'polymerasen', label: L3('Pol I en Pol III', 'Pol I and Pol III'), color: C.prot },
   ],
 });

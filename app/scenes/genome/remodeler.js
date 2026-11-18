@@ -93,7 +93,7 @@ export default {
         if (step >= 1 && step <= 3) {
           for (let k = 0; k < 3; k++) {
             const u = (p * 2.2 + k / 3) % 1, o = Math.sin(Math.PI * u) * mop;
-            fx += pill(mx - 190 + 60 * u, Y - 210 + 90 * u, 74, 34, 'ATP', '#1f7a8c', o, 20) + pill(mx + 130 + 60 * u, Y - 120 - 90 * u, 74, 34, 'ADP', '#3d4a66', o * .9, 20);
+            fx += pill(mx - 190 + 60 * u, Y - 210 + 90 * u, 74, 34, 'ATP', '#5fd3e6', o, 20) + pill(mx + 130 + 60 * u, Y - 120 - 90 * u, 74, 34, 'ADP', '#3d4a66', o * .9, 20);
           }
         }
         // activator: wacht boven (stap 0–3), gaat zitten (stap 4)

@@ -5,6 +5,7 @@
 import { C, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, f1, aa, AACLASS, CLASSCOL } from '../../kit.js';
 import { hud, placeHud, textBox } from './_tlkit.js';
 import { membraanLijn, ribosoom80S, eiwit, eiwitPad, tmHelix } from '../../bio.js';
+import { sugar } from '../prot/_b_kit.js';
 
 /* humaan serumalbumine (UniProt P02768): signaal 1–18 · propeptide 19–24 · begin rijp eiwit */
 const SEQ = 'MKWVTFISLLFLFSSAYS' + 'RGVFRR' + 'DAHKSEVAHRFKDLGEENFKALVLIAFAQYLQQ';
@@ -66,7 +67,7 @@ export default {
   ],
   svg() {
     return svgOpen() + `
-    <rect x="-300" y="${MB}" width="2200" height="700" fill="rgba(201,165,116,.07)"/>
+    <rect x="-300" y="${MB}" width="2200" height="700" fill="rgba(143,179,232,.10)"/>
     <g data-node="golgi" data-color="${C.mem}" data-label="${T2('Verder naar het Golgi', 'On to the Golgi')}">
       <rect x="-300" y="${MT}" width="2200" height="${MW}" fill="rgba(0,0,0,0)"/><g id="er-mem"></g>
       <circle id="er-golgiA" data-anchor="golgi" cx="330" cy="${MB + 130}" r="1" fill="none"/>
@@ -95,7 +96,7 @@ export default {
     /* 80S-ribosoom met de tunneluitgang op (ex, ey): 40S boven (leest het mRNA), 60S onder; de keten loopt van het PTC door de tunnel */
     const ribo = (ex, ey, pause = 0, keten = true) => `<g transform="translate(${f1(ex)} ${f1(ey)})">${R80.svg}` +
       (keten ? `<path d="${R80.tunnelD}" stroke="${C.chain}" stroke-width="4" fill="none"/>` : '') +
-      txt(-226 * RS, R80.mrnaY + 8, "5'", C.rna, 22, 'end', 700) + txt(226 * RS, R80.mrnaY + 8, "3'", C.rna, 22, 'start', 700) +
+      txt(-226 * RS, R80.mrnaY + 8, "5′", C.rna, 22, 'end', 700) + txt(226 * RS, R80.mrnaY + 8, "3′", C.rna, 22, 'start', 700) +
       (pause > .01 ? `<g opacity="${f1(pause)}">${txt(150, -250, T2('⏸ elongatie geremd', '⏸ elongation arrested'), '#fff', 26, 'start', 700)}</g>` : '') + '</g>';
     /* Sec61: twee helften in de membraan met de porie ertussen; gate opent de laterale poort (rechterhelft schuift opzij) */
     const SW = 24, secX = gate => [PORE - 30, PORE + 30 + gate * 44];
@@ -190,7 +191,7 @@ export default {
         }
         $('er-chain').innerHTML = ch;
         // labels in het overzicht
-        if (i === 0) lab += `<g opacity="${f1(sub(p, .1, .3))}">${txt(1300, 250, 'cytosol', C.muted, 28, 'middle', 700)}${txt(1300, 780, T2('ER-lumen', 'ER lumen'), C.mem, 28, 'middle', 700)}${txt(1300, MT - 16, T2('ER-membraan (ruw ER)', 'ER membrane (rough ER)'), C.mem, 22, 'middle', 700)}${txt(PORE, MB + 50, 'Sec61', C.prot, 22, 'middle', 700)}${txt(SRA[0] + 20, MB + 50, T2('SRP-receptor', 'SRP receptor'), C.prot, 22, 'start', 700)}</g>`;
+        if (i === 0) lab += `<g opacity="${f1(sub(p, .1, .3))}">${txt(1300, 250, 'cytosol', C.muted, 28, 'middle', 700)}${txt(1300, 780, T2('ER-lumen', 'ER lumen'), '#8fb3e8', 28, 'middle', 700)}${txt(1300, MT - 16, T2('ER-membraan (ruw ER)', 'ER membrane (rough ER)'), C.mem, 22, 'middle', 700)}${txt(PORE, MB + 50, 'Sec61', C.prot, 22, 'middle', 700)}${txt(SRA[0] + 20, MB + 50, T2('SRP-receptor', 'SRP receptor'), C.prot, 22, 'start', 700)}</g>`;
         if (i === 1 && m >= 18) {
           const k = sub(p, .7, .85), a = pos[0], b = pos[2], c = pos[12], d = pos[17];
           lab += `<g opacity="${f1(k)}">${txt(a[0] + 26, a[1] + 6, T2('n (+)', 'n (+)'), '#4f8ff7', 20, 'start', 800)}${txt((b[0] + c[0]) / 2, Math.max(b[1], c[1]) + 70, T2('hydrofobe kern (h)', 'hydrophobic core (h)'), C.chain, 22, 'middle', 800)}${txt(d[0] + 10, d[1] + 44, T2('c: A-Y-S ↓', 'c: A-Y-S ↓'), '#5fd3e6', 20, 'start', 800)}</g>`;
@@ -208,11 +209,11 @@ export default {
             `<path d="M${f1(b54[0])},${f1(b54[1])} C${f1(b54[0] + 120)},${f1(b54[1] - 40)} ${f1(alu[0] + 90)},${f1(alu[1] + 30)} ${f1(alu[0])},${f1(alu[1])}" stroke="${SL7}" stroke-width="10" fill="none" stroke-linecap="round"/>` +
             eiwit(b54[0], b54[1], 62, 28, C.prot, { seed: 54, label: 'SRP54', fs: 18 }) +
             eiwit(alu[0], alu[1], 30, 19, C.prot3, { seed: 14, label: 'Alu', fs: 15 }) +
-            (i === 3 || (i === 4 && p < .45) ? txt(b54[0] - 20, b54[1] + 48, 'GTP', '#ffe08a', 16, 'middle', 700) : '') + '</g>';
+            (i === 3 || (i === 4 && p < .45) ? txt(b54[0] - 20, b54[1] + 48, 'GTP', '#5fd3e6', 16, 'middle', 700) : '') + '</g>';
           $('er-sA').setAttribute('cx', f1(alu[0] + 150)); $('er-sA').setAttribute('cy', f1(alu[1] - 30));
         } else hide('er-sA');
         // SRP-receptor
-        srp += `<g opacity="${f1(i === 0 ? sub(p, .1, .3) : i === 8 ? 1 - sub(p, 0, .2) : 1)}">${tmHelix(SRA[0], MT - 6, MB + 6, C.prot2, 1, 15)}${eiwit(SRA[0] + 4, MT - 14, 20, 12, C.prot2, { seed: 33 })}${eiwit(SRA[0], SRA[1] - 34, 44, 26, C.prot2, { seed: 32, label: 'SRα', fs: 17 })}${i >= 3 && i <= 4 ? txt(SRA[0] + 60, SRA[1] - 28, i === 4 && p > .45 ? 'GDP' : 'GTP', '#ffe08a', 16, 'start', 700) : ''}${i >= 3 ? txt(SRA[0] + 22, MB + 22, 'SRβ', C.muted, 15, 'start', 700) : ''}</g>`;
+        srp += `<g opacity="${f1(i === 0 ? sub(p, .1, .3) : i === 8 ? 1 - sub(p, 0, .2) : 1)}">${tmHelix(SRA[0], MT - 6, MB + 6, C.prot2, 1, 15)}${eiwit(SRA[0] + 4, MT - 14, 20, 12, C.prot2, { seed: 33 })}${eiwit(SRA[0], SRA[1] - 34, 44, 26, C.prot2, { seed: 32, label: 'SRα', fs: 17 })}${i >= 3 && i <= 4 ? txt(SRA[0] + 60, SRA[1] - 28, i === 4 && p > .45 ? 'GDP' : 'GTP', '#5fd3e6', 16, 'start', 700) : ''}${i >= 3 ? txt(SRA[0] + 22, MB + 22, 'SRβ', C.muted, 15, 'start', 700) : ''}</g>`;
         $('er-srp').innerHTML = srp;
         // signaalpeptidase, OST
         if (i === 6) {
@@ -227,14 +228,17 @@ export default {
         if (i === 7) {
           const k = sub(p, .05, .25);
           ost += `<g opacity="${f1(k)}">${tmHelix(653, MT - 6, MB + 6, C.prot2, 1, 14)}${tmHelix(677, MT - 6, MB + 6, C.prot2, 1, 14)}${eiwit(665, MB + 36, 60, 28, C.prot2, { seed: 48, label: 'OST', fs: 18 })}</g>`;
-          // lipide-gekoppelde suikerboom (SNFG: GlcNAc blauw vierkant, Man groen rond, Glc blauw rond)
-          const gx = 560, gy = MB + 10, g = sub(p, .2, .4);
-          let tree = `<line x1="${gx}" y1="${MT + 10}" x2="${gx}" y2="${gy}" stroke="${C.mem}" stroke-width="4"/>`;
-          tree += `<rect x="${gx - 8}" y="${gy}" width="16" height="16" fill="#4f8ff7"/><rect x="${gx - 8}" y="${gy + 20}" width="16" height="16" fill="#4f8ff7"/>`;
-          const man = [[0, 48], [-22, 70], [22, 70], [-36, 94], [-10, 94], [22, 94], [-36, 118], [-10, 118], [22, 118]];
-          man.forEach(([dx, dy]) => { tree += `<circle cx="${gx + dx}" cy="${gy + dy}" r="8" fill="#5ad17a"/>`; });
-          [[-36, 142], [-36, 164], [-36, 186]].forEach(([dx, dy]) => { tree += `<circle cx="${gx + dx}" cy="${gy + dy}" r="8" fill="#4f8ff7"/>`; });
-          ost += `<g opacity="${f1(g)}">${tree}${txt(gx - 60, gy + 60, 'Glc₃Man₉GlcNAc₂', '#fff', 17, 'end', 700)}${txt(gx - 60, gy + 84, T2('op dolichol-PP', 'on dolichol-PP'), C.muted, 16, 'end', 600)}</g>`;
+          // lipide-gekoppelde suikerboom Glc₃Man₉GlcNAc₂ (SNFG-vormen en -kleuren, dezelfde boom als in glyco): de drie Glc zitten op de
+          // ONvertakte α1-3-arm (Man–Man–Man–Glc–Glc–Glc); de α1-6-arm vertakt in twee takken van twee Man (Aebi 2013; Kornfeld & Kornfeld 1985)
+          const gx = 560, gy = MB + 18, g = sub(p, .2, .4), DD = 21;
+          const NOD = { g1: ['GlcNAc', 0, 0, null], g2: ['GlcNAc', 0, 1, 'g1'], m3: ['Man', 0, 2, 'g2'],
+            a1: ['Man', -1.1, 3, 'm3'], a2: ['Man', -1.1, 4, 'a1'], a3: ['Man', -1.1, 5, 'a2'], c1: ['Glc', -1.1, 6, 'a3'], c2: ['Glc', -1.1, 7, 'c1'], c3: ['Glc', -1.1, 8, 'c2'],
+            r1: ['Man', 1.1, 3, 'm3'], b1: ['Man', .55, 4, 'r1'], b2: ['Man', .55, 5, 'b1'], d1: ['Man', 1.65, 4, 'r1'], d2: ['Man', 1.65, 5, 'd1'] };
+          const at = k => [gx + NOD[k][1] * DD, gy + NOD[k][2] * DD];
+          let tree = `<line x1="${gx}" y1="${MT + 10}" x2="${gx}" y2="${gy}" stroke="${C.mem}" stroke-width="4"/>`;   // dolichol-PP in het membraan
+          for (const k in NOD) if (NOD[k][3]) { const [x1, y1] = at(k), [x0, y0] = at(NOD[k][3]); tree += `<line x1="${f1(x0)}" y1="${f1(y0)}" x2="${f1(x1)}" y2="${f1(y1)}" stroke="#c9d2e4" stroke-width="2"/>`; }
+          for (const k in NOD) { const [x, y] = at(k); tree += sugar(NOD[k][0], x, y, 8); }
+          ost += `<g opacity="${f1(g)}">${tree}${txt(gx - 46, gy + 60, 'Glc₃Man₉GlcNAc₂', '#fff', 17, 'end', 700)}${txt(gx - 46, gy + 84, T2('op dolichol-PP', 'on dolichol-PP'), C.muted, 16, 'end', 600)}</g>`;
           $('er-gA').setAttribute('cx', '665'); $('er-gA').setAttribute('cy', f1(MB + 60));
           ov += `<g opacity="${f1(sub(p, .5, .65))}">` + textBox(940, 700, 430, [T2('sequon N-X-S/T (X ≠ Pro)', 'sequon N-X-S/T (X ≠ Pro)'), T2('albumine: geen sequon', 'albumin: no sequon')], { col: '#4f8ff7', fs: 21 }) + '</g>';
         } else hide('er-gA');

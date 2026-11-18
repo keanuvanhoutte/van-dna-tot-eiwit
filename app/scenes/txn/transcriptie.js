@@ -19,8 +19,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">Kijk naar de kleuren: de RNA-basen in de RNA–DNA-hybride zijn complementair aan de matrijsstreng en dus gelijk aan de coderende streng (U in plaats van T).</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Look at the colours: the RNA bases in the RNA–DNA hybrid are complementary to the template strand and therefore identical to the coding strand (U instead of T).</p>' },
   simplified: {
-    nl: 'De dubbelhelix is als platte golf getekend (~10,5 bp per winding klopt). Bel (~13 bp) en RNA–DNA-hybride (~8 bp) zijn op schaal; de vormen van Pol II en de factoren zijn schematisch (echte structuren: PDB 5FLM, 1I6H). Mediator, activatoren en nucleosomen zijn weggelaten. Pol II is hier tientallen keren trager dan in de cel.',
-    en: 'The double helix is drawn as a flat wave (~10.5 bp per turn is correct). The bubble (~13 bp) and RNA–DNA hybrid (~8 bp) are to scale; Pol II and the factors are schematic (real structures: PDB 5FLM, 1I6H). Mediator, activators and nucleosomes are omitted. Pol II moves tens of times slower here than in the cell.' },
+    nl: 'De dubbelhelix is als platte golf getekend (~10,5 bp per winding klopt). Bel (~13 bp) en RNA–DNA-hybride (~8 bp) zijn op schaal; de vormen van Pol II en de factoren zijn schematisch (echte structuren: PDB 5FLM, 1I6H). Mediator, activatoren en nucleosomen zijn weggelaten. Pol II is hier tientallen keren trager dan in de cel. Het cappingenzym is apart getekend bij het RNA-uiteinde; in werkelijkheid zit het vast aan de staart (CTD, met S5P) van Pol II, vlak bij de plek waar het RNA naar buiten komt.',
+    en: 'The double helix is drawn as a flat wave (~10.5 bp per turn is correct). The bubble (~13 bp) and RNA–DNA hybrid (~8 bp) are to scale; Pol II and the factors are schematic (real structures: PDB 5FLM, 1I6H). Mediator, activators and nucleosomes are omitted. Pol II moves tens of times slower here than in the cell. The capping enzyme is drawn separately at the RNA end; in reality it is bound to the tail (CTD, with S5P) of Pol II, close to where the RNA comes out.' },
   steps: [
     { dur: 7000, cam: cam(300, 470, 760), title: { nl: 'Het startpunt van het gen', en: 'The start of the gene' },
       text: { nl: 'Vóór het gen ligt de startplek (promoter). Een hulpeiwit herkent daar het stukje DNA ‘TATAAAA’.', en: 'In front of the gene lies the start site (promoter). A helper protein recognises the DNA stretch ‘TATAAAA’ there.' } },
@@ -61,7 +61,7 @@ export default {
       <path id="tx-rna" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round"/>
     </g>
     <g data-node="capping" data-nolabel data-color="${C.prot2}"><g id="tx-capenz"></g></g>
-    <g data-node="capping" data-color="${C.rna}" data-label="${T2("5'-cap (m⁷G)", "5' cap (m⁷G)")}"><g id="tx-cap"></g></g>
+    <g data-node="capping" data-color="${C.rna}" data-label="${T2("5′-cap (m⁷G)", "5′ cap (m⁷G)")}"><g id="tx-cap"></g></g>
     <g data-node="rnapol" data-color="${C.prot}" data-label="${T2('RNA-polymerase II', 'RNA polymerase II')}">
       <g id="tx-pol">
         <path d="${eiwitPad(0, -12, 150, 128, 77, .06)}" fill="rgba(155,123,255,.20)" stroke="${C.prot}" stroke-width="3"/>
@@ -77,11 +77,11 @@ export default {
     <g id="tx-gtf"></g></g>
     <g data-node="supercoiling" data-color="${C.dna2}" data-label="${T2('Supercoiling', 'Supercoiling')}"><g id="tx-sc"></g><circle id="tx-scA" data-anchor="supercoiling" cx="-99" cy="-99" r="1" fill="none" opacity="0"/></g>
     <g font-family="JetBrains Mono, monospace" font-size="16" fill="${C.text}">
-      <text x="44" y="408">5'</text><text x="1545" y="408">3'</text><text x="44" y="560">3'</text><text x="1545" y="560">5'</text>
+      <text x="44" y="408">5′</text><text x="1545" y="408">3′</text><text x="44" y="560">3′</text><text x="1545" y="560">5′</text>
     </g>
     <g id="tx-strandlab" font-family="Inter" font-size="18">
-      <text x="300" y="392" fill="${C.dna}">${T2("coderende streng (niet-matrijs) 5'→3'", "coding (non-template) strand 5'→3'")}</text>
-      <text x="300" y="566" fill="${C.dna2}">${T2("matrijsstreng (template) 3'→5' — wordt gelezen", "template strand 3'→5' — is read")}</text>
+      <text x="300" y="392" fill="${C.dna}">${T2("coderende streng (niet-matrijs) 5′→3′", "coding (non-template) strand 5′→3′")}</text>
+      <text x="300" y="566" fill="${C.dna2}">${T2("matrijsstreng (template) 3′→5′ — wordt gelezen", "template strand 3′→5′ — is read")}</text>
     </g>
     </svg>`;
   },
@@ -141,14 +141,14 @@ export default {
           }
         }
         $('tx-rna-bases').innerHTML = rb;
-        $('tx-act').setAttribute('cy', f1(yH + 8 - CY));   // actief centrum: aan het 3'-uiteinde van het RNA, tegen de matrijs
+        $('tx-act').setAttribute('cy', f1(yH + 8 - CY));   // actief centrum: aan het 3′-uiteinde van het RNA, tegen de matrijs
 
         // cap: verschijnt bij ~25 nt (550 px)
         const end = pts[pts.length - 1] ?? [active, yH];
         const capOn = rnaLen > 25 * BP;
         const capK = capOn ? clamp((rnaLen - 25 * BP) / 60) : 0;
         $('tx-cap').innerHTML = capK > 0 ? `<g transform="translate(${f1(end[0] - 8)} ${f1(end[1])})" opacity="${f1(capK)}"><circle r="19" fill="${C.cap}" stroke="${C.rna}" stroke-width="2"/><text y="5" font-size="14" text-anchor="middle" fill="#3a1a05" font-family="Inter" font-weight="700">m⁷G</text></g>` : '';
-        // cappingenzym grijpt het 5'-uiteinde vast in de kap-stap en laat los zodra het kapje erop zit
+        // cappingenzym grijpt het 5′-uiteinde vast in de kap-stap en laat los zodra het kapje erop zit
         const enzK = step === 6 ? ease(sub(p, 0, .2)) : 0;
         $('tx-capenz').innerHTML = ePill(end[0] - 95, end[1], 180, 30, T2('cappingenzym', 'capping enzyme'), C.prot2, enzK, 16);
 
@@ -170,9 +170,10 @@ export default {
         const inS1 = (a, b) => step === 1 ? ease(sub(p, a, b)) : step > 1 && step < 3 ? 1 : step === 3 ? 1 - sub(p, .2, .7) : 0;
         g.push(ePill(120, 520, 64, 24, 'TFIIA', '#6f5bd6', inS1(.05, .25)));
         g.push(ePill(260, 522, 64, 24, 'TFIIB', '#6f5bd6', inS1(.15, .35)));
-        g.push(ePill(START + 185, 392, 64, 24, 'TFIIF', '#5a4bb8', inS1(.35, .6)));
-        g.push(ePill(START - 175, 350, 64, 24, 'TFIIE', '#5a4bb8', inS1(.6, .8)));
-        g.push(ePill(START + 190, 336, 74, 26, 'TFIIH', '#8e6cf0', inS1(.75, .95)));
+        // TFIIF en TFIIE liggen tegen Pol II; TFIIH zit op het DNA vóór Pol II, waar XPB het DNA opendraait (He et al. 2016)
+        g.push(ePill(START + 142, 388, 64, 24, 'TFIIF', '#5a4bb8', inS1(.35, .6)));
+        g.push(ePill(START - 138, 366, 64, 24, 'TFIIE', '#5a4bb8', inS1(.6, .8)));
+        g.push(ePill(START + 172, CY - 6, 74, 26, 'TFIIH', '#8e6cf0', inS1(.75, .95)));
         $('tx-gtf').innerHTML = g.join('');
 
         // supercoils

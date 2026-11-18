@@ -45,9 +45,9 @@ export function bilayer(x0, x1, y, o = {}) {
  * met het poriecomplex in de opening (bio.js). Cytoplasma boven, kern onder; buitenkant y − 18 … y + 18. */
 export function nucEnv(x0, x1, y, pores, s = .6) {
   /* klikbaar zonder label: envelop → celkern, poriën → kernporie & import */
-  const env = kernEnvelopLijn(x0, x1, y, { poriën: pores, w: 14, gap: 12, poreW: 30, npc: false, lumen: 'rgba(201,165,116,.22)' });
-  const npcs = pores.map(x => kernporie(x, y, 0, { H: 40, poreW: 30 })).join('');
-  return `<g data-node="kern" data-color="#9cc0ff" data-nolabel>${env}</g><g data-node="kernimport" data-color="${C.prot}" data-nolabel>${npcs}</g>`;
+  const env = kernEnvelopLijn(x0, x1, y, { poriën: pores, w: 20, gap: 14, poreW: 30, npc: false, lumen: 'rgba(143,179,232,.22)' });   // kernmembranen dikker (dichter bij het plasmamembraan)
+  const npcs = pores.map(x => kernporie(x, y, 0, { H: 54, poreW: 30 })).join('');
+  return `<g data-node="kern" data-color="#9cc0ff" data-nolabel>${env}</g><g data-node="kernimport" data-color="#9db4d8" data-nolabel>${npcs}</g>`;
 }
 /* klikbaar zonder label (hotspot naar knoop `node`), voor onderdelen die al een eigen scène hebben */
 export const hot = (node, col, s) => `<g data-node="${node}" data-color="${col}" data-nolabel>${s}</g>`;
@@ -136,15 +136,15 @@ export function egfr(x, y, h = 64, op = 1, pN = 0, side = 0) {
   s += `<path d="M${f1(x)},${y + h + 2} v10" stroke="${C.prot}" stroke-width="5"/>`;
   s += eiwit(x, y + h + 24, 17, 13, C.prot, { seed: 53 }) + eiwit(x, y + h + 50, 22, 16, C.prot, { seed: 54 });
   s += `<path d="M${f1(x)},${y + h + 64} q-6,16 4,30" stroke="${C.prot}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
-  if (pN > .01) s += `<g opacity="${f1(pN)}"><circle cx="${f1(x + 4)}" cy="${y + h + 100}" r="13" fill="#ff6b6b" stroke="#fff" stroke-width="1.6"/><text x="${f1(x + 4)}" y="${y + h + 106}" font-size="17" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="800">P</text></g>`;
+  if (pN > .01) s += `<g opacity="${f1(pN)}"><circle cx="${f1(x + 4)}" cy="${y + h + 100}" r="13" fill="#ff9f43" stroke="#fff" stroke-width="1.6"/><text x="${f1(x + 4)}" y="${y + h + 106}" font-size="17" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="800">P</text></g>`;
   return `<g opacity="${f1(op)}">${s}</g>`;
 }
 /* G-eiwit (heterotrimeer) aan de binnenkant van het membraan. Gα: GTPase-domein + helixdomein, via een vetzuuranker
  * (palmitoyl) in het binnenblad; Gβ (β-propeller) + Gγ (lang en smal) met een prenylanker. memB = onderkant membraan. */
-export function gAlpha(x, y, memB, { op = 1, anker = 1, lab = 'Gαs', fs = 18 } = {}) {
+export function gAlpha(x, y, memB, { op = 1, anker = 1, lab = 'Gαs', fs = 18, ax = -22 } = {}) {   // ax = x-positie van het vetzuuranker t.o.v. Gα
   if (op <= .01) return '';
   let s = '';
-  if (anker > .01) s += `<path d="M${f1(x - 22)},${f1(y - 26)} L${f1(x - 22)},${f1(memB + 6)}" stroke="${GAC}" stroke-width="3.5" opacity="${f1(anker)}"/>` + lipAnker(x - 22, memB, anker);
+  if (anker > .01) s += `<path d="M${f1(x + ax)},${f1(y - 26)} L${f1(x + ax)},${f1(memB + 6)}" stroke="${GAC}" stroke-width="3.5" opacity="${f1(anker)}"/>` + lipAnker(x + ax, memB, anker);
   s += eiwit(x + 26, y - 18, 22, 17, GAC, { seed: 32 }) + eiwit(x - 2, y + 2, 44, 32, GAC, { seed: 31 });
   if (lab) s += `<text x="${f1(x - 4)}" y="${f1(y - 8)}" font-size="${fs}" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">${lab}</text>`;
   return `<g opacity="${f1(op)}">${s}</g>`;

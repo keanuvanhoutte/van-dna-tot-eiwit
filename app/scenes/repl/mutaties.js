@@ -116,7 +116,7 @@ export default {
         s += `<g opacity="${f1(op)}">${g}</g>`;
       });
       // rijlabels + uiteinden
-      s += txt(X0 - 14, YD + 18, "5'", C.dna, 16, 'end', 700, 'JetBrains Mono') + txt(X0 - 14, YM + 18, "5'", C.rna, 16, 'end', 700, 'JetBrains Mono');
+      s += txt(X0 - 14, YD + 18, "5′", C.dna, 16, 'end', 700, 'JetBrains Mono') + txt(X0 - 14, YM + 18, "5′", C.rna, 16, 'end', 700, 'JetBrains Mono');
       s += txt(X0 - 14, YA + 6, 'N', C.prot, 16, 'end', 700, 'JetBrains Mono');
       return s;
     }
@@ -187,7 +187,7 @@ export default {
           nm += `<g transform="translate(${ptc} ${Y})"><path d="M-10,-24 L10,-24 L24,-10 L24,10 L10,24 L-10,24 L-24,10 L-24,-10Z" fill="${C.danger}"/>${txt(0, 5, 'UAG', '#fff', 13, 'middle', 700)}</g>`;
           // ribosoom
           const rx = lerp(x0 + 60, ptc, clamp(kR * 1.4));
-          { const rb = ribosoom80S(rx, Y + 140 * .42, { s: .42, mrna: false, tRNAs: 1 });   // 40S boven, 60S onder het mRNA
+          { const rb = ribosoom80S(rx, Y - 140 * .42, { s: .42, mrna: false, tRNAs: 1, grootBoven: true });   // zoals in translatie en nmd: 60S boven, 40S onder het mRNA
             rib = `<g opacity="${f1(k * (1 - kD * .85) * (1 - kD))}">${rb.svg}</g>`; }
           nm += eiwit(ptc, Y - 97, 44, 20, C.prot2, { seed: 11, label: 'UPF1', fs: 17, op: kU * (1 - kD) });
           nm += `<g opacity="${f1(kU * (1 - kD))}">${seg(ptc + 34, Y - 94, e2 - 60, Y - 50, C.prot2, 3, 1, 'stroke-dasharray="6 5"')}</g>`;

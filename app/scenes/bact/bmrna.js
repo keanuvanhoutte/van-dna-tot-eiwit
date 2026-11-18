@@ -143,7 +143,7 @@ export default {
             po += `<rect x="${g0 - 70}" y="456" width="44" height="28" rx="6" fill="${K.sd}" fill-opacity=".8"/>` + txt(g0 - 48, 530, 'SD', K.sd, 20, 'middle', 800) +
               `<rect x="${g0}" y="460" width="${g1 - g0}" height="20" rx="10" fill="${cols[i]}" fill-opacity=".35" stroke="${cols[i]}"/>` + txt((g0 + g1) / 2, 540, `${T2('gen', 'gene')} ${i + 1}`, cols[i], 24, 'middle', 700);
             for (let k = 0; k < 2; k++) {
-              const v = clamp(u * 1.4 - k * .4);
+              const v = clamp(u * 1.4 - k * .4) * (k ? .62 : 1);   // het tweede ribosoom blijft een vaste afstand achter het eerste (kortere keten)
               if (v <= 0) continue;
               const x = lerp(g0 + 20, g1 - 20, v);
               po += `<path d="M${f1(x)},420 q${f1(14)},${f1(-30 * v)} 0,${f1(-80 * v)}" stroke="${cols[i]}" stroke-width="5" fill="none"/>` + ribo(x, 446, 2.6, 1);

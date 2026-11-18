@@ -125,8 +125,9 @@ export default molScene({
         c.style({ chain: 'B', resn: 'CMO' }, { stick: { radius: .25 }, sphere: { radius: .45 } });
         c.style({ chain: 'B', resi: [63, 92], not: { atom: ['N', 'C', 'O'] } }, { stick: { colorscheme: 'greenCarbon', radius: .25 } });
         const lab = (s, t, col) => { const a = c.sel(s); if (a.length) c.label(t, c.center(a), { border: col, size: 16 }); };
-        lab({ chain: 'B', resi: 92, atom: 'NE2' }, 'His92 (F8)', '#2cc6a8'); lab({ chain: 'B', resi: 63, atom: 'NE2' }, 'His63 (E7)', '#7fdc6a');
-        lab({ chain: 'B', resn: 'HEM', atom: 'FE' }, 'Fe²⁺', '#ff8a3d'); lab({ chain: 'B', resn: 'CMO' }, 'CO', '#ffffff');
+        // labels uit elkaar: His92 op zijn Cα (verder van het heem dan NE2), CO op het O-atoom; het Fe-label staat al in het paneel
+        lab({ chain: 'B', resi: 92, atom: 'CA' }, 'His92 (F8)', '#2cc6a8'); lab({ chain: 'B', resi: 63, atom: 'NE2' }, 'His63 (E7)', '#7fdc6a');
+        lab({ chain: 'B', resn: 'CMO', atom: 'O' }, 'CO', '#ffffff');
       },
       zoom: { chain: 'B', within: { distance: 9, sel: { chain: 'B', resn: 'HEM' } } }, spin: .018,
       panel: () => phead(T2('Liganden stabiliseren de vouw', 'Ligands stabilise the fold')) + plines(222, [

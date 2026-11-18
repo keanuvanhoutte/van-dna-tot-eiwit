@@ -57,6 +57,32 @@ const DEN = [
   [[452, 460], [760, 470], [1050, 500], [1300, 520], [1460, 500]],
   [[430, 530], [690, 620], [960, 680], [1200, 700], [1380, 690]],
 ];
+/* zenuwcel als één doorlopend omhulsel: het celmembraan van het cellichaam gaat over in dat van elke uitloper
+ * (geen wand tussen cellichaam en uitloper). Punten langs de Catmull-Rom-curve van smooth(). */
+const SOMA = [330, 460, 125], DW = 14;          // cellichaam (x, y, r) en halve breedte van een uitloper
+const curvePts = P => { const out = [P[0]]; for (let i = 0; i < P.length - 1; i++) { const p0 = P[i - 1] ?? P[i], p1 = P[i], p2 = P[i + 1], p3 = P[i + 2] ?? p2;
+  const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6], c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+  for (let k = 1; k <= 12; k++) { const t = k / 12, u = 1 - t; out.push([u * u * u * p1[0] + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t * t * t * p2[0], u * u * u * p1[1] + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t * t * t * p2[1]]); } }
+  return out; };
+const zijde = (Q, d) => Q.map((p, i) => { const a = Q[Math.max(0, i - 1)], b = Q[Math.min(Q.length - 1, i + 1)], n = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1; return [p[0] - (b[1] - a[1]) / n * d, p[1] + (b[0] - a[0]) / n * d]; });
+function neuronOmhulsel() {
+  const [cx, cy, r] = SOMA, gaps = DEN.map(P => Math.atan2(P[0][1] - cy, P[0][0] - cx)), hw = Math.asin(DW / r);
+  let fill = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#2a2350"/>`, mem = '';
+  DEN.forEach(P => {
+    const Q = curvePts(P), e = Q[Q.length - 1], q = Q[Q.length - 2], ang = Math.atan2(e[1] - q[1], e[0] - q[0]);
+    fill += `<path d="${smooth(P)}" stroke="#2a2350" stroke-width="${2 * DW}" fill="none" stroke-linecap="round"/>`;
+    const A = zijde(Q, -DW), B = zijde(Q, DW), tip = [];
+    for (let k = 1; k < 8; k++) { const th = ang - Math.PI / 2 + Math.PI * k / 8; tip.push([e[0] + DW * Math.cos(th), e[1] + DW * Math.sin(th)]); }
+    mem += membraanPts([...A, ...tip, ...B.reverse()], { w: 9 });
+  });
+  // cellichaam: bogen tussen de aanhechtingen van de uitlopers
+  const g = gaps.map(a => [a - hw, a + hw]).sort((x, y) => x[0] - y[0]);
+  for (let i = 0; i < g.length; i++) {
+    const a0 = g[i][1], a1 = i + 1 < g.length ? g[i + 1][0] : g[0][0] + 2 * Math.PI, n = Math.max(4, Math.round((a1 - a0) * r / 8));
+    mem += membraanPts(Array.from({ length: n + 1 }, (_, k) => { const t = a0 + (a1 - a0) * k / n; return [cx + r * Math.cos(t), cy + r * Math.sin(t)]; }), { w: 9 });
+  }
+  return fill + mem;
+}
 const len = P => P.slice(1).reduce((a, q, i) => a + Math.hypot(q[0] - P[i][0], q[1] - P[i][1]), 0);
 
 export default {
@@ -188,8 +214,7 @@ export default {
         const vC = vis([6], step, p);
         if (vC > .01) {
           o += `<g opacity="${f1(vC)}">`;
-          DEN.forEach(P => { o += `<path d="${smooth(P)}" stroke="${LIPID.head}" stroke-width="28" fill="none" stroke-linecap="round"/><path d="${smooth(P)}" stroke="#4a3d86" stroke-width="20" fill="none" stroke-linecap="round"/>`; });   // uitloper met celmembraan als rand
-          o += `<circle cx="330" cy="460" r="125" fill="#2a2350"/>` + membraanPts(ptsCirkel(330, 460, 125, 70), { w: 9, closed: true }) + `<circle cx="315" cy="455" r="55" fill="url(#gNuc)"/>` + KERN_C;
+          o += neuronOmhulsel() + `<circle cx="315" cy="455" r="55" fill="url(#gNuc)"/>` + KERN_C;
           const k = ease(sub(p, .1, .8)), kT = ease(sub(p, .75, .95));
           DEN.forEach((P, i) => {
             const L = len(P), end = P[P.length - 1];

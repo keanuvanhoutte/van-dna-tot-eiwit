@@ -15,13 +15,13 @@ export default {
   title: { nl: 'Aminoacyl-tRNA-synthetase', en: 'Aminoacyl-tRNA synthetase' },
   scale: '≈ 10 nm', time: { nl: 'snel (hier sterk vertraagd)', en: 'fast (strongly slowed down here)' },
   org: { nl: 'alle levensvormen (hier IleRS)', en: 'all domains of life (here IleRS)' },
-  legend: [[C.prot, { nl: 'synthetase (IleRS)', en: 'synthetase (IleRS)' }], [C.trna, 'tRNA-Ile'], ['#ff8a3d', 'ATP / AMP / PPi'], ['#7fdc6a', { nl: 'hydrofoob aminozuur', en: 'hydrophobic amino acid' }]],
+  legend: [[C.prot, { nl: 'synthetase (IleRS)', en: 'synthetase (IleRS)' }], [C.trna, 'tRNA-Ile'], ['#5fd3e6', 'ATP / AMP / PPi'], ['#7fdc6a', { nl: 'hydrofoob aminozuur', en: 'hydrophobic amino acid' }]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Proef (Chapeville e.a., 1962): Cys-tRNA-Cys werd chemisch omgezet in Ala-tRNA-Cys; daarna verscheen Ala op Cys-codons. Het ribosoom controleert dus het anticodon, niet het aminozuur.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Experiment (Chapeville et al., 1962): Cys-tRNA-Cys was chemically converted into Ala-tRNA-Cys; Ala then appeared at Cys codons. So the ribosome checks the anticodon, not the amino acid.</p>' },
   simplified: {
-    nl: 'Het enzym is schematisch getekend als enkele domeinen (katalytisch domein, editeerdomein CP1, anticodonbindend domein; echte IleRS: ≈ 900–1300 aminozuren; PDB 1FFY = IleRS van S. aureus, 917 aminozuren). Het tRNA is een vereenvoudigde L-vorm. Proeflezen gebeurt zowel vóór (aa-AMP) als na de overdracht (aa-tRNA); hier tonen we de post-transfer-route. Klasse-I-enzymen laden meestal de 2\'-OH, klasse II de 3\'-OH (uitzondering: PheRS, klasse II, 2\'-OH).',
-    en: 'The enzyme is drawn schematically as a few domains (catalytic domain, CP1 editing domain, anticodon-binding domain; real IleRS: ≈ 900–1300 amino acids; PDB 1FFY = S. aureus IleRS, 917 amino acids). The tRNA is a simplified L shape. Editing happens both before (aa-AMP) and after transfer (aa-tRNA); here we show the post-transfer route. Class I enzymes usually charge the 2\'-OH, class II the 3\'-OH (exception: PheRS, class II, 2\'-OH).' },
+    nl: 'Het enzym is schematisch getekend als enkele domeinen (katalytisch domein, editeerdomein CP1, anticodonbindend domein; echte IleRS: ≈ 900–1300 aminozuren; PDB 1FFY = IleRS van S. aureus, 917 aminozuren). Het tRNA is een vereenvoudigde L-vorm. Proeflezen gebeurt zowel vóór (aa-AMP) als na de overdracht (aa-tRNA); hier tonen we de post-transfer-route. Klasse-I-enzymen laden meestal de 2′-OH, klasse II de 3′-OH (uitzondering: PheRS, klasse II, 2′-OH).',
+    en: 'The enzyme is drawn schematically as a few domains (catalytic domain, CP1 editing domain, anticodon-binding domain; real IleRS: ≈ 900–1300 amino acids; PDB 1FFY = S. aureus IleRS, 917 amino acids). The tRNA is a simplified L shape. Editing happens both before (aa-AMP) and after transfer (aa-tRNA); here we show the post-transfer route. Class I enzymes usually charge the 2′-OH, class II the 3′-OH (exception: PheRS, class II, 2′-OH).' },
   steps: [
     ST(8000, cam(820, 470, 1500), 'Een eigen enzym per aminozuur', 'Its own enzyme for each amino acid', 'Elk aminozuur heeft een eigen enzym dat het aan de juiste tRNA’s hangt. Hier wordt de code echt vertaald.', 'Each amino acid has its own enzyme that attaches it to the right tRNAs. This is where the code is really translated.'),
     ST(9000, cam(900, 460, 1000), 'Stap 1: het aminozuur klaarmaken', 'Step 1: getting the amino acid ready', 'Het enzym activeert het aminozuur (isoleucine) met energie uit ATP.', 'The enzyme activates the amino acid (isoleucine) with energy from ATP.'),
@@ -80,7 +80,7 @@ export default {
       $('rs-tA').setAttribute('cx', f1(x - 50)); $('rs-tA').setAttribute('cy', f1(y + 140));
       return s + '</g>';
     }
-    const atp = (x, y, n = 3, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}">${pill(x, y, 62, 30, n === 3 ? 'ATP' : 'AMP', '#e0702a', 1, 16)}</g>`;
+    const atp = (x, y, n = 3, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}">${pill(x, y, 62, 30, n === 3 ? 'ATP' : 'AMP', '#5fd3e6', 1, 16)}</g>`;
     const ppi = (x, y, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}">${pill(x, y, 58, 28, 'PPi', '#b35a22', 1, 15)}</g>`;
 
     return {
@@ -134,14 +134,14 @@ export default {
               `<g opacity="${f1(sub(p, .65, .8))}">` + txt(tipSyn[0] - 110, tipSyn[1] - 150, T2('acceptorstam + base 73', 'acceptor stem + base 73'), '#fff', 20, 'middle', 700) + '</g>';
           } else {
             ov += `<g opacity="${f1(sub(p, .05, .2))}">` + txt(860, 215, T2('Ile-AMP + tRNA  →  Ile-tRNA + AMP', 'Ile-AMP + tRNA  →  Ile-tRNA + AMP'), '#fff', 28, 'middle', 800) + '</g>' +
-              `<g opacity="${f1(sub(p, .65, .8))}">` + txt(tipSyn[0] + 40, tipSyn[1] + 90, T2("ester op 2'-OH van A76", "ester on 2'-OH of A76"), C.chain, 20, 'start', 700) + '</g>';
+              `<g opacity="${f1(sub(p, .65, .8))}">` + txt(tipSyn[0] + 40, tipSyn[1] + 90, T2("ester op 2′-OH van A76", "ester on 2′-OH of A76"), C.chain, 20, 'start', 700) + '</g>';
           }
         }
         if (i === 4) {
           tr = trna(0, 0, tipSyn, { a: 'I', dx: 30, dy: -26 }, 1);     // IleRS + Ile-tRNA blijven in beeld als voorbeeld van klasse I
           const f = 1;
-          ov += `<g opacity="${f1(f)}">` + textBox(420, 200, 540, [T2('Rossmann-vouwing', 'Rossmann fold'), T2('motieven HIGH, KMSKS', 'motifs HIGH, KMSKS'), T2("meestal 2'-OH van A76", "usually 2'-OH of A76"), T2('bv. IleRS, MetRS, ValRS', 'e.g. IleRS, MetRS, ValRS')], { title: T2('Klasse I', 'Class I'), col: '#9b7bff', fs: 26 }) + '</g>';
-          ov += `<g opacity="${f1(sub(p, .15, .3))}">` + textBox(1000, 200, 540, [T2('antiparallel β-blad', 'antiparallel β-sheet'), T2('motieven 1, 2, 3', 'motifs 1, 2, 3'), T2("meestal 3'-OH van A76", "usually 3'-OH of A76"), T2('bv. SerRS, AlaRS, ThrRS', 'e.g. SerRS, AlaRS, ThrRS')], { title: T2('Klasse II', 'Class II'), col: '#5fd3e6', fs: 26 }) + '</g>';
+          ov += `<g opacity="${f1(f)}">` + textBox(420, 200, 540, [T2('Rossmann-vouwing', 'Rossmann fold'), T2('motieven HIGH, KMSKS', 'motifs HIGH, KMSKS'), T2("meestal 2′-OH van A76", "usually 2′-OH of A76"), T2('bv. IleRS, MetRS, ValRS', 'e.g. IleRS, MetRS, ValRS')], { title: T2('Klasse I', 'Class I'), col: '#9b7bff', fs: 26 }) + '</g>';
+          ov += `<g opacity="${f1(sub(p, .15, .3))}">` + textBox(1000, 200, 540, [T2('antiparallel β-blad', 'antiparallel β-sheet'), T2('motieven 1, 2, 3', 'motifs 1, 2, 3'), T2("meestal 3′-OH van A76", "usually 3′-OH of A76"), T2('bv. SerRS, AlaRS, ThrRS', 'e.g. SerRS, AlaRS, ThrRS')], { title: T2('Klasse II', 'Class II'), col: '#5fd3e6', fs: 26 }) + '</g>';
         }
         if (i === 5) {
           // Leu en Phe botsen af; Val past

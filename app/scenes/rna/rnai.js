@@ -129,7 +129,7 @@ export default {
             enz += prot(base0[0] - 90, base0[1] + 10, 94, 34, 'Drosha', '#6f5bd6', k * (1 - sub(p, .8, 1)), 17);
             enz += prot(base0[0] + 110, base0[1] + 60, 82, 30, 'DGCR8', '#5a4bb8', k * (1 - sub(p, .8, 1)), 15) + prot(base0[0] + 110, base0[1] + 98, 82, 30, 'DGCR8', '#5a4bb8', k * (1 - sub(p, .8, 1)), 15);
             enz += snip(base0[0], base0[1] + 2, sub(p, .4, .5) * (1 - sub(p, .6, .7)));
-            enz += note(base0[0] + 30, base0[1] + 36, T2("2-nt 3'-overhang", "2-nt 3' overhang"), '#ffd36b', 15, 'start', sub(p, .65, .8));
+            enz += note(base0[0] + 30, base0[1] + 36, T2("2-nt 3′-overhang", "2-nt 3′ overhang"), '#ffd36b', 15, 'start', sub(p, .65, .8));
             enz += note(base0[0] - 50, base0[1] - 150, 'pre-miRNA', C.rna, 20, 'end', sub(p, .65, .8));
           }
         }
@@ -148,7 +148,7 @@ export default {
           enz += note(ex, ey - 50, T2('Exportine-5', 'Exportin-5'), '#c9b8ff', 18, 'middle', eo);
           const gtp = p < .82;
           enz += prot(ex - 150, ey + 42, 98, 30, gtp ? 'Ran·GTP' : 'Ran·GDP', gtp ? '#3fb6c9' : '#5a7a88', eo, 15);
-          if (!gtp) enz += note(ex - 150, ey + 86, 'GTP → GDP + Pᵢ', '#7fe0ef', 15, 'middle', eo);
+          if (!gtp) enz += note(ex - 150, ey + 86, 'GTP → GDP + Pᵢ', '#5fd3e6', 15, 'middle', eo);
         }
         const DB = [800, PORE_Y];
         if (step === 3) {
@@ -172,7 +172,7 @@ export default {
           hp += `<g transform="translate(${f1(o[0])} ${f1(o[1])}) rotate(90)">` + hairpin({ loop: 0, duplexOnly: 1, passOp: 0, guideOp: gOp }) + `</g>`;
           hp += `<g transform="translate(${f1(o[0])} ${f1(o[1] - pUp)}) rotate(90)">` + hairpin({ loop: 0, duplexOnly: 1, passOp: pOp, guideOp: 0 }) + `</g>`;
           hp += note(o[0] + 110, o[1] - 40 - pUp, T2('passagiersstreng', 'passenger strand'), '#bdb3d0', 16, 'middle', sub(p, .45, .55) * pOp);
-          hp += note(o[0] - 30, o[1] - 20, "5'", '#ff9ec3', 16, 'middle', gOp * sub(p, .3, .45)) + note(o[0] - 26, o[1] + 34, T2('gids', 'guide'), '#ff9ec3', 16, 'end', gOp * sub(p, .3, .45));
+          hp += note(o[0] - 30, o[1] - 20, "5′", '#ff9ec3', 16, 'middle', gOp * sub(p, .3, .45)) + note(o[0] - 26, o[1] + 34, T2('gids', 'guide'), '#ff9ec3', 16, 'end', gOp * sub(p, .3, .45));
         }
         // AGO2 met gids (5' rechts in MID, 3' links in PAZ)
         if (step >= 4) {                                  // lege AGO2 staat al klaar vanaf het begin van stap 4; de gids komt erin
@@ -186,7 +186,7 @@ export default {
               `<text x="${x}" y="${YG + 21}" font-size="17" text-anchor="middle" fill="#0a1224" font-family="JetBrains Mono" font-weight="700">${GUIDE[i - 1]}</text>`;
             if (step >= 5 && (i === 1 || i === 2 || i === 8 || i === 10 || i === 11 || i === 22) && !(step === 6 && p > .2)) ago += `<text opacity="${step === 6 ? f1(1 - sub(p, 0, .2)) : 1}" x="${x}" y="${YG - 6}" font-size="14" text-anchor="middle" fill="${C.muted}" font-family="JetBrains Mono">${i}</text>`;
           }
-          ago += note(gx(1) + 30, YG + 22, "5'", '#ff9ec3', 17, 'start') + note(gx(NB) - 26, YG + 22, "3'", '#ff9ec3', 17, 'end');
+          ago += note(gx(1) + 30, YG + 22, "5′", '#ff9ec3', 17, 'start') + note(gx(NB) - 26, YG + 22, "3′", '#ff9ec3', 17, 'end');
           if (step === 5 || step === 6) { const so = step === 5 ? 1 : 1 - sub(p, 0, .2); ago += `<path d="M${gx(8) - 15},${YG - 22} h${7 * W} " stroke="#fff" stroke-width="3" opacity="${f1(so)}"/>` + note((gx(8) + gx(2)) / 2, YG - 30, T2('seed (nt 2–8)', 'seed (nt 2–8)'), '#fff', 16, 'middle', so); }
           ago += '</g>';
         }
@@ -210,8 +210,8 @@ export default {
           tg += `<line x1="${Lx - sep}" y1="${YT + 15}" x2="${f1(cx - 4 - sep)}" y2="${YT + 15}" stroke="${C.rna}" stroke-width="8"/><line x1="${f1(cx + 4 + sep)}" y1="${YT + 15}" x2="${Rx + sep}" y2="${YT + 15}" stroke="${C.rna}" stroke-width="8"/>`;
           tg += `<line x1="${Rx + sep}" y1="${YT + 15}" x2="${f1(Rx + sep + tail)}" y2="${YT + 15}" stroke="${C.cap}" stroke-width="6" stroke-dasharray="3 3"/>`;
           if (tail > 20) tg += note(Rx + sep + tail / 2 + 10, YT + 56, 'poly(A)', C.cap, 16);
-          tg += note(Rx + sep + tail + 16, YT + 22, "3'", C.text, 18, 'start') + capG(Lx - 24 - sep, YT + 15, 20) + note(Lx - 50 - sep, YT + 22, "5'", C.text, 18, 'end');
-          tg += note((gx(NB) + gx(1)) / 2, YT + 70, T2("doel-mRNA (3'-UTR)", "target mRNA (3' UTR)"), C.rna, 17);
+          tg += note(Rx + sep + tail + 16, YT + 22, "3′", C.text, 18, 'start') + capG(Lx - 24 - sep, YT + 15, 20) + note(Lx - 50 - sep, YT + 22, "5′", C.text, 18, 'end');
+          tg += note((gx(NB) + gx(1)) / 2, YT + 70, T2("doel-mRNA (3′-UTR)", "target mRNA (3′ UTR)"), C.rna, 17);
           for (let i = 1; i <= NB; i++) {
             const b = tb(i), x = xs(gx(i)), pr = i > 1 && RNA_PAIR[GUIDE[i - 1]] === b;   // nt 1 zit vast in het MID-domein en paart niet
             tg += `<rect x="${f1(x - 13)}" y="${YT}" width="26" height="30" rx="5" fill="${BASE[b]}"/><text x="${f1(x)}" y="${YT + 21}" font-size="17" text-anchor="middle" fill="#0a1224" font-family="JetBrains Mono" font-weight="700">${b}</text>`;

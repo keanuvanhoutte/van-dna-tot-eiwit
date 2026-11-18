@@ -104,16 +104,18 @@ export default {
         }
         if (i === 1) {
           const nC = SEQ.length / 3, k = Math.min(nC - 1, Math.floor(sub(p, .05, .95) * nC)), cod = SEQ.slice(k * 3, k * 3 + 3);
-          const x0 = 960, dx = 32, y = 250;
-          ov += txt(x0 - 30, y + 26, "5'", C.text, 22, 'end', 700) + txt(x0 + SEQ.length * dx - 6, y + 26, "3'", C.text, 22, 'start', 700); mr += strip(x0, y, SEQ, dx);
+          const x0 = 880, dx = 32, y = 250;   // hele mRNA en het ribosoom blijven in beeld, ook bij het laatste codon
+          ov += txt(x0 - 30, y + 26, "5′", C.text, 22, 'end', 700) + txt(x0 + SEQ.length * dx - 6, y + 26, "3′", C.text, 22, 'start', 700); mr += strip(x0, y, SEQ, dx);
           const wx = x0 + k * 3 * dx - dx / 2 - 2, rx = wx + 1.5 * dx;
-          // het ribosoom zit op het codon dat gelezen wordt: kleine eenheid (40S) aan de ene kant van het mRNA, grote (60S) aan de andere;
-          // het nieuwste aminozuur komt uit de grote eenheid (hier onderaan getekend, zodat de keten eronder groeit)
-          mr = subeenheid(koepelPad(rx, y - 10, 82, 38, { seed: 41 }), { fill: .22 }) + subeenheid(koepelPad(rx, y + 42, 96, 46, { seed: 61, dir: 1 }), { fill: .16 }) +
-            txt(rx + 106, y - 18, T2('ribosoom', 'ribosome'), C.rrna, 20, 'start', 700) + mr;
+          // het ribosoom zit op het codon dat gelezen wordt: zoals in translatie de grote eenheid (60S) boven het mRNA en de kleine (40S)
+          // eronder; de keten komt bovenaan uit de tunnel van de grote eenheid (Alberts MBoC hfst. 6)
+          mr = subeenheid(koepelPad(rx, y - 10, 96, 46, { seed: 61 }), { fill: .16 }) + subeenheid(koepelPad(rx, y + 42, 82, 38, { seed: 41, dir: 1 }), { fill: .22, col: '#8df0dc' }) +
+            txt(rx - 106, y - 30, T2('ribosoom', 'ribosome'), C.rrna, 20, 'end', 700) + mr;
           ov += `<rect x="${f1(wx)}" y="${y - 8}" width="${3 * dx}" height="${dx + 16}" rx="8" fill="none" stroke="#fff" stroke-width="3.5"/>`;
-          for (let j = 0; j <= k; j++) { const a = translate(SEQ.slice(j * 3, j * 3 + 3)); pep += aa(x0 + j * 3 * dx + dx - 2, y + 110, a, 30); if (j) pep += `<line x1="${x0 + (j - 1) * 3 * dx + dx + 28}" y1="${y + 110}" x2="${x0 + j * 3 * dx + dx - 32}" y2="${y + 110}" stroke="${C.chain}" stroke-width="5"/>`; }
-          ov += txt(x0 + k * 3 * dx + dx - 2, y + 175, cod, '#fff', 22, 'middle', 800);
+          const yP = y - 100;     // de groeiende keten boven het ribosoom; het nieuwste aminozuur zit vlak boven de tunneluitgang
+          for (let j = 0; j <= k; j++) { const a = translate(SEQ.slice(j * 3, j * 3 + 3)); pep += aa(x0 + j * 3 * dx + dx - 2, yP, a, 30); if (j) pep += `<line x1="${x0 + (j - 1) * 3 * dx + dx + 28}" y1="${yP}" x2="${x0 + j * 3 * dx + dx - 32}" y2="${yP}" stroke="${C.chain}" stroke-width="5"/>`; }
+          pep += `<line x1="${f1(rx)}" y1="${yP + 30}" x2="${f1(rx)}" y2="${y - 52}" stroke="${C.chain}" stroke-width="5"/>`;   // uit de tunnel van de grote eenheid
+          ov += txt(x0 + k * 3 * dx + dx - 2, y + 120, cod, '#fff', 22, 'middle', 800);
           hl += hlCodon(cod, '#fff', 5);
         }
         if (i === 2) {
@@ -139,11 +141,11 @@ export default {
           const third = p < .36 ? 'U' : p < .68 ? 'C' : 'A', k = 1;   // diagram meteen in beeld; de 3e base wisselt U → C → A
           tr += `<g opacity="${f1(k)}"><path d="M${x0 - 40},${y - 70} h${3 * dx + 20} v-110 h-40 v70 h-${3 * dx - 20} z" fill="rgba(255,194,71,.2)" stroke="${C.trna}" stroke-width="3"/>` +
             ntBox(x0, y - 60, 'C', 50) + ntBox(x0 + dx, y - 60, 'G', 50) + `<g><rect x="${x0 + 2 * dx - 25}" y="${y - 60}" width="50" height="54" rx="6" fill="#d9c7ff"/><text x="${x0 + 2 * dx}" y="${y - 21}" font-size="34" text-anchor="middle" fill="#0a1224" font-family="JetBrains Mono" font-weight="700">I</text></g>` +
-            txt(x0 - 50, y - 26, "3'", '#fff', 22, 'end', 700) + txt(x0 + 2 * dx + 50, y - 26, "5'", '#fff', 22, 'start', 700) +
+            txt(x0 - 50, y - 26, "3′", '#fff', 22, 'end', 700) + txt(x0 + 2 * dx + 50, y - 26, "5′", '#fff', 22, 'start', 700) +
             txt(x0 + 2 * dx, y - 88, '34', C.muted, 18) + txt(x0 + dx, y - 88, '35', C.muted, 18) + txt(x0, y - 88, '36', C.muted, 18) +
             txt(x0 + 3 * dx + 20, y - 150, T2('tRNA-Ala (anticodon IGC)', 'tRNA-Ala (anticodon IGC)'), C.trna, 22, 'start', 700) + '</g>';
           tr += `<g opacity="${f1(k)}">` + ntBox(x0, y + 20, 'G', 50) + ntBox(x0 + dx, y + 20, 'C', 50) + ntBox(x0 + 2 * dx, y + 20, third, 50, 1, 'stroke="#fff" stroke-width="3"') +
-            txt(x0 - 50, y + 54, "5'", C.rna, 22, 'end', 700) + txt(x0 + 2 * dx + 50, y + 54, "3'", C.rna, 22, 'start', 700) +
+            txt(x0 - 50, y + 54, "5′", C.rna, 22, 'end', 700) + txt(x0 + 2 * dx + 50, y + 54, "3′", C.rna, 22, 'start', 700) +
             txt(x0 + dx, y + 110, `mRNA: GC${third} → Ala`, C.rna, 24, 'middle', 800) + '</g>';
           for (let j = 0; j < 3; j++) tr += `<line x1="${x0 + j * dx}" y1="${y - 4}" x2="${x0 + j * dx}" y2="${y + 18}" stroke="#fff" stroke-width="3" ${j === 2 ? 'stroke-dasharray="4 4"' : ''} opacity="${f1(k)}"/>`;
           tr += txt(x0 + 2 * dx + 42, y + 12, 'wobble', '#fff', 20, 'start', 800).replace('<text', `<text opacity="${f1(k)}"`);
@@ -152,7 +154,7 @@ export default {
         } else $('cd-tA').setAttribute('cx', '-9999');
         if (i === 5) {
           const x0 = 1050, dx = 34, y = 330, frames = [0, 1, 2];
-          ov += txt(x0 - 26, y + 26, "5'", C.text, 22, 'end', 700) + txt(x0 + SEQ.length * dx - 8, y + 26, "3'", C.text, 22, 'start', 700); mr += strip(x0, y, SEQ, dx);
+          ov += txt(x0 - 26, y + 26, "5′", C.text, 22, 'end', 700) + txt(x0 + SEQ.length * dx - 8, y + 26, "3′", C.text, 22, 'start', 700); mr += strip(x0, y, SEQ, dx);
           frames.forEach((f, r) => {
             const op = sub(p, .1 + r * .25, .25 + r * .25), yy = y + 100 + r * 90;
             let row = txt(x0 - 30, yy + 8, T2(`raam ${f + 1}`, `frame ${f + 1}`), f === 0 ? C.ok : C.muted, 20, 'end', 700), beads = '';
@@ -163,13 +165,13 @@ export default {
         }
         if (i === 6) {
           const x0 = 1050, dx = 34, y1 = 300, y2 = 500, k = sub(p, .3, .5);
-          const head = (seq, y, ins) => txt(x0 - 26, y + 26, "5'", C.text, 22, 'end', 700) + strip(x0, y, seq, dx, { mark: ins });
+          const head = (seq, y, ins) => txt(x0 - 26, y + 26, "5′", C.text, 22, 'end', 700) + strip(x0, y, seq, dx, { mark: ins });
           const row = (seq, y, ins, aaOnly = false) => {
             let s = aaOnly ? '' : head(seq, y, ins);
             for (let j = 0; j + 3 <= seq.length; j += 3) { const a = translate(seq.slice(j, j + 3)); s += a === '*' ? `<rect x="${x0 + j * dx - dx / 2 + 2}" y="${y + 60}" width="${3 * dx - 6}" height="40" rx="10" fill="${C.danger}"/>` + txt(x0 + j * dx + dx - 2, y + 88, 'STOP', '#fff', 20, 'middle', 800) : aa(x0 + j * dx + dx - 2, y + 80, a, 22); if (a === '*') break; }
             return s;
           };
-          ov += txt(x0 + 300, y1 - 26, T2('normaal', 'normal'), C.ok, 24, 'middle', 800) + txt(x0 - 26, y1 + 26, "5'", C.text, 22, 'end', 700); mr += strip(x0, y1, SEQ, dx); pep += row(SEQ, y1, undefined, true);
+          ov += txt(x0 + 300, y1 - 26, T2('normaal', 'normal'), C.ok, 24, 'middle', 800) + txt(x0 - 26, y1 + 26, "5′", C.text, 22, 'end', 700); mr += strip(x0, y1, SEQ, dx); pep += row(SEQ, y1, undefined, true);
           mut += `<g opacity="${f1(k)}">` + txt(x0 + 200, y2 - 26, T2('insertie van 1 U', 'insertion of 1 U'), C.danger, 24, 'end', 800) + row(MUT, y2, 12) +
             `<path d="M${x0 + 12 * dx},${y2 - 16} v-18" stroke="#fff" stroke-width="3" marker-end="url(#arrow)"/></g>`;
           $('cd-mA').setAttribute('cx', f1(x0 + 12 * dx)); $('cd-mA').setAttribute('cy', f1(y2 - 60));

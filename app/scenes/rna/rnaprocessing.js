@@ -24,7 +24,7 @@ function sceneProcessing() {
     <g id="pr-down"></g>
     <g data-node="splicing" data-color="${C.prot}" data-label="${T('Spliceosoom', 'Spliceosome')}"><g id="pr-intron"></g><g id="pr-snrnp"></g></g>
     <g data-node="rnaprocessing" data-nolabel><g id="pr-mrna"></g></g>
-    <g data-node="capping" data-color="${C.rna}" data-label="${T("5'-cap", "5' cap")}"><g id="pr-cap"></g></g>
+    <g data-node="capping" data-color="${C.rna}" data-label="${T("5′-cap", "5′ cap")}"><g id="pr-cap"></g></g>
     <g data-node="nmd" data-color="${C.prot}" data-label="${T('EJC → NMD-controle', 'EJC → NMD check')}"><g id="pr-ejc"></g></g><rect id="pr-ejc-a" data-anchor="nmd" x="0" y="0" width="0" height="0" fill="transparent" pointer-events="none"/>
     <g data-node="polya" data-color="${C.rna}" data-label="${T('Knippen & poly(A)', 'Cleavage & poly(A)')}"><g id="pr-pa"></g></g>
 
@@ -55,7 +55,7 @@ function initProcessing(svg) {
     const lig1 = ease(prog(5)), lig2 = ease(prog(6));        // exon 1 schuift naar exon 2; daarna exon 1+2 naar exon 3
     const off = x => x + (x <= X.e1[1] + .1 ? lig1 * L1 : 0) + (x <= X.e2[1] + .1 ? lig2 * L2 : 0);
     const cut = prog(8) > .35, gone = ease(prog(10));
-    // stap 11: het mRNP wordt met de 5'-kant (cap + CBC) voorop naar de kernporie gebracht en blijft daar aan de korf liggen
+    // stap 11: het mRNP wordt met de 5′-kant (cap + CBC) voorop naar de kernporie gebracht en blijft daar aan de korf liggen
     const cap0 = off(X.cap), sc = 1 - .5 * gone, poreIn = poreAt[1] + 46;
     const dx = cap0 + (900 - cap0) * gone - sc * cap0, dy = Y + (poreIn - Y) * gone - sc * Y;
     const upT = gone > 0 ? `translate(${dx.toFixed(1)} ${dy.toFixed(1)}) scale(${sc.toFixed(3)})` : '';
@@ -63,12 +63,12 @@ function initProcessing(svg) {
     noTxt = gone > .35;   // kleine labels vervagen bij het verkleinen
     const up = `transform="${upT}"`;
 
-    // mRNA-exonen (+ 3'-UTR)
+    // mRNA-exonen (+ 3′-UTR)
     let m = `<g ${up}>`;
     m += seg(off(X.e1[0]), off(X.e1[1]), Y, C.rna, 9) + seg(off(X.e2[0]), off(X.e2[1]), Y, C.rna, 9) + seg(X.e3[0], X.e3[1], Y, C.rna, 9);
     m += seg(X.utr[0], X.utr[1], Y, '#d9854a', 6);
     m += `<g opacity="${lab}">` + txt(off((X.e1[0] + X.e1[1]) / 2), Y + 34, 'exon 1', C.rna) + txt(off((X.e2[0] + X.e2[1]) / 2), Y + 34, 'exon 2', C.rna) + txt((X.e3[0] + X.e3[1]) / 2, Y + 34, 'exon 3', C.rna);
-    m += txt((X.pas[0] + X.pas[1]) / 2, Y - 16, 'AAUAAA', '#ffb27a', 13) + txt(X.utr[0] + 30, Y + 34, "3'-UTR", '#d9854a', 13) + '</g>';
+    m += txt((X.pas[0] + X.pas[1]) / 2, Y - 16, 'AAUAAA', '#ffb27a', 13) + txt(X.utr[0] + 30, Y + 34, "3′-UTR", '#d9854a', 13) + '</g>';
     // poly(A)-staart
     const pa = ease(prog(9));
     if (ph >= 9) {
@@ -81,12 +81,12 @@ function initProcessing(svg) {
     m += `</g>`;
     $('pr-mrna').innerHTML = m;
 
-    // 5'-cap (+ CBC)
+    // 5′-cap (+ CBC)
     const capOp = Math.min(1, prog(0) * 1.6), capX = off(X.cap);
     $('pr-cap').innerHTML = `<g ${up}>` + (capOp > 0 ? `<g opacity="${capOp}"><circle cx="${capX}" cy="${Y}" r="13" fill="#ffb27a" stroke="${C.rna}" stroke-width="2"/><text x="${capX}" y="${Y + 4}" font-size="9" text-anchor="middle" fill="#3a1a05" font-family="Inter" font-weight="700" opacity="${lab}">m⁷G</text></g>` : '')
       + pill(capX + 6, Y - 52, 110, 24, 'RNGTT · RNMT', C.prot, ph === 0 ? 1 - Math.max(0, (prog(0) - .75) / .25) : 0)
       + pill(capX - 4, Y - 30, 46, 20, 'CBC', '#6f5bd6', ph >= 1 ? 1 : 0)
-      + `<g opacity="${lab}">` + txt(capX - 10, Y + 30, "5'", C.text, 13) + `</g></g>`;
+      + `<g opacity="${lab}">` + txt(capX - 10, Y + 30, "5′", C.text, 13) + `</g></g>`;
 
     // introns: intron 1 vormt de lariat, intron 2 wordt korter en verdwijnt
     const lar = ease(prog(4));                                // 0 = recht, 1 = lariat
@@ -128,10 +128,10 @@ function initProcessing(svg) {
     const u4 = ph < 2 ? 0 : ph === 2 ? fadeIn(2) : ph === 3 ? 1 - prog(3) * 1.5 : 0;
     const lyUp = -170 * rel;
     let sn = '';
-    // U1 op de 5'-splitsplaats (GU), U2 op het vertakkings-A, U2AF op (Py)n + AG: alle drie onder tegen het RNA.
+    // U1 op de 5′-splitsplaats (GU), U2 op het vertakkings-A, U2AF op (Py)n + AG: alle drie onder tegen het RNA.
     // Het tri-snRNP (U4/U6·U5) zakt in stap 3 op het intron tussen U1 en U2; samen vormen ze één complex (gestippelde rand).
     const triDrop = ph === 2 ? -90 * (1 - ease(Math.min(1, prog(2) * 1.4))) : 0;
-    const act = ph < 3 ? 0 : ph === 3 ? ease(prog(3)) : 1;    // U6 neemt de 5'-splitsplaats over van U1
+    const act = ph < 3 ? 0 : ph === 3 ? ease(prog(3)) : 1;    // U6 neemt de 5′-splitsplaats over van U1
     if (tri > 0) sn += `<g opacity="${tri.toFixed(2)}" transform="translate(0 ${(lyUp + triDrop).toFixed(1)})"><ellipse cx="${(X.i1[0] + X.br1) / 2 + 10}" cy="${Y - 4}" rx="${(X.br1 - X.i1[0]) / 2 + 58}" ry="54" fill="rgba(155,123,255,.13)" stroke="${C.prot}" stroke-width="2" stroke-dasharray="6 4"/></g>`;
     sn += `<g transform="translate(0 ${lyUp.toFixed(1)})">`;
     sn += pill(X.i1[0] + 12, Y + 14, 44, 24, 'U1', '#8e6cf0', Math.max(0, u1));
@@ -155,11 +155,11 @@ function initProcessing(svg) {
     ea.setAttribute('x', ex - 22); ea.setAttribute('y', Y - 36); ea.setAttribute('width', eOn ? 44 : 0); ea.setAttribute('height', eOn ? 20 : 0);
     if (upT) ea.setAttribute('transform', upT); else ea.removeAttribute('transform');
 
-    // 3'-uiteinde: CPSF/CstF, knippen, PAP, Xrn2-torpedo op het stroomafwaartse RNA, Pol II
+    // 3′-uiteinde: CPSF/CstF, knippen, PAP, Xrn2-torpedo op het stroomafwaartse RNA, Pol II
     const f3 = ph < 7 ? 0 : ph === 7 ? fadeIn(7) : ph <= 9 ? 1 : 0;
     const cstf = ph < 7 ? 0 : ph === 7 ? fadeIn(7) : ph === 8 ? 1 - prog(8) : 0;
     let p3 = `<g ${up}>`;
-    p3 += pill((X.pas[0] + X.pas[1]) / 2, Y - 46, 64, 24, 'CPSF', '#8e6cf0', f3);
+    p3 += pill((X.pas[0] + X.pas[1]) / 2, Y - 24, 64, 24, 'CPSF', '#8e6cf0', f3);   // CPSF zit op AAUAAA
     p3 += `</g>`;
     p3 += pill((X.dse[0] + X.dse[1]) / 2, Y - 14, 60, 22, 'CstF', '#5a4bb8', cstf);   // CstF op het GU-rijke RNA stroomafwaarts van de knipplaats
     if (ph === 8 && prog(8) > .3 && prog(8) < .6) p3 += `<path d="M${X.cut - 10},${Y - 22} l20,44 M${X.cut + 10},${Y - 22} l-20,44" stroke="#fff" stroke-width="3" opacity=".9"/>`;
@@ -172,7 +172,7 @@ function initProcessing(svg) {
     let dn = '';
     const ds = cut ? X.cut + 6 + chew * (X.down[1] - X.cut) : X.cut;
     if (!cut) dn += seg(X.cut, X.down[1], Y, '#c07a4a', 5);
-    else if (ds < X.down[1] - 2) dn += seg(ds, X.down[1], Y, '#c07a4a', 5) + `<g opacity="${polOp.toFixed(2)}">${pill(ds - 4, Y - 26, 52, 22, 'Xrn2', '#5a4bb8')}</g>`;
+    else if (ds < X.down[1] - 2) dn += seg(ds, X.down[1], Y, '#c07a4a', 5) + `<g opacity="${polOp.toFixed(2)}">${pill(ds - 4, Y - 14, 52, 22, 'Xrn2', '#5a4bb8')}</g>`;
     dn += txt((X.dse[0] + X.dse[1]) / 2, Y + 20, ph < 9 ? L({ nl: 'GU-rijk', en: 'GU-rich' }) : '', '#c07a4a', 10);
     $('pr-down').innerHTML = dn;
     // Pol II zit op het DNA (dat er dwars door loopt); het RNA komt er aan de linkerkant uit
@@ -193,8 +193,8 @@ export default {
   org: { nl: 'mens (Pol II-transcripten)', en: 'human (Pol II transcripts)' },
   legend: [[C.rna, 'exon'], ['#a9876f', 'intron'], ['#ffb27a', { nl: 'm⁷G-cap / poly(A)', en: 'm⁷G cap / poly(A)' }], [C.prot, { nl: "snRNP's & processingfactoren", en: 'snRNPs & processing factors' }], [C.dna, 'DNA']],
   extra: {
-    nl: `<p style="font-size:13px;color:#93a0bb">Kern van de zaak: splicing = <b>twee transesterificaties</b>. Eerst valt de 2'-OH van het vertakkingspunt-A de 5'-splicesite aan (lariat), daarna de vrije 3'-OH van exon 1 de 3'-splicesite. De katalyse gebeurt door RNA (U2/U6): het spliceosoom is een ribozym.</p>`,
-    en: `<p style="font-size:13px;color:#93a0bb">The key point: splicing = <b>two transesterifications</b>. First the 2'-OH of the branch-point A attacks the 5' splice site (lariat), then the free 3'-OH of exon 1 attacks the 3' splice site. Catalysis is carried out by RNA (U2/U6): the spliceosome is a ribozyme.</p>` },
+    nl: `<p style="font-size:13px;color:#93a0bb">Kern van de zaak: splicing = <b>twee transesterificaties</b>. Eerst valt de 2′-OH van het vertakkingspunt-A de 5′-splicesite aan (lariat), daarna de vrije 3′-OH van exon 1 de 3′-splicesite. De katalyse gebeurt door RNA (U2/U6): het spliceosoom is een ribozym.</p>`,
+    en: `<p style="font-size:13px;color:#93a0bb">The key point: splicing = <b>two transesterifications</b>. First the 2′-OH of the branch-point A attacks the 5′ splice site (lariat), then the free 3′-OH of exon 1 attacks the 3′ splice site. Catalysis is carried out by RNA (U2/U6): the spliceosome is a ribozyme.</p>` },
   simplified: {
     nl: "De stappen staan na elkaar, maar in de cel overlappen ze en gebeuren ze grotendeels terwijl Pol II nog transcribeert. Het spliceosoom bevat ook meer dan 100 eiwitten (o.a. Prp8, helicasen) die niet getekend zijn; de U-snRNP's zijn bolletjes. De poly(A)-staart en afstanden zijn niet op schaal (~3 px per nt). Echte structuren: PDB 5YZG (humaan C-complex na stap 1), 5XJC (C*-complex vlak voor de exonligatie).",
     en: 'The steps are shown one after another, but in the cell they overlap and happen largely while Pol II is still transcribing. The spliceosome also contains more than 100 proteins (e.g. Prp8, helicases) that are not drawn; the U snRNPs are shown as blobs. The poly(A) tail and distances are not to scale (~3 px per nt). Real structures: PDB 5YZG (human C complex after step 1), 5XJC (C* complex just before exon ligation).' },

@@ -13,7 +13,7 @@ import { blaasje, cisterne, membraanPts, ptsBoog, hydrolase, tmHelix, vATPase, e
  * celmembraan en worden ze uitgescheiden (exocytose); bij Pompe ontbreekt één enzym.
  */
 const L3 = (nl, en) => ({ nl, en });
-const ENZ = C.prot, SUG = '#00A651', PH = DEST.lyso, REC = '#ffc247', ENDO = '#ff8a3d', PUMP = '#5fd3e6';
+const ENZ = C.prot, SUG = '#00A651', PH = '#ff9f43', REC = '#ffc247', ENDO = C.mem, PUMP = '#5fd3e6';
 const LY = [1180, 400], LR = 190, EN = [800, 580], ER0 = 105, PMX = 1520;
 const DEBRIS = '#8a93a8', GLYC = '#9cc0ff', BB = '#e6ebf5';   // BB = afbraakproducten (bouwstenen)
 const ES = .5;                                  // grootte van het enzym (zodat het met label in het Golgi-lumen past)
@@ -95,7 +95,7 @@ export default {
   time: { nl: 'schematisch', en: 'schematic' },
   org: { nl: 'mens', en: 'human' },
   legend: [[ENZ, L3('knipenzym (zure hydrolase)', 'cutting enzyme (acid hydrolase)')], [SUG, L3('suiker (mannose)', 'sugar (mannose)')], [PH, L3('fosfaat: het label (mannose-6-fosfaat)', 'phosphate: the tag (mannose 6-phosphate)')],
-    [REC, L3('ontvanger (M6P-receptor)', 'receiver (M6P receptor)')], [PUMP, L3('protonpomp (V-ATPase)', 'proton pump (V-ATPase)')], [C.mem, 'Golgi'], [ENDO, L3('endosoom', 'endosome')], [DEST.lyso, L3('lysosoom', 'lysosome')], [BB, L3('bouwstenen (afbraakproducten)', 'building blocks (breakdown products)')]],
+    [REC, L3('ontvanger (M6P-receptor)', 'receiver (M6P receptor)')], [PUMP, L3('protonpomp (V-ATPase)', 'proton pump (V-ATPase)')], [C.mem, L3('Golgi, endosoom', 'Golgi, endosome')], [DEST.lyso, L3('lysosoom', 'lysosome')], [BB, L3('bouwstenen (afbraakproducten)', 'building blocks (breakdown products)')]],
   simplified: {
     nl: 'Schematisch en niet op schaal. Het label wordt in twee stappen gemaakt (eerst een fosfaat met een afdekgroep, die daarna verwijderd wordt); hier is dat één stap. Het enzym verschijnt hier na elkaar in elke cisterne; in werkelijkheid schuift het geleidelijk door de stapel. Het endosoom rijpt in werkelijkheid geleidelijk tot lysosoom; hier brengt één blaasje het enzym over. Niet elk lysosomaal eiwit gebruikt dit label: er bestaan ook andere ontvangers.',
     en: 'Schematic and not to scale. The tag is made in two steps (first a phosphate with a capping group, which is then removed); here that is one step. Here the enzyme appears in each cisterna in turn; in reality it moves gradually through the stack. In reality the endosome gradually matures into a lysosome; here a single vesicle carries the enzyme across. Not every lysosomal protein uses this tag: other receivers also exist.' },
@@ -117,12 +117,12 @@ export default {
   ],
   svg() {
     let golgi = '';
-    for (let i = 0; i < 4; i++) golgi += cisterne(GX(i), 400, { len: GLEN(i), dik: 56, buig: 34, w: 9 });
+    for (let i = 0; i < 4; i++) golgi += cisterne(GX(i), 400, { len: GLEN(i), dik: 46, buig: 34, w: 9 });   // dun genoeg dat er cytosol tussen naburige zakken blijft (zoals golgi.js)
     return svgOpen(bioDefs) + `
     <g data-node="golgi" data-color="${C.mem}" data-label="${T2('Golgi', 'Golgi')}">${golgi}<circle data-anchor="golgi" cx="380" cy="200" r="1" fill="none"/></g>
     ${T(GX(0), 584, 'cis', { size: 22, col: C.muted })}${T(GX(3), 584, 'trans', { size: 22, col: C.muted })}${arrow(GX(0) + 26, 577, GX(3) - 34, 577, C.muted, 2)}
     ${T(394, 655, 'Golgi', { size: 28, col: C.mem })}
-    <g id="ly-endo"><g data-node="endocytose" data-color="${ENDO}" data-nolabel>${blaasje(EN[0], EN[1], ER0, { lumen: 'rgba(255,138,61,.13)', rand: ENDO, w: 12 })}</g>
+    <g id="ly-endo"><g data-node="endocytose" data-color="${ENDO}" data-nolabel>${blaasje(EN[0], EN[1], ER0, { lumen: 'rgba(201,165,116,.13)', rand: ENDO, w: 12 })}</g>
     ${T(EN[0], EN[1] + ER0 + 25, T2('endosoom', 'endosome'), { size: 24, col: ENDO })}
     <g id="ly-epump"></g></g>
     <g data-node="autofagie" data-color="${DEST.lyso}" data-label="${T2('Ook grote stukken: autofagie', 'Large pieces too: autophagy')}">

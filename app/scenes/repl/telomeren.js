@@ -28,7 +28,7 @@ const scene = {
   time: { nl: 'verkorting bij elke celdeling; telomerase voegt telkens 6 letters toe', en: 'shortening at every cell division; telomerase adds 6 letters per round' },
   org: { nl: 'mens', en: 'human' },
   legend: [[C.dna, { nl: 'G-rijke streng (TTAGGG)', en: 'G-rich strand (TTAGGG)' }], [C.dna2, { nl: 'C-rijke streng', en: 'C-rich strand' }], [NEW, { nl: 'nieuw DNA', en: 'new DNA' }],
-    [PRIMER, { nl: 'RNA (primer / telomerase-RNA)', en: 'RNA (primer / telomerase RNA)' }], [C.prot, { nl: 'TERT & shelterin', en: 'TERT & shelterin' }], ['#ffd9b3', { nl: 'RNA-mal (3D)', en: 'RNA template (3D)' }], ['#7f8fb0', { nl: 'andere eiwitten (3D)', en: 'other proteins (3D)' }]],
+    [PRIMER, { nl: 'RNA (primer / telomerase-RNA)', en: 'RNA (primer / telomerase RNA)' }], [C.prot, { nl: 'TERT & shelterin', en: 'TERT & shelterin' }], ['#ffd9b3', { nl: 'RNA-matrijs (3D)', en: 'RNA template (3D)' }], ['#7f8fb0', { nl: 'andere eiwitten (3D)', en: 'other proteins (3D)' }]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">De matrijs in het telomerase-RNA is 11 nt lang: 5 nt om het DNA-uiteinde vast te houden en 6 nt die als GGTTAG worden overgeschreven. Zo ontstaat telkens een nieuwe TTAGGG-herhaling.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">The template in telomerase RNA is 11 nt long: 5 nt to hold the DNA end and 6 nt that are copied as GGTTAG. Each round therefore adds a new TTAGGG repeat.</p>' },
@@ -113,12 +113,12 @@ const scene = {
               m += seg(x, YT + BH + 1, x, YB - 1, '#5b6a8c', 2) + ntL(x, YB, c, 22, BH, lo);
             }
           }
-          m += endl(X0 - 44, YT + 17, "5'", C.dna) + endl(xOf(nT - 1) + 32, YT + 17, "3'", C.dna);
-          m += endl(X0 - 44, YB + 17, "3'", C.dna2) + endl(xOf(bEnd - 1) + 32, YB + 17, "5'", bEnd > ND ? PRIMER : C.dna2, 17);
+          m += endl(X0 - 44, YT + 17, "5′", C.dna) + endl(xOf(nT - 1) + 32, YT + 17, "3′", C.dna);
+          m += endl(X0 - 44, YB + 17, "3′", C.dna2) + endl(xOf(bEnd - 1) + 32, YB + 17, "5′", bEnd > ND ? PRIMER : C.dna2, 17);
           // herhalingen onderstrepen in stap 0
           if (step === 0) {
             for (let r = 0; r < 6; r++) m += `<g opacity="${f1(ease(sub(p, .1 + r * .06, .2 + r * .06)))}">` + seg(xOf(r * 6) - 11, YT - 22, xOf(r * 6 + 5) + 11, YT - 22, '#ffc247', 3) + txt((xOf(r * 6) + xOf(r * 6 + 5)) / 2, YT - 30, 'TTAGGG', '#ffc247', 18, 'middle', 700, 'JetBrains Mono') + '</g>';
-            m += tag(xOf(ND) + 180, YB + 90, T2("3'-overhang (enkelstrengig)", "3' overhang (single-stranded)"), C.dna, 18, 'middle', sub(p, .5, .7));
+            m += tag(xOf(ND) + 180, YB + 90, T2("3′-overhang (enkelstrengig)", "3′ overhang (single-stranded)"), C.dna, 18, 'middle', sub(p, .5, .7));
             m += tag(xOf(10), YB + 90, T2('dubbelstrengig telomeer-DNA', 'double-stranded telomeric DNA'), C.text, 18, 'middle', sub(p, .4, .6));
             m += arrow(1330, YT + 12, 1440, YT + 12, C.muted, 3, sub(p, .6, .8)) + tag(1385, YT - 8, T2('uiteinde', 'end'), C.muted, 19, 'middle', sub(p, .6, .8));
           }
@@ -140,13 +140,13 @@ const scene = {
             r += seg(xOf(jStart) - 12, yR + BH + 8, xOf(jStart + 10) + 12, yR + BH + 8, PRIMER, 6);
             const xl = xOf(jStart) - 12, xr = xOf(jStart + 10) + 12, yb = yR + BH + 8;
             r += `<path d="M${f1(xl)},${f1(yb)} C${f1(xl - 90)},${f1(yb + 20)} ${f1(xl - 70)},${f1(yb + 110)} ${f1(xl + 60)},${f1(yb + 105)} S${f1(xr + 60)},${f1(yb + 120)} ${f1(xr)},${f1(yb)}" stroke="${PRIMER}" stroke-width="5" fill="none" stroke-dasharray="4 7"/>`;
-            r += endl(xOf(jStart) - 32, yR + 17, "3'", PRIMER, 16) + endl(xOf(jStart + 10) + 32, yR + 17, "5'", PRIMER, 16);
+            r += endl(xOf(jStart) - 32, yR + 17, "3′", PRIMER, 16) + endl(xOf(jStart + 10) + 32, yR + 17, "5′", PRIMER, 16);
             r += txt(xl + 70, yb + 80, T2('hTR (451 nt)', 'hTR (451 nt)'), PRIMER, 18, 'middle', 700);
             m += `<g opacity="${f1(kIn)}">${r}</g>`;
             // paringsstreepjes
             const nTop = top.length;
             for (let j = 0; j < 11; j++) { const i = Math.round(jStart) + j; if (i < nTop && kIn > .95 && Math.abs(shift - Math.round(shift)) < .01) m += seg(xOf(i), YT + BH + 1, xOf(i), YB - 1, '#c9b8ff', 2); }
-            if (step === 3) m += tag(xOf(TOP.length - 3), YT - 90, T2('5 nt paren: …GTTAG-3\'', '5 nt pair: …GTTAG-3\''), C.text, 17, 'middle', sub(p, .45, .65));
+            if (step === 3) m += tag(xOf(TOP.length - 3), YT - 90, T2('5 nt paren: …GTTAG-3′', '5 nt pair: …GTTAG-3′'), C.text, 17, 'middle', sub(p, .45, .65));
             if (step === 4) m += tag(xOf(TOP.length + 3), YT - 90, T2('+ GGTTAG (DNA van een RNA-matrijs)', '+ GGTTAG (DNA from an RNA template)'), NEW, 17, 'middle', sub(p, .1, .25));
             if (step === 5) m += arrow(xOf(TOP.length) - 40, YT - 90, xOf(TOP.length) + 120, YT - 90, C.text, 4, sub(p, .05, .2)) + tag(xOf(TOP.length) + 40, YT - 76 - 30, T2('translocatie: 6 nt', 'translocation: 6 nt'), C.text, 17, 'middle', sub(p, .05, .2));
             if (step <= 5) place('tl-rta', cx + 200, cy + 72); else place('tl-rta', -99, -99);
@@ -156,17 +156,18 @@ const scene = {
             const k = ease(sub(p, 0, .2)) * (1 - sub(p, .85, 1));
             const x = xOf(bEnd - 1) + 40;
             m += prot(x + 40, YB + 100, 110, 38, C.prot3, 'CST · Pol α-primase', 16, k);
-            m += tag(xOf(ND + 8), YT - 40, T2("3'-overhang blijft over", "3' overhang remains"), C.dna, 17, 'middle', sub(p, .8, .95));
+            m += tag(xOf(ND + 8), YT - 40, T2("3′-overhang blijft over", "3′ overhang remains"), C.dna, 17, 'middle', sub(p, .8, .95));
           }
           // shelterin (stap 7)
           if (step === 7) {
             const k = i => ease(sub(p, .05 + i * .1, .2 + i * .1));
             // 6 eiwitten, 6 vormen; TRF1 en TRF2 elk één homodimeer op het dubbelstrengige TTAGGG. TIN2 is de brug tussen TRF1, TRF2
             // en TPP1; TPP1 houdt POT1 vast, dat het enkelstrengige 3'-uiteinde bindt; RAP1 zit op TRF2 (de Lange, Genes Dev 2005).
-            m += prot(870, 490, 76, 30, C.prot2, 'TRF2', 20, k(0)) + prot(1030, 490, 76, 30, C.prot, 'TRF1', 20, k(0));
+            const dimeer = (x, y, col, lab, op) => prot(x - 37, y, 40, 30, col, '', 20, op, '', 11) + prot(x + 37, y, 40, 30, col, '', 20, op, '', 12) + (op > .01 ? `<g opacity="${f1(op)}">${txt(x, y + 7, lab, '#fff', 20, 'middle', 700)}</g>` : '');   // homodimeer: twee halfjes
+            m += dimeer(870, 490, C.prot2, 'TRF2', k(0)) + dimeer(1030, 490, C.prot, 'TRF1', k(0));
             m += prot(760, 548, 62, 28, C.prot3, 'RAP1', 20, k(1));
             m += prot(1000, 548, 112, 28, C.prot3, 'TIN2', 20, k(2));   // TIN2 raakt TRF2 én TRF1 tegelijk en houdt TPP1 vast (Srinivas et al., Cancers 2020, PMID 32121056, gelezen)
-            m += prot(1172, 512, 64, 28, C.prot3, 'TPP1', 20, k(3)) + prot(1290, 446, 76, 30, '#b07cf0', 'POT1', 21, k(3));
+            m += prot(1180, 492, 64, 28, C.prot3, 'TPP1', 20, k(3)) + prot(1290, 433, 76, 30, '#b07cf0', 'POT1', 21, k(3));   // POT1 op het enkelstrengige 3'-uiteinde, TPP1 tussen POT1 en TIN2
             m += tag(760, 190, T2('shelterin (6 eiwitten; TRF1 en TRF2 elk als dimeer)', 'shelterin (6 proteins; TRF1 and TRF2 each as a dimer)'), C.text, 28, 'middle', sub(p, .55, .7));
           }
         } else place('tl-rta', -99, -99);
@@ -178,7 +179,7 @@ const scene = {
         let e = '';
         if (step === 1) {
           const Y = 610, xa = 180, xe = 1250;
-          e += seg(xa, Y, xe, Y, C.dna, 7) + endl(xa - 30, Y + 6, "5'", C.dna) + endl(xe + 30, Y + 6, "3'", C.dna);
+          e += seg(xa, Y, xe, Y, C.dna, 7) + endl(xa - 30, Y + 6, "5′", C.dna) + endl(xe + 30, Y + 6, "3′", C.dna);
           e += tag(xe, Y - 30, T2('uiteinde chromosoom →', 'chromosome end →'), C.muted, 17, 'end');
           e += tag(xa + 10, Y - 30, T2('matrijs: G-rijke streng', 'template: G-rich strand'), C.dna, 17, 'start');
           const Yn = Y + 34;
@@ -197,9 +198,9 @@ const scene = {
               if (kRem > .5) e += `<rect x="${b - prim}" y="${Yn - 12}" width="${prim + 4}" height="24" rx="6" fill="none" stroke="${C.danger}" stroke-width="3" stroke-dasharray="6 4"/>`;
             }
           });
-          e += endl(xa - 30, Yn + 6, "3'", NEW) + endl(xe - 70, Yn + 40, "5'", NEW, 16, kRem);
+          e += endl(xa - 30, Yn + 6, "3′", NEW) + endl(xe - 70, Yn + 40, "5′", NEW, 16, kRem);
           e += tag(xe, Yn + 70, T2('gat: niet op te vullen', 'gap: cannot be filled'), C.danger, 18, 'end', step === 1 ? sub(p, .55, .7) : 1);
-          e += tag(640, Yn + 70, T2("interne gaten: opgevuld vanaf een 3'-OH", "internal gaps: filled from a 3'-OH"), C.muted, 17, 'middle', step === 1 ? sub(p, .35, .5) : 0);
+          e += tag(640, Yn + 70, T2("interne gaten: opgevuld vanaf een 3′-OH", "internal gaps: filled from a 3′-OH"), C.muted, 17, 'middle', step === 1 ? sub(p, .35, .5) : 0);
         }
         if (step === 2 || (step === 3 && p < .06)) {   // in stap 3 vervaagt de grafiek i.p.v. meteen te verdwijnen
           const pp = step === 2 ? p : 1, fade = step === 3 ? 1 - sub(p, 0, .06) : 1;
@@ -243,7 +244,7 @@ const scene = {
           // 3'-overhang: van het lusuiteinde omlaag tussen de strengen, gepaard met de C-streng
           tlp += `<path d="M${f1(e[0])},${f1(e[1])} C${f1(e[0] - 30)},${f1(e[1] + 40)} ${f1(580)},${f1(Y)} ${f1(545)},${f1(Y)} L430,${Y}" stroke="${C.dna}" stroke-width="7" fill="none"/>`;
           for (let x = 436; x < 545; x += 16) tlp += seg(x, Y, x, Y + g / 2, '#8fb0e8', 3);
-          tlp += endl(410, Y + 6, "3'", C.dna, 16);
+          tlp += endl(410, Y + 6, "3′", C.dna, 16);
           tlp += txt(490, Y - 56, T2('D-lus', 'D-loop'), C.text, 20);
           tlp += txt(CX, CYc + 10, T2('T-lus', 't-loop'), C.text, 28, 'middle', 700);
           tlp += prot(640, Y + 66, 70, 30, C.prot2, 'TRF2', 20);
@@ -295,10 +296,10 @@ export default with3d(scene, {
           { ...sp({ chain: 'B', resi: 180 }, PRIMER, 2.6), label: 'RNA' },
           { ...sp({ chain: 'N', resi: 24 }, C.dna, 3.2), label: 'DNA' }] },
       { dur: 9000, model: 'tert', spin: .008, zoom: { chain: 'B', resi: [40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62] },
-        title: { nl: 'Het DNA-uiteinde ligt op de RNA-mal', en: 'The DNA end lies on the RNA template' },
+        title: { nl: 'Het DNA-uiteinde ligt op de RNA-matrijs', en: 'The DNA end lies on the RNA template' },
         text: { nl: 'Het uiteinde van het DNA paart met een kort stukje RNA: daar komen de nieuwe letters bij.', en: 'The end of the DNA pairs with a short piece of RNA: that is where the new letters are added.' },
         show: [sp({ chain: ['A', 'O', 'L', 'M'] }, '#33415c', .55), sp({ chain: 'B' }, PRIMER, 1.2), sp(TPL_SEL, TPL, 3), sp({ chain: 'N' }, C.dna, 3),
-          { ...sp({ chain: 'B', resi: 47 }, TPL, 3), label: { nl: 'RNA-mal', en: 'RNA template' } },
+          { ...sp({ chain: 'B', resi: 47 }, TPL, 3), label: { nl: 'RNA-matrijs', en: 'RNA template' } },
           { ...sp({ chain: 'N', resi: 30 }, C.dna, 3), label: { nl: 'DNA-uiteinde', en: 'DNA end' } }] },
     ],
   },

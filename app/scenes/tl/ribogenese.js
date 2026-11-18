@@ -43,7 +43,7 @@ export default {
     ST(9000, cam(520, 400, 900), 'Knippen in twee routes', 'Cutting into two routes', 'Het RNA wordt geknipt: een deel voor de kleine helft, de rest voor de grote. Opvulstukken worden afgebroken.', 'The RNA is cut: one part goes to the small half, the rest to the large one. Spacer pieces are broken down.'),
     ST(9000, cam(720, 490, 1250), 'Eiwitten komen erbij', 'Proteins join', '≈ 80 eiwitten worden buiten de kern gemaakt en binnengebracht. Een klein RNA (5S) gaat naar de grote helft.', '≈ 80 proteins are made outside the nucleus and brought in. A small RNA (5S) joins the large half.'),
     ST(9000, cam(820, 460, 1350), 'Apart de kern uit', 'Leaving the nucleus separately', 'De twee helften verlaten de kern apart, door poriën in de kernwand, met hulp van transporteiwitten.', 'The two halves leave the nucleus separately, through pores in its wall, helped by transport proteins.'),
-    ST(9500, cam(1240, 460, 820), 'Afwerking buiten de kern', 'Finishing outside the nucleus', 'Buiten de kern wordt het RNA op maat geknipt en gaan hulpeiwitten eraf. Pas dan vormen ze samen een ribosoom.', 'Outside the nucleus the RNA is trimmed and helper proteins come off. Only then do the halves form a ribosome.'),
+    ST(9500, cam(1240, 460, 820), 'Afwerking buiten de kern', 'Finishing outside the nucleus', 'Buiten de kern wordt het RNA op maat geknipt en gaan hulpeiwitten eraf. Pas bij de start van translatie vormen ze samen een ribosoom.', 'Outside the nucleus the RNA is trimmed and helper proteins come off. Only at the start of translation do the halves form a ribosome.'),
   ],
   svg() {
     const [nx, ny, nrx, nry] = NUC, [ox, oy, orx, ory] = NO;
@@ -53,7 +53,7 @@ export default {
       <ellipse cx="${nx}" cy="${ny}" rx="${nrx}" ry="${nry}" fill="url(#gNuc)"/>
       ${kernEnvelop(NUCP, { poriën: POREF, poreW: PW, w: 12, gap: 12, npc: false })}
     </g>
-    <g data-node="kernimport" data-color="${C.prot}" data-label="${T2('Kernporie', 'Nuclear pore')}" data-nolabel>${[PORE1, PORE2].map(([x, y], k) => kernporie(x, y, PANG[k], { s: 1.3, H: 36, poreW: PW })).join('')}</g>
+    <g data-node="kernimport" data-color="#9db4d8" data-label="${T2('Kernporie', 'Nuclear pore')}" data-nolabel>${[PORE1, PORE2].map(([x, y], k) => kernporie(x, y, PANG[k], { s: 1.3, H: 36, poreW: PW })).join('')}</g>
     <g data-node="nucleolus" data-color="${C.rrna}" data-label="${T2('Nucleolus', 'Nucleolus')}">
       <ellipse cx="${ox}" cy="${oy}" rx="${orx}" ry="${ory}" fill="rgba(44,198,168,.08)" stroke="${C.rrna}" stroke-width="2.5" stroke-dasharray="3 7"/>
       ${[[360, 330], [620, 320], [420, 600], [640, 590]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="42" fill="rgba(44,198,168,.14)"/><circle cx="${x}" cy="${y}" r="20" fill="rgba(79,143,247,.18)"/>`).join('')}
@@ -104,7 +104,7 @@ export default {
         if (cut < .5) s += txt(x + w / 2, j % 2 ? y + 72 : y - 14, lab, kind === 'sp' ? C.muted : COL[kind], kind === 'sp' ? 18 : 22, 'middle', 800);
         s += '</g>';
       });
-      if (cut < .3) s += txt(BX - 16, BY + 28, "5'", '#fff', 22, 'end', 700) + txt(SEGX[6][0] + SEGX[6][1] + 12, BY + 28, "3'", '#fff', 22, 'start', 700);
+      if (cut < .3) s += txt(BX - 16, BY + 28, "5′", '#fff', 22, 'end', 700) + txt(SEGX[6][0] + SEGX[6][1] + 12, BY + 28, "3′", '#fff', 22, 'start', 700);
       for (const [x, kind, k] of marks) if (k > .01) s += `<g opacity="${f1(k)}"><circle cx="${f1(x)}" cy="${BY - 2}" r="11" fill="${kind === 'm' ? '#ffffff' : '#ffc247'}" stroke="#0a1224" stroke-width="2"/><text x="${f1(x)}" y="${BY + 3}" font-size="${kind === 'm' ? 12 : 14}" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">${kind === 'm' ? 'Me' : 'Ψ'}</text></g>`;
       return s + '</g>';
     }
@@ -135,7 +135,7 @@ export default {
             rd += `<path d="M${f1(x)},${y - 10} q${f1(-len * .15)},${f1(-len * .5)} ${f1(len * .1)},${f1(-len)}" stroke="${C.rrna}" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="${f1(x)}" cy="${y}" r="9" fill="${C.prot}" stroke="#0a1224" stroke-width="2"/>`;
           }
           if (i === 1) rd += `<g opacity="${f1(sub(p, .2, .35))}">` + txt(g0, y + 50, T2('rRNA-gen (≈ 13 kb)', 'rRNA gene (≈ 13 kb)'), C.dna2, 20, 'start', 700) + txt(790, y + 50, T2('spacer', 'spacer'), C.muted, 18, 'middle', 600) +
-            txt(480, y + 90, T2('Pol I + groeiende transcripten', 'Pol I + growing transcripts'), '#fff', 20, 'middle', 700) + txt(g0 + 10, y - 60, "5'", '#fff', 18, 'middle') + '</g>' +
+            txt(480, y + 90, T2('Pol I + groeiende transcripten', 'Pol I + growing transcripts'), '#fff', 20, 'middle', 700) + txt(g0 + 10, y - 60, "5′", '#fff', 18, 'middle') + '</g>' +
             `<g opacity="${f1(sub(p, .55, .7))}">` + textBox(705, 262, 300, [T2('honderden kopieën', 'hundreds of copies'), T2('in tandem op chr', 'in tandem on chr'), '13, 14, 15, 21, 22'], { col: C.dna2, fs: 18 }) + '</g>';
           rd += '</g>';
           $('rg-pA').setAttribute('cx', '215'); $('rg-pA').setAttribute('cy', f1(y - 14));
@@ -160,7 +160,7 @@ export default {
             [-40, -20, 0, 20, 40].map(dx => `<path d="M${x + dx},${y - 4} V${BY + 80} M${x + dx},${BY + 52} V${BY + 44}" stroke="#fff" stroke-width="2" stroke-dasharray="3 3"/>`).join('') + '</g>';
           sno += guide(SEGX[5][0] + 90, BY + 96 + (1 - cd) * 80, '#ffc247', T2('C/D-box-snoRNA', 'C/D box snoRNA'), T2('fibrillarine', 'fibrillarin'), cd);
           sno += guide(SEGX[1][0] + 60, BY + 96 + (1 - ha) * 80, '#ffe08a', T2('H/ACA-snoRNA', 'H/ACA snoRNA'), T2('dyskerine', 'dyskerin'), ha);
-          ov += `<g opacity="${f1(sub(p, .7, .85))}">` + textBox(330, 505, 470, [T2('Me = 2\'-O-methylribose (≈ 100×)', 'Me = 2\'-O-methylribose (≈ 100×)'), T2('Ψ = pseudo-uridine (≈ 100×)', 'Ψ = pseudouridine (≈ 100×)')], { col: '#ffc247', fs: 19 }) + '</g>';
+          ov += `<g opacity="${f1(sub(p, .7, .85))}">` + textBox(330, 505, 470, [T2('Me = 2′-O-methylribose (≈ 100×)', 'Me = 2′-O-methylribose (≈ 100×)'), T2('Ψ = pseudo-uridine (≈ 100×)', 'Ψ = pseudouridine (≈ 100×)')], { col: '#ffc247', fs: 19 }) + '</g>';
         }
         $('rg-sno').innerHTML = sno;
         // deeltjes
@@ -193,17 +193,19 @@ export default {
           ov += `<g opacity="${f1(sub(p, .85, 1))}">` + txt(1250, 780, T2('apart, niet als 80S!', 'separately, not as 80S!'), '#fff', 24, 'middle', 800) + '</g>';
         }
         if (i === 7) {
-          const join = ease(sub(p, .55, .85));
-          const a40 = E2([1250, 350], [1235, 524], join), a60 = E2([1260, 590], [1240, 474], join);   // 60S boven, 40S onder, het mRNA ertussen
+          // zoals bij de start van translatie: eerst bindt de 40S (onder het mRNA) op het startcodon AUG, daarna komt de 60S (erboven) erbij
+          const j40 = ease(sub(p, .45, .68)), j60 = ease(sub(p, .64, .85)), join = j60;
+          const a40 = E2([1215, 620], [1185, 524], j40), a60 = E2([1225, 330], [1190, 474], j60);   // 60S boven, 40S onder, het mRNA ertussen
           const mk = sub(p, .8, .92);                       // de losse helften gaan over in één 80S: twee eenheden tegen elkaar, het mRNA ertussen
-          part += `<g opacity="${f1(1 - mk)}">` + large(a60[0], a60[1], 1, fac, join < .5 ? T2('pre-60S → 60S', 'pre-60S → 60S') : '', true) + small(a40[0], a40[1], 1, fac, join < .5 ? (sub(p, .2, .4) > .5 ? '18S-E → 18S' : '18S-E') : '') + '</g>';
-          if (mk > .01) part += `<g opacity="${f1(mk)}" transform="translate(1240 511) scale(1 -1) translate(0 ${f1(-R80.mrnaY)})">${R80.svg}</g>`;
+          part += `<g opacity="${f1(1 - mk)}">` + large(a60[0], a60[1], 1, fac, join < .5 ? T2('pre-60S → 60S', 'pre-60S → 60S') : '') + small(a40[0], a40[1], 1, fac, '') +
+            (j40 < .5 ? txt(a40[0], a40[1] + 44, sub(p, .2, .4) > .5 ? '18S-E → 18S' : '18S-E', '#8df0dc', 20, 'middle', 700) : '') + '</g>';
+          if (mk > .01) part += `<g opacity="${f1(mk)}" transform="translate(1190 511) scale(1 -1) translate(0 ${f1(-R80.mrnaY)})">${R80.svg}</g>`;
           { const off = ease(sub(p, .15, .45)), fo = 1 - sub(p, .45, .6);   // rijpingsfactoren (klein t.o.v. de subeenheden) zitten er eerst nog op en gaan er dan af
             const fz = (x, y, lab, sd, an) => eiwit(x, y, 13, 10, C.prot2, { seed: sd }) + txt(x + (an === 'end' ? -20 : 20), y + 7, lab, '#c9bfff', 21, an, 700);
             ov += `<g opacity="${f1(fo)}">` + fz(lerp(1282, 1380, off), lerp(362, 320, off), 'NOB1', 31, 'start') +
               fz(lerp(1282, 1400, off), lerp(612, 660, off), 'eIF6', 32, 'start') + fz(lerp(1226, 1120, off), lerp(616, 680, off), 'NMD3', 33, 'end') + '</g>'; }
-          tl += `<g><line x1="1066" y1="511" x2="1500" y2="511" stroke="${C.rna}" stroke-width="7"/>${[...'GCCACCAUGGCUUCAGGAUCUGAAUAA'].map((b, k) => { const bx = 1078 + k * 16; return `<rect x="${bx - 6}" y="514" width="12" height="16" rx="3" fill="${BASE[b]}"/>`; }).join('')}${txt(1500, 494, "mRNA", C.rna, 22, "end", 700)}${txt(1066, 545, "5'", C.rna, 20, 'start', 700)}${txt(1500, 545, "3'", C.rna, 20, 'end', 700)}</g>`;
-          ov += `<g opacity="${f1(sub(p, .85, .95))}">` + txt(1240, 650, T2('80S: klaar voor translatie', '80S: ready for translation'), '#fff', 24, 'middle', 800) + '</g>';
+          tl += `<g><line x1="1066" y1="511" x2="1500" y2="511" stroke="${C.rna}" stroke-width="7"/>${[...'GCCACCAUGGCUUCAGGAUCUGAAUAA'].map((b, k) => { const bx = 1078 + k * 16; return `<rect x="${bx - 6}" y="514" width="12" height="16" rx="3" fill="${BASE[b]}"/>`; }).join('')}${txt(1500, 494, "mRNA", C.rna, 22, "end", 700)}${txt(1066, 545, "5′", C.rna, 20, 'start', 700)}${txt(1500, 545, "3′", C.rna, 20, 'end', 700)}</g>`;
+          ov += `<g opacity="${f1(sub(p, .85, .95))}">` + txt(1190, 650, T2('80S op het startcodon (AUG)', '80S on the start codon (AUG)'), '#fff', 24, 'middle', 800) + '</g>';
           $('rg-tA').setAttribute('cx', '1100'); $('rg-tA').setAttribute('cy', '505');
           $('rg-rA').setAttribute('cx', f1(a60[0])); $('rg-rA').setAttribute('cy', f1(a60[1] - 70));
         } else { hide('rg-tA'); hide('rg-rA'); }

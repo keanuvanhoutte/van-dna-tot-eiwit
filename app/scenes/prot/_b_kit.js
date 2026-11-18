@@ -6,7 +6,7 @@ import { C, f1 } from '../../kit.js';
 import { eiwitPad } from '../../bio.js';
 
 export const UB = '#ffd166';          // ubiquitine
-export const PHOS = '#ff6b6b';        // fosfaatgroep (negatief geladen = rood, zoals CLASSCOL['-'])
+export const PHOS = '#ff9f43';        // fosfaatgroep: overal dezelfde oranje fosfaatkleur als in de DNA-ruggengraat (nucleotide, dnahelix)
 export const ATPC = '#5fd3e6';        // ATP/ADP/GTP-pillen
 export const LUMEN = 'rgba(201,165,116,.07)';
 

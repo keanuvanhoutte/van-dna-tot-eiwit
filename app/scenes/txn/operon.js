@@ -94,11 +94,12 @@ export default {
     // groeiende eiwitketen: elk gen (lacZ, lacY, lacA) heeft een eigen start- en stopcodon; hoe verder het ribosoom in zijn gen (d), hoe langer de keten
     const GENES = ['lacZ', 'lacY', 'lacA'].map(g => [EL[g][0] - TSS - 20, EL[g][1] - TSS - 20]);   // genposities in mRNA-px vanaf het 5'-uiteinde
     const chainAt = (x, y, d) => {
-      const n = Math.max(1, Math.min(9, Math.round(d / 40)));
+      const n = Math.max(1, Math.min(7, Math.round(d / 40), Math.floor((y - 240) / 11)));   // begrensd: de keten blijft in het cytoplasma, onder de celwand
       let dd = `M${f1(x)},${f1(y)}`;
       for (let k = 0; k < n; k++) dd += ` q${k % 2 ? -8 : 8},-6 0,-11`;
       return `<path d="${dd}" stroke="${C.chain}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
     };
+    let placed = [];                                       // ribosomen die in dit beeld al getekend zijn
     function mrnaAt(x0, len, withRibo, t) {
       // mRNA hangt boven het DNA, 5'-uiteinde het verst van de polymerase
       if (len <= 4) return '';
@@ -108,10 +109,15 @@ export default {
       if (withRibo) {
         // per gen: ribosomen starten aan het begin van dat gen (eigen startcodon), om de ~120 nt-px
         for (const [g0, g1] of GENES) for (let d = g0 + 30; d < Math.min(g1 - 10, len - 40); d += 120) {
-          const q = pts[Math.floor((len - d) / 8)] ?? pts[pts.length - 1];
-          // 70S: grote eenheid (50S) boven, kleine (30S) onder, mRNA ertussen; de keten komt uit de grote eenheid
-          g += ribosoomKlein(q[0], q[1] + 2, { s: 1.5, rot: 180, col: K.ribo }) +
-            chainAt(q[0], q[1] - 17, d - g0);
+          const i = Math.min(pts.length - 1, Math.floor((len - d) / 8)), q = pts[i] ?? pts[pts.length - 1];
+          // het ribosoom volgt de stand van het (schuine) mRNA: raaklijn richting 3′ (naar de polymerase)
+          const a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)], ang = Math.atan2(a[1] - b[1], a[0] - b[0]);
+          const nx = Math.sin(ang), ny = -Math.cos(ang);                 // normaal naar de kant van de grote eenheid
+          if (placed.some(([x, y]) => Math.hypot(x - q[0], y - q[1]) < 46)) continue;   // geen ribosomen over elkaar (ook niet van een ander mRNA)
+          placed.push(q);
+          // 70S: grote eenheid (50S) aan de bovenkant, kleine (30S) eronder, mRNA ertussen; de keten komt uit de grote eenheid
+          g += ribosoomKlein(q[0] - nx * 2, q[1] - ny * 2, { s: 1.5, rot: 180 + ang * 180 / Math.PI, col: K.ribo }) +
+            chainAt(q[0] + nx * 17, q[1] + ny * 17, d - g0);
         }
       }
       return g;
@@ -162,6 +168,7 @@ export default {
         pr += rnap(470, st.rn, 1, blocked);
         if (step === 1) pr += txt(450, Y0 - 128, T2('holo-enzym = core (α₂ββ′ω) + σ70', 'holoenzyme = core (α₂ββ′ω) + σ70'), C.text, 17);
         let mr = '';
+        placed = [];
         const T = t / 1000;
         const n = st.lvl === 2 ? 4 : st.lvl === 1 ? 1 : 0;
         const period = st.lvl === 2 ? 1 : 3.2;           // lage expressie: zelden een polymerase onderweg
@@ -173,7 +180,7 @@ export default {
           pr += `<g opacity="${f1(clamp((1 - u) * 12))}">` + prot(x, Y0 - 40, 34, 26, K.rnap, 1, 93) + '</g>';
         }
         $('op-mrna').innerHTML = mr;
-        setA('op-trA', 1180, 250, (step === 5 || step === 6) && n > 0);
+        setA('op-trA', 1440, 300, (step === 5 || step === 6) && n > 0);
 
         // eiwitproducten (stap 6)
         if (step === 6) {

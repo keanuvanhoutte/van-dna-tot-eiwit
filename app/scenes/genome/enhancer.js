@@ -11,7 +11,7 @@ import { eiwitPad } from '../../bio.js';
  */
 const L3 = (nl, en) => ({ nl, en });
 const Y = 640;
-const ENH = '#ffb27a', ACT = C.prot, MED = '#5fd3e6', POL = '#6f5bd6', GENE = C.ok;
+const ENH = '#ffb27a', ACT = C.prot, MED = '#6f5bd6', POL = C.prot, GENE = C.ok;   // zelfde kleuren als genregulatie/promoter: Pol II #9b7bff, Mediator #6f5bd6
 const E0 = [230, Y], E1 = [600, Y], P0 = [1060, Y], P1 = [800, Y];   // versterker en startplaats: voor en na de lus
 
 const box = (x, y, w, col, lab, op = 1) => op <= .01 ? '' : `<rect x="${f1(x - w / 2)}" y="${f1(y - 22)}" width="${w}" height="44" rx="10" fill="${col}" opacity="${f1(op)}"/>` + T(x, y + 9, lab, { size: 22, col: '#0a1224', w: 700, halo: false, op });
@@ -25,7 +25,7 @@ export default {
   time: L3('minuten (vertraagd)', 'minutes (slowed down)'),
   org: L3('mens', 'human'),
   legend: [[C.dna, L3('DNA', 'DNA')], [ENH, L3('versterker (enhancer)', 'switch (enhancer)')], [GENE, L3('gen met zijn startplaats', 'gene with its start site')], [ACT, L3('activator', 'activator')],
-    [MED, L3('brugcomplex', 'bridge complex')], [POL, L3('afleesapparaat (RNA-polymerase)', 'reading machine (RNA polymerase)')], [C.rna, L3('RNA', 'RNA')]],
+    [MED, L3('brugcomplex (Mediator)', 'bridge complex (Mediator)')], [POL, L3('afleesapparaat (RNA-polymerase II, Pol II)', 'reading machine (RNA polymerase II, Pol II)')], [C.rna, L3('RNA', 'RNA')]],
   simplified: {
     nl: 'Schematisch: de lus is veel korter getekend dan in het echt, en er is maar één activator en één versterker getoond. Een gen heeft vaak meerdere versterkers, en één versterker kan meer dan één gen aansturen. Hoe vaak en hoe lang versterker en startplaats elkaar raken, wordt nog onderzocht.',
     en: 'Schematic: the loop is drawn much shorter than in reality, and only one activator and one switch are shown. A gene often has several switches, and one switch can control more than one gene. How often and for how long switch and start site touch is still being studied.' },
@@ -74,7 +74,7 @@ export default {
         $('en-gene').innerHTML = g;
         // afleesapparaat (wacht bij de startplaats), activatoren, brug, RNA
         let fx = '';
-        fx += blob(P[0] + 6, Y - 70, 70, 44, POL, T2('aflezer', 'reader'), 1, 22);
+        fx += blob(P[0] + 6, Y - 70, 70, 44, POL, 'Pol II', 1, 22);
         if (step === 0) fx += T(P[0] + 120, Y - 130, T2('traag…', 'slow…'), { size: 26, col: C.muted, op: ease(sub(p, .4, .7)) });
         if (kE > .01 && kL < .99) {
           const o = kE * (1 - kL);

@@ -161,7 +161,7 @@ export default {
           ann += txt(1130, 190, T2('antiparallel ("mand")', 'antiparallel ("basket")'), '#fff', 30) + txt(1130, 226, T2('Na⁺ · NMR · PDB 143D', 'Na⁺ · NMR · PDB 143D'), C.muted, 22);
           ann += `<g opacity="${f1(ease(sub(p, .7, .85)))}">${txt(800, 700, 'AGGG TTAGGG TTAGGG TTAGGG', '#e8edf7', 28, 'middle', 700, 'JetBrains Mono')}${txt(800, 736, T2('4 G-banen × 3 G = 3 kwartetten', '4 G-tracts × 3 G = 3 quartets'), C.muted, 22)}</g>`;
         } else if (step === 4) {
-          // chromosoomuiteinde met 3'-overhang die vouwt tot G4
+          // chromosoomuiteinde met 3′-overhang die vouwt tot G4
           const k = ease(sub(p, .1, .5)), k2 = ease(sub(p, .5, .8));
           m += `<path d="M150,440 H900" stroke="${C.dna}" stroke-width="8"/><path d="M150,470 H760" stroke="${C.dna2}" stroke-width="8"/>`;
           m += txt(170, 420, "5′", C.dna, 24, 'start', 700) + txt(170, 505, "3′", C.dna2, 24, 'start', 700) + txt(745, 505, "5′", C.dna2, 22, 'end', 700);

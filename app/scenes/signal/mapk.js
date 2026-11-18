@@ -59,8 +59,8 @@ const SCENE = {
     nl: '<p style="font-size:13px;color:#93a0bb">MAPKKK → MAPKK → MAPK: MAP-kinase-kinase-kinase, MAP-kinase-kinase, mitogeen-geactiveerd proteïnekinase. 3D: H-Ras met een GTP-analoog PDB <a href="https://www.rcsb.org/structure/5P21" target="_blank" rel="noopener">5P21</a>.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">MAPKKK → MAPKK → MAPK: MAP kinase kinase kinase, MAP kinase kinase, mitogen-activated protein kinase. 3D: H-Ras with a GTP analogue PDB <a href="https://www.rcsb.org/structure/5P21" target="_blank" rel="noopener">5P21</a>.</p>' },
   simplified: {
-    nl: 'Schematisch en niet op schaal. Raf wordt in werkelijkheid actief via een reeks stappen (binding aan Ras-GTP, dimerisatie van Raf, (de)fosforylering, 14-3-3-eiwitten); we tonen alleen de binding aan Ras. Er zijn verschillende isovormen (H-, K-, N-Ras; A-, B-, C-Raf; MEK1/2; ERK1/2); we tekenen er telkens één. Steigereiwitten zijn weggelaten. De versterking is kwalitatief getekend: de aantallen kopieën zijn geen echte verhoudingen. ERK gaat de kern in via verschillende mechanismen (o.a. met importine-7 of door directe binding aan nucleoporinen).',
-    en: 'Schematic and not to scale. In reality Raf is activated through a series of steps (binding to Ras-GTP, Raf dimerisation, (de)phosphorylation, 14-3-3 proteins); we only show binding to Ras. There are several isoforms (H-, K-, N-Ras; A-, B-, C-Raf; MEK1/2; ERK1/2); we draw one of each. Scaffold proteins are omitted. Amplification is drawn qualitatively: the numbers of copies are not real ratios. ERK enters the nucleus by several mechanisms (e.g. with importin-7 or by binding nucleoporins directly).' },
+    nl: 'Schematisch en niet op schaal. Raf wordt in werkelijkheid actief via een reeks stappen (binding aan Ras-GTP, dimerisatie van Raf, (de)fosforylering, 14-3-3-eiwitten); we tonen alleen de binding aan Ras. Er zijn verschillende isovormen (H-, K-, N-Ras; A-, B-, C-Raf; MEK1/2; ERK1/2); we tekenen er telkens één. Steigereiwitten zijn weggelaten. De versterking is kwalitatief getekend: de aantallen kopieën zijn geen echte verhoudingen. ERK gaat de kern in via verschillende mechanismen (o.a. met importine-7 of door directe binding aan nucleoporinen). Het plasmamembraan staat dikker getekend dan de twee kernmembranen, zodat de receptoren erin passen; in werkelijkheid zijn alle drie even dik (≈ 4–5 nm).',
+    en: 'Schematic and not to scale. In reality Raf is activated through a series of steps (binding to Ras-GTP, Raf dimerisation, (de)phosphorylation, 14-3-3 proteins); we only show binding to Ras. There are several isoforms (H-, K-, N-Ras; A-, B-, C-Raf; MEK1/2; ERK1/2); we draw one of each. Scaffold proteins are omitted. Amplification is drawn qualitatively: the numbers of copies are not real ratios. ERK enters the nucleus by several mechanisms (e.g. with importin-7 or by binding nucleoporins directly). The plasma membrane is drawn thicker than the two nuclear membranes so that the receptors fit; in reality all three are equally thick (≈ 4–5 nm).' },
   steps: [
     ST(7000, cam(800, 450, 1600), 'Van het membraan naar de kern', 'From the membrane to the nucleus',
       'Drie kinasen (enzymen die fosfaat op eiwitten zetten) wachten. Ze gaan het signaal naar de kern brengen.',
@@ -92,15 +92,15 @@ const SCENE = {
   ],
   loop: false,
   svg() {
-    const NM = (NO + NI) / 2, EW = 13, EG = NI - NO - EW;                       // midden, membraandikte, perinucleaire ruimte
-    const npc = px => kernporie(px, NM, 0, { H: EG + 2 * EW, poreW: 2 * PW - 20, col: '#b9a6ff' });
+    const NM = (NO + NI) / 2, EW = 18, EG = NI - NO - EW;                       // midden, membraandikte, perinucleaire ruimte
+    const npc = px => kernporie(px, NM, 0, { H: EG + 2 * EW, poreW: 2 * PW - 20 });
     return svgOpen(arrowDefs('mk', { m: C.muted, w: '#fff', e: K.erk })) + `
     <rect x="-600" y="${MB}" width="2800" height="${NO - MB}" fill="url(#gCyto)" opacity=".85"/>
     <rect x="-600" y="${NI}" width="2800" height="900" fill="url(#gNuc)"/>
     <g data-node="chromatine" data-color="${C.dna}" data-nolabel>${CHROM}</g>
     ${membrane('mk', MT, MB)}
     <g data-node="kern" data-color="#9cc0ff" data-nolabel>${kernEnvelopLijn(-600, 2200, NM, { poriën: PORES, w: EW, gap: EG, poreW: 2 * PW - 20, npc: false })}</g>
-    <g data-node="kernimport" data-color="${C.prot2}" data-label="${T2('Kernporie', 'Nuclear pore')}">${PORES.map(npc).join('')}<g id="mk-kiA"><circle data-anchor="kernimport" cx="${PORES[2]}" cy="${NO - 18}" r="1" fill="none"/></g></g>
+    <g data-node="kernimport" data-color="#9db4d8" data-label="${T2('Kernporie', 'Nuclear pore')}">${PORES.map(npc).join('')}<g id="mk-kiA"><circle data-anchor="kernimport" cx="${PORES[2]}" cy="${NO - 18}" r="1" fill="none"/></g></g>
     <g data-node="rtk" data-color="${K.rec}" data-label="${T2('← EGF-receptor', '← EGF receptor')}"><g id="mk-rec"></g><g id="mk-rtkA"><circle data-anchor="rtk" cx="135" cy="60" r="1" fill="none"/></g></g>
     <g data-node="rtk" data-color="${K.grb}" data-nolabel><g id="mk-sos"></g></g>
     <g id="mk-ras"></g>

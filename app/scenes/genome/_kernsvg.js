@@ -29,7 +29,7 @@ export function sceneKern() {
   for (const [x, y] of [[1195, 310], [1215, 520], [1165, 690], [1240, 410]]) {
     poly += `<path d="M${x},${y} q25,-16 50,0 t50,0 t50,0" stroke="${C.rna}" stroke-width="2.5" fill="none"/>`;
     // ribosomen op het mRNA: grote + kleine eenheid; het mRNA loopt tussen beide (de golf ligt op y ± 6)
-    for (let i = 0; i < 6; i++) { const xx = x + 12 + i * 25, u = xx - x, t = (u % 50) / 50, yy = y + (Math.floor(u / 50) % 2 ? 1 : -1) * 32 * t * (1 - t); poly += ribosoomKlein(xx, yy + 3, { s: .85 }); }
+    for (let i = 0; i < 6; i++) { const xx = x + 12 + i * 25, u = xx - x, t = (u % 50) / 50, yy = y + (Math.floor(u / 50) % 2 ? 1 : -1) * 32 * t * (1 - t); poly += ribosoomKlein(xx, yy - 4, { s: .85, rot: 180 }); }   // grote eenheid boven, kleine onder het mRNA
   }
   // transcriptieplaats: "kerstboom" zoals in Miller-preparaten (RNA's worden langer richting het geneinde)
   const gx0 = 860, gy = 330, gx1 = 1060;
@@ -57,7 +57,7 @@ export function sceneKern() {
       ${Array.from({ length: 40 }, () => `<circle cx="${(660 + r() * 120).toFixed(1)}" cy="${(390 + r() * 120).toFixed(1)}" r="${(1.5 + r() * 2.5).toFixed(1)}" fill="${C.rrna}" opacity=".55"/>`).join('')}
       <circle cx="690" cy="440" r="14" fill="#1b2a47"/><circle cx="740" cy="470" r="11" fill="#1b2a47"/>
     </g>
-    <g data-node="kernimport" data-color="${C.prot}" data-label="${L({ nl: 'Kernporiecomplex', en: 'Nuclear pore complex' })}">${npc}<circle data-anchor="kernimport" cx="${P(225, R + 14)[0]}" cy="${P(225, R + 14)[1] - 6}" r="1" fill="none"/></g>
+    <g data-node="kernimport" data-color="#9db4d8" data-label="${L({ nl: 'Kernporiecomplex', en: 'Nuclear pore complex' })}">${npc}<circle data-anchor="kernimport" cx="${P(225, R + 14)[0]}" cy="${P(225, R + 14)[1] - 6}" r="1" fill="none"/></g>
 
     <g data-node="transcriptie" data-color="${C.prot}" data-label="${L({ nl: 'Transcriptie van een gen', en: 'Transcription of a gene' })}">
       <rect x="${gx0 - 50}" y="${gy - 90}" width="${gx1 - gx0 + 100}" height="130" fill="transparent"/>${tree}

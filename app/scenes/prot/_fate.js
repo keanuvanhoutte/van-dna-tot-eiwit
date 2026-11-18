@@ -7,10 +7,10 @@ import { T } from './_b_kit.js';
 import { eiwitPad, cisterne, ribosoomKlein, kernEnvelop, ptsCirkel, mitochondrion, blaasje, membraanLijn, membraanPts, LIPID } from '../../bio.js';
 
 /* vaste kleur per bestemming (ook in de legendes) */
-export const DEST = { cyt: '#93a0bb', er: '#e0b25c', kern: C.dna, mito: '#ff8a3d', perox: '#5fd3e6', lyso: '#ff6b6b' };
+export const DEST = { cyt: '#93a0bb', er: '#e0b25c', kern: C.dna, mito: '#c96f53', perox: '#5fd3e6', lyso: '#ff6b6b' };   // mito: rood-bruin (oranje is RNA)
 export const HYD = '#ffc247';          // waterafstotend (vettig) stuk
 export const PLUS = '#4f8ff7';         // positief geladen
-export const LUMEN = 'rgba(201,165,116,.08)';
+export const LUMEN = 'rgba(143,179,232,.10)';   // ER-lumen: zelfde blauwe tint als in cel, kern, viruskopie, assemblage
 
 /* keten van bolletjes; lab = [{ from, to, col }] kleurt een deel (index 0 = begin van het eiwit) */
 export function beads(x0, y, n, { sp = 22, r = 9, col = C.chain, lab = [], op = 1, dy = () => 0, dx = null } = {}) {
@@ -26,17 +26,18 @@ export function beads(x0, y, n, { sp = 22, r = 9, col = C.chain, lab = [], op = 
   return `<g opacity="${f1(op)}"><path d="${line}" stroke="${col}" stroke-width="${f1(r * .55)}" fill="none" stroke-linecap="round"/>${b}</g>`;
 }
 
-/* ribosoom (zijaanzicht, overzicht): grote eenheid onder, kleine eenheid erboven, het mRNA in de spleet ertussen
- * (de kleine eenheid leest het), en de uitgangstunnel door de grote eenheid naar onderen (daar komt de keten uit).
+/* ribosoom (zijaanzicht, overzicht): app-afspraak voor vrije ribosomen (zoals translatie): grote eenheid boven, kleine eenheid
+ * eronder, het mRNA in de spleet ertussen (de kleine eenheid leest het), en de uitgangstunnel door de grote eenheid naar boven.
+ * (Getekend als gespiegelde versie van de vroegere ER-stand; het mRNA blijft op dezelfde hoogte.)
  * Detailronde 15-11-2026: bobbelige eenheden die tegen elkaar liggen i.p.v. twee ellipsen; zelfde parameters en voetafdruk.
- * Tunneluitgang (bij s = 1): (cx, cy + 70). */
+ * Tunneluitgang (bij s = 1): (cx, cy − 82). */
 export function ribo(cx, cy, s = 1, op = 1) {
   if (op <= .01) return '';
   const big = eiwitPad(0, 26, 80, 46, 60, .05), sm = eiwitPad(-6, -32, 58, 27, 40, .06);
-  return `<g opacity="${f1(op)}" transform="translate(${f1(cx)} ${f1(cy)}) scale(${f1(s)})">` +
+  return `<g opacity="${f1(op)}" transform="translate(${f1(cx)} ${f1(cy - 12 * s)}) scale(${f1(s)} ${f1(-s)})">` +
     `<path d="${big}" fill="#0b1224"/><path d="${big}" fill="${C.rrna}" fill-opacity=".34" stroke="${C.rrna}" stroke-width="3"/>` +
     `<path d="M4,-2 C22,18 -10,42 0,72" stroke="#0b1224" stroke-opacity=".75" stroke-width="13" fill="none" stroke-linecap="round"/>` +
-    `<path d="${sm}" fill="#0b1224"/><path d="${sm}" fill="${C.rrna}" fill-opacity=".2" stroke="${C.rrna}" stroke-width="3"/>` +
+    `<path d="${sm}" fill="#0b1224"/><path d="${sm}" fill="#8df0dc" fill-opacity=".2" stroke="#8df0dc" stroke-width="3"/>` +
     `<path d="M-120,-6 C-60,-10 40,-1 120,-7" stroke="${C.rna}" stroke-width="5" fill="none" stroke-linecap="round"/></g>`;
 }
 

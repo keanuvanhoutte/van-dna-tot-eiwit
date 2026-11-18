@@ -24,8 +24,8 @@ export default {
   legend: [[PINK, { nl: 'viraal DNA / LTR', en: 'viral DNA / LTR' }], [C.dna, { nl: 'gastheer-DNA', en: 'host DNA' }],
     [C.prot, { nl: 'integrase (intasoom)', en: 'integrase (intasome)' }], [C.chain, { nl: 'herstelenzymen van de gastheer', en: 'host repair enzymes' }], [C.rna, 'mRNA']],
   simplified: {
-    nl: 'Het intasoom is hier één eiwitklomp die beide DNA-uiteinden samenhoudt; in werkelijkheid is het een symmetrisch complex van integrase-subeenheden (bij HIV-1 een tetrameer). Het ingebouwde provirus is als lus getekend om plaats te sparen; in het chromosoom ligt het gewoon in lijn. Basenparen zijn niet individueel getekend, dus de 5 bp tussen de twee insertieplaatsen is symbolisch. Het capside, LEDGF/p75 en de herstelenzymen staan schematisch.',
-    en: 'The intasome is drawn as one protein blob holding both DNA ends; in reality it is a symmetric complex of integrase subunits (a tetramer for HIV-1). The inserted provirus is drawn as a loop to save space; in the chromosome it simply lies in line. Base pairs are not drawn individually, so the 5 bp between the two insertion sites is symbolic. The capsid, LEDGF/p75 and the repair enzymes are schematic.' },
+    nl: 'Het intasoom is hier getekend als vier integrase-subeenheden (bij HIV-1 een tetrameer) die beide DNA-uiteinden samenhouden; het echte intasoom is groter en kan meer subeenheden bevatten. Het ingebouwde provirus is als lus getekend om plaats te sparen; in het chromosoom ligt het gewoon in lijn. Basenparen zijn niet individueel getekend, dus de 5 bp tussen de twee insertieplaatsen is symbolisch. Het capside, LEDGF/p75 en de herstelenzymen staan schematisch.',
+    en: 'The intasome is drawn as four integrase subunits (a tetramer for HIV-1) holding both DNA ends; the real intasome is larger and can contain more subunits. The inserted provirus is drawn as a loop to save space; in the chromosome it simply lies in line. Base pairs are not drawn individually, so the 5 bp between the two insertion sites is symbolic. The capsid, LEDGF/p75 and the repair enzymes are schematic.' },
   steps: [
     ST(7000, cam(800, 385, 1350), 'Viraal DNA in de kern', 'Viral DNA in the nucleus',
       'Het nieuwe virus-DNA is in de kern aangekomen. Aan elk uiteinde zit een herhaling (LTR).',
@@ -90,9 +90,9 @@ export default {
         ${txt(800, y - H - 24, L({ nl: 'gag · pol · env (≈ 9,7 kb)', en: 'gag · pol · env (≈ 9.7 kb)' }), C.text, 19)}`;
     };
     /* intasoom: een kluwen van integrase-subeenheden (bobbelige eiwitten) rond de twee DNA-uiteinden */
-    const intasome = (y, op) => op <= .01 ? '' : `<g transform="translate(800 ${f1(y)})" opacity="${f1(op)}">
+    const intasome = (y, op, zij = false) => op <= .01 ? '' : `<g transform="translate(800 ${f1(y)})" opacity="${f1(op)}">
       ${[[-44, -16, 46, 32], [44, -16, 46, 32], [-36, 20, 40, 28], [36, 20, 40, 28]].map(([x, yy, rx, ry], i) => eiwit(x, yy, rx, ry, C.prot, { seed: 70 + i, bumps: .12 })).join('')}
-      ${txt(0, -70, L({ nl: 'intasoom (integrase)', en: 'intasome (integrase)' }), C.prot, 19)}</g>`;
+      ${txt(-94, zij ? 50 : 8, L({ nl: 'intasoom (integrase)', en: 'intasome (integrase)' }), C.prot, 19, 'end')}</g>`;   // label links naast het intasoom, nooit over de LTR-strengen
 
     return {
       update(t, s) {
@@ -116,7 +116,7 @@ export default {
 
         /* intasoom */
         const iOn = step === 0 ? 0 : step === 1 ? ease(sub(p, .15, .6)) : step <= 3 ? 1 : step === 4 ? 1 - ease(clamp(p / .3)) : 0;
-        $('in-intasome').innerHTML = intasome(y + 4, iOn);
+        $('in-intasome').innerHTML = intasome(y + 4, iOn, step >= 3);
 
         /* herstel: 5-bp duplicatie aan weerszijden */
         const rOn = step === 4 ? ease(sub(p, .25, .6)) : step > 4 ? 1 : 0;
@@ -141,8 +141,8 @@ export default {
           const k = ease(sub(p, .2, .6)), dr = 40 * ease(sub(p, .5, 1));
           no += `<g opacity="${f1(k)}">
             ${txt(E1 - 70, Y0 + 80 + dr * .7, 'GT', '#ff6b6b', 22)}${txt(E2 + 70, Y0 + 80 + dr * .7, 'GT', '#ff6b6b', 22)}
-            ${txt(800, Y0 - 130, "…CA-3'OH", '#7fdc6a', 19)}
-            ${txt(800, Y0 + 150, T2("2 nt per 3'-uiteinde weg → vrije 3'-OH", "2 nt removed per 3' end → free 3'-OH"), '#ff6b6b', 19)}</g>`;
+            ${txt(800, Y0 - 130, "…CA-3′OH", '#7fdc6a', 19)}
+            ${txt(800, Y0 + 150, T2("2 nt per 3′-uiteinde weg → vrije 3′-OH", "2 nt removed per 3′ end → free 3′-OH"), '#ff6b6b', 19)}</g>`;
         }
         if (step === 3) {
           const k = ease(sub(p, .6, .95));

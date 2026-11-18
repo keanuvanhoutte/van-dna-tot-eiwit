@@ -198,7 +198,7 @@ export default {
         let ubL = '', ubB = '', nUb = 0;
         if (step === 8) {
           // E3-ligase met een voorraad ubiquitine staat er van bij het begin; de ubiquitines schuiven één voor één naar de keten
-          us += enz(235, 700, 120, 54, T2('E3-ligase', 'E3 ligase'), { fs: 24 });
+          us += enz(LYS[0] + 150, LYS[1] + 16, 120, 54, T2('E3-ligase', 'E3 ligase'), { fs: 24 });   // E3 bindt het doeleiwit naast de lysine (zoals in ubiquitine)
           for (let i = 0; i < 4; i++) {
             const k = ease(sub(p, .05 + i * .17, .25 + i * .17)), [x1, y1] = UBP[i];
             const x = lerp(130 + i * 58, x1, k), y = lerp(820, y1, k);
@@ -219,7 +219,8 @@ export default {
         const RAF = [[2500, 200]], MEK = [[2180, 380], [2500, 380], [2820, 380]], ERK = [1950, 2170, 2390, 2610, 2830, 3050].map(x => [x, 560]), TG = [1950, 2170, 2390, 2610, 2830, 3050].map(x => [x, 720]);
         const aR = sub(cp, .05, .15), aM = sub(cp, .25, .4), aE = sub(cp, .5, .65), aT = sub(cp, .75, .9);
         let cs = arr(2500, 80, 2500, 140, '#fff', 'pt-w', { op: sub(cp, 0, .08) }) + T(2560, 102, T2('groeifactorsignaal (via Ras)', 'growth-factor signal (via Ras)'), { size: 20, anchor: 'start', op: sub(cp, 0, .08) });
-        const kin = (x, y, lab, a, np, rx = 100) => enz(x, y, rx, 44, lab, { col: a > .5 ? C.prot : C.prot3, fillOp: a > .5 ? .35 : .15, fs: 22 }) + Array.from({ length: np }, (_, j) => phos(x + rx - 6 + j * 34, y - 34, 15, a)).join('');
+        const KC = { Raf: '#ff9a4d', MEK: '#ff7eb6', ERK: '#5fd3e6' };   // zelfde vaste kleuren als in rtk, mapk en srf (signal/rtk.js K)
+        const kin = (x, y, lab, a, np, rx = 100) => enz(x, y, rx, 44, lab, { col: KC[lab], fillOp: a > .5 ? .35 : .12, fs: 22 }) + Array.from({ length: np }, (_, j) => phos(x + rx - 6 + j * 34, y - 34, 15, a)).join('');
         RAF.forEach(([x, y]) => cs += kin(x, y, 'Raf', aR, 1));
         MEK.forEach(([x, y]) => { cs += arr(2500, 244, x, y - 50, C.prot, 'pt-p', { op: sub(cp, .15, .25), bend: 0 }); cs += kin(x, y, 'MEK', aM, 2); });
         ERK.forEach(([x, y], i) => { const m = MEK[Math.floor(i / 2)]; cs += arr(m[0], m[1] + 46, x, y - 50, C.prot, 'pt-p', { op: sub(cp, .4, .5) }); cs += kin(x, y, 'ERK', aE, 2, 80); });

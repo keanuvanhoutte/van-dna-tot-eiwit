@@ -1,6 +1,6 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1 } from '../../kit.js';
 import { knopPts, ptsPad, glad } from './_bits.js';
-import { blaasje, cisterne, membraanPts, ptsLijn } from '../../bio.js';
+import { blaasje, cisterne, membraanPts, ptsLijn, ribosoomOpER } from '../../bio.js';
 import { T, btn, ribo, corona, rnaWave, SPIKE, NPROT } from './_corona.js';
 
 /*
@@ -101,12 +101,12 @@ export default {
         ER.forEach(([x0, y, x1], i) => {
           // ER-zak: dubbellaag rond een lumen; ribosomen op de buitenkant, het uitsteeksel steekt in het lumen
           er += cisterne((x0 + x1) / 2, y, { len: x1 - x0 + 30, dik: 58, buig: 0, vert: false, w: 10, lumen: 'rgba(143,179,232,.14)' });
-          for (let k = 0; k < 3; k++) er += ribo(x0 + 70 + k * 140, y - 42, .32, 1);
+          for (let k = 0; k < 3; k++) er += ribosoomOpER(x0 + 70 + k * 140, y - 29, { s: .21, mw: 10 }).svg;   // 60S op het Sec61-kanaal, zoals in er en glyco
           const kS = step === 0 ? ease(sub(p, .25 + i * .1, .6 + i * .1)) : 1;
           for (let k = 0; k < 3; k++) er += spikeP(x0 + 120 + k * (x1 - x0 - 190) / 2, y + 24, 0, kS, .78);   // binnen de zak
         });
         er += T(280, 660, T2('ER', 'ER'), { size: 30, col: C.mem, w: 700 });
-        if (step === 0) er += T(280, 230, T2('uitsteeksels in het membraan', 'spikes in the membrane'), { size: 26, col: SPIKE, w: 700, op: ease(sub(p, .55, .75)) });
+        if (step === 0) er += T(280, 186, T2('uitsteeksels in het membraan', 'spikes in the membrane'), { size: 26, col: SPIKE, w: 700, op: ease(sub(p, .55, .75)) });
         $('as-er').innerHTML = er;
 
         /* Golgi (klein, rechts van het tussencompartiment) */

@@ -172,7 +172,7 @@ export default {
             o += `<g opacity="${f1(k * (i === 6 ? .5 : 1))}">` + txt(a[0], a[1] + 62, lab, '#fff', 34, 'middle', 800) + '</g>';
             if (lab === 'E') o += `<g opacity="${f1(k * (i === 6 ? .4 : .9))}"><path d="M${f1(a[0])},${f1(a[1] - 12)} L${f1(e[0])},${f1(e[1])}" stroke="${C.trna}" stroke-width="3" stroke-dasharray="7 7" fill="none"/>` + txt(e[0] - 20, e[1] - 20, T2('E: leeg', 'E: empty'), C.muted, 20, 'end') + '</g>';
           }
-          if (i === 5) o += txt(proj(LM.acA)[0] + 150, proj(LM.acA)[1] + 120, "mRNA 5'→3'", C.rna, 22, 'start').replace('<text', `<text opacity="${f1(fade)}"`);
+          if (i === 5) o += txt(proj(LM.acA)[0] + 150, proj(LM.acA)[1] + 120, "mRNA 5′→3′", C.rna, 22, 'start').replace('<text', `<text opacity="${f1(fade)}"`);
         }
         if (i === 6) {
           const pc = proj(LM.ptc);

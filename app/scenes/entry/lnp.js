@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, txt, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { lnpParticle, knopPts, ptsPad, padPts, blaasjeOpen, PINK, LIP, PEG, CHOL } from './_bits.js';
-import { blaasje, membraanPts, ptsLijn, ribosoomKlein, eiwit, kernEnvelop, ptsCirkel } from '../../bio.js';
+import { blaasje, membraanPts, ptsLijn, ribosoomKlein, eiwit, kernEnvelop, ptsCirkel, cisterne, sec61, tmHelix } from '../../bio.js';
 
 /* Zijpad: hoe een mRNA-vaccin zijn boodschap in het cytosol krijgt. */
 const AX = 420, AY = 330, AR = 130;      // anatomie links
@@ -18,8 +18,8 @@ export default {
   legend: [[LIP, { nl: 'ioniseerbaar lipide', en: 'ionizable lipid' }], [PEG, 'PEG-lipide'], [CHOL, { nl: 'cholesterol', en: 'cholesterol' }],
     ['#c9a574', { nl: 'helperfosfolipide / membraan', en: 'helper phospholipid / membrane' }], [C.rna, 'mRNA'], [C.rrna, { nl: 'ribosoom', en: 'ribosome' }], [C.prot, { nl: 'eiwit (antigeen)', en: 'protein (antigen)' }]],
   simplified: {
-    nl: 'Een LNP is geen nette bol met een holte: het is een dicht pakket lipiden met mRNA in waterige binnenruimtes. We tekenen één deeltje, één endosoom en één mRNA; in werkelijkheid gaat het om miljarden deeltjes en ontsnapt slechts een kleine fractie. De opnameroute (o.a. via ApoE en de LDL-receptor) is vereenvoudigd tot "endocytose".',
-    en: 'An LNP is not a neat sphere with a cavity: it is a dense package of lipids with mRNA in aqueous compartments. We draw one particle, one endosome and one mRNA; in reality there are billions of particles and only a small fraction escapes. The uptake route (involving ApoE and the LDL receptor) is simplified to "endocytosis".' },
+    nl: 'Een LNP is geen nette bol met een holte: het is een dicht pakket lipiden met mRNA in waterige binnenruimtes. We tekenen één deeltje, één endosoom en één mRNA; in werkelijkheid gaat het om miljarden deeltjes en ontsnapt slechts een kleine fractie. De opnameroute (o.a. via ApoE en de LDL-receptor) is vereenvoudigd tot "endocytose". Het eiwit van het vaccin (het spike-eiwit) is een membraaneiwit: het wordt op het ruwe ER gemaakt en via het Golgi naar het celoppervlak gebracht; dat transport tonen we niet. De kern is in werkelijkheid zo’n 100 keer groter dan het nanodeeltje.',
+    en: 'An LNP is not a neat sphere with a cavity: it is a dense package of lipids with mRNA in aqueous compartments. We draw one particle, one endosome and one mRNA; in reality there are billions of particles and only a small fraction escapes. The uptake route (involving ApoE and the LDL receptor) is simplified to "endocytosis". The vaccine protein (the spike protein) is a membrane protein: it is made on the rough ER and carried via the Golgi to the cell surface; we do not show that transport. In reality the nucleus is about 100 times larger than the nanoparticle.' },
   steps: [
     ST(8000, cam(AX, AY + 20, 1060), 'Een bolletje van vetachtige stoffen', 'A tiny ball of fatty molecules',
       'Het vaccin is een bolletje van vier soorten vetachtige moleculen (lipiden). Eén ervan houdt het mRNA vast.',
@@ -37,8 +37,8 @@ export default {
       'De positieve lipiden maken de wand van het blaasje zwak. Maar slechts een klein deel van het mRNA raakt eruit.',
       'The positive lipids weaken the wall of the vesicle. But only a small part of the mRNA gets out.'),
     ST(7000, cam(1080, 720, 1000), 'Ribosomen maken het vaccin-eiwit', 'Ribosomes make the vaccine protein',
-      'Ribosomen lezen het mRNA meteen en maken het eiwit van het vaccin. Het afweersysteem leert dat eiwit herkennen.',
-      'Ribosomes read the mRNA straight away and make the vaccine protein. The immune system learns to recognise it.'),
+      'Ribosomen op het ruwe ER lezen het mRNA en maken het eiwit van het vaccin. Dat gaat naar het celoppervlak, waar het afweersysteem het leert herkennen.',
+      'Ribosomes on the rough ER read the mRNA and make the vaccine protein. It goes to the cell surface, where the immune system learns to recognise it.'),
     ST(7000, cam(1130, 520, 1080), 'Het mRNA gaat niet naar de kern', 'The mRNA does not enter the nucleus',
       'Niets brengt het mRNA naar de kern, en het vaccin kan er geen DNA van maken. Na enkele dagen is het afgebroken.',
       'Nothing carries the mRNA into the nucleus, and the vaccine cannot turn it into DNA. Within days it is broken down.'),
@@ -60,11 +60,11 @@ export default {
     </g>
     <g id="ln-part"></g>
     <g data-node="initiatie" data-color="${C.rrna}" data-label="${T2('Ribosomen · translatie', 'Ribosomes · translation')}" id="ln-ribo" opacity="0">
-      <circle data-anchor="initiatie" data-pos="below" cx="930" cy="790" r="1" fill="none"/>
+      <circle data-anchor="initiatie" cx="990" cy="660" r="1" fill="none"/>
       <g id="ln-ribo-body"></g>
     </g>
-    <g data-node="kernimport" data-color="${C.prot}" data-label="${T2('Kernporie (hier niet gebruikt)', 'Nuclear pore (not used here)')}" id="ln-nuc" opacity="0">
-      <circle data-anchor="kernimport" cx="1480" cy="275" r="1" fill="none"/>
+    <g data-node="kernimport" data-color="#9db4d8" data-label="${T2('Kernporie (hier niet gebruikt)', 'Nuclear pore (not used here)')}" id="ln-nuc" opacity="0">
+      <circle data-anchor="kernimport" cx="1500" cy="290" r="1" fill="none"/>
       <g id="ln-nuc-body"></g>
     </g>
     <g id="ln-notes"></g>
@@ -75,7 +75,7 @@ export default {
     const $ = id => svg.getElementById(id);
     /* mRNA-schema: cap – 5'UTR – ORF – 3'UTR – poly(A) */
     const mrnaGlyph = (x, y, w, lab = 1) => {
-      const seg = [[.00, .10, C.cap, "5'UTR"], [.10, .78, C.prot2, T2('coderend (antigeen)', 'coding (antigen)')], [.78, .90, C.cap, "3'UTR"]];
+      const seg = [[.00, .10, C.cap, "5′UTR"], [.10, .78, C.prot2, T2('coderend (antigeen)', 'coding (antigen)')], [.78, .90, C.cap, "3′UTR"]];
       let s = `<g><circle cx="${f1(x - 18)}" cy="${f1(y + 13)}" r="17" fill="${C.cap}" stroke="${C.rna}" stroke-width="2.5"/>${txt(x - 18, y + 18, 'm⁷G', '#3a1a05', 12)}`;
       for (const [a, b, col, name] of seg) {
         s += `<rect x="${f1(x + a * w)}" y="${f1(y)}" width="${f1((b - a) * w)}" height="26" rx="8" fill="${col}" opacity=".85"/>`;
@@ -149,30 +149,37 @@ export default {
         /* ontsnapt mRNA + ribosomen */
         const rOn = step === 4 ? ease(sub(p, .6, 1)) : step >= 5 ? 1 : 0;
         $('ln-ribo').setAttribute('opacity', f1(rOn));
+        /* het vaccin-eiwit (spike) is een membraaneiwit: de ribosomen binden aan het ruwe ER (Sec61), de keten gaat het ER in
+           en het eiwit blijft met zijn anker in het membraan; via het Golgi gaat het naar het celoppervlak (Pardi et al. 2018) */
+        const ERY = 800, ERT = ERY - 35;                      // midden en bovenmembraan van het ER-stuk
         $('ln-ribo-body').innerHTML = rOn > .01
-          ? `<path d="M${px - 60},${f1(py + 90)} Q960,720 880,730" stroke="${C.rna}" stroke-width="4" fill="none" stroke-dasharray="10 8" opacity=".5"/>
-             <path d="M820,730 q26,-20 52,0 t52,0 t52,0 t52,0" stroke="${C.rna}" stroke-width="6" fill="none"/>
-             ${[0, 1, 2, 3].map(i => { const x = 846 + i * 52,   /* volledig rechts van de celrand: translatie in het cytosol */ y = 730 + (i % 2 ? 17 : -3);   // ribosoom (twee eenheden), mRNA tussen beide
-               const kc = step >= 5 ? (step === 5 ? ease(sub(p, .1, .7)) : 1) : .25, L = (8 + i * 6) * kc;   // kort genoeg om in beeld te blijven   // keten groeit uit de grote eenheid
-               return ribosoomKlein(x, y, { s: 1.9 }) + `<path d="M${x},${y + 24} q${f1(-L * .4)},${f1(L * .5)} ${f1(L * .1)},${f1(L)}" stroke="${C.chain}" stroke-width="4" fill="none" stroke-linecap="round"/>`; }).join('')}
+          ? `<path d="M${px - 60},${f1(py + 90)} Q980,720 934,722" stroke="${C.rna}" stroke-width="4" fill="none" stroke-dasharray="10 8" opacity=".5"/>
+             ${cisterne(1075, ERY, { len: 380, dik: 70, buig: 0, vert: false, w: 10, lumen: 'rgba(143,179,232,.16)' })}
+             ${txt(1290, ERY + 7, T2('ruw ER', 'rough ER'), C.muted, 20, 'start')}
+             <path d="M874,722 q26,-16 52,0 t52,0 t52,0 t52,0" stroke="${C.rna}" stroke-width="6" fill="none"/>
+             ${[0, 1, 2, 3].map(i => { const x = 900 + i * 52, y = ERT - 32;   // ER-gebonden ribosoom: kleine eenheid boven het mRNA, grote eenheid op het Sec61-kanaal
+               const kc = step >= 5 ? (step === 5 ? ease(sub(p, .1, .7)) : 1) : .25, L = (6 + i * 5) * kc;   // keten groeit uit de grote eenheid het ER in
+               return sec61(x, ERT, { mw: 10, s: .3 }) + ribosoomKlein(x, y, { s: 1.9 }) + `<path d="M${x},${ERT - 4} v8 q${f1(-L * .4)},${f1(L * .5)} ${f1(L * .1)},${f1(L)}" stroke="${C.chain}" stroke-width="4" fill="none" stroke-linecap="round"/>`; }).join('')}
              ${step >= 5 ? `<g opacity="${f1(step === 5 ? ease(sub(p, .45, .85)) : 1)}">
-               <path d="M${f1(1002)},${f1(754)} q14,-30 34,-52" stroke="${C.chain}" stroke-width="3" fill="none" stroke-dasharray="5 6" opacity=".7"/>
-               ${eiwit(1066, 680, 32, 23, C.prot, { seed: 33, bumps: .14 })}${eiwit(1132, 700, 26, 20, C.prot, { seed: 34, bumps: .14 })}
-               ${txt(1166, 690, T2('antigeen-eiwit', 'antigen protein'), C.prot, 21, 'start')}</g>` : ''}` : '';
+               ${tmHelix(1150, ERT - 9, ERT + 9, C.prot, 1, 9)}${eiwit(1150, ERT + 26, 24, 15, C.prot, { seed: 33, bumps: .14 })}
+               ${tmHelix(1215, ERT - 9, ERT + 9, C.prot, 1, 9)}${eiwit(1215, ERT + 26, 24, 15, C.prot, { seed: 34, bumps: .14 })}
+               <g opacity="${f1(step === 5 ? 1 : 0)}">${txt(1075, ERY + 76, T2('antigeen-eiwit in het ER-membraan', 'antigen protein in the ER membrane'), C.prot, 20)}
+               ${txt(1075, ERY + 104, T2('→ via het Golgi naar het celoppervlak', '→ via the Golgi to the cell surface'), C.muted, 19)}</g></g>` : ''}` : '';
 
         /* kern-uitsluiting */
         const nOn = step === 6 ? ease(sub(p, .15, .5)) : 0;
         $('ln-nuc').setAttribute('opacity', f1(nOn));
         $('ln-nuc-body').innerHTML = nOn > .01
-          ? `<circle cx="1480" cy="420" r="128" fill="url(#gNuc)"/>${kernEnvelop(ptsCirkel(1480, 420, 140, 90), { poriën: [.05, .2, .35, .5, .65, .8, .95], w: 7, gap: 7, poreW: 16, s: .45 })}
-             ${txt(1480, 430, T2('celkern', 'nucleus'), '#9cc0ff', 24)}
-             <path d="M1040,735 Q1330,790 1420,580" stroke="${C.danger}" stroke-width="5" fill="none" stroke-dasharray="12 9" marker-end="url(#arrow)" opacity=".9"/>
+          ? `<circle cx="1880" cy="470" r="428" fill="url(#gNuc)"/>${kernEnvelop(ptsCirkel(1880, 470, 440, 260), { poriën: [.44, .47, .5, .53, .56], w: 7, gap: 7, poreW: 16, s: .45 })}
+             ${txt(1572, 470, T2('celkern', 'nucleus'), '#9cc0ff', 24)}
+             ${txt(1572, 500, T2('(niet op schaal)', '(not to scale)'), C.muted, 17)}
+             <path d="M1040,735 Q1330,790 1440,610" stroke="${C.danger}" stroke-width="5" fill="none" stroke-dasharray="12 9" marker-end="url(#arrow)" opacity=".9"/>
              <g transform="translate(1290 742)"><circle r="26" fill="#0b1224" stroke="${C.danger}" stroke-width="5"/><line x1="-18" y1="18" x2="18" y2="-18" stroke="${C.danger}" stroke-width="5"/></g>` : '';
 
         /* notities */
         let no = lab;
-        if (step === 4) no += `<g opacity="${f1(ease(sub(p, .25, .6)))}">${txt(RX - 330, 600, T2('+ lading bindt het', '+ charge binds the'), LIP, 22)}
-          ${txt(RX - 330, 630, T2('negatieve membraan', 'negative membrane'), LIP, 22)}
+        if (step === 4) no += `<g opacity="${f1(ease(sub(p, .25, .6)))}">${txt(RX + 132, 540, T2('+ lading bindt het', '+ charge binds the'), LIP, 22, 'start')}
+          ${txt(RX + 132, 570, T2('negatieve membraan', 'negative membrane'), LIP, 22, 'start')}
           ${txt(RX + 150, 700, T2('orde van grootte: enkele % ontsnapt', 'order of magnitude: a few % escapes'), C.muted, 20)}</g>`;
         if (step === 6) no += `<g opacity="${f1(ease(sub(p, .3, .7)))}">${txt(1140, 300, T2('geen reverse transcriptase · geen integratie', 'no reverse transcriptase · no integration'), C.danger, 21)}
 </g>`;

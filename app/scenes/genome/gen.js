@@ -14,6 +14,8 @@ const YP = 520, YM = 660;                             // pre-mRNA, rijp mRNA
 /* D(): detailtekst, verborgen in de overzichtsbeelden (stap 0 en 7) */
 const D = h => h.replace('<text', '<text class="gn-det"');
 const col = { utr: '#8fb3e8', cds: C.dna, intron: C.intron, enh: '#ffc247', prom: C.prot };
+/* in RNA (pre-mRNA en rijp mRNA): oranje tinten, zoals overal in de app (DNA blauw, RNA oranje) */
+const RCOL = { utr: '#d9854a', cds: C.rna };
 
 /* rijp mRNA: exonen aan elkaar (lengtes behouden), begint bij x0 */
 const MX0 = 300;
@@ -29,10 +31,10 @@ export default {
   scale: { nl: 'enkele kb tot > 1 Mb (hier niet op schaal)', en: 'a few kb to > 1 Mb (not to scale here)' },
   time: { nl: 'transcriptie van een gemiddeld gen: minuten tot uren', en: 'transcribing an average gene: minutes to hours' },
   org: { nl: 'mens (eiwitcoderend gen, Pol II)', en: 'human (protein-coding gene, Pol II)' },
-  legend: [[col.enh, 'enhancer'], [col.prom, 'promoter'], [col.cds, { nl: 'coderend exon (CDS)', en: 'coding exon (CDS)' }], [col.utr, 'UTR'], [col.intron, 'intron'], [C.rna, 'RNA'], [C.cap, "5'-cap"]],
+  legend: [[col.enh, 'enhancer'], [col.prom, 'promoter'], [col.cds, { nl: 'coderend exon op het DNA (CDS)', en: 'coding exon on the DNA (CDS)' }], [col.utr, { nl: 'UTR op het DNA', en: 'UTR on the DNA' }], [RCOL.utr, { nl: 'UTR in het RNA', en: 'UTR in the RNA' }], [col.intron, 'intron'], [C.rna, 'RNA'], [C.cap, "5′-cap"]],
   simplified: {
-    nl: 'Niet op schaal: in menselijke genen zijn intronen meestal veel langer dan exonen, en een enhancer kan tientallen tot honderden kb verder liggen (of zelfs in een intron van een ander gen). Slechts een minderheid van de promoters heeft een TATA-box; veel promoters liggen in een CpG-eiland. Genen kunnen op beide strengen liggen; hier staat de coderende streng bovenaan (5\'→3\' van links naar rechts).',
-    en: 'Not to scale: in human genes introns are usually much longer than exons, and an enhancer can lie tens to hundreds of kb away (or even in an intron of another gene). Only a minority of promoters has a TATA box; many promoters lie in a CpG island. Genes can lie on either strand; here the coding strand is on top (5\'→3\' from left to right).' },
+    nl: 'Niet op schaal: in menselijke genen zijn intronen meestal veel langer dan exonen, en een enhancer kan tientallen tot honderden kb verder liggen (of zelfs in een intron van een ander gen). Slechts een minderheid van de promoters heeft een TATA-box; veel promoters liggen in een CpG-eiland. Genen kunnen op beide strengen liggen; hier staat de coderende streng bovenaan (5′→3′ van links naar rechts).',
+    en: 'Not to scale: in human genes introns are usually much longer than exons, and an enhancer can lie tens to hundreds of kb away (or even in an intron of another gene). Only a minority of promoters has a TATA box; many promoters lie in a CpG island. Genes can lie on either strand; here the coding strand is on top (5′→3′ from left to right).' },
   steps: [
     ST(8000, FULL, 'Wat is een gen?', 'What is a gene?',
       'Een gen is een stuk DNA dat naar RNA wordt gekopieerd, plus de stukken die dat regelen.',
@@ -62,20 +64,20 @@ export default {
   svg() {
     // exonblokken op het DNA: UTR-deel dunner, CDS-deel dik
     const block = (a, b, y, h, c) => `<rect x="${a}" y="${y - h / 2}" width="${b - a}" height="${h}" rx="5" fill="${c}"/>`;
-    const exonSVG = (y, sc = 1, xmap = x => x) => {
+    const exonSVG = (y, sc = 1, xmap = x => x, pal = col) => {
       let s = '';
       EX.forEach(([a, b], i) => {
         const A = xmap(a), B = xmap(b);
         const cA = xmap(Math.max(a, ATG)), cB = xmap(Math.min(b, STOP));
-        if (a < ATG) s += block(A, Math.min(B, xmap(Math.min(b, ATG))), y, 30 * sc, col.utr);
-        if (b > STOP) s += block(Math.max(A, xmap(Math.max(a, STOP))), B, y, 30 * sc, col.utr);
-        if (cB > cA) s += block(cA, cB, y, 46 * sc, col.cds);
+        if (a < ATG) s += block(A, Math.min(B, xmap(Math.min(b, ATG))), y, 30 * sc, pal.utr);
+        if (b > STOP) s += block(Math.max(A, xmap(Math.max(a, STOP))), B, y, 30 * sc, pal.utr);
+        if (cB > cA) s += block(cA, cB, y, 46 * sc, pal.cds);
       });
       return s;
     };
     // --- DNA ---
-    let dna = `<line id="gn-dnaL" x1="40" y1="${Y}" x2="${ENH[0]}" y2="${Y}" stroke="${C.dna2}" stroke-width="6"/><line x1="${PROM[0] - 6}" y1="${Y}" x2="1560" y2="${Y}" stroke="${C.dna2}" stroke-width="6"/>`;
-    dna += txt(40, Y - 28, "5'", C.text, 18, 'start') + txt(1560, Y - 28, "3'", C.text, 18, 'end');
+    let dna = `<line id="gn-dnaL" x1="40" y1="${Y}" x2="${ENH[0]}" y2="${Y}" stroke="${C.dna}" stroke-width="6"/><line x1="${PROM[0] - 6}" y1="${Y}" x2="1560" y2="${Y}" stroke="${C.dna}" stroke-width="6"/>`;   // coderende streng = C.dna (zoals promoter, transcriptie, rnapol)
+    dna += txt(40, Y - 28, "5′", C.text, 18, 'start') + txt(1560, Y - 28, "3′", C.text, 18, 'end');
     // intronen (lijn + GT/AG)
     let intr = '';
     [[EX[0][1], EX[1][0]], [EX[1][1], EX[2][0]]].forEach(([a, b], i) => {
@@ -87,20 +89,20 @@ export default {
     // --- pre-mRNA ---
     let pre = `<line x1="${TSS}" y1="${YP}" x2="${CUT}" y2="${YP}" stroke="${C.rna}" stroke-width="5"/>`;
     [[EX[0][1], EX[1][0]], [EX[1][1], EX[2][0]]].forEach(([a, b]) => { pre += `<line x1="${a}" y1="${YP}" x2="${b}" y2="${YP}" stroke="${col.intron}" stroke-width="8" opacity=".85"/>`; });
-    pre += exonSVG(YP, .7);
+    pre += exonSVG(YP, .7, x => x, RCOL);
     pre += `<circle cx="${TSS - 18}" cy="${YP}" r="18" fill="${C.cap}" stroke="${C.rna}" stroke-width="2"/>` + D(txt(TSS - 18, YP + 5, 'm⁷G', '#3a1a05', 13, 'middle', 800));
-    pre += txt(TSS - 46, YP + 6, "5'", C.text, 16, 'end') + txt(CUT + 16, YP + 6, "3'", C.text, 16, 'start');
+    pre += txt(TSS - 46, YP + 6, "5′", C.text, 16, 'end') + txt(CUT + 16, YP + 6, "3′", C.text, 16, 'start');
     pre += txt(TSS + 10, YP - 36, T2('pre-mRNA (primair transcript)', 'pre-mRNA (primary transcript)'), C.rna, 21, 'start', 700);
     // --- rijp mRNA ---
     const mEnd = mpos(CUT);
-    let mat = `<line x1="${MX0}" y1="${YM}" x2="${mEnd}" y2="${YM}" stroke="${C.rna}" stroke-width="5"/>` + exonSVG(YM, .7, mpos);
+    let mat = `<line x1="${MX0}" y1="${YM}" x2="${mEnd}" y2="${YM}" stroke="${C.rna}" stroke-width="5"/>` + exonSVG(YM, .7, mpos, RCOL);
     mat += `<circle cx="${MX0 - 18}" cy="${YM}" r="18" fill="${C.cap}" stroke="${C.rna}" stroke-width="2"/>` + D(txt(MX0 - 18, YM + 5, 'm⁷G', '#3a1a05', 13, 'middle', 800));
     for (let i = 0; i < 9; i++) mat += mono(mEnd + 14 + i * 16, YM + 7, 'A', C.rna, 18);
-    mat += txt(MX0 - 48, YM + 6, "5'", C.text, 16, 'end') + txt(mEnd + 164, YM + 6, "3'", C.text, 16, 'start');
+    mat += txt(MX0 - 48, YM + 6, "5′", C.text, 16, 'end') + txt(mEnd + 164, YM + 6, "3′", C.text, 16, 'start');
     mat += txt(mpos(ATG) + 60, YM - 36, T2('rijp mRNA', 'mature mRNA'), C.rna, 21, 'start', 700);
     // bracketlabels onder het rijpe mRNA
     const br = (a, b, lbl, c) => `<path d="M${a},${YM + 36} v10 H${b} v-10" stroke="${c}" stroke-width="2" fill="none"/>` + D(txt((a + b) / 2, YM + 70, lbl, c, 17));
-    mat += br(MX0, mpos(ATG), "5'-UTR", col.utr) + br(mpos(ATG), mpos(STOP), T2('coderende sequentie (CDS)', 'coding sequence (CDS)'), C.dna2) + br(mpos(STOP), mEnd, "3'-UTR", col.utr) + br(mEnd + 6, mEnd + 150, 'poly(A)', C.rna);
+    mat += br(MX0, mpos(ATG), "5′-UTR", RCOL.utr) + br(mpos(ATG), mpos(STOP), T2('coderende sequentie (CDS)', 'coding sequence (CDS)'), C.rna) + br(mpos(STOP), mEnd, "3′-UTR", RCOL.utr) + br(mEnd + 6, mEnd + 150, 'poly(A)', C.rna);
     mat += D(mono(mpos(ATG) + 22, YM - 32, 'AUG', BASE.A, 16)) + D(mono(mpos(STOP) - 22, YM - 32, 'UAA', BASE.T, 16));
 
     return svgOpen() + `
@@ -122,7 +124,7 @@ export default {
       <g id="gn-codons">
         ${mono(ATG + 22, Y + 44, 'ATG', BASE.A, 20)}${txt(ATG + 22, Y + 68, 'start', BASE.A, 15)}
         ${mono(STOP - 22, Y + 44, 'TAA', BASE.T, 20)}${txt(STOP - 22, Y + 68, 'stop', BASE.T, 15)}
-        ${txt((TSS + ATG) / 2 + 12, Y + 70, "5'-UTR", col.utr, 16)}${txt((STOP + CUT) / 2 + 12, Y + 70, "3'-UTR", col.utr, 16)}
+        ${txt((TSS + ATG) / 2 + 12, Y + 70, "5′-UTR", col.utr, 16)}${txt((STOP + CUT) / 2 + 12, Y + 70, "3′-UTR", col.utr, 16)}
       </g>
       <g data-node="polya" data-color="${C.rna}" data-label="${T2('Poly(A)-signaal', 'Poly(A) signal')}">
         <g id="gn-pas">${mono(PAS - 16, Y + 44, 'AATAAA', C.rna, 17)}
@@ -142,7 +144,7 @@ export default {
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Transcriptie →', 'Transcription →')}" id="gn-pre">${pre}<circle data-anchor="transcriptie" cx="${CUT - 60}" cy="${YP + 30}" r="1" fill="none" data-pos="below"/></g>
     <g id="gn-arrow" data-node="rnaprocessing" data-color="${C.muted}" data-nolabel><path d="M800,${YP + 40} L800,${YM - 60}" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>${D(txt(815, (YP + YM) / 2 - 6, T2('splicing · polyadenylatie', 'splicing · polyadenylation'), C.muted, 18, 'start'))}</g>
     <g id="gn-mat" data-node="translatie" data-color="${C.rna}" data-nolabel>${mat}</g>
-    <g id="gn-dnalab">${txt(800, 190, T2("DNA (coderende streng 5'→3')", "DNA (coding strand 5'→3')"), C.dna2, 21)}</g>
+    <g id="gn-dnalab">${txt(800, 190, T2("DNA (coderende streng 5′→3′)", "DNA (coding strand 5′→3′)"), C.dna, 21)}</g>
     </svg>`;
   },
   init(svg) {
@@ -156,7 +158,7 @@ export default {
         $('gn-enh').setAttribute('transform', `translate(${f1(dx)} 0)`);
         $('gn-dnaL').setAttribute('x2', f1(ENH[0] + dx));
         const lp = `M${f1(eR)},${Y} C${f1(eR - 70 * k)},${f1(Y - h * 1.25)} ${f1(PROM[0] + 60 * k)},${f1(Y - h * 1.25)} ${PROM[0] - 6},${Y}`;
-        let g = `<path d="${lp}" stroke="${C.dna2}" stroke-width="6" fill="none"/>`;
+        let g = `<path d="${lp}" stroke="${C.dna}" stroke-width="6" fill="none"/>`;
         if (k > .05 && step >= 1 && step <= 2) g += txt((eR + PROM[0]) / 2, Y - h * .95, T2('… tot honderden kb …', '… up to hundreds of kb …'), C.muted, 16);
         if (k < .05) g += `<g stroke="${C.muted}" stroke-width="3"><line x1="246" y1="${Y - 14}" x2="238" y2="${Y + 14}"/><line x1="258" y1="${Y - 14}" x2="250" y2="${Y + 14}"/></g>`;
         if (k > .05) {
@@ -164,8 +166,8 @@ export default {
           if (step === 1) g += txt((eR + PROM[0]) / 2 - 40, Y - 62, T2('cohesine', 'cohesin'), '#ffc247', 15, 'end');
           const mo = step === 1 ? sub(p, .55, .8) : 0;
           // activator op de enhancer; Mediator overbrugt enhancer en promoter (raakt beide)
-          if (mo > .01) g += `<g opacity="${f1(mo)}"><path d="${eiwitPad((ENH[0] + ENH[1]) / 2 + dx + 4, Y + 38, 52, 17, 1117, .08)}" fill="#c98a1e" stroke="${col.enh}" stroke-width="2"/>${txt((ENH[0] + ENH[1]) / 2 + dx + 4, Y + 44, 'activator', '#fff', 15, 'middle', 700)}` +
-            `<path d="${eiwitPad(PROM[0] + 22, Y + 40, 56, 22, 1114, .07)}" fill="rgba(155,123,255,.75)" stroke="${C.prot}" stroke-width="2"/>${txt(PROM[0] + 22, Y + 46, 'Mediator', '#fff', 17, 'middle', 700)}</g>`;
+          if (mo > .01) g += `<g opacity="${f1(mo)}"><path d="${eiwitPad((ENH[0] + ENH[1]) / 2 + dx + 4, Y + 38, 52, 17, 1117, .08)}" fill="rgba(155,123,255,.75)" stroke="${C.prot}" stroke-width="2"/>${txt((ENH[0] + ENH[1]) / 2 + dx + 4, Y + 44, 'activator', '#fff', 15, 'middle', 700)}` +
+            `<path d="${eiwitPad(PROM[0] + 22, Y + 40, 56, 22, 1114, .07)}" fill="rgba(111,91,214,.85)" stroke="#6f5bd6" stroke-width="2"/>${txt(PROM[0] + 22, Y + 46, 'Mediator', '#fff', 17, 'middle', 700)}</g>`;
         }
         $('gn-loop').innerHTML = g;
         // markeringen per stap

@@ -6,7 +6,7 @@ import { membraanPts, bacterieWand, kernEnvelop, ptsCirkel, eiwit, ribosoomKlein
  * Wissel zonder "half-om-half"-beeld: eerst vervaagt wat alleen de mens heeft (kern, RNA, ribosomen), dan vervormen de
  * gedeelde onderdelen (celrand rond → staafje, DNA langer), pas dan verschijnt wat alleen de bacterie heeft.
  * Bronnen: zie shared/details/bact2.js (vergelijk). */
-const K = { pol: '#9b7bff', rib: '#2cc6a8', rib2: '#7fe0cc', cap: '#f06bc0', intron: '#8a93a8', env: '#8a93a8', bact: C.bact };
+const K = { pol: '#9b7bff', rib: '#2cc6a8', rib2: '#7fe0cc', cap: C.cap, intron: C.intron, env: '#8a93a8', bact: C.bact, exDNA: '#4f8ff7' };   // cap en intron zoals overal (C.cap, C.intron); exon op het DNA blauw
 const PROT = ['#7fdc6a', '#9b7bff', '#ffc247'];
 const ss = (a, b, x) => { const u = clamp((x - a) / (b - a)); return u * u * (3 - 2 * u); };
 const win = (a, b, c, d, x) => ss(a, b, x) * (1 - ss(c, d, x));        // zichtbaar tussen b en c, zachte randen
@@ -16,12 +16,12 @@ const n1 = x => (+x).toFixed(1);
 
 const TX = {
   nucleus: { nl: 'celkern', en: 'nucleus' }, pore: { nl: 'kernporie', en: 'nuclear pore' }, pre: { nl: 'pre-mRNA', en: 'pre-mRNA' },
-  intron: { nl: 'introns eruit', en: 'introns out' }, cap: { nl: '5′-kap', en: '5′ cap' }, tail: { nl: 'poly(A)-staart', en: 'poly(A) tail' },
+  intron: { nl: 'introns eruit', en: 'introns out' }, cap: { nl: '5′-cap', en: '5′ cap' }, tail: { nl: 'poly(A)-staart', en: 'poly(A) tail' },
   rib: { nl: '80S-ribosoom', en: '80S ribosome' }, rib70: { nl: '70S-ribosoom', en: '70S ribosome' }, prot: { nl: 'eiwit', en: 'protein' }, cyto: { nl: 'cytoplasma', en: 'cytoplasm' },
   nucleoid: { nl: 'nucleoïd: DNA los in het cytoplasma', en: 'nucleoid: DNA free in the cytoplasm' },
   gene: { nl: 'gen', en: 'gene' }, exon: { nl: 'exon', en: 'exon' },
   coupled: { nl: 'ribosomen op een mRNA dat nog gemaakt wordt', en: 'ribosomes on an mRNA still being made' },
-  none: { nl: 'geen kern · geen spliceosoom · geen kap zoals bij de mens', en: 'no nucleus · no spliceosome · no cap as in humans' },
+  none: { nl: 'geen kern · geen spliceosoom · geen cap zoals bij de mens', en: 'no nucleus · no spliceosome · no cap as in humans' },
   human: { nl: 'MENS · menselijke cel', en: 'HUMAN · human cell' }, bact: { nl: 'BACTERIE · E. coli', en: 'BACTERIUM · E. coli' },
 };
 const lbl = (x, y, s, a, o = {}) => a < .01 ? '' : `<text x="${n1(x)}" y="${n1(y)}" font-size="${o.size ?? 28}" font-weight="${o.w ?? 600}" fill="${o.fill ?? C.text}" text-anchor="${o.anchor ?? 'middle'}" opacity="${a.toFixed(3)}" font-family="Inter" paint-order="stroke" stroke="#0d1426" stroke-width="6">${s}</text>`;
@@ -30,10 +30,11 @@ const lbl = (x, y, s, a, o = {}) => a < .01 ? '' : `<text x="${n1(x)}" y="${n1(y
 const strands = (x0, x1, y) => `<line x1="${n1(x0)}" y1="${n1(y - 6)}" x2="${n1(x1)}" y2="${n1(y - 6)}" stroke="${C.dna}" stroke-width="7" stroke-linecap="round"/><line x1="${n1(x0)}" y1="${n1(y + 6)}" x2="${n1(x1)}" y2="${n1(y + 6)}" stroke="${C.dna2}" stroke-width="7" stroke-linecap="round"/>`;
 const pol = (x, y, a) => a < .01 ? '' : eiwit(x, y, 36, 27, K.pol, { seed: 7, op: .92 * a });
 /* ribosoom: twee eenheden tegen elkaar, het mRNA loopt langs de kleine eenheid; de keten komt uit de grote eenheid.
- * up: grote eenheid boven het mRNA (mens: 80S) of eronder (bacterie: 70S, kleiner: ≈ 20 nm tegenover ≈ 25–30 nm) */
-function ribosome(x, y, a, up) {
+ * Mens (80S) en bacterie (70S) zijn op dezelfde manier gebouwd en staan dus ook hetzelfde: grote eenheid boven het mRNA,
+ * keten naar boven (Alberts MBoC hfst. 6). Alleen de grootte verschilt: s = 2,4 (80S, ≈ 25–30 nm) of 1,95 (70S, ≈ 20 nm). */
+function ribosome(x, y, a, s = 2.4) {
   if (a < .01) return '';
-  return up ? ribosoomKlein(x, y - 12, { s: 2.4, rot: 180, op: a, col: K.rib }) : ribosoomKlein(x, y + 11, { s: 1.95, rot: 0, op: a, col: K.rib });
+  return ribosoomKlein(x, y - 5 * s, { s, rot: 180, op: a, col: K.rib });
 }
 /* afgeronde rechthoek als puntenlijst (met de klok mee op het scherm, bovenrand van links naar rechts) */
 function ptsRond(x, y, w, h, r) {
@@ -64,9 +65,9 @@ function human(p) {
   s += `<circle cx="${cx}" cy="${cy}" r="300" fill="rgba(138,147,168,.09)"/>` + KERN;
   labels.push([470, 248, L(TX.nucleus), 1, { w: 700 }]);
   labels.push([805, 598, L(TX.pore), win(.41, .43, .62, .65, p), { anchor: 'start' }]);
-  /* gen: exons (oranje) en introns (grijs) op het DNA (de strengen zelf zijn gedeeld, zie draw) */
-  for (const [k, a, b] of H_SEG) s += `<rect x="${700 - b}" y="404" width="${b - a}" height="32" rx="5" fill="${k === 'e' ? C.rna : K.intron}" opacity=".45"/>`;
-  labels.push([650, 386, L(TX.exon), 1 - ss(.25, .27, p), { size: 24, fill: C.rna }]);
+  /* gen: exons (blauw: het is nog DNA) en introns op het DNA (de strengen zelf zijn gedeeld, zie draw); in het RNA worden ze oranje */
+  for (const [k, a, b] of H_SEG) s += `<rect x="${700 - b}" y="404" width="${b - a}" height="32" rx="5" fill="${k === 'e' ? K.exDNA : K.intron}" opacity=".45"/>`;
+  labels.push([650, 386, L(TX.exon), 1 - ss(.25, .27, p), { size: 24, fill: '#9cc0ff' }]);
   labels.push([555, 386, 'intron', 1 - ss(.25, .27, p), { size: 24, fill: C.muted }]);
   /* transcriptie */
   const polX = lerp(705, 255, clamp((p - .03) / .19)), uT = clamp(700 - polX, 0, 440);
@@ -103,7 +104,7 @@ function human(p) {
     const p0 = .63 + .08 * k, pr = clamp((p - p0) / .18), u = lerp(15, 265, pr);
     const el = Math.max(0, p - p0 - .18);                      // klaar: het eiwit komt los en drijft weg (anders liggen ze op elkaar)
     if (p > p0) s += chain(hx - u - 900 * el, hy - 44 - 300 * el, Math.floor(pr * 13), -1, PROT[0]);
-    s += ribosome(hx - u, hy, win(p0 - .01, p0 + .01, p0 + .18, p0 + .21, p), true);
+    s += ribosome(hx - u, hy, win(p0 - .01, p0 + .01, p0 + .18, p0 + .21, p));
   }
   labels.push([1365, 560, L(TX.rib), win(.63, .66, .9, .93, p), { fill: K.rib }]);
   labels.push([1200, 230, L(TX.prot), ss(.74, .77, p), { fill: PROT[0] }]);
@@ -121,7 +122,7 @@ function bacterium(p) {
   GENES.forEach(([a, b], g) => { s += `<rect x="${b}" y="364" width="${a - b}" height="32" rx="5" fill="${PROT[g]}" opacity=".45"/>`; labels.push([(a + b) / 2, 350, `${L(TX.gene)} ${g + 1}`, 1, { size: 24, fill: PROT[g] }]); });
   const polX = lerp(1305, 425, clamp((p - .03) / .60)), uT = clamp(1300 - polX, 0, 875);
   s += pol(polX, BD.y, win(.01, .03, .63, .66, p));
-  if (uT > 0) s += `<line x1="${n1(polX)}" y1="406" x2="${n1(polX)}" y2="440" stroke="${C.rna}" stroke-width="6" opacity="${(1 - ss(.63, .66, p)).toFixed(3)}"/><line x1="1300" y1="440" x2="${n1(1300 - uT)}" y2="440" stroke="${C.rna}" stroke-width="7" stroke-linecap="round"/>`;
+  if (uT > 0) s += `<line x1="${n1(polX)}" y1="406" x2="${n1(polX)}" y2="540" stroke="${C.rna}" stroke-width="6" opacity="${(1 - ss(.63, .66, p)).toFixed(3)}"/><line x1="1300" y1="540" x2="${n1(1300 - uT)}" y2="540" stroke="${C.rna}" stroke-width="7" stroke-linecap="round"/>`;
   /* per gen twee ribosomen, die starten zodra de polymerase voorbij de start is: gekoppelde transcriptie-translatie */
   const vPol = 875 / .60, vRib = vPol * .7;
   GENES.forEach((_, g) => {
@@ -129,8 +130,8 @@ function bacterium(p) {
       const u0 = 300 * g + 10, pS = .03 + (u0 + 30 + 120 * j) / vPol;
       if (p < pS) continue;
       const u = Math.min(u0 + 250, u0 + vRib * (p - pS)), pr = clamp((u - u0) / 250), pE = pS + 250 / vRib;
-      s += chain(1300 - u, 486, Math.floor(pr * 12), 1, PROT[g]);
-      s += ribosome(1300 - u, 440, 1 - ss(pE, pE + .03, p), false);
+      s += chain(1300 - u, 504, Math.floor(pr * 8), -1, PROT[g]);   // keten uit de grote eenheid, naar boven (zoals bij de mens); mRNA lager zodat de keten het DNA niet kruist
+      s += ribosome(1300 - u, 540, 1 - ss(pE, pE + .03, p), 1.95);
     }
   });
   labels.push([1275, 592, L(TX.rib70), win(.08, .12, .64, .68, p), { fill: K.rib }]);
@@ -169,7 +170,7 @@ function draw(hp, bp, sw) {
 const ROWS = [
   [{ nl: 'Kern', en: 'Nucleus' }, { nl: 'ja', en: 'yes' }, 'kern', { nl: 'nee: nucleoïd', en: 'no: nucleoid' }, 'bnucleoid'],
   [{ nl: 'Introns eruit knippen', en: 'Cutting out introns' }, { nl: 'ja, spliceosoom', en: 'yes, spliceosome' }, 'splicing', { nl: 'geen spliceosoom', en: 'no spliceosome' }, 'bsplicing'],
-  [{ nl: '5′-kap', en: '5′ cap' }, { nl: 'ja', en: 'yes' }, 'capping', { nl: 'geen kap zoals bij de mens', en: 'no cap as in humans' }, 'bmrna'],
+  [{ nl: '5′-cap', en: '5′ cap' }, { nl: 'ja', en: 'yes' }, 'capping', { nl: 'geen cap zoals bij de mens', en: 'no cap as in humans' }, 'bmrna'],
   [{ nl: 'Genen per mRNA', en: 'Genes per mRNA' }, { nl: 'meestal één', en: 'usually one' }, 'gen', { nl: 'vaak meerdere (operon)', en: 'often several (operon)' }, 'operon'],
   [{ nl: 'Wanneer vertalen?', en: 'When translated?' }, { nl: 'na de export', en: 'after export' }, 'translatie', { nl: 'al tijdens het maken', en: 'while being made' }, 'bmrna'],
   [{ nl: 'Ribosoom', en: 'Ribosome' }, { nl: '80S (40S + 60S)', en: '80S (40S + 60S)' }, 'ribosoom', { nl: '70S (30S + 50S), kleiner', en: '70S (30S + 50S), smaller' }, 'bribosoom'],
@@ -230,7 +231,7 @@ export default {
   time: { nl: 'minuten; hier sterk versneld', en: 'minutes; strongly accelerated here' },
   org: { nl: 'mens en bacterie (Escherichia coli)', en: 'human and bacterium (Escherichia coli)' },
   legend: [[LIPID.head, { nl: 'membranen (kern: dubbel; bacterie: binnen- en buitenmembraan)', en: 'membranes (nucleus: double; bacterium: inner and outer membrane)' }], [C.dna, 'DNA'], [C.rna, { nl: 'mRNA (exons)', en: 'mRNA (exons)' }], [K.intron, 'intron'], [K.pol, { nl: 'RNA-polymerase', en: 'RNA polymerase' }],
-    [K.cap, { nl: '5′-kap en poly(A)-staart', en: '5′ cap and poly(A) tail' }], [K.rib, { nl: 'ribosoom', en: 'ribosome' }], [PROT[0], { nl: 'eiwitketen', en: 'protein chain' }]],
+    [K.cap, { nl: '5′-cap en poly(A)-staart', en: '5′ cap and poly(A) tail' }], [K.rib, { nl: 'ribosoom', en: 'ribosome' }], [PROT[0], { nl: 'eiwitketen', en: 'protein chain' }]],
   simplified: {
     nl: 'Niet op schaal: een menselijke cel is ongeveer tien keer zo groot als E. coli, en de genen zijn hier heel kort. Echte genen van de mens hebben vaak veel meer en langere introns. Bij de mens beginnen kap, splicing en staart al tijdens de transcriptie; hier staan ze na elkaar om ze apart te tonen. Op één mRNA zitten in beide cellen vaak veel meer ribosomen tegelijk dan getekend.',
     en: 'Not to scale: a human cell is about ten times the size of E. coli, and the genes here are very short. Real human genes often have many more and longer introns. In humans, cap, splicing and tail already start during transcription; here they are shown one after the other to show them separately. In both cells, one mRNA often carries many more ribosomes at once than drawn.' },
@@ -238,7 +239,7 @@ export default {
     { dur: 8000, title: { nl: 'Mens: het gen wordt in de kern gekopieerd', en: 'Human: the gene is copied inside the nucleus' },
       text: { nl: 'RNA-polymerase leest het gen en maakt een pre-mRNA. Dat gebeurt binnen de celkern.', en: 'RNA polymerase reads the gene and makes a pre-mRNA. This happens inside the nucleus.' } },
     { dur: 8000, title: { nl: 'Mens: het RNA wordt eerst bijgewerkt', en: 'Human: the RNA is edited first' },
-      text: { nl: 'De introns gaan eruit (splicing). Het RNA krijgt een 5′-kap en een poly(A)-staart.', en: 'The introns are cut out (splicing). The RNA gets a 5′ cap and a poly(A) tail.' } },
+      text: { nl: 'De introns gaan eruit (splicing). Het RNA krijgt een 5′-cap en een poly(A)-staart.', en: 'The introns are cut out (splicing). The RNA gets a 5′ cap and a poly(A) tail.' } },
     { dur: 7000, title: { nl: 'Mens: het mRNA verlaat de kern', en: 'Human: the mRNA leaves the nucleus' },
       text: { nl: 'Het rijpe mRNA gaat door een kernporie naar het cytoplasma.', en: 'The mature mRNA passes through a nuclear pore into the cytoplasm.' } },
     { dur: 8000, title: { nl: 'Mens: ribosomen maken het eiwit', en: 'Human: ribosomes make the protein' },

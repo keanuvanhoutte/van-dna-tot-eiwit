@@ -65,13 +65,13 @@ export default {
 
     // paneel B: twee compartimenten
     let cmp = panel(1760, 170, 700, 580, { col: C.mem, fill: 'rgba(201,165,116,.08)' }) + panel(2540, 170, 700, 580, { col: '#5fd3e6', fill: 'rgba(95,211,230,.06)' });
-    cmp += T(2110, 225, T2('ER-lumen: oxiderend', 'ER lumen: oxidising'), { size: 28, col: C.mem, w: 800 }) + T(2890, 225, T2('cytosol: reducerend', 'cytosol: reducing'), { size: 28, col: '#5fd3e6', w: 800 });
+    cmp += T(2110, 225, T2('ER-lumen: oxiderend', 'ER lumen: oxidising'), { size: 28, col: '#8fb3e8', w: 800 }) + T(2890, 225, T2('cytosol: reducerend', 'cytosol: reducing'), { size: 28, col: '#5fd3e6', w: 800 });
     cmp += T(2110, 275, 'GSH : GSSG ≈ 1:1 – 3:1', { size: 24, font: 'JetBrains Mono', w: 700 }) + T(2890, 275, T2('GSH : GSSG ≈ 30:1 – 100:1 (cel)', 'GSH : GSSG ≈ 30:1 – 100:1 (cell)'), { size: 22, font: 'JetBrains Mono', w: 700 });
     cmp += TL(2110, 640, [T2('PDI + Ero1 aanwezig', 'PDI + Ero1 present'), T2('→ disulfidebruggen vormen', '→ disulfide bonds form')], { size: 22, col: C.text });
     cmp += TL(2890, 640, [T2('glutathion en thioredoxine', 'glutathione and thioredoxin'), T2('houden Cys als –SH', 'keep Cys as –SH')], { size: 22, col: C.text });
     return svgOpen(arrowDefs('ds', { m: C.muted, e: '#5fd3e6' })) + `
     <rect x="0" y="80" width="1600" height="760" rx="30" fill="rgba(201,165,116,.05)"/>
-    ${T(40, 130, T2('ER-lumen (oxiderend)', 'ER lumen (oxidising)'), { size: 22, col: C.mem, anchor: 'start' })}
+    ${T(40, 130, T2('ER-lumen (oxiderend)', 'ER lumen (oxidising)'), { size: 22, col: '#8fb3e8', anchor: 'start' })}
     <g data-node="tertiair" data-color="${C.chain}" data-label="${T2('Tertiaire structuur', 'Tertiary structure')}"><g id="ds-chain"></g><circle id="ds-chainA" data-anchor="tertiair" r="1" fill="none"/></g>
     <g id="ds-bond"></g>
     <g id="ds-pdi"></g>

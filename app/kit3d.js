@@ -7,6 +7,8 @@
  *   base: [ { sel: {...3Dmol-selectie}, style: {...} }, ... ],   // basisweergave (volgorde telt)
  *   steps: [ { dur, title, text,
  *              focus: { sel, style, label: {nl,en} } | null,     // wat deze stap uitlicht (rest wordt gedimd)
+ *                     (optioneel labelSel: selectie waarop het label staat, labelColor: randkleur van het label,
+ *                      labelOff: [dx, dy] schermverschuiving in px, zodat twee labels met bijna hetzelfde zwaartepunt niet overlappen)
  *              zoom: sel | null,                                  // waarop inzoomen (standaard focus.sel of alles)
  *              spin: 0.02 } ],                                    // graden per ms rond de y-as
  *   hotspots: [ { node: 'histonmod', label: {nl,en}, color, href? } ],   // klikbare knoppen links in beeld (href: bv. '../atlas/index.html?pdb=1TUP')
@@ -77,7 +79,7 @@ export function structure3d(o) {
           applyBase(true);
           for (const f of [].concat(st.focus)) {
             viewer.setStyle(f.sel, f.style);
-            if (f.label) labels.push(viewer.addLabel(L(f.label), { fontSize: 15, fontColor: 'white', backgroundColor: '#0b1224', backgroundOpacity: .85, borderThickness: 1, borderColor: '#7cc4ff', inFront: true }, f.sel));
+            if (f.label) labels.push(viewer.addLabel(L(f.label), { fontSize: 15, fontColor: 'white', backgroundColor: '#0b1224', backgroundOpacity: .85, borderThickness: f.labelColor ? 2 : 1, borderColor: f.labelColor ?? '#7cc4ff', inFront: true, ...(f.labelOff ? { screenOffset: { x: f.labelOff[0], y: f.labelOff[1] } } : {}) }, f.labelSel ?? f.sel));   // labelSel: label op een deel (bv. een uiteinde) i.p.v. het zwaartepunt; labelColor: rand in de kleur van het onderdeel
           }
         } else applyBase(false);
         const z = st.zoom === undefined ? ([].concat(st.focus ?? [])[0]?.sel ?? {}) : st.zoom;
@@ -157,7 +159,7 @@ export function inset3d(svg, o) {
       applyBase(true);
       for (const f of [].concat(st.focus)) {
         viewer.setStyle(f.sel, f.style);
-        if (f.label) labels.push(viewer.addLabel(L(f.label), { fontSize: 16, fontColor: 'white', backgroundColor: '#0b1224', backgroundOpacity: .85, borderThickness: 1, borderColor: '#7cc4ff', inFront: true }, f.sel));
+        if (f.label) labels.push(viewer.addLabel(L(f.label), { fontSize: 16, fontColor: 'white', backgroundColor: '#0b1224', backgroundOpacity: .85, borderThickness: f.labelColor ? 2 : 1, borderColor: f.labelColor ?? '#7cc4ff', inFront: true, ...(f.labelOff ? { screenOffset: { x: f.labelOff[0], y: f.labelOff[1] } } : {}) }, f.labelSel ?? f.sel));   // labelSel: label op een deel (bv. een uiteinde) i.p.v. het zwaartepunt; labelColor: rand in de kleur van het onderdeel
       }
     } else applyBase(false);
     viewer.zoomTo(st.zoom ?? {}, 900);

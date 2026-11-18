@@ -12,7 +12,7 @@ import { C } from '../../kit.js';
 const L3 = (nl, en) => ({ nl, en });
 const S30P = 'bcdefghijklmnopqrstu'.split('');
 const S50P = 'CDEFGHIJKLMNOPQRSTUVWXYZ0123456'.split('');
-const COL = { r16: '#2cc6a8', p30: '#7fb8ab', r23: '#1f8f7a', p50: '#6a9a90', mrna: C.rna, tP: '#ffc247', tW: '#8a7a4a', tA: '#ffe08a', eftu: '#9b7bff', gdp: '#ff8a3d', kir: '#ff6b6b' };
+const COL = { r16: '#2cc6a8', p30: '#7fb8ab', r23: '#1f8f7a', p50: '#6a9a90', mrna: C.rna, tP: '#ffc247', tW: '#8a7a4a', tA: '#ffe08a', eftu: '#9b7bff', gdp: '#5fd3e6', kir: '#ff6b6b' };
 const T = (color, w = .6) => ({ sphere: { color, radius: 1.6 + w * .9 } });
 const FADE = (sel) => ({ sel, style: { sphere: { color: '#33415c', radius: .5 } } });
 const RIBO = [FADE({ chain: ['a', ...S30P, 'A', 'B', ...S50P] })];

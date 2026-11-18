@@ -157,8 +157,8 @@ export default {
           }
           dna += pth(top, C.dna, 6) + pth(bot, C.dna2, 6);
           const [yl0, yl1] = ys(sepAt(X0, b)), [yr0, yr1] = ys(sepAt(X1, b));
-          dna += endl(X0 - 26, yl0 + 4, "5'", C.dna, 16) + endl(X1 + 26, yr0 + 4, "3'", C.dna, 16) +
-                 endl(X0 - 26, yl1 + 8, "3'", C.dna2, 16) + endl(X1 + 26, yr1 + 8, "5'", C.dna2, 16);
+          dna += endl(X0 - 26, yl0 + 4, "5′", C.dna, 16) + endl(X1 + 26, yr0 + 4, "3′", C.dna, 16) +
+                 endl(X0 - 26, yl1 + 8, "3′", C.dna2, 16) + endl(X1 + 26, yr1 + 8, "5′", C.dna2, 16);
           // nieuwe strengen per bel
           const ligAll = step >= 6 || (step === 5 && p > .8);
           const yTopNew = x => ys(sepAt(x, b))[0] + 14, yBotNew = x => ys(sepAt(x, b))[1] - 14;
@@ -254,7 +254,7 @@ export default {
               pr += ePill(o - 150, CY - 120, 64, 28, 'DDK', '#e0708f', kk, 15) + ePill(o + 150, CY - 120, 64, 28, 'CDK', '#e0708f', kk, 15);
               pr += arrow(o - 118, CY - 110, o - 40, CY - 50, '#e0708f', 3, kk) + arrow(o + 118, CY - 110, o + 40, CY - 50, '#e0708f', 3, kk);
               pr += tag(o, CY + 130, T2('CMG = Cdc45 + MCM2-7 + GINS', 'CMG = Cdc45 + MCM2-7 + GINS'), C.text, 17, 'middle', sub(p, .3, .45));
-              pr += tag(o, CY + 156, T2("elke CMG loopt 3'→5' over zijn streng", "each CMG moves 3'→5' along its strand"), C.muted, 15, 'middle', sub(p, .65, .8));
+              pr += tag(o, CY + 156, T2("elke CMG loopt 3′→5′ over zijn streng", "each CMG moves 3′→5′ along its strand"), C.muted, 15, 'middle', sub(p, .65, .8));
             }
           });
         }

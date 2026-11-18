@@ -173,3 +173,11 @@
 - [x] Per thema: onafhankelijke beeldcontrole van elke stap (eindbeeld + tussenmoment) → fix-ronde → tweede onafhankelijke controle → fix-ronde; bij cel en virussen een extra slotcontrole. Alle FOUT- en MISLEIDEND-punten opgelost; toegevoegde feiten met zelf gelezen bronnen (o.a. Oswald 2016, Beck & Nassal 2007, Koike-Takeshita 2008, Krupinski 1989, Meijsing 2009, Heider 2009, Joo 2023, Srinivas 2020, Hubstenberger 2017, Maiti & Drohat 2011).
 - [x] Open leesbaarheidspunten genoom/RNA (histonmod, supercoiling, remodeler, lussen, enhancer, imprinting, nmd, rnai, editing, rnastructuur, lncrna, riboswitch, rnaprocessing st10, nucleotide P=O) opgelost — 18-11-2026. Donkere overgangen bij nucleolus st3, translatie st5/8, transcriptie st6, chromatine st2, histonmod st1 bestonden al.
 - [~] Kruimelpad "zijsprong vanuit hoofdstuk 1" bij rechtstreeks openen van gpcr/steroid: bewust gedrag van lineFor (scène buiten een hoofdlijn blijft in de huidige lijn).
+
+## Consistentieronde per figuurtype — 18/19-11-2026
+- [x] Dwarscontrole over de hele app per figuurtype (ribosomen, strengrichting, membranen, eiwitten, chemie en 3D, kleuren/legendes/namen), telkens elk voorkomen naast elkaar bekeken.
+- [x] Eén afspraak voor ribosomen: vrij ribosoom met de grote eenheid boven en de kleine onder het mRNA (ook mitoribosomen en operon); ER-gebonden ribosoom met de grote eenheid op Sec61. Optie `grootBoven` in `ribosoom80S` (bio.js).
+- [x] Dunne membranen (kernenvelop) tonen twee kopjesrijen per membraan; V-ATPase-V1 in het cytosol; blaasje snoert pas af onder het membraan; suikerboom op het ER met glucoses op de α1-3-arm (SNFG); eiwitten raken hun substraat (Mediator, TFIIE/F/H, eRF1, ADAR2, NER, E3).
+- [x] Eén kleur per molecuul/structuur (DNA/RNA, viraal DNA, nieuw DNA, kleine ribosoomeenheid, lysosoom, endosoom, kernporie, ER-lumen, fosfaat, ATP/GTP, α-helix); 5′/3′/2′ met priemteken in alle teksten; namen gelijkgetrokken (5′-cap, RNA-matrijs, nucleoporinen).
+- [x] Onafhankelijke tweede controle → kleine fix-ronde (labels viruskopie, lnp, integratie, rt; mmr-kleur). Controles: check.html PROBLEMS (0), text 0 te klein, clip- en blank-meldingen gelijk aan vóór de ronde, bundeltest OK.
+- [ ] Niet gedaan (grote herschrijving): Pol II overal dezelfde vorm; ER-hals in de scène kern; CH₃/acetyl één vaste kleur.

@@ -14,7 +14,7 @@ export default {
       kort: 'DNA bestaat uit twee strengen die als een gedraaide ladder om elkaar heen lopen. De zijkanten zijn suiker en fosfaat; de sporten zijn [[basenparen|basenpaar]] (A met T, G met C). Omdat elke streng de andere bepaalt, kan DNA precies gekopieerd en afgelezen worden.',
       what: 'DNA is een dubbelhelix van twee antiparallelle polynucleotideketens. De suiker-fosfaatruggengraat ligt aan de buitenkant, de vlakke basen zitten binnenin als gepaarde, gestapelde "treden". In de cel is dat vrijwel overal de rechtshandige B-vorm.',
       how: [
-        "Elke streng heeft een richting (5'→3'); de twee strengen lopen tegengesteld (antiparallel).",
+        "Elke streng heeft een richting (5′→3′); de twee strengen lopen tegengesteld (antiparallel).",
         'Fosfaat en 2′-deoxyribose wisselen elkaar af in de ruggengraat; elk fosfaat is negatief geladen.',
         'Basen paren binnenin: A met T (2 H-bruggen), G met C (3 H-bruggen).',
         'Opeenvolgende basenparen stapelen op ≈ 3,4 Å van elkaar en zijn telkens ≈ 34–36° gedraaid.',
@@ -29,7 +29,7 @@ export default {
       kort: 'DNA consists of two strands that wind around each other like a twisted ladder. The sides are sugar and phosphate; the rungs are [[base pairs|basenpaar]] (A with T, G with C). Because each strand determines the other, DNA can be copied and read accurately.',
       what: 'DNA is a double helix of two antiparallel polynucleotide chains. The sugar–phosphate backbone lies on the outside, the flat bases sit inside as paired, stacked "steps". In the cell it is almost everywhere the right-handed B form.',
       how: [
-        "Each strand has a direction (5'→3'); the two strands run in opposite directions (antiparallel).",
+        "Each strand has a direction (5′→3′); the two strands run in opposite directions (antiparallel).",
         'Phosphate and 2′-deoxyribose alternate in the backbone; every phosphate is negatively charged.',
         'Bases pair inside: A with T (2 H-bonds), G with C (3 H-bonds).',
         'Successive base pairs stack ≈ 3.4 Å apart and are each rotated by ≈ 34–36°.',

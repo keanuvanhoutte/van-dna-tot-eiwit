@@ -189,8 +189,8 @@ export default {
         let no = '';
         if (step >= 4) {
           const k = step === 4 ? ease(sub(p, .4, .85)) : 1;
-          no += `<g opacity="${f1(k)}"><path d="M${LX - 70},640 q30,-26 66,0 t66,0" stroke="${C.dna}" stroke-width="6" fill="none"/>
-            ${txt(LX, 690, T2('viraal DNA', 'viral DNA'), C.dna, 22)}
+          no += `<g opacity="${f1(k)}"><path d="M${LX - 70},640 q30,-26 66,0 t66,0" stroke="${PINK}" stroke-width="6" fill="none"/>
+            ${txt(LX, 690, T2('viraal DNA', 'viral DNA'), PINK, 22)}
             <path d="M${RX - 70},640 q30,-26 66,0 t66,0" stroke="${C.rna}" stroke-width="6" fill="none"/>
             ${txt(RX, 690, T2('viraal RNA', 'viral RNA'), C.rna, 22)}</g>`;
         }

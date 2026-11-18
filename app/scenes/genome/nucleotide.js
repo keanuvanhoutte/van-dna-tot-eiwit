@@ -188,7 +188,7 @@ export default {
             const k = Math.max(.25, ease(sub(p, .05 + i * .08, .25 + i * .08)));   // vaag zichtbaar vanaf het begin
             const x = 200 + i * 300, v = { S: 40, ox: x - (pur ? -.8 : 0) * 40, oy: 430 };
             const pl = place(BASEDEF[b], { rot: pur ? 0 : 0 });
-            m += `<g opacity="${f1(k)}">${drawBase(pl, v, { col: BASE[b], sugar: false, fs: 21 })}</g>`;
+            m += `<g opacity="${f1(k)}">${drawBase(pl, v, { col: BASE[b], sugar: false, fs: 21, freeH: true })}</g>`;
             m += `<g opacity="${f1(k)}">${txt(x, 610, nm, BASE[b], 30)}${txt(x, 652, b === 'U' ? T2('(RNA)', '(RNA)') : b === 'T' ? T2('(DNA)', '(DNA)') : T2('(DNA, RNA)', '(DNA, RNA)'), C.muted, 24)}</g>`;
           });
           const k2 = ease(sub(p, .5, .7));

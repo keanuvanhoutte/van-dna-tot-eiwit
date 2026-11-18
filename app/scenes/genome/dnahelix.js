@@ -31,7 +31,7 @@ export default {
   scale: { nl: '≈ 2 nm breed', en: '≈ 2 nm wide' },
   time: { nl: 'structuur (draait enkel om te bekijken)', en: 'structure (rotates only for viewing)' },
   org: { nl: 'mens (B-DNA)', en: 'human (B-DNA)' },
-  legend: [[C.dna, { nl: "streng I (5'→3' naar rechts)", en: "strand I (5'→3' to the right)" }], [C.dna2, { nl: 'streng II (antiparallel)', en: 'strand II (antiparallel)' }], ['#ff9f43', { nl: 'fosfaat', en: 'phosphate' }], ['#c9a574', 'deoxyribose'], [BASE.A, 'A'], [BASE.T, 'T'], [BASE.G, 'G'], [BASE.C, 'C']],
+  legend: [[C.dna, { nl: "streng I (5′→3′ naar rechts)", en: "strand I (5′→3′ to the right)" }], [C.dna2, { nl: 'streng II (antiparallel)', en: 'strand II (antiparallel)' }], ['#ff9f43', { nl: 'fosfaat', en: 'phosphate' }], ['#c9a574', 'deoxyribose'], [BASE.A, 'A'], [BASE.T, 'T'], [BASE.G, 'G'], [BASE.C, 'C']],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Het model is geen tekening maar een berekende helix: posities van fosfaat, suiker en basen volgen uit de B-DNA-parameters (10,5 bp/winding, 3,38 Å/bp), met de hoeken afgeleid uit PDB 1BNA. Stap 8 toont de echte atomen van 1BNA.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">The model is not a drawing but a computed helix: positions of phosphate, sugar and bases follow from the B-DNA parameters (10.5 bp/turn, 3.38 Å/bp), with angles derived from PDB 1BNA. Step 8 shows the real atoms of 1BNA.</p>' },
@@ -106,13 +106,13 @@ export default {
         if (endsOp > .01) {
           const fs = step === 1 ? 30 : 26;
           ann += `<g opacity="${f1(endsOp)}" font-family="JetBrains Mono" font-weight="700" font-size="${fs}">
-            <text x="${f1(E.s1_5[0] - 50)}" y="${f1(CY - 105)}" fill="${C.dna}" text-anchor="middle">5'</text><text x="${f1(E.s1_3[0] + 50)}" y="${f1(CY - 105)}" fill="${C.dna}" text-anchor="middle">3'</text>
-            <text x="${f1(E.s2_3[0] - 50)}" y="${f1(CY + 125)}" fill="${C.dna2}" text-anchor="middle">3'</text><text x="${f1(E.s2_5[0] + 50)}" y="${f1(CY + 125)}" fill="${C.dna2}" text-anchor="middle">5'</text></g>`;
+            <text x="${f1(E.s1_5[0] - 50)}" y="${f1(CY - 105)}" fill="${C.dna}" text-anchor="middle">5′</text><text x="${f1(E.s1_3[0] + 50)}" y="${f1(CY - 105)}" fill="${C.dna}" text-anchor="middle">3′</text>
+            <text x="${f1(E.s2_3[0] - 50)}" y="${f1(CY + 125)}" fill="${C.dna2}" text-anchor="middle">3′</text><text x="${f1(E.s2_5[0] + 50)}" y="${f1(CY + 125)}" fill="${C.dna2}" text-anchor="middle">5′</text></g>`;
         }
         if (step === 1) {
           const k = ease(sub(p, .1, .5)), k2 = ease(sub(p, .45, .85));
-          ann += `<g opacity="${f1(k)}"><path d="M300,${CY - 200} H${f1(300 + 1000 * k)}" stroke="${C.dna}" stroke-width="6" marker-end="url(#arrow)"/>${txt(800, CY - 220, T2("streng I: 5' → 3'", "strand I: 5' → 3'"), C.dna, 28)}</g>`;
-          ann += `<g opacity="${f1(k2)}"><path d="M1300,${CY + 210} H${f1(1300 - 1000 * k2)}" stroke="${C.dna2}" stroke-width="6" marker-end="url(#arrow)"/>${txt(800, CY + 255, T2("streng II: 5' → 3' (tegengesteld)", "strand II: 5' → 3' (opposite)"), C.dna2, 28)}</g>`;
+          ann += `<g opacity="${f1(k)}"><path d="M300,${CY - 200} H${f1(300 + 1000 * k)}" stroke="${C.dna}" stroke-width="6" marker-end="url(#arrow)"/>${txt(800, CY - 220, T2("streng I: 5′ → 3′", "strand I: 5′ → 3′"), C.dna, 28)}</g>`;
+          ann += `<g opacity="${f1(k2)}"><path d="M1300,${CY + 210} H${f1(1300 - 1000 * k2)}" stroke="${C.dna2}" stroke-width="6" marker-end="url(#arrow)"/>${txt(800, CY + 255, T2("streng II: 5′ → 3′ (tegengesteld)", "strand II: 5′ → 3′ (opposite)"), C.dna2, 28)}</g>`;
         }
         // stap 2: ruggengraat
         if (step === 2) {

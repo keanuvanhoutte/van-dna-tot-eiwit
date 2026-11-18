@@ -13,7 +13,7 @@ const NC = [400, 450], NRX = 280, NRY = 250;
 const FCS = [[330, 370], [480, 400], [350, 540], [505, 545]];   // fibrillaire centra
 const TREE = { x0: 790, x1: 1170, y: 300 };                     // één getranscribeerde eenheid in het Miller-paneel
 const PRE = { x0: 780, y: 610 };                                 // 47S-schema
-const SEG = [['5\'ETS', 60, '#6b7a99'], ['18S', 170, C.rrna], ['ITS1', 60, '#6b7a99'], ['5.8S', 40, '#7fe0c8'], ['ITS2', 55, '#6b7a99'], ['28S', 290, '#1fa38a'], ['3\'ETS', 35, '#6b7a99']];
+const SEG = [['5′ETS', 60, '#6b7a99'], ['18S', 170, C.rrna], ['ITS1', 60, '#6b7a99'], ['5.8S', 40, '#7fe0c8'], ['ITS2', 55, '#6b7a99'], ['28S', 290, '#1fa38a'], ['3′ETS', 35, '#6b7a99']];
 
 export default {
   id: 'nucleolus',
@@ -100,7 +100,7 @@ export default {
     SEG.forEach(([n, w, c]) => { segs.push([x, x + w, n, c]); x += w; });
     pre += `<g id="nl-47s">`;
     segs.forEach(([a, b, n, c]) => { pre += `<rect x="${a}" y="${PRE.y - 18}" width="${b - a}" height="36" fill="${c}" stroke="#0a1224" stroke-width="2"/>` + (n === '18S' || n === '28S' ? K : h => h)(txt((a + b) / 2, PRE.y + (n.length > 4 || b - a < 50 ? 46 : 6), n, n.includes('S') && !n.includes('ETS') && !n.includes('ITS') && b - a >= 50 ? '#0a1224' : '#fff', n.length > 4 || b - a < 50 ? 14 : 17, 'middle', 700)); });
-    pre += txt(PRE.x0 - 14, PRE.y + 6, "5'", C.text, 16, 'end') + txt(x + 14, PRE.y + 6, "3'", C.text, 16, 'start') + txt(PRE.x0, PRE.y - 56, '47S pre-rRNA (~13 kb)', C.rrna, 17, 'start', 700);
+    pre += txt(PRE.x0 - 14, PRE.y + 6, "5′", C.text, 16, 'end') + txt(x + 14, PRE.y + 6, "3′", C.text, 16, 'start') + txt(PRE.x0, PRE.y - 56, '47S pre-rRNA (~13 kb)', C.rrna, 17, 'start', 700);
     pre += `</g><g id="nl-mods"></g>`;
     pre += `<g id="nl-prod"></g>`;
     return svgOpen() + `
@@ -170,7 +170,7 @@ export default {
             const x = x0 + 6 + rr() * (seg[1] - 12), me = rr() < .55;
             mods += `<g opacity="${f1(mk * (i / 26 < mk ? 1 : 0))}"><line x1="${f1(x)}" y1="${PRE.y - 18}" x2="${f1(x)}" y2="${PRE.y - 30}" stroke="${me ? C.trna : '#ff8a8a'}" stroke-width="2"/><circle cx="${f1(x)}" cy="${PRE.y - 33}" r="3.5" fill="${me ? C.trna : '#ff8a8a'}"/></g>`;
           }
-          mods += `<g opacity="${f1(step === 4 ? mk : step === 5 ? 1 - ease(sub(p, 0, .3)) : 0)}">${snoRNP(860, 740, C.trna, T2('box C/D-snoRNP → 2\'-O-Me', 'box C/D snoRNP → 2\'-O-Me'), 41)}${snoRNP(1190, 740, '#ff8a8a', T2('box H/ACA-snoRNP → Ψ', 'box H/ACA snoRNP → Ψ'), 42)}</g>`;
+          mods += `<g opacity="${f1(step === 4 ? mk : step === 5 ? 1 - ease(sub(p, 0, .3)) : 0)}">${snoRNP(860, 740, C.trna, T2('box C/D-snoRNP → 2′-O-Me', 'box C/D snoRNP → 2′-O-Me'), 41)}${snoRNP(1190, 740, '#ff8a8a', T2('box H/ACA-snoRNP → Ψ', 'box H/ACA snoRNP → Ψ'), 42)}</g>`;
         }
         $('nl-mods').innerHTML = mods;
 

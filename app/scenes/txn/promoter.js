@@ -158,11 +158,12 @@ export default {
         g += ePill(bx(-17), Y0 - 54, 88, 32, 'TFIIB', G.b, fin(2, .35, .7) * (1 - leave), 18);
         const polOp = fin(3, .05, .45);
         const px = aX - 30, py = Y0 - 88;
-        g += ePill(px + 156, py + 122, 88, 32, 'TFIIF', G.f, fin(3, .2, .5) * (1 - leave), 18);
-        g += ePill(px + 222, py + 20, 88, 32, 'TFIIE', G.e, fin(4, .05, .35) * (1 - leave), 18);
+        g += ePill(px + 128, py - 100, 88, 32, 'TFIIF', G.f,   // TFIIF, TFIIE en TFIIH raken Pol II; TFIIH ligt op het DNA stroomafwaarts (He et al. 2016)
+           fin(3, .2, .5) * (1 - leave), 18);
+        g += ePill(px + 176, py - 46, 88, 32, 'TFIIE', G.e, fin(4, .05, .35) * (1 - leave), 18);
         const hOp = fin(4, .35, .7);
-        const hx = px + 225, hy = py - 66;
-        g += `<g opacity="${f1(hOp * (1 - leave))}">` + prot(hx, hy, 76, 40, G.h, 1, 71, 'TFIIH', 18) +
+        const hx = px + 204, hy = py + 46;
+        g += `<g opacity="${f1(hOp * (1 - leave))}">` + prot(hx, hy, 66, 36, G.h, 1, 71, 'TFIIH', 18) +
           (step >= 5 && step <= 6 ? txt(hx, hy - 52, step === 5 ? 'XPB · ATP' : 'CDK7 → Ser5', '#c9b8ff', 18) : '') + '</g>';
         if (step === 5) g += txt(800, Y0 + 180, T2('open complex: transcriptiebel', 'open complex: transcription bubble'), C.text, 20);
         // NELF / DSIF / P-TEFb
@@ -180,10 +181,10 @@ export default {
 
         // Mediator
         const mOp = fin(3, .5, .8) * (1 - (step === 6 ? ease(sub(p, .4, .9)) : step > 6 ? 1 : 0));
-        $('pr-med').innerHTML = prot(bx(-6), 240, 130, 54, G.med, mOp, 81, 'Mediator', 20) +
-          (mOp > .05 ? `<g opacity="${f1(mOp)}"><line x1="${bx(-6) - 128}" y1="230" x2="${bx(-6) - 196}" y2="204" stroke="${G.med}" stroke-width="3" stroke-dasharray="5 5" marker-end="url(#arrow)"/>` +
-            txt(bx(-6) - 206, 202, T2('activatoren', 'activators'), '#c9b8ff', 18, 'end') + '</g>' : '');   // kort naar de (niet getekende) activatoren verderop
-        setA('pr-medA', bx(-6), 190, mOp > .5);
+        $('pr-med').innerHTML = prot(bx(-6), 285, 130, 54, G.med, mOp, 81, 'Mediator', 20) +   // ligt tegen Pol II (bovenkant ≈ y 331)
+          (mOp > .05 ? `<g opacity="${f1(mOp)}"><line x1="${bx(-6) - 128}" y1="275" x2="${bx(-6) - 196}" y2="249" stroke="${G.med}" stroke-width="3" stroke-dasharray="5 5" marker-end="url(#arrow)"/>` +
+            txt(bx(-6) - 206, 247, T2('activatoren', 'activators'), '#c9b8ff', 18, 'end') + '</g>' : '');   // kort naar de (niet getekende) activatoren verderop
+        setA('pr-medA', bx(-6), 228, mOp > .5);
 
         // Pol II + CTD
         let pol = '';
@@ -203,7 +204,7 @@ export default {
           pol += '</g>';
         }
         $('pr-pol').innerHTML = pol;
-        setA('pr-polA', step >= 7 ? px + 80 : px + 20, step >= 7 ? py + 30 : py - 128, polOp > .5);   // stap 8–9: knop in Pol II, vrij van DSIF/NELF/P-TEFb
+        setA('pr-polA', step >= 7 ? px + 80 : px - 40, step >= 7 ? py + 30 : py + 8, polOp > .5);   // in Pol II, vrij van de Mediator erboven   // stap 8–9: knop in Pol II, vrij van DSIF/NELF/P-TEFb
 
         // RNA
         let rna = '';

@@ -40,8 +40,8 @@ export default {
   org: { nl: 'algemeen (voorbeelden: mens, HIV-1, gist-tRNA)', en: 'general (examples: human, HIV-1, yeast tRNA)' },
   legend: [[BASE.A, 'A'], [BASE.U, 'U'], [BASE.G, 'G'], [BASE.C, 'C'], [C.rna, { nl: 'RNA-ruggengraat', en: 'RNA backbone' }], [C.dna, 'DNA'], ['#ffd36b', { nl: 'G·U-wobble / nadruk', en: 'G·U wobble / highlight' }]],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">Belangrijk verschil met DNA: dsRNA is vrijwel altijd <b>A-vorm</b> (≈ 11 bp/winding, C3\'-endo; de 2\'-OH maakt C2\'-endo en dus B-vorm ongunstig). Vergelijk met B-DNA (≈ 10–10,5 bp, C2\'-endo) en Z-DNA (linkshandig). Echte structuren: tRNA<sup>Phe</sup> van gist <b>1EHZ</b>, HIV-1 TAR <b>1ANR</b>, pseudoknoop (MMTV) <b>1RNK</b>, hammerhead-ribozym <b>2OEU</b>, humaan 80S-ribosoom <b>4UG0</b>.</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">Key difference from DNA: dsRNA is almost always <b>A-form</b> (≈ 11 bp/turn, C3\'-endo; the 2\'-OH disfavours C2\'-endo and hence B-form). Compare B-DNA (≈ 10–10.5 bp, C2\'-endo) and Z-DNA (left-handed). Real structures: yeast tRNA<sup>Phe</sup> <b>1EHZ</b>, HIV-1 TAR <b>1ANR</b>, pseudoknot (MMTV) <b>1RNK</b>, hammerhead ribozyme <b>2OEU</b>, human 80S ribosome <b>4UG0</b>.</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">Belangrijk verschil met DNA: dsRNA is vrijwel altijd <b>A-vorm</b> (≈ 11 bp/winding, C3′-endo; de 2′-OH maakt C2′-endo en dus B-vorm ongunstig). Vergelijk met B-DNA (≈ 10–10,5 bp, C2′-endo) en Z-DNA (linkshandig). Echte structuren: tRNA<sup>Phe</sup> van gist <b>1EHZ</b>, HIV-1 TAR <b>1ANR</b>, pseudoknoop (MMTV) <b>1RNK</b>, hammerhead-ribozym <b>2OEU</b>, humaan 80S-ribosoom <b>4UG0</b>.</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">Key difference from DNA: dsRNA is almost always <b>A-form</b> (≈ 11 bp/turn, C3′-endo; the 2′-OH disfavours C2′-endo and hence B-form). Compare B-DNA (≈ 10–10.5 bp, C2′-endo) and Z-DNA (left-handed). Real structures: yeast tRNA<sup>Phe</sup> <b>1EHZ</b>, HIV-1 TAR <b>1ANR</b>, pseudoknot (MMTV) <b>1RNK</b>, hammerhead ribozyme <b>2OEU</b>, human 80S ribosome <b>4UG0</b>.</p>' },
   simplified: {
     nl: 'Alle structuren zijn 2D-schema\'s: helices als ladders, lussen als cirkels. De haarspeld is een voorbeeldsequentie (met de bekende, zeer stabiele cUUCGg-tetralus). TAR is de echte HIV-1-sequentie (nt 17–45), maar Tat en cycline T1 zijn als blob getekend. De A/B-helices zijn zijaanzichten van een ideaal model, niet op exacte schaal. De tRNA-L-vorm is een projectie van de 3D-structuur (1EHZ). Het hammerhead-ribozym is als klassieke Y-vorm getekend zonder de tertiaire lus-lusinteractie van de volledige structuur.',
     en: 'All structures are 2D schemes: helices as ladders, loops as circles. The hairpin is an example sequence (with the well-known, very stable cUUCGg tetraloop). TAR is the real HIV-1 sequence (nt 17–45), but Tat and cyclin T1 are drawn as blobs. The A/B helices are side views of an ideal model, not exactly to scale. The tRNA L shape is a projection of the 3D structure (1EHZ). The hammerhead ribozyme is drawn as the classic Y shape without the tertiary loop–loop interaction of the full-length structure.' },
@@ -87,7 +87,7 @@ export default {
     r2 += note(2780, 520, T2('stam (helix)', 'stem (helix)'), C.text, 18) + note(2920, 680, T2('interne lus', 'internal loop'), '#ffd36b', 18) +
       note(3040, 470, 'bulge', '#ffd36b', 18) + note(3240, 670, T2('junctie (multilus)', 'junction (multiloop)'), '#ffd36b', 18) +
       note(t1[0] + 14, t1[1] - 84, T2('haarspeldlus', 'hairpin loop'), '#ffd36b', 18) + note(t2[0] + 34, t2[1] + 80, T2('haarspeldlus', 'hairpin loop'), '#ffd36b', 18);
-    r2 += note(2640, 566, "5'", C.text, 18, 'end') + note(2640, 600, "3'", C.text, 18, 'end');
+    r2 += note(2640, 566, "5′", C.text, 18, 'end') + note(2640, 600, "3′", C.text, 18, 'end');
 
     // ---- R4: A-vorm vs B-vorm (zijaanzicht) ----
     const helix = (cx, y0, R, bpt, rise, n, tilt, minor, col, lab, sub1) => {
@@ -104,12 +104,12 @@ export default {
       return s + note(cx, y0 - 40, lab, col, 22) + note(cx, y0 + n * rise + 44, sub1, C.muted, 17);
     };
     // schaal ≈ 7 px/Å: B: diameter 20 Å, stijging 3,4 Å; A: diameter ≈ 23 Å, stijging ≈ 2,6 Å, gekantelde basenparen
-    const r4b = helix(1760, 1150, 70, 10.5, 24, 16, 0, 2.4, C.dna, 'B-DNA', T2('≈ 10,5 bp/winding · C2\'-endo', '≈ 10.5 bp/turn · C2\'-endo')),
-      r4a = helix(2240, 1150, 82, 11, 18.2, 21, 12, 2.0, C.rna, T2('A-RNA (dsRNA)', 'A-RNA (dsRNA)'), T2('≈ 11 bp/winding · C3\'-endo', '≈ 11 bp/turn · C3\'-endo'));
+    const r4b = helix(1760, 1150, 70, 10.5, 24, 16, 0, 2.4, C.dna, 'B-DNA', T2('≈ 10,5 bp/winding · C2′-endo', '≈ 10.5 bp/turn · C2′-endo')),
+      r4a = helix(2240, 1150, 82, 11, 18.2, 21, 12, 2.0, C.rna, T2('A-RNA (dsRNA)', 'A-RNA (dsRNA)'), T2('≈ 11 bp/winding · C3′-endo', '≈ 11 bp/turn · C3′-endo'));
 
     return svgOpen() + `
     <g id="rs-hp"></g><g id="rs-tar"></g><g id="rs-r2">${r2}</g><g id="rs-pk"></g><g><g data-node="dnavormen" data-color="${C.dna}" data-nolabel>${r4b}</g><g data-node="dnavormen" data-color="${C.rna}" data-nolabel>${r4a}</g></g><g data-node="trna" data-color="${C.trna}" data-nolabel><g id="rs-trna"></g></g><g id="rs-hh"></g><g id="rs-oth"></g><g data-node="ribosoom" data-color="${C.rrna}" data-nolabel><g id="rs-ribo"></g></g><g data-node="splicing" data-color="${C.prot}" data-nolabel><g id="rs-spl"></g></g>
-    ${hot('nucleotide', T2('Nucleotide: ribose met 2\'-OH', 'Nucleotide: ribose with 2\'-OH'), C.rna, 'rs-nA')}
+    ${hot('nucleotide', T2('Nucleotide: ribose met 2′-OH', 'Nucleotide: ribose with 2′-OH'), C.rna, 'rs-nA')}
     ${hot('rt', T2('Pseudoknoop in 3D', 'Pseudoknot in 3D'), '#ffd36b', 'rs-pA', '../atlas/index.html?id=pseudoknot')}
     ${hot('dnavormen', T2('DNA-vormen A, B, Z', 'A-, B-, Z-DNA'), C.dna, 'rs-bA')}
     ${hot('baltimore', T2('dsRNA in 3D', 'dsRNA in 3D'), C.rna, 'rs-dA', '../atlas/index.html?id=dsrna')}
@@ -143,12 +143,12 @@ export default {
         s += hb(P[a][0] + (wob ? 8 : 0), P[a][1] + SZ / 2, P[b][0] - (wob ? 8 : 0), P[b][1] - SZ / 2, npairs(HP[a], HP[b]), (f - .9) * 10 * (step === 2 && !wob ? .45 : 1), hl ? '#ffd36b' : '#fff');
       }
       HP.split('').forEach((b, i) => { s += ntBox(P[i][0], P[i][1], b, SZ); });
-      s += note(P[0][0] - 36, P[0][1] + 8, "5'", C.text, 20, 'end') + (f < .5 ? note(P[15][0] + 36, P[15][1] + 8, "3'", C.text, 20, 'start') : note(P[15][0] - 36, P[15][1] + 8, "3'", C.text, 20, 'end'));
+      s += note(P[0][0] - 36, P[0][1] + 8, "5′", C.text, 20, 'end') + (f < .5 ? note(P[15][0] + 36, P[15][1] + 8, "3′", C.text, 20, 'start') : note(P[15][0] - 36, P[15][1] + 8, "3′", C.text, 20, 'end'));
       if (step === 0) {
         const k = sub(p, .2, .45);
-        [2, 7, 12].forEach(i => { s += `<line x1="${P[i][0]}" y1="${P[i][1] + 24}" x2="${P[i][0]}" y2="${P[i][1] + 52}" stroke="#ffd36b" stroke-width="2.5" opacity="${f1(k)}"/>` + note(P[i][0], P[i][1] + 74, "2'-OH", '#ffd36b', 17, 'middle', k); });
-        s += note(800, 600, T2('ribose (2\'-OH) · uracil i.p.v. thymine', 'ribose (2\'-OH) · uracil instead of thymine'), C.muted, 20, 'middle', sub(p, .45, .65));
-        s += `<g opacity="${f1(sub(p, .6, .8))}">` + arrow(340, 330, 1260, 330, C.muted, 3) + `</g>` + note(800, 318, "5' → 3'", C.muted, 18, 'middle', sub(p, .6, .8));
+        [2, 7, 12].forEach(i => { s += `<line x1="${P[i][0]}" y1="${P[i][1] + 24}" x2="${P[i][0]}" y2="${P[i][1] + 52}" stroke="#ffd36b" stroke-width="2.5" opacity="${f1(k)}"/>` + note(P[i][0], P[i][1] + 74, "2′-OH", '#ffd36b', 17, 'middle', k); });
+        s += note(800, 600, T2('ribose (2′-OH) · uracil i.p.v. thymine', 'ribose (2′-OH) · uracil instead of thymine'), C.muted, 20, 'middle', sub(p, .45, .65));
+        s += `<g opacity="${f1(sub(p, .6, .8))}">` + arrow(340, 330, 1260, 330, C.muted, 3) + `</g>` + note(800, 318, "5′ → 3′", C.muted, 18, 'middle', sub(p, .6, .8));
       }
       if (step >= 1 && f > .95) {
         s += note(490 + 2.5 * SP, 360, T2('stam (antiparallel)', 'stem (antiparallel)'), C.text, 18, 'middle', step === 1 ? sub(p, .7, .85) : 1);
@@ -190,7 +190,7 @@ export default {
         s += ntBox(TP[n][0], TP[n][1], tarB(n), 38);
         if (bulge) s += `<circle cx="${TP[n][0]}" cy="${TP[n][1]}" r="25" fill="none" stroke="#ffd36b" stroke-width="3" opacity="${f1(sub(p, .25, .4))}"/>`;
       }
-      s += note(TX0 - 34, TY1 + 8, "5'", C.text, 20, 'end') + note(TX0 - 34, TY2 + 8, "3'", C.text, 20, 'end');
+      s += note(TX0 - 34, TY1 + 8, "5′", C.text, 20, 'end') + note(TX0 - 34, TY2 + 8, "3′", C.text, 20, 'end');
       [17, 22, 26, 29].forEach(n => { s += note(TP[n][0], TY1 - 30, n, C.muted, 13); });
       s += note(TP[23][0] - 40, TP[23][1] - 30, T2('bulge (U23 C24 U25)', 'bulge (U23 C24 U25)'), '#ffd36b', 19, 'end', sub(p, .25, .4));
       s += note(TP[32][0] + 50, TP[32][1] + 8, T2('lus', 'loop'), C.muted, 17, 'start');
@@ -217,7 +217,7 @@ export default {
       S2.forEach(([a, b]) => s += arc(a, b, '#ffd36b', k2));
       s += note(X(8.5), y + 44, T2('stam 1 (genest)', 'stem 1 (nested)'), C.dna2, 18, 'middle', k1);
       s += note(X(21), y + 44, T2('stam 2 kruist stam 1', 'stem 2 crosses stem 1'), '#ffd36b', 18, 'middle', k2);
-      s += note(X(0) - 30, y + 6, "5'", C.text, 20, 'end') + note(X(n - 1) + 30, y + 6, "3'", C.text, 20, 'start');
+      s += note(X(0) - 30, y + 6, "5′", C.text, 20, 'end') + note(X(n - 1) + 30, y + 6, "3′", C.text, 20, 'start');
       s += note(800, 1560, T2('Kruisende bogen = pseudoknoop: niet te voorspellen met klassieke (geneste) algoritmen', 'Crossing arcs = pseudoknot: not predictable with classic (nested) algorithms'), C.muted, 17, 'middle', sub(p, .7, .85));
       s += note(800, 1600, T2('voorbeeld: frameshift-pseudoknoop van MMTV (PDB 1RNK)', 'example: MMTV frameshift pseudoknot (PDB 1RNK)'), C.muted, 16, 'middle', sub(p, .75, .9));
       return s;
@@ -254,7 +254,7 @@ export default {
       // CCA-uiteinde en anticodon
       const at = pts.acc.tip, ar = pts.acc.ang;
       s += `<line x1="${f1(at[0])}" y1="${f1(at[1])}" x2="${f1(at[0] + Math.cos(ar) * 50)}" y2="${f1(at[1] + Math.sin(ar) * 50)}" stroke="${C.trna}" stroke-width="5"/>`;
-      s += note(at[0] + Math.cos(ar) * 70 + (m > .5 ? 20 : 0), at[1] + Math.sin(ar) * 70 + 6, "CCA-3'", '#ffd36b', 18, m > .5 ? 'start' : 'middle');
+      s += note(at[0] + Math.cos(ar) * 70 + (m > .5 ? 20 : 0), at[1] + Math.sin(ar) * 70 + 6, "CCA-3′", '#ffd36b', 18, m > .5 ? 'start' : 'middle');
       const ac = pts.ac.tip, acr = pts.ac.ang, lc = [ac[0] + Math.cos(acr) * 30, ac[1] + Math.sin(acr) * 30];
       s += note(lc[0], lc[1] + 60, T2('anticodon', 'anticodon'), '#ffd36b', 18);
       // labels
@@ -284,7 +284,7 @@ export default {
       const cs = [c[0] + 52, c[1] + 48];
       s += snip(cs[0], cs[1], sub(p, .2, .3) * (1 - sub(p, .45, .55)));
       s += `<circle cx="${cs[0]}" cy="${cs[1]}" r="16" fill="none" stroke="${C.danger}" stroke-width="3" opacity="${f1(sub(p, .1, .2))}"/>`;
-      s += note(c[0], c[1] + 170, T2("2'-OH → 2',3'-cyclisch fosfaat + 5'-OH", "2'-OH → 2',3'-cyclic phosphate + 5'-OH"), '#ffd36b', 20, 'middle', sub(p, .3, .45));
+      s += note(c[0], c[1] + 170, T2("2′-OH → 2′,3′-cyclisch fosfaat + 5′-OH", "2′-OH → 2′,3′-cyclic phosphate + 5′-OH"), '#ffd36b', 20, 'middle', sub(p, .3, .45));
       s += note(c[0], c[1] - 250, T2('hammerhead-ribozym (PDB 2OEU)', 'hammerhead ribozyme (PDB 2OEU)'), C.text, 21);
       return s;
     }
@@ -294,7 +294,7 @@ export default {
       const box = (y, t1, col, op) => `<g opacity="${f1(op)}"><rect x="2060" y="${y - 28}" width="540" height="56" rx="14" fill="rgba(13,20,38,.9)" stroke="${col}" stroke-width="2.5"/>` +
         note(2080, y + 7, t1, col, 20, 'start') + '</g>';
       const a = box(2000, T2('groep I/II-intronen: zelfsplicing', 'group I/II introns: self-splicing'), '#ffd36b', k) +
-        box(2080, T2("RNase P: knipt 5'-leader van pre-tRNA", "RNase P: cuts 5' leader off pre-tRNA"), '#ffd36b', sub(p, .58, .75));
+        box(2080, T2("RNase P: knipt 5′-leader van pre-tRNA", "RNase P: cuts 5′ leader off pre-tRNA"), '#ffd36b', sub(p, .58, .75));
       const b = box(2160, T2('ribosoom: rRNA vormt peptidebinding', 'ribosome: rRNA forms peptide bond'), C.rrna, sub(p, .66, .82));
       const c = box(2320, T2('spliceosoom: U2/U6-snRNA katalyseert', 'spliceosome: U2/U6 snRNA catalyses'), C.prot, sub(p, .74, .9));
       return [a, b, c];

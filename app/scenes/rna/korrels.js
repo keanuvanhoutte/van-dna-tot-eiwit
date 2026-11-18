@@ -89,7 +89,7 @@ export default {
         let o = '';
         const vA = vis([0, 1, 2, 3, 4, 5, 6], step, p);
         if (vA > .01) {
-          o += `<g opacity="${f1(vA)}"><rect x="120" y="125" width="1360" height="640" rx="60" fill="rgba(19,33,67,.55)" stroke="#2a3a63" stroke-width="3"/>`;
+          o += `<g opacity="${f1(vA)}"><rect x="120" y="125" width="1360" height="640" rx="60" fill="rgba(19,33,67,.55)" stroke="#2a3a63" stroke-width="2" stroke-dasharray="10 9"/>`;   // paneel (stippelrand), geen celmembraan
           o += T(170, 730, 'cytosol', { size: 24, anchor: 'start', col: C.muted });
           // druppels bij stress
           D.forEach(([x, y], i) => {

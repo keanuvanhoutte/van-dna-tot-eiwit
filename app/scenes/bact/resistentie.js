@@ -121,7 +121,8 @@ export default {
           }
           if (step === 4) {
             // pomp met drie delen: buis door het buitenmembraan, verbindingsstuk in het periplasma, pompdeel in het binnenmembraan
-            g += eiwit(520, YI - 6, 50, 52, K.tra, { seed: 17, bumps: .06 }) + `<rect x="494" y="${YO + 70}" width="52" height="${YI - YO - 116}" rx="10" fill="${K.tra}" fill-opacity=".3" stroke="${K.tra}" stroke-width="2.5"/>` +
+            // pompdeel (AcrB): grote kop in het periplasma, smal deel door het binnenmembraan, nauwelijks iets in het cytoplasma (Murakami et al. 2002)
+            g += `<rect x="498" y="${YI - 16}" width="44" height="28" rx="8" fill="${K.tra}" fill-opacity=".6" stroke="${K.tra}" stroke-width="2.5"/>` + eiwit(520, YI - 54, 52, 40, K.tra, { seed: 17, bumps: .06 }) + `<rect x="494" y="${YO + 70}" width="52" height="${YI - YO - 162}" rx="10" fill="${K.tra}" fill-opacity=".3" stroke="${K.tra}" stroke-width="2.5"/>` +
               `<rect x="488" y="250" width="64" height="${YO - 250 + 80}" rx="18" fill="#0b1224"/><rect x="488" y="250" width="64" height="${YO - 250 + 80}" rx="18" fill="${K.tra}" fill-opacity=".45" stroke="${K.tra}" stroke-width="3"/>` +
               `<rect x="512" y="256" width="16" height="${YI - 286}" rx="8" fill="#0b1224" fill-opacity=".55"/>` + txt(620, 420, T2('pomp', 'pump'), K.tra, 26, 'start', 800);   // kanaal dicht naar het cytoplasma
             // de bolletjes stappen in de pomp vanuit het periplasma of de buitenste laag van het binnenmembraan (Oswald et al. 2016)

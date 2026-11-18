@@ -9,7 +9,7 @@ import { PINK } from './_bits.js';
  * RNAs are transcribed by cellular RNA polymerase II".
  * Ook bij klasse I, II en VI maakt het RNA-polymerase II van de cel het mRNA (van het virale dsDNA, het aangevulde DNA of het
  * provirus); daarom staat daar een klein "Pol II" boven de laatste pijl (uitzondering: pokkenvirussen, zie 'simplified'). */
-const POL2 = '#5fd3e6';
+const POL2 = C.prot, VENZ = '#d98cf0';   // Pol II van de cel = eiwitpaars zoals overal; virale enzymen (RdRp, RT) = eigen tint (geel blijft voor tRNA)
 const Y0 = 170, DY = 108;
 const rowY = i => Y0 + i * DY;
 /* camera per klasse: zoom op de rij, maar blijf binnen de figuur (geen lege helft boven/onder) */
@@ -22,10 +22,10 @@ const XN = 210, XG = 260, WG = 200, XM = 545, XR = 920, WR = 160, XE = 1115;
 const CLASSES = [
   { n: 'I', g: 'dsDNA', gl: { nl: 'dubbelstrengig DNA', en: 'double-stranded DNA' }, ex: { nl: 'adenovirus, herpesvirussen', en: 'adenovirus, herpesviruses' }, mid: [] },
   { n: 'II', g: 'ssDNA', gl: { nl: 'enkelstrengig DNA', en: 'single-stranded DNA' }, ex: { nl: 'parvovirus B19', en: 'parvovirus B19' }, mid: [{ t: 'dsDNA', c: C.dna, lab: { nl: 'eerst aanvullen', en: 'fill in first' } }] },
-  { n: 'III', g: 'dsRNA', gl: { nl: 'dubbelstrengig RNA', en: 'double-stranded RNA' }, ex: { nl: 'rotavirus, reovirus', en: 'rotavirus, reovirus' }, mid: [{ t: 'RdRp', c: C.prot, lab: { nl: 'viraal enzym', en: 'viral enzyme' } }] },
+  { n: 'III', g: 'dsRNA', gl: { nl: 'dubbelstrengig RNA', en: 'double-stranded RNA' }, ex: { nl: 'rotavirus, reovirus', en: 'rotavirus, reovirus' }, mid: [{ t: 'RdRp', c: VENZ, lab: { nl: 'viraal enzym', en: 'viral enzyme' } }] },
   { n: 'IV', g: '(+)ssRNA', gl: { nl: 'genoom ís al mRNA', en: 'genome already is mRNA' }, ex: { nl: 'poliovirus, SARS-CoV-2', en: 'poliovirus, SARS-CoV-2' }, mid: [] },
-  { n: 'V', g: '(−)ssRNA', gl: { nl: 'complement van mRNA', en: 'complement of mRNA' }, ex: { nl: 'influenza, mazelen, ebola', en: 'influenza, measles, Ebola' }, mid: [{ t: 'RdRp', c: C.prot, lab: { nl: 'viraal enzym', en: 'viral enzyme' } }] },
-  { n: 'VI', g: 'ssRNA-RT', gl: { nl: 'RNA → DNA → genoom', en: 'RNA → DNA → genome' }, ex: { nl: 'HIV-1', en: 'HIV-1' }, mid: [{ t: 'RT', c: C.trna, lab: { nl: 'reverse transcriptase', en: 'reverse transcriptase' } }, { t: 'dsDNA', c: C.dna }] },
+  { n: 'V', g: '(−)ssRNA', gl: { nl: 'complement van mRNA', en: 'complement of mRNA' }, ex: { nl: 'influenza, mazelen, ebola', en: 'influenza, measles, Ebola' }, mid: [{ t: 'RdRp', c: VENZ, lab: { nl: 'viraal enzym', en: 'viral enzyme' } }] },
+  { n: 'VI', g: 'ssRNA-RT', gl: { nl: 'RNA → DNA → genoom', en: 'RNA → DNA → genome' }, ex: { nl: 'HIV-1', en: 'HIV-1' }, mid: [{ t: 'RT', c: VENZ, lab: { nl: 'reverse transcriptase', en: 'reverse transcriptase' } }, { t: 'dsDNA', c: C.dna }] },
   { n: 'VII', g: 'dsDNA-RT', gl: { nl: 'DNA met RNA-tussenstap', en: 'DNA with RNA intermediate' }, ex: { nl: 'hepatitis B-virus', en: 'hepatitis B virus' }, mid: [{ t: 'Pol II', c: POL2, lab: { nl: 'van de cel', en: "host cell's" } }],
     side: { nl: 'kopiëren: RNA → RT → DNA', en: 'copying: RNA → RT → DNA' } },
 ];
@@ -62,7 +62,7 @@ export default {
   title: { nl: 'Baltimore-klassen', en: 'Baltimore classification' },
   scale: { nl: 'genoomniveau', en: 'genome level' }, time: { nl: 'n.v.t. (indeling)', en: 'n/a (classification)' },
   org: { nl: 'virussen van dieren, planten en bacteriën', en: 'viruses of animals, plants and bacteria' },
-  legend: [[C.dna, 'DNA'], [C.rna, 'RNA / mRNA'], [C.prot, { nl: 'viraal RNA-polymerase (RdRp)', en: 'viral RNA polymerase (RdRp)' }], [C.trna, { nl: 'reverse transcriptase', en: 'reverse transcriptase' }], [POL2, { nl: 'RNA-polymerase II van de cel', en: 'host RNA polymerase II' }]],
+  legend: [[C.dna, 'DNA'], [C.rna, 'RNA / mRNA'], [VENZ, { nl: 'virale enzymen: RNA-polymerase (RdRp), reverse transcriptase (RT)', en: 'viral enzymes: RNA polymerase (RdRp), reverse transcriptase (RT)' }], [POL2, { nl: 'RNA-polymerase II van de cel', en: 'host RNA polymerase II' }]],
   simplified: {
     nl: 'Dit is een indeling naar "hoe komt dit genoom aan mRNA?", niet naar verwantschap. Per klasse tonen we één schematische route; details (segmenten, subgenomische RNA\'s, capping door virale enzymen, waar in de cel het gebeurt) zijn weggelaten. Het pokkenvirus is klasse I maar repliceert in het cytoplasma, met zijn eigen RNA-polymerase — de uitzondering die de regel bevestigt.',
     en: 'This is a classification by "how does this genome get to mRNA?", not by relatedness. Per class we show one schematic route; details (segments, subgenomic RNAs, capping by viral enzymes, where in the cell it happens) are omitted. Poxvirus is class I but replicates in the cytoplasm, using its own RNA polymerase — the exception that proves the rule.' },
@@ -118,7 +118,7 @@ export default {
           ${det}
           ${txt(XR + WR / 2, y - 24, 'mRNA', C.rna, 22)}
           ${txt(XE, c.side ? y - 4 : y + 8, L(c.ex), C.text, 21, 'start', 500)}
-          ${c.side ? txt(XE, y + 28, '↺ ' + L(c.side), C.trna, 19, 'start', 600) : ''}
+          ${c.side ? txt(XE, y + 28, '↺ ' + L(c.side), VENZ, 19, 'start', 600) : ''}
         </g>
       </g>`;
     });
@@ -133,7 +133,7 @@ export default {
       <circle id="bal-a0" data-anchor="adeno" cx="${XE + 110}" cy="${rowY(0) - 22}" r="1" fill="none"/>
       <rect x="${XE}" y="${rowY(0) - 18}" width="300" height="36" fill="transparent"/>
     </g>
-    <g data-node="rt" data-color="${C.trna}" data-label="${T2('HIV-1: reverse transcriptie', 'HIV-1: reverse transcription')}">
+    <g data-node="rt" data-color="${VENZ}" data-label="${T2('HIV-1: reverse transcriptie', 'HIV-1: reverse transcription')}">
       <circle id="bal-a5" data-anchor="rt" cx="${XM + 60}" cy="${rowY(5) - 28}" r="1" fill="none"/>
       <rect x="${XM}" y="${rowY(5) - 24}" width="120" height="48" fill="transparent"/>
     </g>

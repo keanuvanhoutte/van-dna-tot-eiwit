@@ -66,8 +66,8 @@ export default {
       cd += node ? `<g data-node="${node}" data-color="${C.chain}" data-label="${T2('Aβ en α-synucleïne zijn IDP\'s', 'Aβ and α-synuclein are IDPs')}">${b}<circle data-anchor="${node}" cx="${cx}" cy="${y0 + 4}" r="1" fill="none"/></g>` : b;
     });
     /* paneel F: ER-membraan */
-    const erm = `<rect x="8540" y="444" width="1520" height="420" fill="rgba(201,165,116,.06)"/><g id="mf-erm">${bilayer(8540, 10060, ERY, { h: ERW })}</g>` +
-      T(8560, 382, 'cytosol', { size: 25, col: C.muted, anchor: 'start' }) + T(8560, 482, T2('ER-lumen', 'ER lumen'), { size: 25, col: C.mem, anchor: 'start' });
+    const erm = `<rect x="8540" y="444" width="1520" height="420" fill="rgba(143,179,232,.09)"/><g id="mf-erm">${bilayer(8540, 10060, ERY, { h: ERW })}</g>` +
+      T(8560, 382, 'cytosol', { size: 25, col: C.muted, anchor: 'start' }) + T(8560, 482, T2('ER-lumen', 'ER lumen'), { size: 25, col: '#8fb3e8', anchor: 'start' });
     return svgOpen(arrowDefs('mf', { m: C.muted, g: C.ok, r: BAD, w: '#fff' })) + `
     <g id="mf-a"></g>
     <g data-node="chaperones" data-color="${C.prot}" data-label="${T2('Chaperones', 'Chaperones')}"><g id="mf-chap"></g><circle id="mf-chapA" data-anchor="chaperones" r="1" fill="none"/></g>
@@ -198,7 +198,7 @@ export default {
           const SENS = [[8800, 'IRE1'], [9300, 'PERK'], [9800, 'ATF6']];
           // ATF6 reist in een COPII-blaasje naar het Golgi (daar knippen S1P/S2P): het blaasje knopt af uit het ER-membraan
           const kBud = ease(sub(q, .66, .84)), kGo = ease(sub(q, .84, .97));
-          const bud = kBud > 0 ? knop([AX, ERY], [0, -1], AVR, kBud, { hole: 'none', w: ERW, gap: 30, lumen: 'rgba(201,165,116,.10)' }) : null;
+          const bud = kBud > 0 ? knop([AX, ERY], [0, -1], AVR, kBud, { hole: 'none', w: ERW, gap: 30, lumen: 'rgba(143,179,232,.12)' }) : null;
           let gap = null;
           if (bud) { const rho = bud.c[1] - bud.top[1], d = ERY - bud.c[1]; if (d < rho) { const h = Math.sqrt(rho * rho - d * d); gap = [AX - h, AX + h]; } }
           const key = gap ? `${f1(gap[0])}` : '';

@@ -23,7 +23,7 @@ const poort = (x, y, col, h, sd) => [-1, 1].map(k => { const d = eiwitPad(x + k 
  * Lokale kopie star gedraaid: membraannormaal = +y (cytosol boven), de twee TOM40-tonnen naast elkaar op de x-as.
  */
 const L3 = (nl, en) => ({ nl, en });
-const T40 = '#9b7bff', T22 = '#ff8a3d', TSM = '#7fdc6a', MITO = DEST.mito, PRE = DEST.mito, HSP = '#5fd3e6', MPP = '#e0708f';
+const T40 = '#9b7bff', T22 = '#f2c14e', TSM = '#7fdc6a', MITO = '#d9b38c', PRE = DEST.mito,   /* MITO: tekst bij ruimtes en membranen; PRE: adreslabel (zelfde kleur als in sortering) */  HSP = '#5fd3e6', MPP = '#e0708f';
 const CART = col => ({ cartoon: { color: col } });
 const BASE3 = [{ sel: { chain: ['I', 'J'] }, style: CART(T40) }, { sel: { chain: ['G', 'H'] }, style: CART(T22) }, { sel: { chain: ['A', 'B', 'C', 'D', 'E', 'F'] }, style: CART(TSM) }];
 const S3 = {
@@ -62,7 +62,7 @@ export default {
   scale: { nl: 'schematisch (de echte poort is ≈ 13 nm breed)', en: 'schematic (the real gate is ≈ 13 nm wide)' },
   time: { nl: 'vertraagd (schematisch)', en: 'slowed down (schematic)' },
   org: { nl: 'mens · PDB 7CP9', en: 'human · PDB 7CP9' },
-  legend: [[MITO, L3('membranen van het mitochondrion', 'mitochondrial membranes')], [PRE, L3('adreslabel (plus-spiraal vooraan)', 'address label (plus spiral at the start)')], [C.chain, L3('eiwitketen', 'protein chain')],
+  legend: [[MITO, L3('mitochondrion (ruimtes)', 'mitochondrion (spaces)')], [PRE, L3('adreslabel (plus-spiraal vooraan)', 'address label (plus spiral at the start)')], [C.chain, L3('eiwitketen', 'protein chain')],
     [T40, L3('poort buiten: TOM40 (kanaal)', 'outer gate: TOM40 (channel)')], ['#c08bff', L3('poort binnen: TIM23', 'inner gate: TIM23')], [T22, L3('TOM22 (ontvanger)', 'TOM22 (receiver)')], [TSM, L3('kleine TOM-eiwitten', 'small TOM proteins')], [MPP, L3('knipenzym (MPP)', 'cutting enzyme (MPP)')], [HSP, L3('helper (mtHsp70)', 'helper (mtHsp70)')]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Stap 3 en 4 tonen de echte cryo-EM-structuur van de menselijke TOM-poort (Guan et al., <i>Cell Discov</i> 2021): twee tonvormige kanalen naast elkaar. De rest is een schema.</p>',
@@ -91,11 +91,11 @@ export default {
   svg() {
     return svgOpen() + `
     <g id="mi-2d">
-      <rect x="-300" y="${OM + MH / 2}" width="2200" height="${IM - OM - MH}" fill="rgba(255,138,61,.05)"/>
-      <rect x="-300" y="${IM + MH / 2}" width="2200" height="600" fill="rgba(255,138,61,.10)"/>
-      ${bilayer(-300, 1900, OM, { h: MH, col: MITO, gap: [TX - 60, TX + 60] })}
-      <path d="M${CRX - CRW},${IM} V${IM + CRL} A${CRW},${CRW} 0 0 0 ${CRX + CRW},${IM + CRL} V${IM}Z" fill="#141a2e"/><path d="M${CRX - CRW},${IM} V${IM + CRL} A${CRW},${CRW} 0 0 0 ${CRX + CRW},${IM + CRL} V${IM}Z" fill="rgba(255,138,61,.05)"/>
-      <g>${membraanLijn(-300, 1900, IM, { w: MH, head: MITO, gaten: [[IX - 60, IX + 60], [CRX - CRW - 50, CRX + CRW + 50]] })}${membraanPts(CRP, { w: MH, head: MITO })}</g>
+      <rect x="-300" y="${OM + MH / 2}" width="2200" height="${IM - OM - MH}" fill="rgba(201,111,83,.06)"/>
+      <rect x="-300" y="${IM + MH / 2}" width="2200" height="600" fill="rgba(201,111,83,.12)"/>
+      ${bilayer(-300, 1900, OM, { h: MH, gap: [TX - 60, TX + 60] })}
+      <path d="M${CRX - CRW},${IM} V${IM + CRL} A${CRW},${CRW} 0 0 0 ${CRX + CRW},${IM + CRL} V${IM}Z" fill="#141a2e"/><path d="M${CRX - CRW},${IM} V${IM + CRL} A${CRW},${CRW} 0 0 0 ${CRX + CRW},${IM + CRL} V${IM}Z" fill="rgba(201,111,83,.06)"/>
+      <g>${membraanLijn(-300, 1900, IM, { w: MH, gaten: [[IX - 60, IX + 60], [CRX - CRW - 50, CRX + CRW + 50]] })}${membraanPts(CRP, { w: MH })}</g>
       <g id="mi-ov">${T(CRX + CRW + 40, IM + CRL - 10, T2('plooi (crista)', 'fold (crista)'), { size: 22, anchor: 'start', col: MITO })}
       ${mitochondrion(1420, 196, 130, 62, { n: 5, w: 7 })}${T(1270, 205, T2('mitochondrion', 'mitochondrion'), { size: 22, anchor: 'end', col: MITO })}</g>
       ${T(1590, OM - MH / 2 - 12, T2('buitenste membraan', 'outer membrane'), { size: 24, anchor: 'end', col: MITO })}
@@ -137,7 +137,7 @@ export default {
         const k0 = step === 0 ? 1 : step === 1 ? 1 - ease(sub(p, 0, .3)) : 0;
         let bg = '';
         if (k0 > .01) {
-          bg += `<g opacity="${f1(k0)}"><circle cx="1180" cy="680" r="46" fill="none" stroke="${C.dna}" stroke-width="7"/>${ribosoomKlein(1100, 610, { s: 1.6 })}${ribosoomKlein(1150, 600, { s: 1.6, rot: 20 })}` + T(1180, 692, '13', { size: 32, col: C.text, w: 800 }) +
+          bg += `<g opacity="${f1(k0)}"><circle cx="1180" cy="680" r="46" fill="none" stroke="${C.dna}" stroke-width="7"/>${ribosoomKlein(1100, 610, { s: 1.6, rot: 180 })}${ribosoomKlein(1150, 600, { s: 1.6, rot: 200 })}` + T(1180, 692, '13', { size: 32, col: C.text, w: 800 }) +
             T(1250, 690, T2('eigen DNA: 13 eiwitten', 'own DNA: 13 proteins'), { size: 26, anchor: 'start', col: C.dna2 });
           for (let i = 0; i < 6; i++) bg += `<path d="${eiwitPad(680 + i * 72, 150 + (i % 2) * 40, 21, 18, 40 + i, .1)}" fill="rgba(127,220,106,.25)" stroke="${C.chain}" stroke-width="3"/>`;
           bg += T(900, 250, T2('> 1000 eiwitten van buiten', '> 1000 proteins from outside'), { size: 26, col: C.chain }) + arrow(900, 270, 900, OM - 40, C.chain, 4) + '</g>';
@@ -183,7 +183,8 @@ export default {
         }
         if (step === 7) {
           const o = ease(sub(p, .05, .25));
-          const hx = kFold > 0 ? FOLD[0] + 110 : lerp(IX + 90, IX + 60, kIn), hy = kFold > 0 ? FOLD[1] : IM + MH / 2 + 60;
+          // helper (mtHsp70) zit eerst via Tim44 vast aan de binnenkant van TIM23 en trekt daar de keten binnen (Wiedemann & Pfanner 2017)
+          const hx = kFold > 0 ? FOLD[0] + 110 : lerp(IX + 70, IX + 52, kIn), hy = kFold > 0 ? FOLD[1] : IM + MH / 2 + 40;
           fx += `<g opacity="${f1(o)}"><path d="${eiwitPad(hx, hy, 60, 36, 78, .08)}" fill="#0b1224" fill-opacity=".5"/><path d="${eiwitPad(hx, hy, 60, 36, 78, .08)}" fill="${HSP}" fill-opacity=".3" stroke="${HSP}" stroke-width="3"/>` + T(hx, hy + 8, T2('helper', 'helper'), { size: 22 }) + '</g>';
           fx += T(FOLD[0], FOLD[1] + 110, T2('✓ opgevouwen', '✓ folded'), { size: 26, col: C.ok, op: ease(sub(p, .85, 1)) });
         }

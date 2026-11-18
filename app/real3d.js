@@ -13,7 +13,7 @@ import { load3Dmol } from './kit3d.js';
 import { inspect, analyseProtein, principalFrame, applyFrame, WATER_IONS, FAV, ALLOW, MAX_RES } from './atomic.js';
 
 const BG = '#0d1426';                                         // = var(--bg-2), de paneelkleur
-const SS = { helix: '#f06bc0', sheet: '#ffc247', other: '#8a93a8' };
+const SS = { helix: '#9b7bff',   /* α-helix paars (C.prot), zoals in de 2D-scène secundair */  sheet: '#ffc247', other: '#8a93a8' };
 const HB = '#7cc4ff', AT = '#ffc247', GC = '#7fdc6a', GLY = '#5fd3e6';
 const PAL = ['#9b7bff', '#7fdc6a', '#5fd3e6', '#f06bc0', '#ffc247', '#c9a574', '#ff8a3d', '#6f5bd6'];
 const ELEM = { N: '#3050f8', O: '#ff3b3b', P: '#ff8000', S: '#ffd84a', H: '#e8edf7', FE: '#e06633', ZN: '#7d80b0', MG: '#8aff00' };

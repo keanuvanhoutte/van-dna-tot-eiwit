@@ -11,7 +11,8 @@ import { membraanLijn, eiwit, eiwitPad, tmHelix } from '../../bio.js';
 /* kleuren verhaallijn 2 (vaste betekenis in rtk, mapk en srf) */
 export const K = {
   egf: '#7fdc6a', rec: '#9b7bff', grb: '#4fd1c5', sos: '#e58cff', ras: '#f2c14e', raf: '#ff9a4d', mek: '#ff7eb6', erk: '#5fd3e6',
-  gtp: '#f4f6ff', gdp: '#8a93a8', atp: '#c3cde3', tyr: '#dfe6f5',
+  gtp: '#5fd3e6', gdp: '#8a93a8', atp: '#5fd3e6',   // ATP/GTP: vaste energiekleur (ATPC)
+  tyr: '#dfe6f5',
 };
 
 /* fosfolipide dubbellaag tussen y0 en y1 (patroon met kopjes en staarten) */

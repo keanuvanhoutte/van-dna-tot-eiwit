@@ -80,8 +80,8 @@ export default {
           if (i !== EA) ds += hb(tx(i), YT + 34, tx(i), YB - 4, npairs(TOP[i], BOT[i]), .8);
           else if (edited && flip < .2) ds += hb(tx(i), YT + 34, tx(i), YB - 4, 3, 1, '#ffd36b');
         }
-        ds += note(tx(0) - 34, YT + 22, "5'", C.text, 18, 'end') + note(tx(0) - 34, YB + 22, "3'", C.text, 18, 'end');
-        if (step >= 1) ds += note(tx(1), YT - 30, 'exon', C.rna, 18) + note(tx(2), YB + 64, T2('intron (complementair)', 'intron (complementary)'), '#d9854a', 18);
+        ds += note(tx(0) - 34, YT + 22, "5′", C.text, 18, 'end') + note(tx(0) - 34, YB + 22, "3′", C.text, 18, 'end');
+        if (step >= 1) ds += note(tx(9), YT - 30, 'exon', C.rna, 18) + note(tx(2), YB + 64, T2('intron (complementair)', 'intron (complementary)'), '#d9854a', 18);
         // codonkader CAG
         if (step >= 1 && step <= 3) ds += `<rect x="${tx(3) - 22}" y="${YT - 6 - (step === 2 ? 70 * flip : 0) * 0}" width="${3 * W}" height="44" rx="8" fill="none" stroke="#fff" stroke-width="2.5" opacity=".8"/>`;
         const opL = step === 0 ? 1 : step <= 3 ? 1 : .35;
@@ -92,14 +92,16 @@ export default {
         let ad = '';
         const adOp = step === 1 ? ease(sub(p, .2, .6)) : step === 2 ? 1 : step === 3 ? 1 - sub(p, 0, .3) : 0;
         if (adOp > 0) {
-          ad += `<g opacity="${f1(adOp)}"><path d="${eiwitPad(tx(4), YT - 112, (tx(6) - tx(2)) / 2 + 30, 64, 12, .06)}" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/>` +
-            `<text x="${tx(4)}" y="${YT - 118}" font-size="18" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">${T2('deaminase', 'deaminase')}</text>` +
-            `<text x="${tx(4)}" y="${YT - 196}" font-size="20" text-anchor="middle" fill="#c9b8ff" font-family="Inter" font-weight="800">ADAR2</text></g>`;
+          ad += `<g opacity="${f1(adOp)}"><path d="${eiwitPad(tx(4), YT - 70, (tx(6) - tx(2)) / 2 + 30, 64, 12, .06)}" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/>` +
+            `<text x="${tx(4) - 70}" y="${YT - 92}" font-size="18" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">${T2('deaminase', 'deaminase')}</text>` +
+            `<text x="${tx(4)}" y="${YT - 148}" font-size="20" text-anchor="middle" fill="#c9b8ff" font-family="Inter" font-weight="800">ADAR2</text></g>`;
+          // het deaminasedomein ligt óp de dubbele streng (de A klapt erin); een flexibele linker verbindt het met de dsRBD's (Matthews et al. 2016)
+          ad += `<path d="M${tx(6) + 18},${YT - 40} C${tx(7) + 40},${YT - 20} ${tx(6) + 10},${YB + 30} ${tx(7) - 22},${YB + 48}" stroke="${C.prot}" stroke-width="4" fill="none" stroke-linecap="round" opacity="${f1(adOp * .9)}"/>`;
           ad += prot(tx(7) + 20, YB + 48, 84, 30, 'dsRBD1', '#5a4bb8', adOp, 15) + prot(tx(9) + 30, YB + 48, 84, 30, 'dsRBD2', '#5a4bb8', adOp, 15);   // tegen het dubbele RNA, binnen beeld
         }
         if (step === 2) {
-          ad += note(tx(4) + 150, YT - 60, edited ? T2('inosine (=O)', 'inosine (=O)') : T2('adenosine (–NH₂)', 'adenosine (–NH₂)'), edited ? '#fff' : BASE.A, 18, 'start', sub(p, .1, .25));
-          ad += note(tx(4) + 150, YT - 30, 'H₂O → NH₃', '#ffd36b', 17, 'start', sub(p, .45, .6));
+          ad += note(tx(4) + 175, YT - 92, edited ? T2('inosine (=O)', 'inosine (=O)') : T2('adenosine (–NH₂)', 'adenosine (–NH₂)'), edited ? '#fff' : BASE.A, 18, 'start', sub(p, .1, .25));
+          ad += note(tx(4) + 175, YT - 62, 'H₂O → NH₃', '#ffd36b', 17, 'start', sub(p, .45, .6));
         }
         $('ed-adar').innerHTML = ad;
 
@@ -128,8 +130,9 @@ export default {
           const bb = i === 4 && cu ? 'U' : b;
           ap += ntBox(AX + i * AW, AY + 19, bb, 36, b === 'N' ? .55 : 1);
         });
-        if (step >= 4) ap += note(AX - 60, AY + 26, "5' …", C.text, 18, 'end') + note(AX + 15 * AW + 50, AY + 26, "… 3'", C.text, 18, 'start');
-        if (step >= 4) [['2152', 1], ['2153', 5], ['2154', 9], ['2155', 13]].forEach(([c, i]) => { ap += note(AX + i * AW, AY - 22, c, i === 5 ? C.text : C.muted, 16); });
+        if (step >= 4) ap += note(AX - 60, AY + 26, "5′ …", C.text, 18, 'end') + note(AX + 15 * AW + 50, AY + 26, "… 3′", C.text, 18, 'start');
+        const eoN = step === 4 ? ease(sub(p, .2, .6)) : step === 5 ? 1 : step === 6 ? 1 - sub(p, 0, .2) : 0;   // codonnummer 2153 schuift boven APOBEC1 uit (dat op het codon ligt)
+        if (step >= 4) [['2152', 1], ['2153', 5], ['2154', 9], ['2155', 13]].forEach(([c, i]) => { ap += note(AX + i * AW, AY - 22 - (i === 5 ? 92 * eoN : 0), c, i === 5 ? C.text : C.muted, 16); });
         ap += `<rect x="${AX + 4 * AW - 24}" y="${AY - 6}" width="${3 * AW - 2}" height="50" rx="8" fill="none" stroke="${cu ? C.danger : '#fff'}" stroke-width="2.5" opacity="${step >= 4 ? 1 : .6}"/>`;
         ap += note(AX + 5 * AW, AY + 84, cu ? T2('UAA = stop', 'UAA = stop') : T2('CAA = Gln', 'CAA = Gln'), cu ? C.danger : C.text, 18, 'middle', step >= 4 ? 1 : 0);
         if (step >= 4) ap += `<path d="M${AX + 8 * AW - 20},${AY + 60} v10 H${AX + 14 * AW + 18} v-10" stroke="#ffd36b" stroke-width="2.5" fill="none"/>` + note(AX + 11.5 * AW, AY + 96, T2('mooring-sequentie', 'mooring sequence'), '#ffd36b', 15);
@@ -139,8 +142,8 @@ export default {
         let ab = '';
         const eo = step === 4 ? ease(sub(p, .2, .6)) : step === 5 ? 1 : step === 6 ? 1 - sub(p, 0, .2) : 0;
         if (eo > 0) {
-          ab += `<g opacity="${f1(eo)}"><path d="${eiwitPad(AX + 5 * AW - 60, AY - 90, 58, 44, 14, .07)}" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/><path d="${eiwitPad(AX + 5 * AW + 60, AY - 90, 58, 44, 15, .07)}" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/>` + /* APOBEC1 als dimeer */
-            `<text x="${AX + 5 * AW}" y="${AY - 84}" font-size="18" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="800">APOBEC1 (2×)</text></g>`;
+          ab += `<g opacity="${f1(eo)}"><path d="${eiwitPad(AX + 5 * AW - 60, AY - 50, 58, 44, 14, .07)}" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/><path d="${eiwitPad(AX + 5 * AW + 60, AY - 50, 58, 44, 15, .07)}" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/>` + /* APOBEC1 als dimeer */
+            `<text x="${AX + 5 * AW}" y="${AY - 44}" font-size="18" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="800">APOBEC1 (2×)</text></g>`;
           ab += prot(AX + 11.5 * AW, AY + 38, 76, 30, 'A1CF', '#5a4bb8', eo, 16);   // op de mooring-sequentie
         }
         if (step === 5) ab += note(AX + 5 * AW + 130, AY - 150, 'C → U  (+ NH₃)', '#ffd36b', 18, 'start', sub(p, .4, .55));

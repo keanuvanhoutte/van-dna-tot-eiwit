@@ -4,7 +4,7 @@ import { eiwitPad } from '../../bio.js';
 
 export const NEW = '#5fd3e6';          // nieuw gesynthetiseerd DNA (niet te verwarren met de ouderstrengen)
 export const PRIMER = C.rna;           // RNA-primer = RNA = oranje
-export const ADNA = '#ffb27a';         // door Pol α gemaakt DNA-stukje van de primer
+export const ADNA = '#3fa9c9';         // door Pol α gemaakt DNA-stukje van de primer: een DNA-tint (blauw), geen RNA-oranje
 export const PCNA = '#ffe08a';
 
 export const d = pts => pts.map((p, i) => `${i ? 'L' : 'M'}${f1(p[0])},${f1(p[1])}`).join('');

@@ -35,7 +35,7 @@ export default {
   scale: { nl: '≈ 1–5 µm (Golgi-stapel ≈ 1 µm)', en: '≈ 1–5 µm (Golgi stack ≈ 1 µm)' },
   time: { nl: 'door de Golgi-stapel: ~2 tot ~15 min, afhankelijk van het eiwit', en: 'through the Golgi stack: ~2 to ~15 min, depending on the protein' },
   org: { nl: 'mens (secretoire cel)', en: 'human (secretory cell)' },
-  legend: [[C.mem, { nl: 'ER, Golgi-cisternen, membranen', en: 'ER, Golgi cisternae, membranes' }], [COPII, { nl: 'COPII-vesikel (ER → Golgi)', en: 'COPII vesicle (ER → Golgi)' }], [COPI, { nl: 'COPI-vesikel (terug)', en: 'COPI vesicle (back)' }], [CLATH, { nl: 'clathrinevesikel', en: 'clathrin vesicle' }], [CARGO, { nl: 'vrachteiwit (cargo)', en: 'cargo protein' }], [C.prot, { nl: 'ER-/Golgi-residente eiwitten', en: 'ER/Golgi resident proteins' }], [GRAN, { nl: 'secretiegranule', en: 'secretory granule' }]],
+  legend: [[C.mem, { nl: 'ER, Golgi-cisternen, membranen', en: 'ER, Golgi cisternae, membranes' }], [COPII, { nl: 'COPII-vesikel (ER → Golgi)', en: 'COPII vesicle (ER → Golgi)' }], [COPI, { nl: 'COPI-vesikel (terug)', en: 'COPI vesicle (back)' }], [CLATH, { nl: 'clathrinevesikel', en: 'clathrin vesicle' }], [CARGO, { nl: 'vrachteiwit (cargo)', en: 'cargo protein' }], [C.prot, { nl: 'ER-/Golgi-residente eiwitten', en: 'ER/Golgi resident proteins' }], [GRAN, { nl: 'secretiegranule', en: 'secretory granule' }], ['#ff6b6b', { nl: 'lysosoom en lysosomale enzymen (M6P)', en: 'lysosome and lysosomal enzymes (M6P)' }]],
   simplified: {
     nl: 'Sterk geschematiseerd: een echte Golgi-stapel in zoogdiercellen telt 4 tot 11 cisternen en de ER–Golgi-afstand is niet op schaal. Het cisternale-rijpingsmodel wordt getoond: volgens Glick & Luini (2011) de beste kandidaat voor het kernmechanisme, maar er is nog geen volledige consensus en ook transport via buisjes of blaasjes tussen cisternen wordt voorgesteld. Coatonderdelen (Sar1, Sec23/24, Sec13/31, ARF1, coatomeer, adaptines) zijn niet afzonderlijk getekend. De doorlooptijd varieert sterk per eiwit (bv. albumine < 2 min, VSV-G ~15 min door de stapel).',
     en: 'Strongly schematic: a real Golgi stack in mammalian cells has 4 to 11 cisternae and the ER–Golgi distance is not to scale. The cisternal maturation model is shown: according to Glick & Luini (2011) the best candidate for the core mechanism, but there is no full consensus yet and transport via tubules or vesicles between cisternae is also proposed. Coat components (Sar1, Sec23/24, Sec13/31, ARF1, coatomer, adaptins) are not drawn separately. Transit time varies strongly per protein (e.g. albumin < 2 min, VSV-G ~15 min through the stack).' },
@@ -77,13 +77,13 @@ export default {
     // plasmamembraan
     const pm = membraanPts(ptsBoog(PMX, 40, PMX + 40, 450, PMX, 860, 50), { w: 20 }) + TL(PMX + 70, 590, [T2('buiten', 'outside'), T2('de cel', 'the cell')], { size: 22, col: C.muted });
     // endosoom en lysosoom
-    const el = blaasje(ENDO[0], ENDO[1], 44, { w: 9, lumen: 'rgba(255,138,61,.12)', rand: '#ff8a3d' }) + `<g id="go-ell1">` + TL(ENDO[0], ENDO[1] + 78, [T2('endosoom', 'endosome'), T2('pH ≈ 5,5–6,5', 'pH ≈ 5.5–6.5')], { size: 22, col: '#ff8a3d' }) + '</g>' +
-      blaasje(LYSO[0], LYSO[1], 54, { w: 9, lumen: 'rgba(214,90,90,.15)', rand: C.bact }) + `<g id="go-ell2">` + TL(LYSO[0], LYSO[1] + 88, [T2('lysosoom', 'lysosome'), T2('pH ≈ 4,5–5', 'pH ≈ 4.5–5')], { size: 22, col: C.danger }) + '</g>';
+    const el = blaasje(ENDO[0], ENDO[1], 44, { w: 9, lumen: 'rgba(201,165,116,.14)', rand: C.mem }) + `<g id="go-ell1">` + TL(ENDO[0], ENDO[1] + 78, [T2('endosoom', 'endosome'), T2('pH ≈ 5,5–6,5', 'pH ≈ 5.5–6.5')], { size: 22, col: '#ff6b6b' }) + '</g>' +
+      blaasje(LYSO[0], LYSO[1], 54, { w: 9, lumen: 'rgba(255,107,107,.11)', rand: '#ff6b6b' }) + `<g id="go-ell2">` + TL(LYSO[0], LYSO[1] + 88, [T2('lysosoom', 'lysosome'), T2('pH ≈ 4,5–5', 'pH ≈ 4.5–5')], { size: 22, col: C.danger }) + '</g>';
     return svgOpen(arrowDefs('go', { m: C.muted, o: COPII, b: COPI, g: C.ok })) + `
     <g data-node="kern" data-color="${C.dna}" data-nolabel>${nuc}</g>
     <g data-node="er" data-color="${C.mem}" data-label="${T2('Ruw ER', 'Rough ER')}">${er}<circle data-anchor="er" cx="240" cy="200" r="1" fill="none"/></g>
     ${pm}
-    <g data-node="endocytose" data-color="#ff8a3d" data-label="${T2('Endocytose (endosoom)', 'Endocytosis (endosome)')}">${el}<circle id="go-endoA" data-anchor="endocytose" cx="${ENDO[0] - 50}" cy="${ENDO[1] - 70}" r="1" fill="none"/></g>
+    <g data-node="endocytose" data-color="${C.mem}" data-label="${T2('Endocytose (endosoom)', 'Endocytosis (endosome)')}">${el}<circle id="go-endoA" data-anchor="endocytose" cx="${ENDO[0] - 50}" cy="${ENDO[1] - 70}" r="1" fill="none"/></g>
     <g data-node="lysosoom" data-color="${C.danger}" data-label="${T2('Lysosoom: het suikerlabel', 'Lysosome: the sugar tag')}"><circle cx="${LYSO[0]}" cy="${LYSO[1]}" r="56" fill="transparent"/><circle id="go-lysoA" data-anchor="lysosoom" cx="${LYSO[0] - 30}" cy="${LYSO[1] - 70}" r="1" fill="none"/></g>
     <g data-node="glyco" data-color="#00A651" data-label="${T2('Glycanen bewerken', 'Processing glycans')}"><g id="go-cis"></g><circle data-anchor="glyco" cx="${X0 + 1.5 * SPC}" cy="${GY + GH + 50}" r="1" fill="none"/></g>
     <g id="go-ergic"></g>
@@ -187,12 +187,12 @@ export default {
           const lp = step === 7 ? p : step === 5 ? p * .5 : 0;
           for (let k = 0; k < 2; k++) {
             const u = clamp(lp * 1.6 - k * .3);
-            if (u > 0 && u < 1) { const pos = qb([TGN[0] + 20, GY + 150], [1060, 640], [ENDO[0] - 30, ENDO[1] - 20], u); v += ves(pos[0], pos[1], CLATH, '#ff8a3d', 16); }
+            if (u > 0 && u < 1) { const pos = qb([TGN[0] + 20, GY + 150], [1060, 640], [ENDO[0] - 30, ENDO[1] - 20], u); v += ves(pos[0], pos[1], CLATH, '#ff6b6b', 16); }
           }
           if (step === 7) {
             const rel = sub(p, .55, .75), toL = ease(sub(p, .7, .92)), back = ease(sub(p, .6, .95));
             // het losgelaten enzym gaat in een blaasje van het endosoom naar het lysosoom (nooit los door een membraan)
-            if (toL > 0 && toL < 1) v += ves(lerp(ENDO[0] + 50, LYSO[0] - 60, toL), ENDO[1] - 40 * Math.sin(Math.PI * toL), C.mem, '#ff8a3d', 16, rel);
+            if (toL > 0 && toL < 1) v += ves(lerp(ENDO[0] + 50, LYSO[0] - 60, toL), ENDO[1] - 40 * Math.sin(Math.PI * toL), C.mem, '#ff6b6b', 16, rel);
             else { const xs = toL >= 1 ? [LYSO[0] - 20, LYSO[0] + 10] : [ENDO[0], ENDO[0] + 10]; v += `<circle cx="${xs[0]}" cy="${ENDO[1]}" r="9" fill="#ff8a3d" opacity="${f1(rel)}"/><circle cx="${xs[1]}" cy="${ENDO[1] + 18}" r="9" fill="#ff8a3d" opacity="${f1(rel)}"/>`; }
             if (back > 0 && back < 1) { const pos = qb([ENDO[0] - 20, ENDO[1] - 46], [1080, 560], [TGN[0] + 30, GY + 120], back); v += ves(pos[0], pos[1], C.mem, C.prot, 13); }
           }
@@ -230,12 +230,12 @@ export default {
         if (step === 5) {
           lb += T(1320, 540, T2('constitutief', 'constitutive'), { size: 20, col: C.mem, op: sub(p, .1, .3) });
           lb += T(1345, 358, T2('gereguleerd (granules)', 'regulated (granules)'), { size: 20, col: GRAN, op: sub(p, .3, .5) });
-          lb += T(1030, 690, T2('lysosomaal (M6P)', 'lysosomal (M6P)'), { size: 20, col: '#ff8a3d', op: sub(p, .5, .7), anchor: 'end' });
+          lb += T(1030, 690, T2('lysosomaal (M6P)', 'lysosomal (M6P)'), { size: 20, col: '#ff6b6b', op: sub(p, .5, .7), anchor: 'end' });
         }
         if (step === 6) lb += T(1440, 580, T2('continu', 'continuously'), { size: 20, col: C.mem, anchor: 'end' }) + T(1380, 178, T2('op signaal', 'on signal'), { size: 20, col: GRAN, op: sub(p, .55, .7), anchor: 'end' });
         if (step === 7) {
-          lb += T(1040, 700, T2('M6P-receptor + enzym', 'M6P receptor + enzyme'), { size: 19, col: '#ff8a3d', anchor: 'end', op: sub(p, 0, .15) });
-          lb += T(ENDO[0] + 60, ENDO[1] + 146, T2('zuur → enzym laat los', 'acidic → enzyme released'), { size: 20, col: '#ff8a3d', op: sub(p, .5, .6), anchor: 'end' });
+          lb += T(1040, 700, T2('M6P-receptor + enzym', 'M6P receptor + enzyme'), { size: 19, col: '#ff6b6b', anchor: 'end', op: sub(p, 0, .15) });
+          lb += T(ENDO[0] + 60, ENDO[1] + 146, T2('zuur → enzym laat los', 'acidic → enzyme released'), { size: 20, col: '#ff6b6b', op: sub(p, .5, .6), anchor: 'end' });
           lb += T(1110, 578, T2('receptor terug', 'receptor returns'), { size: 18, col: C.mem, op: sub(p, .6, .7), anchor: 'start' });
         }
         $('go-lbl').innerHTML = lb;

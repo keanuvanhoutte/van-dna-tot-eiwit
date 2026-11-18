@@ -157,7 +157,7 @@ const SCENE = {
           for (let i = 0; i <= n; i++) { const u = i / n * rnaLen; pts.push([polX - 30 - u * 330, DY - 80 - u * 190 + Math.sin(u * 14) * 16]); }
           pl += `<path d="${smooth(pts)}" stroke="${C.rna}" stroke-width="7" fill="none" stroke-linecap="round" opacity="${f1(rnaFade)}"/>`;
           const e = pts[pts.length - 1];
-          if (rnaLen > .3) pl += T(e[0] + 8, e[1] - 24, "5'", { size: 20, col: C.rna, w: 800, op: rnaFade });
+          if (rnaLen > .3) pl += T(e[0] + 8, e[1] - 24, "5′", { size: 20, col: C.rna, w: 800, op: rnaFade });
         }
         pl += `<rect x="${f1(polX - 80)}" y="${DY - 80}" width="160" height="120" fill="transparent"/>`;
         $('sf-pol').innerHTML = pl;

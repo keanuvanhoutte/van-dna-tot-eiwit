@@ -32,7 +32,7 @@ export default {
   org: { nl: 'humaan adenovirus C5 in een epitheelcel', en: 'human adenovirus C5 in an epithelial cell' },
   legend: [[PINK, { nl: 'capside / viraal dsDNA', en: 'capsid / viral dsDNA' }], [FIBRE, { nl: 'vezel + knop (fiber knob)', en: 'fibre + knob' }],
     ['#7fc9b6', 'CAR'], ['#c9a574', { nl: 'αv-integrine, membraan', en: 'αv integrin, membrane' }], ['#8fa8ff', { nl: 'klathrine', en: 'clathrin' }],
-    [C.prot, { nl: 'motoreiwitten, nucleoporinen', en: 'motor proteins, nucleoporins' }], ['#c98fe0', { nl: 'proteïne VII', en: 'protein VII' }], ['#ffd166', { nl: 'terminaal eiwit (TP)', en: 'terminal protein (TP)' }]],
+    [C.prot, { nl: 'motoreiwitten', en: 'motor proteins' }], ['#9db4d8', { nl: 'nucleoporinen (kernporie)', en: 'nucleoporins (nuclear pore)' }], ['#c98fe0', { nl: 'proteïne VII', en: 'protein VII' }], ['#ffd166', { nl: 'terminaal eiwit (TP)', en: 'terminal protein (TP)' }]],
   simplified: {
     nl: 'Het capside is een icosaëder met 240 hexonen en 12 pentonen; hier tekenen we het silhouet (zeshoek) met één vezel per zichtbare hoek in plaats van alle twaalf. Van de tientallen betrokken gastheereiwitten tonen we alleen CAR, αv-integrine, klathrine, dynamine en de motoren. Afmetingen zijn niet op schaal ten opzichte van de cel, en de tijdschaal is sterk vertraagd.',
     en: 'The capsid is an icosahedron with 240 hexons and 12 pentons; here we draw the silhouette (a hexagon) with one fibre per visible vertex instead of all twelve. Of the dozens of host proteins involved we show only CAR, αv integrin, clathrin, dynamin and the motors. Sizes are not to scale relative to the cell and the time scale is strongly slowed down.' },
@@ -82,7 +82,7 @@ export default {
       <g id="ad-ves"></g><circle id="ad-ves-a" data-anchor="endocytose" cx="${PX}" cy="420" r="1" fill="none"/>
     </g>
 
-    <g data-node="kernimport" data-color="${C.prot}" data-label="${T2('Kernporie (Nup214)', 'Nuclear pore (Nup214)')}">
+    <g data-node="kernimport" data-color="#9db4d8" data-label="${T2('Kernporie (Nup214)', 'Nuclear pore (Nup214)')}">
       <g id="ad-pore" opacity="0"><g transform="rotate(${f1(PROT)} ${PORE[0]} ${PORE[1]})">${npc(PORE[0], PORE[1], .9)}</g></g>
       <circle data-anchor="kernimport" data-pos="below" cx="${PORE[0] - 165}" cy="${PORE[1] + 20}" r="1" fill="none"/>
     </g>
@@ -198,8 +198,8 @@ export default {
         const clOn = step === 4 ? ease(sub(p, .25, .9)) : step === 5 ? 1 - ease(sub(p, .55, 1)) : 0;
         if (clOn > .01) {
           for (let i = -4; i <= 4; i++) {
-            const [x, y, a] = opKnop(i * 44, 30, kn, los);
-            cl += triskelion(x, y, i * 24 + a, 1.15, '#8fa8ff', clOn * clamp(1 - Math.abs(i) / 6.5));
+            const [x, y, a] = opKnop(i * 44, 42, kn, los);        // ver genoeg van het membraan: poten (≈ 26 px) blijven aan de cytosolkant
+            cl += triskelion(x, y, i * 24 + a, .86, '#8fa8ff', clOn * clamp(1 - Math.abs(i) / 6.5) * clamp((y - MEM - 30) / 15));   // nooit boven/buiten het plasmamembraan
           }
           if (step === 4) cl += `<g opacity="${f1(ease(sub(p, .55, .9)))}">${txt(PX - 250, MEM + 190, T2('klathrine-mandje', 'clathrin cage'), '#8fa8ff', 21)}
             <line x1="${PX - 170}" y1="${MEM + 182}" x2="${PX - 110}" y2="${MEM + 140}" stroke="#8fa8ff" stroke-width="2"/></g>`;

@@ -14,7 +14,7 @@ import { ribo, arrow } from './_rna.js';
  * U22, U47, U51, U74 (2,65 Å: Watson–Crick met U74). Lokale kopie data/pdb/1Y26.pdb. Nagekeken in docs/verificatie-ronde-11-rna-lot.md.
  */
 const L3 = (nl, en) => ({ nl, en });
-const RNA = C.rna, ADE = '#5fd3e6', SD = '#ffd166', ARM1 = '#ffc247', ARM2 = '#7fdc6a', U74 = '#ff6b6b', GREY = '#55607a';
+const RNA = C.rna, ADE = '#5ad17a',   /* adenine-groen = BASE.A, zoals overal in de app */ SD = '#ffd166', ARM1 = '#ffc247', ARM2 = '#7fdc6a', U74 = '#ff6b6b', GREY = '#55607a';
 const range = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
 const NUC = { hetflag: false };
 const CART = col => ({ cartoon: { color: col } });

@@ -112,7 +112,7 @@ const scene = {
           if (kMark > .01) fx += `<g opacity="${f1(kMark)}"><line x1="${f1(xj)}" y1="${Y1 - GAP / 2 - 36}" x2="${f1(xj)}" y2="${Y1 + GAP / 2 + 46}" stroke="${C.danger}" stroke-width="4" stroke-dasharray="8 7"/>${txt(xj + 110, Y1 + GAP / 2 + 96, T2('2 letterparen kwijt', '2 letter pairs lost'), C.danger, 26, 'middle', 700)}</g>`;
           if (kBreak > .01 && kJoin < .5) fx += `<g opacity="${f1(kBreak * (1 - 2 * kJoin))}">${txt(xi(B) - BP / 2, Y1 + GAP / 2 + 124, T2('breuk', 'break'), C.danger, 26, 'middle', 700)}</g>`;
           const L5 = X0 - 26 - gap / 2, R3 = X0 + N * BP + 26 + gap / 2 + (kTrim > .5 ? shiftR : 0);
-          d += endl(L5, Y1 - GAP / 2 + 8, "5'", C.dna, 22) + endl(R3, Y1 - GAP / 2 + 8, "3'", C.dna, 22) + endl(L5, Y1 + GAP / 2 + 8, "3'", C.dna2, 22) + endl(R3, Y1 + GAP / 2 + 8, "5'", C.dna2, 22);
+          d += endl(L5, Y1 - GAP / 2 + 8, "5′", C.dna, 22) + endl(R3, Y1 - GAP / 2 + 8, "3′", C.dna, 22) + endl(L5, Y1 + GAP / 2 + 8, "3′", C.dna2, 22) + endl(R3, Y1 + GAP / 2 + 8, "5′", C.dna2, 22);
           $('ds-nt').innerHTML = txt(X0, 112, T2('1 · Snel lijmen (NHEJ)', '1 · Glue fast (NHEJ)'), '#ff8a3d', 30, 'start', 800);
           $('ds-nd').innerHTML = d; $('ds-nfx').innerHTML = fx;
           // link naar telomeren in de lijmstap
@@ -140,7 +140,7 @@ const scene = {
           }
           // gebroken chromatide
           const lEnd = BX - gp / 2, rEnd = BX + gp / 2;
-          // linkerstuk: bovenstreng (3'-staart bij de breuk) blijft, onderstreng (5') wordt teruggeknipt
+          // linkerstuk: bovenstreng (3′-staart bij de breuk) blijft, onderstreng (5′) wordt teruggeknipt
           const tail0 = lEnd - RES * kRes;
           if (kBack < 1) {
             d += pth([[XA, yT], [tail0, yT]], C.dna, 7);
@@ -150,7 +150,7 @@ const scene = {
           // onderstreng links: tot (breuk − res), daarna opgevuld (nieuw)
           d += seg(XA, yB, lEnd - res, yB, C.dna2, 7);
           if (kFill > 0) d += seg(lEnd - res, yB, lEnd - res + res * kFill, yB, NEW, 7);
-          // rechterstuk: bovenstreng (5') teruggeknipt, onderstreng (3'-staart) blijft
+          // rechterstuk: bovenstreng (5′) teruggeknipt, onderstreng (3′-staart) blijft
           d += seg(Math.max(rEnd + res, kBack > 0 ? lEnd + syn - 4 : 0), yT, XB, yT, C.dna, 7);
           d += seg(rEnd, yB, XB, yB, C.dna2, 7);
           // sporten waar beide strengen er zijn
@@ -159,16 +159,16 @@ const scene = {
             const rightDuplex = x > rEnd + res || (kBack > .99 && x > rEnd && x < lEnd + syn);
             if ((x < lEnd && leftDuplex && (x < tail0 || kBack > .99)) || (x > rEnd && rightDuplex)) d += seg(x, yT, x, yB, '#3b4c70', 3);
           }
-          d += endl(XA - 30, yT + 8, "5'", C.dna, 22) + endl(XB + 30, yT + 8, "3'", C.dna, 22) + endl(XA - 30, yB + 8, "3'", C.dna2, 22) + endl(XB + 30, yB + 8, "5'", C.dna2, 22);
-          if (kRes > .3 && kBack < .9) fx += `<g opacity="${f1(sub(kRes, .3, .8) * (1 - kBack))}">${txt(tail0 + 70 * kInv, lerp(yT, yInv, 1) - 22, "3'", C.dna, 22, 'middle', 700, 'JetBrains Mono')}</g>`;
-          // eiwitdraad op de 3'-staarten
+          d += endl(XA - 30, yT + 8, "5′", C.dna, 22) + endl(XB + 30, yT + 8, "3′", C.dna, 22) + endl(XA - 30, yB + 8, "3′", C.dna2, 22) + endl(XB + 30, yB + 8, "5′", C.dna2, 22);
+          if (kRes > .3 && kBack < .9) fx += `<g opacity="${f1(sub(kRes, .3, .8) * (1 - kBack))}">${txt(tail0 + 70 * kInv, lerp(yT, yInv, 1) - 22, "3′", C.dna, 22, 'middle', 700, 'JetBrains Mono')}</g>`;
+          // eiwitdraad op de 3′-staarten
           const filOp = kFil * (1 - ph(6, 0, .25));
           if (filOp > .01) {
             for (let x = tail0 + 70 * kInv + 10; x < lEnd - 6; x += 20) fil += `<rect x="${f1(x - 8)}" y="${f1(yInv - 26)}" width="16" height="22" rx="5" fill="${RAD}"/>`;
             for (let x = rEnd + 10; x < rEnd + RES * kRes - 6; x += 20) fil += `<rect x="${f1(x - 8)}" y="${f1(yB + 4)}" width="16" height="22" rx="5" fill="${RAD}"/>`;
             fil = `<g opacity="${f1(filOp)}">${fil}</g>` + tag(BX - 70, Y2 - 70, T2('eiwitdraad', 'protein filament'), RAD, 24, 'middle', filOp * (1 - kInv));
           }
-          { const po = ph(6, 0, .1) * (1 - ph(7, 0, .2)), px = lEnd + syn;   // polymerase op het groeiende 3'-uiteinde; het woord eronder (niet over de strengen)
+          { const po = ph(6, 0, .1) * (1 - ph(7, 0, .2)), px = lEnd + syn;   // polymerase op het groeiende 3′-uiteinde; het woord eronder (niet over de strengen)
             fx += prot(px, yInv, 44, 30, POL, '', 16, po) + tag(Math.max(px, 700), sB + 46, 'polymerase', POL, 24, 'middle', po); }
           fx += tag(BX, Y2 + 68, T2('breuk', 'break'), C.danger, 26, 'middle', kBreak * (1 - kRes));
           if (kOk > .01) fx += `<g opacity="${f1(kOk)}"><rect x="${BX - RES - 14}" y="${yT - 26}" width="${2 * RES + 28}" height="${G + 52}" rx="14" fill="none" stroke="${C.ok}" stroke-width="4"/>${txt(BX, yT - 40, T2('✓ nauwkeurig hersteld', '✓ accurately repaired'), C.ok, 26, 'middle', 700)}</g>`;

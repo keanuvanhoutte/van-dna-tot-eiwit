@@ -26,7 +26,7 @@ export default {
   scale: { nl: '≈ 120 nm (kernporiecomplex)', en: '≈ 120 nm (nuclear pore complex)' },
   time: { nl: 'één translocatie in enkele ms', en: 'one translocation in a few ms' },
   org: { nl: 'menselijke cel', en: 'human cell' },
-  legend: [[C.prot, { nl: 'nucleoporinen (Nup)', en: 'nucleoporins (Nup)' }], ['#b9a6ff', { nl: 'FG-herhalingen', en: 'FG repeats' }],
+  legend: [['#9db4d8', { nl: 'nucleoporinen (Nup)', en: 'nucleoporins (Nup)' }], ['#b9a6ff', { nl: 'FG-herhalingen', en: 'FG repeats' }],
     ['#7fdc6a', 'NLS'], [C.prot2, { nl: 'importine α/β', en: 'importin α/β' }], ['#5fd3e6', 'Ran·GTP'],
     [PINK, { nl: 'adenovirus / viraal DNA', en: 'adenovirus / viral DNA' }], ['#ffd166', { nl: 'terminaal eiwit (TP)', en: 'terminal protein (TP)' }], [C.dna, { nl: 'chromatine', en: 'chromatin' }]],
   simplified: {

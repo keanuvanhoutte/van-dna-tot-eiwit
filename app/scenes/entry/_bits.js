@@ -263,7 +263,7 @@ export function linDNA(x0, x1, y, { op = 1, amp = 9, vii = 4 } = {}) {
 /* Getekend rond (x,y): cytoplasma boven (y kleiner), nucleoplasma onder. Het membraan (kernenvelop) tekent de scène zelf;
  * de membraanring van de porie valt op ± 92·s, het poriemembraan hoort daar te liggen (zie kernEnvelop in bio.js). */
 export function npc(x, y, s = 1, o = {}) {
-  const fg = o.fg ?? 1, col = C.prot, g = [];
+  const fg = o.fg ?? 1, col = o.col ?? '#9db4d8', g = [];   // kernporie: overal dezelfde grijsblauwe kleur als bio.kernporie()
   const S = v => f1(v * s);
   // ring-doorsnede: twee "blokken" links en rechts van het kanaal
   for (const side of [-1, 1]) {

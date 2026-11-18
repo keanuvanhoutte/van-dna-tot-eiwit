@@ -106,9 +106,9 @@ export default {
         if (v2 > .01) {
           const kp = i => step === 2 ? k(.15 + i * .15, .45 + i * .15) : 1;
           o += `<g opacity="${f1(v2)}">` + lnc(380, 1220, 520) +
-            blob(lerp(470, 560, kp(0)), lerp(220, 445, kp(0)), 80, 46, PA, T2('eiwit 1', 'protein 1')) +
-            blob(800, lerp(760, 600, kp(1)), 80, 46, PB, T2('eiwit 2', 'protein 2')) +
-            blob(lerp(1150, 1040, kp(2)), lerp(220, 445, kp(2)), 80, 46, PC, T2('eiwit 3', 'protein 3')) +
+            blob(lerp(470, 560, kp(0)), lerp(220, 463, kp(0)), 80, 46, PA, T2('eiwit 1', 'protein 1')) +
+            blob(800, lerp(760, 570, kp(1)), 80, 46, PB,   /* alle drie raken het RNA */ T2('eiwit 2', 'protein 2')) +
+            blob(lerp(1150, 1040, kp(2)), lerp(220, 485, kp(2)), 80, 46, PC, T2('eiwit 3', 'protein 3')) +
             T(800, 300, T2('steiger: houdt eiwitten samen', 'scaffold: holds proteins together'), { size: 28, col: LNC, w: 700, op: step === 2 ? sub(p, .7, .85) : 1 }) + '</g>';
         }
         /* 3: gids */

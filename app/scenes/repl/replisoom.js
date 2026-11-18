@@ -32,8 +32,8 @@ const scene = {
     [C.prot, { nl: 'enzymen', en: 'enzymes' }], [PCNA, 'PCNA'], [RPA, 'RPA'],
     ['#c9b8ff', { nl: 'rest van de ritsmachine (3D)', en: 'rest of the unzipper (3D)' }], ['#e0708f', { nl: 'Pol ε (3D)', en: 'Pol ε (3D)' }], ['#7f8fb0', { nl: 'hulpeiwitten (3D)', en: 'helper proteins (3D)' }]],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">Let op de richtingen: beide nieuwe strengen groeien 5\'→3\'. De leidende streng groeit mee met de vork; op de volgende streng wijst de groeirichting van de vork weg, daarom wordt die in stukken (Okazaki-fragmenten) gemaakt.</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">Watch the directions: both new strands grow 5\'→3\'. The leading strand grows along with the fork; on the lagging strand the direction of growth points away from the fork, which is why it is made in pieces (Okazaki fragments).</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">Let op de richtingen: beide nieuwe strengen groeien 5′→3′. De leidende streng groeit mee met de vork; op de volgende streng wijst de groeirichting van de vork weg, daarom wordt die in stukken (Okazaki-fragmenten) gemaakt.</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">Watch the directions: both new strands grow 5′→3′. The leading strand grows along with the fork; on the lagging strand the direction of growth points away from the fork, which is why it is made in pieces (Okazaki fragments).</p>' },
   simplified: {
     nl: '2D-schema, niet op schaal. Een Okazaki-fragment is ~200 nt, de RNA-primer ~10 nt en Pol α voegt ~20 nt DNA toe; primer en flap zijn hier groter getekend. In werkelijkheid verdringt Pol δ telkens slechts enkele nucleotiden en knipt FEN1 herhaaldelijk kleine flaps (nick-translatie). De volgende-streng-matrijs vormt in de cel waarschijnlijk een lus zodat alles bij elkaar blijft; Ctf4/AND-1, Mcm10, Tipin–Timeless en de histonchaperonnes zijn weggelaten. De 3D-stappen tonen PDB 7PFO (menselijk kernreplisoom, cryo-EM; Jones et al., EMBO J 2021) met één bolletje per bouwsteen; in dat model ontbreken Pol α, Pol δ, PCNA en het bouwende deel van Pol ε, en het DNA is een kort proefstuk. Andere echte structuren: PDB 6XTX (humaan CMG), 1AXC (humaan PCNA).',
     en: '2D scheme, not to scale. An Okazaki fragment is ~200 nt, the RNA primer ~10 nt and Pol α adds ~20 nt of DNA; primer and flap are drawn larger here. In reality Pol δ displaces only a few nucleotides at a time and FEN1 repeatedly cuts short flaps (nick translation). In the cell the lagging-strand template probably loops so that everything stays together; Ctf4/AND-1, Mcm10, Tipin–Timeless and the histone chaperones are omitted. The 3D steps show PDB 7PFO (human core replisome, cryo-EM; Jones et al., EMBO J 2021) with one bead per building block; Pol α, Pol δ, PCNA and the building part of Pol ε are missing from that model, and the DNA is a short test piece. Other real structures: PDB 6XTX (human CMG), 1AXC (human PCNA).' },
@@ -141,15 +141,15 @@ const scene = {
           else if (x < LEAD3) arms += seg(x, BOTY, x, (BOTY + NBOT) / 2, BASE[b2], 4.5) + seg(x, (BOTY + NBOT) / 2, x, NBOT, BASE[m2], 4.5);
           else arms += seg(x, BOTY, x, BOTY + 13, BASE[b2], 4.5);
         }
-        arms += endl(66, TOPY + 6, "5'", C.dna) + endl(1554, CY - GAP / 2 + 6, "3'", C.dna) +
-                endl(66, BOTY + 6, "3'", C.dna2) + endl(1554, CY + GAP / 2 + 6, "5'", C.dna2);
+        arms += endl(66, TOPY + 6, "5′", C.dna) + endl(1554, CY - GAP / 2 + 6, "3′", C.dna) +
+                endl(66, BOTY + 6, "3′", C.dna2) + endl(1554, CY + GAP / 2 + 6, "5′", C.dna2);
         $('rs-arms').innerHTML = arms;
 
         /* ---- volgende streng: oude fragmenten, nieuw fragment, flap ---- */
         let lag = '';
         // oud fragment (al geligeerd) + vorig fragment, tot flapBase
         lag += seg(96, NTOP, flapBase, NTOP, NEW, 7);
-        lag += endl(66, NTOP + 6, "3'", NEW);
+        lag += endl(66, NTOP + 6, "3′", NEW);
         // 5'-deel van het vorige fragment: gepaard (step<6) of opgetild als flap
         if (!flapCut) {
           const L0 = PREV5 - flapBase;                         // opgetilde lengte
@@ -165,7 +165,7 @@ const scene = {
           };
           lag += fl(flapBase, PREV_A, NEW) + fl(Math.max(flapBase, PREV_A), PREV_R, ADNA) + fl(Math.max(flapBase, PREV_R), PREV5, PRIMER);
           const tip = PREV5 - flapBase > 1 ? [flapBase + (PREV5 - flapBase) * Math.cos(ang), NTOP + (PREV5 - flapBase) * Math.sin(ang)] : [PREV5, NTOP];
-          lag += endl(tip[0] + 16, tip[1] - 14, "5'", PRIMER, 16);
+          lag += endl(tip[0] + 16, tip[1] - 14, "5′", PRIMER, 16);
         } else if (step === 7) {
           // weggeknipte flap drijft weg
           const k = sub(p, .35, .8);
@@ -178,12 +178,12 @@ const scene = {
           lag += seg(priR, NTOP, PRI5, NTOP, PRIMER, 7);
           if (priA < priR) lag += seg(priA, NTOP, priR, NTOP, ADNA, 7);
           if (step >= 6 && del3 < PRI_A) lag += seg(del3, NTOP, PRI_A, NTOP, NEW, 7);
-          lag += endl(PRI5 + 16 + (step === 3 ? 80 : step === 4 ? 80 * (1 - sub(p, .05, .3)) : 0), NTOP - 10, "5'", PRIMER, 16);   // opzij zolang Pol α-primase erboven zit
+          lag += endl(PRI5 + 16 + (step === 3 ? 80 : step === 4 ? 80 * (1 - sub(p, .05, .3)) : 0), NTOP - 10, "5′", PRIMER, 16);   // opzij zolang Pol α-primase erboven zit
           const e3 = step >= 6 ? del3 : priA;
           // 3'-label op de echte plaats; verborgen zolang Pol α-primase of Pol δ het 3'-uiteinde bedekt (anders lijkt het bij de verkeerde streng te horen)
           const rfcOn = step === 4 ? ease(sub(p, .25, .4)) * (1 - sub(p, .6, .75)) : 0;
           const cov3 = step === 3 ? 1 : step === 4 ? Math.max(1 - sub(p, .05, .3), rfcOn, ease(sub(p, .7, .95))) : step === 7 ? 1 - sub(p, .1, .35) : step >= 5 ? 1 : 0;
-          if (!(step === 7 && sealed) && step < 8) lag += endl(e3 - 22, NTOP - 16, "3'", NEW, 16, 1 - cov3);
+          if (!(step === 7 && sealed) && step < 8) lag += endl(e3 - 22, NTOP - 16, "3′", NEW, 16, 1 - cov3);
         }
         // nick vóór ligatie
         if (step === 7 && flapCut && !sealed) lag += `<circle cx="${PREV_A}" cy="${NTOP}" r="9" fill="none" stroke="#fff" stroke-width="2.5" opacity="${f1(.5 + .5 * Math.sin(t / 120))}"/>`;
@@ -200,14 +200,14 @@ const scene = {
         const ssa = $('rs-ssa'); if (rpaR - rpaL > 40) { ssa.setAttribute('cx', f1((rpaL + rpaR) / 2)); ssa.setAttribute('cy', 300); } else { ssa.setAttribute('cx', -99); ssa.setAttribute('cy', -99); }
 
         /* ---- leidende streng ---- */
-        let lead = seg(96, NBOT, LEAD3, NBOT, NEW, 7) + endl(66, NBOT + 6, "5'", NEW);
+        let lead = seg(96, NBOT, LEAD3, NBOT, NEW, 7) + endl(66, NBOT + 6, "5′", NEW);
         if (step === 5) {
           // stroom van nucleotiden naar het 3'-uiteinde
           for (let k = 0; k < 6; k++) {
             const u = ((t / 1400 + k / 6) % 1);
             lead += `<circle cx="${f1(lerp(120, LEAD3 - 10, u))}" cy="${NBOT}" r="4.5" fill="#fff" opacity="${f1(.8 * Math.sin(Math.PI * u))}"/>`;
           }
-          lead += arrow(300, 745, 700, 745, NEW, 4, sub(p, .1, .3)) + tag(500, 776, T2("synthese 5'→3', met de vork mee", "synthesis 5'→3', along with the fork"), NEW, 18, 'middle', sub(p, .1, .3));
+          lead += arrow(300, 745, 700, 745, NEW, 4, sub(p, .1, .3)) + tag(500, 776, T2("synthese 5′→3′, met de vork mee", "synthesis 5′→3′, along with the fork"), NEW, 18, 'middle', sub(p, .1, .3));
         }
         // close-up proeflezen: basen met letters
         if (step === 8) {
@@ -233,7 +233,7 @@ const scene = {
             cl += `<circle cx="${last - 30}" cy="${NBOT + 74}" r="20" fill="#0a1224" stroke="#fff" stroke-width="1.5" stroke-dasharray="4 3" opacity="${f1(sub(p, .15, .3))}"/>`;
             cl += `<g opacity="${f1(1 - gone)}">${seg(wx, wy, wx, wy + 22, BASE[wrong], 5)}${txt(wx + 14, wy + 30, wrong, BASE[wrong], 15, 'middle', 700, 'JetBrains Mono')}</g>`;
             cl += tag(last + 36, BOTY + 20, '✗', C.danger, 26, 'middle', 1 - sub(p, .2, .3));
-            cl += tag(last - 112, NBOT + 80, T2("exo-plaats (3'→5')", "exo site (3'→5')"), '#fff', 13, 'end', sub(p, .15, .3) * (1 - gone));
+            cl += tag(last - 112, NBOT + 80, T2("exo-plaats (3′→5′)", "exo site (3′→5′)"), '#fff', 13, 'end', sub(p, .15, .3) * (1 - gone));
           } else {
             cl += `<g opacity="${f1(put)}">${seg(last, (BOTY + NBOT) / 2, last, NBOT, BASE[COMP[bT]], 4.5)}${seg(last - 9, NBOT, last + 9, NBOT, NEW, 7)}</g>`;
             cl += tag(last + 34, BOTY + 20, '✓', C.ok, 26, 'middle', sub(p, .8, .9));
@@ -254,7 +254,7 @@ const scene = {
         // Pol ε + PCNA op de leidende streng
         // Pol ε houdt het 3'-uiteinde van de leidende streng vast en zit rechtstreeks tegen CMG aan (Langston et al., PNAS 2014; Zhou et al., PNAS 2017)
         // proeflezen (stap 9): Pol ε blijft op het 3'-uiteinde; de exo-plaats zit in hetzelfde enzym (Alberts, MBoC hfst. 5)
-        pr += step === 8 ? prot(LEAD3 - 4, NBOT + 30, 104, 56, C.prot2, '', 18) + txt(LEAD3 + 50, NBOT + 70, 'Pol ε', '#fff', 18, 'middle', 700) : `<g transform="translate(902 684) rotate(-28)">${prot(0, 0, 92, 42, C.prot2, '', 24)}</g>` + txt(900, 716, 'Pol ε', '#fff', 24, 'middle', 700) + endl(LEAD3 - 46, NBOT + 32, "3'", NEW, 18);   // links onder het uiteinde, naast (niet onder) Pol ε
+        pr += step === 8 ? prot(LEAD3 - 4, NBOT + 30, 104, 56, C.prot2, '', 18) + txt(LEAD3 + 50, NBOT + 70, 'Pol ε', '#fff', 18, 'middle', 700) : `<g transform="translate(902 684) rotate(-28)">${prot(0, 0, 92, 42, C.prot2, '', 24)}</g>` + txt(900, 716, 'Pol ε', '#fff', 24, 'middle', 700) + endl(LEAD3 - 46, NBOT + 32, "3′", NEW, 18);   // links onder het uiteinde, naast (niet onder) Pol ε
         pr += clamp3(step === 8 ? 640 : LEAD3 - 120, (BOTY + NBOT) / 2, 13, 44, PCNA, 1);
         // Pol α-primase
         const aOp = step < 3 ? (step === 0 ? .0 : 0) : step === 3 ? ease(sub(p, 0, .15)) : step === 4 ? 1 - sub(p, .05, .3) : 0;   // polymerasewissel: Pol α laat los vóór RFC de klem plaatst
@@ -270,7 +270,7 @@ const scene = {
         // Pol δ zit op de PCNA-klem en omvat het 3'-uiteinde van het groeiende fragment
         const dX = step >= 6 ? del3 - 14 : pcnaX - 20;   // de opgetilde flap komt er rechtsboven uit
         pr += prot(dX, NTOP - (big ? 52 : 46), big ? 70 : 58, big ? 38 : 32, C.prot2, 'Pol δ', big ? 24 : 18, dOp);
-        if (step === 6) pr += arrow(del3 - 20, 120, del3 - 120, 120, NEW, 4, sub(p, .05, .2)) + tag(del3 - 70, 102, "5'→3'", NEW, 17, 'middle', sub(p, .05, .2));
+        if (step === 6) pr += arrow(del3 - 20, 120, del3 - 120, 120, NEW, 4, sub(p, .05, .2)) + tag(del3 - 70, 102, "5′→3′", NEW, 17, 'middle', sub(p, .05, .2));
         if (step === 6 && p > .6) pr += tag(700, 106, T2('strengverdringing → flap', 'strand displacement → flap'), C.text, 17, 'middle', sub(p, .6, .7));
         // FEN1 en ligase I
         pr += prot(PREV_A + 12, 150, 44, 26, '#e0708f', 'FEN1', 16, step === 7 ? ease(sub(p, .05, .2)) * (1 - sub(p, .45, .6)) : 0);

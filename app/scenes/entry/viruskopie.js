@@ -1,6 +1,6 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1 } from '../../kit.js';
 import { T, btn, ribo, rnaWave, scissors, dmv, CUT, COPY } from './_corona.js';
-import { cisterne } from '../../bio.js';
+import { cisterne, membraanPts, ptsLijn } from '../../bio.js';
 
 /*
  * Het virus laat zich kopiëren (zijpad virussen, 05-11-2026). Het (+)RNA-genoom van SARS-CoV-2 (29 903 nt) wordt meteen door
@@ -15,13 +15,13 @@ import { cisterne } from '../../bio.js';
  * een porie (nsp3) verbindt het binnenste van het blaasje (dsRNA) met het cytosol.
  */
 const L3 = (nl, en) => ({ nl, en });
-const RY = 250, X0 = 150, X1 = 1110, CY = 380;            // RNA-hoogte, begin/einde van het genoom, hoogte van de keten
+const RY = 380, X0 = 150, X1 = 1110, CY = 250;            // RNA-hoogte, begin/einde van het genoom, hoogte van de keten (boven: de keten komt uit de grote eenheid bovenaan)
 const XO = X0 + (X1 - X0) * 2 / 3;                          // einde van ORF1a/1ab (≈ 2/3 van het genoom)
 const N = 16, SEG = (XO - X0) / N;                          // 16 stukken (nsp1–16)
 const SCH = [2, 4];                                          // nsp3 (PLpro) en nsp5 (Mpro): de scharen in de keten
 const MACH = [3, 6, 7, 9, 10, 11, 12, 13];                  // stukken die (o.a.) de kopieermachine vormen (nsp3–4–6 membraan, nsp7–8–12 polymerase, 9, 10, 13)
 const SEGCOL = i => SCH.includes(i) ? CUT : MACH.includes(i) ? (i === 11 ? COPY : C.prot) : ['#7fdc6a', '#5fb85a', '#a6e38f'][i % 3];
-const DV = [[1270, 650, 120], [1060, 720, 78], [1480, 720, 80]];   // blaasjes met dubbel membraan
+const DV = [[1270, 650, 120], [1060, 700, 78], [1480, 700, 80]];   // blaasjes met dubbel membraan
 const MX = 1270, MY = 480;                                  // plaats van de kopieermachine: aan de cytosolkant van de porie bovenop het grote blaasje
 
 export default {
@@ -78,6 +78,9 @@ export default {
           er += `<g transform="rotate(-14 1040 825)">${cisterne(1040, 825, { len: 290, dik: 24, buig: 6, vert: false, w: 8, op: kEr, lumen: 'rgba(143,179,232,.14)' })}</g>` +
             `<g transform="rotate(12 1500 820)">${cisterne(1500, 820, { len: 290, dik: 24, buig: 6, vert: false, w: 8, op: kEr, lumen: 'rgba(143,179,232,.14)' })}</g>`;
           DV.forEach(([x, y, r], i) => { er += dmv(x, y, r * (i ? ph(4, .2, .55) : ph(4, .05, .4)), kEr); });
+          // de kleine blaasjes blijven via een smalle hals met het ER verbonden (Wolff et al. 2020)
+          for (const [x, y, r, yER] of [[1060, 700, 78, 806], [1480, 700, 80, 802]]) { const kH = kEr * ph(4, .45, .6), y0 = y + r - 3;
+            if (kH > .01) er += `<g opacity="${f1(kH)}"><rect x="${x - 7}" y="${y0}" width="14" height="${yER - y0}" fill="rgba(143,179,232,.14)"/>${membraanPts(ptsLijn(x - 8, y0, x - 8, yER), { w: 6 })}${membraanPts(ptsLijn(x + 8, y0, x + 8, yER), { w: 6 })}</g>`; }
           er += T(1270, 878, T2('ER → blaasjes met dubbel membraan', 'ER → vesicles with a double membrane'), { size: 24, col: C.mem, op: ph(4, .4, .6) });
           // poortje (nsp3) bovenaan het grote blaasje: al in stap 4 zichtbaar, vóór er RNA door het membraan gaat (Wolff et al. 2020)
           const kP = ph(4, .2, .35);
@@ -86,10 +89,10 @@ export default {
         }
         $('vk-er').innerHTML = er;
 
-        /* het genoom (+RNA) met 5'-kap */
+        /* het genoom (+RNA) met 5′-cap */
         const kRna = step === 0 ? ease(sub(p, 0, .2)) : 1;
         $('vk-rna').innerHTML = `<g opacity="${f1(.35 + .65 * kRna)}">${rnaWave(X0, X1, RY, 1, 8)}<circle cx="${X0 - 12}" cy="${RY}" r="12" fill="${C.cap}"/></g>` +
-          T(X0 - 10, RY - 50, T2('RNA van het virus', 'RNA of the virus'), { size: 26, col: C.rna, anchor: 'start', w: 700, op: step <= 1 ? 1 : .6 });
+          T(X0 - 10, RY + 62, T2('RNA van het virus', 'RNA of the virus'), { size: 26, col: C.rna, anchor: 'start', w: 700, op: step <= 1 ? 1 : .6 });
 
         /* ribosomen: lopen over het RNA (stap 0–1), daarna verder in rust */
         const run = step === 0 ? .35 * ease(sub(p, .25, 1)) : step === 1 ? .35 + .65 * ease(sub(p, 0, .9)) : 1;
@@ -98,12 +101,12 @@ export default {
         for (let k = 0; k < 3; k++) {
           const u = Math.max(0, run - k * .22);
           if (step === 0 && k > 0 && u <= 0) continue;
-          rb += ribo(lerp(X0 + 40, XO, Math.min(1, u)), RY + 4, .55, rOp);
+          rb += ribo(lerp(X0 + 40, XO, Math.min(1, u)), RY + 4, .55, rOp, { grootBoven: true });   // vrij ribosoom: grote eenheid boven het mRNA
         }
-        if (step === 0) rb += T(560, RY + 95, T2('ribosomen van de cel', 'ribosomes of the cell'), { size: 26, col: C.rrna, w: 700, op: ease(sub(p, .4, .6)) });
+        if (step === 0) rb += T(640, RY + 100, T2('ribosomen van de cel', 'ribosomes of the cell'), { size: 26, col: C.rrna, w: 700, op: ease(sub(p, .4, .6)) });
         // het laatste derde van het genoom (S, E, M, N ...) wordt niet door deze ribosomen gelezen
         rb += `<path d="M${f1(XO + 6)},${RY - 30} V${RY + 30}" stroke="${C.muted}" stroke-width="2" stroke-dasharray="5 5"/>` +
-          T((XO + X1) / 2 + 30, RY - 44, T2('S · E · M · N: later, via kortere kopieën', 'S · E · M · N: later, via shorter copies'), { size: 23, col: C.muted, w: 600, op: step <= 2 ? 1 : .6 });
+          T(XO + 18, RY + 52, T2('S · E · M · N: later, via kortere kopieën', 'S · E · M · N: later, via shorter copies'), { size: 21, col: C.muted, w: 600, anchor: 'start', op: step <= 2 ? 1 : .6 });
         $('vk-ribo').innerHTML = rb;
 
         /* de lange keten (stap 1) → stukken (stap 2) → kopieermachine (stap 3–5) */
@@ -115,7 +118,7 @@ export default {
         const cut = ph(2, .35, .8), gather = ph(3, .1, .75), sink = ph(4, .1, .7);
         if (grow > 0) {
           const xEnd = Math.min(lead, lerp(X0, XO, grow));
-          if (tunOp > .01) ch += `<path d="M${f1(lead)},${RY + 54} C${f1(lead)},${CY - 10} ${f1(xEnd + 10)},${CY - 20} ${f1(xEnd)},${CY}" stroke="${C.chain}" stroke-width="10" fill="none" stroke-linecap="round" opacity="${f1(tunOp)}"/>`;
+          if (tunOp > .01) ch += `<path d="M${f1(lead)},${RY - 48} C${f1(lead)},${CY + 10} ${f1(xEnd + 10)},${CY + 20} ${f1(xEnd)},${CY}" stroke="${C.chain}" stroke-width="10" fill="none" stroke-linecap="round" opacity="${f1(tunOp)}"/>`;
           for (let i = 0; i < N; i++) {
             const a = X0 + i * SEG, b = Math.min(X0 + (i + 1) * SEG, xEnd);
             if (b <= a) break;
@@ -131,7 +134,7 @@ export default {
             const kS = step >= 2 && SCH.includes(i) ? ph(2, 0, .2) : 0;     // de twee scharen kleuren eerst op, dan knippen ze
             ch += `<path d="M${f1(x0)},${f1(y)} L${f1(x1)},${f1(y)}" stroke="${kS > .5 || cut > .02 ? SEGCOL(i) : C.chain}" stroke-width="16" stroke-linecap="round" opacity="${f1(op)}"/>`;
           }
-          if (step === 1) ch += T(lerp(X0, XO, grow) / 2 + X0 / 2, CY + 60, T2('één lange eiwitketen', 'one long protein chain'), { size: 26, col: C.chain, w: 700, op: ease(sub(p, .3, .5)) });
+          if (step === 1) ch += T(lerp(X0, XO, grow) / 2 + X0 / 2, CY - 42, T2('één lange eiwitketen', 'one long protein chain'), { size: 26, col: C.chain, w: 700, op: ease(sub(p, .3, .5)) });
         }
         // scharen op de knipplekken (stap 2)
         if (step === 2) {
@@ -140,7 +143,7 @@ export default {
           fx += T(X0 + 2.5 * SEG, CY - 40, 'PLpro', { size: 21, col: CUT, w: 700, op: kL }) + T(X0 + 4.5 * SEG, CY - 70, 'Mpro', { size: 21, col: CUT, w: 700, op: kL });
           fx += `<path d="M${f1(X0 + 2.5 * SEG)},${CY - 34} V${CY - 12} M${f1(X0 + 4.5 * SEG)},${CY - 64} V${CY - 12}" stroke="${CUT}" stroke-width="2" opacity="${f1(kL)}"/>`;
           for (let i = 1; i < N; i++) fx += `<path d="M${f1(X0 + i * SEG)},${CY - 16} l-5,-9 h10z M${f1(X0 + i * SEG)},${CY + 16} l-5,9 h10z" fill="${CUT}" opacity="${f1(kC)}"/>`;
-          fx += T(450, CY + 140, T2('16 losse eiwitten', '16 separate proteins'), { size: 28, col: C.text, w: 700, op: ease(sub(p, .65, .85)) });
+          fx += T(450, CY - 104, T2('16 losse eiwitten', '16 separate proteins'), { size: 28, col: C.text, w: 700, op: ease(sub(p, .65, .85)) });
         }
         // de machine (stap 3+)
         if (gather > .6) {
@@ -161,10 +164,10 @@ export default {
           for (let k = 0; k < 4; k++) {
             const u = ease(sub(p, .15 + k * .12, .55 + k * .12));
             if (u <= 0) continue;
-            const x = lerp(1300, 1500 - k * 130, u), y = lerp(530, 340 + (k % 2) * 50, u);
+            const x = lerp(1300, 1500 - k * 105, u), y = lerp(530, 236 + (k % 2) * 50, u);   // boven, los van het virus-RNA
             fx += rnaWave(x - 45, x + 45, y, 1, 6);
           }
-          fx += T(1330, 298, T2('nieuwe RNA-kopieën', 'new RNA copies'), { size: 26, col: C.rna, w: 700, op: ease(sub(p, .5, .7)) });
+          fx += T(1350, 196, T2('nieuwe RNA-kopieën', 'new RNA copies'), { size: 26, col: C.rna, w: 700, op: ease(sub(p, .5, .7)) });
         }
         $('vk-chain').innerHTML = ch;
         $('vk-fx').innerHTML = fx;

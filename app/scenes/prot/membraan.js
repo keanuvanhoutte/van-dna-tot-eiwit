@@ -85,7 +85,7 @@ export default {
       <rect x="-300" y="${MB}" width="2200" height="700" fill="${LUMEN}"/>
       <g data-node="er" data-color="${C.mem}" data-label="${T2('Hoe kwam het eiwit hier? (ER)', 'How did the protein get here? (ER)')}"><g id="mb-bil">${bilayer(-300, 1900, MY, { h: MH, gap: [CX - 74, CX + 74] })}</g><circle data-anchor="er" cx="${CX - 330}" cy="${MT - 20}" r="1" fill="none"/></g>
       ${T(90, 200, T2('cytosol', 'cytosol'), { size: 28, anchor: 'start', col: C.muted })}
-      ${T(90, 790, T2('binnenkant van het ER', 'inside of the ER'), { size: 28, anchor: 'start', col: '#e0b25c' })}
+      ${T(90, 790, T2('binnenkant van het ER', 'inside of the ER'), { size: 28, anchor: 'start', col: '#8fb3e8' })}
       <g data-node="golgi" data-color="${C.mem}" data-label="${T2('Verder naar het Golgi', 'On to the Golgi')}"><g id="mb-ves"></g><circle id="mb-vesA" data-anchor="golgi" cx="-99" cy="-99" r="1" fill="none"/></g>
       <g id="mb-chan"></g><g id="mb-chain"></g><g id="mb-ribo"></g><g id="mb-fx"></g>
     </g>
@@ -97,7 +97,7 @@ export default {
       ${T(1230, 360, T2('Het echte kanaal', 'The real channel'), { size: 28, anchor: 'start', w: 700 })}
       ${T(1230, 398, T2('mens · PDB 8DNV', 'human · PDB 8DNV'), { size: 24, anchor: 'start', col: C.muted, w: 500 })}
       ${T(1230, 190, T2('↑ cytosol', '↑ cytosol'), { size: 26, anchor: 'start', col: C.muted })}
-      ${T(1230, 710, T2('↓ binnenkant ER', '↓ inside the ER'), { size: 26, anchor: 'start', col: '#e0b25c' })}
+      ${T(1230, 710, T2('↓ binnenkant ER', '↓ inside the ER'), { size: 26, anchor: 'start', col: '#8fb3e8' })}
     </g>
     ${btn('sortering', 40, 330, T2('↑ overzicht adreslabels', '↑ address labels overview'), C.ok)}
     ${btn('golgi', 1230, 330, T2('verder: Golgi →', 'next: Golgi →'), C.mem)}
@@ -127,7 +127,7 @@ export default {
         const rb = ribosoom80S(CX, MT - 14, { s: .9 });
         $('mb-ribo').innerHTML = `<g opacity="${f1(1 - kOff)}" transform="translate(${f1(lerp(0, -260, kOff))} ${f1(-lerp(0, 120, kOff))})">${rb.svg}</g>` + T(CX - 150 - 260 * kOff, 255 - 120 * kOff, T2('ribosoom', 'ribosome'), { size: 24, col: C.rrna, anchor: 'end', op: 1 - kOff });
         // blaasje (stap 6): knopt uit het ER-membraan zelf (knop uit _fate.js), met de helix in het stuk membraan dat afsnoert
-        const bud = kBud > 0 ? knop([HX, MY], [0, -1], VR, kBud, { hole: 'none', w: VW, gap: 70, lumen: 'rgba(201,165,116,.08)' }) : null;
+        const bud = kBud > 0 ? knop([HX, MY], [0, -1], VR, kBud, { hole: 'none', w: VW, gap: 70, lumen: 'rgba(143,179,232,.10)' }) : null;
         let gap2 = null;
         if (bud) { const rho = bud.c[1] - bud.top[1], d = MY - bud.c[1]; if (d < rho) { const h = Math.sqrt(rho * rho - d * d); gap2 = [HX - h - VW * .55, HX + h + VW * .55]; } }   // het vlakke membraan stopt waar de knopwand begint (geen dubbele kopjes)
         const V = [lerp(0, 130, kMove), lerp(0, -25, kMove)];

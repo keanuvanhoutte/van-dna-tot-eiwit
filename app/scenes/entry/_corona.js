@@ -9,11 +9,12 @@ import { btn } from '../prot/_fate.js';
 import { membraanPts, ptsCirkel, eiwit, eiwitPad, blaasjeDubbel, ribosoom80S } from '../../bio.js';
 export { T, btn };
 
-/* ribosoom (detailronde 15-11-2026): zelfde aanroep als ribo() uit prot/_fate.js (mRNA horizontaal door (cx, cy − 4·s)),
- * maar getekend als 80S-ribosoom uit bio.js: 40S boven het mRNA, 60S eronder, tRNA's tot het actieve centrum. */
-export function ribo(cx, cy, s = 1, op = 1, { mrna = true, tRNAs = 2 } = {}) {
+/* ribosoom (detailronde 15-11-2026): mRNA horizontaal door (cx, cy − 4·s), getekend als 80S-ribosoom uit bio.js.
+ * Standaard (ER-stand, assemblage): 40S boven het mRNA, 60S eronder op het membraan. grootBoven = true (vrij in het cytosol,
+ * app-afspraak zoals in translatie): 60S boven, 40S onder het mRNA, tunneluitgang bovenaan op (cx, cy − 93,6·s). */
+export function ribo(cx, cy, s = 1, op = 1, { mrna = true, tRNAs = 2, grootBoven = false } = {}) {
   if (op <= .01) return '';
-  return ribosoom80S(cx, cy + 85.6 * s, { s: .64 * s, op, mrna, tRNAs }).svg;
+  return ribosoom80S(cx, grootBoven ? cy - 93.6 * s : cy + 85.6 * s, { s: .64 * s, op, mrna, tRNAs, grootBoven }).svg;
 }
 
 export const SPIKE = '#ff9d5c', REC = '#7fc9b6', CUT = '#e070ff', COPY = C.prot2, DRUG = '#5fd3e6', NPROT = '#ffd166';

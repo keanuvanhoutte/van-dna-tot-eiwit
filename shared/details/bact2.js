@@ -246,16 +246,16 @@ export default {
   vergelijk: {
     nl: {
       kort: 'Van gen tot eiwit gaat bij de mens en bij een bacterie volgens hetzelfde recept: DNA → RNA → eiwit. Alleen de werkplaats verschilt. De mens heeft een [[kern|kern]], werkt het RNA eerst bij en vertaalt het pas daarna. Een bacterie heeft geen kern: [[ribosomen|bribosoom]] beginnen al terwijl het mRNA nog gemaakt wordt.',
-      what: 'Bij de mens ligt het DNA in de celkern. RNA-polymerase II maakt een pre-mRNA. Dat krijgt een 5′-kap, het spliceosoom knipt de introns eruit en het 3′-uiteinde krijgt een poly(A)-staart. Pas het rijpe mRNA gaat door een kernporie naar het cytoplasma, waar ribosomen het vertalen. Bij E. coli is er geen kern: transcriptie en translatie gebeuren in dezelfde ruimte en zijn aan elkaar gekoppeld. De genen van een operon staan samen op één mRNA.',
+      what: 'Bij de mens ligt het DNA in de celkern. RNA-polymerase II maakt een pre-mRNA. Dat krijgt een 5′-cap, het spliceosoom knipt de introns eruit en het 3′-uiteinde krijgt een poly(A)-staart. Pas het rijpe mRNA gaat door een kernporie naar het cytoplasma, waar ribosomen het vertalen. Bij E. coli is er geen kern: transcriptie en translatie gebeuren in dezelfde ruimte en zijn aan elkaar gekoppeld. De genen van een operon staan samen op één mRNA.',
       how: [
         'Mens: transcriptie in de kern; kap, splicing en poly(A)-staart beginnen al tijdens de transcriptie.',
         'Mens: het rijpe mRNA gaat door een kernporie naar het cytoplasma en wordt daar vertaald. Een menselijk mRNA draagt meestal één gen.',
         'Bacterie: ribosomen binden het mRNA al terwijl het gemaakt wordt (gezien met de elektronenmicroscoop); in het expressoom zit het ribosoom vlak achter RNA-polymerase.',
         'Bacterie: de genen van een operon worden samen op één mRNA gezet, en elk gen geeft een eigen eiwit.',
         'Bacterie: geen spliceosoom; de zeldzame introns knippen zichzelf uit.',
-        'Bacterie: geen 5′-kap zoals bij de mens; een klein deel van de RNA’s krijgt wel een NAD-kap.',
+        'Bacterie: geen 5′-cap zoals bij de mens; een klein deel van de RNA’s krijgt wel een NAD-cap.',
       ],
-      facts: [['Kern', 'mens: ja · bacterie: nee (nucleoïd)'], ['Introns', 'mens: spliceosoom · bacterie: zeldzaam, zelfsplicend'], ['5′-kap', 'mens: ja · bacterie: nee (enkele RNA’s: NAD-kap)'], ['Genen per mRNA', 'mens: meestal één · bacterie: vaak meerdere (operon)'], ['Translatie', 'mens: na de export · bacterie: al tijdens de transcriptie']],
+      facts: [['Kern', 'mens: ja · bacterie: nee (nucleoïd)'], ['Introns', 'mens: spliceosoom · bacterie: zeldzaam, zelfsplicend'], ['5′-cap', 'mens: ja · bacterie: nee (enkele RNA’s: NAD-cap)'], ['Genen per mRNA', 'mens: meestal één · bacterie: vaak meerdere (operon)'], ['Translatie', 'mens: na de export · bacterie: al tijdens de transcriptie']],
       why: 'Door die verschillen kan een bacterie een menselijk gen niet zomaar juist aflezen: ze kan de introns niet verwijderen. En omdat de ribosomen van bacterie en mens verschillen, kunnen sommige antibiotica de eiwitaanmaak van bacteriën remmen zonder die van onze cellen.',
     },
     en: {

@@ -31,6 +31,16 @@ export const dpath = pts => pts.map((p, i) => `${i ? 'L' : 'M'}${f1(p[0])},${f1(
 /* ---------- vormen ---------- */
 /* eiwit met naam: bobbelige eiwitvorm (bio.js-stijl, vaste vorm per naam) i.p.v. een gladde rechthoek; tekst blijft leesbaar */
 const hashSeed = s => { let h = 7; for (const ch of String(s)) h = (h * 31 + ch.charCodeAt(0)) % 9973; return h; };
+/* exosoom (zijaanzicht): een ringvormig vat (9 eiwitten + Rrp44) met een kanaal waar het RNA doorheen loopt (Makino et al. 2013).
+ * Getekend als boven- en onderwand van de ring met het kanaal ertussen; (x, y) = midden van het kanaal. */
+export function exosoom(x, y, rx = 72, ry = 40, op = 1, lab = '', fs = 18) {
+  if (op <= .01) return '';
+  const hw = ry * .62, d1 = eiwitPad(x, y - ry + hw / 2, rx, hw, 33, .06), d2 = eiwitPad(x, y + ry - hw / 2, rx, hw, 34, .06), col = '#8a5a3a';
+  return `<g opacity="${f1(op)}"><path d="${eiwitPad(x, y, rx, ry, 35, .04)}" fill="#0b1224" fill-opacity=".85"/>` +
+    `<path d="${d1}" fill="${col}" fill-opacity=".85" stroke="${col}" stroke-width="2"/><path d="${d2}" fill="${col}" fill-opacity=".85" stroke="${col}" stroke-width="2"/>` +
+    `<rect x="${f1(x - rx)}" y="${f1(y - 6)}" width="${f1(2 * rx)}" height="12" fill="#0b1224" fill-opacity=".9"/>` +            // kanaal
+    (lab ? `<text x="${f1(x)}" y="${f1(y - ry - 10)}" font-size="${fs}" text-anchor="middle" fill="#e0b089" font-family="Inter" font-weight="700">${lab}</text>` : '') + '</g>';
+}
 export function prot(x, y, w, h, label, col = C.prot, op = 1, fs = 16, extra = '') {
   if (op <= .01) return '';
   const sd = hashSeed(label), d = eiwitPad(x, y, w / 2 + 3, h / 2 + 2, sd, .07);
@@ -53,7 +63,7 @@ export function capG(x, y, r = 16, op = 1) {
 export function ribo(x, y, s = 1, op = 1, lab = '80S', o = {}) {
   if (op <= .01) return '';
   const { keten = 0, mrna = true, bact = false, tRNA = s >= .55 } = o;
-  const k = bact ? .88 : 1, big = C.rrna, small = '#7fe3cf';
+  const k = bact ? .88 : 1, big = C.rrna, small = '#8df0dc';   // kleine eenheid: zelfde lichte tint als overal (bio.js RRNA_KLEIN)
   let g = `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(${f1(s * k)})">`;
   const dL = eiwitPad(2, -47, 70, 45, 60, .06), dS = eiwitPad(-4, 24, 56, 24, 40, .07);
   // grote eenheid + uitgangstunnel (van het PTC naar de top)

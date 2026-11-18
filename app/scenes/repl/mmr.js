@@ -1,5 +1,6 @@
 import { structure3d } from '../../kit3d.js';
 import { C, BASE } from '../../kit.js';
+import { NEW } from './_draw.js';
 
 /* PDB 2O8B: menselijk MutSα (MSH2–MSH6) met ADP op DNA met een G·T-mispaar (röntgen 2,75 Å; Warren et al., Mol Cell 2007).
  * Ketens (nagekeken in het PDB-bestand 05-11-2026): A = MSH2 (1–855) · B = MSH6 (362–1335) · E en F = DNA (15 nt elk).
@@ -12,9 +13,9 @@ const base = [
   { sel: { chain: 'A' }, style: { cartoon: { color: COL.msh2, opacity: .9 } } },
   { sel: { chain: 'B' }, style: { cartoon: { color: COL.msh6, opacity: .9 } } },
   { sel: { chain: 'E' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .15 } } },
-  { sel: { chain: 'F' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .15 } } },
+  { sel: { chain: 'F' }, style: { cartoon: { color: NEW }, stick: { color: NEW, radius: .15 } } },
 ];
-const DNA = [{ sel: { chain: 'E' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .22 } } }, { sel: { chain: 'F' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .22 } } }];
+const DNA = [{ sel: { chain: 'E' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .22 } } }, { sel: { chain: 'F' }, style: { cartoon: { color: NEW }, stick: { color: NEW, radius: .22 } } }];
 const G = { sel: { chain: 'E', resi: 8 }, style: { stick: { color: BASE.G, radius: .4 } }, label: 'G' };
 const Tm = { sel: { chain: 'F', resi: 23 }, style: { stick: { color: BASE.T, radius: .4 } }, label: 'T' };
 const PHE = { sel: { chain: 'B', resi: 432 }, style: { stick: { color: '#ffffff', radius: .45 } }, label: L3('vinger', 'finger') };
@@ -25,7 +26,7 @@ export default structure3d({
   title: L3('Kopieerfouten worden nagelezen en verbeterd', 'Copying errors are proofread and corrected'),
   scale: { nl: '≈ 14 nm · MSH2 + MSH6', en: '≈ 14 nm · MSH2 + MSH6' }, time: L3('vlak achter de kopieervork', 'right behind the replication fork'),
   org: L3('mens · PDB 2O8B', 'human · PDB 2O8B'),
-  legend: [[COL.msh2, 'MSH2'], [COL.msh6, 'MSH6'], [C.dna, L3('oude streng', 'old strand')], [C.dna2, L3('nieuwe streng', 'new strand')], [BASE.G, 'G'], [BASE.T, L3('T (fout)', 'T (error)')], ['#ffffff', 'Phe432 (MSH6)']],
+  legend: [[COL.msh2, 'MSH2'], [COL.msh6, 'MSH6'], [C.dna, L3('oude streng', 'old strand')], [NEW, L3('nieuwe streng', 'new strand')], [BASE.G, 'G'], [BASE.T, L3('T (fout)', 'T (error)')], ['#ffffff', 'Phe432 (MSH6)']],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Echte kristalstructuur (Warren et al., <i>Mol Cell</i> 2007): de herkenningsklem MutSα (MSH2 + MSH6) op een stuk DNA met een G·T-mispaar. Sleep om te draaien, scroll om te zoomen.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Real crystal structure (Warren et al., <i>Mol Cell</i> 2007): the recognition clamp MutSα (MSH2 + MSH6) on a piece of DNA with a G·T mispair. Drag to rotate, scroll to zoom.</p>' },
@@ -40,7 +41,7 @@ export default structure3d({
       focus: [{ sel: { chain: 'A' }, style: { cartoon: { color: COL.msh2 } }, label: L3('deel 1', 'part 1') }, { sel: { chain: 'B' }, style: { cartoon: { color: COL.msh6 } }, label: L3('deel 2', 'part 2') }, ...DNA],
       text: L3('Twee eiwitten vormen samen een klem. Die glijdt over het DNA en zoekt foute paren.', 'Two proteins together form a clamp. It slides along the DNA, looking for wrong pairs.') },
     { dur: 8000, title: L3('De klem omsluit het DNA en knikt het', 'The clamp grips the DNA and kinks it'), zoom: { chain: ['E', 'F'] }, spin: .008,
-      focus: [{ sel: { chain: ['A', 'B'] }, style: { cartoon: { color: '#56607a', opacity: .45 } } }, { sel: { chain: 'E' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .25 } }, label: 'DNA' }, { sel: { chain: 'F' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .25 } } }],
+      focus: [{ sel: { chain: ['A', 'B'] }, style: { cartoon: { color: '#56607a', opacity: .45 } } }, { sel: { chain: 'E' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .25 } }, label: 'DNA' }, { sel: { chain: 'F' }, style: { cartoon: { color: NEW }, stick: { color: NEW, radius: .25 } } }],
       text: L3('Het DNA loopt dwars door de klem. Op de plek van de fout wordt het geknikt.', 'The DNA runs right through the clamp. At the site of the error it is kinked.') },
     { dur: 9000, title: L3('G tegenover T: dat past niet', 'G opposite T: that does not fit'), zoom: MIS, spin: .005,
       focus: [{ sel: { chain: ['A', 'B'] }, style: { cartoon: { color: '#56607a', opacity: .35 } } }, ...DNA, G, Tm],
@@ -49,8 +50,8 @@ export default structure3d({
       focus: [{ sel: { chain: ['A', 'B'] }, style: { cartoon: { color: '#56607a', opacity: .35 } } }, ...DNA, { ...G, label: undefined }, { ...Tm, label: undefined }, PHE],
       text: L3('Eén bouwsteen van de klem steekt in het DNA, precies tegen de foute T. Zo weet de klem waar de fout zit.', 'One building block of the clamp pokes into the DNA, right against the wrong T. That is how the clamp knows where the error is.') },
     { dur: 9000, title: L3('Het foute stuk van de nieuwe streng gaat eruit', 'The faulty stretch of the new strand is removed'), zoom: { chain: ['E', 'F'] }, spin: .008,
-      focus: [{ sel: { chain: ['A', 'B'] }, style: { cartoon: { color: '#56607a', opacity: .3 } } }, { sel: { chain: 'E' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .2 } }, label: L3('oude streng', 'old strand') },
-        { sel: { chain: 'F' }, style: { stick: { color: C.danger, radius: .35 } }, label: L3('nieuwe streng', 'new strand') }],
+      focus: [{ sel: { chain: ['A', 'B'] }, style: { cartoon: { color: '#56607a', opacity: .3 } } }, { sel: { chain: 'E' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .2 } }, label: L3('oude streng', 'old strand'), labelSel: { chain: 'E', resi: 1 }, labelColor: C.dna },
+        { sel: { chain: 'F' }, style: { stick: { color: NEW, radius: .35 } }, label: L3('nieuwe streng', 'new strand'), labelSel: { chain: 'F', resi: 16 }, labelColor: NEW }],   // labels aan tegenovergestelde uiteinden (E1 paart met F30, F16 met E15): niet meer over elkaar
       text: L3('Partnereiwitten knippen de nieuwe streng in en halen een stuk met de fout weg. De oude streng blijft heel.', 'Partner proteins nick the new strand and remove a stretch containing the error. The old strand stays intact.') },
     { dur: 9000, title: L3('Opnieuw gemaakt, nu juist', 'Made again, now correct'), zoom: { chain: ['E', 'F'] }, spin: .008,
       focus: [{ sel: { chain: ['A', 'B'] }, style: { cartoon: { color: '#56607a', opacity: .3 } } }, { sel: { chain: 'E' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .2 } } },

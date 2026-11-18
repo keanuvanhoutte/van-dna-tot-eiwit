@@ -15,7 +15,7 @@ const centerK = k => X => { const l = loopPt(X); return [lerp(X, l[0], k), lerp(
 const NUC = [-330, -150, 205, 545, 700, TATA, 1160, 1320, 1690, 1880];
 const CTCF1 = 90, CTCF2 = 1500;
 
-const M = { act: C.prot, med: '#6f5bd6', hat: '#d98cf0', rem: '#8f7bd0', ctcf: '#e8a23a', rep: C.danger, pol: '#8e6cf0' };
+const M = { act: C.prot, med: '#6f5bd6', hat: '#d98cf0', rem: '#8f7bd0', ctcf: '#e8a23a', rep: C.danger, pol: C.prot };   // Pol II: overal #9b7bff (C.prot)
 
 export default {
   id: 'genregulatie',
@@ -206,10 +206,11 @@ export default {
         pr2 += prot(rq[0] - 40, remY, 54, 26, M.rem, remOp, 22, 'SWI/SNF', 18);   // links van de +1-pijl
         if (step === 3 && remOp > .01) pr2 += txt(rq[0] - 60, remY - 46, T2('remodeler (ATP)', 'remodeller (ATP)'), C.text, 18);
         // Mediator
-        const mA = [e[0] + 70, e[1] - 150], mB = [915, 425];
-        const mp = [lerp(mA[0], mB[0], k), lerp(mA[1], mB[1], k)];
-        pr2 += `<g opacity="${f1(med)}"><path d="M${f1(e[0])},${f1(ay - 58)} L${f1(mp[0] - 40)},${f1(mp[1] + 20)}" stroke="${M.med}" stroke-width="3" stroke-dasharray="4 4"/></g>`;
-        pr2 += prot(mp[0], mp[1] - 60 * (1 - med), 82, 44, M.med, med, 31, 'Mediator', 20);
+        // Mediator ligt tegen het activatiedomein (bol bovenaan de activator); na de lus raakt hij ook Pol II: de brug (Soutourina 2018)
+        const PP = pt(TATA), polL = [PP[0] + 95 - 70, PP[1] - 60];
+        const mA = [e[0] + 20, ay - 104], mB = [(e[0] + polL[0]) / 2, ((ay - 50) + polL[1]) / 2 - 6];
+        const mp = [lerp(mA[0], mB[0], k), lerp(mA[1], mB[1], k)], mrx = lerp(82, Math.max(82, (polL[0] - e[0]) / 2 + 14), k);
+        pr2 += prot(mp[0], mp[1] - 60 * (1 - med), mrx, 44, M.med, med, 31, 'Mediator', 20);
         // CTCF
         const c1 = pt(CTCF1), c2 = pt(CTCF2);
         const ctcf = (q) => `<rect x="${f1(q[0] - 12)}" y="${f1(q[1] - 20)}" width="24" height="40" rx="5" fill="${M.ctcf}" fill-opacity=".25" stroke="${M.ctcf}" stroke-width="2"/>` + prot(q[0], q[1] - 34, 26, 16, M.ctcf, 1, 41);
@@ -238,9 +239,10 @@ export default {
         pic += prot(P[0] + 95, P[1] - 60, 70, 52, M.pol, f(.4, .58), 52, 'Pol II', 17) +   // met de CTD-staart (enkel Pol II heeft die)
           (f(.4, .58) > .01 ? `<path d="M${f1(P[0] + 60)},${f1(P[1] - 108)} q-18,-16 -6,-32 q12,-16 -6,-32" stroke="${M.pol}" stroke-width="3" fill="none" opacity="${f1(f(.4, .58) * .85)}"/>` + txt(P[0] + 60, P[1] - 180, 'CTD', M.pol, 15, 'middle', 700).replace('<text', `<text opacity="${f1(f(.4, .58))}"`) : '');
         // rechterkolom boven het +1-nucleosoom (niet erover): TFIIF, TFIIE, TFIIH (TFIIE haalt TFIIH binnen)
-        gtf += ePill(P[0] + 186, P[1] - 74, 70, 26, 'TFIIF', '#5a4bb8', f(.45, .6), 15);
-        gtf += ePill(P[0] + 152, P[1] - 128, 70, 26, 'TFIIE', '#5a4bb8', f(.6, .72), 15);
-        gtf += ePill(P[0] + 206, P[1] - 162, 74, 28, 'TFIIH', '#8e6cf0', f(.7, .85), 15);
+        // TFIIF en TFIIE tegen Pol II; TFIIH op het DNA vóór Pol II (XPB draait daar het DNA open; He et al. 2016)
+        gtf += ePill(P[0] + 176, P[1] - 66, 70, 26, 'TFIIF', '#5a4bb8', f(.45, .6), 15);
+        gtf += ePill(P[0] + 136, P[1] - 116, 70, 26, 'TFIIE', '#5a4bb8', f(.6, .72), 15);
+        gtf += ePill(P[0] + 120, P[1] - 4, 70, 26, 'TFIIH', '#8e6cf0', f(.7, .85), 15);
         $('gr-pic').innerHTML = pic; $('gr-gtf').innerHTML = gtf;
         setA('gr-polA', P[0] + 300, P[1] - 110, step === 7 && p > .5);
 

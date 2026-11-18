@@ -1,6 +1,7 @@
 import { C, BASE, COMP, L, T2, svgOpen, txt, mono, pill, nt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { ST } from './_a_kit.js';
-import { eiwitPad } from '../../bio.js';
+import { eiwitPad, eiwit } from '../../bio.js';
+import { NEW } from '../repl/_draw.js';   // nieuw gesynthetiseerd DNA: zelfde cyaan als in replicatie/replisoom
 
 /* bovenste streng 5'→3'; elke CG = CpG-plaats (palindroom: onderste streng leest ook 5'-CG-3') */
 const SEQ = 'TACGGATCGCATTCGACGTAACGT';
@@ -23,7 +24,7 @@ function strand(y, seq, top, meth, op, col, newS = false, lab = 1) {
         (lab > .01 ? `<text x="${bx(i)}" y="${f1(y1 + (top ? -9 : 17))}" font-size="12" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="800" opacity="${f1(lab)}">CH₃</text>` : '') + `</g>`;
     }
   }
-  s += txt(bx(0) - 40, y + 21, top ? "5'" : "3'", C.text, 17) + txt(bx(N - 1) + 40, y + 21, top ? "3'" : "5'", C.text, 17);
+  s += txt(bx(0) - 40, y + 21, top ? "5′" : "3′", C.text, 17) + txt(bx(N - 1) + 40, y + 21, top ? "3′" : "5′", C.text, 17);
   return s + '</g>';
 }
 const COMPL = SEQ.split('').map(b => COMP[b]).join('');
@@ -34,7 +35,7 @@ export default {
   scale: { nl: '≈ 1–10 nm', en: '≈ 1–10 nm' },
   time: { nl: 'onderhoud kort na replicatie; patronen kunnen levenslang blijven', en: 'maintenance shortly after replication; patterns can last a lifetime' },
   org: { nl: 'mens (zoogdier)', en: 'human (mammal)' },
-  legend: [[BASE.A, 'A'], [BASE.T, 'T'], [BASE.G, 'G'], [BASE.C, 'C'], [MCOL, { nl: 'methylgroep (5mC)', en: 'methyl group (5mC)' }], [C.dna, { nl: 'oude streng', en: 'parental strand' }], [C.dna2, { nl: 'nieuwe streng', en: 'new strand' }], [C.prot, { nl: 'DNMT / TET / MBD', en: 'DNMT / TET / MBD' }]],
+  legend: [[BASE.A, 'A'], [BASE.T, 'T'], [BASE.G, 'G'], [BASE.C, 'C'], [MCOL, { nl: 'methylgroep (5mC)', en: 'methyl group (5mC)' }], [C.dna, { nl: 'oude streng', en: 'parental strand' }], [NEW, { nl: 'nieuwe streng', en: 'new strand' }], [C.prot, { nl: 'DNMT / TET / MBD', en: 'DNMT / TET / MBD' }]],
   simplified: {
     nl: 'Het DNA is als platte ladder getekend. In werkelijkheid flipt DNMT de cytosine uit de helix in zijn actieve site. DNMT1 werkt samen met UHRF1 (herkent hemigemethyleerd CpG) en gaat mee met de replicatievork; DNMT3A/B werken samen met DNMT3L. Buiten CpG komt (vooral in neuronen en stamcellen) ook wat methylatie in andere contexten voor. De chromatine rond het DNA is weggelaten.',
     en: 'The DNA is drawn as a flat ladder. In reality DNMT flips the cytosine out of the helix into its active site. DNMT1 works together with UHRF1 (which recognises hemimethylated CpG) and travels with the replication fork; DNMT3A/B work together with DNMT3L. Outside CpG, some methylation in other contexts also occurs (mainly in neurons and stem cells). The chromatin around the DNA is omitted.' },
@@ -121,7 +122,7 @@ export default {
     <g data-node="nucleotide" data-color="${BASE.C}" data-label="${T2('Nucleotide (cytosine)', 'Nucleotide (cytosine)')}" id="dm-chem">${chem}<circle data-anchor="nucleotide" cx="1180" cy="300" r="1" fill="none"/></g>
     ${tr}
     <g id="dm-prom" opacity="0">${prom}</g>
-    <g data-node="replicatie" data-color="${C.dna2}" data-label="${T2('DNA-replicatie', 'DNA replication')}" id="dm-rep" opacity="0"><rect x="60" y="480" width="40" height="160" fill="transparent"/><circle data-anchor="replicatie" cx="140" cy="485" r="1" fill="none"/></g>
+    <g data-node="replicatie" data-color="${NEW}" data-label="${T2('DNA-replicatie', 'DNA replication')}" id="dm-rep" opacity="0"><rect x="60" y="480" width="40" height="160" fill="transparent"/><circle data-anchor="replicatie" cx="140" cy="485" r="1" fill="none"/></g>
     <g id="dm-sum" opacity="0">
       <g data-node="histonmod" data-color="${C.chain}" data-label="${T2('Histonmodificaties', 'Histone modifications')}">${pill(300, 140, 380, 46, T2('+ histonmodificaties (H3K9me3)', '+ histone modifications (H3K9me3)'), '#1f7a5c', 1, 20)}</g>
       ${pill(780, 140, 500, 46, T2('X-inactivatie · imprinting · transposons', 'X inactivation · imprinting · transposons'), '#8a2e3b', 1, 20)}
@@ -153,8 +154,8 @@ export default {
         let d = '';
         d += strand(yA1, SEQ, true, mTop, 1, C.dna, false, lab);
         d += strand(yB2, COMPL, false, mBot, 1, C.dna, false, lab);
-        d += strand(yA2, COMPL, false, nBot, newOp, C.dna2, true, lab);
-        d += strand(yB1, SEQ, true, nTop, newOp, C.dna2, true, lab);
+        d += strand(yA2, COMPL, false, nBot, newOp, NEW, true, lab);
+        d += strand(yB1, SEQ, true, nTop, newOp, NEW, true, lab);
         // waterstofbruggen (streepjes) tussen gepaarde basen
         const hb = (ya, yb, op) => op < .05 ? '' : `<g opacity="${f1(op)}">` + SEQ.split('').map((b, i) => `<line x1="${bx(i)}" y1="${ya + BH + 1}" x2="${bx(i)}" y2="${yb - 1}" stroke="#fff" stroke-width="2" stroke-dasharray="3 3" opacity=".6"/>`).join('') + '</g>';
         d += hb(yA1, 420, rep < .05 ? 1 : newOp);
@@ -170,10 +171,10 @@ export default {
         let e = '';
         if (step === 2) {
           const k = sub(p, .1, .9), x = lerp(bx(0), bx(N - 1), k);
-          e += pill(x, 262, 150, 36, 'DNMT3A/B', C.prot2, 1 - sub(p, .9, 1), 17) + pill(x, 488, 150, 36, 'DNMT3A/B', C.prot2, 1 - sub(p, .9, 1), 17);
+          e += eiwit(x, 262, 78, 22, C.prot2, { seed: 31, label: 'DNMT3A/B', fs: 17, op: 1 - sub(p, .9, 1) }) + eiwit(x, 488, 78, 22, C.prot2, { seed: 32, label: 'DNMT3A/B', fs: 17, op: 1 - sub(p, .9, 1) });   // eiwitvorm i.p.v. tekstpil
           e += txt(560, 560, 'SAM → SAH', C.muted, 18);
         }
-        if (step === 4) e += pill(Math.min(dx + 60, bx(N - 1) - 60), 500, 170, 36, 'DNMT1 + UHRF1', C.prot2, 1, 16);   // blijft binnen beeld (stopt bij de laatste CpG)
+        if (step === 4) e += eiwit(Math.min(dx + 60, bx(N - 1) - 60), 500, 88, 22, C.prot2, { seed: 33, label: 'DNMT1 + UHRF1', fs: 16 });   // blijft binnen beeld (stopt bij de laatste CpG)
         $('dm-enz').innerHTML = e;
         // inzetten
         $('dm-me').setAttribute('opacity', step === 1 ? ease(sub(p, .25, .5)) : 1);

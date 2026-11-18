@@ -39,7 +39,7 @@ export default {
   scale: { nl: '≈ 1–10 µm (metafase)', en: '≈ 1–10 µm (metaphase)' },
   time: { nl: 'mitose ≈ 1 uur', en: 'mitosis ≈ 1 hour' },
   org: { nl: 'mens (46,XX of 46,XY)', en: 'human (46,XX or 46,XY)' },
-  legend: [[C.dna, { nl: 'chromatide / DNA', en: 'chromatid / DNA' }], ['#ffc247', { nl: 'cohesine', en: 'cohesin' }], [C.prot, { nl: 'kinetochoor', en: 'kinetochore' }], ['#7fdc6a', { nl: 'microtubuli', en: 'microtubules' }], [C.rna, { nl: 'telomeer (TTAGGG)ₙ', en: 'telomere (TTAGGG)ₙ' }], [C.rrna, { nl: 'rDNA (NOR)', en: 'rDNA (NOR)' }], ['#5fd3e6', { nl: 'condensine', en: 'condensin' }]],
+  legend: [[C.dna, { nl: 'chromatide / DNA', en: 'chromatid / DNA' }], ['#ffc247', { nl: 'cohesine', en: 'cohesin' }], [C.prot, { nl: 'kinetochoor', en: 'kinetochore' }], ['#7fdc6a', { nl: 'microtubuli', en: 'microtubules' }], ['#dfe6f5', { nl: 'telomeer (DNA: TTAGGG)ₙ', en: 'telomere (DNA: TTAGGG)ₙ' }], [C.rrna, { nl: 'rDNA (NOR)', en: 'rDNA (NOR)' }], ['#5fd3e6', { nl: 'condensine', en: 'condensin' }]],
   simplified: {
     nl: 'Lengtes in het karyogram zijn op schaal (T2T-referentie), maar de centromeerposities zijn benaderd en de banden zijn schematisch (geen echt G-bandpatroon). Cohesine en condensine zijn als ringen getekend; in een echt chromosoom zijn het er duizenden. Het aantal lussen, microtubuli en telomeerherhalingen is sterk verminderd.',
     en: 'Lengths in the karyogram are to scale (T2T reference), but centromere positions are approximate and the bands are schematic (not a real G-banding pattern). Cohesin and condensin are drawn as rings; a real chromosome has thousands. The number of loops, microtubules and telomere repeats is strongly reduced.' },
@@ -98,7 +98,7 @@ export default {
     const big = `<g id="cs-sisA">${sis(-W / 2 - 3)}</g><g id="cs-sisB">${sis(W / 2 + 3)}<rect x="${BX - 12}" y="${BC - 9}" width="24" height="18" rx="6" fill="${C.dna}"/></g>`;
     // telomeerkappen
     const telo = [[-1, top], [1, top], [-1, top + len], [1, top + len]].map(([sd, y]) =>
-      `<rect x="${f1(BX + sd * (W / 2 + 3) - W / 2 + 2)}" y="${f1(y < BC ? y : y - 14)}" width="${W - 4}" height="14" rx="7" fill="${C.rna}"/>`).join('');
+      `<rect x="${f1(BX + sd * (W / 2 + 3) - W / 2 + 2)}" y="${f1(y < BC ? y : y - 14)}" width="${W - 4}" height="14" rx="7" fill="#dfe6f5"/>`).join('');   // telomeer: DNA-uiteinde, neutrale merkkleur (oranje = RNA)
 
     // ---- inzet centromeer ----
     let cen = panel(860, 400, 680, 300, T2('Centromeer', 'Centromere'), '#2a3a60', 20);
@@ -109,23 +109,23 @@ export default {
       cen += nu.svg;
     }
     cen += `</g>`;
-    cen += `<path d="${eiwitPad(1170, 520, 252, 24, 112, .05)}" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>` + txt(1170, 526, T2('kinetochoor', 'kinetochore'), '#fff', 18);
-    for (let i = 0; i < 7; i++) cen += `<line x1="${960 + i * 70}" y1="500" x2="${1000 + i * 55}" y2="440" stroke="#7fdc6a" stroke-width="7" stroke-linecap="round"/>`;
-    cen += txt(1480, 470, T2('microtubuli', 'microtubules'), '#7fdc6a', 18, 'end');
+    cen += `<path d="${eiwitPad(1170, 546, 252, 24, 112, .05)}" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>` + txt(1170, 552, T2('kinetochoor', 'kinetochore'), '#fff', 18);
+    for (let i = 0; i < 7; i++) cen += `<line x1="${960 + i * 70}" y1="526" x2="${1000 + i * 55}" y2="466" stroke="#7fdc6a" stroke-width="7" stroke-linecap="round"/>`;
+    cen += txt(1480, 496, T2('microtubuli', 'microtubules'), '#7fdc6a', 18, 'end');
     cen += txt(1170, 650, T2('α-satelliet-DNA · CENP-A-nucleosomen (paars)', 'α-satellite DNA · CENP-A nucleosomes (purple)'), C.muted, 17);
 
     // ---- inzet telomeer ----
     let tel = panel(860, 720, 680, 170, T2('Telomeer', 'Telomere'), '#2a3a60', 20);
     const rep = 'TTAGGG';
     for (let i = 0; i < 5; i++) {
-      tel += `<rect x="${900 + i * 100}" y="790" width="92" height="30" rx="6" fill="rgba(255,138,61,.25)" stroke="${C.rna}" stroke-width="2"/>` + mono(946 + i * 100, 811, rep, C.rna, 16);
+      tel += `<rect x="${900 + i * 100}" y="790" width="92" height="30" rx="6" fill="rgba(79,143,247,.22)" stroke="${C.dna}" stroke-width="2"/>` + mono(946 + i * 100, 811, rep, C.dna, 16);   // G-rijke DNA-streng (zoals in telomeren)
     }
-    tel += `<rect x="1400" y="790" width="92" height="30" rx="6" fill="rgba(255,138,61,.25)" stroke="${C.rna}" stroke-width="2" stroke-dasharray="4 3"/>` + mono(1446, 811, rep, C.rna, 16);
-    tel += txt(1452, 864, T2("3'-overhang", "3' overhang"), C.rna, 13) + txt(890, 811, "5'", C.text, 15, 'end') + txt(1510, 811, "3'", C.text, 15, 'start');
+    tel += `<rect x="1400" y="790" width="92" height="30" rx="6" fill="rgba(79,143,247,.22)" stroke="${C.dna}" stroke-width="2" stroke-dasharray="4 3"/>` + mono(1446, 811, rep, C.dna, 16);
+    tel += txt(1452, 864, T2("3′-overhang", "3′ overhang"), C.dna, 13) + txt(890, 811, "5′", C.text, 15, 'end') + txt(1510, 811, "3′", C.text, 15, 'start');
     tel += `<path d="M900,835 L1390,835" stroke="${C.dna2}" stroke-width="4"/>` + txt(1145, 870, T2('complementaire streng (CCCTAA)ₙ', 'complementary strand (CCCTAA)ₙ'), C.dna2, 13) +
-      txt(890, 840, "3'", C.text, 15, 'end') + txt(1398, 840, "5'", C.text, 15, 'start');
-    // telomerase op het uitstekende 3'-uiteinde (verlengt het met nieuwe TTAGGG-herhalingen)
-    tel += `<g id="cs-tert"><path d="${eiwitPad(1446, 768, 44, 15, 884, .07)}" fill="#3fb6c9" stroke="#0a1224" stroke-width="1.5"/>${txt(1446, 773, 'telomerase', '#0a1224', 13, 'middle', 700)}</g>`;
+      txt(890, 840, "3′", C.text, 15, 'end') + txt(1398, 840, "5′", C.text, 15, 'start');
+    // telomerase op het uitstekende 3′-uiteinde (verlengt het met nieuwe TTAGGG-herhalingen)
+    tel += `<g id="cs-tert"><path d="${eiwitPad(1446, 774, 44, 15, 884, .07)}" fill="${C.prot}" stroke="#0a1224" stroke-width="1.5"/><path d="M1420,786 q10,-5 20,0 t20,0 t14,0" stroke="${C.rna}" stroke-width="2.2" fill="none"/>${txt(1446, 778, 'telomerase', '#0a1224', 13, 'middle', 700)}</g>`;   // lila eiwit (TERT) met oranje RNA-mal (hTR), zoals in de scène telomeren
     tel += `<g id="cs-shel">${[960, 1100, 1240].map(x => `<path d="${eiwitPad(x, 775, 30, 12, 883, .07)}" fill="#c78bf0" opacity=".8"/>`).join('')}${txt(1330, 772, 'shelterin', '#c78bf0', 14, 'start')}</g>`;
 
     // ---- condensinelussen op een arm ----
@@ -143,7 +143,7 @@ export default {
     <g id="cs-kar">${kar}</g>
     <g id="cs-big">
       <g id="cs-rep" data-node="replicatie" data-color="${C.dna}" data-label="${T2('Zusterchromatiden (na replicatie)', 'Sister chromatids (after replication)')}">${big}<circle data-anchor="replicatie" cx="${BX + 170}" cy="${top + 70}" r="1" fill="none"/></g>
-      <g id="cs-telo" data-node="telomeren" data-color="${C.rna}" data-label="${T2('Telomeren', 'Telomeres')}">${telo}<circle data-anchor="telomeren" cx="${BX + 110}" cy="${top + len + 5}" r="1" fill="none"/></g>
+      <g id="cs-telo" data-node="telomeren" data-color="#dfe6f5" data-label="${T2('Telomeren', 'Telomeres')}">${telo}<circle data-anchor="telomeren" cx="${BX + 110}" cy="${top + len + 5}" r="1" fill="none"/></g>
       <g id="cs-coh"></g>
       <g id="cs-kin"></g>
       <g id="cs-loops" data-node="chromatine" data-color="${C.dna2}" data-nolabel opacity="0">${loops}</g>
@@ -155,7 +155,7 @@ export default {
       <g id="cs-inter" opacity="0"></g>
     </g>
     <g id="cs-cen">${cen}</g>
-    <g data-node="telomeren" data-color="${C.rna}" data-nolabel id="cs-tel">${tel}</g>
+    <g data-node="telomeren" data-color="#dfe6f5" data-nolabel id="cs-tel">${tel}</g>
     <g data-node="chromatine" data-color="${C.dna}" data-label="${T2('Chromatine →', 'Chromatin →')}"><g id="cs-chr"></g><circle id="cs-chrA" data-anchor="chromatine" cx="${BX - 150}" cy="${top + 5}" r="1" fill="none"/></g>
     </svg>`;
   },

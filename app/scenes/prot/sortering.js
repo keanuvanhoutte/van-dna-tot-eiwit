@@ -30,7 +30,7 @@ const BIG = { x0: 110, y: 470, sp: 38, r: 15 };
 
 /* suikerlabel met fosfaat (lysosoom) boven bolletje i van een keten */
 const sugar = (x, y, s = 1, op = 1, letter = s > 1.2) => op <= .01 ? '' : `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(${s})"><line x1="0" y1="0" x2="0" y2="-26" stroke="#c9d2e4" stroke-width="3"/>` +
-  `<rect x="-9" y="-44" width="18" height="18" rx="3" fill="#00A651"/><circle cx="14" cy="-48" r="${letter ? 10 : 9}" fill="${DEST.lyso}"/>${letter ? '<text x="14" y="-43" font-size="13" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">P</text>' : ''}</g>`;
+  `<rect x="-9" y="-44" width="18" height="18" rx="3" fill="#00A651"/><circle cx="14" cy="-48" r="${letter ? 10 : 9}" fill="#ff9f43"/>${letter ? '<text x="14" y="-43" font-size="13" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">P</text>' : ''}</g>`;
 
 function chainOf(k, x0, y, sp, r, op) {
   const v = VAR[k];
@@ -87,7 +87,7 @@ export default {
     ${T(RX + 26, 100, T2('label', 'label'), { size: 24, anchor: 'start', col: C.muted, w: 600 })}${T(RX + 730, 100, T2('bestemming', 'destination'), { size: 24, anchor: 'start', col: C.muted, w: 600 })}
     <g id="so-head" opacity="0"></g>
     ${rows}
-    <g data-node="translatie" data-color="${C.rrna}" data-label="${T2('Ribosoom', 'Ribosome')}">${ribo(300, 250, 1.15)}<circle data-anchor="translatie" cx="300" cy="170" r="1" fill="none"/></g>
+    <g data-node="translatie" data-color="${C.rrna}" data-label="${T2('Ribosoom', 'Ribosome')}">${ribo(300, 250, 1.15)}<circle data-anchor="translatie" cx="300" cy="134" r="1" fill="none"/></g>
     <g id="so-big"></g>
     </svg>`;
   },

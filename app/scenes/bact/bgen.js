@@ -97,9 +97,9 @@ const SC = {
         if (step === 1 || (step === 2 && p < .3)) {
           const fo = step === 2 ? 1 - sub(p, 0, .25) : 1;
           const a = (step === 1 ? sub(p, .15, .35) : 1) * fo, b = (step === 1 ? ease(sub(p, .45, .7)) : 1) * fo;
-          o += `<g opacity="${f1(a)}">` + mono(195, Y0 - 40, 'TTGACA', COL.prom, 24) + mono(375, Y0 - 40, 'TATAAT', COL.prom, 24) +
-            `<path d="M245,${Y0 + 28} v10 H325 v-10" stroke="${C.muted}" fill="none" stroke-width="2"/>` + txt(285, Y0 + 60, '17 bp', C.muted, 20) + '</g>';
-          o += `<g opacity="${f1(b)}">` + prot(285, Y0 - 104, 170, 34, COL.prom, 1, 11, T2('σ-factor (σ70)', 'σ factor (σ70)'), 22) + '</g>';
+          o += `<g opacity="${f1(a)}">` + mono(195, Y0 - 72, 'TTGACA', COL.prom, 24) + mono(375, Y0 - 72, 'TATAAT', COL.prom, 24) +
+            `<path d="M245,${Y0 - 98} v-10 H325 v10" stroke="${C.muted}" fill="none" stroke-width="2"/>` + txt(285, Y0 - 116, '17 bp', C.muted, 20) + '</g>';
+          o += `<g opacity="${f1(b)}">` + prot(268, Y0 - 32, 164, 34, COL.prom, 1, 11, T2('σ-factor (σ70)', 'σ factor (σ70)'), 22) + '</g>';   // σ70 ligt op het DNA en leest −35 en −10 (zoals in operon en bpol)
         }
         // stap 3: repressor op operator, activator ervoor
         if (step === 3) {

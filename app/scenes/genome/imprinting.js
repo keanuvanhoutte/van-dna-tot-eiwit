@@ -27,14 +27,14 @@ const arc = (x0, x1, y, col, op = 1, h = 120) => op <= .01 ? '' : `<path d="M${x
 export default {
   id: 'imprinting',
   title: L3('Soms telt van welke ouder je een gen kreeg', 'Sometimes it matters which parent gave you a gene'),
-  scale: L3('genen en chromosomen (schematisch)', 'genes and chromosomes (schematic)'),
+  scale: L3('genen en chromosomen (schematisch; cellen niet op schaal)', 'genes and chromosomes (schematic; cells not to scale)'),
   time: L3('merkteken gezet in eicel of zaadcel, daarna een leven lang', 'mark set in egg or sperm, then for a lifetime'),
   org: L3('mens', 'human'),
   legend: [[MOM, L3('kopie van de moeder', 'copy from the mother')], [DAD, L3('kopie van de vader', 'copy from the father')], [ON, L3('gen aan', 'gene on')], [OFFG, L3('gen uit', 'gene off')],
     [ME, L3('merkteken (methylgroepen)', 'mark (methyl groups)')], [STOP, L3('stop-eiwit', 'stop protein')], [ENH, L3('versterker', 'switch')]],
   simplified: {
-    nl: 'Schematisch: de genen staan niet op hun echte plaats en zijn veel te groot getekend. Het groeigen en zijn buurgen (IGF2 en H19) liggen op chromosoom 11; het getal "ongeveer honderd" komt uit een overzicht van 2011 en later zijn er meer kandidaten gevonden. De ziekten op chromosoom 15 kunnen ook andere oorzaken hebben dan een verlies van een stukje.',
-    en: 'Schematic: the genes are not at their real positions and are drawn far too large. The growth gene and its neighbour (IGF2 and H19) lie on chromosome 11; the figure "about a hundred" comes from a 2011 overview and more candidates have been found since. The disorders on chromosome 15 can also have causes other than a lost piece.' },
+    nl: 'Schematisch: de genen staan niet op hun echte plaats en zijn veel te groot getekend. Het groeigen en zijn buurgen (IGF2 en H19) liggen op chromosoom 11; het getal "ongeveer honderd" komt uit een overzicht van 2011 en later zijn er meer kandidaten gevonden. De ziekten op chromosoom 15 kunnen ook andere oorzaken hebben dan een verlies van een stukje. De eicel en de zaadcel zijn niet op schaal: een eicel (≈ 0,1 mm) is zo’n twintig keer breder dan de kop van een zaadcel (≈ 5 µm).',
+    en: 'Schematic: the genes are not at their real positions and are drawn far too large. The growth gene and its neighbour (IGF2 and H19) lie on chromosome 11; the figure "about a hundred" comes from a 2011 overview and more candidates have been found since. The disorders on chromosome 15 can also have causes other than a lost piece. The egg and sperm cell are not to scale: an egg (≈ 0.1 mm) is about twenty times wider than a sperm head (≈ 5 µm).' },
   steps: [
     { dur: 7500, cam: FULL, title: L3('Van elk gen heb je twee kopieën', 'You have two copies of every gene'),
       text: L3('Je krijgt één kopie van je moeder en één van je vader. Meestal werken ze allebei.', 'You get one copy from your mother and one from your father. Usually both work.') },
@@ -99,7 +99,7 @@ export default {
           // vader: merkteken, geen stop → versterker bereikt het groeigen
           o += marks(655, 330, 3, vC) + arc(1190, 400, 330, ON, vC * kd, 170);
           // moeder: stop-eiwit op het controlestuk → versterker bereikt alleen het buurgen
-          o += `<path d="M620,${640 - 70} L690,${640 - 70} L700,${640 - 30} L610,${640 - 30}Z" fill="${STOP}" opacity="${f1(vC)}"/>` + T(655, 640 - 84, T2('stop', 'stop'), { size: 22, col: STOP, w: 700, op: vC });
+          o += `<path d="M620,${640 - 58} L690,${640 - 58} L700,${640 - 18} L610,${640 - 18}Z" fill="${STOP}" opacity="${f1(vC)}"/>` + T(655, 640 - 70, T2('stop-eiwit (CTCF)', 'stop protein (CTCF)'), { size: 22, col: STOP, w: 700, op: vC });   // zit óp het controlestuk
           o += arc(1190, 940, 640, ON, vC * kd, 110) + T(560, 520, T2('✗', '✗'), { size: 36, col: ME, w: 800, op: vC * kd });
           o += T(800, 450, T2('↑ merkteken: stop-eiwit kan niet binden', '↑ mark: stop protein cannot bind'), { size: 24, col: ME, op: vC });
           o += T(800, 760, T2('controlestuk met stop-eiwit: de versterker komt er niet voorbij', 'control piece with stop protein: the switch cannot get past'), { size: 24, col: STOP, op: vC });

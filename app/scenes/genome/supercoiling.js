@@ -211,7 +211,7 @@ export default {
           // enzym op de onderste kruising van de plectoneem
           const cy = Y0 - PH * .25, on = ease(sub(p, .05, .2)) * (1 - ease(sub(p, .9, 1)));
           enz += `<g opacity="${f1(on)}"><path d="${eiwitPad(XM - 60, cy, 60, 80, 1473, .07)}" fill="rgba(111,91,214,.3)" stroke="${C.prot2}" stroke-width="3"/><path d="${eiwitPad(XM + 60, cy, 60, 80, 1474, .07)}" fill="rgba(111,91,214,.3)" stroke="${C.prot2}" stroke-width="3"/>
-            ${txt(XM, f1(cy + 115), T2('TOP2', 'TOP2'), '#fff', 22)}${pill(XM - 110, cy - 95, 60, 26, 'ATP', '#c9a027', sub(p, .15, .25) * (1 - sub(p, .55, .65)), 14)}${pill(XM + 110, cy - 95, 60, 26, 'ATP', '#c9a027', sub(p, .15, .25) * (1 - sub(p, .55, .65)), 14)}</g>`;
+            ${txt(XM, f1(cy + 115), T2('TOP2', 'TOP2'), '#fff', 22)}${pill(XM - 110, cy - 95, 60, 26, 'ATP', '#5fd3e6', sub(p, .15, .25) * (1 - sub(p, .55, .65)), 14)}${pill(XM + 110, cy - 95, 60, 26, 'ATP', '#5fd3e6', sub(p, .15, .25) * (1 - sub(p, .55, .65)), 14)}</g>`;
           const k1 = ease(sub(p, .2, .35)), k2 = ease(sub(p, .35, .5));
           if (p > .2 && p < .5) ann += `<g opacity="${f1(k1)}"><path d="M${XM - 30},${f1(cy - 20)} L${XM + 30},${f1(cy + 20)}" stroke="#ff6b6b" stroke-width="5"/><path d="M${XM - 30},${f1(cy + 20)} L${XM + 30},${f1(cy - 20)}" stroke="#ff6b6b" stroke-width="5"/>${txt(XM + 150, f1(cy - 130), T2('dubbelstrengbreuk (G-segment)', 'double-strand break (G segment)'), '#ff6b6b', 22, 'start')}
             <path d="M${XM},${f1(cy - 60)} V${f1(cy + 60 * k2)}" stroke="#ffc247" stroke-width="4" marker-end="url(#arrow)" opacity="${f1(k2)}"/>${txt(XM + 150, f1(cy - 100), T2('T-segment gaat erdoor', 'T segment passes through'), '#ffc247', 22, 'start')}</g>`;

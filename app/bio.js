@@ -15,6 +15,8 @@
 import { C, f1, rng } from './kit.js';
 
 export const LIPID = { head: '#e2bd7e', tail: '#9a8160', core: 'rgba(138,115,80,.18)' };
+/* kleine ribosoomeenheid (40S/30S): lichtere tint van C.rrna, overal in 2D (grote eenheid = C.rrna), zoals in de 3D-structuurscène */
+export const RRNA_KLEIN = '#8df0dc';
 
 /* ---------- membraan als lipidedubbellaag ----------
  * Getekend langs een lijst punten (open of gesloten). Per laag: een rij ronde kopjes (fosfolipidekop, waterminnend)
@@ -29,6 +31,15 @@ const offsetPts = (P, dist, closed) => P.map((p, i) => {
 const ptsD = (P, closed) => 'M' + P.map(p => f1(p[0]) + ',' + f1(p[1])).join(' L') + (closed ? 'Z' : '');
 export function membraanPts(P, { w = 24, closed = false, op = 1, head = LIPID.head, tail = LIPID.tail, kern = true } = {}) {
   if (op <= .01 || P.length < 2) return '';
+  /* dunne membraan (w < 10): kleinere kopjes zonder staartjes, zodat elke membraan zichtbaar TWEE rijen kopjes houdt
+   * (anders smelten beide rijen tot één rij en leest een kernenvelop als één enkele dubbellaag). */
+  if (w < 10) {
+    const hr = Math.max(.9, w * .17), pitch = hr * 2.6;
+    let g = `<g opacity="${f1(op)}" fill="none" stroke-linecap="round">`;
+    g += `<path d="${ptsD(P, closed)}" stroke="#0b1224" stroke-opacity=".75" stroke-width="${f1(Math.max(1, w - 2 * hr))}" stroke-linecap="butt"/>`;
+    for (const side of [-1, 1]) g += `<path d="${ptsD(offsetPts(P, side * (w / 2 - hr), closed), closed)}" stroke="${head}" stroke-width="${f1(hr * 2)}" stroke-dasharray="0 ${f1(pitch)}"/>`;
+    return g + '</g>';
+  }
   const hr = Math.max(2.2, w * .13), pitch = hr * 2.3, tl = w / 2 - hr * 2 - .5;      // kopstraal, afstand, staartlengte
   let g = `<g opacity="${f1(op)}" fill="none" stroke-linecap="round">`;
   if (kern) g += `<path d="${ptsD(P, closed)}" stroke="${LIPID.core}" stroke-width="${f1(w - 2 * hr)}" stroke-linecap="butt"/>`;
@@ -118,26 +129,29 @@ export function tmHelix(x, y0, y1, col = C.prot, op = 1, w = 14) {
  * tRNA's overspannen beide eenheden: het anticodon zit op het codon (40S-kant), het aminozuurende reikt tot het
  * peptidyltransferasecentrum (PTC) in de grote eenheid (60S), vlak onder de grens tussen de eenheden.
  * Van het PTC loopt de uitgangstunnel dwars door de 60S naar de andere kant. Op het ER zit die uitgang op het Sec61-kanaal.
- * (x, yUit) = waar de tunnel de 60S verlaat (onderaan). Geeft { svg, ptc, uit, tunnelD, mrnaY, L, S } terug. */
-export function ribosoom80S(x, yUit, { s = 1, op = 1, label = '', labelSmall = '', tRNAs = 2, mrna = true } = {}) {
-  const L = { cx: x, cy: yUit - 66 * s, rx: 122 * s, ry: 64 * s };                 // 60S
-  const S = { cx: x - 10 * s, cy: L.cy - L.ry - 36 * s, rx: 100 * s, ry: 42 * s };   // 40S: raakt de 60S over een groot vlak (bruggen tussen de eenheden)
-  const mrnaY = L.cy - L.ry - 10 * s;                                                // mRNA loopt door die spleet, gebonden aan de 40S
-  const ptc = [x + 4 * s, L.cy - L.ry + 26 * s];                                     // actief centrum: bovenaan in de 60S
-  const tunnelD = `M${f1(ptc[0])},${f1(ptc[1])} C${f1(x + 26 * s)},${f1(L.cy - 6 * s)} ${f1(x - 10 * s)},${f1(L.cy + 26 * s)} ${f1(x)},${f1(yUit + 2)}`;
+ * (x, yUit) = waar de tunnel de 60S verlaat. Standaard (ER-stand) zit de 40S boven en de 60S onder het mRNA, tunnel naar onder.
+ * grootBoven = true: de app-afspraak voor vrije ribosomen (zoals in translatie): 60S boven het mRNA, 40S eronder, tunnel
+ * en keten naar boven; (x, yUit) is dan de tunneluitgang bovenaan. Geeft { svg, ptc, uit, tunnelD, mrnaY, L, S } terug. */
+export function ribosoom80S(x, yUit, { s = 1, op = 1, label = '', labelSmall = '', tRNAs = 2, mrna = true, grootBoven = false } = {}) {
+  const Y = v => grootBoven ? 2 * yUit - v : v;                                        // spiegelen rond de tunneluitgang
+  const Lcy = yUit - 66 * s, L = { cx: x, cy: Y(Lcy), rx: 122 * s, ry: 64 * s };       // 60S
+  const Scy = Lcy - L.ry - 36 * s, S = { cx: x - 10 * s, cy: Y(Scy), rx: 100 * s, ry: 42 * s };   // 40S: raakt de 60S over een groot vlak (bruggen tussen de eenheden)
+  const mY = Lcy - L.ry - 10 * s, mrnaY = Y(mY);                                       // mRNA loopt door die spleet, gebonden aan de 40S
+  const ptcY = Lcy - L.ry + 26 * s, ptc = [x + 4 * s, Y(ptcY)];                       // actief centrum: in de 60S, vlak bij de grens
+  const tunnelD = `M${f1(ptc[0])},${f1(ptc[1])} C${f1(x + 26 * s)},${f1(Y(Lcy - 6 * s))} ${f1(x - 10 * s)},${f1(Y(Lcy + 26 * s))} ${f1(x)},${f1(Y(yUit + 2))}`;
   let g = `<g opacity="${f1(op)}">`;
   g += eiwit(L.cx, L.cy, L.rx, L.ry, C.rrna, { seed: 60, bumps: .07 });
   g += `<path d="${tunnelD}" stroke="#0b1224" stroke-opacity=".6" stroke-width="${f1(13 * s)}" fill="none" stroke-linecap="round"/>`;
-  g += eiwit(S.cx, S.cy, S.rx, S.ry, C.rrna, { seed: 40, bumps: .08 });
+  g += eiwit(S.cx, S.cy, S.rx, S.ry, RRNA_KLEIN, { seed: 40, bumps: .08 });
   // tRNA's: P-plaats (draagt de keten) en A-plaats (brengt het volgende aminozuur); anticodon op het mRNA, voet in het PTC
   const tr = (dx, col, o = 1) => {            // L-vormig tRNA: anticodonarm op het codon, elleboog, acceptorarm tot in het PTC
-    const ax = x + dx * s, ay = mrnaY + 2 * s, ex = ax + (dx < 0 ? -16 : 16) * s, ey = mrnaY + 22 * s, tx = ptc[0] + (dx < 0 ? -5 : 7) * s, ty = ptc[1] - 3 * s;
+    const ax = x + dx * s, ay = Y(mY + 2 * s), ex = ax + (dx < 0 ? -16 : 16) * s, ey = Y(mY + 22 * s), tx = ptc[0] + (dx < 0 ? -5 : 7) * s, ty = Y(ptcY - 3 * s);
     return `<path d="M${f1(ax)},${f1(ay)} L${f1(ex)},${f1(ey)} L${f1(tx)},${f1(ty)}" stroke="${col}" stroke-width="${f1(10 * s)}" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="${f1(o)}"/>` +
       `<rect x="${f1(ax - 9 * s)}" y="${f1(ay - 3 * s)}" width="${f1(18 * s)}" height="${f1(6 * s)}" rx="${f1(2 * s)}" fill="${col}" opacity="${f1(o)}"/>`;
   };
   if (tRNAs >= 1) g += tr(-16, C.trna);
   if (tRNAs >= 2) g += tr(18, '#ffe08a', .9);
-  if (mrna) g += `<path d="M${f1(x - 210 * s)},${f1(mrnaY + 2 * s)} C${f1(x - 120 * s)},${f1(mrnaY - 4 * s)} ${f1(x + 100 * s)},${f1(mrnaY + 5 * s)} ${f1(x + 220 * s)},${f1(mrnaY - 1 * s)}" stroke="${C.rna}" stroke-width="${f1(6 * s)}" fill="none" stroke-linecap="round"/>`;
+  if (mrna) g += `<path d="M${f1(x - 210 * s)},${f1(Y(mY + 2 * s))} C${f1(x - 120 * s)},${f1(Y(mY - 4 * s))} ${f1(x + 100 * s)},${f1(Y(mY + 5 * s))} ${f1(x + 220 * s)},${f1(Y(mY - 1 * s))}" stroke="${C.rna}" stroke-width="${f1(6 * s)}" fill="none" stroke-linecap="round"/>`;
   g += `<circle cx="${f1(ptc[0])}" cy="${f1(ptc[1])}" r="${f1(5 * s)}" fill="#fff" fill-opacity=".85"/>`;     // PTC
   if (label) g += `<text x="${f1(L.cx + L.rx * .5)}" y="${f1(L.cy + 14 * s)}" font-size="${f1(20 * s)}" text-anchor="middle" fill="#dff7f1" font-family="Inter" font-weight="700">${label}</text>`;
   if (labelSmall) g += `<text x="${f1(S.cx - S.rx * .45)}" y="${f1(S.cy + 2 * s)}" font-size="${f1(18 * s)}" text-anchor="middle" fill="#dff7f1" font-family="Inter" font-weight="700">${labelSmall}</text>`;
@@ -203,10 +217,11 @@ export function hydrolase(x, y, { s = 1, op = 1, tag = 0, glycaan = true, seed =
   if (op <= .01) return '';
   let g = `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(${f1(s)})">` + eiwit(0, 0, 30, 23, col, { seed, holte: true });
   if (glycaan) {
-    g += `<path d="M-4,-21 v-26 M-4,-47 l-9,-10 M-4,-47 l9,-10" stroke="#c9d2e4" stroke-width="2.4" fill="none"/>`;
+    g += `<path d="M-4,-21 v-35 M-4,-56 l-9,-12 M-4,-56 l9,-12" stroke="#c9d2e4" stroke-width="2.4" fill="none"/>`;
     g += `<rect x="-10" y="-34" width="12" height="12" rx="2" fill="#0072BC"/><rect x="-10" y="-47" width="12" height="12" rx="2" fill="#0072BC"/>` +   // twee GlcNAc (SNFG blauw vierkant), zoals de kern van elk N-glycaan
-      `<circle cx="-14" cy="-56" r="6.5" fill="#00A651"/><circle cx="6" cy="-56" r="6.5" fill="#00A651"/>`;          // mannose (groen)
-    if (tag > .01) g += `<g opacity="${f1(tag)}"><circle cx="20" cy="-66" r="15" fill="#ff6b6b"/><text x="20" y="-58" font-size="22" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">P</text></g>`;
+      `<circle cx="-4" cy="-56" r="6.5" fill="#00A651"/>` +                                                                 // centrale β-mannose (kern Man₃GlcNAc₂)
+      `<circle cx="-14" cy="-70" r="6.5" fill="#00A651"/><circle cx="6" cy="-70" r="6.5" fill="#00A651"/>`;          // twee armmannoses (α1-3, α1-6)
+    if (tag > .01) g += `<g opacity="${f1(tag)}"><circle cx="20" cy="-80" r="15" fill="#ff9f43"/><text x="20" y="-72" font-size="22" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">P</text></g>`;
   }
   return g + '</g>';
 }
@@ -234,7 +249,7 @@ export const ptsStaaf = (cx, cy, len, r, ang = 0) => {
  * membranen in elkaar over (Alberts/MBoC; Beck & Hurt 2017). Elk stuk envelop tussen twee poriën is daarom één
  * platte, gesloten zak. P = puntenlijst (cirkel, ellips of lijn), poriën = posities als fractie (0..1) van de lengte.
  * binnen = +1 als de kern aan de +normaal-kant ligt (bij ptsCirkel/ptsEllips: +1 = binnenkant). */
-export function kernEnvelop(P, { closed = true, poriën = [], w = 12, gap = 12, poreW = 26, op = 1, binnen = 1, lumen = 'rgba(201,165,116,.14)', npc = true, s = 1 } = {}) {
+export function kernEnvelop(P, { closed = true, poriën = [], w = 12, gap = 12, poreW = 26, op = 1, binnen = 1, lumen = 'rgba(143,179,232,.16)', npc = true, s = 1 } = {}) {   // perinucleaire ruimte = ER-lumen (één doorlopende ruimte): zelfde blauwe tint
   if (op <= .01) return '';
   const cl = cumLen(P, closed), tot = cl.L[cl.L.length - 1], half = (gap + w) / 2;
   const pos = poriën.map(f => ((f % 1) + 1) % 1 * tot).sort((a, b) => a - b);
@@ -343,11 +358,12 @@ export const ribosoom70S = (x, yUit, o = {}) => ribosoom80S(x, yUit, { ...o, s: 
 
 /* klein ribosoom voor overzichtsbeelden: grote en kleine eenheid die tegen elkaar liggen (geen bolletje).
  * rot in graden: 0 = kleine eenheid boven. */
-export function ribosoomKlein(x, y, { s = 1, rot = 0, op = 1, col = C.rrna } = {}) {
+export function ribosoomKlein(x, y, { s = 1, rot = 0, op = 1, col = C.rrna, colKlein = null } = {}) {
   if (op <= .01) return '';
+  const ck = colKlein ?? (col === C.rrna ? RRNA_KLEIN : col);
   return `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(rot)}) scale(${f1(s)})">` +
     `<path d="${eiwitPad(0, 4, 13, 8.5, 60, .07)}" fill="${col}" fill-opacity=".75" stroke="${col}" stroke-width="1.6"/>` +
-    `<path d="${eiwitPad(-1, -8.5, 10, 5, 40, .08)}" fill="${col}" fill-opacity=".45" stroke="${col}" stroke-width="1.6"/></g>`;
+    `<path d="${eiwitPad(-1, -8.5, 10, 5, 40, .08)}" fill="${ck}" fill-opacity=".45" stroke="${ck}" stroke-width="1.6"/></g>`;
 }
 
 /* dubbelmembraanblaasje (autofagosoom): twee dubbellagen met een smalle ruimte ertussen */

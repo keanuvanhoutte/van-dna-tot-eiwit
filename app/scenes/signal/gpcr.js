@@ -1,4 +1,4 @@
-import { C, T2, svgOpen, cam, FULL, f1 } from '../../kit.js';
+import { C, T2, svgOpen, cam, FULL, f1, lerp, clamp } from '../../kit.js';
 import { T, K, track, hot, tag, phos, bilayer, nucEnv, dna, mrna, adr, gpcr7, gAlpha, gBG, cAMP, anchor, ADRC, GTPC, GAC, GBC } from './_sig1.js';
 import { eiwit, tmHelix } from '../../bio.js';
 
@@ -25,8 +25,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">3D: β2-adrenerge receptor met Gs, PDB <a href="https://www.rcsb.org/structure/3SN6" target="_blank" rel="noopener">3SN6</a>.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">3D: β2-adrenergic receptor with Gs, PDB <a href="https://www.rcsb.org/structure/3SN6" target="_blank" rel="noopener">3SN6</a>.</p>' },
   simplified: {
-    nl: 'De receptor is getekend als 7 staafjes; adenylylcyclase is getekend met 12 staafjes (TM-helices) en twee katalytische domeinen. Gβγ geeft zelf ook signalen door (niet getoond). Dat Gαs volledig loskomt van Gβγ is het klassieke model; recenter werk toont dat ze soms eerder herschikken dan echt scheiden. PKA zit in cellen vaak via AKAP-eiwitten op een vaste plek en de C-subeenheden laten in werkelijkheid niet altijd volledig los. We tonen één C-subeenheid die de kern in gaat en één CREB-dimeer; CREB wordt ook door andere kinasen gefosforyleerd. Desensitisatie van de receptor (GRK, β-arrestine) is weggelaten. Moleculen zijn niet op schaal.',
-    en: 'The receptor is drawn as 7 rods; adenylyl cyclase is drawn with 12 rods (TM helices) and two catalytic domains. Gβγ also relays signals itself (not shown). Gαs fully separating from Gβγ is the classic model; more recent work shows they sometimes rearrange rather than truly separate. In cells PKA is often anchored at fixed sites by AKAP proteins, and the C subunits do not always fully dissociate. We show one C subunit entering the nucleus and one CREB dimer; CREB is also phosphorylated by other kinases. Receptor desensitisation (GRK, β-arrestin) is left out. Molecules are not to scale.' },
+    nl: 'De receptor is getekend als 7 staafjes; adenylylcyclase is getekend met 12 staafjes (TM-helices) en twee katalytische domeinen. Gβγ geeft zelf ook signalen door (niet getoond). Dat Gαs volledig loskomt van Gβγ is het klassieke model; recenter werk toont dat ze soms eerder herschikken dan echt scheiden. PKA zit in cellen vaak via AKAP-eiwitten op een vaste plek en de C-subeenheden laten in werkelijkheid niet altijd volledig los. We tonen één C-subeenheid die de kern in gaat en één CREB-dimeer; CREB wordt ook door andere kinasen gefosforyleerd. Desensitisatie van de receptor (GRK, β-arrestine) is weggelaten. Moleculen zijn niet op schaal. Het plasmamembraan staat dikker getekend dan de twee kernmembranen, zodat de receptoren erin passen; in werkelijkheid zijn alle drie even dik (≈ 4–5 nm).',
+    en: 'The receptor is drawn as 7 rods; adenylyl cyclase is drawn with 12 rods (TM helices) and two catalytic domains. Gβγ also relays signals itself (not shown). Gαs fully separating from Gβγ is the classic model; more recent work shows they sometimes rearrange rather than truly separate. In cells PKA is often anchored at fixed sites by AKAP proteins, and the C subunits do not always fully dissociate. We show one C subunit entering the nucleus and one CREB dimer; CREB is also phosphorylated by other kinases. Receptor desensitisation (GRK, β-arrestin) is left out. Molecules are not to scale. The plasma membrane is drawn thicker than the two nuclear membranes so that the receptors fit; in reality all three are equally thick (≈ 4–5 nm).' },
   steps: [
     ST(7000, cam(520, 330, 1000), 'Adrenaline komt aan', 'Adrenaline arrives',
       'Het hormoon adrenaline nadert zijn receptor. Eronder wacht een schakelaar-eiwit (G-eiwit), nog uit.',
@@ -111,7 +111,8 @@ export default {
         // nucleotide in Gα: GDP → GTP → (8.1) GDP
         const hyd = K(g, 8.1, 8.3);
         /* Gα (vetzuuranker) en Gβγ (prenylanker) blijven allebei aan het binnenblad van het membraan; Gα schuift achter Gβγ langs */
-        let G = gAlpha(ga[0], ga[1], MY + MH, { lab: 'Gαs' }) + gBG(bx, by, MY + MH);
+        // vetzuuranker van Gα in het binnenblad náást de helixbundel van de receptor (en links van het adenylylcyclase)
+        let G = gAlpha(ga[0], ga[1], MY + MH, { lab: 'Gαs', ax: lerp(28, -22, clamp((ga[0] - 430) / 294)) }) + gBG(bx, by, MY + MH);
         const isGTP = g >= 2.6 && g < 8.2;
         if (!isGTP || g < 2.6) {
           // GDP (begin) of GDP die vertrekt

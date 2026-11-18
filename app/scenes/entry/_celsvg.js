@@ -55,12 +55,12 @@ export function sceneCel() {
   const mito = [[1120, 250, 20], [1230, 520, -60], [1040, 740, 10], [470, 560, 70], [620, 740, -20], [980, 170, -10]]
     .map(([x, y, rot]) => mitochondrion(x, y, 42, 18, { rot, n: 4, w: 3.4 })).join('');
   const lyso = [[1290, 405], [430, 460], [1180, 660]]   // volledig in het cytosol, los van het plasmamembraan
-   .map(([x, y]) => blaasje(x, y, 17, { lumen: 'rgba(141,108,196,.45)', w: 5.5 })).join('');
+   .map(([x, y]) => blaasje(x, y, 17, { lumen: 'rgba(255,107,107,.40)', w: 5.5 })).join('');
   // vrije polysomen in het cytosol: ribosomen (twee eenheden) op één mRNA
   let poly = '';
   for (const [x, y] of [[1150, 380], [1190, 440], [1110, 470]]) {
     poly += `<path d="M${x},${y} q20,-12 40,0 t40,0" stroke="${C.rna}" stroke-width="2" fill="none"/>`;
-    for (let i = 0; i < 4; i++) { const u = (i + .5) / 4, yy = y - 6 * Math.sin(u * 2 * Math.PI); poly += ribosoomKlein(x + u * 80, yy + 2, { s: .62 }); }
+    for (let i = 0; i < 4; i++) { const u = (i + .5) / 4, yy = y - 6 * Math.sin(u * 2 * Math.PI); poly += ribosoomKlein(x + u * 80, yy - 2, { s: .62, rot: 180 }); }   // vrij polysoom: grote eenheid boven, kleine onder het mRNA (zoals translatie)
   }
   // adenovirus: eiwitjas (capside) zonder membraan, met vezels; binnenin DNA
   const virion = (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})">${capsid(22, { fibre: 15, hexons: false })}${viralGenome(17, 1, false)}</g>`;
@@ -106,7 +106,7 @@ export function sceneCel() {
       <circle cx="${nx}" cy="${ny}" r="${nr + 5}" fill="url(#gNuc)"/>
       ${env}
       <g data-node="nucleolus" data-color="#9cc0ff" data-nolabel><ellipse cx="${nx + 35}" cy="${ny - 20}" rx="46" ry="38" fill="#2b3e66" opacity=".9"/></g>
-      <g data-node="chromatine" data-color="${C.dna}" data-nolabel>${chrom}</g><g data-node="kernimport" data-color="${C.prot}" data-nolabel>${pores}</g>
+      <g data-node="chromatine" data-color="${C.dna}" data-nolabel>${chrom}</g><g data-node="kernimport" data-color="#9db4d8" data-nolabel>${pores}</g>
     </g>
     <g data-node="export" data-color="${C.rna}" data-label="${L({ nl: 'mRNA-export', en: 'mRNA export' })}">
       <circle data-anchor="export" cx="975" cy="232" r="1" fill="none"/>
@@ -128,13 +128,13 @@ export function sceneCel() {
       <circle data-anchor="endocytose" data-pos="below" cx="425" cy="682" r="1" fill="none"/>
     </g>
     <!-- route 2: mRNA in lipidenanodeeltje -->
-    <g data-node="lnp" data-color="${C.trna}" data-label="${L({ nl: 'mRNA-vaccin (LNP)', en: 'mRNA vaccine (LNP)' })}">
+    <g data-node="lnp" data-color="#e8c27a" data-label="${L({ nl: 'mRNA-vaccin (LNP)', en: 'mRNA vaccine (LNP)' })}">
       <circle data-anchor="lnp" cx="205" cy="668" r="1" fill="none"/>
       ${lnp(205, 700)}
       <path d="${lPath}" stroke="transparent" stroke-width="28" fill="none"/>
       <path d="${lPath}" stroke="${C.rna}" stroke-width="1" stroke-dasharray="3 6" fill="none" opacity=".45"/>
       ${[0, 2.5].map(b => `<path d="M-10,0 q4,-6 8,0 t8,0 t8,0" stroke="${C.rna}" stroke-width="3" fill="none"><animateMotion dur="5s" begin="-${b}s" repeatCount="indefinite" path="${lPath}" rotate="auto"/></path>`).join('')}
-      ${[[700, 692], [735, 707]].map(([x, y]) => ribosoomKlein(x, y, { s: .7 })).join('')}
+      ${[[700, 692], [735, 707]].map(([x, y]) => ribosoomKlein(x, y, { s: .7, rot: 180 })).join('')}
     </g>
     <!-- route 3 (verhaal 2): een signaalmolecule (groeifactor EGF) bindt een receptor in het membraan -->
     <g data-node="signaal" data-color="${C.prot}" data-label="${L({ nl: 'Signaalmolecule (EGF)', en: 'Signal molecule (EGF)' })}">

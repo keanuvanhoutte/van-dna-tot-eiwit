@@ -12,7 +12,7 @@ const base = [
   { sel: { chain: 'D' }, style: { cartoon: { color: COL.D }, stick: { color: COL.D, radius: .3 } } },
   { sel: { chain: 'A' }, style: { cartoon: { color: COL.A, opacity: .7 } } },
 ];
-const EX = [{ sel: { chain: 'C' }, style: { cartoon: { color: COL.C }, stick: { color: COL.C, radius: .25 } }, label: L3('exon', 'exon') }, { sel: { chain: 'D' }, style: { cartoon: { color: COL.D }, stick: { color: COL.D, radius: .35 } }, label: L3('exon', 'exon') }];
+const EX = [{ sel: { chain: 'C' }, style: { cartoon: { color: COL.C }, stick: { color: COL.C, radius: .25 } }, label: L3('exon', 'exon'), labelColor: COL.C, labelOff: [-80, -18] }, { sel: { chain: 'D' }, style: { cartoon: { color: COL.D }, stick: { color: COL.D, radius: .35 } }, label: L3('exon', 'exon'), labelColor: COL.D, labelOff: [80, 18] }];
 
 export default structure3d({
   id: 'bsplicing', pdb: '1U6B',

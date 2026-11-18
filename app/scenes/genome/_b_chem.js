@@ -140,6 +140,11 @@ export function drawBase(pl, v, o = {}) {
     s += `<line x1="${f1(X(p1))}" y1="${f1(Y(p1))}" x2="${f1(X(p2))}" y2="${f1(Y(p2))}" stroke="#d7def0" stroke-width="${f1(lw * .8)}" stroke-linecap="round"/>`;
     s += `<text x="${f1(X(h))}" y="${f1(Y(h) + fs * .36)}" font-size="${f1(fs * .8)}" text-anchor="middle" fill="${ELCOL.H}" font-family="Inter" font-weight="600">H</text>`;
   }
+  // vrije base (o.freeH): het stikstofatoom dat anders aan C1' van de suiker hangt (N9 bij purines, N1 bij pyrimidines) draagt een H
+  if (o.freeH) { const b = def.bonds.find(bb => bb[0] === "C1'" || bb[1] === "C1'");
+    if (b) { const k = b[0] === "C1'" ? b[1] : b[0], p = A[k], d = unit(subv(A["C1'"], p)), h = [p[0] + d[0] * 1.0, p[1] + d[1] * 1.0], p1 = [p[0] + d[0] * .32, p[1] + d[1] * .32], p2 = [h[0] - d[0] * .22, h[1] - d[1] * .22];
+      s += `<line x1="${f1(X(p1))}" y1="${f1(Y(p1))}" x2="${f1(X(p2))}" y2="${f1(Y(p2))}" stroke="#d7def0" stroke-width="${f1(lw * .8)}" stroke-linecap="round"/>` +
+        `<text x="${f1(X(h))}" y="${f1(Y(h) + fs * .36)}" font-size="${f1(fs * .8)}" text-anchor="middle" fill="${ELCOL.H}" font-family="Inter" font-weight="600">H</text>`; } }
   // heteroatomen
   for (const [k, p] of Object.entries(A)) {
     if (k === "C1'") continue;
@@ -170,7 +175,7 @@ export function drawBase(pl, v, o = {}) {
   if (o.sugar !== false) {
     const p = A["C1'"];
     s += `<circle cx="${f1(X(p))}" cy="${f1(Y(p))}" r="${f1(fs * .55)}" fill="${o.sugarCol ?? '#4f8ff7'}" stroke="#0b1224" stroke-width="2"/>`;
-    if (o.c1text !== false) s += `<text x="${f1(X(p))}" y="${f1(Y(p) + fs * .28)}" font-size="${f1(fs * .6)}" text-anchor="middle" fill="#0b1224" font-family="Inter" font-weight="700">C1'</text>`;
+    if (o.c1text !== false) s += `<text x="${f1(X(p))}" y="${f1(Y(p) + fs * .28)}" font-size="${f1(fs * .6)}" text-anchor="middle" fill="#0b1224" font-family="Inter" font-weight="700">C1′</text>`;
   }
   return s + '</g>';
 }

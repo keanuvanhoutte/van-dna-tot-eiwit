@@ -1,5 +1,5 @@
 import { C, L, T2, svgOpen, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { prot, capG, ribo, note, arrow, ntRow, hot, setHot } from './_rna.js';
+import { prot, capG, ribo, note, arrow, ntRow, hot, setHot, exosoom } from './_rna.js';
 import { eiwitPad } from '../../bio.js';
 
 /* mRNA-afbraak in het cytoplasma: deadenylatie → decapping → XRN1 (5'→3') of exosoom (3'→5'). 5' links. */
@@ -14,7 +14,7 @@ export default {
   scale: '≈ 50 nm',
   time: { nl: 'halfwaardetijd: minuten tot vele uren', en: 'half-life: minutes to many hours' },
   org: { nl: 'mens (cytoplasma)', en: 'human (cytoplasm)' },
-  legend: [[C.rna, 'mRNA'], [C.cap, { nl: 'm⁷G-cap / poly(A)', en: 'm⁷G cap / poly(A)' }], ['#3fb6c9', { nl: 'translatiefactoren, PABPC1', en: 'translation factors, PABPC1' }], ['#8a5a3a', { nl: 'nucleasen & afbraakfactoren', en: 'nucleases & decay factors' }], [C.rrna, { nl: 'ribosoom', en: 'ribosome' }]],
+  legend: [[C.rna, 'mRNA'], [C.cap, { nl: 'm⁷G-cap / poly(A)', en: 'm⁷G cap / poly(A)' }], ['#6f5bd6', { nl: 'translatiefactoren, PABPC1', en: 'translation factors, PABPC1' }], ['#8a5a3a', { nl: 'nucleasen & afbraakfactoren', en: 'nucleases & decay factors' }], [C.rrna, { nl: 'ribosoom', en: 'ribosome' }]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Naast transcriptie bepaalt ook afbraak hoeveel er van een mRNA is (halfwaardetijd van minuten tot vele uren): kortlevende mRNA\'s (met AU-rijke elementen, bv. voor cytokines) laten de cel snel reageren. Gespecialiseerde routes: <b>NMD</b> (vroegtijdig stopcodon) en <b>miRNA\'s</b> (via CCR4–NOT).</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Besides transcription, decay also sets how much of an mRNA there is (half-life from minutes to many hours): short-lived mRNAs (with AU-rich elements, e.g. for cytokines) let the cell respond quickly. Specialised routes: <b>NMD</b> (premature stop codon) and <b>miRNAs</b> (via CCR4–NOT).</p>' },
@@ -46,7 +46,7 @@ export default {
   ],
   svg() {
     return svgOpen() + `
-    <g data-node="mrnaafbraak" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-nolabel><g id="md-mrna"></g></g><g data-node="initiatie" data-color="#3fb6c9" data-nolabel><g id="md-tli"></g></g><g data-node="ribosoom" data-color="${C.rrna}" data-nolabel><g id="md-rib"></g></g><g id="md-fac"></g><g data-node="rnai" data-color="#e0679a" data-nolabel><g id="md-mi"></g></g><g data-node="nmd" data-color="#e0679a" data-nolabel><g id="md-nmd"></g></g>
+    <g data-node="mrnaafbraak" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-nolabel><g id="md-mrna"></g></g><g data-node="initiatie" data-color="#6f5bd6" data-nolabel><g id="md-tli"></g></g><g data-node="ribosoom" data-color="${C.rrna}" data-nolabel><g id="md-rib"></g></g><g id="md-fac"></g><g data-node="rnai" data-color="#e0679a" data-nolabel><g id="md-mi"></g></g><g data-node="nmd" data-color="#e0679a" data-nolabel><g id="md-nmd"></g></g>
     ${hot('mrnaafbraak', T2('mRNA in 3D', 'mRNA in 3D'), C.rna, 'md-mA', '../atlas/index.html?id=mrna', true)}
     ${hot('rnai', T2('miRNA → CCR4–NOT', 'miRNA → CCR4–NOT'), '#e0679a', 'md-iA')}
     ${hot('nmd', T2('NMD: snelle route', 'NMD: fast route'), '#e0679a', 'md-nA')}
@@ -69,13 +69,13 @@ export default {
       if (X.are > from && X.are < to) m += `<rect x="${X.are - 34}" y="${Y - 10}" width="68" height="20" rx="4" fill="#ffd36b" opacity=".85"/>`;
       if (labels) {
         if (b2 - a2 > 200) m += note((a2 + b2) / 2, Y + 76, T2('coderend deel (ORF)', 'coding region (ORF)'), C.rna, 19);
-        if (b3 - a3 > 150) m += note(X.u3[0] + 60, Y + 46, "3'-UTR", '#d9854a', 19);
+        if (b3 - a3 > 150) m += note(X.u3[0] + 60, Y + 46, "3′-UTR", '#d9854a', 19);
         if (tb - ta > 60) m += note((ta + tb) / 2, Y + 46, 'poly(A)', C.cap, 19);
       }
-      for (let i = 0; i < pab; i++) if (PAB[i] < Math.min(tail, to) && PAB[i] > from) m += `<path d="${eiwitPad(PAB[i], Y - 22, 15, 13, 50 + i, .1)}" fill="#3fb6c9" stroke="#0a1224" stroke-width="1.5"/>`;
+      for (let i = 0; i < pab; i++) if (PAB[i] < Math.min(tail, to) && PAB[i] > from) m += `<path d="${eiwitPad(PAB[i], Y - 22, 15, 13, 50 + i, .1)}" fill="#6f5bd6" stroke="#0a1224" stroke-width="1.5"/>`;
       if (capOn > .01 && from <= X.u5[0] + 1) m += capG(X.cap, Y, 22, capOn);
-      if (from <= X.u5[0] + 1) m += note(X.cap - 32, Y - 14, "5'", C.text, 19, 'end');
-      if (to > tail - 2 || to > X.pa[0]) m += note(Math.min(tail, to) + 14, Y + 6, "3'", C.text, 19, 'start');
+      if (from <= X.u5[0] + 1) m += note(X.cap - 32, Y - 14, "5′", C.text, 19, 'end');
+      if (to > tail - 2 || to > X.pa[0]) m += note(Math.min(tail, to) + 14, Y + 6, "3′", C.text, 19, 'start');
       return m + '</g>';
     }
 
@@ -100,24 +100,23 @@ export default {
             const fly = sub(p, .6, 1);
             m += `<g opacity="${f1(1 - sub(p, .85, 1))}" transform="translate(${f1(-60 * fly)} ${f1(-120 * fly)})">${capG(X.cap, Y, 22, sub(p, .55, .6))}</g>`;
             m += note(X.cap - 60, Y - 160, 'm⁷GDP', C.cap, 19, 'middle', sub(p, .7, .85) * (1 - sub(p, .88, .95)));
-            m += note(X.cap + 16, Y - 26, "5'-p", '#ffd36b', 19, 'middle', sub(p, .7, .85));
+            m += note(X.cap + 16, Y - 26, "5′-p", '#ffd36b', 19, 'middle', sub(p, .7, .85));
           }
         } else if (step === 4) {
           const x = lerp(X.u5[0], X.pa[0] + 26, ease(sub(p, .1, .95)));
           m += mrna({ capOn: 0, tail, pab: 0, from: x, labels: p < .5 });
           fa += debris(X.u5[0], x - 80) + prot(x - 30, Y, 78, 45, 'XRN1', '#8a5a3a', 1, 19);
-          fa += `<g opacity="${f1(1 - sub(p, .9, 1))}">` + arrow(x + 10, Y - 60, x + 110, Y - 60, '#e0b089', 3) + `</g>` + note(x + 60, Y - 72, "5' → 3'", '#e0b089', 19, 'middle', 1 - sub(p, .9, 1));
+          fa += `<g opacity="${f1(1 - sub(p, .9, 1))}">` + arrow(x + 10, Y - 60, x + 110, Y - 60, '#e0b089', 3) + `</g>` + note(x + 60, Y - 72, "5′ → 3′", '#e0b089', 19, 'middle', 1 - sub(p, .9, 1));
           fa += note(Math.min(x - 90, 800), Y + 110, T2('losse nucleotiden (NMP)', 'free nucleotides (NMPs)'), C.muted, 19, 'middle', sub(p, .2, .35));
         } else if (step === 5) {
           const x = lerp(X.pa[0] + 26, X.u5[0] + 8, ease(sub(p, .15, .85)));
           m += mrna({ capOn: 1, tail: X.pa[0] + 26, pab: 0, to: x, labels: p < .5 });          // hetzelfde gedeadenyleerde mRNA, nu vanaf het 3'-uiteinde
           const eo = sub(p, 0, .06);
-          fa += debris(x + 160, X.pa[0] + 40) + note(Math.max(x + 250, 800), Y + 110, T2('losse nucleotiden (NMP)', 'free nucleotides (NMPs)'), C.muted, 19, 'middle', sub(p, .3, .45));
-          fa += `<g opacity="${f1(eo)}"><path d="${eiwitPad(x + 76, Y, 72, 40, 33, .07)}" fill="#0b1224"/><path d="${eiwitPad(x + 76, Y, 72, 40, 33, .07)}" fill="#8a5a3a" fill-opacity=".85" stroke="#8a5a3a" stroke-width="2"/>` +
-            `<path d="M${f1(x + 4)},${Y} H${f1(x + 60)}" stroke="#0b1224" stroke-opacity=".55" stroke-width="14" stroke-linecap="round"/>` +   // het 3'-uiteinde schuift in het kanaal van de exosoomring
-            `<text x="${f1(x + 76)}" y="${Y + 7}" font-size="20" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">${T2('exosoom', 'exosome')}</text></g>`;
+          fa += debris(x + 160, X.pa[0] + 40) + note(Math.max(x + 300, 800), Y + 110, T2('losse nucleotiden (NMP)', 'free nucleotides (NMPs)'), C.muted, 19, 'middle', sub(p, .3, .45));
+          fa += exosoom(x + 76, Y, 72, 40, eo, '');   // ringvormig exosoom; het 3'-uiteinde loopt door het kanaal
+          fa += note(x + 76, Y + 98, T2('exosoom (ring)', 'exosome (ring)'), '#e0b089', 20, 'middle', eo);
           fa += prot(x + 64, Y - 70, 139, 36, T2('SKI-complex', 'SKI complex'), '#6b4a33', eo * (1 - sub(p, .76, .84)), 19);
-          fa += note(x + 64, Y + 70, "3' → 5'", '#e0b089', 19, 'middle', sub(p, .04, .12) * (1 - sub(p, .8, .87)));
+          fa += note(x + 64, Y + 70, "3′ → 5′", '#e0b089', 19, 'middle', sub(p, .04, .12) * (1 - sub(p, .8, .87)));
           if (p > .8) {
             fa += prot(X.cap + 30, Y - 64, 81, 36, 'DcpS', '#8a5a3a', sub(p, .8, .88), 19);
             fa += note(X.cap + 30, Y + 60, 'm⁷GpppN → m⁷GMP', C.cap, 19, 'middle', sub(p, .85, .95));
@@ -134,25 +133,25 @@ export default {
 
         // translatiemachine: eIF4E/4G, ribosomen, gesloten lus
         if (step <= 3) {
-          tli += prot(X.cap + 4, Y - 44, 84, 34, 'eIF4E', '#3fb6c9', step < 3 ? 1 : 0, 19);
-          tli += prot(X.cap + 90, Y - 84, 89, 34, 'eIF4G', '#3fb6c9', loopOp, 19);
-          tli += `<path d="M${X.cap + 125},${Y - 84} C${X.cap + 400},${Y - 300} ${PAB[2]},${Y - 280} ${PAB[2]},${Y - 40}" stroke="#7fe0ef" stroke-width="3" fill="none" stroke-dasharray="7 6" opacity="${f1(loopOp)}"/>`;
-          tli += note(800, Y - 250, T2('gesloten lus (eIF4G–PABPC1)', 'closed loop (eIF4G–PABPC1)'), '#7fe0ef', 19, 'middle', step === 0 ? 1 : loopOp * (step === 1 ? 0 : 1));
-          tli += note(PAB[2] + 20, Y - 58, 'PABPC1', '#7fe0ef', 19, 'start', step === 0 ? sub(p, .2, .4) : 0);
+          tli += prot(X.cap + 4, Y - 44, 84, 34, 'eIF4E', '#6f5bd6', step < 3 ? 1 : 0, 19);
+          tli += prot(X.cap + 90, Y - 84, 89, 34, 'eIF4G', '#6f5bd6', loopOp, 19);
+          tli += `<path d="M${X.cap + 125},${Y - 84} C${X.cap + 400},${Y - 300} ${PAB[2]},${Y - 280} ${PAB[2]},${Y - 40}" stroke="#b9a6ff" stroke-width="3" fill="none" stroke-dasharray="7 6" opacity="${f1(loopOp)}"/>`;
+          tli += note(800, Y - 250, T2('gesloten lus (eIF4G–PABPC1)', 'closed loop (eIF4G–PABPC1)'), '#b9a6ff', 19, 'middle', step === 0 ? 1 : loopOp * (step === 1 ? 0 : 1));
+          tli += note(PAB[2] + 20, Y - 58, 'PABPC1', '#b9a6ff', 19, 'start', step === 0 ? sub(p, .2, .4) : 0);
           for (const rx of [400, 580, 760]) rib += ribo(rx, Y, .85, riboOp, '', { keten: (rx - 300) * .25 });   // polysoom: verder op het mRNA = langere keten
         }
         if (step === 1) {
           const k = ease(sub(p, .1, .4));
           fa += `<g opacity="${f1(k)}">` + ntRow(X.are - 60, Y - 150, 'AUUUA', 30, 32) + `<path d="M${X.are - 75},${Y - 112} L${X.are - 34},${Y - 12} M${X.are + 75},${Y - 112} L${X.are + 34},${Y - 12}" stroke="${C.muted}" stroke-width="2" stroke-dasharray="4 4"/></g>`;
           fa += note(X.are, Y - 170, T2('AU-rijk element (ARE)', 'AU-rich element (ARE)'), '#ffd36b', 19, 'middle', k);
-          fa += prot(X.are, Y + 48, 76, 36, 'TTP', '#8a5a3a', sub(p, .45, .6), 19);
-          fa += prot(X.are + 110, Y + 90, 139, 36, 'CCR4–NOT', '#8a5a3a', sub(p, .65, .8), 19);
+          fa += prot(X.are, Y + 22, 76, 36, 'TTP', '#8a5a3a', sub(p, .45, .6), 19);   // TTP zit op het ARE en trekt CCR4–NOT aan
+          fa += prot(X.are + 84, Y + 56, 139, 36, 'CCR4–NOT', '#8a5a3a', sub(p, .65, .8), 19);
         }
         if (step === 2) {
           const ph = p < .45;
           fa += prot(tail + 34, Y - 40, ph ? 110 : 110, 30, ph ? 'PAN2–PAN3' : 'CCR4–NOT', '#8a5a3a', sub(p, 0, .1), 19);
           fa += note(tail + 34, Y + 44, 'A A A …', C.cap, 19, 'middle', 1 - sub(p, .8, .9));
-          for (let i = 0; i < 6; i++) { const drop = clamp((PAB[i] - tail) / 50); if (drop > 0 && drop < 1) fa += `<path d="${eiwitPad(PAB[i] + 20 * drop, Y - 22 - 120 * drop, 15, 13, 50 + i, .1)}" fill="#3fb6c9" opacity="${f1((1 - drop) * (1 - sub(p, .85, .95)))}"/>`; }   // losgelaten PABPC1 drijft weg en blijft niet zweven
+          for (let i = 0; i < 6; i++) { const drop = clamp((PAB[i] - tail) / 50); if (drop > 0 && drop < 1) fa += `<path d="${eiwitPad(PAB[i] + 20 * drop, Y - 22 - 120 * drop, 15, 13, 50 + i, .1)}" fill="#6f5bd6" opacity="${f1((1 - drop) * (1 - sub(p, .85, .95)))}"/>`; }   // losgelaten PABPC1 drijft weg en blijft niet zweven
           fa += note(900, Y - 160, T2('translatie stopt', 'translation stops'), '#ffd36b', 19, 'middle', sub(p, .5, .7));
         }
         if (step === 3) {
@@ -165,7 +164,7 @@ export default {
         $('md-tli').innerHTML = tli; $('md-rib').innerHTML = rib; $('md-fac').innerHTML = fa;
         setHot(svg, 'md-mA', step === 0 ? [575, Y + 70, 200, 26] : null);
         // hotspots naar miRNA en NMD
-        $('md-mi').innerHTML = step === 2 ? prot(1260, Y + 110, 160, 36, 'miRNA·AGO2', '#e0679a', sub(p, .5, .7), 19) : '';
+        $('md-mi').innerHTML = step === 2 ? prot(1260, Y + 110, 160, 36, 'miRNA·AGO2', '#9b7bff', sub(p, .5, .7), 19) : '';
         setHot(svg, 'md-iA', step === 2 && p > .6 ? [1260, Y + 110, 118, 30] : step === 6 && p > .3 ? [905, 445, 60, 28] : null);
         $('md-nmd').innerHTML = step === 4 ? prot(1250, 250, 204, 36, T2('NMD (SMG6-knip)', 'NMD (SMG6 cut)'), '#e0679a', sub(p, .3, .5), 19) : '';
         setHot(svg, 'md-nA', step === 4 && p > .4 ? [1250, 250, 150, 30] : null);
