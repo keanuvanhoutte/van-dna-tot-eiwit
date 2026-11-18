@@ -187,7 +187,7 @@ export default {
         const dimB = 1 - .78 * K(g, 7.05, 7.4);
         const tilt = 8 * K(g, 2.55, 2.85);
         let B = gpcr7(XB, MY, MH, tilt, 1);
-        // adenylylcyclase: 2 × 6 TM-helices met elk een cytosolisch katalytisch domein (C1, C2), zoals in de gpcr-scène (Tesmer et al., Science 1997)
+        // adenylylcyclase: 2 × 6 TM-helices met elk een cytosolisch domein (C1, C2), zoals in de gpcr-scène (topologie: Krupinski et al., Science 1989;244:1558; C1/C2 als katalytisch centrum: Tesmer et al., Science 1997)
         B += `<g opacity=".95">${[940, 948, 956, 964, 972, 980, 996, 1004, 1012, 1020, 1028, 1036].map(x => tmHelix(x, MY - 10, MY + MH + 10, '#b58cff', .85, 7)).join('')}` +
           eiwit(962, MY + MH + 34, 26, 22, '#b58cff', { seed: 41 }) + eiwit(1016, MY + MH + 36, 26, 22, '#b58cff', { seed: 42 }) +
           `<text x="989" y="${MY + MH + 76}" font-size="16" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">AC</text></g>`;

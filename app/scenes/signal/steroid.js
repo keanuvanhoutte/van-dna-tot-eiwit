@@ -11,9 +11,9 @@ const H1 = 925, H2 = 1075;                      // halve plaatsen van het GRE
 const P23C = '#f2d16d', FKBPC = '#f29e6d', COAC = '#d98cf0';
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 
-function importin(x, y, op = 1, rot = 0) {
+function importin(x, y, op = 1, rot = 0, sc = 1) {
   if (op <= .01) return '';
-  return `<g transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(rot)})" opacity="${f1(op)}"><path d="M-56,-26 a48,48 0 1,0 0,52 a34,34 0 1,1 0,-52" fill="${C.prot2}" opacity=".9"/>` +
+  return `<g transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(rot)}) scale(${f1(sc)})" opacity="${f1(op)}"><path d="M-56,-26 a48,48 0 1,0 0,52 a34,34 0 1,1 0,-52" fill="${C.prot2}" opacity=".9"/>` +
     `<rect x="-30" y="-20" width="34" height="40" rx="11" fill="${C.prot3}" stroke="#b9a6ff" stroke-width="1.5"/>` +
     `<text x="-13" y="7" font-size="18" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">α</text>` +
     `<text x="-76" y="7" font-size="20" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">β</text></g>`;
@@ -118,12 +118,15 @@ export default {
         const pos = track(g, [[4.3, GX, GY], [4.55, PORE, 470], [4.85, PORE, 680], [5.05, PORE, 680], [5.35, H1 - 30, 700]]);
         const rot = track(g, [[4.3, 0], [4.5, -90], [4.9, -90], [5.25, 0]])[0], th = rot * Math.PI / 180;
         const bind = K(g, 5.3, 5.5);
-        let R = gr(pos[0], pos[1], { lig, nls: nls * (1 - bind), sc: SC, op: 1 - bind, rot });
+        /* tijdens de porie-passage compacter getekend, zodat GR door de opening past en niet over de membranen steekt */
+        const sq = 1 - .45 * K(g, 4.4, 4.55) * (1 - K(g, 4.85, 5.05));
+        let R = gr(pos[0], pos[1], { lig, nls: nls * (1 - bind), sc: SC * sq, op: 1 - bind, rot });
         /* tweede GR (uit een ander complex) komt ook met importine door een kernporie (x 1420) binnen */
         const p2 = track(g, [[4.5, 1420, 450], [4.65, 1420, 470], [5.05, 1420, 690], [5.4, H2 + 40, 700]]);
+        const sq2 = 1 - .45 * (1 - K(g, 5.05, 5.25));
         const rot2 = track(g, [[4.5, -90], [5.05, -90], [5.3, 0]])[0], th2 = rot2 * Math.PI / 180;
         const in2 = K(g, 4.45, 4.6);
-        R += gr(p2[0], p2[1], { lig: 1, nls: 1 - K(g, 5.3, 5.45), sc: SC, op: in2 * (1 - K(g, 5.35, 5.55)), rot: rot2 });
+        R += gr(p2[0], p2[1], { lig: 1, nls: 1 - K(g, 5.3, 5.45), sc: SC * sq2, op: in2 * (1 - K(g, 5.35, 5.55)), rot: rot2 });
         R += grBound(H1, -1, bind) + grBound(H2, 1, K(g, 5.4, 5.6));
         $('st-gr').innerHTML = R;
 
@@ -131,10 +134,10 @@ export default {
         const imp = K(g, 4.05, 4.3) * (1 - K(g, 4.85, 5.0));
         const io = track(g, [[4.85, 0, 0], [5.0, 60, -40]]);
         const ox = -4.5, oy = -58;
-        const imp2 = K(g, 4.45, 4.6) * (1 - K(g, 5.05, 5.2));
-        const io2 = track(g, [[5.05, 0, 0], [5.2, 60, -40]]);
-        $('st-imp').innerHTML = importin(pos[0] + ox * Math.cos(th) - oy * Math.sin(th) + io[0], pos[1] + ox * Math.sin(th) + oy * Math.cos(th) + io[1], imp, rot) +
-          importin(p2[0] + ox * Math.cos(th2) - oy * Math.sin(th2) + io2[0], p2[1] + ox * Math.sin(th2) + oy * Math.cos(th2) + io2[1], imp2, rot2);
+        const imp2 = K(g, 4.45, 4.6) * (1 - K(g, 4.95, 5.05));            // importine laat los en gaat weg vóór het DNA
+        const io2 = track(g, [[4.92, 0, 0], [5.05, 50, -70]]);
+        $('st-imp').innerHTML = importin(pos[0] + sq * (ox * Math.cos(th) - oy * Math.sin(th)) + io[0], pos[1] + sq * (ox * Math.sin(th) + oy * Math.cos(th)) + io[1], imp, rot, sq) +
+          importin(p2[0] + sq2 * (ox * Math.cos(th2) - oy * Math.sin(th2)) + io2[0], p2[1] + sq2 * (ox * Math.sin(th2) + oy * Math.cos(th2)) + io2[1], imp2, rot2, sq2);
 
         /* ---------- kern: GRE, co-activatoren, Pol II ---------- */
         let N = '';

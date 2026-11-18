@@ -58,7 +58,8 @@ export default {
   ],
 
   svg() {
-    /* adenylylcyclase: 2 × 6 TM-helices, elk gevolgd door een cytosolisch katalytisch domein (C1, C2) dat samen het actieve centrum vormt (Tesmer et al., Science 1997) */
+    /* adenylylcyclase: 2 × 6 TM-helices, elk gevolgd door een cytosolisch domein (C1, C2) (topologie: Krupinski et al., Science 1989;244:1558);
+     * C1 en C2 vormen samen het katalytische centrum (Tesmer et al., Science 1997) */
     const ac = [741, 750.5, 760, 769.5, 779, 788.5, 811.5, 821, 830.5, 840, 849.5, 859].map(x => tmHelix(x, MY - 12, MY + MH + 12, ACC, .85, 8)).join('') +
       `<path d="M770,${MY + MH + 10} L775,${MY + MH + 22} M832,${MY + MH + 10} L830,${MY + MH + 24}" stroke="${ACC}" stroke-width="5"/>` +
       eiwit(775, MY + MH + 44, 32, 26, ACC, { seed: 41 }) + eiwit(830, MY + MH + 48, 30, 26, ACC, { seed: 42 });
@@ -83,7 +84,7 @@ export default {
       <g id="gp-lab"></g>
       <g id="gp-hot" opacity="0">
         <g data-node="srf" data-color="${C.dna}" data-label="${T2('Vergelijk: EGF-route (SRE)', 'Compare: EGF route (SRE)')}">
-          <rect x="700" y="${DY - 30}" width="330" height="70" fill="transparent"/>${anchor('srf', 800, DY - 40)}</g>
+          <rect x="700" y="${DY - 30}" width="330" height="70" fill="transparent"/>${anchor('srf', 960, DY - 82)}</g>
         <g data-node="genregulatie" data-color="${CBPC}" data-label="${T2('Genregulatie', 'Gene regulation')}">
           <rect x="1120" y="${NY + 20}" width="260" height="${DY - NY}" fill="transparent"/>${anchor('genregulatie', CRX + 8, NY + 34)}</g>
       </g>
@@ -157,7 +158,7 @@ export default {
         /* ---------- PKA ---------- */
         let P = '';
         const rel = K(g, 5.4, 5.85);
-        P += eiwit(PKX - 15, PKY, 16, 44, RC, { seed: 44, bumps: .08 }) + eiwit(PKX + 15, PKY, 16, 44, RC, { seed: 45, bumps: .08 });
+        P += eiwit(PKX - 15, PKY, 17, 44, RC, { seed: 44, bumps: .16 }) + eiwit(PKX + 15, PKY, 17, 44, RC, { seed: 47, bumps: .16 });
         P += `<text x="${PKX}" y="${PKY + 66}" font-size="18" text-anchor="middle" fill="${RC}" font-family="Inter" font-weight="700">R R</text>`;
         const c1 = track(g, [[5.4, PKX - 58, PKY], [5.85, PORE + 10, 600], [6.05, PORE + 10, 600], [6.25, PORE, NY], [6.5, CRX - 45, DY - 82]]);
         const c2 = track(g, [[5.4, PKX + 58, PKY], [5.85, PKX + 130, 590]]);

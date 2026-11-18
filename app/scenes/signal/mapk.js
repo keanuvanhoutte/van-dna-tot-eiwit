@@ -130,10 +130,10 @@ const SCENE = {
         const cw = SCENE.steps[step]?.cam?.[2] ?? 1600;
         $('mk-recP').innerHTML = tyr(62, 356, 1, 13, cw) + tyr(42, 376, 1, 13, cw) + tyr(218, 396, 1, 13, cw);
         /* ---- Ras ---- */
-        const gef = step < 1 ? 0 : step === 1 ? ease(sub(p, .15, .75)) : 1;          // GDP → GTP
+        const gef = step < 1 ? 0 : step === 1 ? ease(sub(p, .78, .9)) : 1;           // GDP → GTP: pas aan als het GTP in Ras zit (aankomst p ≈ 0,8)
         const off = step < 7 ? 0 : step === 7 ? ease(sub(p, .25, .6)) : 1;           // GAP: GTP → GDP
         const rasOn = step < 7 ? gef : 1 - off;
-        let rs = ras(RAS[0], RAS[1], MB, { on: rasOn, nuc: rasOn > .5 ? 'GTP' : 'GDP', nucOp: step === 1 ? 1 - Math.sin(Math.PI * sub(p, .25, .65)) * .9 : 1 });
+        let rs = ras(RAS[0], RAS[1], MB, { on: rasOn, nuc: step === 1 ? (p >= .79 ? 'GTP' : 'GDP') : rasOn > .5 ? 'GTP' : 'GDP', nucOp: step === 1 ? 1 - .9 * sub(p, .15, .3) * (1 - sub(p, .76, .8)) : 1 });
         let nucTags = '';                                       // GDP/GTP-pilletjes: boven Raf getekend (in mk-fx)
         if (step === 1) {
           const out = ease(sub(p, .15, .5)), inn = ease(sub(p, .45, .8));

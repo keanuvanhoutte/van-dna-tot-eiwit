@@ -81,7 +81,7 @@ const SCENE = {
     <g data-node="dnahelix" data-color="${C.dna}" data-nolabel>${dna(-300, 1900, DY)}</g>
     <g><rect x="${BRK - 16}" y="${DY - 40}" width="32" height="80" fill="#12203f"/><path d="M${BRK - 22},${DY + 34} L${BRK - 4},${DY - 34} M${BRK + 4},${DY + 34} L${BRK + 22},${DY - 34}" stroke="#dfe6f5" stroke-width="4"/></g>
     <path d="M${TSS},${DY - 30} L${TSS},${DY - 64} L${TSS + 26},${DY - 64}" stroke="#fff" stroke-width="5" fill="none" marker-end="url(#sf-w)"/>
-    <g data-node="promoter" data-color="#ffc247" data-label="${T2('Promoter & PIC →', 'Promoter & PIC →')}"><rect x="${TATA[0] - 10}" y="${DY - 30}" width="${TATA[1] - TATA[0] + 20}" height="60" fill="transparent"/><g id="sf-prA"><circle data-anchor="promoter" data-pos="below" cx="${(TATA[0] + TATA[1]) / 2}" cy="${DY + 40}" r="1" fill="none"/></g></g>
+    <g data-node="promoter" data-color="#ffc247" data-label="${T2('Promoter & PIC →', 'Promoter & PIC →')}"><rect x="${TATA[0] - 10}" y="${DY - 30}" width="${TATA[1] - TATA[0] + 20}" height="60" fill="transparent"/><g id="sf-prA"><circle data-anchor="promoter" data-pos="below" cx="${(TATA[0] + TATA[1]) / 2}" cy="${DY + 100}" r="1" fill="none"/></g></g>
     <g data-node="genregulatie" data-color="${MED}" data-label="${T2('Genregulatie', 'Gene regulation')}"><g id="sf-med"></g><g id="sf-grA"><circle data-anchor="genregulatie" cx="600" cy="245" r="1" fill="none"/></g></g>
     <g id="sf-tf"></g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Transcriptie →', 'Transcription →')}"><g id="sf-pol"></g><g id="sf-txA"><circle id="sf-txC" data-anchor="transcriptie" cx="${POL0}" cy="${DY - 80}" r="1" fill="none"/></g></g>
