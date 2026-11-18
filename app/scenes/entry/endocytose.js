@@ -206,7 +206,9 @@ export default {
         if (step >= 7) { lx = cx + cr * .3; ly = cy; }
         const lOp = step === 7 && p > .75 ? 1 - ease(sub(p, .75, 1)) * .7 : 1;
         $('en-lnp').innerHTML = `<g transform="translate(${f1(lx)} ${f1(ly)})" opacity="${f1(lOp)}">${lnpParticle(36, 1, { protonated: step >= 6 ? (step === 6 ? ease(sub(p, .1, .5)) : 1) : 0 })}</g>`;
-        $('en-lnp-a').setAttribute('cx', f1(lx)); $('en-lnp-a').setAttribute('cy', f1(step === 0 ? MEM + 92 : ly + 56));   // stap 1: label onder de adaptoren, niet op het membraan
+        $('en-lnp-a').setAttribute('cx', f1(lx)); $('en-lnp-a').setAttribute('cy', f1(ly + 56));
+        $('en-lnp-a').setAttribute('data-pos', step === 0 ? 'above' : 'below');   // stap 1: label boven het deeltje (niet op het membraan)
+        if (step === 0) { $('en-lnp-a').setAttribute('cx', f1(lx + 40)); $('en-lnp-a').setAttribute('cy', f1(ly - 95)); }   // hoger dan het adenoviruslabel: geen overlap
 
         /* lysosoom */
         const lyOn = step >= 7 ? (step === 7 ? ease(sub(p, .55, .95)) : 1) : 0;

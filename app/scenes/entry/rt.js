@@ -24,6 +24,10 @@ const enz = (x, y, lab, col) => `<g transform="translate(${f1(x)} ${f1(y)})"><el
 /* 5'/3'-labels aan de uiteinden van een streng (nodig om de sprongen te volgen) */
 const P5 = "5'", P3 = "3'";
 const end = (x, y, lab, col) => txt(x, y + 6, lab, col, 17);
+/* tRNA dat met zijn 3′-uiteinde (18 nt) gepaard ligt op het PBS: een kort tRNA-stuk onder het PBS-vak, met basenparen,
+ * dat aan de linkerkant (het 3′-OH) overloopt in het nieuwe DNA; rechts gaat het over in het L-vormige tRNA */
+const trnaPBS = (yR, yD) => `<line x1="${SEG.PBS[0]}" y1="${yD}" x2="${SEG.PBS[1]}" y2="${yD}" stroke="${TRC}" stroke-width="7" stroke-linecap="round"/>` +
+  Array.from({ length: 6 }, (_, i) => { const x = SEG.PBS[0] + 8 + i * 11; return `<line x1="${x}" y1="${yR + 15}" x2="${x}" y2="${yD - 4}" stroke="${TRC}" stroke-width="2" opacity=".6"/>`; }).join('');
 const trnaHot = (x, y) => `<g data-node="trna" data-href="../atlas/index.html?id=trna" data-color="${TRC}" data-nolabel>${trna(x, y, 1, -1)}</g>`;
 
 export default {
@@ -80,7 +84,7 @@ export default {
     lanes.push(`${T(1, L({ nl: '(−)-streng strong stop', en: '(−) strand strong stop' }))}
       ${strand(SEG.R5[0], SEG.R3[1], laneY(1), RNAC, .8, 6)}
       ${box(...SEG.PBS, laneY(1), 'PBS', '#ffb27a')}
-      ${trna(SEG.PBS[1], laneY(1) + 30)}
+      ${trnaPBS(laneY(1), laneY(1) + 30)}${trna(SEG.PBS[1], laneY(1) + 30)}
       ${strand(SEG.R5[0], SEG.PBS[0], laneY(1) + 30, DNAC, 1, 7)}
       ${txt(SEG.R5[0] + 52, laneY(1) + 62, L({ nl: 'nieuw DNA (R-U5)', en: 'new DNA (R-U5)' }), DNAC, 18, 'start')}
       ${enz(SEG.R5[0] + 6, laneY(1) + 62, 'RT', C.prot)}
@@ -90,6 +94,7 @@ export default {
     lanes.push(`${T(2, 'RNase H')}
       ${gone(SEG.R5[0], SEG.U5[1], laneY(2), RNAC)}
       ${strand(SEG.PBS[0], SEG.R3[1], laneY(2), RNAC, .8, 6)}
+      ${box(...SEG.PBS, laneY(2), 'PBS', '#ffb27a')}${trnaPBS(laneY(2), laneY(2) + 30)}
       ${strand(SEG.R5[0], SEG.PBS[0], laneY(2) + 30, DNAC, 1, 7)}${trna(SEG.PBS[1], laneY(2) + 30)}
       ${enz(SEG.R5[0] + 20, laneY(2) - 40, 'RNase H', C.prot)}
       ${txt((SEG.R5[0] + SEG.U5[1]) / 2, laneY(2) + 58, L({ nl: 'RNA afgebroken', en: 'RNA degraded' }), C.muted, 18)}

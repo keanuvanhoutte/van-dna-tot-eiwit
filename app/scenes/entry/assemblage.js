@@ -1,5 +1,5 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1 } from '../../kit.js';
-import { knopPts, ptsPad } from './_bits.js';
+import { knopPts, ptsPad, glad } from './_bits.js';
 import { blaasje, cisterne, membraanPts, ptsLijn } from '../../bio.js';
 import { T, btn, ribo, corona, rnaWave, SPIKE, NPROT } from './_corona.js';
 
@@ -18,6 +18,17 @@ const kluwen = (x, y, op = 1, s = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}"
   [[-26, 2], [-10, -10], [6, 4], [22, -6], [34, 4]].map(([u, v]) => `<circle cx="${u}" cy="${v}" r="8" fill="${NPROT}" stroke="#0a1224" stroke-width="1.5"/>`).join('') + '</g>';
 /* blaasje = lipidedubbellaag rond een lumen; het lysosoom krijgt een rode rand */
 const vesicle = (x, y, r, col, op = 1) => col === LYSO ? blaasje(x, y, r, { w: 18, op, lumen: 'rgba(255,107,107,.10)', rand: LYSO }) : blaasje(x, y, r, { w: 18, op, lumen: 'rgba(201,165,116,.08)' });
+/* omtrek van twee versmeltende blaasjes (groot c1/R1, klein c2/r): per straal vanuit c1 de verste rand van beide cirkels,
+ * daarna gladgemaakt; zo ontstaat bij een kleine overlap een korte hals in plaats van twee kruisende randen */
+function versmelt(c1, R1, c2, r, N = 120) {
+  const Dx = c2[0] - c1[0], Dy = c2[1] - c1[1], D2 = Dx * Dx + Dy * Dy, P = [];
+  for (let i = 0; i < N; i++) {
+    const a = i / N * 2 * Math.PI, ux = Math.cos(a), uy = Math.sin(a), b = ux * Dx + uy * Dy, disc = b * b - D2 + r * r;
+    const t = disc >= 0 ? Math.max(R1, b + Math.sqrt(disc)) : R1;
+    P.push([c1[0] + ux * t, c1[1] + uy * t]);
+  }
+  return glad(P, 6, true);
+}
 const KB = 40, KW = 60;                            // afknoppen in het ERGIC: straal van de knop, halve breedte van de basis
 const VB = 62, VW = 70;                            // transportblaasje dat rechts uit het ERGIC knopt (stap 3): straal, halve basis
 
@@ -156,18 +167,27 @@ export default {
              wordt minder zuur en schuift daarna naar de celrand */
           const k = step === 4 ? ease(sub(p, .0, .25)) : 1;
           const go = step === 4 ? ease(sub(p, .56, 1)) : 1;
+          let fuse = false, fuseC = [0, 0, 0], vir = '';
           const lx = lerp(1190, 1250, go), lyy = lerp(620, 500, go);
           if (step === 4 && p < .56) {
             /* het tweede virus knopt in een blaasje rechts uit het ERGIC (p 0–.25), reist naar het lysosoom (.25–.45) en het
                blaasje versmelt ermee: zijn membraan gaat op in dat van het lysosoom (straal → 0) en het virus komt erin (.45–.55) */
-            const inKnop = p < .25, x0 = xbV + VB * .94, tx = 1190 - 92 - VB * .45, ty = 612;
-            const mv = ease(sub(p, .25, .45)), fu = ease(sub(p, .45, .55));
-            const bx = inKnop ? Math.max(lerp(ex + 60, xbV - 20, ease(sub(p, 0, .06))), xbV + VB * (2 * kV - 1)) : lerp(x0, tx, mv) + (tx + VB * .45 - tx) * fu;
-            const by = inKnop ? ey - 5 : lerp(ey - 5, ty, mv);
-            if (!inKnop) ly += vesicle(bx, by, VB * (1 - fu), C.mem, 1);
-            ly += corona(lerp(bx, 1160, fu), lerp(by, 600, fu), 26, ease(sub(p, 0, .06)));
+            const inKnop = p < .25, x0 = xbV + VB * .94, dT = 92 + VB - 6, tx = lx - dT * .94, ty = lyy - dT * .34;
+            const mv = ease(sub(p, .25, .42)), fu = ease(sub(p, .42, .55));
+            fuse = !inKnop && mv >= 1;
+            const bx = inKnop ? Math.max(lerp(ex + 60, xbV - 20, ease(sub(p, 0, .06))), xbV + VB * (2 * kV - 1)) : lerp(x0, lx + (tx - lx) * (1 - fu), mv);
+            const by = inKnop ? ey - 5 : lerp(ey - 5, lyy + (ty - lyy) * (1 - fu), mv);
+            fuseC = [bx, by, VB * (1 - fu)];
+            if (!inKnop && !fuse) ly += vesicle(bx, by, VB, C.mem, 1);
+            vir = corona(lerp(bx, lx - 30, fu), lerp(by, lyy - 20, fu), 26, ease(sub(p, 0, .06)));
           }
-          ly += `<g opacity="${f1(k)}">` + vesicle(lx, lyy, 92, LYSO, 1) + corona(lx + 30, lyy + 24, 24) + (step === 5 || p >= .56 ? corona(lx - 30, lyy - 20, 26) : '') + '</g>';   // het aangevoerde virus zit nu ook in het lysosoom
+          /* lysosoom; tijdens de versmelting één doorlopend membraan met een hals naar het blaasje */
+          let lys = vesicle(lx, lyy, 92, LYSO, 1);
+          if (fuse && fuseC[2] > 2) {
+            const P = versmelt([lx, lyy], 92, [fuseC[0], fuseC[1]], fuseC[2]);
+            lys = `<path d="${ptsPad(P, true)}" fill="rgba(255,107,107,.10)"/><path d="${ptsPad(P, true)}" fill="none" stroke="${LYSO}" stroke-width="2.4" opacity=".9" transform="translate(0 0)"/>` + membraanPts(P, { w: 18, closed: true });
+          }
+          ly += `<g opacity="${f1(k)}">` + lys + corona(lx + 30, lyy + 24, 24) + (step === 5 || p >= .56 ? corona(lx - 30, lyy - 20, 26) : vir) + '</g>';   // het aangevoerde virus zit nu ook in het lysosoom
           ly += T(lx - 70, lyy + 140, T2('lysosoom: minder zuur', 'lysosome: less acidic'), { size: 26, col: LYSO, w: 700, op: k });
         }
         if (step === 5) {

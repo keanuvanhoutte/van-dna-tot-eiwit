@@ -60,7 +60,7 @@ export default {
     </g>
     <g id="ln-part"></g>
     <g data-node="initiatie" data-color="${C.rrna}" data-label="${T2('Ribosomen · translatie', 'Ribosomes · translation')}" id="ln-ribo" opacity="0">
-      <circle data-anchor="initiatie" data-pos="below" cx="1080" cy="830" r="1" fill="none"/>
+      <circle data-anchor="initiatie" data-pos="below" cx="930" cy="790" r="1" fill="none"/>
       <g id="ln-ribo-body"></g>
     </g>
     <g data-node="kernimport" data-color="${C.prot}" data-label="${T2('Kernporie (hier niet gebruikt)', 'Nuclear pore (not used here)')}" id="ln-nuc" opacity="0">
@@ -150,15 +150,15 @@ export default {
         const rOn = step === 4 ? ease(sub(p, .6, 1)) : step >= 5 ? 1 : 0;
         $('ln-ribo').setAttribute('opacity', f1(rOn));
         $('ln-ribo-body').innerHTML = rOn > .01
-          ? `<path d="M${px - 60},${f1(py + 90)} Q960,740 880,760" stroke="${C.rna}" stroke-width="4" fill="none" stroke-dasharray="10 8" opacity=".5"/>
-             <path d="M820,760 q26,-20 52,0 t52,0 t52,0 t52,0" stroke="${C.rna}" stroke-width="6" fill="none"/>
-             ${[0, 1, 2, 3].map(i => { const x = 846 + i * 52,   /* volledig rechts van de celrand: translatie in het cytosol */ y = 760 + (i % 2 ? 17 : -3);   // ribosoom (twee eenheden), mRNA tussen beide
-               const kc = step >= 5 ? (step === 5 ? ease(sub(p, .1, .7)) : 1) : .25, L = (10 + i * 12) * kc;   // keten groeit uit de grote eenheid
+          ? `<path d="M${px - 60},${f1(py + 90)} Q960,720 880,730" stroke="${C.rna}" stroke-width="4" fill="none" stroke-dasharray="10 8" opacity=".5"/>
+             <path d="M820,730 q26,-20 52,0 t52,0 t52,0 t52,0" stroke="${C.rna}" stroke-width="6" fill="none"/>
+             ${[0, 1, 2, 3].map(i => { const x = 846 + i * 52,   /* volledig rechts van de celrand: translatie in het cytosol */ y = 730 + (i % 2 ? 17 : -3);   // ribosoom (twee eenheden), mRNA tussen beide
+               const kc = step >= 5 ? (step === 5 ? ease(sub(p, .1, .7)) : 1) : .25, L = (8 + i * 6) * kc;   // kort genoeg om in beeld te blijven   // keten groeit uit de grote eenheid
                return ribosoomKlein(x, y, { s: 1.9 }) + `<path d="M${x},${y + 24} q${f1(-L * .4)},${f1(L * .5)} ${f1(L * .1)},${f1(L)}" stroke="${C.chain}" stroke-width="4" fill="none" stroke-linecap="round"/>`; }).join('')}
              ${step >= 5 ? `<g opacity="${f1(step === 5 ? ease(sub(p, .45, .85)) : 1)}">
-               <path d="M${f1(1002)},${f1(784)} q14,-30 34,-52" stroke="${C.chain}" stroke-width="3" fill="none" stroke-dasharray="5 6" opacity=".7"/>
-               ${eiwit(1066, 708, 32, 23, C.prot, { seed: 33, bumps: .14 })}${eiwit(1132, 728, 26, 20, C.prot, { seed: 34, bumps: .14 })}
-               ${txt(1270, 700, T2('antigeen-eiwit', 'antigen protein'), C.prot, 21, 'start')}</g>` : ''}` : '';
+               <path d="M${f1(1002)},${f1(754)} q14,-30 34,-52" stroke="${C.chain}" stroke-width="3" fill="none" stroke-dasharray="5 6" opacity=".7"/>
+               ${eiwit(1066, 680, 32, 23, C.prot, { seed: 33, bumps: .14 })}${eiwit(1132, 700, 26, 20, C.prot, { seed: 34, bumps: .14 })}
+               ${txt(1166, 690, T2('antigeen-eiwit', 'antigen protein'), C.prot, 21, 'start')}</g>` : ''}` : '';
 
         /* kern-uitsluiting */
         const nOn = step === 6 ? ease(sub(p, .15, .5)) : 0;
@@ -166,8 +166,8 @@ export default {
         $('ln-nuc-body').innerHTML = nOn > .01
           ? `<circle cx="1480" cy="420" r="128" fill="url(#gNuc)"/>${kernEnvelop(ptsCirkel(1480, 420, 140, 90), { poriën: [.05, .2, .35, .5, .65, .8, .95], w: 7, gap: 7, poreW: 16, s: .45 })}
              ${txt(1480, 430, T2('celkern', 'nucleus'), '#9cc0ff', 24)}
-             <path d="M960,790 Q1330,790 1420,580" stroke="${C.danger}" stroke-width="5" fill="none" stroke-dasharray="12 9" marker-end="url(#arrow)" opacity=".9"/>
-             <g transform="translate(1290 750)"><circle r="26" fill="#0b1224" stroke="${C.danger}" stroke-width="5"/><line x1="-18" y1="18" x2="18" y2="-18" stroke="${C.danger}" stroke-width="5"/></g>` : '';
+             <path d="M1040,735 Q1330,790 1420,580" stroke="${C.danger}" stroke-width="5" fill="none" stroke-dasharray="12 9" marker-end="url(#arrow)" opacity=".9"/>
+             <g transform="translate(1290 742)"><circle r="26" fill="#0b1224" stroke="${C.danger}" stroke-width="5"/><line x1="-18" y1="18" x2="18" y2="-18" stroke="${C.danger}" stroke-width="5"/></g>` : '';
 
         /* notities */
         let no = lab;
