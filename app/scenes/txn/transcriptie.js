@@ -26,7 +26,7 @@ export default {
       text: { nl: 'Vóór het gen ligt de startplek (promoter). Een hulpeiwit herkent daar het stukje DNA ‘TATAAAA’.', en: 'In front of the gene lies the start site (promoter). A helper protein recognises the DNA stretch ‘TATAAAA’ there.' } },
     { dur: 8000, cam: cam(330, 460, 820), title: { nl: 'De kopieermachine gaat klaarstaan', en: 'The copying machine gets ready' },
       text: { nl: 'Hulpeiwitten zetten het enzym dat RNA maakt (RNA-polymerase) op het begin van het gen.', en: 'Helper proteins place the enzyme that makes RNA (RNA polymerase) at the start of the gene.' } },
-    { dur: 7000, cam: cam(390, 450, 700), title: { nl: 'Het DNA gaat even open', en: 'The DNA opens briefly' },
+    { dur: 7000, cam: cam(390, 478, 700), title: { nl: 'Het DNA gaat even open', en: 'The DNA opens briefly' },
       text: { nl: 'De twee DNA-strengen gaan op die plek uit elkaar. Nu kan het enzym één streng aflezen en beginnen.', en: 'The two DNA strands come apart at that spot. Now the enzyme can read one strand and get started.' } },
     { dur: 6000, cam: cam(470, 460, 860), title: { nl: 'Het enzym vertrekt', en: 'The enzyme sets off' },
       text: { nl: 'Het enzym rijdt het gen in en laat de meeste hulpeiwitten achter bij de startplek.', en: 'The enzyme moves into the gene and leaves most helper proteins behind at the start site.' } },
@@ -53,7 +53,7 @@ export default {
     </g>
     <g data-node="promoter" data-color="${C.prot}" data-label="${T2('Promoter (TATA-box)', 'Promoter (TATA box)')}">
       <rect x="112" y="432" width="150" height="76" rx="10" fill="rgba(155,123,255,.10)" stroke="${C.prot}" stroke-dasharray="5 4"/>
-      <circle data-anchor="promoter" cx="187" cy="600" r="1" fill="none"/>
+      <circle data-anchor="promoter" cx="187" cy="636" r="1" fill="none"/>
     </g>
     <g data-node="rnaprocessing" data-color="${C.rna}" data-label="${T2('pre-mRNA → processing', 'pre-mRNA → processing')}">
       <path id="tx-rna-hit" stroke="transparent" stroke-width="26" fill="none"/>
@@ -75,7 +75,7 @@ export default {
     <!-- factoren boven Pol II: de omtrek van Pol II loopt niet door hun labels -->
     <g data-node="promoter" data-nolabel data-color="${C.prot}"><text id="tx-tata" x="187" y="592" text-anchor="middle" font-family="JetBrains Mono" font-size="18" fill="#c9b8ff">TATAAAA</text>
     <g id="tx-gtf"></g></g>
-    <g data-node="supercoiling" data-color="${C.dna2}" data-label="${T2('Supercoiling', 'Supercoiling')}" id="tx-sc"></g>
+    <g data-node="supercoiling" data-color="${C.dna2}" data-label="${T2('Supercoiling', 'Supercoiling')}"><g id="tx-sc"></g><circle id="tx-scA" data-anchor="supercoiling" cx="-99" cy="-99" r="1" fill="none" opacity="0"/></g>
     <g font-family="JetBrains Mono, monospace" font-size="16" fill="${C.text}">
       <text x="44" y="408">5'</text><text x="1545" y="408">3'</text><text x="44" y="560">3'</text><text x="1545" y="560">5'</text>
     </g>
@@ -160,8 +160,8 @@ export default {
         $('tx-tata').setAttribute('opacity', step <= 3 ? 1 : 0);
         $('tx-ctdp').setAttribute('opacity', step === 8 ? f1(1 - sub(p, 0, .3)) : 1);
         $('tx-ctdlab').setAttribute('opacity', step === 2 || step === 7 ? 1 : 0);
-        $('tx-strandlab').setAttribute('opacity', step === 0 || step === 8 ? 1 : step === 4 ? f1(sub(p, .45, .6)) : 0);
-        $('tx-strandlab').setAttribute('transform', step === 4 ? 'translate(-190 0)' : '');   // in stap 5 links van Pol II en het RNA
+        $('tx-strandlab').setAttribute('opacity', step === 0 || step === 8 ? 1 : step === 4 ? f1(sub(p, .85, .95)) : 0);   // pas als Pol II voorbij is
+        $('tx-strandlab').setAttribute('transform', step === 4 ? 'translate(-200 0)' : step === 0 ? 'translate(-150 0)' : '');   // stap 1: volledig in beeld; stap 5: links van Pol II   // in stap 5 links van Pol II en het RNA
 
         // algemene transcriptiefactoren
         const g = [];
@@ -177,6 +177,7 @@ export default {
 
         // supercoils
         const sc = step >= 4 ? 1 : 0;
+        { const a = $('tx-scA'); a.setAttribute('cx', f1(polX + 230)); a.setAttribute('cy', 612); a.setAttribute('opacity', sc); }   // knop boven de +-supercoils, niet over de CTD
         $('tx-sc').innerHTML = sc ? `
           <g transform="translate(${f1(polX + 230)} 640)"><circle r="17" fill="none" stroke="${C.dna2}" stroke-width="2"/><text y="6" text-anchor="middle" fill="${C.dna2}" font-size="18" font-family="Inter">+</text></g>
           <g transform="translate(${f1(polX - 230)} 640)"><circle r="17" fill="none" stroke="${C.dna2}" stroke-width="2"/><text y="6" text-anchor="middle" fill="${C.dna2}" font-size="20" font-family="Inter">−</text></g>

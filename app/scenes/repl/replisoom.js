@@ -233,13 +233,13 @@ const scene = {
             cl += `<circle cx="${last - 30}" cy="${NBOT + 74}" r="20" fill="#0a1224" stroke="#fff" stroke-width="1.5" stroke-dasharray="4 3" opacity="${f1(sub(p, .15, .3))}"/>`;
             cl += `<g opacity="${f1(1 - gone)}">${seg(wx, wy, wx, wy + 22, BASE[wrong], 5)}${txt(wx + 14, wy + 30, wrong, BASE[wrong], 15, 'middle', 700, 'JetBrains Mono')}</g>`;
             cl += tag(last + 36, BOTY + 20, '✗', C.danger, 26, 'middle', 1 - sub(p, .2, .3));
-            cl += tag(last - 62, NBOT + 80, T2("exo-plaats (3'→5')", "exo site (3'→5')"), '#fff', 13, 'end', sub(p, .15, .3) * (1 - gone));
+            cl += tag(last - 112, NBOT + 80, T2("exo-plaats (3'→5')", "exo site (3'→5')"), '#fff', 13, 'end', sub(p, .15, .3) * (1 - gone));
           } else {
             cl += `<g opacity="${f1(put)}">${seg(last, (BOTY + NBOT) / 2, last, NBOT, BASE[COMP[bT]], 4.5)}${seg(last - 9, NBOT, last + 9, NBOT, NEW, 7)}</g>`;
             cl += tag(last + 34, BOTY + 20, '✓', C.ok, 26, 'middle', sub(p, .8, .9));
           }
           lead += cl;
-        } else lead += endl(LEAD3 + 24, NBOT + 8, "3'", NEW, 16);
+        }   // 3'-label van de leidende streng: bij de eiwitten (boven Pol ε), zie onder
         $('rs-lead').innerHTML = lead;
 
         /* ---- eiwitten ---- */
@@ -253,7 +253,8 @@ const scene = {
         pr += arrow(1060, 660, 1150, 660, C.prot, 3.5, 1);
         // Pol ε + PCNA op de leidende streng
         // Pol ε houdt het 3'-uiteinde van de leidende streng vast en zit rechtstreeks tegen CMG aan (Langston et al., PNAS 2014; Zhou et al., PNAS 2017)
-        pr += step === 8 ? prot(LEAD3 + 22, 752, 92, 40, C.prot2, 'Pol ε', 18) : `<g transform="translate(902 684) rotate(-28)">${prot(0, 0, 92, 42, C.prot2, '', 24)}</g>` + txt(900, 716, 'Pol ε', '#fff', 24, 'middle', 700);
+        // proeflezen (stap 9): Pol ε blijft op het 3'-uiteinde; de exo-plaats zit in hetzelfde enzym (Alberts, MBoC hfst. 5)
+        pr += step === 8 ? prot(LEAD3 - 4, NBOT + 30, 104, 56, C.prot2, '', 18) + txt(LEAD3 + 50, NBOT + 70, 'Pol ε', '#fff', 18, 'middle', 700) : `<g transform="translate(902 684) rotate(-28)">${prot(0, 0, 92, 42, C.prot2, '', 24)}</g>` + txt(900, 716, 'Pol ε', '#fff', 24, 'middle', 700) + endl(LEAD3 - 46, NBOT + 32, "3'", NEW, 18);   // links onder het uiteinde, naast (niet onder) Pol ε
         pr += clamp3(step === 8 ? 640 : LEAD3 - 120, (BOTY + NBOT) / 2, 13, 44, PCNA, 1);
         // Pol α-primase
         const aOp = step < 3 ? (step === 0 ? .0 : 0) : step === 3 ? ease(sub(p, 0, .15)) : step === 4 ? 1 - sub(p, .05, .3) : 0;   // polymerasewissel: Pol α laat los vóór RFC de klem plaatst

@@ -169,12 +169,12 @@ export default {
         const nelfOp = step === 7 ? sub(p, .45, .7) : step === 8 ? 1 - ease(sub(p, .45, .75)) : 0;
         const dsifOp = step === 7 ? sub(p, .35, .6) : step === 8 ? 1 : 0;
         const pausePx = step === 8 ? aX - 30 : px;
-        g += ePill(pausePx + 120, py - 128 - (step === 8 ? 120 * ease(sub(p, .45, .75)) : 0), 86, 32, 'NELF', G.nelf, nelfOp, 18);
-        g += ePill(pausePx - 214, py + 30, 86, 32, 'DSIF', G.dsif, dsifOp, 18);   // links van de RNA-uitgang, vrij van de RNA-lijn
+        g += ePill(pausePx + 108, py - 94 - (step === 8 ? 120 * ease(sub(p, .45, .75)) : 0), 86, 32, 'NELF', G.nelf, nelfOp, 18);
+        g += ePill(pausePx - 60, py - 130, 86, 32, 'DSIF', G.dsif, dsifOp, 18);   // DSIF (op de klem) en NELF tegen de Pol II-omtrek: beide binden Pol II rechtstreeks; vrij van RNA en CTD
         if (step === 8) {
           const pt = ease(sub(p, 0, .3));
           g += ePill(pausePx - 20, py - 178, 190, 34, 'P-TEFb (CDK9)', '#4a9a3a', pt, 18);
-          if (pt > .3) g += `<g opacity="${f1(pt * nelfOp)}">${txt(pausePx + 176, py - 138 - 120 * ease(sub(p, .45, .75)), 'P', C.ok, 20)}</g><g opacity="${f1(pt)}">${txt(pausePx - 272, py + 22, 'P', C.ok, 20)}</g>`;
+          if (pt > .3) g += `<g opacity="${f1(pt * nelfOp)}">${txt(pausePx + 164, py - 104 - 120 * ease(sub(p, .45, .75)), 'P', C.ok, 20)}</g><g opacity="${f1(pt)}">${txt(pausePx - 114, py - 136, 'P', C.ok, 20)}</g>`;
         }
         $('pr-gtf').innerHTML = g;
 
@@ -203,7 +203,7 @@ export default {
           pol += '</g>';
         }
         $('pr-pol').innerHTML = pol;
-        setA('pr-polA', step === 7 ? px + 80 : px + 20, step === 7 ? py + 30 : py - 128, polOp > .5);
+        setA('pr-polA', step >= 7 ? px + 80 : px + 20, step >= 7 ? py + 30 : py - 128, polOp > .5);   // stap 8–9: knop in Pol II, vrij van DSIF/NELF/P-TEFb
 
         // RNA
         let rna = '';

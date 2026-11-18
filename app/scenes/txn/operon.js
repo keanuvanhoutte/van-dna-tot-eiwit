@@ -3,8 +3,10 @@ import { helixAlong, prot, panel, arrow } from './_txn.js';
 import { bacterieWand, ptsStaaf, ribosoomKlein } from '../../bio.js';
 
 /* E. coli lac-operon. Posities in scènecoördinaten (niet op schaal in bp).
- * lac-promoter: −35 TTTACA, −10 TATGTT (lacUV5 verschilt enkel in −10 → TATAAT); bron: Wikipedia 'LacUV5' (GenBank E. coli lac-
- * sequentie; Studier & Moffatt, J Mol Biol 1986), gelezen; σ70-consensus TTGACA / TATAAT. */
+ * lac-promoter: −35 TTTACA, −10 TATGTT (lacUV5: −10 TATAAT) — Heider, Pyka & Barnekow, BMC Res Notes 2009;2:125 (PMID 19583865) en
+ * Joo et al., Microbiol Spectr 2023 (PMID 36786576), beide gelezen; oorspronkelijke bepaling: Dickson et al., Science 1975 (PMID 1088926).
+ * Tussenruimte −35/−10: lac 18 bp (Mandecki & Reznikoff, Nucleic Acids Res 1982, PMID 6278440, abstract gelezen), consensus 17 bp.
+ * σ70-consensus TTGACA / TATAAT. */
 const Y0 = 470, TSS = 520;
 const EL = {
   lacI: [120, 262], cap: [292, 346], m35: [364, 408], m10: [452, 496], op: [506, 570],
@@ -36,7 +38,7 @@ export default {
   steps: [
     { dur: 8000, cam: cam(790, 440, 1420), title: { nl: 'Het lac-operon: drie genen samen', en: 'The lac operon: three genes together' },
       text: { nl: 'In E. coli delen drie genen één startplek en één aan/uit-schakelaar. Ze worden samen in één mRNA gekopieerd.', en: 'In E. coli, three genes share one start site and one on/off switch. They are copied together into one mRNA.' } },
-    { dur: 9000, cam: cam(440, 430, 780), title: { nl: 'Het RNA-enzym zoekt de startplek', en: 'The RNA enzyme finds the start site' },
+    { dur: 9000, cam: cam(440, 455, 780), title: { nl: 'Het RNA-enzym zoekt de startplek', en: 'The RNA enzyme finds the start site' },
       text: { nl: 'Een hulpeiwit (σ-factor) brengt het enzym dat RNA maakt naar de startplek. Die past hier slecht: de start is zwak.', en: 'A helper protein (σ factor) brings the enzyme that makes RNA to the start site. Here the site is a poor match, so starting is weak.' } },
     { dur: 8000, cam: cam(790, 440, 1420), title: { nl: 'Geen lactose: de genen staan uit', en: 'No lactose: the genes are off' },
       text: { nl: 'Een rem-eiwit (repressor) zit op de schakelaar en houdt het RNA-enzym tegen. De genen staan uit.', en: 'A brake protein (repressor) sits on the switch and blocks the RNA enzyme. The genes are off.' } },
@@ -89,9 +91,10 @@ export default {
     el += `<g id="op-promlab">` + txt(430, Y0 + 92, 'promoter', K.sig, 20) + '</g>';
     $('op-elems').innerHTML = el;
 
-    // groeiende eiwitketen: hoe verder het ribosoom van het 5'-uiteinde (d), hoe langer de keten
+    // groeiende eiwitketen: elk gen (lacZ, lacY, lacA) heeft een eigen start- en stopcodon; hoe verder het ribosoom in zijn gen (d), hoe langer de keten
+    const GENES = ['lacZ', 'lacY', 'lacA'].map(g => [EL[g][0] - TSS - 20, EL[g][1] - TSS - 20]);   // genposities in mRNA-px vanaf het 5'-uiteinde
     const chainAt = (x, y, d) => {
-      const n = Math.max(1, Math.min(9, Math.round(d / 45)));
+      const n = Math.max(1, Math.min(9, Math.round(d / 40)));
       let dd = `M${f1(x)},${f1(y)}`;
       for (let k = 0; k < n; k++) dd += ` q${k % 2 ? -8 : 8},-6 0,-11`;
       return `<path d="${dd}" stroke="${C.chain}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
@@ -103,12 +106,12 @@ export default {
       for (let s = 0; s <= len; s += 8) pts.push([x0 - s * .42, Y0 - 66 - Math.min(s, 300) * .55 - 8 * Math.sin(s / 30)]);
       let g = `<path d="${pts.map((q, i) => `${i ? 'L' : 'M'}${f1(q[0])},${f1(q[1])}`).join('')}" stroke="${C.rna}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
       if (withRibo) {
-        // ribosomen vanaf het 5'-uiteinde, om de ~130 nt-px
-        for (let d = 60; d < len - 40; d += 130) {
+        // per gen: ribosomen starten aan het begin van dat gen (eigen startcodon), om de ~120 nt-px
+        for (const [g0, g1] of GENES) for (let d = g0 + 30; d < Math.min(g1 - 10, len - 40); d += 120) {
           const q = pts[Math.floor((len - d) / 8)] ?? pts[pts.length - 1];
           // 70S: grote eenheid (50S) boven, kleine (30S) onder, mRNA ertussen; de keten komt uit de grote eenheid
           g += ribosoomKlein(q[0], q[1] + 2, { s: 1.5, rot: 180, col: K.ribo }) +
-            chainAt(q[0], q[1] - 17, d);
+            chainAt(q[0], q[1] - 17, d - g0);
         }
       }
       return g;
@@ -143,10 +146,10 @@ export default {
         $('op-cell').setAttribute('opacity', step === 0 ? .8 : 0);
         // echte lac-promoter (bovenste rij) met de afwijkingen van de σ70-consensus (onderste rij) in rood
         const mm = (seq, cons) => [...seq].map((c, i) => c === cons[i] ? c : `<tspan fill="${C.danger}">${c}</tspan>`).join('');
-        $('op-seq').innerHTML = sq > .01 ? `<g opacity="${f1(sq)}">` + `<rect x="236" y="${Y0 + 68}" width="290" height="106" rx="10" fill="#0b1224" opacity=".95"/>` +
+        $('op-seq').innerHTML = sq > .01 ? `<g opacity="${f1(sq)}">` + `<rect x="236" y="${Y0 + 68}" width="290" height="126" rx="10" fill="#0b1224" opacity=".95"/>` +
           txt(350, Y0 + 96, 'lac', C.text, 16, 'end', 700) + txt(386, Y0 + 96, mm('TTTACA', 'TTGACA'), K.sig, 17, 'middle', 700, 'JetBrains Mono') + txt(474, Y0 + 96, mm('TATGTT', 'TATAAT'), K.sig, 17, 'middle', 700, 'JetBrains Mono') +
           txt(350, Y0 + 120, T2('consensus', 'consensus'), C.muted, 14, 'end') + txt(386, Y0 + 120, 'TTGACA', C.muted, 15, 'middle', 600, 'JetBrains Mono') + txt(474, Y0 + 120, 'TATAAT', C.muted, 15, 'middle', 600, 'JetBrains Mono') +
-          `<path d="M410,${Y0 + 130} v8 H450 v-8" stroke="${C.muted}" fill="none" stroke-width="1.5"/>` + txt(430, Y0 + 160, '~17 bp', C.muted, 16) + '</g>' : '';
+          `<path d="M410,${Y0 + 130} v8 H450 v-8" stroke="${C.muted}" fill="none" stroke-width="1.5"/>` + txt(430, Y0 + 154, T2('lac: 18 bp', 'lac: 18 bp'), C.text, 15) + txt(430, Y0 + 174, T2('consensus: 17 bp', 'consensus: 17 bp'), C.muted, 14) + '</g>' : '';
 
         // eiwitten
         let pr = '';

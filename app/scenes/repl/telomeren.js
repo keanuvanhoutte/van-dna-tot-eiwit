@@ -165,8 +165,8 @@ const scene = {
             // en TPP1; TPP1 houdt POT1 vast, dat het enkelstrengige 3'-uiteinde bindt; RAP1 zit op TRF2 (de Lange, Genes Dev 2005).
             m += prot(870, 490, 76, 30, C.prot2, 'TRF2', 20, k(0)) + prot(1030, 490, 76, 30, C.prot, 'TRF1', 20, k(0));
             m += prot(760, 548, 62, 28, C.prot3, 'RAP1', 20, k(1));
-            m += prot(1030, 548, 96, 28, C.prot3, 'TIN2', 20, k(2));
-            m += prot(1180, 506, 64, 28, C.prot3, 'TPP1', 20, k(3)) + prot(1290, 446, 76, 30, '#b07cf0', 'POT1', 21, k(3));
+            m += prot(1000, 548, 112, 28, C.prot3, 'TIN2', 20, k(2));   // TIN2 raakt TRF2 én TRF1 tegelijk en houdt TPP1 vast (Srinivas et al., Cancers 2020, PMID 32121056, gelezen)
+            m += prot(1172, 512, 64, 28, C.prot3, 'TPP1', 20, k(3)) + prot(1290, 446, 76, 30, '#b07cf0', 'POT1', 21, k(3));
             m += tag(760, 190, T2('shelterin (6 eiwitten; TRF1 en TRF2 elk als dimeer)', 'shelterin (6 proteins; TRF1 and TRF2 each as a dimer)'), C.text, 28, 'middle', sub(p, .55, .7));
           }
         } else place('tl-rta', -99, -99);

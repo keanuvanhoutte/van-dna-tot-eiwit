@@ -178,7 +178,7 @@ export default {
           else nu += nucleosome(q[0], q[1], 1, acHere);
         }
         $('gr-nuc').innerHTML = nu;
-        const na = pt(1320); setA('gr-nucA', na[0], na[1] - 34);
+        const na = pt(step === 3 ? 1160 : 1320); setA('gr-nucA', na[0], na[1] - 34);   // stap 4: knop binnen beeld
 
         // eiwitten
         let pr2 = '';
@@ -201,8 +201,10 @@ export default {
         $('gr-hat').innerHTML = hat;
         { const qa = pt(545); setA('gr-hatA', qa[0] + 4, qa[1] - 58, step >= 3 && step <= 5 && !(step === 3 && p < .3)); }
         const rq = pt(TATA);
-        pr2 += prot(rq[0] + 60 * evict, rq[1] - 80 - 170 * evict, 54, 26, M.rem, remOp, 22, 'SWI/SNF', 18);
-        if (step === 3 && remOp > .01) pr2 += txt(rq[0] + 60 * evict, rq[1] - 128 - 170 * evict, T2('remodeler (ATP)', 'remodeller (ATP)'), C.text, 18);
+        // SWI/SNF zit op het promoternucleosoom en duwt het weg; daarna blijft het op het vrijgekomen DNA (contact, niet zwevend)
+        const remY = rq[1] - 50 + 16 * evict;   // eerst bovenop het nucleosoom, daarna op het vrijgekomen DNA
+        pr2 += prot(rq[0] - 40, remY, 54, 26, M.rem, remOp, 22, 'SWI/SNF', 18);   // links van de +1-pijl
+        if (step === 3 && remOp > .01) pr2 += txt(rq[0] - 60, remY - 46, T2('remodeler (ATP)', 'remodeller (ATP)'), C.text, 18);
         // Mediator
         const mA = [e[0] + 70, e[1] - 150], mB = [915, 425];
         const mp = [lerp(mA[0], mB[0], k), lerp(mA[1], mB[1], k)];
