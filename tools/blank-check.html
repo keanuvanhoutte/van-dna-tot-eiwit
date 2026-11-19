@@ -28,8 +28,25 @@ async function fill(svg, box) {
   return n / (W * H);
 }
 
+/* Zelftest (?selftest=1): nepscène waarvan stap 1 pas na de helft inhoud krijgt → moet "overgang wordt donker" geven;
+ * stap 2 heeft meteen inhoud in een andere camera → mag niets geven. */
+const NS = 'http://www.w3.org/2000/svg';
+const TEST = {
+  svg: () => `<svg xmlns="${NS}" viewBox="0 0 1600 900"><rect id="t0" x="100" y="100" width="1400" height="700" fill="#e05050"/><circle id="t1" cx="800" cy="450" r="300" fill="#50e050" opacity="0"/><rect id="t2" x="0" y="0" width="400" height="300" fill="#5050e0" opacity="0"/></svg>`,
+  init: svg => ({ update: (t, { step, p }) => {
+    svg.querySelector('#t0').setAttribute('opacity', step === 0 ? 1 : 0);
+    svg.querySelector('#t1').setAttribute('opacity', step === 1 && p > .6 ? 1 : 0);
+    svg.querySelector('#t2').setAttribute('opacity', step === 2 ? 1 : 0);
+  } }),
+  steps: [{ dur: 6000 }, { dur: 6000 }, { dur: 6000, cam: [0, 0, 400, 300] }],
+};
+const LIST = new URLSearchParams(location.search).get('selftest') ? { _selftest: TEST } : SCENES;
+/* De app tweent de camera exponentieel (k = 1 − e^(−dt/550)) en legt 120 ms + 1,1 s een vervagende kopie van het
+ * vorige eindbeeld over de nieuwe stap. Een overgang is pas echt donker als het beeld ook op het eerste moment zonder
+ * die kopie (t ≈ 1250 ms, camera bijna op doel) nog veel leger is dan het eigen eindbeeld van de stap. */
+const T_VRIJ = 1250, CAM_TAU = 550;
 const rows = [], flags = [];
-for (const [id, sc] of Object.entries(SCENES)) {
+for (const [id, sc] of Object.entries(LIST)) {
   if (sc.alias || sc.kind === '3d' || !sc.svg) continue;
   if (only && !only.includes(id)) continue;
   const host = document.createElement('div'); host.style.cssText = 'position:absolute;left:-5000px;top:0;width:1600px;height:900px';
@@ -37,16 +54,22 @@ for (const [id, sc] of Object.entries(SCENES)) {
   const svg = host.querySelector('svg');
   let api = null; try { api = sc.init?.(svg, { lang: 'nl' }); } catch (e) { flags.push(`${id}: init ${e.message}`); host.remove(); continue; }
   await new Promise(r => setTimeout(r, 900));          // scènes die PDB-gegevens ophalen (secundair, dnahelix…) eerst laten laden
-  let t0 = 0, prevEnd = null;
+  let t0 = 0, prevEnd = null, prevBox = null;
   for (const [k, st] of sc.steps.entries()) {
     const box = st.cam ?? [0, 0, 1600, 900];
-    const at = async p => { try { api?.update?.(t0 + st.dur * p, { step: k, p, t: t0 + st.dur * p, total: 0 }); } catch (e) { return -1; } return fill(svg, box); };
+    const at = async (p, bx = box) => { try { api?.update?.(t0 + st.dur * p, { step: k, p, t: t0 + st.dur * p, total: 0 }); } catch (e) { return -1; } return fill(svg, bx); };
     const a = await at(.02), b = await at(.98);
     rows.push(`${id} s${k} start ${(a * 100).toFixed(1)}% end ${(b * 100).toFixed(1)}%`);
     if (a >= 0 && a < .015) flags.push(`${id} stap ${k}: begint bijna leeg (${(a * 100).toFixed(1)}%)`);
-    if (prevEnd !== null && a >= 0 && prevEnd > .03 && a < prevEnd * .35) flags.push(`${id} stap ${k}: overgang wordt donker (${(prevEnd * 100).toFixed(1)}% → ${(a * 100).toFixed(1)}%)`);
+    if (prevEnd !== null && a >= 0 && prevEnd > .03 && a < prevEnd * .35) {
+      const kk = 1 - Math.exp(-T_VRIJ / CAM_TAU), from = prevBox ?? box;
+      const mid = box.map((v, i) => from[i] + (v - from[i]) * kk);
+      const c = await at(Math.min(T_VRIJ / st.dur, .5), mid);
+      if (c >= 0 && c < b * .35) flags.push(`${id} stap ${k}: overgang wordt donker (${(prevEnd * 100).toFixed(1)}% → ${(a * 100).toFixed(1)}%; na ${T_VRIJ} ms ${(c * 100).toFixed(1)}% van eind ${(b * 100).toFixed(1)}%)`);
+      else rows.push(`${id} s${k} overgang: ok na ${T_VRIJ} ms (${(c * 100).toFixed(1)}% t.o.v. eind ${(b * 100).toFixed(1)}%)`);
+    }
     if (b >= 0 && b < .015) flags.push(`${id} stap ${k}: eindbeeld bijna leeg (${(b * 100).toFixed(1)}%)`);
-    prevEnd = b; t0 += st.dur;
+    prevEnd = b; prevBox = box; t0 += st.dur;
   }
   try { api?.destroy?.(); } catch {}
   host.remove();
