@@ -1,4 +1,4 @@
-import { structure3d } from '../../kit3d.js';
+import { structure3d, ghost } from '../../kit3d.js';
 
 /* PDB 7RFW: hoofdprotease (Mpro, 3CLpro, nsp5) van SARS-CoV-2 met nirmatrelvir (PF-07321332, ligand 4WI), röntgen 1,73 Å
  * (Owen et al., Science 2021 — de studie waarin Pfizer nirmatrelvir voorstelde). Eén entiteit: 3C-like proteinase, SARS-CoV-2.
@@ -6,7 +6,7 @@ import { structure3d } from '../../kit3d.js';
  * CA-atomen + volledige His41 en Cys145 + nirmatrelvir; geen water (4 870 → 776 atomen). Nagekeken in het bestand (05-11-2026):
  * Cys145-SG ligt 1,92 Å van atoom C3 van 4WI (covalente binding), His41-NE2 3,62 Å van Cys145-SG (katalytische dyade). */
 const L3 = (nl, en) => ({ nl, en });
-const PA = '#b39ddb', PB = '#7e6bd6', SITE = '#ff6b6b', DRUG = '#5fd3e6', GREY = '#33415c';
+const PA = '#b39ddb', PB = '#7e6bd6', SITE = '#ff6b6b', DRUG = '#5fd3e6';
 const S = (color, r = 2.4) => ({ sphere: { color, radius: r } });
 const PROT = { atom: 'CA', hetflag: false };
 const base = [{ sel: { chain: 'A', ...PROT }, style: S(PA) }, { sel: { chain: 'B', ...PROT }, style: S(PB) }, { sel: { resn: '4WI' }, style: {} }];
@@ -36,10 +36,10 @@ export default structure3d({
         { sel: { chain: 'A', resi: 250, atom: 'CA' }, style: S(PA, 2.6), label: L3('helft 1', 'half 1') }, { sel: { chain: 'B', resi: 250, atom: 'CA' }, style: S(PB, 2.6), label: L3('helft 2', 'half 2') }],
       text: L3('De schaar bestaat uit twee gelijke helften. Alleen samen kunnen ze knippen.', 'The scissors consist of two identical halves. Only together can they cut.') },
     { dur: 9000, title: L3('Het knipmes zit in een groef', 'The blade sits in a groove'), zoom: { chain: 'A', resi: [41, 145, 166, 189] }, spin: .006,
-      focus: [{ sel: { chain: 'A', ...PROT }, style: S(PA, 1.2) }, { sel: { chain: 'B', ...PROT }, style: S(GREY, 1) }, ...DYAD('A', 4.2, L3('knipplek', 'cutting site'))],
+      focus: [{ sel: { chain: 'A', ...PROT }, style: S(PA, 1.2) }, { sel: { chain: 'B', ...PROT }, style: ghost(3.6, .12) }, ...DYAD('A', 4.2, L3('knipplek', 'cutting site'))],
       text: L3('Twee bouwstenen in een groef doen het knippen. Daar past normaal een stukje van de keten in.', 'Two building blocks in a groove do the cutting. Normally a piece of the chain fits in there.') },
     { dur: 9000, title: L3('Een medicijn blokkeert de schaar', 'A medicine blocks the scissors'), zoom: { chain: 'A', resi: [41, 145, 166, 189] }, spin: .006,
-      focus: [{ sel: { chain: 'A', ...PROT }, style: S(PA, 1.2) }, { sel: { chain: 'B', ...PROT }, style: S(GREY, 1) }, ...DYAD('A', 3.4), DRUGS('A', L3('medicijn', 'medicine'))],
+      focus: [{ sel: { chain: 'A', ...PROT }, style: S(PA, 1.2) }, { sel: { chain: 'B', ...PROT }, style: ghost(3.6, .12) }, ...DYAD('A', 3.4), DRUGS('A', L3('medicijn', 'medicine'))],
       text: L3('Dit medicijn past in dezelfde groef en hecht zich aan het knipmes. Zo zit de schaar vast.', 'This medicine fits into the same groove and attaches to the blade. That locks the scissors.') },
     { dur: 8500, title: L3('Elke helft heeft een eigen groef', 'Each half has its own groove'), zoom: {}, spin: .01,
       focus: [{ sel: { chain: 'A', ...PROT }, style: S(PA, 2.2) }, { sel: { chain: 'B', ...PROT }, style: S(PB, 2.2) }, ...DYAD('A', 3.4), ...DYAD('B', 3.4), DRUGS('A'), DRUGS('B')],

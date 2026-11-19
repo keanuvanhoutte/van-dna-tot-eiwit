@@ -73,7 +73,7 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
 
     <!-- onderstrook: uitleg van de stap + bediening als videospeler (onder de figuur, niet erover) -->
     <footer class="dock">
-      <div class="caption" id="caption"><div class="ct" id="capTitle"></div><div class="cx" id="capText"></div></div>
+      <div class="caption" id="caption"><div class="cgrip" id="capGrip"><span class="gripdots" aria-hidden="true">⠿</span><span class="griptxt" id="capGripTxt"></span><button class="capbtn" id="capMin" type="button">–</button><button class="capbtn" id="capDock" type="button">⤓</button></div><div class="ct" id="capTitle"></div><div class="cx" id="capText"></div></div>
       <div class="prow">
         <button class="tbtn play" id="tPlay" title=""></button>
         <button class="tbtn step" id="tPrev" title="">‹</button>
@@ -83,10 +83,19 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
         <div class="nextch" id="nextCh"></div>
         <details class="gear" id="gear">
           <summary class="tbtn" id="gearBtn" title="">⚙</summary>
-          <div class="gearbox"><label for="speed" data-u="speedLbl"></label>
-            <select id="speed">
-              <option value="0.5">0,5×</option><option value="0.75">0,75×</option><option value="1" selected>1×</option><option value="1.5">1,5×</option><option value="2">2×</option>
-            </select>
+          <div class="gearbox">
+            <div class="gh" data-u="settings"></div>
+            <div class="grow"><label for="pPlay" data-u="pPlay"></label><select id="pPlay"></select></div>
+            <div class="grow"><label for="pRead" data-u="pRead"></label><select id="pRead"></select></div>
+            <div class="grow"><label for="speed" data-u="speedLbl"></label>
+              <select id="speed">
+                <option value="0.5">0,5×</option><option value="0.75">0,75×</option><option value="1" selected>1×</option><option value="1.5">1,5×</option><option value="2">2×</option>
+              </select></div>
+            <div class="grow"><label for="pCap" data-u="pCap"></label><select id="pCap"></select></div>
+            <div class="grow chk"><input type="checkbox" id="pLabels"><label for="pLabels" data-u="pLabels"></label></div>
+            <button type="button" class="greset" id="pReset" data-u="pReset"></button>
+            <div class="gnote" data-u="pKeys"></div>
+            <div class="gnote" data-u="pSaved"></div>
           </div>
         </details>
       </div>

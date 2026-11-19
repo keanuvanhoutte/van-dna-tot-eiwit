@@ -57,7 +57,18 @@ const UI2 = {
   repeatOff: { nl: 'Deze stap blijven herhalen in plaats van verder te gaan', en: 'Keep repeating this step instead of moving on' },
   stateAuto: { nl: '▶ speelt · gaat vanzelf verder', en: '▶ playing · continues by itself' }, stateRepeat: { nl: '🔁 herhaalt deze stap', en: '🔁 repeating this step' },
   statePaused: { nl: '⏸ gepauzeerd · ▶ of spatie om verder te kijken', en: '⏸ paused · ▶ or space to continue' },
-  speedLbl: { nl: 'Snelheid', en: 'Speed' }, settings: { nl: 'Instellingen', en: 'Settings' }, more: { nl: 'Voor wie meer wil', en: 'Want to know more?' },
+  speedLbl: { nl: 'Snelheid', en: 'Speed' }, settings: { nl: 'Instellingen', en: 'Settings' }, more: { nl: 'Verdieping', en: 'In depth' },
+  pPlay: { nl: 'Vanzelf verder', en: 'Continue by itself' }, pRead: { nl: 'Leestijd na een stap', en: 'Reading time after a step' },
+  pCap: { nl: 'Uitleg bij de stap', en: 'Step explanation' }, pLabels: { nl: 'Labels in de figuur', en: 'Labels in the figure' },
+  pReset: { nl: 'Uitlegvenster terug op zijn plaats', en: 'Put the explanation window back' },
+  pKeys: { nl: 'Sneltoetsen: spatie ▶/⏸ · ← → stap · Esc uitzoomen · / zoeken · M kaart · C uitleg in-/uitklappen', en: 'Shortcuts: space ▶/⏸ · ← → step · Esc zoom out · / search · M map · C fold explanation' },
+  pSaved: { nl: 'Je keuzes blijven bewaard op dit toestel tot je ze verandert.', en: 'Your choices are kept on this device until you change them.' },
+  playAll: { nl: 'het hele verhaal door', en: 'through the whole story' }, playChapter: { nl: 'tot einde hoofdstuk', en: 'to end of chapter' },
+  playStep: { nl: 'nee, stap herhalen', en: 'no, repeat the step' },
+  readShort: { nl: 'kort', en: 'short' }, readNormal: { nl: 'normaal', en: 'normal' }, readLong: { nl: 'lang', en: 'long' },
+  capFloat: { nl: 'zwevend venster', en: 'floating window' }, capDock: { nl: 'onder de figuur', en: 'below the figure' }, capOff: { nl: 'verbergen', en: 'hide' },
+  capGrip: { nl: 'uitleg · versleep mij', en: 'explanation · drag me' }, capMin: { nl: 'In- of uitklappen (C)', en: 'Fold or unfold (C)' }, capDockTip: { nl: 'Onder de figuur zetten', en: 'Put below the figure' },
+  stateChapter: { nl: '▶ speelt · stopt aan het einde van het hoofdstuk', en: '▶ playing · stops at the end of the chapter' },
   real3d: { nl: 'Bekijk echt in 3D', en: 'View in real 3D' },
   homeTip: { nl: 'Terug naar het startmenu (kies een ander verhaal of zijpad)', en: 'Back to the main menu (pick another story or side path)' }, upTip: { nl: 'Eén niveau uitzoomen (Esc)', en: 'Zoom out one level (Esc)' },
 };
@@ -74,7 +85,7 @@ let lastChapter = 0;           // laatst bezochte hoofdstuk
 let busy = false, playing = true, speed = 1, showLabels = true, t = 0, endedOnce = false;
 /* Stap-voor-stap: elke stap speelt één keer en blijft dan staan op het eindbeeld (goal).
  * De gebruiker gaat zelf verder; 'ff' spoelt eerst zichtbaar (snel, maar zonder sprong) naar een tijdstip. */
-let goal = 0, ff = null, held = false, done = false, holdT = 0;
+let goal = 0, ff = null, held = false, done = false, holdT = 0, endStop = false;
 const FF_MS = 650;
 /* Na afloop blijft een stap niet stilstaan: na een korte pauze speelt ze opnieuw (zacht overvloeiend),
  * tot de gebruiker zelf verder klikt. Pauze (⏸ / spatie) zet alles stil. */
@@ -83,18 +94,30 @@ const LOOP_WAIT = 2600;
  * (zacht overvloeiend) naar de volgende stap; aan het einde van een hoofdstuk naar het volgende hoofdstuk van de lijn.
  * Uit: de stap herhaalt zich tot de gebruiker zelf klikt. ⏸ zet altijd alles stil. Keuze wordt onthouden (?auto=0|1). */
 const AUTO_KEY = 'dna-app-auto';
-let auto = (() => {
-  const u = new URLSearchParams(location.search).get('auto');
-  if (u === '0' || u === '1') return u === '1';
-  try { const v = localStorage.getItem(AUTO_KEY); if (v === '0' || v === '1') return v === '1'; } catch {}
-  return true;
-})();
+/* Instellingen (⚙) blijven bewaard op dit toestel tot de gebruiker ze verandert:
+ *   play  'all' (hele verhaal door) | 'chapter' (stopt aan het einde van het hoofdstuk) | 'step' (elke stap herhalen)
+ *   read  leestijd-factor na een stap (0,6 / 1 / 1,6) · speed · labels (aan/uit)
+ *   cap   uitleg bij de stap: 'float' (zwevend, versleepbaar venster op een leeg stuk van de figuur) | 'dock' (onder de figuur) | 'off'
+ *   capPos  zelf versleepte plaats van het venster (fracties van de vrije ruimte), anders kiest de app een lege hoek */
+const PREF_KEY = 'dna-app-prefs';
+const prefs = (() => { try { const v = JSON.parse(localStorage.getItem(PREF_KEY)); return v && typeof v === 'object' ? v : {}; } catch { return {}; } })();
+const savePrefs = () => { try { localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); } catch {} };
+if (!['all', 'chapter', 'step'].includes(prefs.play)) {          // overnemen uit de oudere aan/uit-keuze
+  let a = true; try { const v = localStorage.getItem(AUTO_KEY); if (v === '0' || v === '1') a = v === '1'; } catch {}
+  prefs.play = a ? 'all' : 'step';
+}
+{ const u = new URLSearchParams(location.search).get('auto'); if (u === '0' || u === '1') prefs.play = u === '1' ? 'all' : 'step'; }
+if (![.6, 1, 1.6].includes(prefs.read)) prefs.read = 1;
+if (!['float', 'dock', 'off'].includes(prefs.cap)) prefs.cap = 'float';
+let auto = prefs.play !== 'step';
+if ([.5, .75, 1, 1.5, 2].includes(prefs.speed)) speed = prefs.speed;
+if (typeof prefs.labels === 'boolean') showLabels = prefs.labels;
 const CHAPTER_WAIT = 2500;                        // extra pauze vóór een nieuw hoofdstuk
-/* leestijd: genoeg om titel + ondertitel rustig te lezen (≈ 55 ms per teken), 4–12 s, sneller bij hogere snelheid */
+/* leestijd: genoeg om titel + ondertitel rustig te lezen (≈ 55 ms per teken), 4–12 s, sneller bij hogere snelheid; × leestijd-keuze */
 function readMs(i) {
   const st = current?.steps[i]; if (!st) return 5000;
   const n = (L(st.title) ?? '').length + (L(st.text) ?? '').length;
-  return Math.min(12000, Math.max(4000, 1800 + 55 * n)) / Math.max(.5, speed);
+  return Math.min(12000, Math.max(4000, 1800 + 55 * n)) * prefs.read / Math.max(.5, speed);
 }
 let camNow = FULL.slice(), camTarget = FULL.slice(), camSnap = false;
 
@@ -205,6 +228,7 @@ function frame(now) {
           setAutoFill(Math.min(1, holdT / wait), last);
           if (holdT > wait) {
             if (!last) playStep(si.step + 1);
+            else if (prefs.play === 'chapter') { setAutoFill(0, true); holdT = 0; endStop = true; setPlaying(false); }   // einde hoofdstuk: hier stoppen (knop "Volgend hoofdstuk" blijft staan; ▶ gaat verder)
             else if (ci >= 0 && ci < STORY.length - 1) { held = false; chapterGo(ci + 1); }
             else { makeGhost(); t = stepStart(si.step) + 1; held = false; }   // einde verhaal of zijpad: rustig herhalen
           }
@@ -274,6 +298,8 @@ function onStep(i) {
   $('stepNo').textContent = `${V('step')} ${i + 1}/${current.steps.length}`;
   side.querySelectorAll('.stepsList li').forEach((li, k) => li.classList.toggle('cur', k === i));
   syncPlayBtn();
+  // zwevend uitlegvenster: kort na het begin van de stap de rustigste hoek kiezen (en bij de grootte van de nieuwe tekst)
+  capPlace(); clearTimeout(onStep.h); onStep.h = setTimeout(() => capAuto(), 900);
 }
 function setPlaying(v) {
   playing = v; syncPlayBtn();
@@ -287,7 +313,8 @@ function syncPlayBtn() {
   $('tPlay').textContent = playing ? '⏸' : '▶'; $('tPlay').title = V(playing ? 'pause' : 'play');
   $('tPlay').setAttribute('aria-label', $('tPlay').title);
   $('tRepeat').setAttribute('aria-pressed', String(!auto)); $('tRepeat').title = V(auto ? 'repeatOff' : 'repeatOn'); $('tRepeat').setAttribute('aria-label', $('tRepeat').title);
-  $('playState').textContent = V(!playing ? 'statePaused' : auto ? 'stateAuto' : 'stateRepeat');
+  $('playState').textContent = V(!playing ? 'statePaused' : !auto ? 'stateRepeat' : prefs.play === 'chapter' ? 'stateChapter' : 'stateAuto');
+  if ($('pPlay').value !== prefs.play) $('pPlay').value = prefs.play;
   const last = !!current && isLast();
   $('tNext').disabled = last;
   $('tPrev').disabled = !!current && stepInfo(t).step === 0;
@@ -313,7 +340,7 @@ function hold() {
 function playStep(i, from = null) {
   if (!current) return;
   i = Math.max(0, Math.min(current.steps.length - 1, i));
-  goal = stepEnd(i); held = false; done = false; setAutoFill(0, false);
+  goal = stepEnd(i); held = false; done = false; endStop = false; setAutoFill(0, false);
   if (from !== null && Math.abs(from - t) > 1) ff = { to: from, rate: Math.max(1, Math.abs(from - t) / FF_MS) };
   setPlaying(true);
 }
@@ -330,11 +357,38 @@ function prevStep() {
   playStep(Math.max(0, i), stepStart(Math.max(0, i)) + 1);
 }
 function gotoStep(i) { i = Math.max(0, Math.min(current.steps.length - 1, i)); t = stepStart(i) + 1; ff = null; playStep(i); }
-$('tPlay').onclick = () => setPlaying(!playing);
-$('tRepeat').onclick = () => setAuto(!auto);
+$('tPlay').onclick = () => {
+  if (!playing && endStop) {                       // gestopt aan het einde van een hoofdstuk: ▶ = verder met het volgende hoofdstuk
+    endStop = false; const ci = STORY_IDS.indexOf(current.id);
+    if (ci >= 0 && ci < STORY.length - 1) { held = false; setPlaying(true); chapterGo(ci + 1); return; }
+  }
+  setPlaying(!playing);
+};
+$('tRepeat').onclick = () => setPlay(auto ? 'step' : (prefs.lastPlay ?? 'all'));
 $('tPrev').onclick = prevStep;
 $('tNext').onclick = nextStep;
-$('speed').onchange = e => speed = +e.target.value;
+
+/* ---------- ⚙ instellingen ---------- */
+const opts = (sel, list) => { sel.innerHTML = list.map(([v, k]) => `<option value="${v}">${V(k)}</option>`).join(''); };
+opts($('pPlay'), [['all', 'playAll'], ['chapter', 'playChapter'], ['step', 'playStep']]);
+opts($('pRead'), [['0.6', 'readShort'], ['1', 'readNormal'], ['1.6', 'readLong']]);
+opts($('pCap'), [['float', 'capFloat'], ['dock', 'capDock'], ['off', 'capOff']]);
+function setPlay(v) {
+  prefs.play = v; if (v !== 'step') prefs.lastPlay = v; savePrefs();
+  try { localStorage.setItem(AUTO_KEY, v === 'step' ? '0' : '1'); } catch {}
+  setAuto(v !== 'step');
+}
+function syncPrefsUI() {
+  $('pPlay').value = prefs.play; $('pRead').value = String(prefs.read); $('pCap').value = prefs.cap;
+  $('speed').value = String(speed); $('pLabels').checked = showLabels;
+  $('pReset').hidden = prefs.cap !== 'float' || !prefs.capPos;
+}
+$('pPlay').onchange = e => { setPlay(e.target.value); syncPrefsUI(); };
+$('pRead').onchange = e => { prefs.read = +e.target.value; savePrefs(); if (held) holdT = Math.min(holdT, readMs(stepInfo(t).step) * .5); };
+$('speed').onchange = e => { speed = +e.target.value; prefs.speed = speed; savePrefs(); };
+$('pCap').onchange = e => setCapMode(e.target.value);
+$('pLabels').onchange = e => setLabels(e.target.checked);
+$('pReset').onclick = () => { prefs.capPos = null; savePrefs(); capAuto(true); syncPrefsUI(); };
 document.addEventListener('click', e => { if (!e.target.closest('#gear')) $('gear').open = false; });
 /* tijdlijn in stukken: één stuk per stap (klikbaar, met de naam erbij); het stuk vult zich terwijl de stap speelt,
  * een lichtere vulling toont de leespauze voor het vanzelf verder gaat */
@@ -459,8 +513,129 @@ function showSelf() {
   side.classList.remove('flash'); void side.offsetWidth; side.classList.add('flash');
 }
 $('bInfo').setAttribute('aria-pressed', !narrow());
-function toggleCap() { showCap = !showCap; $('caption').classList.toggle('mini', !showCap); }
-$('bLabels').onclick = e => { showLabels = !showLabels; e.currentTarget.setAttribute('aria-pressed', showLabels); labelsEl.classList.toggle('hide', !showLabels); };
+function toggleCap() { showCap = !showCap; $('caption').classList.toggle('mini', !showCap); capAuto(); }
+function setLabels(v) {
+  showLabels = v; prefs.labels = v; savePrefs();
+  $('bLabels').setAttribute('aria-pressed', v); labelsEl.classList.toggle('hide', !v); stage.classList.toggle('nolab', !v); $('pLabels').checked = v;
+  if (v) labelsDirty = true;
+}
+$('bLabels').onclick = () => setLabels(!showLabels);
+$('bLabels').setAttribute('aria-pressed', showLabels); labelsEl.classList.toggle('hide', !showLabels); stage.classList.toggle('nolab', !showLabels);
+
+/* ---------- uitleg bij de stap: zwevend venster (versleepbaar) of onder de figuur ----------
+ * Zwevend: het venster ligt op de figuur, in de hoek waar op dat moment het minst te zien is (gemeten met
+ * elementsFromPoint op een raster punten; grote achtergrondvlakken en het 3D-canvas tellen niet als inhoud).
+ * Heeft de gebruiker het zelf versleept, dan blijft het daar (bewaard), tot "terug op zijn plaats". */
+const cap = $('caption'), dockEl = document.querySelector('.dock');
+$('capGripTxt').textContent = V('capGrip');
+$('capMin').title = V('capMin'); $('capMin').setAttribute('aria-label', V('capMin'));
+$('capDock').title = V('capDockTip'); $('capDock').setAttribute('aria-label', V('capDockTip'));
+$('capMin').onclick = e => { e.stopPropagation(); toggleCap(); };
+$('capDock').onclick = e => { e.stopPropagation(); setCapMode('dock'); };
+const floating = () => prefs.cap === 'float' && !narrow();
+function setCapMode(m) {
+  prefs.cap = m; savePrefs(); applyCapMode(); syncPrefsUI();
+}
+function applyCapMode() {
+  const fl = floating();
+  if (fl && cap.parentNode !== stage) stage.append(cap);
+  if (!fl && cap.parentNode !== dockEl) dockEl.prepend(cap);
+  cap.classList.toggle('float', fl);
+  cap.hidden = prefs.cap === 'off';
+  if (!fl) { cap.style.left = cap.style.top = ''; }
+  labelsDirty = true;
+  requestAnimationFrame(() => { placeLabels(); fitTags(); capPlace(); });
+}
+const CAP_M = 12;                                  // marge tot de rand van de figuur
+function capBounds() {
+  const W = stage.clientWidth, H = stage.clientHeight, w = cap.offsetWidth, h = cap.offsetHeight;
+  return { W, H, w, h, maxX: Math.max(CAP_M, W - w - CAP_M), maxY: Math.max(CAP_M, H - h - CAP_M) };
+}
+function capMove(x, y, anim) {
+  const b = capBounds();
+  cap.classList.toggle('anim', !!anim);
+  cap.style.left = Math.min(b.maxX, Math.max(CAP_M, x)).toFixed(0) + 'px';
+  cap.style.top = Math.min(b.maxY, Math.max(CAP_M, y)).toFixed(0) + 'px';
+}
+let capCorner = null;
+function capPlace() {
+  if (!floating() || cap.hidden) return;
+  const b = capBounds();
+  if (prefs.capPos) return capMove(CAP_M + prefs.capPos.x * (b.maxX - CAP_M), CAP_M + prefs.capPos.y * (b.maxY - CAP_M), false);
+  const c = capCorner ?? 'bl';
+  capMove(c[1] === 'l' ? CAP_M : b.maxX, c[0] === 't' ? 54 : b.maxY, false);
+}
+/* hoe "vol" is een rechthoek van de figuur (in stage-coördinaten)? */
+function busyness(x, y, w, h) {
+  if (!current) return 0;
+  const sr = stage.getBoundingClientRect(), big = sr.width * sr.height * .3;
+  let n = 0;
+  for (let i = 0; i < 5; i++) for (let j = 0; j < 4; j++) {
+    const px = sr.left + x + w * (i + .5) / 5, py = sr.top + y + h * (j + .5) / 4;
+    for (const el of document.elementsFromPoint(px, py)) {
+      if (el === cap || cap.contains(el)) continue;
+      if (el.classList?.contains('lbl')) { n += 1.5; break; }
+      if (!current.layer.contains(el)) continue;
+      if (el.tagName === 'svg' || el.tagName === 'CANVAS' || el.classList.contains('layer') || el.classList.contains('v3d')) break;
+      const r = el.getBoundingClientRect();
+      if (r.width * r.height > big) continue;        // achtergrondvlak (bv. cytoplasma) telt niet
+      n += 1; break;
+    }
+  }
+  return n;
+}
+function capAuto(force) {
+  if (!floating() || cap.hidden || prefs.capPos || drag) return;
+  const b = capBounds(), top = 54;                 // bovenaan iets lager: daar staan vaak knoppen van de scène
+  const C4 = { bl: [CAP_M, b.maxY], br: [b.maxX, b.maxY], tr: [b.maxX, top], tl: [CAP_M, top] };
+  let best = capCorner ?? 'bl', bestS = Infinity;
+  const cur = capCorner ? busyness(...C4[capCorner], b.w, b.h) : Infinity;
+  for (const k of ['bl', 'br', 'tr', 'tl']) { const s = busyness(...C4[k], b.w, b.h); if (s < bestS) { bestS = s; best = k; } }
+  if (!force && capCorner && cur - bestS < 2) best = capCorner;   // pas verhuizen als het elders duidelijk rustiger is
+  capCorner = best; capMove(...C4[best], !force);
+}
+let drag = null;
+cap.addEventListener('pointerdown', e => {
+  if (!floating() || e.target.closest('button, a') || e.button !== 0) return;
+  const r = cap.getBoundingClientRect();
+  drag = { dx: e.clientX - r.left, dy: e.clientY - r.top, moved: false };
+  cap.setPointerCapture(e.pointerId); cap.classList.add('drag');
+});
+cap.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const sr = stage.getBoundingClientRect();
+  drag.moved = true; capMove(e.clientX - sr.left - drag.dx, e.clientY - sr.top - drag.dy, false);
+});
+const endDrag = () => {
+  if (!drag) return;
+  cap.classList.remove('drag');
+  if (drag.moved) {
+    const b = capBounds(), x = parseFloat(cap.style.left), y = parseFloat(cap.style.top);
+    prefs.capPos = { x: b.maxX > CAP_M ? (x - CAP_M) / (b.maxX - CAP_M) : 0, y: b.maxY > CAP_M ? (y - CAP_M) / (b.maxY - CAP_M) : 0 };
+    savePrefs(); syncPrefsUI();
+  }
+  drag = null;
+};
+cap.addEventListener('pointerup', endDrag); cap.addEventListener('pointercancel', endDrag);
+addEventListener('resize', () => { applyCapMode(); });
+applyCapMode(); syncPrefsUI();
+
+/* ---------- op voorhand laden ----------
+ * Kort nadat een scène start, laten de scènes waar je waarschijnlijk naartoe gaat (volgend hoofdstuk, aanklikbare onderdelen)
+ * hun zware gegevens al ophalen (bv. 3D-structuren: def.warm()), zodat ze daarna meteen en zonder haperen openen. */
+function warmAround() {
+  if (!current) return;
+  const ids = new Set();
+  const ci = STORY_IDS.indexOf(current.id);
+  if (ci >= 0 && STORY[ci + 1]) ids.add(STORY[ci + 1].id);
+  current.root.querySelectorAll('[data-node]').forEach(el => { if (hasScene(el.dataset.node)) ids.add(el.dataset.node); });
+  for (const id of ids) {
+    const d = SCENES[id], b = d?.alias ? SCENES[d.alias] : d;
+    try { b?.warm?.(); } catch (e) { console.warn('warm', id, e); }
+  }
+}
+let warmH = 0;
+const scheduleWarm = () => { clearTimeout(warmH); warmH = setTimeout(() => (window.requestIdleCallback ?? (f => f()))(warmAround), 2000); };
 
 /* ---------- navigatie ---------- */
 function target(el) {
@@ -574,7 +749,7 @@ async function go(id, box, dir = 'in', push = true) {
   if (old) { try { old.api?.destroy?.(); } catch {} old.layer.remove(); }
   nxt.layer.style.transform = ''; nxt.layer.style.transformOrigin = ''; nxt.layer.style.opacity = '';
   current = nxt; camNow = firstCam.slice();
-  t = 0; endedOnce = false; lastStep = -1; ff = null; playStep(0);
+  t = 0; endedOnce = false; lastStep = -1; ff = null; capCorner = null; playStep(0); scheduleWarm();
   const lk = lineFor(id); if (lk !== line) { setLine(lk); lastChapter = 0; }
   /* kruimelpad: een hoofdstuk van de gekozen lijn is altijd een nieuw begin; daaronder komen de zijsprongen */
   if (push) { const i = trail.indexOf(id); trail = STORY_IDS.includes(id) ? [id] : i >= 0 ? trail.slice(0, i + 1) : [...trail, id]; }
@@ -677,7 +852,7 @@ function detailsHTML(id, open = true) {
   const d = DETAILS[id]; if (!d) return '';
   const x = d[lang] ?? d.nl;
   let h = '';
-  // de diepere uitleg (vakterminologie, cijfers, bronnen) zit samen in één dichtgeklapte laag "Voor wie meer wil"
+  // de diepere uitleg (vakterminologie, cijfers, bronnen) zit samen in één dichtgeklapte laag "Verdieping"
   if (x.what) h += `<details class="sec" ${open ? 'open' : ''}><summary>${V('what')}</summary><p>${x.what}</p></details>`;
   if (x.how?.length) h += `<details class="sec"><summary>${V('how')}</summary><ol>${x.how.map(s => `<li>${s}</li>`).join('')}</ol></details>`;
   if (x.facts?.length) h += `<details class="sec"><summary>${V('facts')}</summary><dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
@@ -820,7 +995,7 @@ if (startId) {
   camSnap = true;
   render(); drawTicks();
   playStep(stepInfo(t).step);
-  if (q.has('freeze')) setPlaying(false);
+  if (q.has('freeze')) setPlaying(false); else scheduleWarm();
   const boot = $('boot'); if (boot) { boot.classList.add('gone'); setTimeout(() => boot.remove(), 500); }
   requestAnimationFrame(placeLabels);
 }

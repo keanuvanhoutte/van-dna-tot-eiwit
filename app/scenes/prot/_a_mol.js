@@ -18,6 +18,7 @@ export function molScene(o) {
   return {
     ...o,
     kind: '3d',
+    warm() { load3Dmol().catch(() => {}); fetch(pdbUrl(o.pdb, fmt)).catch(() => {}); },   // bibliotheek en bestand al ophalen (HTTP-cache)
     html() {
       return `<div class="v3d" style="left:0;right:auto;width:${f1(100 * PANEL_X / 1600)}%;top:84px;bottom:150px"></div>
         <svg class="a-ov" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">

@@ -1,5 +1,5 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1 } from '../../kit.js';
-import { inset3d, withInset } from '../../kit3d.js';
+import { inset3d, withInset, warm3d } from '../../kit3d.js';
 import { T, smooth } from '../prot/_b_kit.js';
 import { btn, frame3d } from '../prot/_fate.js';
 import { ribo, arrow } from './_rna.js';
@@ -47,6 +47,7 @@ function swPt(u, k) {
 
 export default {
   id: 'riboswitch',
+  warm() { warm3d('1Y26', 'pdb'); },   // 3D-venster: bestand al ophalen en parsen
   title: L3('Een RNA-schakelaar voelt een klein molecuul', 'An RNA switch senses a small molecule'),
   scale: L3('vanggedeelte: 71 letters · ≈ 7 nm', 'catching part: 71 letters · ≈ 7 nm'),
   time: L3('omklappen: snel (niet op tijdschaal)', 'flipping: fast (not to time scale)'),

@@ -189,3 +189,10 @@
 - [x] Voetbalk: actieve stapnaam altijd volledig, geen woorden gesplitst, "Echte grootte"-waarde blijft zichtbaar (ook 1280 px met zijpaneel).
 - [x] Tweede onafhankelijke controle → fix-ronde. Checks NL en EN: text 0 te klein, blank 0, clip geen nieuwe, check.html PROBLEMS (0), bundeltest OK.
 - [x] rnaprocessing stap 6, tussenmoment: U2 lag onder de RNA-lijn waar exon 1 (en zijn label) passeerde. U2 blijft nu aan het vertakkings-A en gaat eerst opzij en dan omhoog uit de baan (schuift niet over het A); beeldcontrole NL op 4 momenten + EN op 2 momenten; text/clip/blank 0, check.html PROBLEMS (0), bundeltest OK.
+
+## Afspeelopties, uitlegvenster en vlot 3D — 20-11-2026
+- [x] ⚙-menu: vanzelf verder (heel verhaal / tot einde hoofdstuk / stap herhalen), leestijd, snelheid, plaats van de uitleg, labels aan/uit; alles blijft bewaard tot het aangepast wordt. Getest in de browser (ook na herladen, EN).
+- [x] Uitleg als zwevend, versleepbaar venster op het rustigste stuk van de figuur (kan ook onder de figuur of verborgen); "Voor wie meer wil" heet nu "Verdieping".
+- [x] 3D vlot: PDB één keer geladen en bewaard, stapweergaven vooraf opgebouwd (stapwissel rnapol 233–300 → 17–50 ms), volgende scènes vooraf geladen; 80S-ribosoom in WebGL (≈ 55 → 17 ms per beeld), stap "Vooral RNA" toont de eiwitten die op hun plaats vervagen.
+- [x] Ribosomen (70S, EF-Tu) in handboekstijl: gesloten vormen, 30S licht / 50S donker, rustige doorschijnende context; alle 3D-stappen op 4 hoeken nagekeken en bijgestuurd (wiegen, ruimte rond close-ups, p53-zink zichtbaar).
+- [x] 3D-labels: blijven in beeld, overlappen niet, klikbaar waar een onderwerp bestaat; de knop Labels verbergt ze ook. Beeldcontrole + tweede controle; checks NL/EN 0 nieuwe problemen, bundeltest OK.

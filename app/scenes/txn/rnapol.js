@@ -51,7 +51,7 @@ export default structure3d({
     { dur: 8000, title: L3('Het RNA gaat naar buiten', 'The RNA heads out'), zoom: { chain: ['T', 'P'] }, spin: .01,
       focus: [{ sel: { chain: 'P' }, style: { cartoon: { color: C.rna }, stick: { color: C.rna, radius: .25 } }, label: 'RNA' }, { sel: { chain: 'T' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .2 } } }],
       text: L3('Het nieuwe RNA blijft ~8 basen lang aan het DNA vast. Dan verlaat het het enzym via een eigen uitgang.', 'The new RNA stays attached to the DNA for ~8 bases. Then it leaves the enzyme through its own exit.') },
-    { dur: 9000, title: L3('Het hart: een magnesiumion', 'The heart: a magnesium ion'), zoom: { chain: 'A', resi: range(484, 506) }, spin: .006,
+    { dur: 9000, title: L3('Het hart: een magnesiumion', 'The heart: a magnesium ion'), zoom: { chain: 'A', resi: range(484, 506) }, spin: .006, pad: .45,
       focus: [{ sel: { chain: 'A', resi: [495, 497, 499] }, style: { stick: { color: COL.A, radius: .3 } } },
         { sel: MG, style: { sphere: { color: '#7fdc6a', radius: 1.8 } }, label: L3('Mg²⁺ op de Asp-lus (NADFDGD)', 'Mg²⁺ on the Asp loop (NADFDGD)') }, { sel: { chain: 'P' }, style: { stick: { color: C.rna, radius: .25 } } }],
       text: L3('Rpb1 houdt een magnesiumion (Mg²⁺) vast. Dat ion helpt elke nieuwe bouwsteen aan het RNA te koppelen.', 'Rpb1 holds a magnesium ion (Mg²⁺). This ion helps join each new building block to the RNA.') },
@@ -63,7 +63,7 @@ export default structure3d({
       focus: [{ sel: { chain: 'D' }, style: { cartoon: { color: COL.D } }, label: 'Rpb4' }, { sel: { chain: 'G' }, style: { cartoon: { color: COL.G } }, label: 'Rpb7' }],
       text: L3('Rpb4 en Rpb7 steken uit als een stengel naast de RNA-uitgang. Ze pakken mogelijk het RNA vast.', 'Rpb4 and Rpb7 stick out as a stalk next to the RNA exit. They may grab the RNA.') },
     { dur: 9000, title: L3('Een onzichtbare staart', 'An invisible tail'), zoom: {}, spin: .012,
-      focus: { sel: { chain: 'A', resi: range(1455, 1487) }, style: { cartoon: { color: '#ffc247' }, stick: { color: '#ffc247', radius: .25 } }, label: L3('→ linker + CTD (niet zichtbaar)', '→ linker + CTD (not visible)') },
+      focus: { sel: { chain: 'A', resi: range(1455, 1487) }, style: { cartoon: { color: '#ffc247' }, stick: { color: '#ffc247', radius: .25 } }, label: L3('→ linker + CTD (niet zichtbaar)', '→ linker + CTD (not visible)'), node: 'capping' },
       text: L3('Hier stopt het zichtbare deel; dan volgt een slappe staart (CTD). Fosfaten daarop roepen RNA-bewerkers op.', 'The visible part stops here; a floppy tail (CTD) follows. Phosphates on it call in RNA-processing enzymes.') },
   ],
   hotspots: [

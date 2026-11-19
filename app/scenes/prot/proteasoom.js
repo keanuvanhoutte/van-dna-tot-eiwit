@@ -1,4 +1,4 @@
-import { structure3d } from '../../kit3d.js';
+import { structure3d, ghost } from '../../kit3d.js';
 import { C } from '../../kit.js';
 
 /* PDB 6MSB: menselijk 26S-proteasoom met één 19S-kap (cryo-EM 3,0 Å; Dong et al., Nature 2019), alle 33 entiteiten Homo sapiens.
@@ -16,8 +16,10 @@ const ATP = ['A', 'B', 'C', 'D', 'E', 'F'], BASEX = ['U', 'f', 'b'], LID = ['V',
 const CAP = [...ATP, ...BASEX, ...LID, ...UBQ];
 const COL = { a: '#8fa3c8', b: '#d6dcea', atp: '#2cc6a8', basex: '#5fa89a', lid: '#9b7bff', ub: '#ffd166', site: '#ff6b6b', rpn11: '#f06bc0' };
 const SIX = ['#2cc6a8', '#5fd3e6', '#7fdc6a', '#ffc247', '#ff8a3d', '#e0708f'];
-const S = (color, r = 2.4) => ({ sphere: { color, radius: r } });
-const DIM = (chains, r = 1.5) => ({ sel: { chain: chains }, style: S('#33415c', r) });
+/* één bol per CA, groot genoeg om samen een gesloten vorm te geven (zelfde handboekstijl als de ribosomen) */
+const S = (color, r = 2.4) => ({ sphere: { color, radius: r * 1.5 } });
+/* gedimd: één rustige, doorschijnende vorm i.p.v. een wolk grijze stipjes */
+const DIM = (chains) => ({ sel: { chain: chains }, style: ghost(4, .1) });
 const base = [
   { sel: { chain: [...A1, ...A2] }, style: S(COL.a) }, { sel: { chain: [...B1, ...B2] }, style: S(COL.b) },
   { sel: { chain: ATP }, style: S(COL.atp) }, { sel: { chain: BASEX }, style: S(COL.basex) }, { sel: { chain: LID }, style: S(COL.lid) }, { sel: { chain: UBQ }, style: S(COL.ub) },
@@ -32,13 +34,14 @@ export default structure3d({
   legend: [[COL.a, L3('buitenringen (α)', 'outer rings (α)')], [COL.b, L3('binnenringen (β)', 'inner rings (β)')], [COL.site, L3('knipplekken (Thr1)', 'cutting sites (Thr1)')], [COL.atp, L3('motorring (6 ATPasen)', 'motor ring (6 ATPases)')],
     [COL.basex, L3('basis: o.a. ontvangers', 'base: incl. receivers')], [COL.lid, L3('deksel', 'lid')], [COL.rpn11, L3('label-knipper (Rpn11)', 'tag cutter (Rpn11)')], [COL.ub, L3('ubiquitine (label)', 'ubiquitin (tag)')]],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">Echte cryo-EM-structuur van het menselijke 26S-proteasoom (Dong et al., <i>Nature</i> 2019). Om snel te laden toont de figuur één bolletje per aminozuur. Sleep om te draaien, scroll om te zoomen.</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">Real cryo-EM structure of the human 26S proteasome (Dong et al., <i>Nature</i> 2019). To load quickly, the figure shows one bead per amino acid. Drag to rotate, scroll to zoom.</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">Echte cryo-EM-structuur van het menselijke 26S-proteasoom (Dong et al., <i>Nature</i> 2019). Om snel te laden staat er één bol per aminozuur; samen geven ze de buitenvorm. Sleep om te draaien, scroll om te zoomen.</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">Real cryo-EM structure of the human 26S proteasome (Dong et al., <i>Nature</i> 2019). To load quickly, there is one ball per amino acid; together they give the outer shape. Drag to rotate, scroll to zoom.</p>' },
   simplified: {
-    nl: 'Alleen de ruggengraat is getekend (één bolletje per aminozuur). Deze structuur heeft één kap; in de cel kan een kap aan één of aan beide uiteinden zitten. Het uitrollen en knippen van een eiwit gebeurt niet in deze momentopname en wordt alleen verteld. In deze structuur zitten 32 verschillende proteasoomeiwitten; sommige losser gebonden onderdelen ontbreken.',
-    en: 'Only the backbone is drawn (one bead per amino acid). This structure has one cap; in the cell a cap can sit at one or at both ends. Unrolling and cutting a protein does not happen in this snapshot and is only told. This structure contains 32 different proteasome proteins; some more loosely bound parts are missing.' },
+    nl: 'Alleen de ruggengraat is getekend (één bol per aminozuur). Deze structuur heeft één kap; in de cel kan een kap aan één of aan beide uiteinden zitten. Het uitrollen en knippen van een eiwit gebeurt niet in deze momentopname en wordt alleen verteld. In deze structuur zitten 32 verschillende proteasoomeiwitten; sommige losser gebonden onderdelen ontbreken.',
+    en: 'Only the backbone is drawn (one ball per amino acid). This structure has one cap; in the cell a cap can sit at one or at both ends. Unrolling and cutting a protein does not happen in this snapshot and is only told. This structure contains 32 different proteasome proteins; some more loosely bound parts are missing.' },
   base,
   dimOpacity: false,
+  outline: { width: .3 },
   steps: [
     { dur: 8000, title: L3('Een machine die eiwitten afbreekt', 'A machine that breaks proteins down'), focus: null, zoom: {}, spin: .012,
       text: L3('Dit is het echte afbraakapparaat van de mens, het proteasoom. Het bestaat uit ruim 30 verschillende eiwitten.', 'This is the real human breakdown machine, the proteasome. It is built from more than 30 different proteins.') },

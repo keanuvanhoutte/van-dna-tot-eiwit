@@ -1,5 +1,5 @@
 import { C, T2, svgOpen, FULL, cam, sub, ease, lerp, f1 } from '../../kit.js';
-import { inset3d, withInset } from '../../kit3d.js';
+import { inset3d, withInset, warm3d } from '../../kit3d.js';
 import { T } from './_b_kit.js';
 import { arrow } from '../repl/_draw.js';
 import { HYD, LUMEN, bilayer, at, beadsAt, btn, knop } from './_fate.js';
@@ -52,6 +52,7 @@ function bump(A, B, L) {
 
 export default {
   id: 'membraan',
+  warm() { warm3d('8DNV', 'pdb'); },   // 3D-venster: bestand al ophalen en parsen
   title: { nl: 'Een vettig stuk blijft in het membraan steken', en: 'A greasy stretch gets stuck in the membrane' },
   scale: { nl: 'membraan ≈ 3 nm dik · kanaal ≈ 7 nm breed', en: 'membrane ≈ 3 nm thick · channel ≈ 7 nm wide' },
   time: { nl: 'tijdens de aanmaak (vertraagd)', en: 'during synthesis (slowed down)' },

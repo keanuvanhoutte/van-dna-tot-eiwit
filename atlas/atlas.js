@@ -144,7 +144,7 @@ const T = {
   nmrNote: { nl: 'NMR · model 1', en: 'NMR · model 1' },
   // eenvoudige tabellen
   secFacts: { nl: 'Belangrijkste feiten', en: 'Key facts' }, secMeasured: { nl: 'Gemeten in dit 3D-model', en: 'Measured in this 3D model' },
-  allCalc: { nl: 'Alle meetwaarden (voor wie meer wil)', en: 'All measurements (for those who want more)' },
+  allCalc: { nl: 'Alle meetwaarden (verdieping)', en: 'All measurements (in depth)' },
   normal: { nl: 'gewoon DNA', en: 'ordinary DNA' }, estimate: { nl: 'schatting', en: 'estimate' },
   bentRow: { nl: 'Let op', en: 'Note' }, autoTxt: { nl: 'automatisch berekend: bij kort, gebogen of door eiwit vervormd DNA zijn de cijfers met * schattingen', en: 'computed automatically: for short, bent or protein-distorted DNA the numbers marked * are estimates' }, bentTxt: { nl: 'dit DNA is gebogen, dus de cijfers met * zijn schattingen', en: 'this DNA is bent, so the numbers marked * are estimates' },
   eBuild: { nl: 'Waaruit bestaat het?', en: 'What is it made of?' }, eLetters: { nl: 'bouwstenen (letters)', en: 'building blocks (letters)' },
@@ -225,7 +225,7 @@ const T = {
   loadingHuge: { nl: n => `zeer groot (~${n} 000 atomen), dit kan even duren`, en: n => `very large (~${n},000 atoms), this may take a while` },
   // uitlegpaneel
   inShort: { nl: 'In het kort', en: 'In short' }, look: { nl: 'Wat zie je in de figuur?', en: 'What do you see in the figure?' },
-  why: { nl: 'Waarom is dit belangrijk?', en: 'Why does it matter?' }, more: { nl: 'Voor wie meer wil', en: 'For those who want more' },
+  why: { nl: 'Waarom is dit belangrijk?', en: 'Why does it matter?' }, more: { nl: 'Verdieping', en: 'In depth' },
 };
 const t = k => { const v = T[k]; return typeof v === 'function' ? v : L(v); };
 

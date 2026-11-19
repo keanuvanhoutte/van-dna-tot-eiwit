@@ -1,5 +1,5 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1 } from '../../kit.js';
-import { inset3d, withInset } from '../../kit3d.js';
+import { inset3d, withInset, warm3d } from '../../kit3d.js';
 import { T } from '../prot/_b_kit.js';
 import { btn } from '../prot/_fate.js';
 
@@ -75,6 +75,7 @@ function double(op) {
 
 export default {
   id: 'lussen',
+  warm() { warm3d('7W1M', 'cif'); },   // 3D-venster: bestand al ophalen en parsen
   title: L3('Een eiwitring vouwt het DNA in lussen', 'A protein ring folds the DNA into loops'),
   scale: L3('lussen meestal ≈ 40 000 tot 2 miljoen basenparen (schematisch)', 'loops mostly ≈ 40,000 to 2 million base pairs (schematic)'),
   time: L3('in de proefbuis tot ≈ 2000 basenparen per seconde', 'in the test tube up to ≈ 2,000 base pairs per second'),

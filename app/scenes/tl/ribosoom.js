@@ -2,6 +2,8 @@
  * Ribosoom — het humane 80S-ribosoom in pseudo-3D uit echte coördinaten (PDB 6Y0G, grofkorrelig: zie _ribo80s.js).
  * Elke positie = één nucleotide (P-atoom) of aminozuur (Cα) (steekproef), getekend als dikke bol → samen één gesloten vorm per helft.
  * Draaien en uit elkaar schuiven gebeurt in update(t, s).
+ * Tekenen: in de app een <canvas> onder de SVG (bollen als voorgetekende, belichte sprites, van achter naar voor: vlot, ook bij
+ * 60 beelden/s); in de testhulpmiddelen (init zonder api.node) dezelfde bollen als SVG-paden, zodat die de figuur blijven zien.
  */
 import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, f1 } from '../../kit.js';
 import { RIBO, LM } from './_ribo80s.js';
@@ -24,15 +26,182 @@ const K = {
   ang: [-.5, -.5, .35, .2, .2, .25, .3, .86, -.5],
   tilt: [.18, .18, .18, .2, .2, .12, .12, .15, .18],
   sep: [0, 50, 0, 55, 55, 0, 0, 0, 0],
-  split: [0, 0, 1, 0, 0, 0, 0, 0, 0],  // RNA (links) en eiwitten (rechts) naast elkaar
   pal: ['sub', 'sub', 'rp', 's40', 's60', 'sub', 'ptc', 'sub', 'sub'],
   op: [1, 1, 1, 1, 1, .2, .45, .3, 1],
   trna: [0, 0, 0, 0, 0, 1, 1, .8, 0],
   mrna: [0, 0, 0, 1, 0, 1, 1, .8, 0],  // stap 4 (de kleine helft houdt het mRNA vast): mRNA zichtbaar, nog zonder tRNA's
-  pop: [1, 1, .45, .5, .5, 1, .6, 1, 1],
-  pos: [[620, 470, 1], [620, 470, 1], [640, 450, .78], [620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [340, 470, .72]],
+  pop: [1, 1, 1, .5, .5, 1, .6, 1, 1],
+  pos: [[620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [620, 470, 1], [340, 470, .72]],
 };
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
+
+/*
+ * Lichaam van het ribosoom: ≈ 4750 bollen.
+ * Live: WebGL2-canvas onder de SVG; elke bol is één punt (gl.POINTS) dat de fragment-shader als belichte bol tekent, met echte
+ * diepte (gl_FragDepth), en een donkere rand die alleen bij dieptesprongen zichtbaar is (handboekstijl). Eén tekenopdracht
+ * per pas: vlot, ook bij 60 beelden/s.
+ * Zonder api.node (testhulpmiddelen) of zonder WebGL2: dezelfde bollen als dikke ronde SVG-paden (trager, maar overal zichtbaar).
+ */
+function bodyRenderer(svg, live) {
+  const $ = id => svg.getElementById(id);
+  const hit = $('rb-hit');
+  const hitBox = (x0, y0, x1, y1, R) => {
+    hit.setAttribute('x', f1(x0 - R)); hit.setAttribute('y', f1(y0 - R));
+    hit.setAttribute('width', f1(x1 - x0 + 2 * R)); hit.setAttribute('height', f1(y1 - y0 + 2 * R));
+  };
+  if (live) { const g = glRenderer(svg, hitBox); if (g) return g; }
+  const paths = {}; for (const c of CATS) for (let b = 0; b < NB; b++) paths[c + b] = $(`rb-${c}-${b}`);
+  return {
+    draw(P, proj, sep, col, alpha, R, op) {
+      const d = {}, ol = { 40: '', 60: '' }; for (const c of CATS) for (let b = 0; b < NB; b++) d[c + b] = '';
+      let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+      for (const c of CATS) {
+        const dy = SUB40.has(c) ? -sep : sep, ok = SUB40.has(c) ? 40 : 60;
+        for (const p of P[c]) {
+          const [X, Y, Z] = proj(p, dy);
+          const b = Math.max(0, Math.min(NB - 1, Math.floor((Z + 150) / 300 * NB)));
+          const m = `M${X.toFixed(0)},${Y.toFixed(0)}h0`;
+          if (alpha[c] > .02) ol[ok] += m;
+          d[c + b] += m;
+          x0 = Math.min(x0, X); x1 = Math.max(x1, X); y0 = Math.min(y0, Y); y1 = Math.max(y1, Y);
+        }
+      }
+      for (const k of [40, 60]) { const el = $('rb-o' + k); el.setAttribute('d', ol[k]); el.setAttribute('stroke', '#04070f'); el.setAttribute('stroke-width', f1(2 * R + 7)); }
+      for (const c of CATS) for (let b = 0; b < NB; b++) {
+        const el = paths[c + b], shade = .32 - .32 * b / (NB - 1);
+        el.setAttribute('d', alpha[c] > .02 ? d[c + b] : '');
+        el.setAttribute('stroke', rgb(mix(col[c], BG, shade)));
+        el.setAttribute('stroke-width', f1(2 * R * (c[0] === 'p' ? .92 : 1)));
+        el.setAttribute('stroke-opacity', f1(alpha[c]));
+      }
+      hitBox(x0, y0, x1, y1, R);
+      $('rb-body').setAttribute('opacity', f1(op));
+    },
+    destroy() {},
+  };
+}
+
+const VS = `#version 300 es
+in vec4 aP;                        // x, y (SVG-eenheden), z (Å, groter = dichterbij), soort
+uniform vec4 uMap;                 // gx, gy, f (SVG → apparaatpixels), 0
+uniform vec2 uRes;
+uniform float uRad[6];             // straal per soort (apparaatpixels)
+uniform float uPad;                // extra straal (rand)
+uniform float uPush;               // diepte naar achteren (rand)
+out float vZ; flat out int vK; out float vR;
+void main() {
+  vec2 px = uMap.xy + aP.xy * uMap.z;
+  int k = int(aP.w + .5);
+  float r = uRad[k] + uPad;
+  gl_Position = vec4(px.x / uRes.x * 2. - 1., 1. - px.y / uRes.y * 2., clamp((-aP.z + uPush) / 400., -1., 1.), 1.);
+  gl_PointSize = 2. * r;
+  vZ = aP.z; vK = k; vR = r;
+}`;
+const FS = `#version 300 es
+precision highp float;
+in float vZ; flat in int vK; in float vR;
+uniform vec3 uCol[6]; uniform float uAlpha[6]; uniform vec3 uBg; uniform int uMode;   // 0 = bol, 1 = rand
+uniform float uRadA;               // balstraal in Å (voor de diepte van het boloppervlak)
+out vec4 o;
+void main() {
+  vec2 d = gl_PointCoord * 2. - 1.;
+  float r2 = dot(d, d);
+  if (r2 > 1.) discard;
+  float a = uAlpha[vK];
+  if (uMode == 1) { o = vec4(vec3(.016, .027, .059) * a, a); gl_FragDepth = gl_FragCoord.z; return; }
+  float h = sqrt(1. - r2);
+  vec3 n = vec3(d.x, -d.y, h);
+  float lit = .42 + .58 * max(dot(n, normalize(vec3(-.45, .55, .7))), 0.);
+  float spec = pow(max(dot(n, normalize(vec3(-.2, .3, 1.))), 0.), 24.) * .18;
+  float shade = .34 - .34 * clamp((vZ + 150.) / 300., 0., 1.);       // verder weg → naar de achtergrond toe
+  vec3 c = mix(uCol[vK] * lit + spec, uBg, shade);
+  o = vec4(c * a, a);
+  gl_FragDepth = gl_FragCoord.z - h * uRadA / 800.;
+}`;
+function glRenderer(svg, hitBox) {
+  const cv = document.createElement('canvas');
+  cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none';
+  const gl = cv.getContext('webgl2', { premultipliedAlpha: true, antialias: true, alpha: true });
+  if (!gl) return null;
+  const sh = (type, src) => { const x = gl.createShader(type); gl.shaderSource(x, src); gl.compileShader(x); if (!gl.getShaderParameter(x, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(x)); return x; };
+  let prog;
+  try {
+    prog = gl.createProgram(); gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+  } catch (e) { console.warn('[ribosoom] WebGL:', e.message); return null; }
+  svg.parentNode.insertBefore(cv, svg);
+  const U = n => gl.getUniformLocation(prog, n);
+  const u = { map: U('uMap'), res: U('uRes'), rad: U('uRad'), pad: U('uPad'), push: U('uPush'), col: U('uCol'), alpha: U('uAlpha'), bg: U('uBg'), mode: U('uMode'), radA: U('uRadA') };
+  let N = 0; for (const c of CATS) N += RIBO[c].length / 3;
+  const data = new Float32Array(N * 4), buf = gl.createBuffer();
+  const ord = new Uint16Array(N), Zs = new Float32Array(N);
+  gl.useProgram(prog);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  const loc = gl.getAttribLocation(prog, 'aP');
+  gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 4, gl.FLOAT, false, 16, 0);
+  gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL);
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+  return {
+    draw(P, proj, sep, col, alpha, R, op) {
+      const W = cv.clientWidth, H = cv.clientHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
+      if (!W || !H) return;
+      if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+      // SVG-gebruikerscoördinaten → apparaatpixels (viewBox met 'xMidYMid meet', zoals de SVG zelf)
+      const vb = svg.viewBox.baseVal, sw = svg.clientWidth || W, sh = svg.clientHeight || H;
+      const k = Math.min(sw / vb.width, sh / vb.height), ox = (sw - vb.width * k) / 2 - vb.x * k, oy = (sh - vb.height * k) / 2 - vb.y * k;
+      const f = k * dpr;
+      // punten: ondoorschijnende soorten eerst, daarna de doorschijnende (van achter naar voor)
+      let n = 0, x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+      const solid = [], see = [];
+      CATS.forEach((c, ci) => { if (alpha[c] >= .99) solid.push(ci); else if (alpha[c] > .02) see.push(ci); });
+      const put = (ci, list) => {
+        const c = CATS[ci], dy = SUB40.has(c) ? -sep : sep;
+        for (const p of P[c]) {
+          const q = proj(p, dy);
+          list.push(n); Zs[n] = q[2];
+          data[4 * n] = q[0]; data[4 * n + 1] = q[1]; data[4 * n + 2] = q[2]; data[4 * n + 3] = ci; n++;
+          if (q[0] < x0) x0 = q[0]; if (q[0] > x1) x1 = q[0]; if (q[1] < y0) y0 = q[1]; if (q[1] > y1) y1 = q[1];
+        }
+      };
+      const iS = [], iT = [];
+      for (const ci of solid) put(ci, iS);
+      for (const ci of see) put(ci, iT);
+      iT.sort((a, b) => Zs[a] - Zs[b]);
+      const out = new Float32Array(n * 4); let m = 0;
+      for (const j of iS.concat(iT)) { out.set(data.subarray(4 * j, 4 * j + 4), 4 * m); m++; }
+      gl.viewport(0, 0, cv.width, cv.height);
+      gl.clearColor(0, 0, 0, 0); gl.clearDepth(1); gl.depthMask(true);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      gl.bufferData(gl.ARRAY_BUFFER, out, gl.STREAM_DRAW);
+      gl.uniform4f(u.map, ox * dpr, oy * dpr, f, 0);
+      gl.uniform2f(u.res, cv.width, cv.height);
+      const rpx = R * f;
+      gl.uniform1fv(u.rad, CATS.map(c => rpx * (c[0] === 'p' ? .92 : 1)));
+      gl.uniform3fv(u.col, CATS.flatMap(c => col[c].map(v => v / 255)));
+      gl.uniform1fv(u.alpha, CATS.map(c => alpha[c]));
+      gl.uniform3fv(u.bg, BG.map(v => v / 255));
+      gl.uniform1f(u.radA, 9);
+      const nS = iS.length, nT = iT.length;
+      // 1) ondoorschijnende bollen, 2) hun rand (iets naar achteren: alleen zichtbaar waar de diepte verspringt)
+      gl.uniform1i(u.mode, 0); gl.uniform1f(u.pad, 0); gl.uniform1f(u.push, 0);
+      if (nS) gl.drawArrays(gl.POINTS, 0, nS);
+      gl.uniform1i(u.mode, 1); gl.uniform1f(u.pad, 3.5 * f); gl.uniform1f(u.push, 9);
+      if (nS) gl.drawArrays(gl.POINTS, 0, nS);
+      // 3) vervagende soorten (eiwitten): doorschijnend, zonder in de diepte te schrijven
+      if (nT) {
+        gl.depthMask(false);
+        gl.uniform1i(u.mode, 1); gl.uniform1f(u.pad, 3.5 * f); gl.uniform1f(u.push, 9);
+        gl.drawArrays(gl.POINTS, nS, nT);
+        gl.uniform1i(u.mode, 0); gl.uniform1f(u.pad, 0); gl.uniform1f(u.push, 0);
+        gl.drawArrays(gl.POINTS, nS, nT);
+        gl.depthMask(true);
+      }
+      cv.style.opacity = f1(op);
+      hitBox(x0, y0, x1, y1, R);
+    },
+    destroy() { try { gl.getExtension('WEBGL_lose_context')?.loseContext(); } catch {} cv.remove(); },
+  };
+}
 
 export default {
   id: 'ribosoom',
@@ -50,7 +219,7 @@ export default {
   steps: [
     ST(8000, cam(800, 470, 1500), 'Het ribosoom van de mens', 'The human ribosome', 'De eiwitfabriek van de cel, uit RNA en ≈ 80 eiwitten. De vorm komt uit een echte 3D-structuur.', 'The cell’s protein factory, made of RNA and ≈ 80 proteins. The shape comes from a real 3D structure.'),
     ST(8000, cam(800, 470, 1500), 'Twee helften: klein en groot', 'Two halves: small and large', 'Een kleine (40S) en een grote helft (60S) vormen samen het 80S-ribosoom. S-getallen tellen niet zomaar op.', 'A small (40S) and a large half (60S) together form the 80S ribosome. S numbers do not simply add up.'),
-    ST(8000, cam(800, 470, 1500), 'Vooral RNA', 'Mostly RNA', 'Links alleen het RNA, rechts alleen de ≈ 80 eiwitten. Het RNA heeft al bijna de hele vorm en doet het werk; de eiwitten zitten vooral aan de buitenkant.', 'Left only the RNA, right only the ≈ 80 proteins. The RNA alone already has almost the whole shape and does the work; the proteins sit mostly on the outside.'),
+    ST(9000, cam(800, 470, 1500), 'Vooral RNA', 'Mostly RNA', 'Kijk: de eiwitten (paars) verdwijnen even. Het rRNA blijft over en heeft al bijna de hele vorm. Het RNA doet ook het werk; de eiwitten zitten vooral aan de buitenkant.', 'Watch: the proteins (purple) fade away for a moment. The rRNA stays and already has almost the whole shape. The RNA also does the work; the proteins sit mostly on the outside.'),
     ST(8500, cam(800, 560, 1400), 'De kleine helft houdt het mRNA vast', 'The small half holds the mRNA', 'De kleine helft (40S) houdt het mRNA vast en controleert of het tRNA goed past op het codon.', 'The small half (40S) holds the mRNA and checks whether the tRNA fits the codon properly.'),
     ST(8500, cam(800, 400, 1400), 'De grote helft koppelt', 'The large half does the linking', 'De grote helft (60S) bevat drie RNA’s en koppelt de aminozuren aan elkaar.', 'The large half (60S) contains three RNAs and links the amino acids together.'),
     ST(9000, cam(640, 520, 950), 'Drie plaatsen voor tRNA’s', 'Three places for tRNAs', 'A: nieuw aminozuur komt aan. P: houdt de keten vast. E: uitgang. Hier zitten tRNA’s in A en P.', 'A: a new amino acid arrives. P: holds the chain. E: exit. Here tRNAs sit in A and P.'),
@@ -62,7 +231,7 @@ export default {
     const bins = [];
     for (let b = 0; b < NB; b++) bins.push(CATS.map(c => `<path id="rb-${c}-${b}" fill="none" stroke-linecap="round"/>`).join(''));
     return svgOpen() + `
-    <g data-node="ribogenese" data-color="${C.rrna}" data-label="${T2('Hoe wordt een ribosoom gebouwd?', 'How is a ribosome built?')}"><g id="rb-body"><path id="rb-o40" fill="none" stroke-linecap="round"/><path id="rb-o60" fill="none" stroke-linecap="round"/>${bins.join('')}</g>
+    <g data-node="ribogenese" data-color="${C.rrna}" data-label="${T2('Hoe wordt een ribosoom gebouwd?', 'How is a ribosome built?')}"><g id="rb-body"><rect id="rb-hit" fill="transparent" rx="60"/><path id="rb-o40" fill="none" stroke-linecap="round"/><path id="rb-o60" fill="none" stroke-linecap="round"/>${bins.join('')}</g>
       <circle id="rb-bgA" data-anchor="ribogenese" r="1" fill="none"/></g>
     <g id="rb-mg" data-node="codon" data-color="${C.rna}" data-label="${T2('mRNA · codons', 'mRNA · codons')}"><path id="rb-mrna" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle id="rb-mA" data-anchor="codon" data-pos="below" r="1" fill="none"/></g>
     <g id="rb-tg" data-node="trna" data-color="${C.trna}" data-label="tRNA"><path id="rb-tPL" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path id="rb-tP" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path id="rb-tAL" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path id="rb-tA" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle id="rb-tAnc" data-anchor="trna" r="1" fill="none"/></g>
@@ -77,11 +246,11 @@ export default {
     ])}
     </svg>`;
   },
-  init(svg) {
+  init(svg, api) {
     const STEPS = this?.steps ?? [];
+    const body = bodyRenderer(svg, !!api?.node);
     const $ = id => svg.getElementById(id);
     const P = {}; for (const k in RIBO) { const a = RIBO[k], out = []; for (let i = 0; i < a.length; i += 3) out.push([a[i], a[i + 1], a[i + 2]]); P[k] = out; }
-    const paths = {}; for (const c of CATS) for (let b = 0; b < NB; b++) paths[c + b] = $(`rb-${c}-${b}`);
     const cols = s => { const cur = PAL[K.pal[s.step]], prev = PAL[K.pal[Math.max(0, s.step - 1)]], k = ease(sub(s.p, 0, .3)); const o = {}; for (const c of CATS) o[c] = mix(hex2rgb(prev[c]), hex2rgb(cur[c]), k); return o; };
 
     return {
@@ -96,32 +265,10 @@ export default {
           return [cx + S * x, cy - S * (y * cp - z * sp), y * sp + z * cp];
         };
         const col = cols(s);
-        // lichaam: stippen per diepte-laag
-        /* Geen losse stippen meer: elke positie is een dikke bol, zodat ze samensmelten tot één gesloten vorm per helft
-         * (met een donkere omtrek eromheen). Zo blijven de buitenvorm en de twee helften leesbaar; diepte = iets donkerder. */
-        const d = {}, ol = { 40: '', 60: '' }; for (const c of CATS) for (let b = 0; b < NB; b++) d[c + b] = '';
-        const split = stepVal(K.split, s), SPL = 250 * split;
-        for (const c of CATS) {
-          const dy = SUB40.has(c) ? -sep : sep, dx = (c[0] === 'r' ? -SPL : SPL) * 1;
-          const ok = split > .5 ? (c[0] === 'r' ? 40 : 60) : (SUB40.has(c) ? 40 : 60);   // omtrek per helft, of per soort als ze naast elkaar staan
-          for (const p of P[c]) {
-            let [X, Y, Z] = proj(p, dy); X += dx;
-            const b = Math.max(0, Math.min(NB - 1, Math.floor((Z + 150) / 300 * NB)));
-            const m = `M${X.toFixed(0)},${Y.toFixed(0)}h0`;
-            ol[ok] += m; d[c + b] += m;
-          }
-        }
-        const BW = S * 13;
-        if (split > .5) ol[60] = '';                 // eiwitten naast elkaar: als losse stukjes, zonder gesloten omtrek
-        for (const k of [40, 60]) { const el = $('rb-o' + k); el.setAttribute('d', ol[k]); el.setAttribute('stroke', '#04070f'); el.setAttribute('stroke-width', f1(BW + 7)); }
-        for (const c of CATS) for (let b = 0; b < NB; b++) {
-          const el = paths[c + b], shade = .32 - .32 * b / (NB - 1);
-          el.setAttribute('d', d[c + b]);
-          el.setAttribute('stroke', rgb(mix(col[c], BG, shade)));
-          el.setAttribute('stroke-width', f1(BW * (c[0] === 'p' ? .92 - .5 * split : 1)));
-          el.setAttribute('stroke-opacity', c[0] === 'p' ? f1(.35 + .65 * pop) : '1');
-        }
-        $('rb-body').setAttribute('opacity', f1(op));
+        // eiwitten: in stap 3 ("Vooral RNA") op dezelfde plaats laten vervagen en weer terugkomen
+        const fadeP = s.step === 2 ? Math.max(0, 1 - ease(sub(s.p, .3, .48)) + ease(sub(s.p, .84, .97))) : 1;
+        const alpha = {}; for (const c of CATS) alpha[c] = c[0] === 'p' ? (.35 + .65 * pop) * fadeP : 1;
+        body.draw(P, proj, sep, col, alpha, S * 9, op);
         // tRNA's en mRNA (bovenop)
         const line = pts => pts.map((p, i) => { const [X, Y] = proj(p); return `${i ? 'L' : 'M'}${X.toFixed(1)},${Y.toFixed(1)}`; }).join('');
         const avg = (arr, ix) => ix.reduce((a, j) => a.map((v, q) => v + arr[j][q] / ix.length), [0, 0, 0]);
@@ -152,8 +299,10 @@ export default {
           if (i === 1) o += txt(1010, 880, T2('40S + 60S → 80S   (S-waarden tellen niet op)', '40S + 60S → 80S   (S values are not additive)'), C.muted, 22, 'start', 600).replace('<text', `<text opacity="${f1(fade)}"`);
         }
         if (i === 2) {
-          const k = sub(s.p, .25, .45);
-          o += `<g opacity="${f1(k)}">` + txt(cx - SPL, 858, T2('alleen het RNA', 'only the RNA'), C.rrna, 26, 'middle', 700) + txt(cx + SPL, 858, T2('alleen de eiwitten', 'only the proteins'), C.prot, 26, 'middle', 700) + '</g>';
+          const k1 = sub(s.p, .08, .2) * (1 - sub(s.p, .3, .38)), k2 = sub(s.p, .42, .52) * (1 - sub(s.p, .84, .92));
+          // rechts naast het ribosoom (onderaan botst de tekst met de kleine helft tijdens de overgang)
+          o += `<g opacity="${f1(k1)}">` + txt(1000, 430, T2(`<tspan fill="${C.rrna}">rRNA</tspan> + <tspan fill="${C.prot}">≈ 80 eiwitten</tspan>`, `<tspan fill="${C.rrna}">rRNA</tspan> + <tspan fill="${C.prot}">≈ 80 proteins</tspan>`), C.text, 30, 'start', 700) + '</g>';
+          o += `<g opacity="${f1(k2)}">` + txt(1000, 415, T2('alleen het rRNA:', 'only the rRNA:'), C.rrna, 30, 'start', 700) + txt(1000, 455, T2('de vorm blijft bijna dezelfde', 'the shape stays almost the same'), C.text, 26, 'start', 600) + '</g>';
         }
         if (i === 3) {
           const dc = proj(LM.dc, -sep);
@@ -202,6 +351,7 @@ export default {
         }
         $('rb-ov').innerHTML = o; $('rb-dc').innerHTML = dcS; $('rb-ptc').innerHTML = ptcS; $('rb-tun').innerHTML = tunS;
       },
+      destroy() { body.destroy(); },
     };
   },
 };

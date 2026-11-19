@@ -55,7 +55,7 @@ export default structure3d({
         { sel: { chain: 'J' }, style: { cartoon: { color: COL.J, opacity: .55 } } }, { sel: { chain: 'I' }, style: { cartoon: { color: COL.I, opacity: .55 } } }],
       text: L3('De matrijsstreng ligt nu in de kloof. Zodra het enzym de promoter verlaat, laat σ meestal los.', 'The template strand now lies in the cleft. Once the enzyme leaves the promoter, σ usually lets go.') },
     { dur: 8000, title: L3('Vergelijk: ons RNA-polymerase II', 'Compare: our RNA polymerase II'), zoom: {}, spin: .012,
-      focus: [{ sel: { chain: 'J' }, style: { cartoon: { color: COL.J } }, label: L3('β′ ≈ Rpb1', 'β′ ≈ Rpb1') }, { sel: { chain: 'I' }, style: { cartoon: { color: COL.I } }, label: L3('β ≈ Rpb2', 'β ≈ Rpb2') }],
+      focus: [{ sel: { chain: 'J' }, style: { cartoon: { color: COL.J } }, label: L3('β′ ≈ Rpb1', 'β′ ≈ Rpb1'), node: 'rnapol' }, { sel: { chain: 'I' }, style: { cartoon: { color: COL.I } }, label: L3('β ≈ Rpb2', 'β ≈ Rpb2'), node: 'rnapol' }],
       text: L3('Ons Pol II telt 12 eiwitten, maar de kern lijkt sterk: β′ en β zijn familie van Rpb1 en Rpb2.', 'Our Pol II has 12 proteins, but the core is very similar: β′ and β are relatives of Rpb1 and Rpb2.') },
   ],
   hotspots: [

@@ -33,7 +33,7 @@ export default structure3d({
     { dur: 8000, title: L3('Het intron is zelf het enzym', 'The intron itself is the enzyme'), zoom: {}, spin: .012,
       focus: { sel: { chain: 'B' }, style: { cartoon: { color: COL.B } }, label: L3('groep I-intron', 'group I intron') },
       text: L3('Dit intron vouwt zich tot een vaste 3D-vorm: een RNA-enzym (ribozym). Het heeft geen eiwit nodig.', 'This intron folds into a fixed 3D shape: an RNA enzyme (ribozyme). It needs no protein.') },
-    { dur: 9000, title: L3('Twee stappen knippen en plakken', 'Two steps of cutting and joining'), zoom: { chain: ['C', 'D'] }, spin: .008,
+    { dur: 9000, title: L3('Twee stappen knippen en plakken', 'Two steps of cutting and joining'), zoom: { chain: ['C', 'D'] }, rock: 30, pad: .6,
       focus: [...EX, { sel: { chain: 'B' }, style: { cartoon: { color: COL.B, opacity: .6 } } }],
       text: L3('Eerst knipt het intron los van het eerste exon. Dan plakt het de twee exonen aan elkaar.', 'First the intron cuts itself free from the first exon. Then it joins the two exons together.') },
     { dur: 8000, title: L3('Een hulpje voor de foto', 'A helper for the picture'), zoom: {}, spin: .012,

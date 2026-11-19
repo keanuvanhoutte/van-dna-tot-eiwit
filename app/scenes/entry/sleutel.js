@@ -1,11 +1,11 @@
-import { structure3d } from '../../kit3d.js';
+import { structure3d, ghost } from '../../kit3d.js';
 
 /* PDB 6M0J: receptorbindend domein (RBD) van het SARS-CoV-2-uitsteeksel (spike) op menselijk ACE2 (röntgen 2,45 Å; Lan et al., Nature 2020).
  * Entiteiten (RCSB-API, nagekeken 05-11-2026): 1 = ACE2, keten A (Homo sapiens, res. 19–615) · 2 = spike S1-RBD, keten E (SARS-CoV-2, res. 333–526).
  * Lokale kopie data/pdb/6M0J.cif: ingekort tot CA-atomen (6 406 → 791) en star gedraaid (ACE2 onder, RBD boven = +y).
  * Raakvlak (≤ 4 Å tussen zware atomen, berekend in het volledige RCSB-bestand): 17 RBD-residuen en 20 ACE2-residuen, zoals Lan et al. melden. */
 const L3 = (nl, en) => ({ nl, en });
-const ACE = '#7fc9b6', RBD = '#ff9d5c', HOT = '#ffd166', GREY = '#33415c';
+const ACE = '#7fc9b6', RBD = '#ff9d5c', HOT = '#ffd166';
 const S = (color, r = 2.6) => ({ sphere: { color, radius: r } });
 const IA = [24, 27, 28, 30, 31, 34, 35, 37, 38, 41, 42, 79, 82, 83, 330, 353, 354, 355, 357, 393];
 const IE = [417, 446, 449, 453, 455, 456, 475, 486, 487, 489, 493, 496, 498, 500, 501, 502, 505];
@@ -30,10 +30,10 @@ export default structure3d({
     { dur: 8000, title: L3('De sleutel past op het slot van onze cel', 'The key fits the lock on our cell'), focus: null, zoom: {}, spin: .012,
       text: L3('Dit is een echt stukje coronavirus (oranje) vast op een eiwit van onze cel (groen).', 'This is a real piece of coronavirus (orange) stuck to a protein of our cell (green).') },
     { dur: 8500, title: L3('Het slot zit op onze cel', 'The lock sits on our cell'), zoom: { chain: 'A' }, spin: .01,
-      focus: [{ sel: { chain: 'E' }, style: S(GREY, 1.6) }, { sel: { chain: 'A' }, style: S(ACE, 2.8) }, { sel: { chain: 'A', resi: 600 }, style: S(ACE, 2.8), label: L3('slot (eiwit van de cel)', 'lock (protein of the cell)') }],
+      focus: [{ sel: { chain: 'E' }, style: ghost(4, .12) }, { sel: { chain: 'A' }, style: S(ACE, 2.8) }, { sel: { chain: 'A', resi: 600 }, style: S(ACE, 2.8), label: L3('slot (eiwit van de cel)', 'lock (protein of the cell)') }],
       text: L3('Dit eiwit zit op cellen in onder meer de neus, de longen en de darm. Voor het virus is het een slot.', 'This protein sits on cells in the nose, the lungs and the gut, among other places. For the virus it is a lock.') },
     { dur: 8500, title: L3('De sleutel zit op het virus', 'The key sits on the virus'), zoom: { chain: 'E' }, spin: .01,
-      focus: [{ sel: { chain: 'A' }, style: S(GREY, 1.6) }, { sel: { chain: 'E' }, style: S(RBD, 3) }, { sel: { chain: 'E', resi: 360 }, style: S(RBD, 3), label: L3('sleutel (top van het uitsteeksel)', 'key (tip of the spike)') }],
+      focus: [{ sel: { chain: 'A' }, style: ghost(4, .12) }, { sel: { chain: 'E' }, style: S(RBD, 3) }, { sel: { chain: 'E', resi: 360 }, style: S(RBD, 3), label: L3('sleutel (top van het uitsteeksel)', 'key (tip of the spike)') }],
       text: L3('Het virus is bedekt met uitsteeksels. Alleen het topje ervan past op het slot.', 'The virus is covered in spikes. Only their tip fits the lock.') },
     { dur: 9000, title: L3('Sleutel en slot passen precies', 'Key and lock fit exactly'), zoom: { chain: 'A', resi: IA }, spin: .006,
       focus: [{ sel: { chain: 'A' }, style: S(ACE, 2) }, { sel: { chain: 'E' }, style: S(RBD, 2) },

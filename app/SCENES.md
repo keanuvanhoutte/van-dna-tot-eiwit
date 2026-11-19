@@ -81,7 +81,7 @@ export default {
   },
 };
 ```
-Doelpubliek: secundair onderwijs (wetenschappen) en beginnende bachelors. Eerst de eenvoudige laag (`kort`), de diepgang onder "Voor wie meer wil". Elke bewering moet door een gelezen bron gedekt zijn.
+Doelpubliek: secundair onderwijs (wetenschappen) en beginnende bachelors. Eerst de eenvoudige laag (`kort`), de diepgang onder "Verdieping". Elke bewering moet door een gelezen bron gedekt zijn.
 
 
 ## Afspelen: automatisch verder (standaard) of zelf klikken

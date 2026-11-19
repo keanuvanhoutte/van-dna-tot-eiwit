@@ -1,5 +1,5 @@
 /* Eenvoudige laag van de atlas: per item een begrijpelijke titel, "In het kort", "Wat zie je?", "Waarom belangrijk"
- * en een tabel met nuttige feiten (NL/EN). De vakinhoud uit entries.js blijft beschikbaar onder "Voor wie meer wil".
+ * en een tabel met nuttige feiten (NL/EN). De vakinhoud uit entries.js blijft beschikbaar onder "Verdieping".
  * Vaktermen staan als [[woord|sleutel]] in de tekst → aantikbaar (shared/glossary.js + EXTRA_GLOSS hieronder). */
 import * as d1 from './simple-1.js';
 import * as d2 from './simple-2.js';

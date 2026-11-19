@@ -1,4 +1,4 @@
-import { structure3d } from '../../kit3d.js';
+import { structure3d, ghost } from '../../kit3d.js';
 import { C } from '../../kit.js';
 
 /* PDB 7W1Y: menselijke MCM2-7-dubbelhexameer op DNA (cryo-EM 2,59 Å; Li et al., Cell 2023).
@@ -12,7 +12,8 @@ const R1 = ['2', '3', '4', '5', '6', '7'], R2 = ['A', 'B', 'C', 'D', 'E', 'F'], 
 const SUB = ['#9b7bff', '#5fd3e6', '#7fdc6a', '#ffc247', '#ff8a3d', '#e0708f'];      // MCM2 … MCM7
 const RING1 = '#8f86ff', RING2 = '#4fc3d9';
 const T = (color, r = 2.2) => ({ sphere: { color, radius: r } });
-const FADE = chains => ({ sel: { chain: chains }, style: { sphere: { color: '#33415c', radius: .9 } } });
+/* gedimd: één rustige, doorschijnende vorm i.p.v. grijze stipjes */
+const FADE = chains => ({ sel: { chain: chains }, style: ghost(3.6, .1) });
 const bySub = (ring, r = 2.2) => ring.map((ch, i) => ({ sel: { chain: ch }, style: T(SUB[i], r) }));
 const dnaS = (r = 2.6) => [{ sel: { chain: 'O' }, style: T(C.dna, r) }, { sel: { chain: 'S' }, style: T(C.dna2, r) }];
 const base = [...bySub(R1), ...bySub(R2), ...dnaS()];

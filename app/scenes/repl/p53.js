@@ -45,13 +45,14 @@ export default structure3d({
       text: L3('Een van die genen maakt een rem op de celdeling. Zo krijgt de cel tijd om het DNA te herstellen.', 'One of those genes makes a brake on cell division. This gives the cell time to repair the DNA.') },
     { dur: 9000, title: L3('Te veel schade: de cel ruimt zichzelf op', 'Too much damage: the cell self-destructs (apoptosis)'), focus: null, zoom: {}, spin: .012,
       text: L3('Is de schade te groot, dan zet p53 genen aan waardoor de cel sterft. Zo geeft ze de schade niet door.', 'If the damage is too great, p53 switches on genes that make the cell die. That way it does not pass on the damage.') },
-    { dur: 8000, title: L3('Een zinkatoom houdt de grijper in vorm', 'A zinc ion keeps the gripper in shape'), zoom: { chain: 'B', resi: [176, 179, 238, 242] }, spin: .006,
-      focus: [OTHER, ...DNA, B, { sel: { chain: 'B', resn: 'ZN' }, style: { sphere: { color: '#d9e0ee', radius: 1.6 } }, label: L3('zink', 'zinc') }],
+    { dur: 8000, title: L3('Een zinkatoom houdt de grijper in vorm', 'A zinc ion keeps the gripper in shape'), zoom: { chain: 'B', resi: [176, 179, 238, 242] }, spin: .006, pad: .45,
+      // het lint doorschijnend en de vier zinkhouders (Cys176, His179, Cys238, Cys242) als staafjes: zo verdwijnt het zink niet achter het lint
+      focus: [OTHER, ...DNA, { sel: { chain: 'B' }, style: { cartoon: { color: P, opacity: .45 } } }, { sel: { chain: 'B', resi: [176, 179, 238, 242] }, style: { cartoon: { color: P, opacity: .45 }, stick: { color: P, radius: .28 } } }, { sel: { chain: 'B', resn: 'ZN' }, style: { sphere: { color: '#d9e0ee', radius: 1.6 } }, label: L3('zink', 'zinc') }],
       text: L3('Twee lussen die het DNA raken, worden bij elkaar gehouden door één zinkatoom.', 'Two loops that touch the DNA are held together by a single zinc ion (Zn²⁺).') },
     { dur: 9000, title: L3('Kankermutaties raken de grijper', 'Cancer mutations hit the gripper'), zoom: { chain: ['B', 'E', 'F'] }, spin: .006,
       focus: [OTHER, ...DNA, { sel: { chain: 'B' }, style: { cartoon: { color: P, opacity: .6 } } },
-        { sel: { chain: 'B', resi: 248 }, style: { stick: { color: C.danger, radius: .45 } }, label: 'R248' }, { sel: { chain: 'B', resi: 273 }, style: { stick: { color: C.danger, radius: .45 } }, label: 'R273' },
-        { sel: { chain: 'B', resi: 175 }, style: { stick: { color: '#ff9e9e', radius: .4 } }, label: 'R175' }],
+        { sel: { chain: 'B', resi: 248 }, style: { stick: { color: C.danger, radius: .45 } }, label: 'R248', node: 'mutaties' }, { sel: { chain: 'B', resi: 273 }, style: { stick: { color: C.danger, radius: .45 } }, label: 'R273', node: 'mutaties' },
+        { sel: { chain: 'B', resi: 175 }, style: { stick: { color: '#ff9e9e', radius: .4 } }, label: 'R175', node: 'mutaties' }],
       text: L3('Het gen voor p53 is het vaakst veranderde gen bij kanker. Veel fouten raken juist de plekken die het DNA vastpakken.', 'The gene for p53 is the most often changed gene in cancer. Many errors hit exactly the spots that hold the DNA.') },
   ],
   hotspots: [

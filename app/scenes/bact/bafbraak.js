@@ -32,7 +32,7 @@ export default structure3d({
     { dur: 8000, title: L3('ClpX: een motor van zes', 'ClpX: a motor of six'), zoom: {}, spin: .012,
       focus: X.map((c, i) => ({ sel: { chain: c }, style: { cartoon: { color: XC[i] } }, ...(i ? {} : { label: L3('ClpX-ring', 'ClpX ring') }) })),
       text: L3('ClpX is een ring van zes eiwitten die ATP verbruiken. Ze trekken een eiwit open.', 'ClpX is a ring of six proteins that use ATP. They pull a protein open.') },
-    { dur: 9000, title: L3('Een staartje als afbraaklabel', 'A tail as a degradation tag'), zoom: { chain: 'S' }, spin: .008,
+    { dur: 9000, title: L3('Een staartje als afbraaklabel', 'A tail as a degradation tag'), zoom: { chain: 'S' }, rock: 30, pad: .45,
       focus: [{ sel: { chain: 'S' }, style: { stick: { color: SC, radius: .45 } }, label: L3('ssrA-label', 'ssrA tag') }, ...X.map((c, i) => ({ sel: { chain: c }, style: { cartoon: { color: XC[i], opacity: .55 } } }))],
       text: L3('Veel af te breken eiwitten dragen een kort label, zoals ssrA. ClpX grijpt dat staartje in zijn porie.', 'Many proteins to be broken down carry a short tag, such as ssrA. ClpX grips that tail in its pore.') },
     { dur: 9000, title: L3('ClpP: de knipkamer', 'ClpP: the cutting chamber'), zoom: {}, spin: .012,

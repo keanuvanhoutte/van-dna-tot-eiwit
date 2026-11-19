@@ -1,5 +1,5 @@
 import { C, T2, svgOpen, FULL, cam, sub, ease, lerp, f1 } from '../../kit.js';
-import { inset3d, withInset } from '../../kit3d.js';
+import { inset3d, withInset, warm3d } from '../../kit3d.js';
 import { T } from './_b_kit.js';
 import { arrow } from '../repl/_draw.js';
 import { DEST, bilayer, at, beadsAt, btn } from './_fate.js';
@@ -58,6 +58,7 @@ function folded(x, y, r, op, helix = 1) {
 
 export default {
   id: 'mito',
+  warm() { warm3d('7CP9', 'pdb'); },   // 3D-venster: bestand al ophalen en parsen
   title: { nl: 'Een eiwit glipt uitgerold het mitochondrion in', en: 'A protein slips unfolded into the mitochondrion' },
   scale: { nl: 'schematisch (de echte poort is ≈ 13 nm breed)', en: 'schematic (the real gate is ≈ 13 nm wide)' },
   time: { nl: 'vertraagd (schematisch)', en: 'slowed down (schematic)' },
