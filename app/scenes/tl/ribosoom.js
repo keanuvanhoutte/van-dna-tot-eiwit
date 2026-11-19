@@ -134,7 +134,7 @@ export default {
         $('rb-tg').setAttribute('opacity', f1(trOp));
         const m = $('rb-mrna'); m.setAttribute('d', line(P.mrna)); m.setAttribute('stroke', C.rna); m.setAttribute('stroke-width', f1(S * 4.5)); $('rb-mg').setAttribute('opacity', f1(stepVal(K.mrna, s)));
         const L2 = k => proj(LM[k]);
-        const [tx, ty] = L2('elA'); $('rb-tAnc').setAttribute('cx', f1(tx + 40)); $('rb-tAnc').setAttribute('cy', f1(ty - 70));
+        const [tx, ty] = L2('elA'); $('rb-tAnc').setAttribute('cx', f1(tx + 110)); $('rb-tAnc').setAttribute('cy', f1(ty + 40));   // rechts naast het tRNA, niet onder de PTC-tekst
         const mEnd = proj(P.mrna[P.mrna.length - 1]); $('rb-mA').setAttribute('cx', f1(mEnd[0] + 30)); $('rb-mA').setAttribute('cy', f1(mEnd[1] + 16));
         $('rb-bgA').setAttribute('cx', f1(cx + 60)); $('rb-bgA').setAttribute('cy', f1(cy + 360 * sc));
 
@@ -153,7 +153,7 @@ export default {
         }
         if (i === 2) {
           const k = sub(s.p, .25, .45);
-          o += `<g opacity="${f1(k)}">` + txt(cx - SPL, 890, T2('alleen het RNA', 'only the RNA'), C.rrna, 26, 'middle', 700) + txt(cx + SPL, 890, T2('alleen de eiwitten', 'only the proteins'), C.prot, 26, 'middle', 700) + '</g>';
+          o += `<g opacity="${f1(k)}">` + txt(cx - SPL, 858, T2('alleen het RNA', 'only the RNA'), C.rrna, 26, 'middle', 700) + txt(cx + SPL, 858, T2('alleen de eiwitten', 'only the proteins'), C.prot, 26, 'middle', 700) + '</g>';
         }
         if (i === 3) {
           const dc = proj(LM.dc, -sep);

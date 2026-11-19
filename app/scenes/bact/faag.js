@@ -13,7 +13,7 @@ import { T, btn, phage, PHDNA } from '../entry/_corona.js';
 const L3 = (nl, en) => ({ nl, en });
 const A = [60, 330, 560, 400], B = [980, 330, 560, 400];   // twee bacteriën: x, y, w, h
 const AX = 340, BX = 1260, TIP = 338;                      // staartpunt op het celoppervlak
-const MINI = [[205, 420], [475, 420], [280, 500], [340, 500], [400, 500], [240, 570], [340, 575], [440, 570]];   // vrij in het cytoplasma: boven het chromosoom en binnen de lus, niet op de DNA-lijn
+const MINI = [[185, 395], [262, 405], [418, 405], [495, 395], [112, 525], [568, 525], [250, 655], [430, 655]];   // vrij in het cytoplasma rond het chromosoom (boven, opzij, onder), niet binnen de lus van het chromosoom
 const UV = '#b388ff';
 /* chromosoom als lus; gap = deel van de bovenkant dat roze (ingebouwd faag-DNA) wordt */
 const chrom = (cx, cy, op = 1) => `<ellipse cx="${cx}" cy="${cy}" rx="180" ry="95" fill="none" stroke="${C.dna}" stroke-width="7" opacity="${f1(op)}"/>`;
@@ -70,8 +70,8 @@ export default {
           c += membraanPts(ptsBoog(x0, y0, x0 + 22, y0 - 18, x0 + 44, y0, 8), { w: 10, op: 1 - burst * .6 });   // stukjes membraan
         }
         if (bOn > .01) c += rodCell(...B, bOn) + `<g opacity="${f1(bOn)}">${chrom(BX, 560)}</g>`;
-        c += T(AX, 780, T2('weg 1: kopiëren', 'path 1: copy'), { size: 28, col: C.text, w: 700, op: ph(2, 0, .2) });
-        if (bOn > .01) c += T(BX, 780, T2('weg 2: verstoppen', 'path 2: hide'), { size: 28, col: C.text, w: 700, op: bOn });
+        c += T(AX, 780, T2('weg 1: kopiëren (lytisch)', 'path 1: copy (lytic)'), { size: 28, col: C.text, w: 700, op: ph(2, 0, .2) });
+        if (bOn > .01) c += T(BX, 780, T2('weg 2: verstoppen (lysogeen)', 'path 2: hide (lysogenic)'), { size: 28, col: C.text, w: 700, op: bOn });
         $('fa-cells').innerHTML = c;
 
         /* faag A: landt (stap 0→1), spuit DNA (stap 1) */

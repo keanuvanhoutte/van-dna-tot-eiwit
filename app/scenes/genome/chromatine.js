@@ -175,7 +175,7 @@ export default {
     <g id="cr-pD2">
       ${panel(1140, 370, 450, 230, T2('⑤ Hogere vouwing', '⑤ Higher-order folding'), '#2a3a60', 21)}
       <g data-node="nucleosoom" data-color="${C.histone}" data-nolabel>${z30}${vivo}</g>
-      ${txt(1260, 540, T2('in vitro: "30 nm-vezel"', 'in vitro: "30 nm fibre"'), C.muted, 12)}
+      ${txt(1260, 540, T2('in vitro: “30 nm-vezel”', 'in vitro: “30 nm fibre”'), C.muted, 12)}
       ${txt(1260, 556, T2('(regelmatig, zigzag)', '(regular, zigzag)'), C.muted, 11)}
       ${txt(1490, 572, T2('in de cel: onregelmatige', 'in the cell: irregular'), C.text, 12)}
       ${txt(1490, 588, T2('keten van 5–24 nm', 'chain of 5–24 nm'), C.text, 12)}

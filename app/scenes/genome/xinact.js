@@ -114,7 +114,7 @@ export default {
           }
           o += '</g>' + T(640, 640, T2('actief X', 'active X'), { size: 28, col: MOM, w: 700, op: vC });
           o += T(915, 335, T2('XIST-RNA bedekt dit X', 'XIST RNA coats this X'), { size: 26, col: XIST, w: 700, op: vC * (step === 2 ? ease(sub(p, .5, .8)) : 1 - ease(sub(p, 0, .15))) });   // weg vóór het Barr-label verschijnt
-          o += T(960, 380, T2('Barr-lichaampje', 'Barr body'), { size: 28, col: C.text, w: 700, op: vC * (step === 3 ? ease(sub(p, .2, .7)) : 1) });
+          o += T(960, 380, T2('Barr-lichaampje', 'Barr body'), { size: 28, col: C.text, w: 700, op: vC * (step === 3 ? ease(sub(p, .2, .7)) : step > 3 ? 1 : 0) });
         }
         // D: weefsel als mozaïek
         const vD = vis(4, 4);
@@ -146,7 +146,7 @@ export default {
             o += `<rect x="${290 + i * 52}" y="425" width="40" height="50" rx="8" fill="${on ? lerp3g(k) : '#2c3448'}" stroke="#0a1224" stroke-width="2"/>`;
           }
           o += '</g>' + T(800, 370, T2('genen op het stille X', 'genes on the silent X'), { size: 28, w: 700, op: vF }) +
-            T(800, 560, T2('≈ 15 % blijft aan', '≈ 15 % stays on'), { size: 30, col: C.ok, w: 700, op: vF * k });
+            T(800, 560, T2('≈ 15 % blijft aan', '≈ 15 % stay on'), { size: 30, col: C.ok, w: 700, op: vF * k });
         }
         $('xi-v').innerHTML = o;
       },

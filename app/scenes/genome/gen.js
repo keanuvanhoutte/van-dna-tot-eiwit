@@ -56,7 +56,7 @@ export default {
       'The signal AATAAA marks the end. A little further on, the RNA is cut and gets a tail of A’s.'),
     ST(9000, cam(800, 564, 1300), 'Van ruw RNA naar mRNA', 'From raw RNA to mRNA',
       'Het RNA kreeg al tijdens het maken een kapje. Nu gaan de intronen eruit en komt er een A-staart aan.',
-      'The RNA already got a cap while it was being made. Now the introns are cut out and an A tail is added.'),
+      'The RNA already got a cap while it was being made. Now the introns are cut out and a poly(A) tail is added.'),
     ST(7000, FULL, 'Klaar om af te lezen', 'Ready to be read',
       'Dit geheel leest het enzym dat RNA maakt. Hierna: het gen wordt aangezet en afgelezen.',
       'This whole unit is read by the enzyme that makes RNA. Next: the gene is switched on and read.'),
@@ -111,7 +111,7 @@ export default {
       <g id="gn-loop"></g>
       <g data-node="genregulatie" data-color="${col.enh}" data-label="${T2('Enhancer → genregulatie', 'Enhancer → gene regulation')}">
         <g id="gn-enh">${`<rect x="${ENH[0]}" y="${Y - 20}" width="${ENH[1] - ENH[0]}" height="40" rx="10" fill="#4a3d1c" stroke="${col.enh}" stroke-width="3"/>`}${txt((ENH[0] + ENH[1]) / 2, Y + 7, 'enhancer', '#fff', 21, 'middle', 700)}
-        <circle data-anchor="genregulatie" cx="${(ENH[0] + ENH[1]) / 2 - 36}" cy="${Y + 62}" r="1" fill="none" data-pos="below"/></g>
+        <circle data-anchor="genregulatie" cx="${(ENH[0] + ENH[1]) / 2 + 60}" cy="${Y + 62}" r="1" fill="none" data-pos="below"/></g>
       </g>
       <g data-node="promoter" data-color="${col.prom}" data-label="${T2('Promoter', 'Promoter')}">
         <rect x="${PROM[0]}" y="${Y - 22}" width="${PROM[1] - PROM[0]}" height="44" rx="10" fill="#2e2556" stroke="${col.prom}" stroke-width="3"/>

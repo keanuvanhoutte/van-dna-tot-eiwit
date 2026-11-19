@@ -161,7 +161,7 @@ export default {
           const x2 = at(V0, X2);
           ann += `<g opacity="${f1(ease(sub(p, .35, .5)))}"><rect x="460" y="200" width="330" height="92" rx="12" fill="#0d1426" stroke="${rk > .5 ? C.rna : C.dna}" stroke-width="2"/>
             ${txt(625, 232, rk > .5 ? T2('RNA: ribose (2′-OH)', 'RNA: ribose (2′-OH)') : T2('DNA: 2′-deoxyribose (2′-H)', 'DNA: 2′-deoxyribose (2′-H)'), rk > .5 ? C.rna : C.dna, 22)}
-            ${txt(625, 268, rk > .5 ? T2('2′-OH maakt RNA reactiever', '2′-OH makes RNA more reactive') : T2('"deoxy" = zonder zuurstof op C2′', '"deoxy" = without oxygen on C2′'), C.muted, 18)}</g>`;
+            ${txt(625, 268, rk > .5 ? T2('2′-OH maakt RNA reactiever', '2′-OH makes RNA more reactive') : T2('“deoxy” = zonder zuurstof op C2′', '“deoxy” = without oxygen on C2′'), C.muted, 18)}</g>`;
         } else if (step === 2) {
           const nt = nucleotide(V0, [0, 0], { base: 'A', nP: 1, num: 1, glyHl: ease(sub(p, .1, .3)), names: new Set(['N9']), baseOp: 1 });
           m += nt.svg;
@@ -243,7 +243,7 @@ export default {
           m += nt.svg;
           const anti = ph < .5;
           ann += txt(1030, 300, anti ? 'anti' : 'syn', anti ? '#7fdc6a' : BASE.T, 48, 'start', 800);
-          ann += txt(1030, 345, anti ? T2('zesring weg van de suiker', 'six-membered ring away from the sugar') : T2('zesring boven de suiker', 'six-membered ring over the sugar'), '#fff', 22, 'start');
+          ann += txt(1030, 345, anti ? T2('zesring weg van de suiker', 'ring away from sugar') : T2('zesring boven de suiker', 'ring over sugar'), '#fff', 22, 'start');
           ann += txt(1030, 377, anti ? T2('standaard in A- en B-DNA', 'standard in A- and B-DNA') : T2('G in Z-DNA, Hoogsteen-paren', 'G in Z-DNA, Hoogsteen pairs'), C.muted, 20, 'start');
           ann += `<g opacity="${f1(ease(sub(p, .15, .35)))}">${txt(1030, 470, T2("χ = torsie O4′–C1′–N9–C4 (purine)", "χ = torsion O4′–C1′–N9–C4 (purine)"), '#fff', 20, 'start')}${txt(1030, 500, T2("of O4′–C1′–N1–C2 (pyrimidine)", "or O4′–C1′–N1–C2 (pyrimidine)"), C.muted, 19, 'start')}</g>`;
         } else if (step === 9) {

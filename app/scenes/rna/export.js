@@ -151,7 +151,7 @@ export default {
         m += note(c5[0] + (step >= 6 ? -26 : 34), c5[1] + (step >= 6 ? -18 : 42), "5′", C.text, 20) + note(tail[0] + (step >= 6 ? 10 : -22), tail[1] + (step >= 6 ? 36 : -18), "3′", C.text, 20);
         $('ex-mrna').innerHTML = m;
         // stap 8: label voorbij het stopcodon, niet over het ribosoom
-        const mid = step <= 3 ? side(sOf(520), 30) : step === 7 ? side(sOf(620), 64) : step >= 6 ? side(sOf(300), -40) : [-9999, -9999]; $('ex-mA').setAttribute('cx', f1(mid[0])); $('ex-mA').setAttribute('cy', f1(mid[1]));
+        const mid = step <= 3 ? side(sOf(520), 30) : step === 7 ? side(sOf(700), 64) : step >= 6 ? side(sOf(300), -40) : [-9999, -9999]; $('ex-mA').setAttribute('cx', f1(mid[0])); $('ex-mA').setAttribute('cy', f1(mid[1]));
 
         // poly(A) + PABPN1 → PABPC1
         const exch = step === 8 ? ease(sub(p, .1, .5)) : 0;
@@ -166,7 +166,7 @@ export default {
         $('ex-pa').innerHTML = pa;
         // stap 9: label naast de staart, niet op de lus-lijn
         const pA = step === 8 ? (q => [q[0] + 120, q[1] + 10])(P.at(sOf(LEN))) : side(sOf(684), step >= 6 ? -90 : -80); $('ex-pA').setAttribute('cx', f1(pA[0])); $('ex-pA').setAttribute('cy', f1(pA[1]));
-        const lA = step === 8 && p > .5 ? side(sOf(660), 96) : [-9999, -9999]; $('ex-lA').setAttribute('cx', f1(lA[0])); $('ex-lA').setAttribute('cy', f1(lA[1]));   // zijpad RNA-lot
+        const lA = step === 8 && p > .5 ? side(sOf(520), 120) : [-9999, -9999]; $('ex-lA').setAttribute('cx', f1(lA[0])); $('ex-lA').setAttribute('cy', f1(lA[1]));   // zijpad RNA-lot
         svg.querySelector('[data-node="mrnaafbraak"]').setAttribute('opacity', step === 8 ? f1(sub(p, .5, .7)) : '0');
 
         // cap + CBC / eIF4E
@@ -219,7 +219,7 @@ export default {
           ej += prot(q[0], q[1] - k * 90, 62, 34, 'EJC', '#7a62e0', 1 - k, 18);
         });
         $('ex-ejc').innerHTML = ej;
-        const eq = side(sOf(D.ejc[0]), -30); $('ex-eA').dataset.pos = 'below'; $('ex-eA').setAttribute('cx', f1(eq[0])); $('ex-eA').setAttribute('cy', f1(eq[1]));
+        const eq = side(sOf(D.ejc[0]), -52); $('ex-eA').dataset.pos = 'below'; $('ex-eA').setAttribute('cx', f1(eq[0])); $('ex-eA').setAttribute('cy', f1(eq[1]));
         svg.querySelector('[data-node="nmd"]').setAttribute('opacity', step <= 2 || (step === 7 && rd < D.ejc[0] - 20) ? '1' : '0');
 
         // ribosomen
@@ -241,7 +241,7 @@ export default {
         }
         $('ex-ribo').innerHTML = rb;
         const rA = step === 8 ? P.at(sOf(10)) : step === 7 ? P.at(sOf(Math.max(0, rd))) : [-9999, -9999];
-        $('ex-rA').setAttribute('cx', f1(rA[0] + (step === 8 ? 70 : 0))); $('ex-rA').setAttribute('cy', f1(rA[1] + (step === 8 ? 118 : -100)));
+        $('ex-rA').setAttribute('cx', f1(rA[0] + (step === 8 ? 0 : 0))); $('ex-rA').setAttribute('cy', f1(rA[1] + (step === 8 ? 118 : -100)));
         $('ex-rA').dataset.pos = step === 8 ? 'below' : '';
         svg.querySelector('[data-node="initiatie"]').setAttribute('opacity', step >= 7 ? '1' : '0');
 

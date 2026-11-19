@@ -75,7 +75,7 @@ export default {
     const $ = id => svg.getElementById(id);
     /* mRNA-schema: cap – 5'UTR – ORF – 3'UTR – poly(A) */
     const mrnaGlyph = (x, y, w, lab = 1) => {
-      const seg = [[.00, .10, C.cap, "5′UTR"], [.10, .78, C.prot2, T2('coderend (antigeen)', 'coding (antigen)')], [.78, .90, C.cap, "3′UTR"]];
+      const seg = [[.00, .10, C.cap, T2('5′-UTR', '5′ UTR')], [.10, .78, C.prot2, T2('coderend (antigeen)', 'coding (antigen)')], [.78, .90, C.cap, T2('3′-UTR', '3′ UTR')]];
       let s = `<g><circle cx="${f1(x - 18)}" cy="${f1(y + 13)}" r="17" fill="${C.cap}" stroke="${C.rna}" stroke-width="2.5"/>${txt(x - 18, y + 18, 'm⁷G', '#3a1a05', 12)}`;
       for (const [a, b, col, name] of seg) {
         s += `<rect x="${f1(x + a * w)}" y="${f1(y)}" width="${f1((b - a) * w)}" height="26" rx="8" fill="${col}" opacity=".85"/>`;
@@ -118,9 +118,10 @@ export default {
 
         /* route rechts */
         let px = RX, py = 60, pr = 58, endo = '', escape = 0;
-        // stap 2: het deeltje landt op het membraan, dat er een kuil rond vormt (k → .97); bij p = .6 snoert het blaasje af
-        const kn = step === 2 && p < .6 ? .97 * ease(sub(p, .15, .58)) : 0, los = step === 2 && p >= .6;
-        if (step === 2) py = los ? lerp(MEM + KR * .94, 300, ease(sub(p, .6, .9))) : Math.max(lerp(60, MEM - 62, ease(sub(p, 0, .15))), MEM + KR * (2 * kn - 1));
+        // stap 2: het deeltje landt op het membraan, dat er een kuil rond vormt (k → .97, knop met hals); bij p = .6 snoert het blaasje af
+        // en ligt het meteen helemaal onder het plasmamembraan (geen twee dubbellagen door elkaar), zoals in endocytose.js
+        const kn = step === 2 && p < .6 ? .97 * ease(sub(p, .15, .5)) : 0, los = step === 2 && p >= .6;   // vanaf p = .5 hangt de knop aan een smalle hals (zoals in endocytose)
+        if (step === 2) py = los ? lerp(MEM + KR + 23, 300, ease(sub(p, .6, .9))) : Math.max(lerp(60, MEM - 62, ease(sub(p, 0, .15))), MEM + KR * (2 * kn - 1));
         else if (step === 3) { const u = ease(sub(p, .1, .8)); py = lerp(300, 460, u); }
         else if (step === 4) { const u = ease(sub(p, .1, .7)); py = lerp(460, 560, u); escape = ease(sub(p, .45, .95)); }
         else if (step >= 5) { py = 560; escape = 1; }
@@ -144,7 +145,8 @@ export default {
           endo = blaasjeOpen(px, py, 104, k > .02 ? [[124 - 22 * k, 124 + 22 * k], [40, 40 + 14 * k]] : [], { w: 20 });
         }
         $('ln-endo').innerHTML = step >= 2 ? endo : '';
-        $('ln-endo-a').setAttribute('cy', f1(py - 110));
+        // stap 4: onder het blaasje (boven staat het pH-kader); vanaf stap 5 links ernaast (onder staat de notitie over de ontsnapping)
+        $('ln-endo-a').setAttribute('cx', f1(step >= 4 ? px - 230 : px)); $('ln-endo-a').setAttribute('cy', f1(step === 3 ? py + 116 : step >= 4 ? py + 10 : py - 110)); $('ln-endo-a').dataset.pos = step === 3 ? 'below' : '';
 
         /* ontsnapt mRNA + ribosomen */
         const rOn = step === 4 ? ease(sub(p, .6, 1)) : step >= 5 ? 1 : 0;
@@ -160,9 +162,9 @@ export default {
              ${[0, 1, 2, 3].map(i => { const x = 900 + i * 52, y = ERT - 32;   // ER-gebonden ribosoom: kleine eenheid boven het mRNA, grote eenheid op het Sec61-kanaal
                const kc = step >= 5 ? (step === 5 ? ease(sub(p, .1, .7)) : 1) : .25, L = (6 + i * 5) * kc;   // keten groeit uit de grote eenheid het ER in
                return sec61(x, ERT, { mw: 10, s: .3 }) + ribosoomKlein(x, y, { s: 1.9 }) + `<path d="M${x},${ERT - 4} v8 q${f1(-L * .4)},${f1(L * .5)} ${f1(L * .1)},${f1(L)}" stroke="${C.chain}" stroke-width="4" fill="none" stroke-linecap="round"/>`; }).join('')}
-             ${step >= 5 ? `<g opacity="${f1(step === 5 ? ease(sub(p, .45, .85)) : 1)}">
-               ${tmHelix(1150, ERT - 9, ERT + 9, C.prot, 1, 9)}${eiwit(1150, ERT + 26, 24, 15, C.prot, { seed: 33, bumps: .14 })}
-               ${tmHelix(1215, ERT - 9, ERT + 9, C.prot, 1, 9)}${eiwit(1215, ERT + 26, 24, 15, C.prot, { seed: 34, bumps: .14 })}
+             ${step >= 5 ? `<g opacity="${f1(step === 5 ? ease(sub(p, .45, .85)) : 1)}"><!-- membraananker (TM-helix) door de ER-dubbellaag, het grote deel in het lumen (later buiten de cel) -->
+               ${tmHelix(1150, ERT - 11, ERT + 12, C.prot, 1, 10)}${eiwit(1150, ERT + 23, 24, 15, C.prot, { seed: 33, bumps: .14 })}
+               ${tmHelix(1215, ERT - 11, ERT + 12, C.prot, 1, 10)}${eiwit(1215, ERT + 23, 24, 15, C.prot, { seed: 34, bumps: .14 })}
                <g opacity="${f1(step === 5 ? 1 : 0)}">${txt(1075, ERY + 76, T2('antigeen-eiwit in het ER-membraan', 'antigen protein in the ER membrane'), C.prot, 20)}
                ${txt(1075, ERY + 104, T2('→ via het Golgi naar het celoppervlak', '→ via the Golgi to the cell surface'), C.muted, 19)}</g></g>` : ''}` : '';
 
@@ -180,7 +182,7 @@ export default {
         let no = lab;
         if (step === 4) no += `<g opacity="${f1(ease(sub(p, .25, .6)))}">${txt(RX + 132, 540, T2('+ lading bindt het', '+ charge binds the'), LIP, 22, 'start')}
           ${txt(RX + 132, 570, T2('negatieve membraan', 'negative membrane'), LIP, 22, 'start')}
-          ${txt(RX + 150, 700, T2('orde van grootte: enkele % ontsnapt', 'order of magnitude: a few % escapes'), C.muted, 20)}</g>`;
+          ${txt(RX + 150, 700, T2('orde van grootte: enkele % ontsnapt', 'typically only a few % escape'), C.muted, 20)}</g>`;
         if (step === 6) no += `<g opacity="${f1(ease(sub(p, .3, .7)))}">${txt(1140, 300, T2('geen reverse transcriptase · geen integratie', 'no reverse transcriptase · no integration'), C.danger, 21)}
 </g>`;
         $('ln-notes').innerHTML = no;

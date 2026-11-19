@@ -183,7 +183,7 @@ const scene = {
           if (k > .01) {
             const x0 = 1030, w = 545, rows = [
               [T2('wanneer?', 'when?'), T2('altijd', 'always'), T2('na het kopiëren', 'after copying')],
-              [T2('snelheid', 'speed'), T2('± 30 min', '± 30 min'), T2('uren', 'hours')],
+              [T2('snelheid', 'speed'), T2('± 30 min', '≈ 30 min'), T2('uren', 'hours')],
               [T2('letters', 'letters'), T2('soms kwijt', 'sometimes lost'), T2('nauwkeurig', 'accurate')],
               [T2('voorbeeld', 'template'), T2('geen', 'none'), T2('zusterkopie', 'sister copy')],
             ];
@@ -232,7 +232,7 @@ export default with3d(scene, {
         title: { nl: 'Echt beeld: een eiwitdraad rond de losse staart', en: 'Real image: a protein filament around the loose tail' },
         text: { nl: 'Veel dezelfde eiwitten vormen samen een spiraal, met de losse DNA-streng in het midden.', en: 'Many copies of the same protein form a spiral, with the single DNA strand in the middle.' },
         show: [...R9.map((ch, i) => sp({ chain: ch }, i % 2 ? RAD2 : RAD, 1.5)), sp({ chain: 'W' }, C.dna, 3.6),
-          { ...sp({ chain: 'H' }, RAD2, 1.5), label: { nl: 'één eiwit', en: 'one protein' } },
+          { ...sp({ chain: 'H' }, RAD2, 1.5), label: { nl: 'één eiwit', en: 'RAD51 (one unit)' } },
           { ...sp({ chain: 'W', resi: 15 }, C.dna, 3.6), label: { nl: 'DNA-staart', en: 'DNA tail' } }] },
     ],
   },

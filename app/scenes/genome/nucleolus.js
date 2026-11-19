@@ -105,7 +105,7 @@ export default {
     pre += `<g id="nl-prod"></g>`;
     return svgOpen() + `
     <g id="nl-left">
-      <g id="nl-chr" data-node="chromosoom" data-color="${C.dna}" data-label="${T2('Acrocentrische chromosomen (NOR)', 'Acrocentric chromosomes (NOR)')}">${chr}<circle data-anchor="chromosoom" cx="320" cy="262" r="1" fill="none"/></g>
+      <g id="nl-chr" data-node="chromosoom" data-color="${C.dna}" data-label="${T2('Acrocentrische chromosomen (NOR)', 'Acrocentric chromosomes (NOR)')}">${chr}<circle data-anchor="chromosoom" cx="420" cy="300" r="1" fill="none"/></g>
       ${nuc}${gc}${fc}
       <g id="nl-lab"></g>
       <rect x="${FCS[1][0] - 60}" y="${FCS[1][1] - 60}" width="120" height="120" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="6 4"/>
@@ -118,7 +118,7 @@ export default {
     </g>
     <g data-node="ribogenese" data-color="${C.rrna}" data-label="${T2('Ribosoombiogenese', 'Ribosome biogenesis')}"><g id="nl-exp"></g><circle data-anchor="ribogenese" cx="560" cy="640" r="1" fill="none"/></g>
     <g data-node="polymerasen" data-color="${C.prot}" data-label="${T2('RNA-polymerase I', 'RNA polymerase I')}" data-nolabel id="nl-mil">${mil}<g id="nl-tree"></g></g>
-    <g data-node="ribosoom" data-color="${C.rrna}" data-label="${T2('Ribosoom', 'Ribosome')}" id="nl-pre">${pre}<circle data-anchor="ribosoom" cx="1250" cy="790" r="1" fill="none"/></g>
+    <g data-node="ribosoom" data-color="${C.rrna}" data-label="${T2('Ribosoom', 'Ribosome')}" id="nl-pre">${pre}<circle data-anchor="ribosoom" cx="1150" cy="708" r="1" fill="none"/></g>
     </svg>`;
   },
   init(svg) {

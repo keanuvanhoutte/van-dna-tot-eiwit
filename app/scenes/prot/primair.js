@@ -33,7 +33,7 @@ export default {
     ST(8500, FULL, 'Kleur = eigenschap', 'Colour = property', 'Elke letter heeft een eigenschap, bv. waterschuw. Dat patroon bepaalt mee hoe de keten vouwt.', 'Each letter has a property, e.g. water-avoiding. That pattern helps decide how the chain folds.'),
     ST(8500, FULL, 'De spiralen zitten al in de volgorde', 'The spirals are already in the order', 'Onder de letters: de acht spiralen (helices A–H) in het eiwit. Waar ze komen, ligt al in de volgorde vast.', 'Below the letters: the eight spirals (helices A–H) in the protein. Where they form is already set by the order.'),
     ST(9000, cam(765, 410, 1380), 'Eén letter verschil: sikkelcelziekte', 'One letter different: sickle-cell disease', 'Eén letter in het codon voor plaats 6 is anders: Glu (negatief) wordt Val (waterschuw).', 'One letter in the codon for position 6 is different: Glu (negative) becomes Val (water-avoiding).'),
-    ST(7500, FULL, 'Residu, peptide, eiwit', 'Residue, peptide, protein', 'Een ingebouwd aminozuur heet een residu. Tot ± 50 residuen heet de keten een peptide, daarboven een eiwit.', 'An amino acid built into a chain is called a residue. Up to ± 50 residues it is a peptide, above that a protein.'),
+    ST(7500, FULL, 'Residu, peptide, eiwit', 'Residue, peptide, protein', 'Een ingebouwd aminozuur heet een residu. Tot ± 50 residuen heet de keten een peptide, daarboven een eiwit.', 'An amino acid built into a chain is called a residue. Up to ~50 residues it is a peptide, above that a protein.'),
   ],
   svg() {
     return svgOpen() + `
@@ -143,7 +143,7 @@ export default {
             ex += `<rect x="330" y="260" width="940" height="250" rx="20" fill="#0b1224" fill-opacity=".94" stroke="#2a3550" stroke-width="2"/>` +
               txt(800, 320, T2('residu = één aminozuur in de keten', 'residue = one amino acid in the chain'), C.text, 26) +
               `<g font-family="Inter" font-weight="700" font-size="24">` +
-              `<rect x="380" y="370" width="250" height="90" rx="14" fill="rgba(95,211,230,.14)" stroke="#5fd3e6"/>` + txt(505, 405, 'peptide', '#5fd3e6', 26) + txt(505, 442, T2('tot ± 50 residuen', 'up to ± 50 residues'), C.muted, 22) +
+              `<rect x="380" y="370" width="250" height="90" rx="14" fill="rgba(95,211,230,.14)" stroke="#5fd3e6"/>` + txt(505, 405, 'peptide', '#5fd3e6', 26) + txt(505, 442, T2('tot ± 50 residuen', 'up to ~50 residues'), C.muted, 22) +
               `<rect x="680" y="370" width="540" height="90" rx="14" fill="rgba(155,123,255,.14)" stroke="${C.prot}"/>` + txt(950, 405, T2('polypeptide / eiwit', 'polypeptide / protein'), C.prot, 26) + txt(950, 442, T2('bv. β-globine: 146 residuen', 'e.g. β-globin: 146 residues'), C.muted, 22) + '</g>';
           }
         }

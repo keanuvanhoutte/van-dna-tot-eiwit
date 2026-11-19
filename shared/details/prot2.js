@@ -200,7 +200,7 @@ export default {
       why: 'Disulfidebruggen stabiliseren vooral eiwitten die de cel verlaten (hormonen, antilichamen, verteringsenzymen). Niet elke Cys vormt echter een brug.',
     },
     en: {
-      kort: 'A disulfide bridge is a strong link between two [[cysteines|cysteine]] that folding has brought next to each other. It works like a staple that locks the shape. Such bridges form mainly in the [[ER|er]] and mostly reinforce proteins that leave the cell.',
+      kort: 'A disulfide bond is a strong link between two [[cysteines|cysteine]] that folding has brought next to each other. It works like a staple that locks the shape. Such bridges form mainly in the [[ER|er]] and mostly reinforce proteins that leave the cell.',
       what: 'A disulfide bond is a covalent S–S bond between the thiol groups (–SH) of two cysteines, which may be far apart in the sequence but come together through folding. Forming it is an oxidation. In humans this happens mainly in the oxidising lumen of the ER, helped by protein disulfide isomerase (PDI); in the reducing cytosol cysteines mostly stay free.',
       how: [
         'Folding brings two Cys side chains close together.',

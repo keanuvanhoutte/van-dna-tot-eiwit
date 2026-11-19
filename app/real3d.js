@@ -15,7 +15,6 @@ import { inspect, analyseProtein, principalFrame, applyFrame, WATER_IONS, FAV, A
 const BG = '#0d1426';                                         // = var(--bg-2), de paneelkleur
 const SS = { helix: '#9b7bff',   /* α-helix paars (C.prot), zoals in de 2D-scène secundair */  sheet: '#ffc247', other: '#8a93a8' };
 const HB = '#7cc4ff', AT = '#ffc247', GC = '#7fdc6a', GLY = '#5fd3e6';
-const PAL = ['#9b7bff', '#7fdc6a', '#5fd3e6', '#f06bc0', '#ffc247', '#c9a574', '#ff8a3d', '#6f5bd6'];
 const ELEM = { N: '#3050f8', O: '#ff3b3b', P: '#ff8000', S: '#ffd84a', H: '#e8edf7', FE: '#e06633', ZN: '#7d80b0', MG: '#8aff00' };
 
 const T = {
@@ -43,7 +42,7 @@ const T = {
   nFav: { nl: 'in een gunstig gebied', en: 'in a favoured region' },
   counted: { nl: 'geteld: alle bouwstenen behalve glycine en proline', en: 'counted: all building blocks except glycine and proline' },
   nSS: { nl: 'bouwstenen in helix · blad · rest', en: 'building blocks in helix · sheet · other' },
-  helix: { nl: 'helix', en: 'helix' }, sheet: { nl: 'blad (β)', en: 'sheet (β)' }, other: { nl: 'rest', en: 'other' }, hbLeg: { nl: 'waterstofbrug', en: 'hydrogen bond' },
+  helix: { nl: 'α-helix', en: 'α-helix' }, keyProt: { nl: 'eiwit', en: 'protein' }, keyDna: { nl: 'DNA', en: 'DNA' }, keyRna: { nl: 'RNA', en: 'RNA' }, keyTrna: { nl: 'tRNA', en: 'tRNA' }, keyTitle: { nl: 'Kleuren', en: 'Colours' }, sheet: { nl: 'blad (β)', en: 'sheet (β)' }, other: { nl: 'rest', en: 'other' }, hbLeg: { nl: 'waterstofbrug', en: 'hydrogen bond' },
   ramaH: { nl: 'Twee draaipunten per bouwsteen (φ en ψ)', en: 'Two hinges per building block (φ and ψ)' },
   fav: { nl: 'gunstig', en: 'favoured' }, allow: { nl: 'toegestaan', en: 'allowed' },
   glyLeg: { nl: 'glycine heeft meer vrijheid', en: 'glycine has more freedom' }, proLeg: { nl: 'proline', en: 'proline' },
@@ -110,6 +109,7 @@ export function createReal3D({ stage, button, pause, resume }) {
     <div class="r3body">
       <div class="r3view" id="r3View"></div>
       <div class="r3load" id="r3Load"></div>
+      <div class="r3key" id="r3Key" hidden></div>
       <aside class="r3side" id="r3Side" hidden></aside>
     </div>
     <div class="r3foot"><span id="r3Note"></span><span id="r3Help">${t('help')}</span><span class="r3src" id="r3Src"></span></div>`;
@@ -128,18 +128,34 @@ export function createReal3D({ stage, button, pause, resume }) {
       if (!chainIdx.has(a.chain)) chainIdx.set(a.chain, chainIdx.size);
       if (a.atom === "C4'") nuc.add(a.chain + '|' + a.resi);
       if (a.atom === "O2'") rnaRes.add(a.chain + '|' + a.resi);
+      // ingekorte kopie (één P per nucleotide): P telt als nucleotide; RNA/DNA uit de residunaam (A/C/G/U vs DA/DC/DG/DT)
+      if (info?.coarse && a.atom === 'P' && !a.hetflag) { nuc.add(a.chain + '|' + a.resi); if (!/^D[ACGTU]$/.test(a.resn)) rnaRes.add(a.chain + '|' + a.resi); }
       if (a.atom === 'CA' && !a.hetflag) protChains.add(a.chain);
     }
-    const one = protChains.size === 1, rng = { lo: Infinity, hi: -Infinity };
-    if (one) for (const a of atoms) if (a.atom === 'CA' && !a.hetflag) { rng.lo = Math.min(rng.lo, a.resi); rng.hi = Math.max(rng.hi, a.resi); }
-    const pc = [...protChains];
-    const rnaCol = nodeId === 'trna' ? '#ffc247' : '#ff8a3d';
+    /* standaardweergave volgt dezelfde kleurafspraak als Atoomniveau en de 2D-scènes: α-helix paars, β-blad geel, rest grijs;
+       DNA blauw (twee tinten per streng), RNA oranje (tRNA geel). Voor het eerste eiwit gebruiken we dezelfde DSSP-achtige
+       toewijzing als Atoomniveau (atomic.js); voor andere ketens de toewijzing van 3Dmol (a.ss: h/s/c). Ingekorte kopieën
+       (één bolletje per bouwsteen) hebben geen secundaire structuur: daar is eiwit gewoon paars. */
+    const rnaCol = nodeId === 'trna' ? '#ffc247' : '#ff8a3d', coarse = !!info?.coarse;
+    const ssCol = a => {
+      if (coarse) return SS.helix;
+      const k = prot && a.chain === prot.chain ? ssOf.get(a.resi) : a.ss === 'h' ? 'helix' : a.ss === 's' ? 'sheet' : 'other';
+      return SS[k ?? 'other'];
+    };
+    let hasDna = false, hasRna = false;
+    for (const k of nuc) if (rnaRes.has(k)) hasRna = true; else hasDna = true;
     mol = a => {
       const k = a.chain + '|' + a.resi;
       if (nuc.has(k)) return rnaRes.has(k) ? rnaCol : (chainIdx.get(a.chain) % 2 ? '#9cc0ff' : '#4f8ff7');
-      if (one && protChains.has(a.chain)) { const u = (a.resi - rng.lo) / Math.max(1, rng.hi - rng.lo); return hsl(240 - 240 * u, .75, .62); }
-      return PAL[Math.max(0, pc.indexOf(a.chain)) % PAL.length];
+      if (protChains.has(a.chain)) return ssCol(a);
+      return '#c9d2e4';
     };
+    /* legende bij de standaardweergave */
+    const key = [];
+    if (protChains.size) { if (coarse) key.push([SS.helix, t('keyProt')]); else for (const k of ['helix', 'sheet', 'other']) key.push([SS[k], t(k)]); }
+    if (hasDna) key.push(['#4f8ff7', t('keyDna')]);
+    if (hasRna) key.push([rnaCol, t(nodeId === 'trna' ? 'keyTrna' : 'keyRna')]);
+    $('r3Key').innerHTML = `<b>${t('keyTitle')}</b>` + key.map(([c, l]) => `<span><i style="background:${c}"></i>${l}</span>`).join('');
   }
   const elemCol = a => (a.elem === 'C' ? mol(a) : ELEM[a.elem?.toUpperCase()] ?? '#c9d2e4');
   const NOT_WATER = { not: { resn: WATER_IONS } };
@@ -158,6 +174,7 @@ export function createReal3D({ stage, button, pause, resume }) {
   function render() {
     if (!v) return;
     v.removeAllLabels(); v.removeAllShapes(); v.setClickable({}, false, () => {});
+    $('r3Key').hidden = atomic;            // Atoomniveau heeft zijn eigen legende in het zijpaneel
     if (!atomic) baseStyle();
     else if (mode === 'prot') protStyle();
     else dnaStyle();
@@ -422,8 +439,3 @@ export function createReal3D({ stage, button, pause, resume }) {
   };
 }
 const xyz = a => ({ x: a.x, y: a.y, z: a.z });
-/* 3Dmol kent geen hsl()-tekst in colorfunc → zelf omzetten naar #rrggbb (regenboog van N- naar C-uiteinde) */
-function hsl(h, s, l) {
-  const f = n => { const k = (n + h / 30) % 12, c = l - s * Math.min(l, 1 - l) * Math.max(-1, Math.min(k - 3, 9 - k, 1)); return Math.round(255 * c).toString(16).padStart(2, '0'); };
-  return `#${f(0)}${f(8)}${f(4)}`;
-}

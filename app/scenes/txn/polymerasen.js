@@ -152,7 +152,7 @@ export default {
             am += txt(ax(.01) - 20, y + 8, a.n, a.col, 22, 'end', 800);
             am += `<rect x="${f1(ax(.01))}" y="${y - 14}" width="${f1(ax(1000) - ax(.01))}" height="28" rx="6" fill="${a.col}" fill-opacity=".06" stroke="${a.col}" stroke-opacity=".75" stroke-width="2"/>`;
             am += `<rect x="${f1(ax(.01))}" y="${y - 14}" width="${f1(Math.max(0, xe - ax(.01)))}" height="28" rx="6" fill="${a.col}" fill-opacity="${a.res ? .25 : .7}" ${a.res ? `stroke="${a.col}" stroke-dasharray="5 4"` : ''}/>`;
-            if (g > .9) am += a.res ? txt(ax(1000) - 10, y + 6, T2('niet geremd bij ≤ 200 → resistent', 'not inhibited at ≤ 200 → resistant'), '#fff', 20, 'end')
+            if (g > .9) am += a.res ? txt(ax(1000) - 10, y + 6, T2('niet geremd bij ≤ 200 → resistent', 'not inhibited even at 200 → resistant'), '#fff', 20, 'end')
               : txt(xe + 12, y + 6, `${String(a.c).replace('.', L({ nl: ',', en: '.' }))} µg/ml`, '#fff', 20, 'start', 700);
           });
           am += txt(800, 772, T2('humane KB-cellen · Weinmann et al., PNAS 1974', 'human KB cells · Weinmann et al., PNAS 1974'), C.muted, 19) + '</g>';

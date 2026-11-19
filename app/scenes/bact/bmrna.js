@@ -125,7 +125,7 @@ export default {
             cl += `<g transform="translate(0 ${f1(dy)})" opacity="${f1(step === 2 ? sub(p, .05, .2) : 1)}"><path d="M${x - 60},${NY - 54} V${NY - 190} H${x + 60} V${NY - 54}" fill="${C.trna}" fill-opacity=".25" stroke="${C.trna}" stroke-width="3"/>` +
               [...'UAC'].map((c, i) => nt(bx(14 + i), NY - 50, c, 46, 40)).join('') +
               `<circle cx="${x}" cy="${NY - 222}" r="30" fill="${C.chain}" fill-opacity=".85"/>` + txt(x, NY - 214, 'fMet', '#0a1224', 20, 'middle', 800) + '</g>';
-            if (step === 2) cl += `<g opacity="${f1(sub(p, .55, .75))}">` + txt(bx(17) + 40, NY - 214, T2('formyl-methionine', 'formyl-methionine'), C.chain, 24, 'start', 700) + txt(bx(17) + 40, NY - 180, T2('mens: gewone Met', 'human: plain Met'), C.muted, 22, 'start') + '</g>';
+            if (step === 2) cl += `<g opacity="${f1(sub(p, .55, .75))}">` + txt(bx(17) + 40, NY - 214, T2('N-formylmethionine', 'N-formylmethionine'), C.chain, 24, 'start', 700) + txt(bx(17) + 40, NY - 180, T2('mens: gewone Met', 'human: plain Met'), C.muted, 22, 'start') + '</g>';
           }
           cl += '</g>';
         }

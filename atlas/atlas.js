@@ -153,7 +153,7 @@ const T = {
   eHand: { nl: 'Draairichting', en: 'Turns' }, eRight: { nl: 'rechtsom ↻', en: 'right-handed ↻' }, eLeft: { nl: 'linksom ↺', en: 'left-handed ↺' },
   eBpTurn: { nl: 'Treden per volledige draai', en: 'Steps per full turn' },
   eRise: { nl: 'Afstand tussen twee treden', en: 'Distance between two steps' },
-  eWidth: { nl: 'Breedte van de helix', en: 'Width of the helix' },
+  eWidth: { nl: 'Breedte van de helix<br><small>buitendiameter, van atoom tot atoom</small>', en: 'Width of the helix<br><small>outer diameter, atom to atom</small>' },
   eNbp: { nl: 'Basenparen in dit stukje', en: 'Base pairs in this piece' },
   eQuart: { nl: 'Vlakken van vier G’s', en: 'Layers of four G’s' }, eCC: { nl: 'C–C-paren', en: 'C–C pairs' },
   eThird: { nl: 'Basen van de derde streng', en: 'Bases of the third strand' },
@@ -704,7 +704,9 @@ function measuredTable(e, an, method, res) {
     row(t('eHand'), h.hand === 'r' ? t('eRight') : t('eLeft'), ref('', t('eRight')));
     row(t('eBpTurn'), `${num(h.bpt)}${est}`, ref('', num(10.5)));
     row(t('eRise'), `${num(h.rise / 10, 2)} nm${est}`, ref('', `${num(.34, 2)} nm`));
-    row(t('eWidth'), `${num(h.diam / 10)} nm${est}`, ref('', `${num(2.0)} nm`));
+    // buitendiameter (98e percentiel van de afstand tot de as, alle atomen): dezelfde maat als de ≈ 2,0 nm voor B-DNA in de handboeken
+    // (de fosfaat–fosfaatdiameter h.diam is kleiner en zou Z-DNA te smal doen lijken)
+    row(t('eWidth'), `${num(h.outer / 10)} nm${est}`, ref('', `${num(2.0)} nm`));
     row(t('eNbp'), h.nbp);
     if (e.bent || e.custom) row(t('bentRow'), `<span class="wr">${t(e.custom ? 'autoTxt' : 'bentTxt')}</span>`);
   }

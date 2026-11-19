@@ -74,7 +74,7 @@ export default {
       <g data-node="secundair" data-color="${C.prot}" data-label="${T2('α-helix → secundaire structuur', 'α-helix → secondary structure')}">
         <rect x="${X(-100)}" y="${Y(10)}" width="${X(-30) - X(-100)}" height="${Y(-80) - Y(10)}" fill="transparent"/>
         ${reg('ra-la', X(-20), Y(-72), T2('α (rechts)', 'α (right)'), 'start')}
-        <circle data-anchor="secundair" cx="${X(-65)}" cy="${Y(-100)}" r="1" fill="none"/>
+        <circle data-anchor="secundair" cx="1245" cy="720" r="1" fill="none"/>
       </g>
       ${reg('ra-ll', X(105), Y(85), T2('α (links)', 'α (left)'), 'start')}
       ${reg('ra-lf', X(90), Y(-120), T2('verboden', 'forbidden'), 'middle', '#93a0bb')}

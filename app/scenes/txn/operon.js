@@ -180,7 +180,7 @@ export default {
           pr += `<g opacity="${f1(clamp((1 - u) * 12))}">` + prot(x, Y0 - 40, 34, 26, K.rnap, 1, 93) + '</g>';
         }
         $('op-mrna').innerHTML = mr;
-        setA('op-trA', 1440, 300, (step === 5 || step === 6) && n > 0);
+        setA('op-trA', 1390, 330, (step === 5 || step === 6) && n > 0);   // niet aan de rechterrand (anders afgesneden)
 
         // eiwitproducten (stap 6)
         if (step === 6) {

@@ -142,7 +142,7 @@ export default {
         const fade = sub(p, .12, .3), pc = pos[1], p76 = pos[76];
         if (built >= 1) o += txt(pc[0] - 24 + 10 * m, pc[1] + 6 + 26 * m, "5′", '#fff', 24, 'end', 700);
         if (built >= 76) o += txt(p76[0] + 22, p76[1] - 8, "3′", '#fff', 24, 'start', 700);
-        if (i0 === 0) o += txt(800, 820, `${built} / 76 nt`, C.muted, 26, 'middle', 700);
+        if (i0 === 0) o += txt(1300, 780, `${built} / 76 nt`, C.muted, 26, 'middle', 700);
         if (i0 === 1) {
           const lab = [['acc', [750, 250], 'end'], ['d', [470, 330], 'middle'], ['t', [1130, 330], 'middle'], ['ac', [930, 700], 'start'], ['v', [960, 560], 'start']];
           lab.forEach(([k, [x, y], an], j) => { const d = DOM.find(q => q.k === k); o += `<g opacity="${f1(sub(p, .1 + j * .1, .25 + j * .1))}">${txt(x, y, L(d), d.col, 28, an, 800)}</g>`; });
@@ -154,7 +154,7 @@ export default {
         if (aaOn > 0) {
           const ax = p76[0] + 30 * aaOn + 22, ay = p76[1] - 40 * aaOn - 10;
           aaS = `<g opacity="${f1(aaOn)}"><line x1="${f1(p76[0])}" y1="${f1(p76[1])}" x2="${f1(ax)}" y2="${f1(ay)}" stroke="${C.chain}" stroke-width="4"/>${aa(ax, ay, 'F', 24)}</g>`;
-          $('tr-aaA').setAttribute('cx', f1(ax + 110)); $('tr-aaA').setAttribute('cy', f1(ay + 6));
+          $('tr-aaA').setAttribute('cx', f1(ax + 150)); $('tr-aaA').setAttribute('cy', f1(ay - 34));   // rechtsboven het aminozuur, niet erop
         } else { $('tr-aaA').setAttribute('cx', f1(p76[0])); $('tr-aaA').setAttribute('cy', f1(p76[1] - 60)); }
         $('tr-aa').innerHTML = aaS;
         if (i0 === 2) {

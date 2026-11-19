@@ -64,7 +64,7 @@ const SC = {
       <g id="bg-start">${box('start', '#7fdc6a', 'ATG', 22)}</g><g id="bg-stop">${box('stop', C.danger, 'TAA', 22)}</g>
       <g id="bg-term">${box('term', COL.term, 'terminator', 22, 64)}</g>
       <g data-node="bterm" data-color="${COL.term}" data-label="${T2('Hoe de terminator werkt', 'How the terminator works')}"><circle data-anchor="bterm" cx="1110" cy="40" r="1" fill="none"/><rect x="1109" y="39" width="2" height="2" fill="none"/></g>
-      <g data-node="bsplicing" data-color="${C.intron}" data-label="${T2('Introns die zichzelf uitknippen (3D)', 'Introns that cut themselves out (3D)')}"><circle data-anchor="bsplicing" cx="330" cy="92" r="1" fill="none"/><rect x="329" y="91" width="2" height="2" fill="none"/></g>
+      <g data-node="bsplicing" data-color="${C.intron}" data-label="${T2('Introns die zichzelf uitknippen (3D)', 'Introns that cut themselves out (3D)')}"><circle data-anchor="bsplicing" cx="430" cy="92" r="1" fill="none"/><rect x="329" y="91" width="2" height="2" fill="none"/></g>
       <g data-node="breplicatie" data-color="${K.ori}" data-label="${T2('Replicatie vanaf oriC', 'Replication from oriC')}"><circle data-anchor="breplicatie" cx="1250" cy="92" r="1" fill="none"/><rect x="1249" y="91" width="2" height="2" fill="none"/></g>
       <g data-node="gen" data-color="${C.text}" data-label="${T2('Vergelijk: menselijk gen', 'Compare: human gene')}"><rect x="1400" y="39" width="1" height="1" fill="none"/><circle data-anchor="gen" cx="1400" cy="40" r="1" fill="none"/></g>
     </g>

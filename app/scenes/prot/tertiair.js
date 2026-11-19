@@ -33,7 +33,7 @@ export default molScene({
     </g>
     <g class="a-hs2" data-node="disulfide" data-color="#ffc247" data-label="${T2('Disulfidebruggen', 'Disulfide bonds')}">
       <rect x="1030" y="560" width="520" height="50" rx="12" fill="rgba(255,194,71,.10)" stroke="#ffc247" stroke-dasharray="5 4"/>
-      <text x="1290" y="593" font-size="22" text-anchor="middle" fill="#ffc247" font-family="Inter" font-weight="600">${T2('S–S-bruggen (in andere eiwitten)', 'S–S bridges (in other proteins)')}</text>
+      <text x="1290" y="593" font-size="22" text-anchor="middle" fill="#ffc247" font-family="Inter" font-weight="600">${T2('S–S-bruggen (in andere eiwitten)', 'S–S bonds (in other proteins)')}</text>
       <circle data-anchor="disulfide" cx="1290" cy="560" r="1" fill="none"/>
     </g>`,
   overlayUpdate(ov, t, s) {
@@ -152,14 +152,14 @@ export default molScene({
         T2('zoutbrug = ionpaar (+ en −)', 'salt bridge = ion pair (+ and −)'), T2('H-brug = gedeeld H tussen N/O', 'H-bond = shared H between N/O')]),
       panelKey: (t, s, c) => c.data.sb?.length ?? 0,
     }),
-    ST(8000, 'Zwavelbruggen? Hier niet', 'Sulfur bridges? Not here', 'Twee cysteïnes kunnen een sterke zwavelbrug maken. Hier niet: in de celvloeistof lukt dat meestal niet.', 'Two cysteines can form a strong sulfur bridge. Not here: in the cell fluid that usually does not work.', {
+    ST(8000, 'Zwavelbruggen? Hier niet', 'Disulfide bonds? Not here', 'Twee cysteïnes kunnen een sterke zwavelbrug maken. Hier niet: in de celvloeistof lukt dat meestal niet.', 'Two cysteines can form a strong disulfide bond. Not here: in the cell fluid that usually does not work.', {
       show(c) {
         c.style(B, cartoon('#465171'));
         c.style({ chain: 'B', resn: 'CYS' }, { stick: { radius: .3, colorscheme: 'yellowCarbon' }, sphere: { radius: .5, colorscheme: 'yellowCarbon' } });
         for (const r of [93, 112]) { const a = c.sel({ chain: 'B', resi: r, atom: 'SG' }); if (a.length) c.label(`Cys${r} – SH`, a[0], { border: '#ffc247', size: 16 }); }
       },
       zoom: { chain: 'B', within: { distance: 9, sel: { chain: 'B', resn: 'CYS' } } }, spin: .02,
-      panel: () => phead(T2('Covalent: de disulfidebrug', 'Covalent: the disulfide bridge')) + plines(222, [
+      panel: () => phead(T2('Covalent: de disulfidebrug', 'Covalent: the disulfide bond')) + plines(222, [
         ['Cys–SH + HS–Cys → Cys–S–S–Cys', '#ffc247', 22, 700], '',
         T2('• vooral in eiwitten buiten de cel', '• mainly in proteins outside the cell'), T2('• gevormd in het ER (bv. antistoffen)', '• formed in the ER (e.g. antibodies)'), T2('• verbindt ook verre residuen', '• can join residues far apart')]),
     }),

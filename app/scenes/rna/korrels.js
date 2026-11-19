@@ -140,9 +140,9 @@ export default {
           const vT = heat > .01 || (step >= 1 && step <= 4) ? 1 : 0;
           if (vT) {
             const lv = .15 + .85 * heat;
-            o += `<rect x="1430" y="160" width="34" height="200" rx="17" fill="#0b1224" stroke="${C.muted}" stroke-width="3"/>` +
-              `<rect x="1440" y="${f1(350 - 180 * lv)}" width="14" height="${f1(Math.max(0, 180 * lv))}" rx="7" fill="${HEAT}"/><circle cx="1447" cy="375" r="26" fill="${HEAT}" stroke="${C.muted}" stroke-width="3"/>` +
-              T(1447, 440, T2('hitte', 'heat'), { size: 26, col: HEAT, w: 700, op: .3 + .7 * heat });
+            o += `<rect x="1400" y="160" width="34" height="200" rx="17" fill="#0b1224" stroke="${C.muted}" stroke-width="3"/>` +
+              `<rect x="1410" y="${f1(350 - 180 * lv)}" width="14" height="${f1(Math.max(0, 180 * lv))}" rx="7" fill="${HEAT}"/><circle cx="1417" cy="375" r="26" fill="${HEAT}" stroke="${C.muted}" stroke-width="3"/>` +
+              T(1417, 440, T2('hitte', 'heat'), { size: 26, col: HEAT, w: 700, op: .3 + .7 * heat });
           }
           o += '</g>';
         }
@@ -161,7 +161,7 @@ export default {
           o += `<path d="${d}Z" fill="${k > .5 ? 'rgba(255,107,107,.35)' : 'rgba(95,211,230,.18)'}" stroke="${k > .5 ? C.danger : SG}" stroke-width="4" stroke-linejoin="round"/>`;
           for (let i = 0; i < 6; i++) o += stk(cx - 30 + (i % 3) * 30, cy - 15 + ((i / 3) | 0) * 30, 11, 1, 20 + i);
           o += '</g>' + T(540, 700, T2('zenuwcel', 'nerve cell'), { size: 28, w: 700, op: vC }) +
-            T(cx, 360, T2('druppel', 'droplet'), { size: 26, col: SG, op: vC * (1 - k) }) + T(cx, 360, T2('klonter', 'clump'), { size: 26, col: C.danger, w: 700, op: vC * k }) +
+            T(cx, 600, T2('druppel', 'droplet'), { size: 26, col: SG, op: vC * (1 - k) }) + T(cx, 600, T2('klonter', 'clump'), { size: 26, col: C.danger, w: 700, op: vC * k }) +
             T(1150, 640, T2('verband nog onzeker', 'link still uncertain'), { size: 26, col: C.muted, op: vC * sub(p, .6, .85) });
         }
         $('ko-v').innerHTML = o;

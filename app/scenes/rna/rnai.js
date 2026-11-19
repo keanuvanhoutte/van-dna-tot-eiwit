@@ -147,8 +147,8 @@ export default {
           enz += `<g opacity="${f1(eo)}"><path d="${eiwitPad(ex, ey, 150, 23, 55, .05)}" fill="rgba(155,123,255,.22)" stroke="${C.prot}" stroke-width="3"/></g>`;
           enz += note(ex, ey - 50, T2('Exportine-5', 'Exportin-5'), '#c9b8ff', 18, 'middle', eo);
           const gtp = p < .82;
-          enz += prot(ex - 150, ey + 42, 98, 30, gtp ? 'Ran·GTP' : 'Ran·GDP', gtp ? '#3fb6c9' : '#5a7a88', eo, 15);
-          if (!gtp) enz += note(ex - 150, ey + 86, 'GTP → GDP + Pᵢ', '#5fd3e6', 15, 'middle', eo);
+          enz += prot(ex - 205, ey + 46, 98, 30, gtp ? 'Ran·GTP' : 'Ran·GDP', gtp ? '#3fb6c9' : '#5a7a88', eo, 15);
+          if (!gtp) enz += note(ex - 205, ey + 90, 'GTP → GDP + Pᵢ', '#5fd3e6', 15, 'middle', eo);
         }
         const DB = [800, PORE_Y];
         if (step === 3) {

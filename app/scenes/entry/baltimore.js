@@ -26,7 +26,7 @@ const CLASSES = [
   { n: 'IV', g: '(+)ssRNA', gl: { nl: 'genoom ís al mRNA', en: 'genome already is mRNA' }, ex: { nl: 'poliovirus, SARS-CoV-2', en: 'poliovirus, SARS-CoV-2' }, mid: [] },
   { n: 'V', g: '(−)ssRNA', gl: { nl: 'complement van mRNA', en: 'complement of mRNA' }, ex: { nl: 'influenza, mazelen, ebola', en: 'influenza, measles, Ebola' }, mid: [{ t: 'RdRp', c: VENZ, lab: { nl: 'viraal enzym', en: 'viral enzyme' } }] },
   { n: 'VI', g: 'ssRNA-RT', gl: { nl: 'RNA → DNA → genoom', en: 'RNA → DNA → genome' }, ex: { nl: 'HIV-1', en: 'HIV-1' }, mid: [{ t: 'RT', c: VENZ, lab: { nl: 'reverse transcriptase', en: 'reverse transcriptase' } }, { t: 'dsDNA', c: C.dna }] },
-  { n: 'VII', g: 'dsDNA-RT', gl: { nl: 'DNA met RNA-tussenstap', en: 'DNA with RNA intermediate' }, ex: { nl: 'hepatitis B-virus', en: 'hepatitis B virus' }, mid: [{ t: 'Pol II', c: POL2, lab: { nl: 'van de cel', en: "host cell's" } }],
+  { n: 'VII', g: 'dsDNA-RT', gl: { nl: 'DNA met RNA-tussenstap', en: 'DNA with RNA intermediate' }, ex: { nl: 'hepatitis B-virus', en: 'hepatitis B virus' }, mid: [{ t: 'Pol II', c: POL2, lab: { nl: 'van de cel', en: 'from the host cell' } }],
     side: { nl: 'kopiëren: RNA → RT → DNA', en: 'copying: RNA → RT → DNA' } },
 ];
 /* toestand per stap: rij-opaciteit en detail-opaciteit (stap 0 = overzicht, stap k = klasse k-1) */

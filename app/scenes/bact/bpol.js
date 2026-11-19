@@ -40,7 +40,7 @@ export default structure3d({
     { dur: 8000, title: L3('De kern: vijf eiwitten', 'The core: five proteins'), zoom: {}, spin: .012,
       focus: [{ sel: { chain: 'J' }, style: { cartoon: { color: COL.J } }, label: 'β′' }, { sel: { chain: 'I' }, style: { cartoon: { color: COL.I } }, label: 'β' },
         { sel: { chain: 'G' }, style: { cartoon: { color: COL.G } }, label: 'α' }, { sel: { chain: 'H' }, style: { cartoon: { color: COL.H } } }, { sel: { chain: 'K' }, style: { cartoon: { color: COL.K } }, label: 'ω' }],
-      text: L3('Twee α’s, β, β′ en ω vormen de kern. β en β′ zijn de grootste en vormen kaken rond het DNA.', 'Two α’s, β, β′ and ω form the core. β and β′ are the largest and form jaws around the DNA.') },
+      text: L3('Twee α’s, β, β′ en ω vormen de kern. β en β′ zijn de grootste en vormen kaken rond het DNA.', 'Two α subunits, β, β′ and ω form the core. β and β′ are the largest and form jaws around the DNA.') },
     { dur: 8000, title: L3('De σ-factor is de gids', 'The σ factor is the guide'), zoom: {}, spin: .012,
       focus: [{ sel: { chain: 'L' }, style: { cartoon: { color: COL.L } }, label: 'σ70' }, ...DNA],
       text: L3('σ70 ligt over de buitenkant. Zonder σ vindt de kern de promoter niet.', 'σ70 lies across the outside. Without σ the core cannot find the promoter.') },

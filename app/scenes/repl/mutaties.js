@@ -73,7 +73,7 @@ export default {
   svg() {
     return svgOpen() + `
     <g id="mu-rows"></g>
-    <g data-node="codon" data-color="${C.rna}" data-label="${T2('Genetische code', 'Genetic code')}"><rect x="${X0}" y="${YM - 6}" width="${NC * CW}" height="${BH + 12}" fill="transparent"/><circle id="mu-coa" data-anchor="codon" cx="${cx(1)}" cy="${YM - 30}" r="1" fill="none"/></g>
+    <g data-node="codon" data-color="${C.rna}" data-label="${T2('Genetische code', 'Genetic code')}"><rect x="${X0}" y="${YM - 6}" width="${NC * CW}" height="${BH + 12}" fill="transparent"/><circle id="mu-coa" data-anchor="codon" data-pos="below" cx="${cx(1)}" cy="${YM + BH + 6}" r="1" fill="none"/></g>
     <g data-node="aminozuren" data-color="${C.prot}" data-label="${T2('Aminozuren', 'Amino acids')}"><rect x="${X0}" y="${YA - 30}" width="${NC * CW}" height="60" fill="transparent"/><circle id="mu-aaa" data-anchor="aminozuren" cx="${cx(4)}" cy="${YA - 30}" r="1" fill="none"/></g>
     <g id="mu-extra"></g>
     <g data-node="quaternair" data-color="${C.prot}" data-label="${T2('Hemoglobine (quaternaire structuur)', 'Haemoglobin (quaternary structure)')}"><g id="mu-hb"></g><circle id="mu-hba" data-anchor="quaternair" data-pos="below" cx="-99" cy="-99" r="1" fill="none"/></g>
@@ -227,7 +227,7 @@ export default {
         if (step !== 3) place('mu-hba', -99, -99);
         if (step !== 5) place('mu-nmda', -99, -99);
         if (step !== 7) { place('mu-hera', -99, -99); place('mu-repa', -99, -99); }
-        place('mu-coa', cx(step === 4 || step === 6 ? 12 : 1), YM - 30 - 0);
+        place('mu-coa', cx(step === 4 || step === 6 ? 12 : 1), YM + BH + 6);   // onder de mRNA-rij (pos below), niet tussen DNA en mRNA
         $('mu-rows').innerHTML = r; $('mu-extra').innerHTML = ex; $('mu-hb').innerHTML = hb; $('mu-nmd').innerHTML = nm; $('mu-her').innerHTML = her; $('mu-rep').innerHTML = rep; $('mu-rib').innerHTML = rib;
       },
     };

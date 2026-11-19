@@ -60,7 +60,7 @@ export default {
     // netwerk (paneel C)
     const box = (x, y, w, lab, col, node, sub2) => {
       const b = panel(x - w / 2, y - 48, w, 96, { col }) + T(x, sub2 ? y - 6 : y + 10, lab, { size: 28, col, w: 700 }) + (sub2 ? T(x, y + 30, sub2, { size: 23, col: '#c9d2e4', w: 500 }) : '');
-      return node ? `<g data-node="${node}" data-color="${col}" data-label="${L({ nl: '→ ' + { vouwing: 'Eiwitvouwing', ubiquitine: 'Ubiquitine–proteasoom', misvouwing: 'Misvouwing & aggregatie', translatie: 'Translatie' }[node], en: '→ ' + { vouwing: 'Protein folding', ubiquitine: 'Ubiquitin–proteasome', misvouwing: 'Misfolding & aggregation', translatie: 'Translation' }[node] })}">${b}<circle data-anchor="${node}" cx="${x}" cy="${y - 50}" r="1" fill="none"/></g>` : b;
+      return node ? `<g data-node="${node}" data-color="${col}" data-label="${L({ nl: '→ ' + { vouwing: 'Eiwitvouwing', ubiquitine: 'Ubiquitine–proteasoom', misvouwing: 'Misvouwing & aggregatie', translatie: 'Translatie' }[node], en: '→ ' + { vouwing: 'Protein folding', ubiquitine: 'Ubiquitin–proteasome', misvouwing: 'Misfolding & aggregation', translatie: 'Translation' }[node] })}">${b}<circle data-anchor="${node}" cx="${node === 'translatie' ? x : x + w / 2 - 10}" cy="${y - 50}" r="1" fill="none"/></g>` : b;
     };
     let net = box(3560, 460, 250, T2('ribosoom', 'ribosome'), C.rrna, 'translatie');
     net += box(3940, 300, 270, 'Hsp70 + Hsp40', C.prot, null);
@@ -125,7 +125,7 @@ export default {
         cs += `<path d="${smooth(pts.slice(5, 8))}" stroke="${HYD}" stroke-width="12" fill="none" stroke-linecap="round" opacity=".9"/>`;
         $('ch-chain').innerHTML = cs;
         $('ch-r70').setAttribute('opacity', step === 0 ? 1 : 0);   // enkel in het overzicht (de ingezoomde camera's snijden het af)
-        $('ch-chainA').setAttribute('cx', 520); $('ch-chainA').setAttribute('cy', step <= 3 ? 330 : -9999);
+        $('ch-chainA').setAttribute('cx', 520); $('ch-chainA').setAttribute('cy', step <= 3 ? 290 : -9999);
         // Hsp70
         let hs = enz(760, 560, 130, 95, 'NBD', { fs: 24, dy: 20 }) + enz(930, 470, 78, 55, 'SBDβ', { fs: 21, dy: 30 });
         hs += tag(760, 530, nuc || '·', ATPC, { fs: 20, op: nuc ? 1 : 0 });

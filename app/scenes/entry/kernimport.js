@@ -69,8 +69,8 @@ export default {
     <text id="ki-reg1" x="162" y="${OUT - 70}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">${T2('cytoplasma', 'cytoplasm')}</text>
     <text id="ki-reg2" x="162" y="${IN + 90}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">${T2('nucleoplasma', 'nucleoplasm')}</text>
     <g data-node="kern" data-color="#9cc0ff" data-nolabel>${ENV}</g>
-    <g id="ki-memlab">${txt(PX + 140, OUT - 16, T2('buitenste kernmembraan', 'outer nuclear membrane'), '#7aa0d8', 21, 'start', 500)}
-    ${txt(PX + 140, IN + 36, T2('binnenste kernmembraan', 'inner nuclear membrane'), '#9cc0ff', 21, 'start', 500)}</g>
+    <g id="ki-memlab">${txt(PX + 230, OUT - 16, T2('buitenste kernmembraan', 'outer nuclear membrane'), '#7aa0d8', 21, 'start', 500)}
+    ${txt(PX + 230, IN + 36, T2('binnenste kernmembraan', 'inner nuclear membrane'), '#9cc0ff', 21, 'start', 500)}</g>
     <g id="ki-mt" opacity="0"></g>
     <g id="ki-otherpores" opacity=".8"></g>
 
@@ -147,7 +147,7 @@ export default {
           /* in het kanaal staat het complex rechtop (vracht vooraan), zodat het tussen de ringen in het FG-kanaal past */
           let x = 470, y = 330, imp = 0, rot = 0;
           if (step === 3) { imp = ease(sub(p, .35, .75)); x = lerp(440, 520, ease(p)); y = lerp(320, 345, ease(p)); }
-          else if (step === 4) { const u = ease(sub(p, .1, .9)); imp = 1; x = lerp(520, PX, u); y = lerp(345, PY, u); rot = 90 * ease(sub(p, .1, .55)); }
+          else if (step === 4) { imp = 1; x = lerp(520, PX, ease(sub(p, .1, .45))); y = lerp(lerp(345, 390, ease(sub(p, .1, .45))), PY, ease(sub(p, .45, .9))); rot = 90 * ease(sub(p, .1, .45)); }   // eerst recht boven het kanaal, dan pas omlaag door het midden (niet door de cytoplasmatische ring)
           else { const u = ease(sub(p, .1, .6)); imp = 1; x = PX; y = lerp(PY, 690, u); rot = 90; }
           const sc = .8, R = (g, xx, yy) => `<g transform="rotate(${f1(rot)} ${f1(xx)} ${f1(yy)})">${g}</g>`;
           if (step === 5 && p > .55) {

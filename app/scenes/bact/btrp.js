@@ -32,7 +32,7 @@ export default {
     { dur: 9000, cam: cam(780, 520, 1500), title: { nl: 'Veel Trp: het ribosoom rijdt door', en: 'Plenty of Trp: the ribosome rides on' },
       text: { nl: 'Het ribosoom bedekt regio 2. Regio 3 en 4 vormen een stop-haarspeld: het kopiëren stopt.', en: 'The ribosome covers region 2. Regions 3 and 4 form a stop hairpin: copying stops.' } },
     { dur: 9000, cam: cam(780, 520, 1500), title: { nl: 'Weinig Trp: het ribosoom wacht', en: 'Little Trp: the ribosome waits' },
-      text: { nl: 'Zonder Trp blijft het ribosoom op de Trp-codons staan. Regio 2 paart met 3: geen stop, de genen worden gekopieerd.', en: 'Without Trp the ribosome stalls on the Trp codons. Region 2 pairs with 3: no stop, the genes are copied.' } },
+      text: { nl: 'Bij weinig Trp blijft het ribosoom op de Trp-codons staan. Regio 2 paart met 3: geen stop, de genen worden gekopieerd.', en: 'With little Trp the ribosome stalls on the Trp codons. Region 2 pairs with 3: no stop, the genes are copied.' } },
     { dur: 8000, cam: cam(800, 420, 1600), title: { nl: 'Kan alleen zonder kern', en: 'Only possible without a nucleus' },
       text: { nl: 'Dit trucje werkt omdat kopiëren en vertalen in bacteriën tegelijk gebeuren.', en: 'This trick works because copying and translating happen at the same time in bacteria.' } },
   ],
@@ -100,7 +100,7 @@ export default {
         let lb = '';
         if (step === 5) {
           const a = sub(p, .1, .3);
-          lb += `<g opacity="${f1(a)}">` + panel(300, 420, 1000, 300) + txt(800, 480, T2('Het ribosoom "meet" hoeveel Trp er is', 'The ribosome "measures" how much Trp there is'), C.text, 26, 'middle', 700) +
+          lb += `<g opacity="${f1(a)}">` + panel(300, 420, 1000, 300) + txt(800, 480, T2('Het ribosoom “meet” hoeveel Trp er is', 'The ribosome “measures” how much Trp there is'), C.text, 26, 'middle', 700) +
             txt(800, 550, T2('veel Trp → ribosoom rijdt door → STOP (3:4)', 'plenty of Trp → ribosome rides on → STOP (3:4)'), C.danger, 24, 'middle', 700) +
             txt(800, 600, T2('weinig Trp → ribosoom wacht → doorgaan (2:3)', 'little Trp → ribosome waits → continue (2:3)'), C.ok, 24, 'middle', 700) +
             txt(800, 670, T2('Bij de mens gaat dit niet: daar zit de kern tussen kopiëren en vertalen.', 'This is impossible in humans: the nucleus separates copying and translating.'), C.muted, 21) + '</g>';

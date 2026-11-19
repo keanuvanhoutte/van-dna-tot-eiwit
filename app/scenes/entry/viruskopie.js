@@ -118,6 +118,12 @@ export default {
         const cut = ph(2, .35, .8), gather = ph(3, .1, .75), sink = ph(4, .1, .7);
         if (grow > 0) {
           const xEnd = Math.min(lead, lerp(X0, XO, grow));
+          // de ribosomen erachter maken elk ook een (kortere) keten: polysoom
+          if (tunOp > .01) for (let k = 1; k < 3; k++) {
+            const uk = Math.max(0, runNow - k * .22); if (uk <= .02) continue;
+            const xk = lerp(X0 + 40, XO, Math.min(1, uk)), Lk = 22 + 34 * Math.min(1, uk);   // korter dan de afstand tot de lange keten erboven
+            ch += `<path d="M${f1(xk)},${RY - 44} q${f1(-Lk * .25)},${f1(-Lk * .55)} ${f1(-Lk * .7)},${f1(-Lk)}" stroke="${C.chain}" stroke-width="7" fill="none" stroke-linecap="round" opacity="${f1(tunOp)}"/>`;
+          }
           if (tunOp > .01) ch += `<path d="M${f1(lead)},${RY - 48} C${f1(lead)},${CY + 10} ${f1(xEnd + 10)},${CY + 20} ${f1(xEnd)},${CY}" stroke="${C.chain}" stroke-width="10" fill="none" stroke-linecap="round" opacity="${f1(tunOp)}"/>`;
           for (let i = 0; i < N; i++) {
             const a = X0 + i * SEG, b = Math.min(X0 + (i + 1) * SEG, xEnd);
@@ -149,7 +155,7 @@ export default {
         if (gather > .6) {
           const mx = lerp(1270, MX, sink), my = lerp(420, MY, sink), o = ease(sub(gather, .6, 1));
           ch = `<ellipse cx="${f1(mx)}" cy="${f1(my)}" rx="62" ry="50" fill="rgba(155,123,255,.18)" stroke="${C.prot}" stroke-width="3" opacity="${f1(o)}"/>` + ch;
-          fx += T(mx - (step >= 4 ? 170 : 0), my - (step >= 4 ? 20 : 78), T2('kopieermachine', 'copying machine'), { size: 26, col: C.prot, w: 700, op: o });
+          fx += T(mx - (step >= 4 ? 160 : 0), my + (step >= 4 ? 34 : -78), T2('kopieermachine', 'copying machine'), { size: 26, col: C.prot, w: 700, op: o });
         }
         /* stap 4: het blaasje ontstaat onder de machine, die aan het membraan blijft (cytosolkant). Het (+)RNA dient als matrijs;
            binnenin groeit de kopie ertegenaan (dubbelstrengig RNA). Stap 5: kopieën gaan door het poortje naar het cytosol. */

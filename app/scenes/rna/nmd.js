@@ -83,7 +83,7 @@ export default {
         // junctiestreepjes + exonlabels
         for (const xj of [X.e1[1], X.e2[1]]) if (!cut || xj < leftEnd || xj > rightStart) m += `<line x1="${xj}" y1="${Y - 14}" x2="${xj}" y2="${Y + 14}" stroke="#fff" stroke-width="2.5"/>`;
         const labOp = cut ? 1 - .5 * sub(chew, .8, 1) : 1;        // labels dimmen als het mRNA weg is
-        m += `<g opacity="${f1(labOp)}">` + note((X.e1[0] + X.e1[1]) / 2, Y + 44, 'exon 1', C.rna, 18) + note((X.e2[0] + X.e2[1]) / 2, Y + 44, 'exon 2', C.rna, 18) + note((X.e3[0] + X.e3[1]) / 2, Y + 44, T2('exon 3 (laatste)', 'exon 3 (last)'), C.rna, 18) + note((X.pa[0] + X.pa[1]) / 2, Y + 44, 'poly(A)', C.cap, 17);
+        m += `<g opacity="${f1(labOp)}">` + note((X.e1[0] + X.e1[1]) / 2, Y + 44, 'exon 1', C.rna, 18) + note((X.e2[0] + X.e2[1]) / 2, Y + 44, 'exon 2', C.rna, 18) + note(X.e3[0] + 50, Y + 44, T2('exon 3 (laatste)', 'exon 3 (last)'), C.rna, 18) + note((X.pa[0] + X.pa[1]) / 2, Y + 44, 'poly(A)', C.cap, 17);
         // normaal stopcodon
         m += note(X.stop, Y + 76, T2('normaal stop', 'normal stop'), C.text, 17) + '</g>';
         if (!cut || rightStart < X.stop - 20) m += `<rect x="${X.stop - 20}" y="${Y - 11}" width="40" height="22" rx="4" fill="#fff" opacity=".9"/>`;
@@ -146,10 +146,10 @@ export default {
         // NMD-factoren
         let fa = '', erf = '';
         const ejx = EJC[1];
-        if (step === 3) erf += prot(X.ptc + 52, Y - 40, 109, 34, 'eRF1·eRF3', '#6f5bd6', sub(p, .6, .75), 17);
+        if (step === 3) erf += prot(X.ptc + 130, Y - 70, 109, 34, 'eRF1·eRF3', '#6f5bd6', sub(p, .6, .75), 17);
         if (step >= 4 && step <= 6) {
           const k = step === 4 ? ease(sub(p, 0, .35)) : step === 6 ? 1 - sub(p, 0, .25) : 1;
-          erf += prot(X.ptc + 52, Y - 40, 109, 34, 'eRF1·eRF3', '#6f5bd6', step === 4 ? 1 - sub(p, .7, 1) : 0, 17);
+          erf += prot(X.ptc + 130, Y - 70, 109, 34, 'eRF1·eRF3', '#6f5bd6', step === 4 ? 1 - sub(p, .7, 1) : 0, 17);
           const ux = X.ptc + 118, uy = Y - 72;   // UPF1 tegen eRF3 aan (SURF-complex)
           fa += prot(ux, uy, 76, 34, 'UPF1', '#e0679a', k, 17);
           fa += prot(ux + 30, uy - 38, 79, 32, 'SMG1', '#b44f7c', k, 17);

@@ -12,7 +12,7 @@ const L3 = (nl, en) => ({ nl, en });
 const A = 'ABCDEFGHIJKLMNOPQRSTU'.slice(1).split('').map(c => 'A' + c).concat(['AY']);          // AB..AU + AY
 const B50 = 'CDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(c => 'B' + c).concat(['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7']);
 const POL = ['CA', 'CB', 'CC', 'CD', 'CE'];
-const COL = { r16: '#2cc6a8', p30: '#7fb8ab', r23: '#1f8f7a', p50: '#6a9a90', mrna: C.rna, tP: '#ffc247', tA: '#ffe08a', pol: '#9b7bff', nusg: '#7fdc6a', dna: C.dna };
+const COL = { r16: '#2cc6a8', p30: '#7fb8ab', r23: '#137a8c', p50: '#6a9a90', mrna: C.rna, tP: '#ffc247', tA: '#ffe08a', pol: '#9b7bff', nusg: '#7fdc6a', dna: C.dna };
 /* bolletjesmodel: één bol per CA/P-atoom (de lokale kopie bevat alleen die atomen) */
 const T = (color, w = .6) => ({ sphere: { color, radius: 1.6 + w * .9 } });
 /* in stappen die iets binnenin tonen: de rest als kleine, doorschijnende bolletjes */
@@ -51,16 +51,20 @@ export default structure3d({
       focus: [FADE([...S30, ...POL, ...OTHER]), { sel: { chain: 'BA' }, style: T(COL.r23, .8), label: '23S-rRNA' }, { sel: { chain: 'BB' }, style: T(COL.r23, .8) }, { sel: { chain: B50 }, style: T(COL.p50, .8) }],
       text: L3('De 50S-eenheid heeft twee RNA’s (23S en 5S) en ruim 30 eiwitten. Hier worden aminozuren gekoppeld.', 'The 50S subunit has two RNAs (23S and 5S) and over 30 proteins. Here amino acids are joined.') },
     { dur: 8000, title: L3('Een machine vooral uit RNA', 'A machine made mostly of RNA'), zoom: {}, spin: .01,
-      focus: [FADE([...A, ...B50, ...POL, ...OTHER]), { sel: { chain: 'AA' }, style: T(COL.r16, .8), label: '16S' }, { sel: { chain: 'BA' }, style: T(COL.r23, .8), label: '23S' }, { sel: { chain: 'BB' }, style: T(COL.r23, .8) }],
+      focus: [FADE([...A, ...B50, ...POL, ...OTHER]), { sel: { chain: 'AA' }, style: T(COL.r16, .8), label: '16S', labelColor: COL.r16, labelOff: [-110, 30] }, { sel: { chain: 'BA' }, style: T(COL.r23, .8), label: '23S', labelColor: COL.r23, labelOff: [110, -30] }, { sel: { chain: 'BB' }, style: T(COL.r23, .8) }],
       text: L3('Ongeveer twee derde van het ribosoom is RNA. Het RNA doet ook het koppelen zelf.', 'About two thirds of the ribosome is RNA. The RNA also does the joining itself.') },
     { dur: 9000, title: L3('Twee tRNA’s op het mRNA', 'Two tRNAs on the mRNA'), zoom: { chain: ['AW', 'AX', 'AV'] }, spin: .006,
       focus: [...RIBO_FADE, FADE([...POL, 'CF', 'CN', 'CT']), { sel: { chain: 'AW' }, style: T(COL.tP, 1.6), label: L3('start-tRNA (P)', 'start tRNA (P)'), labelColor: COL.tP, labelOff: [-80, -18] }, { sel: { chain: 'AX' }, style: T(COL.tA, 1.6), label: L3('tRNA (A)', 'tRNA (A)'), labelColor: COL.tA, labelOff: [80, 18] }, { sel: { chain: 'AV' }, style: T(COL.mrna, 1.6), label: 'mRNA' }],
       text: L3('In de P-plaats zit het start-tRNA (tRNA-fMet), in de A-plaats het volgende tRNA.', 'The P site holds the start tRNA (tRNA-fMet), the A site holds the next tRNA.') },
     { dur: 9000, title: L3('Het mRNA komt recht uit het polymerase', 'The mRNA comes straight out of the polymerase'), zoom: { chain: [...POL, 'AV'] }, spin: .008,
-      focus: [...RIBO_FADE, { sel: { chain: POL }, style: T(COL.pol, .9), label: L3('RNA-polymerase', 'RNA polymerase') }, { sel: { chain: 'AV' }, style: T(COL.mrna, 1.6), label: 'mRNA' }, { sel: { chain: ['CN', 'CT'] }, style: T(COL.dna, 1.4), label: 'DNA' }],
+      // polymerase als kleine bolletjes (zodat mRNA en DNA erdoor te zien zijn), de 30S erbij als kleine turquoise bolletjes
+      focus: [FADE(S50), FADE(['AW', 'AX', 'CF']), { sel: { chain: S30 }, style: { sphere: { color: COL.r16, radius: .9 } }, label: L3('ribosoom (30S)', 'ribosome (30S)'), labelColor: COL.r16, labelOff: [0, -60] },
+        { sel: { chain: POL }, style: { sphere: { color: COL.pol, radius: 1 } }, label: L3('RNA-polymerase', 'RNA polymerase'), labelColor: COL.pol, labelOff: [-90, -40] },
+        { sel: { chain: 'AV' }, style: T(COL.mrna, 2.2), label: 'mRNA', labelColor: COL.mrna, labelOff: [70, 40] }, { sel: { chain: ['CN', 'CT'] }, style: T(COL.dna, 1.8), label: 'DNA', labelColor: COL.dna, labelOff: [-40, 50] }],
       text: L3('Het RNA-polymerase zit vlak voor het ribosoom. Het verse mRNA gaat er meteen in.', 'RNA polymerase sits right in front of the ribosome. The fresh mRNA goes straight in.') },
     { dur: 9000, title: L3('NusG slaat een brug', 'NusG forms a bridge'), zoom: { chain: ['CF', 'AJ'] }, spin: .006,
-      focus: [...RIBO_FADE, FADE(POL), { sel: { chain: 'CF' }, style: T(COL.nusg, 1.2), label: 'NusG' }, { sel: { chain: 'AJ' }, style: T('#ff8f8f', 1), label: L3('ribosoomeiwit uS10', 'ribosomal protein uS10') }],
+      focus: [...RIBO_FADE, FADE(['AV', 'AW', 'AX', 'CN', 'CT']), { sel: { chain: POL }, style: { sphere: { color: COL.pol, radius: .55 } }, label: L3('RNA-polymerase', 'RNA polymerase'), labelColor: COL.pol, labelOff: [20, 90] },
+        { sel: { chain: 'CF' }, style: T(COL.nusg, 1.2), label: 'NusG', labelColor: COL.nusg, labelOff: [-30, 50] }, { sel: { chain: 'AJ' }, style: T('#ff8f8f', 1), label: L3('ribosoomeiwit uS10', 'ribosomal protein uS10'), labelColor: '#ff8f8f', labelOff: [100, -30] }],
       text: L3('Het eiwit NusG houdt met één kant het polymerase vast en met de andere kant het ribosoom.', 'The protein NusG holds the polymerase with one end and the ribosome with the other.') },
     { dur: 8000, title: L3('Vergelijk: ons 80S-ribosoom', 'Compare: our 80S ribosome'), focus: null, zoom: {}, spin: .01,
       text: L3('Ons ribosoom is groter (80S) en leest het mRNA pas buiten de kern. Het principe is hetzelfde.', 'Our ribosome is larger (80S) and only reads the mRNA outside the nucleus. The principle is the same.') },

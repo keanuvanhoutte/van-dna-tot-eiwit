@@ -94,7 +94,7 @@ export default {
     <g data-node="nucleosoom" data-color="${HC.H3}" data-label="${T2('← Nucleosoom', '← Nucleosome')}" data-nolabel><circle cx="${NX[0]}" cy="${NX[1]}" r="${NR * .8}" fill="transparent"/></g>
     <g id="hm-dna" data-node="dnahelix" data-color="${C.dna}" data-nolabel>${dna}</g>
     <g data-node="ptm" data-color="${CLASSCOL['+']}" data-label="${T2('Post-translationele modificaties', 'Post-translational modifications')}">
-      <g id="hm-tail"></g><circle data-anchor="ptm" cx="660" cy="${TY + 60}" r="1" fill="none" data-pos="below"/>
+      <g id="hm-tail"></g><circle data-anchor="ptm" cx="790" cy="${TY + 60}" r="1" fill="none" data-pos="below"/>
     </g>
     <g id="hm-enz"></g>
     <g id="hm-chem"></g>

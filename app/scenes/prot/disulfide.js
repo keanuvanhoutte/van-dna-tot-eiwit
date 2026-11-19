@@ -27,25 +27,25 @@ export default {
       'In the order, Cys 12 and Cys 58 lie far apart. Each has a sulfur group (–SH).'),
     ST(7000, cam(800, 500, 1100), 'De vouwing brengt ze samen', 'Folding brings them together',
       'Door de vouwing komen de twee cysteïnes naast elkaar te liggen: nu kan een brug ontstaan.',
-      'Folding places the two cysteines next to each other: now a bridge can form.'),
-    ST(8000, cam(960, 470, 1300), 'De brug ontstaat', 'The bridge forms',
+      'Folding places the two cysteines next to each other: now a disulfide bond can form.'),
+    ST(8000, cam(960, 470, 1300), 'De brug ontstaat', 'The disulfide bond forms',
       'De twee zwavels koppelen tot een sterke brug (disulfidebrug). Daarvoor moeten 2 elektronen weg.',
-      'The two sulfurs link into a strong bridge (disulfide bond). For that, 2 electrons must be removed.'),
-    ST(8500, cam(850, 420, 1050), 'Een helper geeft de brug door', 'A helper hands over the bridge',
+      'The two sulfurs link into a strong disulfide bond (S–S). For that, 2 electrons must be removed.'),
+    ST(8500, cam(850, 420, 1050), 'Een helper geeft de brug door', 'A helper hands over the bond',
       'Het enzym PDI heeft zelf een zwavelbrug en geeft die door aan het eiwit dat vouwt.',
-      'The enzyme PDI has a sulfur bridge of its own and passes it on to the folding protein.'),
+      'The enzyme PDI has a disulfide bond of its own and passes it on to the folding protein.'),
     ST(8500, cam(1080, 330, 1150), 'De helper wordt opgeladen', 'The helper is recharged',
       'PDI is nu ‘leeg’. Een ander enzym neemt de elektronen over en geeft ze aan zuurstof.',
       'PDI is now ‘empty’. Another enzyme takes the electrons and passes them to oxygen.'),
-    ST(9000, cam(960, 500, 1150), 'Een foute brug herstellen', 'Fixing a wrong bridge',
+    ST(9000, cam(960, 500, 1150), 'Een foute brug herstellen', 'Fixing a wrong bond',
       'Soms koppelen de verkeerde cysteïnes (12–30). PDI breekt die brug en helpt de juiste (12–58) te vormen.',
-      'Sometimes the wrong cysteines link (12–30). PDI breaks that bridge and helps the right one (12–58) form.'),
+      'Sometimes the wrong cysteines link (12–30). PDI breaks that bond and helps the right one (12–58) form.'),
     ST(8500, cam(2500, 470, 1510), 'Waarom in het ER?', 'Why in the ER?',
       'In het ER kunnen zwavelbruggen ontstaan. In de celvloeistof lukt dat meestal niet: daar blijft –SH.',
-      'Sulfur bridges can form in the ER. In the cell fluid they usually cannot: there the –SH stays.'),
+      'Disulfide bonds can form in the ER. In the cell fluid they usually cannot: there the –SH stays.'),
     ST(8500, cam(4150, 470, 1800), 'Voorbeeld: insuline', 'Example: insulin',
       'Insuline heeft 3 zwavelbruggen. Zulke bruggen verstevigen vooral eiwitten die de cel verlaten.',
-      'Insulin has 3 sulfur bridges. Such bridges mainly strengthen proteins that leave the cell.'),
+      'Insulin has 3 disulfide bonds. Such bonds mainly strengthen proteins that leave the cell.'),
   ],
   svg() {
     // insuline (paneel C): A-keten 21 aa, B-keten 30 aa
@@ -175,7 +175,7 @@ export default {
           lb += T((A[0] + B[0]) / 2, A[1] + 240, T2('→ naar een acceptor', '→ to an acceptor'), { size: 20, col: '#5fd3e6', op: sub(p, .6, .8) });
         }
         if (step === 3) lb += T(PDI0[0] + 170, PDI0[1] + 150, p < .55 ? T2('PDI geoxideerd (S–S)', 'PDI oxidised (S–S)') : T2('PDI gereduceerd (2 –SH)', 'PDI reduced (2 –SH)'), { size: 20, col: '#c9b8ff', anchor: 'start', op: sub(p, .3, .45) });
-        if (step === 4) lb += T(PDI0[0] + 170, PDI0[1] + 150, p > .6 ? T2('PDI weer geoxideerd → klaar voor de volgende', 'PDI oxidised again → ready for the next') : '', { size: 20, col: '#c9b8ff', anchor: 'start' });
+        if (step === 4) lb += T(PDI0[0] + 170, PDI0[1] + 150, p > .6 ? T2('PDI weer geoxideerd → klaar voor de volgende ronde', 'PDI oxidised again → ready for the next round') : '', { size: 20, col: '#c9b8ff', anchor: 'start' });
         $('ds-lbl').innerHTML = lb;
         /* paneel B: dynamisch (ketens met/zonder brug) */
         let cd = '';

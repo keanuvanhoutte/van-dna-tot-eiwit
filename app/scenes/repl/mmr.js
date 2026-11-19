@@ -55,7 +55,7 @@ export default structure3d({
       text: L3('Partnereiwitten knippen de nieuwe streng in en halen een stuk met de fout weg. De oude streng blijft heel.', 'Partner proteins nick the new strand and remove a stretch containing the error. The old strand stays intact.') },
     { dur: 9000, title: L3('Opnieuw gemaakt, nu juist', 'Made again, now correct'), zoom: { chain: ['E', 'F'] }, spin: .008,
       focus: [{ sel: { chain: ['A', 'B'] }, style: { cartoon: { color: '#56607a', opacity: .3 } } }, { sel: { chain: 'E' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .2 } } },
-        { sel: { chain: 'F' }, style: { stick: { color: C.ok, radius: .35 } }, label: L3('opnieuw gemaakt', 'made again') }],
+        { sel: { chain: 'F' }, style: { stick: { color: C.ok, radius: .35 } }, label: L3('opnieuw gemaakt', 'resynthesised stretch') }],
       text: L3('De polymerase maakt het stuk opnieuw, met de oude streng als voorbeeld. Zo gebeuren er ongeveer honderd keer minder fouten.', 'The polymerase makes the stretch again, using the old strand as a guide. This gives about a hundred times fewer errors.') },
   ],
   hotspots: [

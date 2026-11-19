@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, txt, cam, sub, ease, lerp, clamp, rng, f1 } from '../../kit.js';
 import { K, ribo, dsRing, rodCell, rodInner, panel } from './_bkit.js';
-import { PG, LPS, LIPID } from '../../bio.js';
+import { PG, LPS, LIPID, polymerase } from '../../bio.js';
 
 /* E. coli-cel: geen kern, nucleoïd, één ringvormig chromosoom, plasmiden, 70S-ribosomen.
  * Bronnen: Blattner et al. 1997 (genoom K-12), Alberts MBoC 4e, Cooper The Cell 2e (zie shared/details/bact.js). */
@@ -71,10 +71,10 @@ export default {
     return svgOpen() + rodCell(...CELL) + `
     <g id="bc-nucout"></g>
     <g data-node="bnucleoid" data-color="${C.dna}" data-label="${T2('Nucleoïd van dichtbij (3D)', 'Nucleoid up close (3D)')}"><path id="bc-chrom" fill="none" stroke="${C.dna}" stroke-width="4" stroke-linejoin="round"/><circle data-anchor="bnucleoid" cx="${CX}" cy="${CY - RR - 4}" r="1" fill="none"/></g>
-    <g data-node="breplicatie" data-color="${K.ori}" data-label="${T2('Hoe het chromosoom gekopieerd wordt', 'How the chromosome is copied')}" data-pos="below"><circle data-anchor="breplicatie" cx="${CX}" cy="${CY + RR + 50}" r="1" fill="none"/><rect x="${CX}" y="${CY + RR + 49}" width="1" height="1" fill="none"/></g>
+    <g data-node="breplicatie" data-color="${K.ori}" data-label="${T2('Hoe het chromosoom gekopieerd wordt', 'How the chromosome is copied')}" data-pos="below"><circle data-anchor="breplicatie" cx="${CX}" cy="${CY + RR - 25}" r="1" fill="none"/><rect x="${CX}" y="${CY + RR - 26}" width="1" height="1" fill="none"/></g>
     <g id="bc-ring"></g>
     <g data-node="bplasmide" data-color="${K.plas}" data-label="${T2('Plasmiden', 'Plasmids')}"><g id="bc-plas"></g><circle data-anchor="bplasmide" cx="1270" cy="290" r="1" fill="none"/></g>
-    <g data-node="bmrna" data-color="${K.ribo}" data-label="${T2('mRNA & 70S-ribosoom', 'mRNA & 70S ribosome')}"><g id="bc-ribo"></g><g id="bc-mrna"></g><circle data-anchor="bmrna" cx="430" cy="652" r="1" fill="none"/></g>
+    <g data-node="bmrna" data-color="${K.ribo}" data-label="${T2('mRNA & 70S-ribosoom', 'mRNA & 70S ribosome')}"><g id="bc-ribo"></g><g id="bc-mrna"></g><circle data-anchor="bmrna" cx="430" cy="585" r="1" fill="none"/></g>
     <g data-node="cel" data-color="${C.text}" data-label="${T2('Vergelijk: menselijke cel', 'Compare: human cell')}" data-pos="below"><rect x="1330" y="720" width="1" height="1" fill="none"/><circle data-anchor="cel" cx="1330" cy="730" r="1" fill="none"/></g>
     <g id="bc-lab"></g>
     </svg>`;
@@ -110,7 +110,7 @@ export default {
         if (mo > .01) {
           mr = `<g opacity="${f1(mo)}"><path d="M${f1(px)},${f1(py)} ${pts.map(q => `L${f1(q[0])},${f1(q[1])}`).join('')}" stroke="${C.rna}" stroke-width="4" fill="none" stroke-linecap="round"/>` +
             [8, 17, 26].map(i => ribo(pts[i][0], pts[i][1] - 8, 1.5, 1)).join('') +
-            `<ellipse cx="${f1(px)}" cy="${f1(py)}" rx="17" ry="14" fill="${K.rnap}" fill-opacity=".6" stroke="${K.rnap}" stroke-width="2.5"/>` +
+            polymerase(px, py, 20, 12, { col: K.rnap, dir: 1, gul: 3, hoog: 1.3, vul: .55, op: 1, seed: 7, sw: 2 }) +   // bacteriële RNAP (bio.js), zoals in vergelijk
             txt(px + 26, py - 20, T2('RNA-polymerase', 'RNA polymerase'), K.rnap, 20, 'start', 700) + '</g>';
         }
         $('bc-mrna').innerHTML = mr;

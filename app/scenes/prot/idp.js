@@ -77,7 +77,7 @@ export default {
     P.forEach(([h, r]) => plot += `<circle cx="${f1(px(h))}" cy="${f1(py(r))}" r="10" fill="${IDC}"/>`);
     Q.forEach(([h, r]) => plot += `<circle cx="${f1(px(h))}" cy="${f1(py(r))}" r="10" fill="${C.prot}"/>`);
     plot += T(px(.3), py(.46), T2('ongeordend', 'disordered'), { size: 22, col: IDC, w: 700 }) + T(px(.53), py(.25), T2('gevouwen', 'folded'), { size: 22, col: C.prot, w: 700 });
-    plot += T(PX + PW + 40, PY - 250, T2('Uversky et al. 2000', 'Uversky et al. 2000'), { size: 17, col: C.muted, anchor: 'start' }) + T(PX + PW + 40, PY - 222, '⟨H⟩ₘₐₓ = (⟨R⟩ + 1,151) / 2,785', { size: 17, col: C.muted, anchor: 'start', font: 'JetBrains Mono' });
+    plot += T(PX + PW + 40, PY - 250, T2('Uversky et al. 2000', 'Uversky et al. 2000'), { size: 17, col: C.muted, anchor: 'start' }) + T(PX + PW + 40, PY - 222, T2('⟨H⟩ₘₐₓ = (⟨R⟩ + 1,151) / 2,785', '⟨H⟩ₘₐₓ = (⟨R⟩ + 1.151) / 2.785'), { size: 17, col: C.muted, anchor: 'start', font: 'JetBrains Mono' });
 
     /* paneel D: kaarten (rij 1 = stap 6, rij 2 verschijnt in stap 7) */
     const card = (x0, y0, title, line, col, node, lbl) => {

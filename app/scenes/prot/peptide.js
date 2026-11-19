@@ -90,7 +90,7 @@ export default {
     ST(9000, FULL, 'Eerste draaipunt: φ', 'First pivot: φ', 'De keten draait alleen bij het centrale koolstofatoom (Cα). Hoek φ (phi) draait rond de binding met N.', 'The chain only rotates at the central carbon atom (Cα). Angle φ (phi) turns around the bond with N.'),
     ST(9000, FULL, 'Tweede draaipunt: ψ', 'Second pivot: ψ', 'Hoek ψ (psi) draait rond de binding met C. Ezelsbruggetje: phi heeft de N, psi heeft de C.', 'Angle ψ (psi) turns around the bond with C. Mnemonic: phi has the N, psi has the C.'),
     ST(9000, FULL, 'Niet elke hoek kan', 'Not every angle works', 'Bij sommige hoeken botsen atomen (rood). Welke hoeken wel kunnen, toont de Ramachandran-plot.', 'At some angles atoms bump into each other (red). Which angles work is shown by the Ramachandran plot.'),
-    ST(8000, cam(800, 430, 1500), 'Zo ontstaat een keten', 'This is how a chain forms', 'N–Cα–C, telkens herhaald: de ruggengraat. Tot ± 50 aminozuren heet ze een peptide, daarboven een eiwit.', 'N–Cα–C, repeated again and again: the backbone. Up to ± 50 amino acids it is a peptide, above that a protein.'),
+    ST(8000, cam(800, 430, 1500), 'Zo ontstaat een keten', 'This is how a chain forms', 'N–Cα–C, telkens herhaald: de ruggengraat. Tot ± 50 aminozuren heet ze een peptide, daarboven een eiwit.', 'N–Cα–C, repeated again and again: the backbone. Up to ~50 amino acids it is a peptide, above that a protein.'),
   ],
   svg() {
     return svgOpen() + `
@@ -230,7 +230,7 @@ export default {
           // het vlak staat er van bij het begin (sluit aan op de band O–C–N van de vorige stap) en wordt dan duidelijker
           const k = ease(sub(p, 0, .3));
           d2 = `<path d="M${430 - 230},${440 - 60} L${430 + 90},${440 - 170} L${430 + 230},${440 + 60} L${430 - 90},${440 + 170}Z" fill="#5fd3e6" fill-opacity="${(.15 + .08 * k).toFixed(3)}" stroke="#5fd3e6" stroke-width="3" stroke-opacity="${f1(.5 + .5 * k)}"/>` +
-            peptideUnit(430, 440, false) + txt(430, 680, T2('6 atomen in één vlak ("blad papier")', '6 atoms in one plane ("sheet of paper")'), '#5fd3e6', 22);
+            peptideUnit(430, 440, false) + txt(430, 680, T2('6 atomen in één vlak (“blad papier”)', '6 atoms in one plane (“sheet of paper”)'), '#5fd3e6', 22);
           const mini = (x, y, cis, label, sub2) => `<g opacity="${f1(ease(cis ? sub(p, .4, .65) : sub(p, .08, .35)))}">` + bd(x - 40, y, x + 40, y, { sh: 14, sh2: 14, w: 4 }) + at(x - 40, y, 'C', ACOL.C, 24) + at(x + 40, y, 'N', ACOL.N, 24) +
             bd(x - 40, y, x - 95, y - 55, { sh: 14, sh2: 16 }) + at(x - 105, y - 64, 'Cα', '#fff', 22) +
             bd(x + 40, y, x + 95, cis ? y - 55 : y + 55, { sh: 14, sh2: 16 }) + at(x + 105, cis ? y - 64 : y + 64, 'Cα', '#fff', 22) +

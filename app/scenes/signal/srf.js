@@ -237,7 +237,7 @@ const SCENE = {
           L(430, DY + 80, 'SRE', { col: '#fff', size: 28, w: 800 });
         }
         if (step === 8) {
-          L(205, 335, T2('P eraf (fosfatase)', 'P removed (phosphatase)'), { col: '#ffb3c7', size: 22, anchor: 'end', op: sub(p, .5, .7) });
+          L(205, 335, T2('P eraf (fosfatase)', 'P off (phosphatase)'), { col: '#ffb3c7', size: 22, anchor: 'end', op: sub(p, .5, .7) });
           L(1190, 360, T2('kortlevend', 'short-lived'), { col: C.rna, size: 22, anchor: 'start', op: sub(p, .5, .7) });
         }
         $('sf-lbl').innerHTML = lb;

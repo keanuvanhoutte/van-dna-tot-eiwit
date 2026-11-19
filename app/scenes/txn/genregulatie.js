@@ -161,7 +161,7 @@ export default {
         if (step === 0) marks += txt((e[0] + pr[0]) / 2, Y0 + 64, T2('… afstand sterk ingekort …', '… distance strongly shortened …'), C.muted, 21);
         $('gr-marks').innerHTML = marks;
         $('gr-prom').innerHTML = `<rect x="${f1(pr[0] - 40)}" y="${f1(pr[1] - 22)}" width="72" height="44" rx="8" fill="rgba(155,123,255,.12)" stroke="${C.prot}" stroke-dasharray="5 4" stroke-width="2"/>` +
-          (step === 7 && p > .12 ? '' : k > .5 ? txt(pr[0] - 40, pr[1] - 40, 'TATA', '#c9b8ff', 21, 'middle', 700, 'JetBrains Mono') : txt(pr[0] - 4, pr[1] + 64, 'TATA', '#c9b8ff', 21, 'middle', 700, 'JetBrains Mono'));
+          (step === 7 && p > .12 ? '' : k > .5 ? txt(pr[0] + 6, pr[1] + 44, 'TATA', '#c9b8ff', 21, 'middle', 700, 'JetBrains Mono') : txt(pr[0] - 4, pr[1] + 64, 'TATA', '#c9b8ff', 21, 'middle', 700, 'JetBrains Mono'));
         setA('gr-promA', pr[0] - 4 + 60 * k, pr[1] + 68);
         const gy = Y0 + 38;
         $('gr-gene').innerHTML = (step === 7 && p > .35 ? '' : `<path d="M${TSS},${Y0 - 20} v-40 h26" stroke="${C.text}" stroke-width="3" fill="none" marker-end="url(#arrow)"/>`) +

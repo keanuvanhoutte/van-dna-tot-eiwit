@@ -110,29 +110,29 @@ const scene = {
             let fr = pth([[xi(E0) - BP / 2, Y - GAP / 2 - 36 + dy], [xi(E1) + BP / 2, Y - GAP / 2 - 36 + dy]], C.dna, 8);
             for (let i = E0; i <= E1; i++) fr += seg(xi(i), Y - GAP / 2 - 36 + dy, xi(i), Y - GAP / 2 - 8 + dy, BASE[SEQ[i]], 7) + txt(xi(i), Y - GAP / 2 - 52 + dy, SEQ[i], BASE[SEQ[i]], 24, 'middle', 700, 'JetBrains Mono');
             fr += `<rect x="${f1(xi(D) - 22)}" y="${f1(Y - GAP / 2 - 80 + dy)}" width="${BP + 44}" height="80" rx="14" fill="none" stroke="${C.danger}" stroke-width="4"/>`;
-            fx += `<g opacity="${f1(op)}">${fr}${txt(xi(E1) + 60, Y - GAP / 2 - 28 + dy, T2('± 30 letters', '± 30 letters'), C.text, 24, 'start', 700)}${txt(xi(E1) + 60, Y - GAP / 2 + 2 + dy, T2('(hier ingekort)', '(drawn shorter)'), C.muted, 22, 'start', 500)}</g>`;
+            fx += `<g opacity="${f1(op)}">${fr}${txt(xi(E1) + 60, Y - GAP / 2 - 28 + dy, T2('± 30 letters', '≈ 30 letters'), C.text, 24, 'start', 700)}${txt(xi(E1) + 60, Y - GAP / 2 + 2 + dy, T2('(hier ingekort)', '(drawn shorter)'), C.muted, 22, 'start', 500)}</g>`;
           }
         }
         // eiwitten (enkel het label in de figuur; namen staan in de legende / uitleg)
         const spotOp = kSpot * (1 - ph(2, .5, .8));
         // alle eiwitten raken de streng die ze bewerken (XPC tegenover de schade, TFIIH op de bel, XPF/XPG op de randen, Pol/ligase in het gat)
         fx += prot(xd, Y + GAP / 2 + 64 + 60 * (1 - kSpot), 120, 40, SPOT, T2('herkenner', 'spotter'), 24, spotOp);
-        fx += prot(xd, Y - GAP / 2 - upTop(D) - 70, 120, 40, OPEN, T2('opener', 'opener'), 24, kOpen * (1 - ph(3, .55, .85)));
+        fx += prot(xd, Y - GAP / 2 - upTop(D) - 92, 120, 40, OPEN, T2('opener', 'opener'), 24, kOpen * (1 - ph(3, .55, .85)));
         const cutOp = kCut * (1 - ph(4, 0, .35));
-        fx += prot(xi(E0) - 6, Y - GAP / 2 - upTop(E0) - 70, 100, 40, CUT, 'ERCC1–XPF', 22, cutOp) + prot(xi(E1) + 6, Y - GAP / 2 - upTop(E1) - 70, 100, 40, CUT, 'XPG', 22, cutOp);
+        fx += prot(xi(E0) - 6, Y - GAP / 2 - upTop(E0) - 92, 100, 40, CUT, 'ERCC1–XPF', 22, cutOp) + prot(xi(E1) + 6, Y - GAP / 2 - upTop(E1) - 92, 100, 40, CUT, 'XPG', 22, cutOp);
         if (cutOp > .01) fx += `<g opacity="${f1(cutOp)}">${txt(xi(E0) - BP / 2, Y - GAP / 2 - upTop(E0) - 4, '✂', '#fff', 30)}${txt(xi(E1) + BP / 2, Y - GAP / 2 - upTop(E1) - 4, '✂', '#fff', 30)}</g>`;
         const px = lerp(xi(E0), xi(E1), kFill);
         fx += prot(px, Y - GAP / 2 - 44, 120, 38, POL, 'polymerase', 22, ph(5, 0, .12) * (1 - ph(5, .75, .85)));
-        fx += prot(xi(E1) + BP / 2, Y - GAP / 2 - 62, 90, 36, LIG, 'ligase', 22, kLig * (1 - ph(6, 0, .3)));
+        fx += prot(xi(E1) + BP / 2, Y - GAP / 2 - 84, 90, 36, LIG, 'ligase', 22, kLig * (1 - ph(6, 0, .3)));
         // beschermers op de onderste streng
         const rpaOp = kRpa * (1 - ph(5, .7, .95));
-        rp = rpaRow(xi(E0) - BP / 2, xi(E1) + BP / 2, Y + GAP / 2 + downBot(D) + 70, rpaOp, 76, 20);
-        fx += tag(xi(E1) + BP / 2 + 30, Y + GAP / 2 + 78, T2('beschermers', 'protectors'), RPA, 22, 'start', rpaOp);
+        rp = rpaRow(xi(E0) - BP / 2, xi(E1) + BP / 2, Y + GAP / 2 + downBot(D) + 92, rpaOp, 76, 20);
+        fx += tag(xi(E1) + BP / 2 + 30, Y + GAP / 2 + 100, T2('beschermers', 'protectors'), RPA, 22, 'start', rpaOp);
         // eindbeeld: hersteld
         if (kDone > .01) fx += `<g opacity="${f1(kDone)}"><rect x="${f1(xi(E0) - BP / 2 - 8)}" y="${Y - GAP / 2 - 52}" width="${f1((E1 - E0 + 1) * BP + 16)}" height="${GAP + 112}" rx="18" fill="none" stroke="${C.ok}" stroke-width="4"/>${txt(800, Y + GAP / 2 + 120, T2('✓ hersteld: zelfde letters, geen bult', '✓ repaired: same letters, no bump'), C.ok, 30, 'middle', 700)}</g>`;
         $('nr-dna').innerHTML = dna; $('nr-fx').innerHTML = fx; $('nr-rpa').innerHTML = rp;
         const a = $('nr-rpaa');
-        if (rpaOp > .5) { a.setAttribute('cx', f1(xi(D))); a.setAttribute('cy', f1(Y + GAP / 2 + downBot(D) + 96)); } else { a.setAttribute('cx', -99); a.setAttribute('cy', -99); }
+        if (rpaOp > .5) { a.setAttribute('cx', f1(xi(D))); a.setAttribute('cy', f1(Y + GAP / 2 + downBot(D) + 118)); } else { a.setAttribute('cx', -99); a.setAttribute('cy', -99); }
       },
     };
   },
@@ -161,7 +161,7 @@ export default with3d(scene, {
         title: { nl: 'Eén streng loopt apart door de opener', en: 'One strand runs separately through the opener' },
         text: { nl: 'Waar het DNA splitst, zit een kleine helper; de losse streng loopt verder door de opener.', en: 'Where the DNA splits, a small helper sits; the loose strand runs on through the opener.' },
         show: [sp({ chain: ['A', 'C', 'D', 'E', 'F'] }, '#33415c', .55), sp({ chain: 'B' }, OPEN, .9), sp({ chain: 'G' }, XPA_C, 2.4), ...dnaN(3),
-          { ...sp({ chain: 'J', resi: 27 }, C.dna2, 3), label: { nl: 'dubbel DNA', en: 'double DNA' } },
+          { ...sp({ chain: 'J', resi: 27 }, C.dna2, 3), label: { nl: 'dubbel DNA', en: 'double-stranded DNA' } },
           { ...sp({ chain: 'K', resi: 38 }, C.dna, 3), label: { nl: 'losse streng', en: 'single strand' } },
           { ...sp({ chain: 'G', resi: 175 }, XPA_C, 2.4), label: { nl: 'helper', en: 'helper' } }] },
     ],

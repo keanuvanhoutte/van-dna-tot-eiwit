@@ -75,6 +75,7 @@ export default {
     <g data-node="rnaprocessing" data-nolabel data-color="${C.rna}"><g id="pr-rna"></g></g>
     <g id="pr-gtf"></g>
     <g data-node="rnapol" data-color="${G.pol}" data-label="${T2('RNA-polymerase II (3D)', 'RNA polymerase II (3D)')}"><g id="pr-pol"></g><circle id="pr-polA" data-anchor="rnapol" r="1" fill="none"/></g>
+    <g id="pr-elemlab"></g>
     <g data-node="genregulatie" data-color="${G.med}" data-label="${T2('Mediator ← activatoren', 'Mediator ← activators')}"><g id="pr-med"></g><circle id="pr-medA" data-anchor="genregulatie" r="1" fill="none"/></g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Elongatie → transcriptie', 'Elongation → transcription')}"><g id="pr-go"></g><circle id="pr-goA" data-anchor="transcriptie" r="1" fill="none"/></g>
     <g data-node="capping" data-nolabel data-color="${C.rna}"><g id="pr-cap"></g></g>
@@ -115,7 +116,7 @@ export default {
         $('pr-ruler').innerHTML = r;
 
         // elementen
-        let el = '';
+        let el = '', elLab = '';   // namen van de elementen in een aparte laag boven Pol II (anders verdwijnen Inr/MTE/DPE onder de Pol II-vorm)
         ELEM.forEach((e, i) => {
           const appear = step === 0 ? ease(sub(p, .08 + i * .1, .2 + i * .1)) : 1;
           if (appear <= .01) return;
@@ -126,12 +127,13 @@ export default {
           const bent = theta > .05 && e.b < -24;
           const isT = theta > .05 && e.id === 'TATA';
           const lx = isT ? cm[0] - 105 : bent ? cm[0] - 70 : cm[0], ly = isT ? cm[1] + 36 : bent ? cm[1] + 10 : Y0 + 52;
-          el += txt(lx, ly + 4, e.id, e.col, 22, 'middle', 800);
-          if (e.seq && step === 0) el += txt(lx, ly + 28, e.seq, C.muted, 19, 'middle', 600, 'JetBrains Mono');
+          elLab += `<g opacity="${f1(appear)}">` + txt(lx, ly + 4, e.id, e.col, 22, 'middle', 800);
+          if (e.seq && step === 0) elLab += txt(lx, ly + 28, e.seq, C.muted, 19, 'middle', 600, 'JetBrains Mono');
+          elLab += '</g>';
           el += '</g>';
         });
         if (step === 0) el += txt(bx(1) + 30, Y0 - 62, T2('startplaats +1', 'start site +1'), C.text, 20, 'start');
-        $('pr-elem').innerHTML = el;
+        $('pr-elem').innerHTML = el; $('pr-elemlab').innerHTML = elLab + (step === 5 ? txt(aX + 10, Y0 - 44, T2('eerste nt', 'first nt'), C.rna, 18, 'start') : '');
 
         // noot over CpG-eilanden (stap 0) + zijpad-knop Pol I/III
         const nOp = step === 0 ? sub(p, .7, .85) : 0;
@@ -218,7 +220,7 @@ export default {
           }
           rna = `<path d="${pts.map((q, i) => `${i ? 'L' : 'M'}${f1(q[0])},${f1(q[1])}`).join('')}" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round"/>`;
           if (step >= 7) rna += txt(pts[pts.length - 1][0] - 14, pts[pts.length - 1][1] - 8, `${nt} nt`, C.rna, 20, 'end');
-          if (step === 5) rna += txt(aX + 10, Y0 - 44, T2('eerste nt', 'first nt'), C.rna, 18, 'start');
+          // 'eerste nt' staat in de bovenste labellaag (pr-elemlab)
         }
         $('pr-rna').innerHTML = rna;
         $('pr-cap').innerHTML = '';

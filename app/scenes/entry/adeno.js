@@ -87,7 +87,7 @@ export default {
       <circle data-anchor="kernimport" data-pos="below" cx="${PORE[0] - 165}" cy="${PORE[1] + 20}" r="1" fill="none"/>
     </g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Pol II leest de virale genen', 'Pol II reads the viral genes')}" id="ad-txn" opacity="0">
-      <circle data-anchor="transcriptie" cx="1222" cy="772" r="1" fill="none"/>
+      <circle data-anchor="transcriptie" cx="1360" cy="830" r="1" fill="none"/>
       <g id="ad-episome"></g>
     </g>
 

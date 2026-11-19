@@ -72,7 +72,7 @@ export default {
       <g id="gp-gene"></g>
       ${hot('dnahelix', C.dna, dna(-600, 2200, DY))}
       ${T(40, 72, T2('buiten de cel', 'outside the cell'), { size: 24, col: C.muted, anchor: 'start', w: 500 })}
-      ${T(40, 420, 'cytosol', { size: 24, col: C.muted, anchor: 'start', w: 500 })}
+      ${T(125, 420, 'cytosol', { size: 24, col: C.muted, anchor: 'start', w: 500 })}
       ${T(700, 752, T2('celkern', 'nucleus'), { size: 24, col: '#9cc0ff', anchor: 'start', w: 500 })}
       <g id="gp-ac">${ac}</g>
       <g id="gp-rec"></g>

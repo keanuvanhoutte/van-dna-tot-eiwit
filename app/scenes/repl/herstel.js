@@ -9,7 +9,7 @@ import { NEW, seg, tag, arrow } from './_draw.js';
 const ROWS = [
   { k: 'mmr', y: 205, col: '#5fd3e6', dmg: { nl: 'kopieerfout', en: 'copying error' }, how: { nl: 'stuk nieuwe streng opnieuw maken', en: 'remake a stretch of the new strand' }, abbr: 'MMR', name: { nl: 'mismatch-herstel', en: 'mismatch repair' } },
   { k: 'ber', y: 375, col: '#7fdc6a', dmg: { nl: 'één beschadigde letter', en: 'one damaged letter' }, how: { nl: 'die ene letter vervangen', en: 'replace that one letter' }, abbr: 'BER', name: { nl: 'base-excisieherstel', en: 'base excision repair' } },
-  { k: 'ner', y: 545, col: '#ffc247', dmg: { nl: 'bult door UV-licht', en: 'bump from UV light' }, how: { nl: 'stuk van ± 30 letters vervangen', en: 'replace a piece of ± 30 letters' }, abbr: 'NER', name: { nl: 'nucleotide-excisieherstel', en: 'nucleotide excision repair' } },
+  { k: 'ner', y: 545, col: '#ffc247', dmg: { nl: 'bult door UV-licht', en: 'bump from UV light' }, how: { nl: 'stuk van ± 30 letters vervangen', en: 'replace a piece of ≈ 30 letters' }, abbr: 'NER', name: { nl: 'nucleotide-excisieherstel', en: 'nucleotide excision repair' } },
   { k: 'dsb', y: 715, col: '#ff8a3d', dmg: { nl: 'breuk door beide strengen', en: 'break through both strands' }, how: { nl: 'lijmen, of de kopie gebruiken', en: 'glue, or use the copy' }, abbr: 'NHEJ / HR', name: { nl: 'eindverbinding / recombinatie', en: 'end joining / recombination' } },
 ];
 const SEQ = 'GACTCGTACG', BP = 34, DX = 70;          // mini-ladder: 10 bp × 34 px, x 70–410

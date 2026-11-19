@@ -89,7 +89,7 @@ export default {
         const pill = (x, y, r = 11) => `<g opacity="${f1(fade)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${DRUG}" stroke="#fff" stroke-width="2"/></g>`;
         if (step === 1) { const d = ease(sub(p, .1, .45)); g += PORX.map(x => pill(x, LG.top - 40 + (LG.pg - LG.top + 40) * d, 8)).join(''); }   // door de porines naar de celwand
         if (step === 2) g += pill(TG.gyr[0] + 30, TG.gyr[1] - 22);
-        if (step === 3) g += pill(TG.pol[0] + 20, TG.pol[1] - 6);
+        if (step === 3) g += pill(TG.pol[0] + 22, TG.pol[1] + 24);   // onder het woord RNAP, niet erover
         if (step === 4) g += pill(TG.ribo[0] - 4, TG.ribo[1] + 26) + pill(TG.ribo[0] + 6, TG.ribo[1] - 30);
         // breuken in het DNA (stap 2) en barstende wand (stap 1)
         if (step === 2) { const b = ease(sub(p, .55, .8)); if (b > .01) g += `<g opacity="${f1(b)}"><path d="M${TG.gyr[0] - 66},${TG.gyr[1] + 13} l14,-26 M${TG.gyr[0] - 54},${TG.gyr[1] + 13} l14,-26 M${TG.gyr[0] + 40},${TG.gyr[1] + 13} l14,-26 M${TG.gyr[0] + 52},${TG.gyr[1] + 13} l14,-26" stroke="${C.danger}" stroke-width="6" stroke-linecap="round"/></g>`; }
@@ -127,7 +127,7 @@ export default {
         if (step === 3) {
           sd += txt(MX, 205, T2('Rifampicine', 'Rifampicin'), C.text, 30, 'middle', 800);
           sd += prot(MX, 340, 110, 80, K.rnap, 1, 7, T2('RNA-polymerase', 'RNA polymerase'), 22);
-          sd += `<g opacity="${f1(fade)}"><circle cx="${MX + 40}" cy="352" r="16" fill="${DRUG}" stroke="#fff" stroke-width="2"/></g>`;
+          sd += `<g opacity="${f1(fade)}"><circle cx="${MX + 40}" cy="378" r="16" fill="${DRUG}" stroke="#fff" stroke-width="2"/></g>`;
           sd += `<path d="M${MX + 60},330 q30,-10 40,-30" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round" opacity="${f1(1 - sub(p, .3, .55))}"/>`;
           sd += `<g opacity="${f1(sub(p, .35, .6))}">` + txt(MX, 470, T2('het nieuwe RNA kan niet', 'the new RNA cannot'), C.text, 24) + txt(MX, 506, T2('verder groeien', 'grow any further'), C.text, 24) + '</g>';
           sd += `<g opacity="${f1(sub(p, .6, .85))}">` + txt(MX, 575, T2('→ geen nieuw RNA', '→ no new RNA'), C.text, 24, 'middle', 700) + '</g>';
@@ -145,8 +145,8 @@ export default {
           const rows = [
             [T2('celwand', 'cell wall'), T2('ja', 'yes'), T2('geen', 'none')],
             ['gyrase', T2('ja', 'yes'), T2('topo II: anders', 'topo II: different')],
-            [T2('RNA-pol.', 'RNA pol.'), T2('holte', 'pocket'), T2('anders', 'different')],
-            [T2('ribosoom', 'ribosome'), '70S', T2('80S: G i.p.v. A', '80S: G not A')],
+            [T2('RNA-pol.', 'RNA pol.'), T2('ja', 'yes'), T2('geen holte', 'no pocket')],
+            [T2('ribosoom', 'ribosome'), '70S', T2('80S: G, geen A', '80S: G, not A')],
           ];
           rows.forEach((r, i) => {
             const y = 270 + i * 82, o = sub(p, .1 + i * .15, .25 + i * .15);

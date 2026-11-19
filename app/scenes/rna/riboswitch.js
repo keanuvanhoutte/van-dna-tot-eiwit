@@ -80,10 +80,10 @@ export default {
       ${T(1230, 330, T2('Het echte vanggedeelte', 'The real catching part'), { size: 28, anchor: 'start', w: 700 })}
       ${T(1230, 370, T2('bacterie · PDB 1Y26', 'bacterium · PDB 1Y26'), { size: 24, anchor: 'start', col: C.muted, w: 500 })}
       <g id="rw-leg0">${T(1230, 430, T2('oranje: RNA', 'orange: RNA'), { size: 24, anchor: 'start', col: RNA })}
-      ${T(1230, 466, T2('blauw: adenine', 'blue: adenine'), { size: 24, anchor: 'start', col: ADE })}</g>
+      ${T(1230, 466, T2('groen: adenine', 'green: adenine'), { size: 24, anchor: 'start', col: ADE })}</g>
       <g id="rw-leg3" opacity="0">${T(1230, 430, T2('arm 1 en arm 2', 'arm 1 and arm 2'), { size: 24, anchor: 'start', col: ARM1 })}
       ${T(1230, 466, T2('grijs: rest van het RNA', 'grey: rest of the RNA'), { size: 24, anchor: 'start', col: '#8d9ab8' })}</g>
-      <g id="rw-leg4" opacity="0">${T(1230, 430, T2('blauw: adenine', 'blue: adenine'), { size: 24, anchor: 'start', col: ADE })}
+      <g id="rw-leg4" opacity="0">${T(1230, 430, T2('groen: adenine', 'green: adenine'), { size: 24, anchor: 'start', col: ADE })}
       ${T(1230, 466, T2('rood: de U die ermee paart', 'red: the U that pairs with it'), { size: 24, anchor: 'start', col: U74 })}
       ${T(1230, 502, T2('grijs: rest van het RNA', 'grey: rest of the RNA'), { size: 24, anchor: 'start', col: '#8d9ab8' })}</g>
     </g>

@@ -69,14 +69,14 @@ export default {
     <g data-node="trna" data-color="${C.trna}" data-label="tRNA"><g id="tl-trnas"></g><circle id="tl-trnaA" data-anchor="trna" r="1" fill="none"/></g>
     <g data-node="aars" data-color="${C.trna}" data-label="${T2('geladen tRNA (aminoacyl-tRNA)', 'charged tRNA (aminoacyl-tRNA)')}" data-nolabel><g id="tl-inc"></g></g>
     <g data-node="elongatie" data-color="${C.prot}" data-label="eEF1A · eEF2"><g id="tl-eef"></g><circle id="tl-eefA" data-anchor="elongatie" r="1" fill="none"/></g>
-    <g data-node="terminatie" data-color="${C.prot}" data-label="${T2('eRF1 (stop)', 'eRF1 (stop)')}"><g id="tl-rf"></g></g>
+    <g data-node="terminatie" data-color="${C.prot}" data-label="${T2('eRF1 (stop)', 'eRF1 (stop)')}"><g id="tl-rf"></g><circle id="tl-rfA" data-anchor="terminatie" cx="-9999" r="1" fill="none"/></g>
     <g data-node="codon" data-color="${C.rna}" data-label="${T2('mRNA · codons', 'mRNA · codons')}"><g id="tl-mrna"></g><circle id="tl-mrnaA" data-anchor="codon" data-pos="below" r="1" fill="none"/></g>
     <g data-node="polya" data-color="${C.rna}" data-label="${T2('Poly(A)-staart', 'Poly(A) tail')}"><g id="tl-polya"></g><circle id="tl-polyaA" data-anchor="polya" r="1" fill="none"/></g>
     <g data-node="basenparing" data-color="${C.rna}" data-nolabel><g id="tl-pairs"></g></g>
     <g data-node="peptide" data-color="${C.chain}" data-nolabel><g id="tl-ptc"></g></g>
     <g id="tl-abce"></g>
     <g id="tl-ov"></g>
-    <g data-node="initiatie" data-color="${C.prot}" data-label="${T2("5′-cap · initiatiefactoren", "5′ cap · initiation factors")}"><g data-node="capping" data-color="${C.cap}" data-nolabel><g id="tl-cap"></g></g><g id="tl-eif"></g></g>
+    <g data-node="initiatie" data-color="${C.prot}" data-label="${T2("5′-cap · initiatiefactoren", "5′ cap · initiation factors")}"><g data-node="capping" data-color="${C.cap}" data-nolabel><g id="tl-cap"></g></g><g id="tl-eif"></g><circle id="tl-initA" data-anchor="initiatie" r="1" fill="none"/></g>
     </svg>`;
   },
   init(svg) {
@@ -107,6 +107,14 @@ export default {
         eiwit(x + 44, y - 120, 36, 28, C.prot, { seed: 33, bumps: .08 }) + eiwit(x - 2, y + 16, 34, 30, C.prot, { seed: 31, bumps: .08 }) +
         txt(x + 44, y - 113, 'eRF1', '#fff', 19) + txt(x - 2, y + 22, 'N', '#fff', 16) +
         txt(x - 50, y - 214, 'GGQ', '#fff', 14, 'start', 700);
+    }
+    /* tRNA's en factoren komen binnen en vertrekken langs de opening tussen de subeenheden, loodrecht op het scherm
+       (Schmeing & Ramakrishnan 2009): ze schuiven niet zijdelings door de wand van de 60S, maar komen van vóór (groter,
+       doorschijnend) naar hun plaats. k = 0: op hun plaats · 1: nog vóór het ribosoom (onzichtbaar); (dx, dy) = kleine zijdrift */
+    function front(g, x, y, k, dx = 0, dy = 0) {
+      if (k <= .001) return g;
+      if (k >= .999 || !g) return '';
+      return `<g opacity="${f1(1 - k)}" transform="translate(${f1(x + dx * k)} ${f1(y + dy * k)}) scale(${(1 + .3 * k).toFixed(3)}) translate(${-x} ${-y})">${g}</g>`;
     }
     function bead(x, y, a, r = 18) {
       return `<circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${CLASSCOL[AACLASS[a]] ?? '#aaa'}" stroke="#0a1224" stroke-width="2"/>` +
@@ -157,6 +165,8 @@ export default {
           txt(cs + 60, YM + 150, 'start AUG', C.text, 60, 'middle', 700) + txt(ce - 60, YM + 150, 'stop UAA', C.danger, 60, 'middle', 700) + '</g>';
       }
       $('tl-ov').innerHTML = o;
+      // label '5′-cap · initiatiefactoren': niet in het overzicht (daar staat de cap aan de rand en zijn er nog geen factoren)
+      $('tl-initA').setAttribute('cx', f1(ov > .5 ? -99999 : capX + 40)); $('tl-initA').setAttribute('cy', YM - 85);
       return capX;
     }
     function pairLines(x, codon, op) {
@@ -173,21 +183,24 @@ export default {
       // n aminozuren AAS[0..n-1]; nieuwste bij het anker, oudste het verst weg (N-terminus eerst uit de tunnel).
       // released (0..1): de vrijgekomen keten schuift weg en klapt samen tot een compact bolletje (begin van de vouwing)
       const pts = [], FOLD = [380, 160];
+      // plaats op het ketenpad: 0 = aan het tRNA (PTC), 1–3 in de uitgangstunnel, ≥ 4 buiten het ribosoom (fractioneel = ertussen)
+      const at = j => j === 0 ? anchor : j < 4 ? TUBE[j - 1] : [TUNNEL[0] - 24 - (j - 4) * 44, TUNNEL[1] - 34 - (j - 4) * 12 + Math.cos((j - 4) * 1.4) * 12];
+      const along = f => { const j = Math.floor(f), q = f - j, A = at(j), B = at(j + 1); return [lerp(A[0], B[0], q), lerp(A[1], B[1], q)]; };
+      // released: eerst schuift de keten langs haar eigen pad door de tunnel naar buiten (het C-uiteinde komt net buiten de tunnel),
+      // dan pas klapt ze samen tot een compact bolletje (begin van de vouwing)
+      const ra = released > 0 ? ease(clamp(released * 2)) : 0, rb = released > 0 ? ease(clamp(released * 2 - 1)) : 0;
       for (let s = 0; s < n; s++) {
-        let x, y;
-        if (s === 0) { x = anchor[0]; y = anchor[1]; }
-        else if (s < 4) { [x, y] = TUBE[s - 1]; }                   // in de uitgangstunnel van de 60S (vast, het uiteinde bij het PTC beweegt)
-        else { const u = s - 4; x = TUNNEL[0] - 24 - u * 44; y = TUNNEL[1] - 34 - u * 12 + Math.cos(u * 1.4) * 12; }
-        if (released > 0) {
+        let [x, y] = along(s + 4 * ra);
+        if (rb > 0) {
           const i = n - 1 - s, ang = i * 2.4, rad = 27 * Math.sqrt(i + .3);   // zonnebloemspiraal: compact, zonder overlap
-          x = lerp(x, FOLD[0] + rad * Math.cos(ang), released); y = lerp(y, FOLD[1] + rad * Math.sin(ang), released);
+          x = lerp(x, FOLD[0] + rad * Math.cos(ang), rb); y = lerp(y, FOLD[1] + rad * Math.sin(ang), rb);
         }
         pts.push([x, y, AAS[n - 1 - s]]);
       }
       let g = pts.length > 1 ? `<path d="${pts.map((p, i) => `${i ? 'L' : 'M'}${f1(p[0])},${f1(p[1])}`).join('')}" stroke="${C.chain}" stroke-width="4" fill="none"/>` : '';
       g += pts.map(([x, y, a]) => bead(x, y, a, 21)).join('');
       const tip = pts[Math.min(3, pts.length - 1)] ?? anchor;
-      const nt = pts[pts.length - 1] ?? anchor, ca = released > .5 ? [FOLD[0] + 200, FOLD[1] + 10] : [nt[0] - 200, nt[1] + 40];
+      const nt = pts[pts.length - 1] ?? anchor, ca = released > .5 ? [FOLD[0] + 200, FOLD[1] + 10] : n <= 4 ? [TUNNEL[0], TUNNEL[1] - 20] : [TUNNEL[0] + 130, TUNNEL[1] - 70];   // korte keten: label boven de tunneluitgang (niet op het PTC-label)
       $('tl-chainA').setAttribute('cx', f1(ca[0])); $('tl-chainA').setAttribute('cy', f1(ca[1]));
       return g;
     }
@@ -244,8 +257,8 @@ export default {
         let tr = '', inc = '', eef = '', rf = '', pairs = '', ptc = '', abce = '';
         $('tl-eefA').setAttribute('cx', '-9999');
         // tRNA-label links naast de arm van het tRNA in de P-plaats (niet op de keten)
-        const tAx = phase === 'elong' ? SITE.P - v * COD - ease(sub(u, .85, 1)) * 160 : SITE.P;
-        $('tl-trnaA').setAttribute('cx', step === 0 || (step === 14 && p > .5) ? '-9999' : f1(tAx - 80)); $('tl-trnaA').setAttribute('cy', f1(YM - 52 - 90 - (phase === 'elong' ? ease(sub(u, .85, 1)) * 220 : 0)));
+        const tAx = phase === 'elong' ? SITE.P - v * COD : SITE.P;
+        $('tl-trnaA').setAttribute('cx', step === 0 || (step === 14 && p > .5) ? '-9999' : f1(tAx - 80)); $('tl-trnaA').setAttribute('cy', f1(YM - 52 - 90));
         let chain = '';
         const yDock = YM - 52;
         if (phase === 'init') {
@@ -257,16 +270,16 @@ export default {
           const bond = sub(u, .45, .6), shift = v * COD;
           const leave = sub(u, .85, 1);
           const pX = SITE.P - shift, aX = SITE.A - shift;
-          const pUp = leave * 220, pLeft = leave * 160;
-          tr += trna(pX - pLeft, yDock - pUp, c, null, 1 - leave);
+          const pUp = 0, pLeft = 0;
+          tr += front(trna(pX, yDock, c, null, 1), pX, yDock, ease(leave), -60, -30);   // E-tRNA verlaat het ribosoom langs de opening tussen de subeenheden
           // binnenkomend tRNA (codon c+1)
           const arr = ease(sub(u, 0, .3));
-          const ix = lerp(SITE.A + 380, aX, arr), iy = lerp(yDock - 420, yDock, arr);
+          const ix = aX, iy = yDock, kIn = 1 - arr;               // aa-tRNA·eEF1A komt van vóór de A-plaats binnen (factorkant rechts)
           const carriesOwnAa = bond < .5;
-          inc += trna(ix, iy, c + 1, carriesOwnAa ? AAS[c + 1] : null, sub(u, 0, .08) * 1, step === 6);
-          const eA = u < .4 ? [ix + 250, iy - 140] : u >= .62 && u < .82 ? [SITE.A + 190 - shift, 352] : [-9999, 0];
+          inc += front(trna(ix, iy, c + 1, carriesOwnAa ? AAS[c + 1] : null, 1, step === 6), ix, iy, kIn, 60, -30);
+          const eA = u < .4 && arr > .5 ? [ix + 250, iy - 140] : u >= .62 && u < .82 ? [SITE.A + 190 - shift, 352] : [-9999, 0];
           $('tl-eefA').setAttribute('cx', f1(eA[0])); $('tl-eefA').setAttribute('cy', f1(eA[1]));
-          if (u < .45) eef = factor(ix + 84, iy - 150, 150, 34, 'eEF1A·GTP', C.prot2, 1 - sub(u, .38, .45), 19);
+          if (u < .45) eef = front(factor(ix + 84, iy - 150, 150, 34, 'eEF1A·GTP', C.prot2, 1 - sub(u, .38, .45), 19), ix, iy, kIn, 60, -30);
           if (u >= .6 && u < .85) eef = factor(SITE.A + 70 - shift, 360, 136, 34, 'eEF2·GTP', C.prot2, sub(u, .6, .64) * (1 - sub(u, .76, .82)), 19);
           pairs += pairLines(aX, CODONS[c + 1], sub(u, .3, .38));
           if (u < .85) pairs += pairLines(pX, CODONS[c], .55);
@@ -284,12 +297,13 @@ export default {
           // terminatie: P = tRNA(c) met keten van c+1 residuen; A = stopcodon
           const rel = step === 13 ? ease(sub(p, .2, 1)) : step === 14 ? 1 : 0;
           const lv = step === 14 ? sub(p, .1, .6) : 0;
-          tr += trna(SITE.P - lv * 160, yDock - lv * 220, c, null, 1 - lv);
+          tr += front(trna(SITE.P, yDock, c, null, 1), SITE.P, yDock, ease(lv), -60, -30);
           if (lv < .05) pairs += pairLines(SITE.P, CODONS[c], .55);   // het P-tRNA blijft op zijn codon gepaard tot het vertrekt
           const rin = step === 12 ? ease(sub(p, 0, .5)) : 1;
-          const rx = lerp(SITE.A + 380, SITE.A, rin), ry = lerp(yDock - 420, yDock, rin);
+          const rx = SITE.A, ry = yDock;                           // eRF1·eRF3 komt net als een tRNA van vóór de A-plaats binnen
           const rop = step === 14 ? 1 - sub(p, 0, .4) : 1;
-          rf = (rop <= .01 ? '' : `<g opacity="${f1(rop)}">` + eRF1(rx, ry) + '</g>') + factor(rx + 100, ry - 170, 136, 34, 'eRF3·GTP', C.prot2, step === 12 ? sub(p, .1, .4) * (1 - sub(p, .7, .9)) : 0, 18);
+          rf = front((rop <= .01 ? '' : `<g opacity="${f1(rop)}">` + eRF1(rx, ry) + '</g>') + factor(rx + 100, ry - 170, 136, 34, 'eRF3·GTP', C.prot2, step === 12 ? sub(p, .1, .4) * (1 - sub(p, .7, .9)) : 0, 18), rx, ry, 1 - rin, 60, -30);
+          $('tl-rfA').setAttribute('cx', rin > .5 && rop > .1 ? f1(rx + 150) : '-9999'); $('tl-rfA').setAttribute('cy', f1(ry - 60));
           chain = chainSVG([SITE.P + 22, yDock - 222], c + 1, rel);
           if (step === 14) abce += factor(SITE.P, 505, 110, 38, 'ABCE1', C.prot2, sub(p, .2, .45), 22);
         }

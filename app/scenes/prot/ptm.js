@@ -90,7 +90,7 @@ export default {
       if (k === 'ss') ill = `<circle cx="${cx - 60}" cy="${iy}" r="24" fill="${CLASSCOL.p}" stroke="#0a1224" stroke-width="2"/>` + T(cx - 60, iy + 7, 'Cys', { size: 17, col: '#0a1224', halo: false }) + `<circle cx="${cx + 60}" cy="${iy}" r="24" fill="${CLASSCOL.p}" stroke="#0a1224" stroke-width="2"/>` + T(cx + 60, iy + 7, 'Cys', { size: 17, col: '#0a1224', halo: false }) + `<line x1="${cx - 34}" y1="${iy}" x2="${cx + 34}" y2="${iy}" stroke="#ffc247" stroke-width="6"/>` + T(cx, iy - 12, 'S–S', { size: 18, col: '#ffc247' });
       if (k === 'hy') ill = `<circle cx="${cx - 40}" cy="${iy}" r="24" fill="${CLASSCOL.s}" stroke="#0a1224" stroke-width="2"/>` + T(cx - 40, iy + 7, 'Pro', { size: 17, col: '#0a1224', halo: false }) + T(cx + 4, iy + 8, '→', { size: 26 }) + `<circle cx="${cx + 50}" cy="${iy}" r="24" fill="${CLASSCOL.s}" stroke="#0a1224" stroke-width="2"/>` + T(cx + 50, iy + 7, 'Hyp', { size: 17, col: '#0a1224', halo: false }) + tag(cx + 84, iy - 30, 'OH', '#ff8a3d', { fs: 17, w: 44 });
       const body = panel(x0, y0, 370, 320, { col }) + T(cx, y0 + 60, title, { size: 30, col, w: 700 }) + (res ? T(cx, y0 + 112, res, { size: 23, font: 'JetBrains Mono', w: 700 }) : '') + ill;
-      return node ? `<g data-node="${node}" data-color="${col}" data-label="${node === 'ptm' ? T2('(dit hoofdstuk)', '(this chapter)') : L({ nl: '→ ' + { histonmod: 'Histonmodificaties', ubiquitine: 'Ubiquitine–proteasoom', glyco: 'N-glycosylatie', disulfide: 'Disulfidebruggen' }[node], en: '→ ' + { histonmod: 'Histone modifications', ubiquitine: 'Ubiquitin–proteasome', glyco: 'N-glycosylation', disulfide: 'Disulfide bonds' }[node] })}"${node === 'ptm' || (k === 'me') ? ' data-nolabel' : ''}>${body}<circle data-anchor="${node}" cx="${cx}" cy="${y0 + 8}" r="1" fill="none"/></g>` : body;
+      return node ? `<g data-node="${node}" data-color="${col}" data-label="${node === 'ptm' ? T2('(dit hoofdstuk)', '(this chapter)') : L({ nl: '→ ' + { histonmod: 'Histonmodificaties', ubiquitine: 'Ubiquitine–proteasoom', glyco: 'N-glycosylatie', disulfide: 'Disulfidebruggen' }[node], en: '→ ' + { histonmod: 'Histone modifications', ubiquitine: 'Ubiquitin–proteasome', glyco: 'N-glycosylation', disulfide: 'Disulfide bonds' }[node] })}"${node === 'ptm' || (k === 'me') ? ' data-nolabel' : ''}>${body}<circle data-anchor="${node}" cx="${cx}" cy="${y0 + 306}" r="1" fill="none"/></g>` : body;
     }).join('');
 
     const helices = [coil(470, 520, 600, 470, 4, 16), coil(520, 640, 700, 660, 5, 16), coil(700, 520, 840, 600, 4, 16)].map(p => chain(p, { w: 6, op: .55 })).join('');
@@ -210,7 +210,7 @@ export default {
           }
         }
         us += ubL + ubB;
-        if (step === 8) us += T(LYS[0] + 170, LYS[1] + 90, T2('K48-polyubiquitine', 'K48 polyubiquitin'), { size: 22, col: '#ffd166', op: sub(p, .7, .85), anchor: 'start' }) + T(LYS[0] + 170, LYS[1] + 122, T2('= "breek mij af"', '= "degrade me"'), { size: 22, op: sub(p, .75, .9), anchor: 'start' });
+        if (step === 8) us += T(LYS[0] + 170, LYS[1] + 90, T2('K48-polyubiquitine', 'K48 polyubiquitin'), { size: 22, col: '#ffd166', op: sub(p, .7, .85), anchor: 'start' }) + T(LYS[0] + 170, LYS[1] + 122, T2('= “breek mij af”', '= “degrade me”'), { size: 22, op: sub(p, .75, .9), anchor: 'start' });
         $('pt-ub').innerHTML = us;
         $('pt-ubA').setAttribute('cx', LYS[0] - 110); $('pt-ubA').setAttribute('cy', nUb ? LYS[1] + 30 : -9999);
 

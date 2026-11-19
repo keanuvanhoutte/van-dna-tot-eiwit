@@ -110,7 +110,7 @@ export default {
     prom += `<g data-node="gen" data-color="${C.dna}" data-nolabel>` + gene(750, false, T2('gen A', 'gene A')) + gene(840, true, T2('gen B', 'gene B')) + `</g>`;
     prom += txt(540, 718, T2('CpG-eiland (promoter)', 'CpG island (promoter)'), C.trna, 19);
     prom += `<g data-node="genregulatie" data-color="${C.ok}" data-label="${T2('Actief gen → genregulatie', 'Active gene → gene regulation')}">${polII(760, 750, 52, 26, { gul: 14, hoog: 1.4, vul: .45, achter: .5, uit: 1.2, seed: 764, label: 'Pol II', fs: 19, labelY: -16 })}` +   // app-vorm (bio.js): gen-DNA door de geul
-      `<path d="M748,718 q-10,-20 -60,-16" stroke="${C.rna}" stroke-width="4" fill="none" stroke-linecap="round"/>${txt(1440, 712, T2('AAN', 'ON'), C.ok, 22, 'end', 800)}<circle data-anchor="genregulatie" cx="760" cy="700" r="1" fill="none"/></g>`;
+      `<path d="M748,718 q-10,-20 -60,-16" stroke="${C.rna}" stroke-width="4" fill="none" stroke-linecap="round"/>${txt(1440, 712, T2('AAN', 'ON'), C.ok, 22, 'end', 800)}<circle data-anchor="genregulatie" cx="1150" cy="700" r="1" fill="none"/></g>`;
     prom += `<g>${[420, 520, 620].map(x => `<path d="${eiwitPad(x, 800, 44, 18, 779, .07)}" fill="rgba(240,107,192,.4)" stroke="#f06bc0" stroke-width="2"/>`).join('')}` +
       txt(420, 806, 'MBD2', '#fff', 18, 'middle', 700) + txt(520, 806, 'MeCP2', '#fff', 18, 'middle', 700) + txt(620, 806, 'HDAC', '#fff', 18, 'middle', 700) +
       `<path d="M780,815 l30,30 M810,815 l-30,30" stroke="${C.danger}" stroke-width="5"/>${txt(1440, 876, T2('UIT', 'OFF'), C.danger, 22, 'end', 800)}</g>`;

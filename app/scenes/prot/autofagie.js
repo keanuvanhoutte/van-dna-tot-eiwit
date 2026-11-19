@@ -134,7 +134,8 @@ export default {
         $('af-mito').innerHTML = damagedMito(MITO[0] + dx, MITO[1], step >= 2 ? .9 : 1, contentOp * dim);
         $('af-agg').innerHTML = clump(AGGC[0] + dx - 20 * kClose, AGGC[1] - 10 * kClose, 1, contentOp * dim);
         // labels binnen het zakje (niet op het membraan); na het versmelten weg
-        if (step <= 3 && kFuse <= 0) { put('af-mA', MITO[0] + dx + 40, MITO[1] - 58); put('af-aA', AGGC[0] + dx - 50 - 20 * kClose, AGGC[1] + 42); } else { put('af-mA', -99, -99); put('af-aA', -99, -99); }
+        if (step === 0) { put('af-mA', MITO[0] + dx + 40, MITO[1] - 58); put('af-aA', AGGC[0] + dx - 50, AGGC[1] + 42); }
+        else if (step <= 3 && kFuse <= 0) { put('af-mA', OC[0] + dx - OR - 120, MITO[1]); put('af-aA', OC[0] + dx, OC[1] + OR + 34); }   // zodra het membraan er is: labels buiten het zakje (niet op de membraanlijnen) else { put('af-mA', -99, -99); put('af-aA', -99, -99); }
         // membraan: kom die groeit en sluit (stap 1–2), daarna autofagosoom met twee membranen
         let mem = '';
         if (step >= 1 && kFuse <= 0) {
@@ -185,7 +186,7 @@ export default {
             const q = u < .6 ? mix(S0, E, u / .6) : mix(E, Ox, (u - .6) / .4);
             fx += `<circle cx="${f1(q[0])}" cy="${f1(q[1])}" r="7" fill="${BB}" opacity="${f1(kDig)}"/>`;
           }
-          fx += T(FUSE[0], 140, T2('bouwstenen terug naar het cytosol', 'building blocks back to the cytosol'), { size: 26, col: BB, op: ease(sub(kOut, .3, .7)) });
+          fx += T(FUSE[0] - 120, 140, T2('bouwstenen terug naar het cytosol', 'building blocks back to the cytosol'), { size: 26, col: BB, op: ease(sub(kOut, .3, .7)) });
         }
         // honger: sensor uit, veel kleine blaasjes; dagelijks: sensor aan, af en toe een blaasje
         if (step >= 5) {

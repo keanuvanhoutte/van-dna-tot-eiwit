@@ -227,7 +227,7 @@ export default {
           const coil = (x, op) => { let d = `M${x - 200},${y}`; for (let i = 1; i <= 16; i++) d += ` Q${x - 200 + i * 25 - 12},${y + (i % 2 ? -50 : 50)} ${x - 200 + i * 25},${y + Math.sin(i) * 12}`; return `<g opacity="${f1(op)}"><path d="${d}" stroke="${C.prot}" stroke-width="5" fill="none"/>` + [0, 1, 2, 3, 4, 5, 6, 7].map(i => `<circle cx="${x - 180 + i * 52}" cy="${y + (i % 2 ? 26 : -26)}" r="7" fill="#ffd84a"/>`).join('') + '</g>'; };
           const lab = (x, yy, s2, col = '#fff') => txt(x, yy, s2, col, 23);
           bg += blobN(cols[0], 1) + txt(cols[0], y - 170, T2('natief · actief', 'native · active'), C.ok, 26) + lab(cols[0], y + 170, T2('4 S–S-bruggen', '4 S–S bridges'), '#ffd84a');
-          bg += `<g opacity="${f1(k1)}"><path d="M${cols[0] + 165},${y} H${cols[1] - 225}" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/>` + lab((cols[0] + cols[1]) / 2 - 10, y - 104, T2('+ ureum (8 M)', '+ urea (8 M)')) + lab((cols[0] + cols[1]) / 2 - 10, y - 74, '+ β-mercapto-ethanol') +
+          bg += `<g opacity="${f1(k1)}"><path d="M${cols[0] + 165},${y} H${cols[1] - 225}" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/>` + lab((cols[0] + cols[1]) / 2 - 10, y - 104, T2('+ ureum (8 M)', '+ urea (8 M)')) + lab((cols[0] + cols[1]) / 2 - 10, y - 74, '+ β-mercaptoethanol') +
             coil(cols[1], 1) + txt(cols[1], y - 170, T2('ontvouwen · inactief', 'unfolded · inactive'), C.danger, 26) + lab(cols[1], y + 170, T2('S–S verbroken → 8 × SH', 'S–S broken → 8 × SH'), '#ffd84a') + '</g>';
           bg += `<g opacity="${f1(k2)}"><path d="M${cols[1] + 225},${y} H${cols[2] - 165}" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/>` + lab((cols[1] + cols[2]) / 2 + 10, y - 104, T2('stoffen weg', 'remove them')) + lab((cols[1] + cols[2]) / 2 + 10, y - 74, T2('S–S terug (oxidatie)', 'S–S re-formed (oxidation)')) +
             blobN(cols[2], 1) + txt(cols[2], y - 170, T2('opnieuw natief · actief', 'native again · active'), C.ok, 26) + lab(cols[2], y + 170, T2('zelfde 4 S–S-bruggen', 'same 4 S–S bridges'), '#ffd84a') + '</g>';
@@ -250,8 +250,8 @@ export default {
           over += txt(RX, 300, T2('100 residuen × 3 standen per residu', '100 residues × 3 states per residue'), '#c3cde2', 23);
           over += `<g opacity="${f1(k)}">` +
             `<text x="${RX}" y="378" font-size="50" text-anchor="middle" fill="${C.trna}" font-family="Inter" font-weight="700">3<tspan dy="-20" font-size="30">100</tspan><tspan dy="20"> ≈ 5 · 10</tspan><tspan dy="-20" font-size="30">47</tspan></text>` + txt(RX, 422, T2('mogelijke vormen', 'possible shapes'), '#c3cde2', 24) + '</g>';
-          over += `<g opacity="${f1(k2)}">` + txt(RX, 500, T2('aan 10¹³ vormen/s: ± 10²⁷ jaar', 'at 10¹³ shapes/s: ± 10²⁷ years'), C.danger, 27) +
-            txt(RX, 543, T2('heelal: ± 1,4 · 10¹⁰ jaar oud', 'universe: ± 1.4 · 10¹⁰ years old'), '#c3cde2', 24) +
+          over += `<g opacity="${f1(k2)}">` + txt(RX, 500, T2('aan 10¹³ vormen/s: ± 10²⁷ jaar', 'at 10¹³ shapes/s: ≈ 10²⁷ years'), C.danger, 27) +
+            txt(RX, 543, T2('heelal: ± 1,4 · 10¹⁰ jaar oud', 'universe: ≈ 1.4 · 10¹⁰ years old'), '#c3cde2', 24) +
             txt(RX, 620, T2('echte eiwitten: µs tot s', 'real proteins: µs to s'), C.ok, 28) + '</g>';
         } else if (step === 6) {
           // energietrechter (doorsnede) + bal

@@ -146,10 +146,10 @@ const scene = {
             // paringsstreepjes
             const nTop = top.length;
             for (let j = 0; j < 11; j++) { const i = Math.round(jStart) + j; if (i < nTop && kIn > .95 && Math.abs(shift - Math.round(shift)) < .01) m += seg(xOf(i), YT + BH + 1, xOf(i), YB - 1, '#c9b8ff', 2); }
-            if (step === 3) m += tag(xOf(TOP.length - 3), YT - 90, T2('5 nt paren: …GTTAG-3′', '5 nt pair: …GTTAG-3′'), C.text, 17, 'middle', sub(p, .45, .65));
+            if (step === 3) m += tag(xOf(TOP.length - 3), YT - 90, T2('5 nt paren: …GTTAG-3′', '5 nt base-pair: …GTTAG-3′'), C.text, 17, 'middle', sub(p, .45, .65));
             if (step === 4) m += tag(xOf(TOP.length + 3), YT - 90, T2('+ GGTTAG (DNA van een RNA-matrijs)', '+ GGTTAG (DNA from an RNA template)'), NEW, 17, 'middle', sub(p, .1, .25));
             if (step === 5) m += arrow(xOf(TOP.length) - 40, YT - 90, xOf(TOP.length) + 120, YT - 90, C.text, 4, sub(p, .05, .2)) + tag(xOf(TOP.length) + 40, YT - 76 - 30, T2('translocatie: 6 nt', 'translocation: 6 nt'), C.text, 17, 'middle', sub(p, .05, .2));
-            if (step <= 5) place('tl-rta', cx + 200, cy + 72); else place('tl-rta', -99, -99);
+            if (step <= 5) place('tl-rta', cx + 250, cy + 118); else place('tl-rta', -99, -99);
           } else place('tl-rta', -99, -99);
           // CST / Pol α-primase (stap 6)
           if (step === 6) {
@@ -291,10 +291,11 @@ export default with3d(scene, {
       { dur: 9000, model: 'tert', spin: .01, zoom: {},
         title: { nl: 'Echte telomerase: eiwit en RNA in één', en: 'Real telomerase: protein and RNA in one' },
         text: { nl: 'Een echte meting toont het eiwit (paars) dat zijn lange RNA (oranje) vasthoudt.', en: 'A real measurement shows the protein (purple) holding its long RNA (orange).' },
-        show: [sp({ chain: 'A' }, C.prot), sp({ chain: 'B' }, PRIMER, 2.6), sp(TPL_SEL, TPL, 2.6), sp({ chain: ['O', 'L', 'M'] }, OTHER), sp({ chain: 'N' }, C.dna, 3.2),
+        show: [sp({ chain: 'A' }, C.prot, 1.5), sp({ chain: 'B' }, PRIMER, 2.6), sp(TPL_SEL, TPL, 2.6), sp({ chain: ['O', 'L', 'M'] }, OTHER, 1.6), sp({ chain: 'N' }, C.dna, 4),
           { ...sp({ chain: 'A', resi: 600 }, C.prot), label: { nl: 'eiwit', en: 'protein' } },
           { ...sp({ chain: 'B', resi: 180 }, PRIMER, 2.6), label: 'RNA' },
-          { ...sp({ chain: 'N', resi: 24 }, C.dna, 3.2), label: 'DNA' }] },
+          // label op het DNA-stuk dat het verst van het eiwit ligt (N 26)
+          { ...sp({ chain: 'N', resi: 26 }, C.dna, 4), label: 'DNA' }] },
       { dur: 9000, model: 'tert', spin: .008, zoom: { chain: 'B', resi: [40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62] },
         title: { nl: 'Het DNA-uiteinde ligt op de RNA-matrijs', en: 'The DNA end lies on the RNA template' },
         text: { nl: 'Het uiteinde van het DNA paart met een kort stukje RNA: daar komen de nieuwe letters bij.', en: 'The end of the DNA pairs with a short piece of RNA: that is where the new letters are added.' },

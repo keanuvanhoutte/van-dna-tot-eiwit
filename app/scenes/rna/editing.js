@@ -117,7 +117,7 @@ export default {
         }
         $('ed-code').innerHTML = cd;
         setHot(svg, 'ed-cA', step === 3 && p > .4 ? [608, 628, 120, 40] : null);
-        setHot(svg, 'ed-sA', step === 1 && p > .6 ? [tx(2), YB + 90, 40, 16] : null);
+        setHot(svg, 'ed-sA', step === 1 && p > .6 ? [tx(8), YB + 110, 40, 16] : null);
         setHot(svg, 'ed-hM', step === 4 || step === 5 ? [AX + 60, AY + 54, 80, 10] : null);
 
         // ---------- rechts: apoB ----------
@@ -144,7 +144,7 @@ export default {
         if (eo > 0) {
           ab += `<g opacity="${f1(eo)}"><path d="${eiwitPad(AX + 5 * AW - 60, AY - 50, 58, 44, 14, .07)}" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/><path d="${eiwitPad(AX + 5 * AW + 60, AY - 50, 58, 44, 15, .07)}" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/>` + /* APOBEC1 als dimeer */
             `<text x="${AX + 5 * AW}" y="${AY - 44}" font-size="18" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="800">APOBEC1 (2×)</text></g>`;
-          ab += prot(AX + 11.5 * AW, AY + 38, 76, 30, 'A1CF', '#5a4bb8', eo, 16);   // op de mooring-sequentie
+          ab += prot(AX + 11.5 * AW, AY + 52, 76, 30, 'A1CF', '#5a4bb8', eo, 16);   // op de mooring-sequentie
         }
         if (step === 5) ab += note(AX + 5 * AW + 130, AY - 150, 'C → U  (+ NH₃)', '#ffd36b', 18, 'start', sub(p, .4, .55));
         if (step === 6) {

@@ -201,7 +201,7 @@ export default {
             if (!q.ml && q.xl > X0) { const y = ys(sepAt(q.xl + 12, b))[0]; fk += `<g transform="translate(${f1(q.xl + 10)} ${f1(y)}) rotate(-30)"><path d="${eiwitPad(0, 0, 14, 22, 22, .1)}" fill="${C.prot}" fill-opacity=".3" stroke="${C.prot}" stroke-width="3"/></g>`; }
           });
           const an = $('rp-fanchor');
-          if (first && step >= 3 && step <= 4) { an.setAttribute('cx', f1(first[0] + 90)); an.setAttribute('cy', f1(CY - 22)); } else { an.setAttribute('cx', -99); an.setAttribute('cy', -99); }
+          if (first && step >= 3 && step <= 4) { an.setAttribute('cx', f1(first[0])); an.setAttribute('cy', f1(CY - 48)); }   // recht boven de vork, boven de strengen (niet op een andere vork) else { an.setAttribute('cx', -99); an.setAttribute('cy', -99); }
           if (step === 3) {
             const q = b[1];
             fk += tag(q.o, CY - 118, T2('origin', 'origin'), C.muted, 17) + seg(q.o, CY - 108, q.o, CY - 70, C.muted, 2);

@@ -253,10 +253,10 @@ export default {
           const c = tipC(7.3);
           en += enz(c[0] + 79, c[1], 94, 30, T2('glucosidase II', 'glucosidase II'), { col: C.prot2, fs: 16, op: sub(p, .12, .18) * (1 - sub(p, .33, .38)), fillOp: .5 });
           en += enz(c[0] + 72, c[1], 70, 34, 'UGGT', { col: C.prot3, fs: 18, op: sub(p, .45, .52) * (1 - sub(p, .74, .8)), fillOp: .6 });
-          lb += T(1110, 655, p < .45 ? T2('vrij: gevouwen?', 'released: folded?') : T2('UGGT: "nog niet goed" → Glc terug', 'UGGT: "not yet right" → Glc back'), { size: 22, col: p < .45 ? C.text : '#c9b8ff', op: sub(p, .25, .35), anchor: 'start' });
+          lb += T(1110, 655, p < .45 ? T2('vrij: gevouwen?', 'released: folded?') : T2('UGGT: “nog niet goed” → Glc terug', 'UGGT: “not yet right” → Glc back'), { size: 22, col: p < .45 ? C.text : '#c9b8ff', op: sub(p, .25, .35), anchor: 'start' });
           // de cyclus als kleine tekening: vasthouden → los + Glc eraf → UGGT: Glc terug → opnieuw vasthouden
           const kc = sub(p, .8, .95), cy = 712, cx = [850, 1060, 1290];
-          [[T2('calnexine houdt vast', 'calnexin holds'), C.prot], [T2('los + Glc eraf', 'released + Glc off'), C.text], [T2('UGGT: Glc terug', 'UGGT: Glc back'), '#c9b8ff']]
+          [[T2('calnexine houdt vast', 'calnexin holds'), C.prot], [T2('los + Glc eraf', 'freed, Glc off'), C.text], [T2('UGGT: Glc terug', 'UGGT: Glc back'), '#c9b8ff']]
             .forEach(([s2, col], i) => lb += T(cx[i], cy, s2, { size: 18, col, anchor: 'middle', op: kc }));
           lb += arr(948, cy - 6, 985, cy - 6, C.muted, 'gl-m', { w: 3, op: kc }) + arr(1138, cy - 6, 1195, cy - 6, C.muted, 'gl-m', { w: 3, op: kc });
           lb += arr(1290, cy + 12, 850, cy + 12, C.muted, 'gl-m', { w: 3, op: kc, bend: -.12 });

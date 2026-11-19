@@ -31,7 +31,7 @@ export default {
     en: 'Schematic, not to scale. Real tRNAs are L-shaped and the shape of the ribosome is simplified. Each antibiotic has its own precise binding spot; shown is the zone where it sits. Macrolides do not stop every protein: they mainly block at certain amino acid sequences. Researchers use kirromycin to lock EF-Tu on the ribosome, as in the 3D structure 5AFI.' },
   steps: [
     { dur: 8500, cam: FULL, title: { nl: 'Het ribosoom: een topdoelwit', en: 'The ribosome: a top target' },
-      text: { nl: 'Meer dan de helft van de geneesmiddelen tegen infecties remt het ribosoom van de bacterie.', en: 'More than half of the medicines against infections inhibit the bacterial ribosome.' } },
+      text: { nl: 'Veel antibiotica remmen het ribosoom van de bacterie.', en: 'Many antibiotics inhibit the bacterial ribosome.' } },
     { dur: 9000, cam: FULL, title: { nl: 'Tetracycline houdt de A-plaats bezet', en: 'Tetracycline blocks the A site' },
       text: { nl: 'Tetracycline zit op de kleine eenheid, waar het nieuwe tRNA moet landen. Dat tRNA kan er niet meer in.', en: 'Tetracycline sits on the small subunit, where the new tRNA should land. That tRNA can no longer get in.' } },
     { dur: 9000, cam: FULL, title: { nl: 'Aminoglycosiden laten het ribosoom fouten maken', en: 'Aminoglycosides make the ribosome err' },
@@ -89,17 +89,17 @@ export default {
         if (step === 2) {
           g += pill(SITE.A - 30, MY + 42, fade);
           g += trna(SITE.A, lerp(150, 300, ease(sub(p, .3, .6))), '#ff9d9d', 1, DRUG);
-          if (p > .6) g += `<g opacity="${f1(sub(p, .6, .8))}">` + txt(SITE.A + 110, 260, T2('verkeerd', 'wrong'), DRUG, 24, 'start', 800) + '</g>';
+          if (p > .6) g += `<g opacity="${f1(sub(p, .6, .8))}">` + txt(SITE.A + 110, 260, T2('verkeerd', 'wrong'), DRUG, 24, 'start', 800).replace(/<text/g, '<text paint-order="stroke" stroke="#0b1224" stroke-width="6" stroke-linejoin="round"') + '</g>';
         }
-        if (step === 3) g += pill(SITE.P + 48, 232, fade, 15) + `<g opacity="${f1(stall)}">` + txt(SITE.P + 120, 165, T2('vast', 'stuck'), DRUG, 26, 'start', 800) + '</g>';
+        if (step === 3) g += pill(SITE.P + 48, 232, fade, 15) + `<g opacity="${f1(stall)}">` + txt(SITE.P + 120, 165, T2('vast', 'stuck'), DRUG, 26, 'start', 800).replace(/<text/g, '<text paint-order="stroke" stroke="#0b1224" stroke-width="6" stroke-linejoin="round"') + '</g>';
         if (step === 4) {
           g += trna(SITE.A, 300, TRA, 1, CH);
           g += prot(SITE.A + 120, 255, 70, 50, K.rnap, 1, 9, 'EF-Tu', 22) + pill(SITE.A + 150, 228, fade);
-          g += `<g opacity="${f1(sub(p, .5, .75))}">` + txt(SITE.A + 120, 340, T2('kan niet weg', 'cannot leave'), DRUG, 23, 'middle', 800) + '</g>';
+          g += `<g opacity="${f1(sub(p, .5, .75))}">` + txt(SITE.A + 120, 340, T2('kan niet weg', 'cannot leave'), DRUG, 23, 'middle', 800).replace(/<text/g, '<text paint-order="stroke" stroke="#0b1224" stroke-width="6" stroke-linejoin="round"') + '</g>';
         }
         if (step === 5) {
           g += `<g opacity="${f1(fade)}"><circle cx="${SITE.A - 30}" cy="${MY + 42}" r="16" fill="none" stroke="${C.ok}" stroke-width="4"/><circle cx="${SITE.P + 48}" cy="232" r="18" fill="none" stroke="${C.ok}" stroke-width="4"/></g>`;
-          g += `<g opacity="${f1(sub(p, .3, .5))}">` + txt(SITE.A + 40, MY + 90, T2('A1408 → bij ons G', 'A1408 → G in us'), C.ok, 22, 'start', 700) + txt(SITE.P + 95, 236, T2('A2058 → bij ons G', 'A2058 → G in us'), C.ok, 22, 'start', 700) + '</g>';
+          g += `<g opacity="${f1(sub(p, .3, .5))}">` + txt(SITE.A + 40, MY + 90, T2('A1408 → bij ons G', 'A1408 → G in humans'), C.ok, 22, 'start', 700).replace(/<text/g, '<text paint-order="stroke" stroke="#0b1224" stroke-width="6" stroke-linejoin="round"') + txt(SITE.P + 95, 236, T2('A2058 → bij ons G', 'A2058 → G in humans'), C.ok, 22, 'start', 700).replace(/<text/g, '<text paint-order="stroke" stroke="#0b1224" stroke-width="6" stroke-linejoin="round"') + '</g>';
         }
         $('rr-main').innerHTML = g;
         $('rr-h1').setAttribute('opacity', step === 4 ? 1 : 0);

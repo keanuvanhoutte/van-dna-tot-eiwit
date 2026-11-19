@@ -298,7 +298,7 @@ const N = [
   { id: 'seleno', t: 'Selenocysteïne & pyrrolysine', en: '21st & 22nd amino acid', stage: 'tl', scale: 4, kind: 'process',
     s: 'Hercodering van stopcodons: UGA → selenocysteïne dankzij een SECIS-element (bij eukaryoten en archaea in de 3′-UTR, bij bacteriën net achter het UGA); UAG → pyrrolysine in sommige archaea (methanogenen) en enkele bacteriën.',
     rel: ['aminozuren', 'codon'] },
-  { id: 'er', t: 'Ruw ER & SRP-route', en: 'Co-translational targeting', stage: 'tl', scale: 2, kind: 'process',
+  { id: 'er', t: 'Ruw ER & SRP-route', en: 'Rough ER & SRP pathway', stage: 'tl', scale: 2, kind: 'process',
     s: 'Een N-terminaal signaalpeptide wordt door SRP herkend; het ribosoom koppelt aan het Sec61-translocon en het eiwit wordt tijdens translatie het ER in of het membraan in gebracht.',
     next: ['golgi'], rel: ['glyco', 'disulfide', 'membraan', 'sortering'] },
 

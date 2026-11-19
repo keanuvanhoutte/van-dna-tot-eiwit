@@ -30,7 +30,7 @@ const scene = {
   legend: [[C.dna, { nl: 'ouderstreng (matrijs volgende streng)', en: 'parental strand (lagging template)' }], [C.dna2, { nl: 'ouderstreng (matrijs leidende streng)', en: 'parental strand (leading template)' }],
     [NEW, { nl: 'nieuw DNA', en: 'new DNA' }], [PRIMER, { nl: 'RNA-primer', en: 'RNA primer' }], [ADNA, { nl: 'DNA van Pol α', en: 'DNA made by Pol α' }],
     [C.prot, { nl: 'enzymen', en: 'enzymes' }], [PCNA, 'PCNA'], [RPA, 'RPA'],
-    ['#c9b8ff', { nl: 'rest van de ritsmachine (3D)', en: 'rest of the unzipper (3D)' }], ['#e0708f', { nl: 'Pol ε (3D)', en: 'Pol ε (3D)' }], ['#7f8fb0', { nl: 'hulpeiwitten (3D)', en: 'helper proteins (3D)' }]],
+    ['#c9b8ff', { nl: 'rest van de ritsmachine (3D)', en: 'rest of the helicase CMG (3D)' }], ['#e0708f', { nl: 'Pol ε (3D)', en: 'Pol ε (3D)' }], ['#7f8fb0', { nl: 'hulpeiwitten (3D)', en: 'helper proteins (3D)' }]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Let op de richtingen: beide nieuwe strengen groeien 5′→3′. De leidende streng groeit mee met de vork; op de volgende streng wijst de groeirichting van de vork weg, daarom wordt die in stukken (Okazaki-fragmenten) gemaakt.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Watch the directions: both new strands grow 5′→3′. The leading strand grows along with the fork; on the lagging strand the direction of growth points away from the fork, which is why it is made in pieces (Okazaki fragments).</p>' },
@@ -165,10 +165,10 @@ const scene = {
           };
           lag += fl(flapBase, PREV_A, NEW) + fl(Math.max(flapBase, PREV_A), PREV_R, ADNA) + fl(Math.max(flapBase, PREV_R), PREV5, PRIMER);
           const tip = PREV5 - flapBase > 1 ? [flapBase + (PREV5 - flapBase) * Math.cos(ang), NTOP + (PREV5 - flapBase) * Math.sin(ang)] : [PREV5, NTOP];
-          lag += endl(tip[0] + 16, tip[1] - 14, "5′", PRIMER, 16);
+          lag += endl(tip[0] + 30, tip[1] - 24, "5′", PRIMER, 16);   // iets verder van de flaptip: niet op de rand van Pol δ
         } else if (step === 7) {
           // weggeknipte flap drijft weg
-          const k = sub(p, .35, .8);
+          const k = sub(p, .35, .52);                         // weg vóór ligase I verschijnt
           const x0 = PREV_A + k * 40, y0 = NTOP - 20 - k * 70;
           const ux = Math.cos(-1.05), uy = Math.sin(-1.05);
           lag += `<g opacity="${f1(1 - k)}">` + pth([[x0, y0], [x0 + 34 * ux, y0 + 34 * uy]], ADNA, 7) + pth([[x0 + 34 * ux, y0 + 34 * uy], [x0 + 70 * ux, y0 + 70 * uy]], PRIMER, 7) + '</g>';
@@ -182,7 +182,7 @@ const scene = {
           const e3 = step >= 6 ? del3 : priA;
           // 3'-label op de echte plaats; verborgen zolang Pol α-primase of Pol δ het 3'-uiteinde bedekt (anders lijkt het bij de verkeerde streng te horen)
           const rfcOn = step === 4 ? ease(sub(p, .25, .4)) * (1 - sub(p, .6, .75)) : 0;
-          const cov3 = step === 3 ? 1 : step === 4 ? Math.max(1 - sub(p, .05, .3), rfcOn, ease(sub(p, .7, .95))) : step === 7 ? 1 - sub(p, .1, .35) : step >= 5 ? 1 : 0;
+          const cov3 = step === 3 ? 1 : step === 4 ? Math.max(1 - sub(p, .05, .3), rfcOn, ease(sub(p, .7, .95))) : step === 7 ? 1 - sub(p, 0, .14) : step >= 5 ? 1 : 0;
           if (!(step === 7 && sealed) && step < 8) lag += endl(e3 - 22, NTOP - 16, "3′", NEW, 16, 1 - cov3);
         }
         // nick vóór ligatie
@@ -197,7 +197,7 @@ const scene = {
         if (step === 2) rpa += `<rect x="${PREV5}" y="${TOPY - 30}" width="${880 - PREV5}" height="46" rx="20" fill="none" stroke="${RPA}" stroke-width="3" stroke-dasharray="7 6" opacity="${f1(.5 + .5 * Math.sin(t / 200))}"/>` +
           tag(760, 372, T2('RPA-heterotrimeer (RPA70/32/14)', 'RPA heterotrimer (RPA70/32/14)'), RPA, 17);
         $('rs-rpa').innerHTML = rpa;
-        const ssa = $('rs-ssa'); if (rpaR - rpaL > 40) { ssa.setAttribute('cx', f1((rpaL + rpaR) / 2)); ssa.setAttribute('cy', 300); } else { ssa.setAttribute('cx', -99); ssa.setAttribute('cy', -99); }
+        const ssa = $('rs-ssa'); if (rpaR - rpaL > 40) { ssa.setAttribute('cx', f1(Math.min((rpaL + rpaR) / 2, rpaL + 40))); ssa.setAttribute('cy', 300); } else { ssa.setAttribute('cx', -99); ssa.setAttribute('cy', -99); }
 
         /* ---- leidende streng ---- */
         let lead = seg(96, NBOT, LEAD3, NBOT, NEW, 7) + endl(66, NBOT + 6, "5′", NEW);
@@ -266,15 +266,15 @@ const scene = {
         const pcnaOp = step < 4 ? 0 : step === 4 ? ease(sub(p, .35, .6)) : step === 7 ? 1 - sub(p, .6, .9) : step > 7 && step < 9 ? 0 : 1;
         const pcnaX = step >= 6 ? del3 + 22 : PRI_A + 6;
         pr += clamp3(pcnaX, (TOPY + NTOP) / 2, 13, 44, PCNA, pcnaOp) + (step === 4 ? tag(pcnaX + 8, TOPY + 52, T2('PCNA-klem', 'PCNA clamp'), PCNA, 17, 'middle', pcnaOp) : '');
-        const dOp = step < 4 ? 0 : step === 4 ? ease(sub(p, .7, .95)) : step === 7 ? 1 - sub(p, .1, .35) : step === 8 ? 0 : 1;
+        const dOp = step < 4 ? 0 : step === 4 ? ease(sub(p, .7, .95)) : step === 7 ? 1 - sub(p, 0, .14) : step === 8 ? 0 : 1;   // Pol δ weg vóór FEN1 komt
         // Pol δ zit op de PCNA-klem en omvat het 3'-uiteinde van het groeiende fragment
         const dX = step >= 6 ? del3 - 14 : pcnaX - 20;   // de opgetilde flap komt er rechtsboven uit
         pr += prot(dX, NTOP - (big ? 52 : 46), big ? 70 : 58, big ? 38 : 32, C.prot2, 'Pol δ', big ? 24 : 18, dOp);
         if (step === 6) pr += arrow(del3 - 20, 120, del3 - 120, 120, NEW, 4, sub(p, .05, .2)) + tag(del3 - 70, 102, "5′→3′", NEW, 17, 'middle', sub(p, .05, .2));
         if (step === 6 && p > .6) pr += tag(700, 106, T2('strengverdringing → flap', 'strand displacement → flap'), C.text, 17, 'middle', sub(p, .6, .7));
         // FEN1 en ligase I
-        pr += prot(PREV_A + 12, 150, 44, 26, '#e0708f', 'FEN1', 16, step === 7 ? ease(sub(p, .05, .2)) * (1 - sub(p, .45, .6)) : 0);
-        pr += prot(PREV_A - 6, 170, 62, 28, '#3fb58f', T2('Ligase I', 'Ligase I'), 16, step === 7 ? ease(sub(p, .5, .62)) * (1 - sub(p, .92, 1)) : 0);
+        pr += prot(PREV_A + 12, 150, 44, 26, '#e0708f', 'FEN1', 16, step === 7 ? ease(sub(p, .14, .26)) * (1 - sub(p, .45, .54)) : 0);
+        pr += prot(PREV_A - 6, 170, 62, 28, '#3fb58f', T2('Ligase I', 'Ligase I'), 16, step === 7 ? ease(sub(p, .55, .65)) * (1 - sub(p, .92, 1)) : 0);
         $('rs-prot').innerHTML = pr;
 
         /* ---- labels ---- */
@@ -312,16 +312,17 @@ export default with3d(scene, {
       { dur: 9000, model: 'rep', spin: .01, zoom: {},
         title: { nl: 'De echte machine: één groot blok rond het DNA', en: 'The real machine: one big block around the DNA' },
         text: { nl: 'Dit is een echte meting van de menselijke kopieermachine: elke kleur is een ander onderdeel.', en: 'This is a real measurement of the human copying machine: each colour is a different part.' },
-        show: [sp({ chain: RING }, C.prot), sp({ chain: CG }, CG_C), sp({ chain: POLE }, POLE_C), sp({ chain: HELP }, HELP_C), ...dna7(3.2),
-          { ...sp({ chain: '4' }, C.prot), label: { nl: 'ritsmachine', en: 'unzipper' } },
+        show: [sp({ chain: RING }, C.prot, 1.6), sp({ chain: CG }, CG_C, 1.1), sp({ chain: POLE }, POLE_C, 1.6), sp({ chain: HELP }, HELP_C, 1.1), ...dna7(4.2),
+          { ...sp({ chain: '4' }, C.prot), label: { nl: 'ritsmachine', en: 'helicase (CMG)' } },
           { ...sp({ chain: 'B' }, POLE_C), label: { nl: 'polymerase', en: 'polymerase' } },
-          { ...sp({ chain: 'M', resi: 36 }, C.dna2, 3.2), label: 'DNA' }] },
+          // label op een DNA-stuk dat buiten het eiwit uitsteekt (M 33 ligt ≈ 23 Å van het dichtste eiwitatoom)
+          { ...sp({ chain: 'M', resi: 33 }, C.dna2, 4.2), label: 'DNA' }] },
       { dur: 9000, model: 'rep', spin: .008, zoom: { chain: [...RING, 'M', 'N'] },
         title: { nl: 'Maar één streng past door de ring', en: 'Only one strand fits through the ring' },
         text: { nl: 'Vóór de ring is het DNA nog dubbel; door het gat in de ring loopt maar één streng.', en: 'In front of the ring the DNA is still double; only one strand runs through the hole in the ring.' },
         show: [FADE({ chain: [...CG, ...POLE, ...HELP] }), sp({ chain: RING }, C.prot, .9), ...dna7(3.4),
-          { ...sp({ chain: 'M', resi: 36 }, C.dna2, 3.4), label: { nl: 'dubbel DNA', en: 'double DNA' } },
-          { ...sp({ chain: 'M', resi: 57 }, C.dna2, 3.4), label: { nl: 'één streng', en: 'one strand' } }] },
+          { ...sp({ chain: 'M', resi: 36 }, C.dna2, 3.4), label: { nl: 'dubbel DNA', en: 'double-stranded DNA' } },
+          { ...sp({ chain: 'M', resi: 57 }, C.dna2, 3.4), label: { nl: 'één streng', en: 'single strand' } }] },
     ],
   },
 });

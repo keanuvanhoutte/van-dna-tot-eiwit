@@ -6,7 +6,7 @@ const NAME = {
   G: ['Glycine', 'Glycine'], A: ['Alanine', 'Alanine'], V: ['Valine', 'Valine'], L: ['Leucine', 'Leucine'], I: ['Isoleucine', 'Isoleucine'],
   M: ['Methionine', 'Methionine'], F: ['Fenylalanine', 'Phenylalanine'], W: ['Tryptofaan', 'Tryptophan'], P: ['Proline', 'Proline'],
   S: ['Serine', 'Serine'], T: ['Threonine', 'Threonine'], C: ['Cysteïne', 'Cysteine'], N: ['Asparagine', 'Asparagine'], Q: ['Glutamine', 'Glutamine'], Y: ['Tyrosine', 'Tyrosine'],
-  K: ['Lysine', 'Lysine'], R: ['Arginine', 'Arginine'], H: ['Histidine', 'Histidine'], D: ['Aspartaat (asparaginezuur)', 'Aspartic acid (aspartate)'], E: ['Glutamaat (glutaminezuur)', 'Glutamic acid (glutamate)'],
+  K: ['Lysine', 'Lysine'], R: ['Arginine', 'Arginine'], H: ['Histidine', 'Histidine'], D: ['Aspartaat (asparaginezuur)', 'Aspartate'], E: ['Glutamaat (glutaminezuur)', 'Glutamate'],
 };
 const GROUPS = [
   { key: 'h', list: 'GAVLIMFWP', col: CLASSCOL.h, nl: 'Hydrofoob (apolair)', en: 'Hydrophobic (non-polar)' },
@@ -63,7 +63,7 @@ export default {
     ST(7500, FULL, 'Waterminnend (polair)', 'Water-loving (polar)', 'Deze zijketens binden graag aan water. Daarom zitten ze meestal aan de buitenkant van het eiwit.', 'These side chains like to bind water. That is why they usually sit on the outside of the protein.'),
     ST(8000, cam(468, 545, 1000), 'Geladen: + en −', 'Charged: + and −', 'Lys en Arg zijn positief, Asp en Glu negatief. His wordt positief in een zure omgeving.', 'Lys and Arg are positive, Asp and Glu negative. His becomes positive in an acidic environment.'),
     ST(8500, FULL, 'Speciaal: glycine en proline', 'Special: glycine and proline', 'Glycine heeft als zijketen enkel een H: klein en soepel. Bij proline vormt de zijketen een ring: stijf.', 'Glycine has just an H as side chain: small and flexible. In proline the side chain forms a ring: rigid.'),
-    ST(8000, FULL, 'Cysteïne maakt bruggen', 'Cysteine makes bridges', 'Twee cysteïnes kunnen een sterke zwavelbrug vormen. Die verstevigt vooral eiwitten die de cel verlaten.', 'Two cysteines can form a strong sulfur bridge. It mainly reinforces proteins that leave the cell.'),
+    ST(8000, FULL, 'Cysteïne maakt bruggen', 'Cysteine forms disulfide bonds', 'Twee cysteïnes kunnen een sterke zwavelbrug vormen. Die verstevigt vooral eiwitten die de cel verlaten.', 'Two cysteines can form a strong disulfide bond. It mainly reinforces proteins that leave the cell.'),
     ST(8500, FULL, 'Spiegelbeelden: L en D', 'Mirror images: L and D', 'De meeste aminozuren bestaan in twee spiegelbeeldvormen, zoals je handen. Eiwitten gebruiken de L-vorm.', 'Most amino acids come in two mirror-image forms, like your hands. Proteins use the L form.'),
     ST(8000, FULL, 'Nummer 21 en 22', 'Numbers 21 and 22', 'Selenocysteïne wordt soms ingebouwd op een stopcodon. Pyrrolysine komt enkel bij sommige microben voor.', 'Selenocysteine is sometimes built in at a stop codon. Pyrrolysine occurs only in some microbes.'),
     ST(9000, FULL, 'Test jezelf', 'Test yourself', 'Welk aminozuur hoort bij elke letter? De namen verschijnen één voor één.', 'Which amino acid belongs to each letter? The names appear one by one.'),
@@ -106,9 +106,9 @@ export default {
     </g>
     <g id="az-ov"></g>
     <g data-node="disulfide" data-color="#ffd84a" data-nolabel><g id="az-ov6"></g></g>
-    <g id="az-ss" data-node="disulfide" data-color="#ffd84a" data-label="${T2('Disulfidebruggen', 'Disulfide bridges')}">
+    <g id="az-ss" data-node="disulfide" data-color="#ffd84a" data-label="${T2('Disulfidebruggen', 'Disulfide bonds')}">
       <rect x="540" y="560" width="520" height="56" rx="28" fill="rgba(255,216,74,.12)" stroke="#ffd84a"/>
-      ${txt(800, 597, T2('meer over disulfidebruggen', 'more about disulfide bridges'), '#ffd84a', 24)}
+      ${txt(800, 597, T2('meer over disulfidebruggen', 'more about disulfide bonds'), '#ffd84a', 24)}
       <circle data-anchor="disulfide" cx="800" cy="560" r="1" fill="none"/>
     </g>
     </svg>`;
@@ -150,7 +150,7 @@ export default {
         cys(330, 400, false) + bd(430, 400, 520, 400, { sh: 24, sh2: 22 }) + at(535, 400, 'SH', ACOL.S, 28) + at(700, 400, 'HS', ACOL.S, 28) + bd(715, 400, 800, 400, { sh: 22, sh2: 24 }) + cys(890, 400, true).replace(/x/g, 'x') +
         `<path d="M940,400 h110" stroke="#ffd84a" stroke-width="4" marker-end="url(#arrow)"/>` + txt(995, 380, T2('oxidatie', 'oxidation'), '#ffd84a', 24) +
         at(1130, 400, 'S', ACOL.S, 32) + bd(1130, 400, 1230, 400, { sh: 20, sh2: 20, col: '#ffd84a', w: 6 }) + at(1230, 400, 'S', ACOL.S, 32) + bd(1130, 400, 1100, 330, { sh: 20, sh2: 10 }) + bd(1230, 400, 1260, 470, { sh: 20, sh2: 10 }) +
-        txt(1180, 500, T2('disulfidebrug', 'disulfide bridge'), '#ffd84a', 25)),
+        txt(1180, 500, T2('disulfidebrug', 'disulfide bond'), '#ffd84a', 25)),
       7: panel(txt(480, 225, 'L-alanine', CLASSCOL.h, 32) + fischer(480, 400, true) + txt(1120, 225, 'D-alanine', '#93a0bb', 32) + fischer(1120, 400, false) +
         `<line x1="800" y1="190" x2="800" y2="610" stroke="#fff" stroke-width="2.5" stroke-dasharray="10 8"/>` + txt(800, 645, T2('spiegelvlak', 'mirror plane'), C.text, 24) +
         txt(480, 590, T2('in eiwitten', 'in proteins'), C.text, 25) + txt(1120, 590, T2('zeldzaam, niet via ribosomen', 'rare, not via ribosomes'), C.muted, 24)),

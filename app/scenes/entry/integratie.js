@@ -141,7 +141,7 @@ export default {
           const k = ease(sub(p, .2, .6)), dr = 40 * ease(sub(p, .5, 1));
           no += `<g opacity="${f1(k)}">
             ${txt(E1 - 70, Y0 + 80 + dr * .7, 'GT', '#ff6b6b', 22)}${txt(E2 + 70, Y0 + 80 + dr * .7, 'GT', '#ff6b6b', 22)}
-            ${txt(800, Y0 - 130, "…CA-3′OH", '#7fdc6a', 19)}
+            ${txt(800, Y0 - 130, "…CA-3′-OH", '#7fdc6a', 19)}
             ${txt(800, Y0 + 150, T2("2 nt per 3′-uiteinde weg → vrije 3′-OH", "2 nt removed per 3′ end → free 3′-OH"), '#ff6b6b', 19)}</g>`;
         }
         if (step === 3) {

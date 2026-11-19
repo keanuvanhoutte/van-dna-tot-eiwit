@@ -42,7 +42,7 @@ export default {
     ST(9000, cam(520, 360, 900), 'Het RNA wordt aangepast', 'The RNA is modified', 'Kleine RNA’s met eiwitten zoeken de juiste plekken op en passen daar letters van het RNA chemisch aan.', 'Small RNAs with proteins find the right spots and chemically modify letters of the RNA there.'),
     ST(9000, cam(520, 400, 900), 'Knippen in twee routes', 'Cutting into two routes', 'Het RNA wordt geknipt: een deel voor de kleine helft, de rest voor de grote. Opvulstukken worden afgebroken.', 'The RNA is cut: one part goes to the small half, the rest to the large one. Spacer pieces are broken down.'),
     ST(9000, cam(720, 490, 1250), 'Eiwitten komen erbij', 'Proteins join', '≈ 80 eiwitten worden buiten de kern gemaakt en binnengebracht. Een klein RNA (5S) gaat naar de grote helft.', '≈ 80 proteins are made outside the nucleus and brought in. A small RNA (5S) joins the large half.'),
-    ST(9000, cam(820, 460, 1350), 'Apart de kern uit', 'Leaving the nucleus separately', 'De twee helften verlaten de kern apart, door poriën in de kernwand, met hulp van transporteiwitten.', 'The two halves leave the nucleus separately, through pores in its wall, helped by transport proteins.'),
+    ST(9000, cam(820, 460, 1350), 'Apart de kern uit', 'Leaving the nucleus separately', 'De twee helften verlaten de kern apart, door poriën in de kernwand, met hulp van transporteiwitten.', 'The two halves leave the nucleus separately, through the nuclear pores, helped by transport proteins.'),
     ST(9500, cam(1240, 460, 820), 'Afwerking buiten de kern', 'Finishing outside the nucleus', 'Buiten de kern wordt het RNA op maat geknipt en gaan hulpeiwitten eraf. Pas bij de start van translatie vormen ze samen een ribosoom.', 'Outside the nucleus the RNA is trimmed and helper proteins come off. Only at the start of translation do the halves form a ribosome.'),
   ],
   svg() {
@@ -57,7 +57,7 @@ export default {
     <g data-node="nucleolus" data-color="${C.rrna}" data-label="${T2('Nucleolus', 'Nucleolus')}">
       <ellipse cx="${ox}" cy="${oy}" rx="${orx}" ry="${ory}" fill="rgba(44,198,168,.08)" stroke="${C.rrna}" stroke-width="2.5" stroke-dasharray="3 7"/>
       ${[[360, 330], [620, 320], [420, 600], [640, 590]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="42" fill="rgba(44,198,168,.14)"/><circle cx="${x}" cy="${y}" r="20" fill="rgba(79,143,247,.18)"/>`).join('')}
-      <circle id="rg-nA" data-anchor="nucleolus" cx="${ox - 60}" cy="${oy - ory + 20}" r="1" fill="none"/>
+      <circle id="rg-nA" data-anchor="nucleolus" cx="${ox + orx - 40}" cy="${oy + 40}" r="1" fill="none"/>
     </g>
     <g id="rg-lab"></g>
     <g data-node="polymerasen" data-color="${C.dna}" data-label="${T2('RNA-polymerase I', 'RNA polymerase I')}"><g id="rg-rdna"></g><circle id="rg-pA" data-anchor="polymerasen" r="1" fill="none"/></g>
@@ -122,7 +122,7 @@ export default {
           lab += `<g opacity="${f1(sub(p, .4, .6))}">` + textBox(1110, 420, 440, [T2('FC: rDNA', 'FC: rDNA'), T2('FC/DFC-grens: transcriptie', 'FC/DFC border: transcription'), T2('DFC: processing', 'DFC: processing'), T2('GC: assemblage', 'GC: assembly')], { title: T2('Lagen van de nucleolus', 'Layers of the nucleolus'), col: C.rrna, fs: 23 }) + '</g>';
         }
         $('rg-lab').innerHTML = lab;
-        $('rg-nA').setAttribute('cx', i === 0 ? '-9999' : f1(NO[0] - 60));   // stap 1 heeft de titel 'nucleolus' al op die plek
+        $('rg-nA').setAttribute('cx', i === 0 ? '-9999' : f1(NO[0] + NO[2] - 40));   // stap 1 heeft de titel 'nucleolus' al op die plek
         // rDNA-kerstboom (stap 1–2)
         if (i <= 2) {
           const op = i === 0 ? .6 : i === 2 ? 1 - .7 * sub(p, 0, .3) : 1;

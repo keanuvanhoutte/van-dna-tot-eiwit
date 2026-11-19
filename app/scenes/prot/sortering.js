@@ -21,16 +21,16 @@ const ROWS = [
   { k: 'cyt', node: 'vouwing', d: T2('geen label', 'no label'), name: T2('cytosol', 'cytosol') },
   { k: 'er', node: 'er', d: T2('vettig stuk vooraan', 'greasy stretch at the start'), name: T2('ER', 'ER') },
   { k: 'kern', node: 'kernimport', d: T2('positief stukje erin', 'positive patch inside'), name: T2('kern', 'nucleus') },
-  { k: 'mito', node: 'mito', d: T2('plus-spiraal vooraan', 'plus spiral at the start'), name: T2('mitochondrion', 'mitochondrion') },
+  { k: 'mito', node: 'mito', d: T2('plus-spiraal vooraan', '+ charged helix at the start'), name: T2('mitochondrion', 'mitochondrion') },
   { k: 'perox', node: 'perox', d: T2('S-K-L op het einde', 'S-K-L at the very end'), name: T2('peroxisoom', 'peroxisome') },
   { k: 'lyso', node: 'lysosoom', d: T2('suikerlabel, via ER + Golgi', 'sugar tag, via ER + Golgi'), name: T2('lysosoom', 'lysosome') },
 ];
 const RY = i => 170 + i * 100, RX = 620;
 const BIG = { x0: 110, y: 470, sp: 38, r: 15 };
 
-/* suikerlabel met fosfaat (lysosoom) boven bolletje i van een keten */
+/* suikerlabel met fosfaat (lysosoom) boven bolletje i van een keten: mannose-6-fosfaat, mannose als groene cirkel (SNFG, Varki et al. 2015) */
 const sugar = (x, y, s = 1, op = 1, letter = s > 1.2) => op <= .01 ? '' : `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(${s})"><line x1="0" y1="0" x2="0" y2="-26" stroke="#c9d2e4" stroke-width="3"/>` +
-  `<rect x="-9" y="-44" width="18" height="18" rx="3" fill="#00A651"/><circle cx="14" cy="-48" r="${letter ? 10 : 9}" fill="#ff9f43"/>${letter ? '<text x="14" y="-43" font-size="13" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">P</text>' : ''}</g>`;
+  `<circle cx="0" cy="-35" r="9.5" fill="#00A651" stroke="#0a1224" stroke-width="1"/><circle cx="14" cy="-48" r="${letter ? 10 : 9}" fill="#ff9f43"/>${letter ? '<text x="14" y="-43" font-size="13" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">P</text>' : ''}</g>`;
 
 function chainOf(k, x0, y, sp, r, op) {
   const v = VAR[k];
@@ -46,7 +46,7 @@ export default {
   time: { nl: 'tijdens of vlak na de aanmaak', en: 'during or right after synthesis' },
   org: { nl: 'mens', en: 'human' },
   legend: [[C.chain, { nl: 'aminozuurketen (eiwit)', en: 'amino-acid chain (protein)' }], [HYD, { nl: 'vettig (waterafstotend) label → ER', en: 'greasy (water-repelling) label → ER' }], [PLUS, { nl: 'positief label → kern', en: 'positive label → nucleus' }],
-    [DEST.mito, { nl: 'plus-spiraal → mitochondrion', en: 'plus spiral → mitochondrion' }], [DEST.perox, { nl: 'S-K-L → peroxisoom', en: 'S-K-L → peroxisome' }], [DEST.lyso, { nl: 'suiker met fosfaat → lysosoom', en: 'sugar with phosphate → lysosome' }]],
+    [DEST.mito, { nl: 'plus-spiraal → mitochondrion', en: 'positively charged helix → mitochondrion' }], [DEST.perox, { nl: 'S-K-L → peroxisoom', en: 'S-K-L → peroxisome' }], [DEST.lyso, { nl: 'suiker met fosfaat → lysosoom', en: 'sugar with phosphate → lysosome' }]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Klik in de tabel op een bestemming om naar dat hoofdstuk te gaan.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Click a destination in the table to go to that chapter.</p>' },
@@ -62,8 +62,8 @@ export default {
       text: { nl: 'Een waterafstotend stuk aan het begin stuurt het eiwit naar het ER, een netwerk van membranen.', en: 'A water-repelling stretch at the start sends the protein to the ER, a network of membranes.' } },
     { dur: 7500, cam: FULL, title: { nl: 'Een positief stukje: naar de kern', en: 'A positive patch: to the nucleus' },
       text: { nl: 'Een kort stukje met plusladingen, ergens in het eiwit, is het adres van de kern.', en: 'A short patch with plus charges, somewhere in the protein, is the address of the nucleus.' } },
-    { dur: 7500, cam: FULL, title: { nl: 'Een plus-spiraal vooraan: naar het mitochondrion', en: 'A plus spiral at the start: to the mitochondrion' },
-      text: { nl: 'Een spiraaltje met plusladingen aan het begin stuurt het eiwit naar het mitochondrion, de energiecentrale.', en: 'A little spiral with plus charges at the start sends the protein to the mitochondrion, the power plant.' } },
+    { dur: 7500, cam: FULL, title: { nl: 'Een plus-spiraal vooraan: naar het mitochondrion', en: 'A positively charged helix at the start: to the mitochondrion' },
+      text: { nl: 'Een spiraaltje met plusladingen aan het begin stuurt het eiwit naar het mitochondrion, de energiecentrale.', en: 'A short helix with positive charges at the start sends the protein to the mitochondrion, the power plant.' } },
     { dur: 7500, cam: FULL, title: { nl: 'Drie letters op het einde: naar het peroxisoom', en: 'Three letters at the end: to the peroxisome' },
       text: { nl: 'Eindigt het eiwit op S-K-L, dan gaat het naar het peroxisoom, een klein blaasje dat o.a. vetzuren afbreekt.', en: 'If the protein ends in S-K-L, it goes to the peroxisome, a small vesicle that breaks down fatty acids, among other things.' } },
     { dur: 8000, cam: FULL, title: { nl: 'Een suikerlabel stuurt het door naar het lysosoom', en: 'A sugar tag sends it on to the lysosome' },

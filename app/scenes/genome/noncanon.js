@@ -157,8 +157,8 @@ export default {
         } else if (step === 3) {
           const k1 = ease(sub(p, .05, .5)), k2 = ease(sub(p, .3, .75));
           m += g4schema(470, 470, 300, 'par', k1) + g4schema(1130, 470, 300, 'anti', k2);
-          ann += txt(470, 190, T2('parallel ("propeller")', 'parallel ("propeller")'), '#fff', 30) + txt(470, 226, T2('K⁺ · kristal · PDB 1KF1', 'K⁺ · crystal · PDB 1KF1'), C.muted, 22);
-          ann += txt(1130, 190, T2('antiparallel ("mand")', 'antiparallel ("basket")'), '#fff', 30) + txt(1130, 226, T2('Na⁺ · NMR · PDB 143D', 'Na⁺ · NMR · PDB 143D'), C.muted, 22);
+          ann += txt(470, 190, T2('parallel (“propeller”)', 'parallel (“propeller”)'), '#fff', 30) + txt(470, 226, T2('K⁺ · kristal · PDB 1KF1', 'K⁺ · crystal · PDB 1KF1'), C.muted, 22);
+          ann += txt(1130, 190, T2('antiparallel (“mand”)', 'antiparallel (“basket”)'), '#fff', 30) + txt(1130, 226, T2('Na⁺ · NMR · PDB 143D', 'Na⁺ · NMR · PDB 143D'), C.muted, 22);
           ann += `<g opacity="${f1(ease(sub(p, .7, .85)))}">${txt(800, 700, 'AGGG TTAGGG TTAGGG TTAGGG', '#e8edf7', 28, 'middle', 700, 'JetBrains Mono')}${txt(800, 736, T2('4 G-banen × 3 G = 3 kwartetten', '4 G-tracts × 3 G = 3 quartets'), C.muted, 22)}</g>`;
         } else if (step === 4) {
           // chromosoomuiteinde met 3′-overhang die vouwt tot G4

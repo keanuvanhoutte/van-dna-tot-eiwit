@@ -78,7 +78,7 @@ export const S_EN = {
   primair: 'The amino acid sequence from N- to C-terminus; ultimately determines the 3D structure.',
   secundair: 'Local 3D structure through backbone hydrogen bonds: α-helix (i→i+4, 3.6 residues/turn), 3₁₀ and π helices, β-strands/sheets (parallel, antiparallel, mixed), loops.',
   ramachandran: 'Plot of φ against ψ per residue; shows allowed regions (α-helix around −60/−45, β around −120/+130) and outliers caused by steric hindrance.',
-  tertiair: 'Global fold of a single chain, stabilised by the hydrophobic effect, hydrogen bonds, salt bridges, disulfide bridges and ligands. Intermediate level: supersecondary structures (helix-turn-helix, Greek key, Rossmann fold…) and domains.',
+  tertiair: 'Global fold of a single chain, stabilised by the hydrophobic effect, hydrogen bonds, salt bridges, disulfide bonds and ligands. Intermediate level: supersecondary structures (helix-turn-helix, Greek key, Rossmann fold…) and domains.',
   quaternair: 'Several chains (protomers) together: homo- or heteromer. Example: haemoglobin, an α2β2 heterotetramer.',
   vouwing: 'The sequence contains the information for the native structure (Anfinsen). Folding proceeds down an energy funnel, often already co-translationally, in µs to s (Levinthal paradox).',
   chaperones: 'Hsp70 (and trigger factor in bacteria) protects nascent chains; chaperonins (GroEL/GroES, TRiC/CCT) provide an enclosed folding chamber.',

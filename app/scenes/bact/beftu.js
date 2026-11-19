@@ -12,12 +12,16 @@ import { C } from '../../kit.js';
 const L3 = (nl, en) => ({ nl, en });
 const S30P = 'bcdefghijklmnopqrstu'.split('');
 const S50P = 'CDEFGHIJKLMNOPQRSTUVWXYZ0123456'.split('');
-const COL = { r16: '#2cc6a8', p30: '#7fb8ab', r23: '#1f8f7a', p50: '#6a9a90', mrna: C.rna, tP: '#ffc247', tW: '#8a7a4a', tA: '#ffe08a', eftu: '#9b7bff', gdp: '#5fd3e6', kir: '#ff6b6b' };
+const COL = { r16: '#2cc6a8', p30: '#7fb8ab', r23: '#1f8f7a', p50: '#6a9a90', mrna: C.rna, tP: '#ffc247', tW: '#8f5b1c', tA: '#fff0a6', eftu: '#9b7bff', gdp: '#5fd3e6', kir: '#ff6b6b' };
 const T = (color, w = .6) => ({ sphere: { color, radius: 1.6 + w * .9 } });
 const FADE = (sel) => ({ sel, style: { sphere: { color: '#33415c', radius: .5 } } });
 const RIBO = [FADE({ chain: ['a', ...S30P, 'A', 'B', ...S50P] })];
 const TRNA = (ch, col, label) => ({ sel: { chain: ch }, style: { cartoon: { color: col, thickness: .6 }, stick: { color: col, radius: .16 } }, label });
 const EFTU = (label) => ({ sel: { chain: 'z', hetflag: false }, style: { cartoon: { color: COL.eftu } }, label });
+const TOTAL = [{ sel: { chain: 'z', hetflag: false }, style: { sphere: { color: COL.eftu, radius: 1.1 } }, label: L3('EF-Tu + tRNA', 'EF-Tu + tRNA'), labelColor: COL.eftu },
+  { sel: { chain: 'y' }, style: { cartoon: { color: COL.tA, thickness: 1 }, sphere: { color: COL.tA, radius: .9 } } }];
+// de andere tRNA's op de achtergrond houden in de stappen over EF-Tu zelf
+const OTHER_T = { sel: { chain: ['v', 'w'] }, style: { cartoon: { color: '#4d4633', thickness: .4 } } };
 const LIG = (resn, col, label) => ({ sel: { resn }, style: { stick: { color: col, radius: .3 }, sphere: { color: col, radius: .55 } }, label });
 const base = [
   { sel: { chain: 'a' }, style: T(COL.r16) }, { sel: { chain: S30P }, style: T(COL.p30) },
@@ -26,7 +30,9 @@ const base = [
   { sel: { chain: 'v' }, style: { cartoon: { color: COL.tP } } }, { sel: { chain: 'w' }, style: { cartoon: { color: COL.tW } } },
   { sel: { chain: 'y' }, style: { cartoon: { color: COL.tA } } },
   { sel: { chain: 'z', hetflag: false }, style: { cartoon: { color: COL.eftu } } },
-  { sel: { resn: 'GDP' }, style: { stick: { color: COL.gdp, radius: .3 } } }, { sel: { resn: 'KIR' }, style: { stick: { color: COL.kir, radius: .3 } } },
+  { sel: { resn: 'GDP' }, style: { stick: { color: COL.gdp, radius: .3 } } },
+  // kirromycine (KIR) pas tonen in de stap over het antibioticum
+  { sel: { resn: 'KIR' }, style: {} },
 ];
 
 export default structure3d({
@@ -35,17 +41,17 @@ export default structure3d({
   scale: { nl: '70S ≈ 20 nm · EF-Tu ≈ 43 kDa', en: '70S ≈ 20 nm · EF-Tu ≈ 43 kDa' }, time: L3('≈ 10–20 aminozuren/s', '≈ 10–20 amino acids/s'),
   org: L3('bacterie (Escherichia coli) · PDB 5AFI', 'bacterium (Escherichia coli) · PDB 5AFI'),
   legend: [[COL.r16, '16S-rRNA (30S)'], [COL.r23, '23S/5S-rRNA (50S)'], [COL.mrna, 'mRNA'], [COL.tP, L3('start-tRNA (P-plaats)', 'start tRNA (P site)')], [COL.tA, L3('nieuw tRNA (Phe)', 'new tRNA (Phe)')],
-    [COL.tW, L3('tweede start-tRNA', 'second start tRNA')], [COL.eftu, 'EF-Tu'], [COL.gdp, 'GDP'], [COL.kir, L3('kirromycine (antibioticum)', 'kirromycin (antibiotic)')]],
+    [COL.tW, L3('tweede start-tRNA (E-plaats)', 'second start tRNA (E site)')], [COL.eftu, 'EF-Tu'], [COL.gdp, 'GDP'], [COL.kir, L3('kirromycine (antibioticum)', 'kirromycin (antibiotic)')]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Echte cryo-EM-structuur van het E. coli-ribosoom met EF-Tu en een tRNA, vastgezet met het antibioticum kirromycine (Fischer et al., <i>Nature</i> 2015). Het ribosoom zelf: één bolletje per bouwsteen; tRNA’s, mRNA en EF-Tu volledig. Sleep om te draaien, scroll om te zoomen.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Real cryo-EM structure of the E. coli ribosome with EF-Tu and a tRNA, locked in place with the antibiotic kirromycin (Fischer et al., <i>Nature</i> 2015). The ribosome itself: one bead per building block; tRNAs, mRNA and EF-Tu in full. Drag to rotate, scroll to zoom.</p>' },
   simplified: {
-    nl: 'Dit is één momentopname: EF-Tu heeft zijn GTP al tot GDP omgezet, maar kirromycine houdt het nog op het ribosoom vast. Zonder antibioticum zou EF-Tu op dat moment loslaten. In het bestand zit nog een tweede kopie van het start-tRNA (keten w); die ligt op de E-plaats, tegen het mRNA vóór het startcodon, en is donker getekend. Het ribosoom is als bolletjes getekend (één per aminozuur of nucleotide) om snel te laden.',
-    en: 'This is one snapshot: EF-Tu has already turned its GTP into GDP, but kirromycin still holds it on the ribosome. Without the antibiotic EF-Tu would let go at that moment. The file also contains a second copy of the start tRNA (chain w); it lies in the E site, against the mRNA before the start codon, and is drawn dark. The ribosome is drawn as beads (one per amino acid or nucleotide) so it loads quickly.' },
+    nl: 'Dit is één momentopname: EF-Tu heeft zijn GTP al tot GDP omgezet, maar kirromycine houdt het nog op het ribosoom vast. Zonder antibioticum zou EF-Tu op dat moment loslaten. In het bestand zit nog een tweede kopie van het start-tRNA (keten w); die ligt op de E-plaats, tegen het mRNA vóór het startcodon, en is okerbruin getekend. Het ribosoom is als bolletjes getekend (één per aminozuur of nucleotide) om snel te laden.',
+    en: 'This is one snapshot: EF-Tu has already turned its GTP into GDP, but kirromycin still holds it on the ribosome. Without the antibiotic EF-Tu would let go at that moment. The file also contains a second copy of the start tRNA (chain w); it lies in the E site, against the mRNA before the start codon, and is drawn ochre brown. The ribosome is drawn as beads (one per amino acid or nucleotide) so it loads quickly.' },
   base,
   dimOpacity: false,
   steps: [
-    { dur: 8000, title: L3('Een nieuw tRNA komt aan', 'A new tRNA arrives'), focus: null, zoom: {}, spin: .01,
+    { dur: 8000, title: L3('Een nieuw tRNA komt aan', 'A new tRNA arrives'), focus: TOTAL, zoom: {}, spin: .01,
       text: L3('Het eiwit EF-Tu brengt een tRNA met een aminozuur naar het ribosoom.', 'The protein EF-Tu brings a tRNA carrying an amino acid to the ribosome.') },
     { dur: 8500, title: L3('EF-Tu en zijn tRNA', 'EF-Tu and its tRNA'), zoom: { chain: ['z', 'y'] }, spin: .008,
       focus: [...RIBO, EFTU('EF-Tu'), TRNA('y', COL.tA, L3('tRNA met Phe', 'tRNA with Phe')), TRNA('v', COL.tP), { sel: { chain: 'x' }, style: { cartoon: { color: COL.mrna } } }],
@@ -55,16 +61,16 @@ export default structure3d({
         { sel: { chain: 'y' }, style: { cartoon: { color: COL.tA, opacity: .6 } } }, { sel: { chain: 'y', resi: [34, 35, 36] }, style: { stick: { color: COL.tA, radius: .4 } }, label: L3('anticodon GAA', 'anticodon GAA') },
         { sel: { chain: 'v' }, style: { cartoon: { color: COL.tP, opacity: .6 } } }],
       text: L3('Het ribosoom controleert of de drie letters van het tRNA passen op het codon. Hier: GAA op UUC.', 'The ribosome checks whether the three letters of the tRNA fit the codon. Here: GAA on UUC.') },
-    { dur: 9000, title: L3('Het past: GTP wordt GDP', 'It fits: GTP becomes GDP'), zoom: { chain: 'z' }, spin: .008,
-      focus: [...RIBO, EFTU(), LIG('GDP', COL.gdp, 'GDP'), TRNA('y', COL.tA)],
+    { dur: 9000, title: L3('Het past: GTP wordt GDP', 'It fits: GTP becomes GDP'), zoom: { chain: ['z', 'y'] }, spin: .008,
+      focus: [...RIBO, EFTU(), LIG('GDP', COL.gdp, 'GDP'), { sel: { resn: 'KIR' }, style: {} }, { sel: { chain: 'y' }, style: { cartoon: { color: COL.tA, thickness: .6 } } }, OTHER_T],
       text: L3('Past het codon, dan zet EF-Tu zijn GTP om in GDP. Normaal laat het daarna het tRNA los.', 'If the codon fits, EF-Tu turns its GTP into GDP. Normally it then lets go of the tRNA.') },
     { dur: 9000, title: L3('Een antibioticum zet EF-Tu vast', 'An antibiotic locks EF-Tu'), zoom: { chain: 'z' }, spin: .008,
-      focus: [...RIBO, EFTU(), LIG('GDP', COL.gdp), LIG('KIR', COL.kir, L3('kirromycine', 'kirromycin')), TRNA('y', COL.tA)],
+      focus: [...RIBO, EFTU(), LIG('GDP', COL.gdp), LIG('KIR', COL.kir, L3('kirromycine', 'kirromycin')), TRNA('y', COL.tA), OTHER_T],
       text: L3('Kirromycine laat EF-Tu na die stap niet meer los. Zo konden onderzoekers dit moment vastleggen.', 'Kirromycin keeps EF-Tu from letting go after that step. That is how researchers could capture this moment.') },
     { dur: 8500, title: L3('Drie tRNA’s op het ribosoom', 'Three tRNAs on the ribosome'), zoom: { chain: ['v', 'w', 'y'] }, spin: .008,
-      focus: [...RIBO, TRNA('v', COL.tP, L3('start-tRNA (P)', 'start tRNA (P)')), TRNA('y', COL.tA, L3('nieuw tRNA', 'new tRNA')), TRNA('w', COL.tW), { sel: { chain: 'x' }, style: { cartoon: { color: COL.mrna } } }],
+      focus: [...RIBO, TRNA('v', COL.tP, L3('start-tRNA (P)', 'start tRNA (P)')), TRNA('y', COL.tA, L3('nieuw tRNA', 'new tRNA')), TRNA('w', COL.tW, L3('tweede start-tRNA (E)', 'second start tRNA (E)')), { sel: { chain: 'x' }, style: { cartoon: { color: COL.mrna } } }],
       text: L3('Het start-tRNA draagt het eerste aminozuur. Laat EF-Tu los, dan schuift het nieuwe tRNA helemaal in de A-plaats en volgt de koppeling.', 'The start tRNA carries the first amino acid. Once EF-Tu lets go, the new tRNA moves fully into the A site and joining follows.') },
-    { dur: 8000, title: L3('Vergelijk: bij ons doet eEF1A dit', 'Compare: in us eEF1A does this'), focus: null, zoom: {}, spin: .01,
+    { dur: 8000, title: L3('Vergelijk: bij ons doet eEF1A dit', 'Compare: in humans eEF1A does this'), focus: TOTAL, zoom: {}, spin: .01,
       text: L3('In onze cellen brengt eEF1A de tRNA’s. Het werkt op dezelfde manier als EF-Tu.', 'In our cells eEF1A delivers the tRNAs. It works the same way as EF-Tu.') },
   ],
   hotspots: [

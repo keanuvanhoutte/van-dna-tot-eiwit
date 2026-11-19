@@ -40,7 +40,7 @@ export default {
     { dur: 8500, cam: FULL, title: L3('Het geheugen wordt een gids', 'The memory becomes a guide'),
       text: L3('De bacterie schrijft de rij over naar RNA en knipt dat in korte gidsen. Elke gids past op één faag.', 'The bacterium copies the array into RNA and cuts it into short guides. Each guide matches one phage.') },
     { dur: 8000, cam: FULL, title: L3('Gids en schaar zoeken samen', 'Guide and scissors search together'),
-      text: L3('Een eiwitschaar neemt een gids mee en zoekt DNA met dezelfde letters.', 'A protein scissors takes a guide along and looks for DNA with the same letters.') },
+      text: L3('Een eiwitschaar neemt een gids mee en zoekt DNA met dezelfde letters.', 'A cutting protein (Cas) takes a guide along and looks for DNA with the same letters.') },
     { dur: 9000, cam: FULL, title: L3('Past de gids, dan knipt de schaar', 'If the guide fits, the scissors cut'),
       text: L3('Komt dezelfde faag terug, dan past de gids op zijn DNA. De schaar knipt het door en de faag is onschadelijk.', 'If the same phage returns, the guide fits its DNA. The scissors cut it and the phage is harmless.') },
     { dur: 9500, cam: FULL, title: L3('Mensen maakten er een knipgereedschap van', 'People turned it into a cutting tool'),

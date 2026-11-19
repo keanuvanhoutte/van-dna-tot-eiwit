@@ -1,5 +1,6 @@
 import { C, T2, svgOpen, txt, mono, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { K, prot, ribo } from './_bkit.js';
+import { polymerase } from '../../bio.js';
 
 /* Einde van de transcriptie bij bacteriën: intrinsieke terminator (GC-haarspeld + U-reeks) en Rho-afhankelijke terminatie;
  * ribosomen schermen het mRNA af tegen Rho (polariteit). Bron: Ray-Soni, Bellecourt & Landick 2016 (Annu Rev Biochem). */
@@ -81,7 +82,7 @@ export default {
         r += '</g>';
         $('bt-rna').innerHTML = r;
         // polymerase en Rho
-        let o = `<g transform="translate(${f1(60 * rel)} ${f1(dy)})" opacity="${f1(op * rnapOp)}">` + prot(x, Y - 26, 62, 42, K.rnap, 1, 31, 'RNAP', 22) + '</g>';
+        let o = `<g transform="translate(${f1(60 * rel)} ${f1(dy)})" opacity="${f1(op * rnapOp)}">` + polymerase(x, Y, 66, 34, { col: K.rnap, dir: 1, gul: 10, hoog: 1.35, vul: .4, op: 1, seed: 31, label: 'RNAP', fs: 23 })   /* bacteriële RNAP (bio.js): DNA door de geul, RNA achter-boven eruit */ + '</g>';
         if (rhoOp > .01 && rhoD >= 0) {
           const [qx, qy] = rnaPt(x, rhoD);
           o += `<g transform="translate(${f1(60 * rel)} ${f1(dy)})">` + rhoRing(qx, qy, rhoOp * (step === 4 ? 1 - .85 * rel : 1)) + '</g>';

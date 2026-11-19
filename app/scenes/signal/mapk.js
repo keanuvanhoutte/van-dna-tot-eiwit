@@ -158,7 +158,7 @@ const SCENE = {
           rs += ras(1110, 450, 0, { on: .7 + .3 * tw, nuc: 'GTP', r: 34, anchor: false });
           rs += `<path d="M1080,420 l8,-18 l8,18 l18,2 l-14,12 l4,18 l-16,-9 l-16,9 l4,-18 l-14,-12 z" fill="${C.danger}" transform="translate(-18 -30)"/>`;
           rs += T(1170, 440, T2('mutant (G12, G13, Q61):', 'mutant (G12, G13, Q61):'), { size: 24, anchor: 'start', col: C.danger, w: 700 });
-          rs += T(1170, 472, T2('blijft GTP (aan)', 'stays GTP (on)'), { size: 24, anchor: 'start', w: 600 });
+          rs += T(1170, 472, T2('blijft GTP (aan)', 'stays GTP-bound (on)'), { size: 24, anchor: 'start', w: 600 });
           rs += T(1290, 540, T2('→ ERK blijft actief', '→ ERK stays active'), { size: 22, col: K.erk });
         }
         $('mk-ras').innerHTML = rs;

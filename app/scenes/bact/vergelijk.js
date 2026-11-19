@@ -21,7 +21,7 @@ const TX = {
   nucleoid: { nl: 'nucleoïd: DNA los in het cytoplasma', en: 'nucleoid: DNA free in the cytoplasm' },
   gene: { nl: 'gen', en: 'gene' }, exon: { nl: 'exon', en: 'exon' },
   coupled: { nl: 'ribosomen op een mRNA dat nog gemaakt wordt', en: 'ribosomes on an mRNA still being made' },
-  none: { nl: 'geen kern · geen spliceosoom · geen cap zoals bij de mens', en: 'no nucleus · no spliceosome · no cap as in humans' },
+  none: { nl: 'geen kern · geen spliceosoom · geen cap (anders dan bij de mens)', en: 'no nucleus · no spliceosome · no 5′ cap (unlike humans)' },
   human: { nl: 'MENS · menselijke cel', en: 'HUMAN · human cell' }, bact: { nl: 'BACTERIE · E. coli', en: 'BACTERIUM · E. coli' },
 };
 const lbl = (x, y, s, a, o = {}) => a < .01 ? '' : `<text x="${n1(x)}" y="${n1(y)}" font-size="${o.size ?? 28}" font-weight="${o.w ?? 600}" fill="${o.fill ?? C.text}" text-anchor="${o.anchor ?? 'middle'}" opacity="${a.toFixed(3)}" font-family="Inter" paint-order="stroke" stroke="#0d1426" stroke-width="6">${s}</text>`;
@@ -176,7 +176,7 @@ function draw(hp, bp, sw) {
 const ROWS = [
   [{ nl: 'Kern', en: 'Nucleus' }, { nl: 'ja', en: 'yes' }, 'kern', { nl: 'nee: nucleoïd', en: 'no: nucleoid' }, 'bnucleoid'],
   [{ nl: 'Introns eruit knippen', en: 'Cutting out introns' }, { nl: 'ja, spliceosoom', en: 'yes, spliceosome' }, 'splicing', { nl: 'geen spliceosoom', en: 'no spliceosome' }, 'bsplicing'],
-  [{ nl: '5′-cap', en: '5′ cap' }, { nl: 'ja', en: 'yes' }, 'capping', { nl: 'geen cap zoals bij de mens', en: 'no cap as in humans' }, 'bmrna'],
+  [{ nl: '5′-cap', en: '5′ cap' }, { nl: 'ja', en: 'yes' }, 'capping', { nl: 'geen cap (anders dan bij de mens)', en: 'no 5′ cap (unlike humans)' }, 'bmrna'],
   [{ nl: 'Genen per mRNA', en: 'Genes per mRNA' }, { nl: 'meestal één', en: 'usually one' }, 'gen', { nl: 'vaak meerdere (operon)', en: 'often several (operon)' }, 'operon'],
   [{ nl: 'Wanneer vertalen?', en: 'When translated?' }, { nl: 'na de export', en: 'after export' }, 'translatie', { nl: 'al tijdens het maken', en: 'while being made' }, 'bmrna'],
   [{ nl: 'Ribosoom', en: 'Ribosome' }, { nl: '80S (40S + 60S)', en: '80S (40S + 60S)' }, 'ribosoom', { nl: '70S (30S + 50S), kleiner', en: '70S (30S + 50S), smaller' }, 'bribosoom'],

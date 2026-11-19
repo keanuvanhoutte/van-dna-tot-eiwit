@@ -219,9 +219,9 @@ export default {
         }
         if (step === 8) {
           ann += `${box(230, 170, 520, 215, C.prot)}${txt(490, 215, T2('Topo-isomerase I (TOP1)', 'Topoisomerase I (TOP1)'), C.prot, 26, 'middle', 800)}
-            ${[T2('knipt één streng', 'cuts one strand'), T2('geen ATP', 'no ATP'), T2('Lk verandert per winding met 1', 'Lk changes by 1 per turn')].map((l, i) => txt(270, 262 + i * 44, '• ' + l, '#e8edf7', 26, 'start', 500)).join('')}
+            ${[T2('knipt één streng', 'cuts one strand'), T2('geen ATP', 'no ATP'), T2('Lk verandert telkens met 1', 'Lk changes in steps of 1')].map((l, i) => txt(270, 262 + i * 44, '• ' + l, '#e8edf7', 26, 'start', 500)).join('')}
             ${box(850, 170, 520, 215, C.prot2)}${txt(1110, 215, T2('Topo-isomerase II (TOP2A/B)', 'Topoisomerase II (TOP2A/B)'), '#b3a4ff', 26, 'middle', 800)}
-            ${[T2('knipt beide strengen', 'cuts both strands'), T2('ATP-afhankelijk', 'ATP-dependent'), T2('Lk verandert met 2', 'Lk changes by 2')].map((l, i) => txt(890, 262 + i * 44, '• ' + l, '#e8edf7', 26, 'start', 500)).join('')}`;
+            ${[T2('knipt beide strengen', 'cuts both strands'), T2('ATP-afhankelijk', 'ATP-dependent'), T2('Lk verandert telkens met 2', 'Lk changes in steps of 2')].map((l, i) => txt(890, 262 + i * 44, '• ' + l, '#e8edf7', 26, 'start', 500)).join('')}`;
         }
         $('sc-ann').innerHTML = ann; $('sc-enz').innerHTML = enz; $('sc-cnt').innerHTML = cnt; $('sc-pol').innerHTML = pol; $('sc-nucpic').innerHTML = nucpic; $('sc-nucpic').setAttribute('opacity', f1(nucOp));
         vis('sc-clamps', step === 8 ? .3 : 1);

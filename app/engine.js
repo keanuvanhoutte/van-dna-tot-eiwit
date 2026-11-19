@@ -339,7 +339,7 @@ document.addEventListener('click', e => { if (!e.target.closest('#gear')) $('gea
 /* tijdlijn in stukken: één stuk per stap (klikbaar, met de naam erbij); het stuk vult zich terwijl de stap speelt,
  * een lichtere vulling toont de leespauze voor het vanzelf verder gaat */
 function drawTicks() {
-  const tr = $('track'); tr.innerHTML = ''; segKey = '';
+  const tr = $('track'); tr.innerHTML = ''; segKey = ''; curSeg = -1;
   current.steps.forEach((s, i) => {
     const b = document.createElement('button'); b.className = 'seg';
     b.title = `${i + 1}. ${L(s.title) ?? ''}`; b.setAttribute('aria-label', `${V('step')} ${b.title}`);
@@ -350,13 +350,43 @@ function drawTicks() {
     b.onclick = () => gotoStep(i);
     tr.append(b);
   });
+  requestAnimationFrame(fitTags);
 }
+/* korte stapnamen onder de tijdlijn: over max. 2 regels; past één woord niet in de breedte van zijn stuk,
+ * dan wordt die ene naam iets kleiner gezet (11,5 → min. 9 px; daarna afkorten met …, nooit midden in een woord breken) in plaats van midden in het woord te breken */
+function fitTags() {
+  const tr = $('track'), segs = [...tr.children];
+  // 1) de actieve stap krijgt altijd de breedte die zijn volledige naam nodig heeft (op 1 of 2 regels, 11,5 px vet);
+  //    de andere stukken delen de rest en worden zo nodig kleiner/afgekort
+  const cur = segs.find(b => b.classList.contains('cur'));
+  for (const b of segs) b.style.flex = '';
+  if (cur) {
+    const t = cur.querySelector('.tag'), ctx = (fitTags.c ??= document.createElement('canvas').getContext('2d'));
+    ctx.font = `600 11.5px ${getComputedStyle(t).fontFamily}`;
+    const words = (t.textContent || '').split(/\s+/).filter(Boolean), w = x => ctx.measureText(x).width;
+    let need = w(words.join(' '));
+    for (let i = 1; i < words.length; i++) need = Math.min(need, Math.max(w(words.slice(0, i).join(' ')), w(words.slice(i).join(' '))));
+    need = Math.max(need, ...words.map(w)) + 8;
+    if (need > cur.clientWidth) cur.style.flex = `0 0 ${Math.min(need, tr.clientWidth * .3).toFixed(0)}px`;
+  }
+  for (const b of segs) {
+    const t = b.querySelector('.tag');
+    t.style.fontSize = ''; t.style.display = ''; t.style.whiteSpace = ''; t.style.textOverflow = '';
+    if (b === cur) continue;   // actieve stap: nooit verkleinen of afkorten
+    const over = () => t.scrollWidth > t.clientWidth + 1 || t.scrollHeight > t.clientHeight + 1;
+    for (let fs = 11.5; fs > 9 && over(); fs -= .5) t.style.fontSize = fs - .5 + 'px';
+    if (over()) { t.style.display = 'block'; t.style.whiteSpace = 'nowrap'; t.style.textOverflow = 'ellipsis'; }   // nog te lang: afkorten met … (nooit een woord splitsen; volledige naam in de tooltip van de knop)
+  }
+}
+let curSeg = -1;
+addEventListener('resize', () => requestAnimationFrame(fitTags));
 let segKey = '';
 function updateSegs(si) {
   const sk = `${si.step}|${si.p.toFixed(3)}|${autoFill.toFixed(3)}|${$('track').children.length}`;
   if (sk === segKey) return;
   segKey = sk;
   const segs = $('track').children;
+  if (si.step !== curSeg) { curSeg = si.step; requestAnimationFrame(fitTags); }   // nieuwe actieve stap: breedtes opnieuw verdelen
   for (let i = 0; i < segs.length; i++) {
     const b = segs[i], k = i < si.step ? 1 : i > si.step ? 0 : si.p;
     b.classList.toggle('cur', i === si.step); b.classList.toggle('done', i < si.step);
@@ -661,8 +691,8 @@ function render() {
   const lvl = n?.scale ?? 3;
   const sc = L(def.scale ?? base.scale), tm = L(def.time ?? base.time);
   $('scalebox').innerHTML = `<span class="zoomlvl" title="${L({ nl: 'Zoomniveau: van cel (links) tot atomen (rechts)', en: 'Zoom level: from cell (left) to atoms (right)' })}">${SCALES.map(s => `<i class="${s.id <= lvl ? 'on' : ''}" title="${scaleTitle(s)}"></i>`).join('')}</span>` +
-    (sc ? `<span title="${L({ nl: 'Hoe groot dit in werkelijkheid is', en: 'How big this is in reality' })}">📏 ${L({ nl: 'Echte grootte', en: 'Real size' })}: <b>${sc}</b></span>` : '') +
-    (tm ? `<span title="${L({ nl: 'Hoe lang dit proces in de cel echt duurt. De animatie is vertraagd of versneld om het te kunnen volgen.', en: 'How long this process really takes in the cell. The animation is slowed down or sped up so you can follow it.' })}">⏱ ${L({ nl: 'Echte duur', en: 'Real duration' })}: <b>${tm}</b></span>` : '');
+    (sc ? `<span title="${L({ nl: 'Hoe groot dit in werkelijkheid is', en: 'How big this is in reality' })}: ${sc.replace(/"/g, '&quot;')}">📏 <span class="k">${L({ nl: 'Echte grootte', en: 'Real size' })}:</span> <b>${sc}</b></span>` : '') +
+    (tm ? `<span title="${L({ nl: 'Hoe lang dit proces in de cel echt duurt. De animatie is vertraagd of versneld om het te kunnen volgen.', en: 'How long this process really takes in the cell. The animation is slowed down or sped up so you can follow it.' })} (${tm.replace(/"/g, '&quot;')})">⏱ <span class="k">${L({ nl: 'Echte duur', en: 'Real duration' })}:</span> <b>${tm}</b></span>` : '');
   const ups = n ? [...new Set([...n.parents, ...n.prev])] : [];
   side.innerHTML = `
     <button class="btn sheetclose" id="sheetClose">${V('close')} ✕</button>

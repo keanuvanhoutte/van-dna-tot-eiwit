@@ -62,7 +62,7 @@ export default {
   scale: { nl: 'schematisch (de echte poort is ≈ 13 nm breed)', en: 'schematic (the real gate is ≈ 13 nm wide)' },
   time: { nl: 'vertraagd (schematisch)', en: 'slowed down (schematic)' },
   org: { nl: 'mens · PDB 7CP9', en: 'human · PDB 7CP9' },
-  legend: [[MITO, L3('mitochondrion (ruimtes)', 'mitochondrion (spaces)')], [PRE, L3('adreslabel (plus-spiraal vooraan)', 'address label (plus spiral at the start)')], [C.chain, L3('eiwitketen', 'protein chain')],
+  legend: [[MITO, L3('mitochondrion (ruimtes)', 'mitochondrion (spaces)')], [PRE, L3('adreslabel (plus-spiraal vooraan)', 'address label (positively charged helix at the start)')], [C.chain, L3('eiwitketen', 'protein chain')],
     [T40, L3('poort buiten: TOM40 (kanaal)', 'outer gate: TOM40 (channel)')], ['#c08bff', L3('poort binnen: TIM23', 'inner gate: TIM23')], [T22, L3('TOM22 (ontvanger)', 'TOM22 (receiver)')], [TSM, L3('kleine TOM-eiwitten', 'small TOM proteins')], [MPP, L3('knipenzym (MPP)', 'cutting enzyme (MPP)')], [HSP, L3('helper (mtHsp70)', 'helper (mtHsp70)')]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Stap 3 en 4 tonen de echte cryo-EM-structuur van de menselijke TOM-poort (Guan et al., <i>Cell Discov</i> 2021): twee tonvormige kanalen naast elkaar. De rest is een schema.</p>',
@@ -73,8 +73,8 @@ export default {
   steps: [
     { dur: 8000, cam: FULL, title: L3('Het mitochondrion maakt zelf maar 13 eiwitten', 'The mitochondrion makes only 13 proteins itself'),
       text: L3('Het eigen DNA van het mitochondrion levert 13 eiwitten. Meer dan 1000 andere komen van buiten.', 'The mitochondrion’s own DNA provides 13 proteins. More than 1000 others come from outside.') },
-    { dur: 8000, cam: cam(590, 300, 1110), title: L3('Een plus-spiraal vooraan is het adres', 'A plus spiral at the start is the address'),
-      text: L3('Vooraan zit een spiraaltje met aan één kant plusladingen. Dat is het adres van het mitochondrion.', 'At the start sits a little spiral with plus charges on one side. That is the mitochondrion’s address.') },
+    { dur: 8000, cam: cam(590, 300, 1110), title: L3('Een plus-spiraal vooraan is het adres', 'A positively charged helix at the start is the address'),
+      text: L3('Vooraan zit een spiraaltje met aan één kant plusladingen. Dat is het adres van het mitochondrion.', 'At the start sits a short helix with positive charges on one side. That is the mitochondrion’s address.') },
     { dur: 8500, cam: FULL, title: L3('De poort in de buitenste membraan', 'The gate in the outer membrane'),
       text: L3('Dit is de echte poort van de mens in de buitenste membraan. Ze heeft twee kanalen naast elkaar.', 'This is the real human gate in the outer membrane. It has two channels side by side.') },
     { dur: 8500, cam: FULL, title: L3('Elk kanaal is een smalle ton', 'Each channel is a narrow barrel'),
@@ -173,7 +173,7 @@ export default {
           const left = NB - nIn;
           if (left > 0) ch += folded(FP[0][0], FP[0][1], 22 + left * 1.6, 1, 0);
         }
-        if (step <= 3) ch += folded(FP[0][0], FP[0][1], 22 + NB * 1.6, step === 0 ? 0 : 1, kHel) + (step === 1 ? T(FP[0][0] + 120, FP[0][1] + 92, T2('plus-spiraal', 'plus spiral'), { size: 26, col: PRE, op: ease(sub(p, .4, .7)) }) : '');
+        if (step <= 3) ch += folded(FP[0][0], FP[0][1], 22 + NB * 1.6, step === 0 ? 0 : 1, kHel) + (step === 1 ? T(FP[0][0] + 120, FP[0][1] + 92, T2('plus-spiraal', 'positively charged helix'), { size: 26, col: PRE, op: ease(sub(p, .4, .7)) }) : '');
         // knipenzym (stap 6) en helper (stap 7)
         if (step === 6 || (step === 7 && p < .2)) {
           const o = step === 6 ? ease(sub(p, 0, .15)) : 1 - ease(sub(p, 0, .2));

@@ -136,7 +136,7 @@ export default {
       why: 'Daalt de membraanpotentiaal, bv. bij ziekten van de ademhalingsketen, dan stokt de invoer. Zo is import een gevoelige meter voor de gezondheid van het mitochondrion; beschadigde mitochondriën worden via mitofagie (een vorm van autofagie) opgeruimd.',
     },
     en: {
-      kort: 'The mitochondrion makes only 13 proteins itself; more than a thousand others come from the cytosol. Most are led, unrolled, by a plus spiral at the start through a gate in each of the two membranes. Inside, the label comes off and the protein folds.',
+      kort: 'The mitochondrion makes only 13 proteins itself; more than a thousand others come from the cytosol. Most are led, unrolled, by a positively charged helix at the start through a gate in each of the two membranes. Inside, the label comes off and the protein folds.',
       what: 'Human mtDNA (16,569 bp) encodes 13 proteins, all parts of the respiratory chain or ATP synthase. MitoCarta3.0 lists 1,136 human genes for mitochondrial proteins in total; apart from those 13 they are encoded in the nucleus, made in the cytosol and imported. The presequence pathway carries about 60 % of those proteins.',
       how: [
         'The presequence is an N-terminal, positively charged amphipathic α-helix; Tom20 and Tom22 recognise it on the outside.',

@@ -52,7 +52,10 @@ function initProcessing(svg) {
 
   function draw() {
 
-    const lig1 = ease(prog(5)), lig2 = ease(prog(6));        // exon 1 schuift naar exon 2; daarna exon 1+2 naar exon 3
+    // 2de transesterificatie: exon 1 (vrij 3′-OH, vastgehouden door U5) schuift onder de lus door naar de 3′-splitsplaats;
+    // de exonverbinding en het vrijkomen van de lariat zijn één reactie, dus de lariat komt pas los op het moment dat de exonen raken
+    const win = (v, a, b) => Math.min(1, Math.max(0, (v - a) / (b - a)));
+    const lig1 = ease(win(prog(5), 0, .55)), lig2 = ease(prog(6));        // exon 1 schuift naar exon 2; daarna exon 1+2 naar exon 3
     const off = x => x + (x <= X.e1[1] + .1 ? lig1 * L1 : 0) + (x <= X.e2[1] + .1 ? lig2 * L2 : 0);
     const cut = prog(8) > .35, gone = ease(prog(10));
     // stap 11: het mRNP wordt met de 5′-kant (cap + CBC) voorop naar de kernporie gebracht en blijft daar aan de korf liggen
@@ -90,7 +93,7 @@ function initProcessing(svg) {
 
     // introns: intron 1 vormt de lariat, intron 2 wordt korter en verdwijnt
     const lar = ease(prog(4));                                // 0 = recht, 1 = lariat
-    const rel = ease(prog(5));                                // lariat komt vrij
+    const rel = ease(win(prog(5), .55, 1));                   // lariat komt vrij, tegelijk met de exonverbinding
     let intr = '';
     if (ph <= 5) {
       const a0 = X.i1[0], bx = X.br1, a1 = X.i1[1], r = (bx - a0) / (2 * Math.PI);
@@ -146,7 +149,7 @@ function initProcessing(svg) {
 
     // EJC ~20–24 nt stroomopwaarts van elke exon-exonjunctie
     const ejc = [];
-    if (ph >= 5 && lig1 > .95) ejc.push(off(X.e1[1]) - 66);
+    if (ph >= 5 && lig1 > .95 && rel > .6) ejc.push(off(X.e1[1]) - 66);   // EJC pas zichtbaar als de lariat weg is (anders overlapt het met U2)
     if (ph >= 6 && lig2 > .95) ejc.push(off(X.e2[1]) - 66);
     $('pr-ejc').innerHTML = `<g ${up}>` + ejc.map(x => pill(x, Y - 26, 44, 20, 'EJC', '#7a62e0')).join('') + `</g>`;
     // label 'EJC → NMD-controle' boven de laatst gevormde EJC (niet boven het midden van de groep, dat soms buiten beeld valt)
@@ -209,7 +212,7 @@ export default {
     { dur: 7200, cam: cam(560, 470, 700), title: { nl: "De eerste knip", en: "The first cut" },
       text: { nl: "Het begin van het intron komt los en hecht aan een A verderop: een lus met staart, als een lasso.", en: "The start of the intron comes free and joins an A further on: a loop with a tail, like a lasso." } },
     { dur: 7800, cam: cam(530, 460, 820), title: { nl: "De stukken worden aan elkaar geplakt", en: "The pieces are joined" },
-      text: { nl: "De stukken die blijven (exonen) worden aan elkaar geplakt. Bij de naad blijft een eiwit als merkteken.", en: "The pieces that stay (exons) are joined together. A protein stays at the seam as a marker." } },
+      text: { nl: "De stukken die blijven (exonen) worden aan elkaar geplakt; tegelijk komt de lasso los. Bij de naad blijft een eiwit als merkteken.", en: "The pieces that stay (exons) are joined together; at the same moment the lasso comes free. A protein stays at the seam as a marker." } },
     { dur: 5400, cam: cam(860, 480, 900), title: { nl: "Het tweede intron gaat eruit", en: "The second intron goes" },
       text: { nl: "Het tweede intron gaat er net zo uit, vaak al terwijl het RNA nog gemaakt wordt.", en: "The second intron is removed the same way, often while the RNA is still being made." } },
     { dur: 6000, cam: cam(1255, 500, 760), title: { nl: "Waar stopt het mRNA?", en: "Where does the mRNA end?" },

@@ -45,6 +45,12 @@ export default {
   svg() {
     return svgOpen() + `
     <g id="tx-super"></g>
+    <!-- RNA vóór het DNA getekend: waar het RNA Pol II verlaat, loopt het achter de weer gesloten helix langs (niet erdoorheen) -->
+    <g data-node="rnaprocessing" data-color="${C.rna}" data-label="${T2('pre-mRNA → processing', 'pre-mRNA → processing')}">
+      <path id="tx-rna-hit" stroke="transparent" stroke-width="26" fill="none"/>
+      <g id="tx-rna-bases"></g>
+      <path id="tx-rna" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round"/>
+    </g>
     <g data-node="dnahelix" data-label="${T2('DNA-dubbelhelix', 'DNA double helix')}" data-color="${C.dna}">
       <rect x="0" y="400" width="1600" height="140" fill="transparent"/>
       <circle data-anchor="dnahelix" cx="1420" cy="425" r="1" fill="none"/>
@@ -55,11 +61,6 @@ export default {
     <g data-node="promoter" data-color="${C.prot}" data-label="${T2('Promoter (TATA-box)', 'Promoter (TATA box)')}">
       <rect x="112" y="432" width="150" height="76" rx="10" fill="rgba(155,123,255,.10)" stroke="${C.prot}" stroke-dasharray="5 4"/>
       <circle data-anchor="promoter" cx="187" cy="636" r="1" fill="none"/>
-    </g>
-    <g data-node="rnaprocessing" data-color="${C.rna}" data-label="${T2('pre-mRNA → processing', 'pre-mRNA → processing')}">
-      <path id="tx-rna-hit" stroke="transparent" stroke-width="26" fill="none"/>
-      <g id="tx-rna-bases"></g>
-      <path id="tx-rna" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round"/>
     </g>
     <g data-node="capping" data-nolabel data-color="${C.prot2}"><g id="tx-capenz"></g></g>
     <g data-node="capping" data-color="${C.rna}" data-label="${T2("5′-cap (m⁷G)", "5′ cap (m⁷G)")}"><g id="tx-cap"></g></g>
@@ -112,7 +113,7 @@ export default {
           } else {
             rungs += `<line x1="${x}" y1="${f1(s1y(x))}" x2="${x}" y2="${f1(s1y(x) + 16)}" stroke="${BASE[b]}" stroke-width="5" opacity="${f1(sp)}"/>`;
             rungs += `<line x1="${x}" y1="${f1(s2y(x))}" x2="${x}" y2="${f1(s2y(x) - 16)}" stroke="${BASE[m]}" stroke-width="5" opacity="${f1(sp)}"/>`;
-            if (step === 5) rungs += txt(x, s2y(x) + 20, m, BASE[m], 13, 'middle', 700, 'JetBrains Mono');
+            if (step === 5 && sp > .97) rungs += txt(x, s2y(x) + 20, m, BASE[m], 13, 'middle', 700, 'JetBrains Mono');   // letters enkel waar de streng vlak in de bel ligt
           }
         }
         $('tx-rungs').innerHTML = rungs;
@@ -155,10 +156,11 @@ export default {
         // Pol II + CTD-fosforylatie
         const pol = $('tx-pol');
         pol.setAttribute('transform', `translate(${f1(polX)} ${CY})`); pol.setAttribute('opacity', f1(polOp));
-        const s5 = step >= 2 ? (step === 2 ? sub(p, .3, .6) : 1) : 0, s2 = step >= 7 ? (step === 7 ? sub(p, .4, .8) : 1) : 0;
+        // CTD-cyclus (Hsin & Manley 2012): Ser5-P bij de start, Ser2-P stijgt tijdens de verlenging; naar het 3′-einde daalt Ser5-P en blijft Ser2-P hoog
+        const s5 = step >= 2 ? (step === 2 ? sub(p, .3, .6) : step === 8 ? 1 - .75 * sub(p, 0, .6) : 1) : 0, s2 = step >= 7 ? (step === 7 ? sub(p, .4, .8) : 1) : 0;
         $('tx-ctdp').innerHTML = [0, 2, 4].map(i => pill(CTDB[i][0] + 30, CTDB[i][1], 46, 19, 'S5P', '#ffc247', s5, 14)).join('') + [1, 3, 5].map(i => pill(CTDB[i][0] - 30, CTDB[i][1], 46, 19, 'S2P', '#5ad17a', s2, 14)).join('');
         $('tx-tata').setAttribute('opacity', step <= 3 ? 1 : 0);
-        $('tx-ctdp').setAttribute('opacity', step === 8 ? f1(1 - sub(p, 0, .3)) : 1);
+        $('tx-ctdp').setAttribute('opacity', 1);
         $('tx-ctdlab').setAttribute('opacity', step === 2 || step === 7 ? 1 : 0);
         $('tx-strandlab').setAttribute('opacity', step === 0 || step === 8 ? 1 : step === 4 ? f1(sub(p, .85, .95)) : 0);   // pas als Pol II voorbij is
         $('tx-strandlab').setAttribute('transform', step === 4 ? 'translate(-200 0)' : step === 0 ? 'translate(-150 0)' : '');   // stap 1: volledig in beeld; stap 5: links van Pol II   // in stap 5 links van Pol II en het RNA

@@ -58,7 +58,7 @@ export default {
     { dur: 8500, cam: FULL, title: L3('Anders dan het ER en het mitochondrion', 'Unlike the ER and the mitochondrion'),
       text: L3('Het ER en het mitochondrion laten alleen uitgerolde ketens door. Het peroxisoom neemt ook gevouwen eiwitten op.', 'The ER and the mitochondrion only let unrolled chains through. The peroxisome also takes up folded proteins.') },
     { dur: 9500, cam: FULL, title: L3('Zonder werkende peroxisomen: het Zellweger-spectrum', 'Without working peroxisomes: the Zellweger spectrum'),
-      text: L3('Werkt een bouwgen van het peroxisoom niet, dan stapelen zeer lange vetzuren op. Dat kan al bij baby’s ernstig zijn.', 'If a building gene of the peroxisome fails, very long fatty acids pile up. This can already be severe in babies.') },
+      text: L3('Werkt een bouwgen van het peroxisoom niet, dan stapelen zeer lange vetzuren op. Dat kan al bij baby’s ernstig zijn.', 'If a gene needed to build peroxisomes (PEX) fails, very long fatty acids pile up. This can already be severe in babies.') },
   ],
   svg() {
     // één membraan (lipidedubbellaag) rond het lumen; aanmeerplaats (PEX13/PEX14) als eiwitten in het membraan (getekend in update)

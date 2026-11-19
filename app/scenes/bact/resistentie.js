@@ -157,7 +157,7 @@ export default {
           sd += `<g opacity="${f1(step === 0 || step === 5 || act ? 1 : .35)}"><circle cx="${X + 48}" cy="${y - 8}" r="16" fill="${col}"/>` + txt(X + 48, y, String(i + 1), '#0a1224', 20, 'middle', 800) + txt(X + 80, y, a, act ? C.text : C.muted, 24, 'start', act ? 800 : 600) + '</g>';
         });
         sd += txt(X + W / 2, 590, step === 5 ? T2('+ verspreiding via plasmiden', '+ spread via plasmids') : T2('vaak meerdere tegelijk', 'often several at once'), step === 5 ? K.plas : C.muted, 22, 'middle', 700);
-        if (step === 0) sd += txt(X + W / 2, 668, T2('← Waar antibiotica aangrijpen', '← Where antibiotics strike'), DRUG, 22, 'middle', 700);
+        // (geen tweede tekst hier: het klikbare label 'Waar antibiotica aangrijpen' staat al op deze plek)
         $('rs-side').innerHTML = sd;
       },
     };

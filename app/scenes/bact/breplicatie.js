@@ -32,8 +32,8 @@ export default {
     return svgOpen() + `
     <g id="br-ring"></g>
     <g id="br-side"></g>
-    <g data-node="replicatie" data-color="${C.dna}" data-label="${T2('Vergelijk: replicatie bij de mens', 'Compare: replication in humans')}"><circle data-anchor="replicatie" cx="1250" cy="735" data-pos="below" r="1" fill="none"/><rect x="1249" y="734" width="2" height="2" fill="none"/></g>
-    <g data-node="bplasmide" data-color="${K.plas}" data-label="${T2('Plasmiden kopiëren zich ook', 'Plasmids copy themselves too')}"><circle data-anchor="bplasmide" cx="250" cy="735" data-pos="below" r="1" fill="none"/><rect x="249" y="734" width="2" height="2" fill="none"/></g>
+    <g data-node="replicatie" data-color="${C.dna}" data-label="${T2('Vergelijk: replicatie bij de mens', 'Compare: replication in humans')}"><circle data-anchor="replicatie" cx="1250" cy="700" data-pos="below" r="1" fill="none"/><rect x="1249" y="734" width="2" height="2" fill="none"/></g>
+    <g data-node="bplasmide" data-color="${K.plas}" data-label="${T2('Plasmiden kopiëren zich ook', 'Plasmids copy themselves too')}"><circle data-anchor="bplasmide" cx="820" cy="700" data-pos="below" r="1" fill="none"/><rect x="249" y="734" width="2" height="2" fill="none"/></g>
     </svg>`;
   },
   init(svg) {
@@ -71,7 +71,7 @@ export default {
             const cx = CX + sd * lerp(0, 160, sep), cy = CY;
             g += ring(cx, cy, r) + `<circle cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(r - 14)}" fill="none" stroke="${NEW}" stroke-width="6"/>`;
           }
-          g += `<g opacity="${f1(sub(p, .6, .8))}">` + txt(CX - 160, CY + 8, T2('dochter 1', 'daughter 1'), C.text, 26, 'middle', 700) + txt(CX + 160, CY + 8, T2('dochter 2', 'daughter 2'), C.text, 26, 'middle', 700) + '</g>';
+          g += `<g opacity="${f1(sub(p, .6, .8))}">` + txt(CX - 160, CY - 6, T2('dochter-', 'daughter'), C.text, 23, 'middle', 700) + txt(CX - 160, CY + 22, T2('chromosoom 1', 'chromosome 1'), C.text, 23, 'middle', 700) + txt(CX + 160, CY - 6, T2('dochter-', 'daughter'), C.text, 23, 'middle', 700) + txt(CX + 160, CY + 22, T2('chromosoom 2', 'chromosome 2'), C.text, 23, 'middle', 700) + '</g>';
         }
         $('br-ring').innerHTML = g;
 

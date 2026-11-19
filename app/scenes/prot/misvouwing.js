@@ -54,8 +54,8 @@ export default {
     const cards = [
       ['Aβ', T2('Alzheimer', 'Alzheimer\'s'), T2('plaques buiten neuronen', 'plaques outside neurons'), 'idp'],
       ['tau', T2('Alzheimer', 'Alzheimer\'s'), T2('kluwens in neuronen', 'tangles inside neurons'), null],
-      ['α-synucleïne', T2('Parkinson', 'Parkinson\'s'), T2('Lewy-lichaampjes', 'Lewy bodies'), 'idp'],
-      ['IAPP (amyline)', T2('type 2-diabetes', 'type 2 diabetes'), T2('in de eilandjes van Langerhans', 'in the islets of Langerhans'), null],
+      [T2('α-synucleïne', 'α-synuclein'), T2('Parkinson', 'Parkinson\'s'), T2('Lewy-lichaampjes', 'Lewy bodies'), 'idp'],
+      [T2('IAPP (amyline)', 'IAPP (amylin)'), T2('type 2-diabetes', 'type 2 diabetes'), T2('in de eilandjes van Langerhans', 'in the islets of Langerhans'), null],
       ['PrP', T2('Creutzfeldt-Jakob', 'Creutzfeldt–Jakob'), T2('prionziekte, overdraagbaar', 'prion disease, transmissible'), null],
     ];
     let cd = '';
@@ -155,14 +155,14 @@ export default {
           }
           if (step === 3) {
             const k = sub(p, .55, .75);
-            xb += `<path d="M${x0 + 5 * dx},${yT - 20} v-14 H${x0 + 6 * dx} v14" stroke="#fff" stroke-width="3" fill="none" opacity="${f1(k)}"/>` + T(x0 + 5.5 * dx, yT - 46, '4,7 Å', { size: 24, w: 800, op: k });
+            xb += `<path d="M${x0 + 5 * dx},${yT - 20} v-14 H${x0 + 6 * dx} v14" stroke="#fff" stroke-width="3" fill="none" opacity="${f1(k)}"/>` + T(x0 + 5.5 * dx, yT - 46, T2('4,7 Å', '4.7 Å'), { size: 24, w: 800, op: k });
             xb += T(3990, 640, T2('H-bruggen evenwijdig aan de as', 'H-bonds parallel to the axis'), { size: 20, col: '#fff', op: k });
             // eind-aanzicht inzet
             const k2 = sub(p, .7, .9);
             xb += panel(4540, 250, 400, 360, { op: k2 }) + T(4740, 290, T2('dwarsdoorsnede', 'cross-section'), { size: 20, col: C.muted, op: k2 });
             for (let i = 0; i < 5; i++) xb += `<g opacity="${f1(k2)}"><rect x="${4600 + i * 60}" y="370" width="44" height="20" rx="5" fill="${BAD}"/><rect x="${4630 + i * 60 - 30}" y="480" width="44" height="20" rx="5" fill="#b35a5a"/>` +
               `<line x1="${4622 + i * 60}" y1="390" x2="${4622 + i * 60}" y2="420" stroke="${SC}" stroke-width="6"/><line x1="${4622 + i * 60}" y1="480" x2="${4622 + i * 60}" y2="450" stroke="${SC}" stroke-width="6"/></g>`;
-            xb += `<path d="M4930,380 v110" stroke="#fff" stroke-width="3" opacity="${f1(k2)}"/>` + T(4905, 445, '≈ 10 Å', { size: 20, w: 800, op: k2, anchor: 'end' }) + T(4740, 556, T2('zijketens in elkaar', 'side chains interlock'), { size: 23, col: SC, op: k2 }) + T(4740, 590, '"steric zipper"', { size: 23, col: SC, op: k2 });
+            xb += `<path d="M4930,380 v110" stroke="#fff" stroke-width="3" opacity="${f1(k2)}"/>` + T(4905, 445, '≈ 10 Å', { size: 20, w: 800, op: k2, anchor: 'end' }) + T(4740, 556, T2('zijketens in elkaar', 'side chains interlock'), { size: 23, col: SC, op: k2 }) + T(4740, 590, '“steric zipper”', { size: 23, col: SC, op: k2 });
           }
           xb += T(3990, 180, T2('amyloïdfibril (zijaanzicht)', 'amyloid fibril (side view)'), { size: 26, w: 700 });
         }

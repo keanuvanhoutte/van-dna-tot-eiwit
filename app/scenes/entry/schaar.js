@@ -15,7 +15,7 @@ const DRUGS = (ch, label) => ({ sel: { chain: ch, resn: '4WI' }, style: { stick:
 
 export default structure3d({
   id: 'schaar', pdb: '7RFW',
-  title: L3('Een virusschaar knipt de lange keten', 'A virus scissors cuts the long chain'),
+  title: L3('Een virusschaar knipt de lange keten', 'The virus’s scissors cut the long chain'),
   scale: L3('≈ 7 nm (twee helften)', '≈ 7 nm (two halves)'), time: L3('vertraagd getoond (schematisch)', 'shown slowed down (schematic)'),
   org: L3('SARS-CoV-2 · PDB 7RFW', 'SARS-CoV-2 · PDB 7RFW'),
   legend: [[PA, L3('schaar, helft 1', 'scissors, half 1')], [PB, L3('schaar, helft 2', 'scissors, half 2')], [SITE, L3('knipplek (His41 + Cys145)', 'cutting site (His41 + Cys145)')],
@@ -29,7 +29,7 @@ export default structure3d({
   base,
   dimOpacity: false,
   steps: [
-    { dur: 8000, title: L3('Een virusschaar knipt de lange keten', 'A virus scissors cuts the long chain'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('Een virusschaar knipt de lange keten', 'The virus’s scissors cut the long chain'), focus: null, zoom: {}, spin: .012,
       text: L3('Dit is de echte schaar van het coronavirus. Ze knipt de lange eiwitketen op minstens elf plaatsen.', 'This is the real scissors of the coronavirus. It cuts the long protein chain in at least eleven places.') },
     { dur: 8500, title: L3('De schaar werkt als paar', 'The scissors work as a pair'), zoom: {}, spin: .01,
       focus: [{ sel: { chain: 'A', ...PROT }, style: S(PA, 2.6) }, { sel: { chain: 'B', ...PROT }, style: S(PB, 2.6) },
@@ -50,6 +50,6 @@ export default structure3d({
   hotspots: [
     { node: 'viruskopie', label: L3('↑ De lange keten', '↑ The long chain'), color: '#7fdc6a' },
     { node: 'assemblage', label: L3('Nieuwe virussen bouwen →', 'Building new viruses →'), color: '#ff9d5c' },
-    { node: 'proteasoom', label: L3('Vergelijk: de afbraakbuis van de cel', 'Compare: the cell’s breakdown tube'), color: '#9b7bff' },
+    { node: 'proteasoom', label: L3('Vergelijk: de afbraakbuis van de cel', 'Compare: the proteasome'), color: '#9b7bff' },
   ],
 });

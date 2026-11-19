@@ -141,7 +141,7 @@ export default {
 
     /* 7 — lineair dsDNA met LTR's */
     const L1 = [330, 560], L2 = [1130, 1360];
-    lanes.push(`${T(7, L({ nl: 'provirus-DNA', en: 'provirus DNA' }))}
+    lanes.push(`${T(7, L({ nl: 'provirus-DNA', en: 'proviral DNA' }))}
       ${strand(L1[0], L2[1], laneY(7) + 9, DNAC, 1, 7)}${strand(L1[0], L2[1], laneY(7) - 9, DNA2, 1, 7)}
       ${box(L1[0], L1[1], laneY(7), 'LTR: U3-R-U5', '#f7b6dc', 1, 26)}
       ${box(L2[0], L2[1], laneY(7), 'LTR: U3-R-U5', '#f7b6dc', 1, 26)}

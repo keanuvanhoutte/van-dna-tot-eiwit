@@ -100,7 +100,7 @@ html, body { height: 100%; overflow: hidden; }
 .track { flex: 1; min-width: 0; display: flex; gap: 3px; align-items: center; }
 .seg { all: unset; cursor: pointer; flex: 1 1 0; min-width: 0; padding: 8px 0 2px; position: relative; display: flex; flex-direction: column; gap: 5px; }
 /* korte titel onder elk stuk (bv. "knippen", "vouwen"): zo vind je snel een bepaald moment */
-.seg .tag { display: block; font-size: 11.5px; line-height: 1.2; color: var(--muted); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 2px; }
+.seg .tag { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: 11.5px; line-height: 1.15; min-height: 2.3em; color: var(--muted); text-align: center; white-space: normal; overflow: hidden; overflow-wrap: normal; word-break: normal; padding: 0 1px; }   /* korte titel over max. 2 regels i.p.v. afgekapt */
 .seg:hover .tag { color: var(--text); }
 .seg.cur .tag { color: var(--accent); font-weight: 600; }
 .seg.done .tag { color: #8796b4; }
@@ -129,7 +129,13 @@ html, body { height: 100%; overflow: hidden; }
 
 .scalebox { display: flex; gap: 16px; align-items: center; font-size: 12.5px; color: var(--muted); min-width: 0; overflow: hidden; white-space: nowrap; }
 .scalebox b { color: var(--text); font-weight: 600; }
-.scalebox > span { cursor: help; }
+.scalebox > span { cursor: help; min-width: 0; display: inline-flex; align-items: baseline; gap: 4px; white-space: nowrap; flex: 0 1 auto; overflow: hidden; }   /* te smal: eerst het woord 'Echte grootte/duur' weg, de waarde blijft (volledige tekst in de tooltip) */
+.scalebox > span > .k { min-width: 0; overflow: hidden; text-overflow: ellipsis; flex: 0 100 auto; }
+.scalebox > span > b { min-width: 3.2em; overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto; }
+.scalebox > span.zoomlvl + span { flex-shrink: .2; }
+.scalebox > span.zoomlvl + span > b { flex-shrink: 0; min-width: 0; }   /* echte grootte: de (korte) waarde blijft altijd volledig */
+.scalebox > span.zoomlvl { flex: 0 0 auto; }
+#playState { white-space: nowrap; flex: 0 0 auto; }
 .zoomlvl { display: inline-flex; gap: 3px; }
 .zoomlvl i { width: 16px; height: 5px; border-radius: 2px; background: #243049; }
 .zoomlvl i.on { background: var(--accent); }
@@ -327,6 +333,10 @@ html, body { height: 100%; overflow: hidden; }
 .r3bar button:focus-visible, .r3bar a:focus-visible, .r3side button:focus-visible, .r3side tr:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .r3body { position: relative; flex: 1; min-height: 0; display: flex; }
 .r3view { position: relative; flex: 1; min-width: 0; }
+.r3key { position: absolute; left: 12px; bottom: 12px; display: flex; flex-wrap: wrap; gap: 4px 12px; max-width: calc(100% - 24px); padding: 7px 11px; border-radius: 10px; background: rgba(11,18,36,.85); border: 1px solid rgba(160,180,220,.22); font-size: 13px; color: var(--text, #e8edf7); pointer-events: none; }
+.r3key b { font-weight: 600; color: var(--muted); margin-right: 2px; }
+.r3key i { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.r3key[hidden] { display: none; }
 .r3load { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 14px; pointer-events: none; }
 .r3side { flex: none; width: 370px; overflow-y: auto; border-left: 1px solid var(--line); padding: 10px 14px 16px; font-size: 13.5px; line-height: 1.5; background: rgba(8,13,26,.55); }
 .r3side.two { width: min(760px, 55%); display: flex; gap: 16px; overflow: hidden; }
