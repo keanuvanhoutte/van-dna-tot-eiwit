@@ -138,7 +138,10 @@ function initProcessing(svg) {
     if (tri > 0) sn += `<g opacity="${tri.toFixed(2)}" transform="translate(0 ${(lyUp + triDrop).toFixed(1)})"><ellipse cx="${(X.i1[0] + X.br1) / 2 + 10}" cy="${Y - 4}" rx="${(X.br1 - X.i1[0]) / 2 + 58}" ry="54" fill="rgba(155,123,255,.13)" stroke="${C.prot}" stroke-width="2" stroke-dasharray="6 4"/></g>`;
     sn += `<g transform="translate(0 ${lyUp.toFixed(1)})">`;
     sn += pill(X.i1[0] + 12, Y + 14, 44, 24, 'U1', '#8e6cf0', Math.max(0, u1));
-    sn += pill(X.br1, Y + 26 - 18 * lar, 44, 24, 'U2', '#6f5bd6', Math.max(0, u2));
+    // stap 6: U2 blijft aan het vertakkings-A (rechts ervan, op het intron) en gaat eerst opzij en dan omhoog uit de baan,
+    // zodat exon 1 (en zijn label) er vrij onderdoor kan zonder dat U2 over het A schuift
+    const u2Dx = ph >= 5 ? 40 * ease(win(prog(5), 0, .15)) : 0, u2Up = ph >= 5 ? 44 * ease(win(prog(5), .12, .3)) : 0;
+    sn += pill(X.br1 + u2Dx, Y + 26 - 18 * lar - u2Up, 44, 24, 'U2', '#6f5bd6', Math.max(0, u2));
     sn += pill((X.br1 + X.i1[1]) / 2 + 12, Y + 14, 60, 22, 'U2AF', '#5a4bb8', Math.max(0, u2af));
     sn += `<g transform="translate(0 ${triDrop.toFixed(1)})">`;
     sn += pill(X.i1[0] + 100 - 50 * act, Y - 16 - 6 * act, 86, 24, 'U6·U5', '#8e6cf0', tri);
