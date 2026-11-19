@@ -64,7 +64,7 @@ export default {
   svg() {
     return svgOpen() + `<defs><clipPath id="xi-cat"><ellipse cx="830" cy="470" rx="330" ry="150"/><circle cx="1130" cy="330" r="110"/><path d="M1050,250 L1060,150 L1120,225Z M1150,225 L1210,150 L1220,250Z"/><path d="M500,470 C380,440 350,330 420,270 L450,290 C400,340 420,420 520,440Z"/><rect x="590" y="560" width="60" height="150" rx="28"/><rect x="980" y="560" width="60" height="150" rx="28"/></clipPath></defs>
     <g id="xi-v"></g>
-    ${btn('dnamethyl', 40, 340, T2('↑ DNA-methylatie', '↑ DNA methylation'), C.danger)}
+    ${btn('dnamethyl', 40, 340, T2('↑ DNA-methylatie', '↑ DNA methylation'), C.methyl)}
     ${btn('imprinting', 1100, 460, T2('volgende: van moeder of van vader? →', 'next: from mother or from father? →'), '#ffc247')}
     </svg>`;
   },

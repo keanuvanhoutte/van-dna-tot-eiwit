@@ -10,6 +10,9 @@ export const C = {
   dna: '#4f8ff7', dna2: '#9cc0ff', tdna: '#f06bc0', rna: '#ff8a3d', trna: '#ffc247', rrna: '#2cc6a8',
   prot: '#9b7bff', prot2: '#6f5bd6', prot3: '#5a4bb8', chain: '#7fdc6a', mem: '#c9a574', bact: '#d65a5a', histone: '#8a93a8',
   text: '#e8edf7', muted: '#93a0bb', bg: '#070b16', panel: '#0d1426', intron: '#a9876f', cap: '#ffb27a', danger: '#ff6b6b', ok: '#7fdc6a',
+  /* chemische merktekens, overal dezelfde kleur (DNA en histonen): methylgroep (CH₃) ivoor, acetylgroep (Ac) geelgroen.
+   * Gekozen zodat ze niet botsen met DNA/RNA/tRNA/fosfaat/ATP/keten/basen (T = rood, G = geel, A = groen). */
+  methyl: '#f0e6c8', acetyl: '#c8e64c',
 };
 export const BASE = { A: '#5ad17a', T: '#ff6b6b', U: '#ff6b6b', G: '#ffc247', C: '#4fb0ff' };
 export const COMP = { A: 'T', T: 'A', G: 'C', C: 'G' };

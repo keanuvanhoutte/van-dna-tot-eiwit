@@ -1,7 +1,7 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1 } from '../../kit.js';
 import { T } from '../prot/_b_kit.js';
 import { btn } from '../prot/_fate.js';
-import { eiwitPad } from '../../bio.js';
+import { eiwitPad, polII } from '../../bio.js';
 
 /*
  * Enhancers (zijpad epigenetica, 05-11-2026): een verre versterker met activatoren komt via een chromatinelus bij de
@@ -74,7 +74,7 @@ export default {
         $('en-gene').innerHTML = g;
         // afleesapparaat (wacht bij de startplaats), activatoren, brug, RNA
         let fx = '';
-        fx += blob(P[0] + 6, Y - 70, 70, 44, POL, 'Pol II', 1, 22);
+        fx += polII(P[0] + 6, Y, 72, 30, { col: POL, gul: 24, hoog: 3.6, vul: .35, achter: .6, uit: 1.3, seed: 120, label: 'Pol II', fs: 22, labelY: -58 });   // app-vorm (bio.js): het DNA loopt door de geul
         if (step === 0) fx += T(P[0] + 120, Y - 130, T2('traag…', 'slow…'), { size: 26, col: C.muted, op: ease(sub(p, .4, .7)) });
         if (kE > .01 && kL < .99) {
           const o = kE * (1 - kL);
@@ -92,10 +92,13 @@ export default {
           fx += blob(mx, Y - 122, 100, 44, MED, T2('brug', 'bridge'), kM, 24);
         }
         if (kR > .01) {
-          const len = 400 * kR;
-          // het RNA komt uit de aflezer en groeit langs het gen
-          fx += `<path d="M${f1(P[0] + 50)},${Y - 56} Q${f1(P[0] + 100)},${Y - 40} ${f1(gx + 20)},${Y - 40} L${f1(gx + 20 + len)},${Y - 40}" stroke="${C.rna}" stroke-width="8" fill="none" stroke-linecap="round"/>` +
-            T(gx + 210, Y - 66, T2('✓ veel RNA', '✓ lots of RNA'), { size: 26, col: C.rna, w: 700, op: sub(kR, .6, 1) });
+          // het RNA komt bovenaan achteraan uit Pol II (RNA-uitgang) en groeit naar achteren/omhoog, weg van het gen waar het enzym nog moet komen;
+          // "veel RNA" = eerdere kopieën die al los zijn en wegdrijven (schematisch)
+          const x0 = P[0] - 6, y0 = Y - 100;
+          fx += `<path d="M${f1(x0)},${y0} C${f1(x0 - 10)},${Y - 160} ${f1(x0 - 70)},${Y - 170} ${f1(x0 - 90)},${Y - 230} S${f1(x0 - 110)},${Y - 300} ${f1(x0 - 150)},${Y - 310}" pathLength="1" stroke-dasharray="${f1(kR)} 1" stroke="${C.rna}" stroke-width="8" fill="none" stroke-linecap="round"/>`;
+          const los = (x, y, o) => o <= .01 ? '' : `<path d="M${x},${y} q20,-16 40,0 t40,0 t40,0 t40,0" stroke="${C.rna}" stroke-width="7" fill="none" stroke-linecap="round" opacity="${f1(o)}"/>`;
+          fx += los(P[0] + 90, Y - 250, sub(kR, .5, .8)) + los(P[0] + 150, Y - 320, sub(kR, .7, 1));
+          fx += T(P[0] + 250, Y - 190, T2('✓ veel RNA', '✓ lots of RNA'), { size: 26, col: C.rna, w: 700, op: sub(kR, .6, 1) });
         }
         // stap 5: hand met een extra vinger (schematisch)
         if (kF > .01) {

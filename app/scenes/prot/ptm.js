@@ -68,8 +68,8 @@ export default {
   svg() {
     const cards = [
       ['ph', 'ptm', C.prot, T2('Fosforylatie', 'Phosphorylation'), 'Ser · Thr · Tyr'],
-      ['ac', 'histonmod', CLASSCOL['+'], T2('Acetylatie', 'Acetylation'), 'Lys (–NH₃⁺)'],
-      ['me', 'histonmod', '#5fd3e6', T2('Methylatie', 'Methylation'), 'Lys · Arg'],
+      ['ac', 'histonmod', C.acetyl, T2('Acetylatie', 'Acetylation'), 'Lys (–NH₃⁺)'],
+      ['me', 'histonmod', C.methyl, T2('Methylatie', 'Methylation'), 'Lys · Arg'],
       ['ub', 'ubiquitine', '#ffd166', T2('Ubiquitinering', 'Ubiquitination'), ''],
       ['gl', 'glyco', '#00A651', T2('Glycosylatie', 'Glycosylation'), 'Asn (N-) · Ser/Thr (O-)'],
       ['li', null, C.mem, T2('Lipidering', 'Lipidation'), T2('Gly (N-term) · Cys', 'Gly (N-term) · Cys')],
@@ -81,8 +81,8 @@ export default {
       let ill = '';
       const iy = y0 + 215;
       if (k === 'ph') ill = `<circle cx="${cx - 30}" cy="${iy}" r="24" fill="${CLASSCOL.p}" stroke="#0a1224" stroke-width="2"/>` + T(cx - 30, iy + 7, 'Ser', { size: 17, col: '#0a1224', halo: false }) + `<line x1="${cx - 6}" y1="${iy}" x2="${cx + 22}" y2="${iy}" stroke="#fff" stroke-width="3"/>` + phos(cx + 44, iy, 22);
-      if (k === 'ac') ill = `<circle cx="${cx - 30}" cy="${iy}" r="24" fill="${CLASSCOL['+']}" stroke="#0a1224" stroke-width="2"/>` + T(cx - 30, iy + 7, 'Lys', { size: 17, col: '#0a1224', halo: false }) + tag(cx + 48, iy, 'Ac', '#9cc0ff', { fs: 20 });
-      if (k === 'me') ill = `<circle cx="${cx - 58}" cy="${iy}" r="24" fill="${CLASSCOL['+']}" stroke="#0a1224" stroke-width="2"/>` + T(cx - 58, iy + 7, 'Lys', { size: 17, col: '#0a1224', halo: false }) + [0, 1, 2].map(j => tag(cx + 14 + j * 56, iy, 'CH₃', '#5fd3e6', { fs: 18, w: 54 })).join('');
+      if (k === 'ac') ill = `<circle cx="${cx - 30}" cy="${iy}" r="24" fill="${CLASSCOL['+']}" stroke="#0a1224" stroke-width="2"/>` + T(cx - 30, iy + 7, 'Lys', { size: 17, col: '#0a1224', halo: false }) + tag(cx + 48, iy, 'Ac', C.acetyl, { fs: 20 });
+      if (k === 'me') ill = `<circle cx="${cx - 58}" cy="${iy}" r="24" fill="${CLASSCOL['+']}" stroke="#0a1224" stroke-width="2"/>` + T(cx - 58, iy + 7, 'Lys', { size: 17, col: '#0a1224', halo: false }) + [0, 1, 2].map(j => tag(cx + 14 + j * 56, iy, 'CH₃', C.methyl, { fs: 18, w: 54 })).join('');
       if (k === 'ub') ill = `<circle cx="${cx - 60}" cy="${iy}" r="24" fill="${CLASSCOL['+']}" stroke="#0a1224" stroke-width="2"/>` + T(cx - 60, iy + 7, 'Lys', { size: 17, col: '#0a1224', halo: false }) + [0, 1, 2, 3].map(j => ub(cx - 12 + j * 40, iy - j * 6, 19)).join('');
       if (k === 'gl') ill = `<circle cx="${cx - 70}" cy="${iy}" r="24" fill="${CLASSCOL.p}" stroke="#0a1224" stroke-width="2"/>` + T(cx - 70, iy + 7, 'Asn', { size: 17, col: '#0a1224', halo: false }) +
         `<path d="M${cx - 46},${iy} H${cx + 50} M${cx + 12},${iy} L${cx + 50},${iy - 30} M${cx + 12},${iy} L${cx + 50},${iy + 30}" stroke="#ccd" stroke-width="2"/>` + sugar('GlcNAc', cx - 26, iy, 11) + sugar('GlcNAc', cx - 2, iy, 11) + sugar('Man', cx + 22, iy, 11) + sugar('Man', cx + 50, iy - 30, 11) + sugar('Man', cx + 50, iy + 30, 11);

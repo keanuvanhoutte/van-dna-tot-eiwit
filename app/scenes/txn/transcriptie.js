@@ -1,6 +1,7 @@
 import { C, BASE, COMP, RNA_COMP, L, T2, svgOpen, pill, txt, mono, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { ePill } from '../repl/_draw.js';
-import { eiwitPad } from '../../bio.js';
+import { polII, polCTD } from '../../bio.js';
+const CTDO = { ctd: 78, ctdStap: 13 }, CTDB = polCTD(0, -9, 172, 152, CTDO.ctd, CTDO);   // CTD onderaan achteraan (bio.polymerase); kraaltjes voor S5P/S2P
 
 /* coderende streng 5'→3' (links → rechts); promoter met TATA-box aan het begin */
 const GENE = 'GCTATAAAAGGCCTGACGATGGCTTTCAAGGATTGGCACGGACTGACCGAAAGCTAAGGTCACGTTAGCCATGGACTTCGAAGCTGCATGCCTAGTCAGGATCCATGA';
@@ -64,11 +65,10 @@ export default {
     <g data-node="capping" data-color="${C.rna}" data-label="${T2("5′-cap (m⁷G)", "5′ cap (m⁷G)")}"><g id="tx-cap"></g></g>
     <g data-node="rnapol" data-color="${C.prot}" data-label="${T2('RNA-polymerase II', 'RNA polymerase II')}">
       <g id="tx-pol">
-        <path d="${eiwitPad(0, -12, 150, 128, 77, .06)}" fill="rgba(155,123,255,.20)" stroke="${C.prot}" stroke-width="3"/>
-        <path d="M-60,112 q10,30 -5,50 q-15,20 0,40 q15,20 0,40" stroke="${C.prot}" stroke-width="3" fill="none" opacity=".7"/>
-        ${[0, 1, 2, 3, 4, 5].map(i => `<circle cx="${-62 + (i % 2 ? 6 : -6)}" cy="${128 + i * 14}" r="4" fill="${C.prot}"/>`).join('')}
+        ${polII(0, -9, 172, 152, { gul: 100, vul: .2, uit: .4, diep: .82, seed: 77, ...CTDO })}<!-- app-vorm van Pol II (bio.js): de bel met het RNA–DNA-hybride ligt in de geul -->
         <g id="tx-ctdp"></g>
         <text id="tx-ctdlab" x="-20" y="240" fill="${C.muted}" font-size="18" font-family="Inter">CTD (YSPTSPS)×52</text>
+        <circle data-anchor="rnapol" cx="0" cy="-184" r="1" fill="none"/>
         <circle id="tx-act" cx="96" cy="0" r="7" fill="#fff" opacity=".85" filter="url(#glow)"/>
       </g>
     </g>
@@ -141,7 +141,7 @@ export default {
           }
         }
         $('tx-rna-bases').innerHTML = rb;
-        $('tx-act').setAttribute('cy', f1(yH + 8 - CY));   // actief centrum: aan het 3′-uiteinde van het RNA, tegen de matrijs
+        $('tx-act').setAttribute('cy', f1(yH + 8 - CY)); $('tx-act').setAttribute('opacity', step < 2 ? 0 : step === 2 ? f1(.85 * sub(p, 0, .5)) : .85);   // actieve plaats pas als de bel open is   // actief centrum: aan het 3′-uiteinde van het RNA, tegen de matrijs
 
         // cap: verschijnt bij ~25 nt (550 px)
         const end = pts[pts.length - 1] ?? [active, yH];
@@ -156,7 +156,7 @@ export default {
         const pol = $('tx-pol');
         pol.setAttribute('transform', `translate(${f1(polX)} ${CY})`); pol.setAttribute('opacity', f1(polOp));
         const s5 = step >= 2 ? (step === 2 ? sub(p, .3, .6) : 1) : 0, s2 = step >= 7 ? (step === 7 ? sub(p, .4, .8) : 1) : 0;
-        $('tx-ctdp').innerHTML = [0, 2, 4].map(i => pill(-34, 128 + i * 14, 46, 19, 'S5P', '#ffc247', s5, 14)).join('') + [1, 3, 5].map(i => pill(-90, 128 + i * 14, 46, 19, 'S2P', '#5ad17a', s2, 14)).join('');
+        $('tx-ctdp').innerHTML = [0, 2, 4].map(i => pill(CTDB[i][0] + 30, CTDB[i][1], 46, 19, 'S5P', '#ffc247', s5, 14)).join('') + [1, 3, 5].map(i => pill(CTDB[i][0] - 30, CTDB[i][1], 46, 19, 'S2P', '#5ad17a', s2, 14)).join('');
         $('tx-tata').setAttribute('opacity', step <= 3 ? 1 : 0);
         $('tx-ctdp').setAttribute('opacity', step === 8 ? f1(1 - sub(p, 0, .3)) : 1);
         $('tx-ctdlab').setAttribute('opacity', step === 2 || step === 7 ? 1 : 0);

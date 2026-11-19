@@ -1,6 +1,7 @@
 import { C, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { helixAlong, prot, nucleosome, panel, arrow } from './_txn.js';
 import { ePill } from '../repl/_draw.js';
+import { polII } from '../../bio.js';
 
 /* Geometrie: DNA als rechte lijn (y = Y0) die bij k = 1 een lus vormt zodat de enhancer (XE) naast de promoter komt. */
 const Y0 = 560, XE = 380, XP = 960, D = 420, TATA = 985, TSS = 1012, GEND = 1420;
@@ -12,7 +13,7 @@ function loopPt(X) {
   return [LC[0] + LR * Math.cos(a), LC[1] + LR * Math.sin(a)];
 }
 const centerK = k => X => { const l = loopPt(X); return [lerp(X, l[0], k), lerp(Y0, l[1], k)]; };
-const NUC = [-330, -150, 205, 545, 700, TATA, 1160, 1320, 1690, 1880];
+const NUC = [-330, -150, 205, 545, 700, TATA, 1215, 1320, 1690, 1880];   // +1-nucleosoom iets verder: plaats voor TFIIH vóór Pol II
 const CTCF1 = 90, CTCF2 = 1500;
 
 const M = { act: C.prot, med: '#6f5bd6', hat: '#d98cf0', rem: '#8f7bd0', ctcf: '#e8a23a', rep: C.danger, pol: C.prot };   // Pol II: overal #9b7bff (C.prot)
@@ -22,11 +23,11 @@ export default {
   title: { nl: 'Genregulatie', en: 'Gene regulation' },
   scale: { nl: 'DNA-afstanden ingekort · eiwitten ≈ 10–30 nm', en: 'DNA distances shortened · proteins ≈ 10–30 nm' }, time: { nl: 'seconden tot uren (hier samengevat)', en: 'seconds to hours (condensed here)' },
   org: { nl: 'mens (RNA-polymerase II-gen)', en: 'human (RNA polymerase II gene)' },
-  legend: [[C.dna, 'DNA'], [C.histone, { nl: 'nucleosoom', en: 'nucleosome' }], [C.ok, { nl: 'acetylgroep (Ac)', en: 'acetyl mark (Ac)' }], [M.act, { nl: 'activator', en: 'activator' }],
+  legend: [[C.dna, 'DNA'], [C.histone, { nl: 'nucleosoom', en: 'nucleosome' }], [C.acetyl, { nl: 'acetylgroep (Ac)', en: 'acetyl group (Ac)' }], [M.act, { nl: 'activator', en: 'activator' }],
     [M.med, 'Mediator'], [M.hat, 'HAT (p300/CBP)'], [M.rem, { nl: 'remodeler (SWI/SNF)', en: 'remodeller (SWI/SNF)' }], [M.ctcf, { nl: 'CTCF (isolator)', en: 'CTCF (insulator)' }], [M.rep, { nl: 'repressor', en: 'repressor' }]],
   extra: {
-    nl: '<p style="font-size:13px;color:#93a0bb">Rode draad: een gen wordt niet "aangezet" door één schakelaar, maar door een reeks stappen: toegankelijk chromatine, gebonden activatoren, co-activatoren en ten slotte een volledig preinitiatiecomplex op de promoter.</p><p style="font-size:13px;color:#93a0bb">Groene bolletjes op de histonstaarten = acetylgroepen (Ac). Silencers werken niet alleen via deacetylering (HDAC), maar ook via H3K9/H3K27-methylatie en DNA-methylatie.</p>',
-    en: '<p style="font-size:13px;color:#93a0bb">Common thread: a gene is not switched on by a single switch but by a series of steps: accessible chromatin, bound activators, co-activators and finally a complete pre-initiation complex on the promoter.</p><p style="font-size:13px;color:#93a0bb">Green dots on the histone tails = acetyl groups (Ac). Silencers act not only via deacetylation (HDAC) but also via H3K9/H3K27 methylation and DNA methylation.</p>' },
+    nl: '<p style="font-size:13px;color:#93a0bb">Rode draad: een gen wordt niet "aangezet" door één schakelaar, maar door een reeks stappen: toegankelijk chromatine, gebonden activatoren, co-activatoren en ten slotte een volledig preinitiatiecomplex op de promoter.</p><p style="font-size:13px;color:#93a0bb">Geelgroene bolletjes op de histonstaarten = acetylgroepen (Ac). Silencers werken niet alleen via deacetylering (HDAC), maar ook via H3K9/H3K27-methylatie en DNA-methylatie.</p>',
+    en: '<p style="font-size:13px;color:#93a0bb">Common thread: a gene is not switched on by a single switch but by a series of steps: accessible chromatin, bound activators, co-activators and finally a complete pre-initiation complex on the promoter.</p><p style="font-size:13px;color:#93a0bb">Yellow-green dots on the histone tails = acetyl groups (Ac). Silencers act not only via deacetylation (HDAC) but also via H3K9/H3K27 methylation and DNA methylation.</p>' },
   simplified: {
     nl: 'De afstand enhancer–promoter is sterk ingekort (in werkelijkheid kan die groot zijn, bv. ≈ 1 Mb bij de enhancer van het gen SHH). Nucleosomen zijn schijfjes met één DNA-winding (echt ~147 bp in ~1,7 windingen); het DNA is een platte golf. Eén activator staat model voor vele (enhancers binden meestal meerdere factoren samen). Mediator, HAT\'s en remodelers zijn schematische vormen; de volgorde waarin co-activatoren aankomen verschilt per gen. Cohesine (lusvorming) is enkel vermeld.',
     en: 'The enhancer–promoter distance is strongly shortened (in reality it can be large, e.g. ≈ 1 Mb for the enhancer of the SHH gene). Nucleosomes are discs with one DNA turn (really ~147 bp in ~1.7 turns); the DNA is a flat wave. One activator stands for many (enhancers usually bind several factors together). Mediator, HATs and remodellers are schematic shapes; the order in which co-activators arrive differs between genes. Cohesin (loop formation) is only mentioned.' },
@@ -38,7 +39,7 @@ export default {
     { dur: 9000, cam: cam(380, 405, 880), title: { nl: 'Zo leest een eiwit het DNA', en: 'How a protein reads the DNA' },
       text: { nl: 'Meestal past een spiraalvormig stukje van het eiwit (helix) in een groef van het DNA. Zo ‘leest’ het de basen.', en: 'Usually a spiral-shaped part of the protein (helix) fits into a groove of the DNA. That is how it ‘reads’ the bases.' } },
     { dur: 9000, cam: cam(700, 470, 1250), title: { nl: 'Het DNA wordt losser gemaakt', en: 'The DNA is loosened' },
-      text: { nl: 'Helpers hangen groene merkjes (acetylgroepen) aan de eiwitklosjes en schuiven het klosje van de startplek weg.', en: 'Helpers attach green tags (acetyl groups) to the protein spools and push the spool off the start site.' } },
+      text: { nl: 'Helpers hangen geelgroene merkjes (acetylgroepen) aan de eiwitklosjes en schuiven het klosje van de startplek weg.', en: 'Helpers attach yellow-green tags (acetyl groups) to the protein spools and push the spool off the start site.' } },
     { dur: 7000, cam: cam(575, 460, 1030), title: { nl: 'Mediator: de brug', en: 'Mediator: the bridge' },
       text: { nl: 'Het schakelaar-eiwit roept Mediator op, een groot eiwitcomplex. Dat seint door naar het enzym dat RNA maakt.', en: 'The switch protein calls in Mediator, a large protein complex. It relays the signal to the enzyme that makes RNA.' } },
     { dur: 9000, cam: cam(880, 540, 1100), title: { nl: 'Het DNA maakt een lus', en: 'The DNA forms a loop' },
@@ -65,12 +66,12 @@ export default {
     <g data-node="chromatine" data-color="${C.histone}" data-label="${T2('Chromatine (nucleosomen)', 'Chromatin (nucleosomes)')}">
       <g id="gr-nuc"></g><circle id="gr-nucA" data-anchor="chromatine" r="1" fill="none"/>
     </g>
-    <g data-node="histonmod" data-color="${C.ok}" data-label="${T2('Histonacetylatie', 'Histone acetylation')}">
+    <g data-node="histonmod" data-color="${C.acetyl}" data-label="${T2('Histonacetylatie', 'Histone acetylation')}">
       <g id="gr-hat"></g><circle id="gr-hatA" data-anchor="histonmod" r="1" fill="none"/>
     </g>
     <g id="gr-prot"></g>
+    <g data-node="rnapol" data-color="${M.pol}" data-label="${T2('RNA-polymerase II', 'RNA polymerase II')}"><g id="gr-pic"></g><circle id="gr-polA" data-anchor="rnapol" r="1" fill="none"/></g>   <!-- Pol II onder de algemene factoren: TFIIB/F/E/H liggen er zichtbaar tegen -->
     <g data-node="promoter" data-nolabel data-color="${C.prot}"><g id="gr-gtf"></g></g>
-    <g data-node="rnapol" data-color="${M.pol}" data-label="${T2('RNA-polymerase II', 'RNA polymerase II')}"><g id="gr-pic"></g><circle id="gr-polA" data-anchor="rnapol" r="1" fill="none"/></g>
     <g id="gr-ins"></g>
     <g data-node="tertiair" data-nolabel data-color="${C.danger}"><g id="gr-dbd"></g></g>
     <g data-node="histonmod" data-nolabel data-color="${C.ok}"><g id="gr-sil"></g></g>
@@ -173,12 +174,12 @@ export default {
         for (const X of NUC) {
           const q = pt(X);
           const isProm = X === TATA;
-          const acHere = [205, 545, 700, 1160].includes(X) ? ac : 0;
+          const acHere = [205, 545, 700, 1215].includes(X) ? ac : 0;
           if (isProm) nu += nucleosome(q[0] + 60 * evict, q[1] - 170 * evict, 1 - evict, 0);
           else nu += nucleosome(q[0], q[1], 1, acHere);
         }
         $('gr-nuc').innerHTML = nu;
-        const na = pt(step === 3 ? 1160 : 1320); setA('gr-nucA', na[0], na[1] - 34);   // stap 4: knop binnen beeld
+        const na = pt(step === 3 ? 1215 : 1320); setA('gr-nucA', na[0], na[1] - 34);   // stap 4: knop binnen beeld
 
         // eiwitten
         let pr2 = '';
@@ -207,7 +208,7 @@ export default {
         if (step === 3 && remOp > .01) pr2 += txt(rq[0] - 60, remY - 46, T2('remodeler (ATP)', 'remodeller (ATP)'), C.text, 18);
         // Mediator
         // Mediator ligt tegen het activatiedomein (bol bovenaan de activator); na de lus raakt hij ook Pol II: de brug (Soutourina 2018)
-        const PP = pt(TATA), polL = [PP[0] + 95 - 70, PP[1] - 60];
+        const PP = pt(TATA), polL = [PP[0] + 78 - 60, PP[1] - 60];
         const mA = [e[0] + 20, ay - 104], mB = [(e[0] + polL[0]) / 2, ((ay - 50) + polL[1]) / 2 - 6];
         const mp = [lerp(mA[0], mB[0], k), lerp(mA[1], mB[1], k)], mrx = lerp(82, Math.max(82, (polL[0] - e[0]) / 2 + 14), k);
         pr2 += prot(mp[0], mp[1] - 60 * (1 - med), mrx, 44, M.med, med, 31, 'Mediator', 20);
@@ -236,13 +237,13 @@ export default {
         gtf += prot(P[0], P[1] - 34, 34, 20, '#8e6cf0', f(.05, .2), 51, 'TFIID', 15);
         gtf += ePill(P[0] - 62, P[1] + 32, 70, 26, 'TFIIA', '#6f5bd6', f(.18, .3), 15);
         gtf += ePill(P[0] + 56, P[1] + 32, 70, 26, 'TFIIB', '#6f5bd6', f(.25, .38), 15);
-        pic += prot(P[0] + 95, P[1] - 60, 70, 52, M.pol, f(.4, .58), 52, 'Pol II', 17) +   // met de CTD-staart (enkel Pol II heeft die)
-          (f(.4, .58) > .01 ? `<path d="M${f1(P[0] + 60)},${f1(P[1] - 108)} q-18,-16 -6,-32 q12,-16 -6,-32" stroke="${M.pol}" stroke-width="3" fill="none" opacity="${f1(f(.4, .58) * .85)}"/>` + txt(P[0] + 60, P[1] - 180, 'CTD', M.pol, 15, 'middle', 700).replace('<text', `<text opacity="${f1(f(.4, .58))}"`) : '');
+        const pOp = f(.4, .58);
+        pic += polII(P[0] + 78, P[1], 64, 36, { col: M.pol, op: pOp, gul: 22, hoog: 3.1, seed: 52, label: 'Pol II', fs: 17, labelY: -54, ctd: 44 });   // app-vorm (bio.js): DNA door de geul, CTD onderaan achter (zoals in transcriptie en promoter; daar met label)
         // rechterkolom boven het +1-nucleosoom (niet erover): TFIIF, TFIIE, TFIIH (TFIIE haalt TFIIH binnen)
         // TFIIF en TFIIE tegen Pol II; TFIIH op het DNA vóór Pol II (XPB draait daar het DNA open; He et al. 2016)
-        gtf += ePill(P[0] + 176, P[1] - 66, 70, 26, 'TFIIF', '#5a4bb8', f(.45, .6), 15);
-        gtf += ePill(P[0] + 136, P[1] - 116, 70, 26, 'TFIIE', '#5a4bb8', f(.6, .72), 15);
-        gtf += ePill(P[0] + 120, P[1] - 4, 70, 26, 'TFIIH', '#8e6cf0', f(.7, .85), 15);
+        gtf += ePill(P[0] + 146, P[1] - 64, 70, 26, 'TFIIF', '#5a4bb8', f(.45, .6), 15);
+        gtf += ePill(P[0] + 110, P[1] - 116, 70, 26, 'TFIIE', '#5a4bb8', f(.6, .72), 15);
+        gtf += ePill(P[0] + 172, P[1], 62, 26, 'TFIIH', '#8e6cf0', f(.7, .85), 15);   // vóór de bek op het stroomafwaartse DNA, vóór het +1-nucleosoom
         $('gr-pic').innerHTML = pic; $('gr-gtf').innerHTML = gtf;
         setA('gr-polA', P[0] + 300, P[1] - 110, step === 7 && p > .5);
 

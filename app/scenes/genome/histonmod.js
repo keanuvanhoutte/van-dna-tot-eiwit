@@ -11,7 +11,10 @@ const NX = [320, 430], NR = 150;                      // nucleosoom
 const TY = 330, DY = 225, PITCH = 29;                  // hoogte staart, hoogte DNA, residu-afstand
 const rx = i => 1530 - (i - 1) * PITCH;               // residu i (1 = N-terminus, rechts)
 const ACK = [9, 14, 18, 23, 27];                       // geacetyleerd in stap 2
-const COLS = { ac: C.chain, act: '#5fd3e6', rep: C.danger };
+const COLS = { ac: C.acetyl, act: C.methyl, rep: C.methyl };
+const EFF = { aan: C.ok, stil: C.danger };   // het effect apart van de chemische groep: rand + ▲ aan / ▼ stil (K4me3 aan; K9me3, K27me3 stil)
+/* merktekenvlag met effectrand en een klein '▲ aan' / '▼ stil' ernaast */
+const effFlag = (x, y, lbl, col, eff, fs) => { const w = lbl.length * fs * .62 + 10, ec = EFF[eff]; return flag(x, y, lbl, col, 1, fs).replace(`fill="${col}"/>`, `fill="${col}" stroke="${ec}" stroke-width="${f1(fs * .2)}"/>`) + txt(x + w + 4, y - fs * 1.62, eff === 'aan' ? T2('▲ aan', '▲ on') : T2('▼ stil', '▼ off'), ec, fs * 1.25, 'start', 800); };   // iets groter dan de vlagtekst: blijft ≥ 13 px in het overzicht   // één kleur per merkteken (kit C.methyl / C.acetyl); actief of onderdrukkend hangt af van de plaats, niet van de groep
 
 export default {
   id: 'histonmod',
@@ -20,7 +23,7 @@ export default {
   time: { nl: 'acetylatie: snel omkeerbaar; methylatie: stabieler, deels doorgegeven bij celdeling', en: 'acetylation: quickly reversible; methylation: more stable, partly passed on at cell division' },
   org: { nl: 'mens (histon H3.1)', en: 'human (histone H3.1)' },
   legend: [[HC.H3, 'H3'], [HC.H4, 'H4'], [HC.H2A, 'H2A'], [HC.H2B, 'H2B'], [CLASSCOL['+'], { nl: 'lysine (K, positief)', en: 'lysine (K, positive)' }],
-    [COLS.ac, { nl: 'acetyl (ac)', en: 'acetyl (ac)' }], [COLS.act, { nl: 'activerende methylatie', en: 'activating methylation' }], [COLS.rep, { nl: 'onderdrukkende methylatie', en: 'repressive methylation' }], [C.prot, { nl: 'schrijvers / wissers / lezers', en: 'writers / erasers / readers' }]],
+    [COLS.ac, { nl: 'acetylgroep (ac)', en: 'acetyl group (ac)' }], [C.methyl, { nl: 'methylgroep (me)', en: 'methyl group (me)' }], [EFF.aan, { nl: 'groene rand: gen aan', en: 'green edge: gene on' }], [EFF.stil, { nl: 'rode rand: gen stil', en: 'red edge: gene off' }], [C.prot, { nl: 'schrijvers / wissers / lezers', en: 'writers / erasers / readers' }]],
   simplified: {
     nl: 'Alleen de eerste 30 residuen van één H3-staart zijn getekend; er zijn per nucleosoom acht N-terminale staarten (plus twee C-terminale staarten van H2A) en nog veel meer modificaties (fosforylatie, ubiquitinering, …), ook in de bolvormige kern. Dat acetylatie de staart "loslaat" van het DNA is een vereenvoudiging: het verzwakt vooral elektrostatische contacten en creëert bindingsplaatsen voor lezers. De combinaties in beeld zijn voorbeelden.',
     en: 'Only the first 30 residues of one H3 tail are drawn; each nucleosome has eight N-terminal tails (plus two C-terminal tails of H2A) and many more modifications (phosphorylation, ubiquitination, …), also in the globular core. That acetylation "releases" the tail from the DNA is a simplification: it mainly weakens electrostatic contacts and creates binding sites for readers. The combinations shown are examples.' },
@@ -69,16 +72,17 @@ export default {
 
     // lezer-tabel
     const rows = [
-      [T2('bromodomein', 'bromodomain'), 'K-ac', COLS.ac, T2('o.a. in HATs en remodelers', 'e.g. in HATs and remodellers')],
-      [T2('chromodomein', 'chromodomain'), 'K9me3 / K27me3', COLS.rep, T2('HP1 (K9me3), Polycomb-CBX (K27me3)', 'HP1 (K9me3), Polycomb CBX (K27me3)')],
-      [T2('PHD-vinger', 'PHD finger'), 'K4me3', COLS.act, T2('bv. ING-eiwitten', 'e.g. ING proteins')],
+      [T2('bromodomein', 'bromodomain'), 'K-ac', COLS.ac, T2('o.a. in HATs en remodelers', 'e.g. in HATs and remodellers'), 'aan'],
+      [T2('chromodomein', 'chromodomain'), 'K9me3 / K27me3', COLS.rep, T2('HP1 (K9me3), Polycomb-CBX (K27me3)', 'HP1 (K9me3), Polycomb CBX (K27me3)'), 'stil'],
+      [T2('PHD-vinger', 'PHD finger'), 'K4me3', COLS.act, T2('bv. ING-eiwitten', 'e.g. ING proteins'), 'aan'],
     ];
     let tab = `<rect x="690" y="560" width="850" height="270" rx="18" fill="rgba(13,20,38,.6)" stroke="#2a3a60" stroke-width="2"/>` +
-      txt(715, 598, T2('Lezerdomeinen', 'Reader domains'), '#c9d2e4', 20, 'start', 700);
-    rows.forEach(([nm, mark, col, ex], i) => {
+      txt(715, 598, T2('Lezerdomeinen', 'Reader domains'), '#c9d2e4', 20, 'start', 700) + txt(1060, 598, T2('leest', 'reads'), C.muted, 15, 'middle', 600) + txt(1190, 598, T2('effect', 'effect'), C.muted, 15, 'middle', 600);
+    rows.forEach(([nm, mark, col, ex, eff], i) => {
       const y = 650 + i * 62;
       tab += `<path d="M720,${y - 18} q20,-12 44,0 q16,10 0,26 q-24,12 -44,0 z" fill="rgba(155,123,255,.45)" stroke="${C.prot}" stroke-width="2"/>` +
-        txt(785, y + 1, nm, C.text, 19, 'start', 700) + pill(1060, y - 5, 170, 30, mark, col, 1, 15) + txt(1160, y + 1, ex, C.muted, 15, 'start', 500);
+        txt(785, y + 1, nm, C.text, 19, 'start', 700) + pill(1060, y - 5, 170, 30, mark, col, 1, 15).replace('fill="#fff"', 'fill="#0a1224"').replace('opacity=".9"/>', `opacity=".9" stroke="${EFF[eff]}" stroke-width="3"/>`) +
+        txt(1190, y + 1, eff === 'aan' ? T2('▲ aan', '▲ on') : T2('▼ stil', '▼ off'), EFF[eff], 16, 'middle', 800) + txt(1245, y + 1, ex, C.muted, 15, 'start', 500);
     });
 
     return svgOpen() + `
@@ -143,7 +147,7 @@ export default {
           if (m === 'ac') g += flag(x, y - 16, 'ac', COLS.ac, 1, ffs);
           else if (m && m.startsWith('me')) {
             const n = m.slice(2, 3), rep = m.endsWith('r');
-            g += flag(x, y - 16, `me${n}`, rep ? COLS.rep : COLS.act, 1, ffs);
+            g += effFlag(x, y - 16, `me${n}`, rep ? COLS.rep : COLS.act, rep ? 'stil' : 'aan', ffs);
           }
         });
         g += txt(rx(1) + 30, TY + 6, 'N', C.muted, 18, 'start', 700);

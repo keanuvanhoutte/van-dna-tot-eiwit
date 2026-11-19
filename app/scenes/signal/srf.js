@@ -1,7 +1,7 @@
 import { C, T2, svgOpen, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { T, TL, smooth, tag, arrowDefs, arr, phos, panel, spark, PHOS } from '../prot/_b_kit.js';
 import { K, kinase, chip, pdot } from './rtk.js';
-import { eiwit } from '../../bio.js';
+import { eiwit, polII } from '../../bio.js';
 
 /*
  * Verhaallijn 2, hoofdstuk "srf": het serum-responselement (SRE) van het FOS-gen in de kern.
@@ -150,11 +150,11 @@ const SCENE = {
         /* ---- Pol II + TFIID + RNA ---- */
         let pl = '';
         pl += blobP((TATA[0] + TATA[1]) / 2, DY - 44, 34, 22, '#c9b8ff', .3);                        // TFIID (TBP) op TATA
-        pl += eiwit(polX, DY - 18, 80, 58, POL, { seed: 50 });
-        pl += T(polX, DY - 22, 'Pol II', { size: 22, col: '#fff', w: 800 });
+        pl += polII(polX, DY, 84, 44, { col: POL, gul: 16, hoog: 1.75, vul: .4, achter: .5, uit: 1.1, seed: 50 });   // app-vorm (bio.js): DNA door de geul
+        pl += T(polX, DY - 36, 'Pol II', { size: 22, col: '#fff', w: 800 });
         if (rnaLen > 0) {
           const n = 14, pts = [];
-          for (let i = 0; i <= n; i++) { const u = i / n * rnaLen; pts.push([polX - 30 - u * 330, DY - 80 - u * 190 + Math.sin(u * 14) * 16]); }
+          for (let i = 0; i <= n; i++) { const u = i / n * rnaLen; pts.push([polX - 30 - u * 330, DY - 56 - u * 214 + Math.sin(u * 14) * 16]); }
           pl += `<path d="${smooth(pts)}" stroke="${C.rna}" stroke-width="7" fill="none" stroke-linecap="round" opacity="${f1(rnaFade)}"/>`;
           const e = pts[pts.length - 1];
           if (rnaLen > .3) pl += T(e[0] + 8, e[1] - 24, "5′", { size: 20, col: C.rna, w: 800, op: rnaFade });

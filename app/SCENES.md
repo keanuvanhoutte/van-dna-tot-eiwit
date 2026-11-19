@@ -44,6 +44,8 @@ export default {
    Link bij voorkeur naar knopen uit `in`, `next` en `rel` van de eigen knoop, zodat het verhaal doorloopt.
 5. **Tweetalig**: alle zichtbare tekst via `L({ nl, en })` of `T2(nl, en)`.
 6. **Kleurcodes** uit `C` en `BASE` (DNA blauw, RNA oranje, tRNA geel, ribosoom turquoise, eiwit paars, keten groen, vreemd DNA roze).
+   Chemische merktekens: methylgroep (CH₃, op DNA en histonen) altijd `C.methyl` (ivoor), acetylgroep (Ac) altijd `C.acetyl` (geelgroen).
+   RNA-polymerase (Pol II, ook Pol I/III en bacteriële RNAP) altijd met `polymerase()` / `polII()` uit `bio.js`: DNA door de geul, RNA bovenaan achteraan eruit.
 7. **Wetenschappelijk correct.** Richting 5'→3', antiparallelle strengen, volgorde van stappen, juiste namen. Getallen alleen als ze
    kloppen (bronnen: NCBI Bookshelf/Alberts, PubMed, RCSB PDB). Vermeld vereenvoudigingen in `simplified`.
 8. Een knoop mag een **alias** zijn van een deel van een andere scène:

@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, clamp, f1, rng, squiggle } from '../../kit.js';
 import { ST, HC, nucleo, flag, smooth, panel } from './_a_kit.js';
-import { kernEnvelop, ptsCirkel, eiwitPad } from '../../bio.js';
+import { kernEnvelop, ptsCirkel, eiwitPad, polII } from '../../bio.js';
 const KERN = kernEnvelop(ptsCirkel(290, 450, 218, 140), { poriën: Array.from({ length: 14 }, (_, i) => (i + .3) / 14), w: 6, gap: 8, poreW: 12, s: .28 });   // dubbel membraan met poriën
 
 /*
@@ -21,7 +21,7 @@ export default {
   time: { nl: 'lusextrusie tot ~2 kb/s (in vitro); hier vertraagd', en: 'loop extrusion up to ~2 kb/s (in vitro); slowed down here' },
   org: { nl: 'mens', en: 'human' },
   legend: [[C.dna, { nl: 'DNA / chromatinevezel', en: 'DNA / chromatin fibre' }], [C.histone, { nl: 'nucleosoom (histonkern)', en: 'nucleosome (histone core)' }],
-    ['#ff8a3d', 'CTCF'], ['#ffc247', { nl: 'cohesine', en: 'cohesin' }], [C.chain, { nl: 'acetylatie (Ac)', en: 'acetylation (Ac)' }], [C.danger, { nl: 'H3K9me3 / 5mC', en: 'H3K9me3 / 5mC' }], ['#f06bc0', 'HP1'], [C.prot, 'RNA-pol II']],
+    ['#ff8a3d', 'CTCF'], ['#ffc247', { nl: 'cohesine', en: 'cohesin' }], [C.acetyl, { nl: 'acetylgroep (Ac)', en: 'acetyl group (Ac)' }], [C.methyl, { nl: 'methylgroep (H3K9me3 / 5mC)', en: 'methyl group (H3K9me3 / 5mC)' }], ['#f06bc0', 'HP1'], [C.prot, 'RNA-pol II']],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Meer over het DNA rond een nucleosoom in de <a href="../atlas/index.html?id=nucleosome&lang=nl">3D-bibliotheek: nucleosoom</a>.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">More about the DNA around a nucleosome in the <a href="../atlas/index.html?id=nucleosome&lang=en">3D library: nucleosome</a>.</p>' },
@@ -75,11 +75,11 @@ export default {
     eu += `<path d="${smooth(euPts)}" stroke="${C.dna}" stroke-width="3" fill="none"/>`;
     euPts.slice(1, -1).forEach(([x, y], i) => {
       eu += nucleo(x, y, 15, { rot: -90 + i * 40, w: 3.2 }).svg;
-      if (i % 2 === 0) eu += flag(x + 4, y - 14, 'Ac', C.chain, 1, 9);
+      if (i % 2 === 0) eu += flag(x + 4, y - 14, 'Ac', C.acetyl, 1, 9);
     });
     // naakt DNA aan het einde van de vezel, waarop Pol II zit; het RNA komt uit Pol II
     eu += `<path d="M820,660 C832,690 812,712 792,748" stroke="${C.dna}" stroke-width="3" fill="none"/>`;
-    eu += `<path d="M786,722 C768,732 752,752 724,748" stroke="${C.rna}" stroke-width="3" fill="none"/>`;
+    eu += `<path d="M786,736 C768,742 752,756 724,748" stroke="${C.rna}" stroke-width="3" fill="none"/>`;
     const hPts = [];
     const r2 = rng(3);
     for (let i = 0; i < 16; i++) hPts.push([900 + (i % 4) * 36 + (r2() - .5) * 10 + (Math.floor(i / 4) % 2) * 16, 610 + Math.floor(i / 4) * 34 + (r2() - .5) * 8]);
@@ -92,10 +92,10 @@ export default {
       hp1 += `<g><path d="${eiwitPad(x - 5, y, 7, 5, 41, .1)}" fill="#f06bc0"/><path d="${eiwitPad(x + 5, y, 7, 5, 42, .1)}" fill="#f06bc0"/></g>`;   // HP1-dimeer
     });
     let me = '';
-    [[905, 612], [1013, 646], [925, 681], [1008, 716]].forEach(([x, y]) => { me += flag(x, y, 'K9me3', C.danger, 1, 8); });
+    [[905, 612], [1013, 646], [925, 681], [1008, 716]].forEach(([x, y]) => { me += flag(x, y, 'K9me3', C.methyl, 1, 8); });
     // 5mC op het DNA zelf: op de linker tussen twee nucleosomen
     [[1, 2], [13, 14]].forEach(([a, b]) => { const x = (hPts[a][0] + hPts[b][0]) / 2, y = (hPts[a][1] + hPts[b][1]) / 2;
-      me += `<circle cx="${f1(x)}" cy="${f1(y)}" r="4.5" fill="${C.danger}" stroke="#0a1224" stroke-width="1.5"/><text x="${f1(x)}" y="${f1(y + 15)}" font-size="9" text-anchor="middle" fill="${C.danger}" font-family="Inter" font-weight="700" stroke="#0a1224" stroke-width="2.5" paint-order="stroke">5mC</text>`; });   // label onder het bolletje, weg van de K9me3-vlaggen
+      me += `<circle cx="${f1(x)}" cy="${f1(y)}" r="4.5" fill="${C.methyl}" stroke="#0a1224" stroke-width="1.5"/><text x="${f1(x)}" y="${f1(y + 15)}" font-size="9" text-anchor="middle" fill="${C.methyl}" font-family="Inter" font-weight="700" stroke="#0a1224" stroke-width="2.5" paint-order="stroke">5mC</text>`; });   // label onder het bolletje, weg van de K9me3-vlaggen
 
     // ---------- paneel D: 10 nm-vezel ----------
     let bead = '';
@@ -150,12 +150,12 @@ export default {
     <!-- paneel C -->
     <g id="cr-pC">
       ${panel(560, 520, 560, 290, T2('③ Eu- en heterochromatine', '③ Eu- and heterochromatin'), '#2a3a60', 21)}
-      <g data-node="histonmod" data-color="${C.chain}" data-label="${T2('Histonmodificaties', 'Histone modifications')}">${eu}<circle data-anchor="histonmod" cx="640" cy="600" r="1" fill="none"/></g>
+      <g data-node="histonmod" data-color="${C.acetyl}" data-label="${T2('Histonmodificaties', 'Histone modifications')}">${eu}<circle data-anchor="histonmod" cx="640" cy="600" r="1" fill="none"/></g>
       <g data-node="rnapol" data-color="${C.prot}" data-label="${T2('RNA-polymerase II', 'RNA polymerase II')}" data-nolabel>
-        <path d="${eiwitPad(805, 722, 26, 18, 22, .08)}" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="2"/>
+        <g transform="rotate(-59 804 728)">${polII(804, 728, 28, 13, { gul: 5, hoog: 1.5, vul: .35, achter: .4, seed: 22 })}</g><!-- app-vorm (bio.js), gedraaid langs de vezel; leest omhoog, RNA links eruit -->
         <text x="805" y="726" font-size="10" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">Pol II</text>
       </g>
-      <g data-node="dnamethyl" data-color="${C.danger}" data-label="${T2('DNA-methylatie', 'DNA methylation')}">${hetc}${hp1}${me}<circle data-anchor="dnamethyl" cx="1000" cy="590" r="1" fill="none"/></g>
+      <g data-node="dnamethyl" data-color="${C.methyl}" data-label="${T2('DNA-methylatie', 'DNA methylation')}">${hetc}${hp1}${me}<circle data-anchor="dnamethyl" cx="1000" cy="590" r="1" fill="none"/></g>
       ${txt(700, 790, T2('euchromatine: open, actief', 'euchromatin: open, active'), C.chain, 14)}
       ${txt(975, 790, T2('heterochromatine: compact, stil', 'heterochromatin: compact, silent'), '#f3a6d3', 14)}
       <line x1="840" y1="560" x2="840" y2="770" stroke="#2a3a60" stroke-width="2" stroke-dasharray="4 4"/>

@@ -1,5 +1,5 @@
 import { C, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { eiwitPad } from '../../bio.js';
+import { eiwitPad, polII } from '../../bio.js';
 
 /*
  * Een DNA-domein tussen twee vaste punten (uiteinden kunnen niet vrij draaien) als tweestrengig lint.
@@ -188,8 +188,8 @@ export default {
         }
         if (step === 5) {
           const xs = X0 + (X1 - X0) * st.sp;
-          // Pol II als klem: grote lob boven, kaak onder, het DNA loopt door de spleet ertussen
-          pol += `<g>${[eiwitPad(xs, Y0 - 34, 72, 36, 1325, .1), eiwitPad(xs + 6, Y0 + 40, 60, 24, 1326, .1)].map(d => `<path d="${d}" fill="rgba(155,123,255,.45)" stroke="${C.prot}" stroke-width="3"/>`).join('')}${txt(xs, Y0 - 28, 'Pol II', '#fff', 22, 'middle', 700)}
+          // Pol II (app-vorm, bio.js): klem boven, kaak onder, het DNA loopt door de geul ertussen; RNA bovenaan achteraan eruit
+          pol += `<g>${polII(xs, Y0, 76, 50, { gul: 20, hoog: 1.4, vul: .4, uit: 1.05, seed: 1325, label: 'Pol II', fs: 22, labelY: -34 })}
             <path d="M${f1(xs + 30)},${Y0 - 70} h70" stroke="${C.prot}" stroke-width="4" marker-end="url(#arrow)"/>
             <path d="M${f1(xs - 20)},${Y0 - 55} C${f1(xs - 60)},${Y0 - 140} ${f1(xs - 140)},${Y0 - 150} ${f1(xs - 200)},${Y0 - 200}" stroke="${C.rna}" stroke-width="6" fill="none"/>${txt(xs - 210, Y0 - 212, 'RNA', C.rna, 20)}</g>`;
           const k = ease(sub(p, .3, .5));

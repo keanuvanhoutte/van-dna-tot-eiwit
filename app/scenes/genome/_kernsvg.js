@@ -1,5 +1,5 @@
 import { C, L, defs, rng, squiggle } from '../../kit.js';
-import { kernEnvelop, kernporie, ptsCirkel, ribosoomKlein, cisterne, eiwitPad } from '../../bio.js';
+import { kernEnvelop, kernporie, ptsCirkel, ptsBoog, membraanPts, ribosoomKlein, cisterne, eiwitPad } from '../../bio.js';
 
 export function sceneKern() {
   const r = rng(11);
@@ -19,14 +19,37 @@ export function sceneKern() {
   }
   // kernenvelop: buiten- en binnenmembraan (dubbellagen) die bij elke porie in elkaar overlopen; poriecomplexen apart (hotspot)
   const RE = R + 8, PA = Array.from({ length: 24 }, (_, i) => i * 15);
-  const env = kernEnvelop(ptsCirkel(cx, cy, RE, 220), { poriën: PA.map(a => a / 360), w: 9, gap: 7, poreW: 20, npc: false });
+  /* ER-hals: tussen de poriën op 0° en 15° loopt de buitenste kernmembraan door in het membraan van het ruw ER; de
+   * perinucleaire ruimte en het ER-lumen zijn één doorlopende ruimte (Alberts/MBoC hfst. 12; English & Voeltz 2013).
+   * De envelop wordt daarom als open boog getekend (van a2 rond tot a1) en de hals + eerste ER-zak als één membraan. */
+  const LUM = 'rgba(143,179,232,.16)', MW = 9, HALF = (7 + MW) / 2, A1 = 4.9, A2 = 10.1, SPAN = 360 - (A2 - A1);
+  const arc = (a0, a1, rad, n) => Array.from({ length: n + 1 }, (_, i) => P(a0 + (a1 - a0) * i / n, rad));
+  const env = kernEnvelop(arc(A2, A1 + 360, RE, 220), { closed: false, poriën: PA.map(a => ((a < A2 ? a + 360 : a) - A2) / SPAN), w: MW, gap: 7, poreW: 20, npc: false, lumen: LUM });
+  // eerste ER-zak (verticaal, zelfde vorm als bio.cisterne) als puntenlijst, zodat de hals erin kan overlopen
+  const ER = { x: 1450, y: 470, a: 330, t: 11, buig: 14 };
+  const erPt = (u, v) => [ER.x - ER.buig * (1 - (u / ER.a) ** 2) + v, ER.y + u];
+  const links = [], rechts = [];
+  for (let i = 0; i <= 24; i++) { const u = -ER.a + 2 * ER.a * i / 24, e = Math.abs(u / ER.a), h = ER.t + (ER.t * .5) * Math.max(0, (e - .7) / .3) ** 1.5; links.push(erPt(u, -h)); rechts.push(erPt(u, h)); }
+  const kap = (from, to, end) => { const c = erPt(end * (ER.a + ER.t * 1.05), 0); return ptsBoog(from[0], from[1], c[0], c[1], to[0], to[1], 6).slice(1, -1); };
+  const YT = 508, YB = 540, xL = y => erPt(y - ER.y, -ER.t)[0];                       // bovenwand en onderwand van de hals/buis
+  const E1 = P(A1, RE + HALF), E2 = P(A2, RE + HALF);                                  // buitenmembraan aan beide kanten van de hals
+  const boven = [...ptsBoog(E1[0], E1[1], 1192, YT, 1220, YT, 6), ...ptsBoog(1220, YT, (1220 + xL(YT)) / 2, YT, xL(YT) - 10, YT, 4).slice(1), ...ptsBoog(xL(YT) - 10, YT, xL(YT), YT, xL(YT), YT - 10, 3).slice(1)];
+  const onder = [...ptsBoog(xL(YB), YB + 10, xL(YB), YB, xL(YB) - 10, YB, 3), ...ptsBoog(xL(YB) - 10, YB, (1220 + xL(YB)) / 2, YB, 1220, YB, 4).slice(1), ...ptsBoog(1220, YB, 1192, YB, E2[0], E2[1], 6).slice(1)];
+  const halsPad = [...boven, ...links.filter(q => q[1] < YT - 12).reverse(), ...kap(rechts[0], links[0], -1).reverse(), ...rechts, ...kap(links[24], rechts[24], 1).reverse(), ...links.filter(q => q[1] > YB + 12).reverse(), ...onder];
+  const binnenArc = arc(A1, A2, RE - HALF, 6);
+  const ptsStr = Q => 'M' + Q.map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join(' L');
+  let erHals = `<path d="${ptsStr([...halsPad, ...binnenArc.slice().reverse()])}Z" fill="${LUM}"/>` + membraanPts(halsPad, { w: MW }) + membraanPts(binnenArc, { w: MW });
+  // ruw ER: ribosomen aan de cytosolkant, grote eenheid tegen het membraan (rot 0 = grote eenheid onder)
+  let erRib = '';
+  for (let x = 1236; x <= 1400; x += 30) erRib += ribosoomKlein(x, YT - MW / 2 - 11, { s: .85 }) + ribosoomKlein(x + 15, YB + MW / 2 + 11, { s: .85, rot: 180 });
+  for (let y = 170; y <= 780; y += 44) if (y < YT - 30 || y > YB + 30) erRib += ribosoomKlein(xL(y) - MW / 2 - 11, y, { s: .85, rot: -90 });
   let npc = '';
   for (const a of PA) { const [x, y] = P(a, RE); npc += kernporie(x, y, a + 90, { s: .7, H: 25, poreW: 20 }); }
   // cytoplasma: vrije polysomen naast de kern, ER-zakken (één membraan rond een lumen) verder naar rechts (niet over elkaar)
   let cyto = '';
-  for (let k = 0; k < 3; k++) cyto += cisterne(1450 + k * 56, 470, { len: 660, dik: 22, buig: 14 * (k % 2 ? -1 : 1), w: 7, lumen: 'rgba(143,179,232,.12)', op: .8 });
+  for (let k = 1; k < 3; k++) cyto += cisterne(1450 + k * 56, 470, { len: 660, dik: 22, buig: 14, w: 9, lumen: 'rgba(143,179,232,.16)' });   // eerste zak (k = 0) hoort bij de ER-hals hieronder; zelfde kromming en membraandikte (9) als de hals: de zakken raken elkaar niet
   let poly = '';
-  for (const [x, y] of [[1195, 310], [1215, 520], [1165, 690], [1240, 410]]) {
+  for (const [x, y] of [[1195, 310], [1215, 615], [1165, 705], [1225, 410]]) {   // vrije polysomen, niet op de ER-hals
     poly += `<path d="M${x},${y} q25,-16 50,0 t50,0 t50,0" stroke="${C.rna}" stroke-width="2.5" fill="none"/>`;
     // ribosomen op het mRNA: grote + kleine eenheid; het mRNA loopt tussen beide (de golf ligt op y ± 6)
     for (let i = 0; i < 6; i++) { const xx = x + 12 + i * 25, u = xx - x, t = (u % 50) / 50, yy = y + (Math.floor(u / 50) % 2 ? 1 : -1) * 32 * t * (1 - t); poly += ribosoomKlein(xx, yy - 4, { s: .85, rot: 180 }); }   // grote eenheid boven, kleine onder het mRNA
@@ -50,6 +73,7 @@ export function sceneKern() {
     <!-- kernenvelop: dubbel membraan met perinucleaire ruimte -->
     <circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#gNuc)"/>
     ${env}
+    <g data-node="er" data-color="#8fb3e8" data-nolabel>${erHals}${erRib}</g><!-- ER-hals: buitenmembraan loopt door in het ruw ER -->
     <g data-node="chromatine" data-color="#27457e" data-nolabel>${hetero}</g>
     <g data-node="chromatine" data-color="${C.dna}">${chrom}<circle data-anchor="chromatine" cx="560" cy="300" r="1" fill="none"/></g>
     <g data-node="nucleolus" data-color="${C.rrna}">

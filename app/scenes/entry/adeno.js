@@ -1,5 +1,5 @@
 import { C, L, T2, svgOpen, pill, txt, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { blaasje, membraanPts, kernEnvelop, ptsCirkel, eiwit } from '../../bio.js';
+import { blaasje, membraanPts, kernEnvelop, ptsCirkel, eiwit, polII } from '../../bio.js';
 import { capsid, viralGenome, padPts, knopPts, ptsPad, blaasjeOpen, car, integrin, triskelion, microtubule, motor, kinesineGreep, linDNA, capsidBreuk, npc, PINK, FIBRE } from './_bits.js';
 
 /* Hoofdstuk 2 van het verhaal: het adenovirus (HAdV-C5) hecht aan een epitheelcel en wordt opgenomen.
@@ -87,7 +87,7 @@ export default {
       <circle data-anchor="kernimport" data-pos="below" cx="${PORE[0] - 165}" cy="${PORE[1] + 20}" r="1" fill="none"/>
     </g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Pol II leest de virale genen', 'Pol II reads the viral genes')}" id="ad-txn" opacity="0">
-      <circle data-anchor="transcriptie" cx="1190" cy="812" r="1" fill="none"/>
+      <circle data-anchor="transcriptie" cx="1222" cy="772" r="1" fill="none"/>
       <g id="ad-episome"></g>
     </g>
 
@@ -294,10 +294,11 @@ export default {
 
         const txnOp = step === 7 ? ease(sub(p, .65, .9)) : 0;
         $('ad-txn').setAttribute('opacity', f1(txnOp));
-        /* in de kern: lineair DNA; Pol II zit erop en maakt viraal mRNA (het label belooft dat) */
+        /* in de kern: lineair DNA; Pol II zit erop en maakt viraal mRNA (het label belooft dat). Pol II in de app-vorm (bio.js), klem boven,
+           leest naar links: het mRNA vertrekt bovenaan aan de achterkant (rechts) en loopt achter het enzym naar beneden */
         $('ad-episome').innerHTML = txnOp > .01
-          ? `${linDNA(1000, 1230, 846, { vii: 4 })}${eiwit(1150, 842, 34, 26, C.prot, { seed: 12, bumps: .1 })}${txt(1150, 849, 'Pol II', '#e8edf7', 17)}
-             <path d="M1176,858 q26,24 58,24 t46,16" stroke="${C.rna}" stroke-width="5" fill="none" stroke-linecap="round"/>${txt(1290, 912, T2('viraal mRNA', 'viral mRNA'), C.rna, 20, 'start')}
+          ? `${linDNA(1000, 1230, 846, { vii: 4 })}${polII(1150, 846, 40, 18, { dir: -1, gul: 11, hoog: 1.9, vul: .4, achter: .5, uit: 1, seed: 12 })}${txt(1146, 832, 'Pol II', '#e8edf7', 17)}
+             <path d="M1168,822 C1196,808 1206,842 1214,866 q14,22 44,24 t46,16" stroke="${C.rna}" stroke-width="5" fill="none" stroke-linecap="round"/>${txt(1316, 916, T2('viraal mRNA', 'viral mRNA'), C.rna, 20, 'start')}
              ${txt(1080, 900, T2('lineair viraal DNA', 'linear viral DNA'), PINK, 21)}` : '';
       },
     };

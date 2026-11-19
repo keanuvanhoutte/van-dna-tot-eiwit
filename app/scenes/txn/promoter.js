@@ -1,7 +1,8 @@
 import { C, L, T2, svgOpen, pill, txt, mono, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { helixAlong, prot, panel, arrow } from './_txn.js';
 import { ePill } from '../repl/_draw.js';
-import { eiwitPad } from '../../bio.js';
+import { polII, polCTD } from '../../bio.js';
+const CTDO = { ctd: 145, ctdStap: 29, ctdHoek: 100 };   // CTD-staart van Pol II: onderaan achteraan, schuin omlaag tot onder de liniaal
 
 /* Kernpromoter −44 … +44 (er bestaat geen positie 0). 1 bp = 16 px. */
 const BP = 16, Y0 = 540;
@@ -155,7 +156,8 @@ export default {
         if (step >= 1 && step <= 2 && theta > .1) g += txt(T[0] + 110, Y0 + 190, `≈ ${Math.round(theta * 180 / Math.PI)}°`, C.trna, 22);
         g += ePill(T[0] - 128, T[1] - 14, 88, 32, 'TFIIA', G.a, fin(2, .05, .35), 18);
         const B = ctr(bx(-20));
-        g += ePill(bx(-17), Y0 - 54, 88, 32, 'TFIIB', G.b, fin(2, .35, .7) * (1 - leave), 18);
+        const tb = fin(3, .05, .45);   // zodra Pol II komt, schuift TFIIB mee tegen de achterkant van Pol II (TFIIB overbrugt TBP en Pol II)
+        g += ePill(bx(-17) + 56 * tb, Y0 - 54 + 4 * tb, 88, 32, 'TFIIB', G.b, fin(2, .35, .7) * (1 - leave), 18);
         const polOp = fin(3, .05, .45);
         const px = aX - 30, py = Y0 - 88;
         g += ePill(px + 128, py - 100, 88, 32, 'TFIIF', G.f,   // TFIIF, TFIIE en TFIIH raken Pol II; TFIIH ligt op het DNA stroomafwaarts (He et al. 2016)
@@ -191,16 +193,14 @@ export default {
         if (polOp > .01) {
           const dy = -200 * (1 - polOp);
           pol += `<g opacity="${f1(polOp)}" transform="translate(${f1(px)} ${f1(py + dy)})">` +
-            `<path d="${eiwitPad(0, 0, 150, 121, 77, .06)}" fill="rgba(155,123,255,.20)" stroke="${G.pol}" stroke-width="3"/>` +
-            txt(0, -70, 'Pol II', '#fff', 24) +
+            polII(0, 88, 160, 92, { col: G.pol, gul: 46, hoog: 2.27, vul: .2, seed: 77, label: 'Pol II', fs: 24, labelY: -150, ...CTDO }) +   // app-vorm (bio.js): het DNA (y = Y0) loopt door de geul
             `<circle cx="30" cy="88" r="7" fill="#fff" opacity=".9" filter="url(#glow)"/>` +
             '';
           const s5 = step < 6 ? 0 : step === 6 ? sub(p, .05, .35) : 1, s2 = step < 8 ? 0 : sub(p, .2, .5);
-          const bead = i => [-150 - i * 27, -40 - i * 20 + (i % 2 ? 5 : -5)];
-          pol += `<path d="M-140,-30 ${[0, 1, 2, 3, 4, 5].map(i => 'L' + bead(i).join(',')).join(' ')}" stroke="${G.pol}" stroke-width="3" fill="none" opacity=".8"/>`;
-          [0, 1, 2, 3, 4, 5].forEach(i => { const b = bead(i); pol += `<circle cx="${b[0]}" cy="${b[1]}" r="5" fill="${G.pol}"/>`; });
-          pol += [0, 2, 4].map(i => pill(bead(i)[0] + 8, bead(i)[1] - 20, 46, 21, 'S5P', '#ffc247', s5, 14)).join('') + [1, 3, 5].map(i => pill(bead(i)[0] - 8, bead(i)[1] + 20, 46, 21, 'S2P', '#5ad17a', s2, 14)).join('');
-          if (step >= 6) pol += txt(-300, -168, 'CTD (YSPTSPS)×52', C.muted, 18, 'end');
+          // CTD onderaan achteraan via de ctd-optie van bio.polymerase (zelfde plaats als in transcriptie en genregulatie)
+          const bd = polCTD(0, 88, 160, 92, CTDO.ctd, CTDO), bead = i => bd[2 + (i >> 1)];   // merktekens pas onder de liniaal: per kraaltje S5P rechts, S2P links
+          pol += [0, 2, 4].map(i => pill(bead(i)[0] + 30, bead(i)[1], 46, 21, 'S5P', '#ffc247', s5, 14)).join('') + [1, 3, 5].map(i => pill(bead(i)[0] - 30, bead(i)[1], 46, 21, 'S2P', '#5ad17a', s2, 14)).join('');
+          if (step >= 6) pol += txt(bead(0)[0] - 66, bead(0)[1] + 6, 'CTD (YSPTSPS)×52', C.muted, 18, 'end');
           pol += '</g>';
         }
         $('pr-pol').innerHTML = pol;

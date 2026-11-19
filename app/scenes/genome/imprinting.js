@@ -16,11 +16,11 @@ const EGG = membraanPts(ptsCirkel(460, 460, 200, 110), { w: 12, closed: true }),
  * gewist en opnieuw gezet (Bartolomei & Ferguson-Smith 2011; Monk et al. 2019).
  */
 const L3 = (nl, en) => ({ nl, en });
-const MOM = '#ff9ec7', DAD = '#6fd3ff', ON = C.ok, OFFG = '#3a4560', ME = C.danger, STOP = '#ff8a3d', ENH = '#ffb27a';
+const MOM = '#ff9ec7', DAD = '#6fd3ff', ON = C.ok, OFFG = '#3a4560', ME = C.methyl, STOP = '#ff8a3d', ENH = '#ffb27a';
 
 const bar = (x0, x1, y, col, op = 1, h = 44) => op <= .01 ? '' : `<rect x="${x0}" y="${y - h / 2}" width="${x1 - x0}" height="${h}" rx="${h / 2}" fill="${col}" fill-opacity=".35" stroke="${col}" stroke-width="3" opacity="${f1(op)}"/>`;
 const gene = (x, y, w, on, lab, op = 1) => op <= .01 ? '' : `<rect x="${f1(x - w / 2)}" y="${y - 26}" width="${w}" height="52" rx="10" fill="${on ? ON : OFFG}" stroke="#0a1224" stroke-width="2" opacity="${f1(op)}"/>` + T(x, y + 8, lab, { size: 22, col: on ? '#0a1224' : '#c9d2e4', w: 700, halo: false, op });
-/* methylgroepen als lollies (rood) */
+/* methylgroepen als lollies (vaste methylkleur C.methyl) */
 const marks = (x, y, n, op = 1) => { if (op <= .01) return ''; let s = `<g opacity="${f1(op)}">`; for (let i = 0; i < n; i++) { const xx = x - (n - 1) * 14 + i * 28; s += `<line x1="${xx}" y1="${y - 22}" x2="${xx}" y2="${y - 46}" stroke="${ME}" stroke-width="4"/><circle cx="${xx}" cy="${y - 52}" r="9" fill="${ME}"/>`; } return s + '</g>'; };
 const arc = (x0, x1, y, col, op = 1, h = 120) => op <= .01 ? '' : `<path d="M${x0},${y - 30} C${x0},${y - 30 - h} ${x1},${y - 30 - h} ${x1},${y - 30}" stroke="${col}" stroke-width="5" fill="none" stroke-dasharray="10 7" opacity="${f1(op)}"/>`;
 
@@ -100,7 +100,7 @@ export default {
           o += marks(655, 330, 3, vC) + arc(1190, 400, 330, ON, vC * kd, 170);
           // moeder: stop-eiwit op het controlestuk → versterker bereikt alleen het buurgen
           o += `<path d="M620,${640 - 58} L690,${640 - 58} L700,${640 - 18} L610,${640 - 18}Z" fill="${STOP}" opacity="${f1(vC)}"/>` + T(655, 640 - 70, T2('stop-eiwit (CTCF)', 'stop protein (CTCF)'), { size: 22, col: STOP, w: 700, op: vC });   // zit óp het controlestuk
-          o += arc(1190, 940, 640, ON, vC * kd, 110) + T(560, 520, T2('✗', '✗'), { size: 36, col: ME, w: 800, op: vC * kd });
+          o += arc(1190, 940, 640, ON, vC * kd, 110) + T(560, 520, T2('✗', '✗'), { size: 36, col: C.danger, w: 800, op: vC * kd });
           o += T(800, 450, T2('↑ merkteken: stop-eiwit kan niet binden', '↑ mark: stop protein cannot bind'), { size: 24, col: ME, op: vC });
           o += T(800, 760, T2('controlestuk met stop-eiwit: de versterker komt er niet voorbij', 'control piece with stop protein: the switch cannot get past'), { size: 24, col: STOP, op: vC });
         }

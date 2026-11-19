@@ -105,7 +105,7 @@ export default {
         s += '</g>';
       });
       if (cut < .3) s += txt(BX - 16, BY + 28, "5′", '#fff', 22, 'end', 700) + txt(SEGX[6][0] + SEGX[6][1] + 12, BY + 28, "3′", '#fff', 22, 'start', 700);
-      for (const [x, kind, k] of marks) if (k > .01) s += `<g opacity="${f1(k)}"><circle cx="${f1(x)}" cy="${BY - 2}" r="11" fill="${kind === 'm' ? '#ffffff' : '#ffc247'}" stroke="#0a1224" stroke-width="2"/><text x="${f1(x)}" y="${BY + 3}" font-size="${kind === 'm' ? 12 : 14}" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">${kind === 'm' ? 'Me' : 'Ψ'}</text></g>`;
+      for (const [x, kind, k] of marks) if (k > .01) s += `<g opacity="${f1(k)}"><circle cx="${f1(x)}" cy="${BY - 2}" r="11" fill="${kind === 'm' ? C.methyl : '#ffc247'}" stroke="#0a1224" stroke-width="2"/><text x="${f1(x)}" y="${BY + 3}" font-size="${kind === 'm' ? 12 : 14}" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">${kind === 'm' ? 'Me' : 'Ψ'}</text></g>`;
       return s + '</g>';
     }
     const MARKS = [[SEGX[1][0] + 20, 'm'], [SEGX[1][0] + 60, 'p'], [SEGX[5][0] + 30, 'p'], [SEGX[5][0] + 90, 'm'], [SEGX[5][0] + 150, 'm'], [SEGX[5][0] + 210, 'p'], [SEGX[3][0] + 6, 'm']];

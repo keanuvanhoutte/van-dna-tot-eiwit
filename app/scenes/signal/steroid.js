@@ -1,6 +1,6 @@
 import { C, T2, svgOpen, cam, FULL, f1 } from '../../kit.js';
 import { T, K, track, hot, bilayer, nucEnv, dna, mrna, cort, gr, grBound as grB, hsp90, anchor, CORTC, HSPC, NLSC } from './_sig1.js';
-import { eiwit } from '../../bio.js';
+import { eiwit, polII } from '../../bio.js';
 const grBound = (x, side, op) => grB(x, side, DY, op);
 
 /* Zijpad: cortisol → glucocorticoïdreceptor (GR, NR3C1) → kern → GRE.
@@ -152,9 +152,8 @@ export default {
         const pol = K(g, 6.3, 6.5);
         $('st-nuc').innerHTML = N;
         N = '';                                                 // Pol II apart (klikbaar naar RNA-polymerase II), mRNA erna
-        $('st-pol').innerHTML = pol <= .01 ? '' : `<g opacity="${f1(pol)}">${eiwit(1200, DY - 24, 54, 38, C.prot3, { seed: 50, stroke: C.prot })}` +
-          `<text x="1200" y="${DY - 16}" font-size="21" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">Pol II</text></g>`;
-        N += mrna(1240, DY - 46, K(g, 6.5, 6.95), 190);
+        $('st-pol').innerHTML = polII(1200, DY, 58, 26, { op: pol, gul: 12, hoog: 2.4, vul: .4, achter: .5, uit: 1.2, seed: 50, label: 'Pol II', fs: 21, labelY: -28 });   // app-vorm (bio.js): DNA door de geul
+        N += mrna(1182, DY - 59, K(g, 6.5, 6.95), 190);   // RNA verlaat Pol II bovenaan aan de achterkant (stroomopwaarts)
         $('st-nuc2').innerHTML = N;
         const hl = K(g, 6.4, 6.7);
         $('st-gene').innerHTML = hl > .01 ? `<rect x="1150" y="${DY - 26}" width="330" height="52" rx="12" fill="#fff" opacity="${f1(.1 * hl)}"/>` : '';

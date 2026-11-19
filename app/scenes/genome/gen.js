@@ -1,6 +1,6 @@
 import { C, BASE, L, T2, svgOpen, txt, mono, pill, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { ST } from './_a_kit.js';
-import { eiwitPad } from '../../bio.js';
+import { eiwitPad, polII } from '../../bio.js';
 
 /*
  * Architectuur van een typisch menselijk eiwitcoderend gen (schematisch, niet op schaal):
@@ -137,8 +137,7 @@ export default {
       <!-- stap 3: TFIID op de TATA-box en Pol II op de promoter, rond de startplaats (+1) -->
       <g id="gn-pic" opacity="0" data-node="rnapol" data-color="${C.prot}" data-nolabel>
         <path d="${eiwitPad(360, Y - 40, 34, 16, 77, .08)}" fill="#7a62e0" fill-opacity=".9" stroke="${C.prot}" stroke-width="2"/>${txt(360, Y - 35, 'TFIID', '#fff', 15, 'middle', 700)}
-        <path d="${eiwitPad(446, Y + 2, 34, 34, 22, .08)}" fill="rgba(70,52,140,.85)" stroke="${C.prot}" stroke-width="3"/>
-        ${txt(446, Y + 8, 'Pol II', '#fff', 16, 'middle', 700)}
+        ${polII(446, Y, 46, 36, { gul: 24, hoog: 1.6, vul: .45, achter: .55, seed: 22, label: 'Pol II', fs: 16, labelY: -32 })}<!-- app-vorm (bio.js): DNA door de geul -->
       </g>
     </g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Transcriptie →', 'Transcription →')}" id="gn-pre">${pre}<circle data-anchor="transcriptie" cx="${CUT - 60}" cy="${YP + 30}" r="1" fill="none" data-pos="below"/></g>

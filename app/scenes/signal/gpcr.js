@@ -1,6 +1,6 @@
 import { C, T2, svgOpen, cam, FULL, f1, lerp, clamp } from '../../kit.js';
 import { T, K, track, hot, tag, phos, bilayer, nucEnv, dna, mrna, adr, gpcr7, gAlpha, gBG, cAMP, anchor, ADRC, GTPC, GAC, GBC } from './_sig1.js';
-import { eiwit, tmHelix } from '../../bio.js';
+import { eiwit, tmHelix, polII } from '../../bio.js';
 
 /* Zijpad: adrenaline → β2-adrenerge receptor → Gs → adenylylcyclase → cAMP → PKA → CREB (CRE).
  * Membraan y 260–324, cytosol tot 646, kernenvelop y 660, DNA y 800. Alles volgt g = stap + p. */
@@ -177,9 +177,8 @@ export default {
         const cbp = track(g, [[7.05, 1400, 750, 0], [7.4, CRX + 8, DY - 112, 1], [8.55, CRX + 8, DY - 112, 1], [8.9, 1400, 750, 0]]);
         if (cbp[2] > .01) N += eiwit(cbp[0], cbp[1], 62, 34, CBPC, { seed: 49, op: cbp[2] });
         const pol = K(g, 7.3, 7.5) * (1 - K(g, 8.55, 8.9));
-        if (pol > .01) N += `<g opacity="${f1(pol)}">${eiwit(1335, DY - 22, 52, 36, C.prot3, { seed: 50, stroke: C.prot })}` +
-          `<text x="1335" y="${DY - 14}" font-size="21" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">Pol II</text></g>`;
-        N += mrna(1372, DY - 40, K(g, 7.5, 7.95), 170);
+        if (pol > .01) N += polII(1335, DY, 56, 24, { op: pol, gul: 12, hoog: 2.4, vul: .4, achter: .5, uit: 1.2, seed: 50, label: 'Pol II', fs: 21, labelY: -26 });   // app-vorm (bio.js): DNA door de geul
+        N += mrna(1318, DY - 54, K(g, 7.5, 7.95), 170);   // RNA verlaat Pol II bovenaan aan de achterkant (stroomopwaarts)
         // CRE-sequentie
         N += `<text x="${CRX}" y="${DY + 48}" font-size="24" text-anchor="middle" fill="#cfe0ff" font-family="JetBrains Mono" font-weight="700" letter-spacing="2">TGACGTCA</text>`;
         $('gp-nuc').innerHTML = N;

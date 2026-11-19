@@ -1,5 +1,5 @@
 import { C, L, T2, svgOpen, txt, clamp, lerp } from '../../kit.js';
-import { membraanPts, bacterieWand, kernEnvelop, ptsCirkel, eiwit, ribosoomKlein, LIPID } from '../../bio.js';
+import { membraanPts, bacterieWand, kernEnvelop, ptsCirkel, ribosoomKlein, LIPID, polymerase } from '../../bio.js';
 
 /* Mens ⇄ bacterie: "van gen tot eiwit" naast elkaar (fase 4, uit poc/03-diepte/tab-c.js).
  * Het beeld is een pure functie draw(hp, bp, s): hp/bp = voortgang bij mens/bacterie (0..1), s = wissel (0 = mens, 1 = bacterie).
@@ -28,7 +28,11 @@ const lbl = (x, y, s, a, o = {}) => a < .01 ? '' : `<text x="${n1(x)}" y="${n1(y
 
 /* ---------- vormpjes ---------- */
 const strands = (x0, x1, y) => `<line x1="${n1(x0)}" y1="${n1(y - 6)}" x2="${n1(x1)}" y2="${n1(y - 6)}" stroke="${C.dna}" stroke-width="7" stroke-linecap="round"/><line x1="${n1(x0)}" y1="${n1(y + 6)}" x2="${n1(x1)}" y2="${n1(y + 6)}" stroke="${C.dna2}" stroke-width="7" stroke-linecap="round"/>`;
-const pol = (x, y, a) => a < .01 ? '' : eiwit(x, y, 36, 27, K.pol, { seed: 7, op: .92 * a });
+/* RNA-polymerase in de app-vorm (bio.js polymerase), klem boven zoals overal: leest naar links, het DNA loopt door de geul
+ * (de polymerase wordt bovenop de DNA-strengen getekend, zie draw). Het RNA verlaat het enzym bovenaan aan de achterkant (rechts,
+ * waar het enzym al geweest is) en loopt daarachter naar beneden. Mens (Pol II) en bacterie (RNAP) zelfde vormtaal. */
+const pol = (x, y, a) => a < .01 ? '' : polymerase(x, y, 48, 22, { col: K.pol, dir: -1, gul: 11, hoog: 1.4, vul: .4, op: .92 * a, seed: 7 });
+const rnaUit = (x, y, yRij, op = 1) => `<path d="M${n1(x + 27)},${n1(y - 20)} C${n1(x + 78)},${n1(y - 42)} ${n1(x + 80)},${n1(yRij)} ${n1(x + 30)},${n1(yRij)}" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round" opacity="${(+op).toFixed(3)}"/>`;
 /* ribosoom: twee eenheden tegen elkaar, het mRNA loopt langs de kleine eenheid; de keten komt uit de grote eenheid.
  * Mens (80S) en bacterie (70S) zijn op dezelfde manier gebouwd en staan dus ook hetzelfde: grote eenheid boven het mRNA,
  * keten naar boven (Alberts MBoC hfst. 6). Alleen de grootte verschilt: s = 2,4 (80S, ≈ 25–30 nm) of 1,95 (70S, ≈ 20 nm). */
@@ -71,7 +75,7 @@ function human(p) {
   labels.push([555, 386, 'intron', 1 - ss(.25, .27, p), { size: 24, fill: C.muted }]);
   /* transcriptie */
   const polX = lerp(705, 255, clamp((p - .03) / .19)), uT = clamp(700 - polX, 0, 440);
-  s += pol(polX, HD.y, win(.01, .03, .22, .25, p));
+  const top = pol(polX, HD.y, win(.01, .03, .22, .25, p));
   /* splicing: exons schuiven aan, introns worden lussen en verdwijnen */
   const q = ss(.25, .41, p), sh = [0, 0, 90 * q, 90 * q, 160 * q];
   const qe1 = ss(.41, .47, p), qe2 = ss(.47, .60, p);
@@ -79,7 +83,7 @@ function human(p) {
   const L5 = 440 - 160 * q;
   let rna = '';
   if (p < .25) {   /* groeiend pre-mRNA, aan de polymerase vast */
-    rna += `<line x1="${n1(polX)}" y1="446" x2="${n1(polX)}" y2="${hy}" stroke="${C.rna}" stroke-width="6"/>`;
+    rna += rnaUit(polX, HD.y, hy);
     for (const [k, a, b] of H_SEG) if (uT > a) rna += `<line x1="${n1(hx - a)}" y1="${hy}" x2="${n1(hx - Math.min(b, uT))}" y2="${hy}" stroke="${k === 'e' ? C.rna : K.intron}" stroke-width="7" stroke-linecap="round"/>`;
   } else {
     H_SEG.forEach(([k, a, b], i) => {
@@ -108,7 +112,7 @@ function human(p) {
   }
   labels.push([1365, 560, L(TX.rib), win(.63, .66, .9, .93, p), { fill: K.rib }]);
   labels.push([1200, 230, L(TX.prot), ss(.74, .77, p), { fill: PROT[0] }]);
-  return { s, labels };
+  return { s, labels, top };
 }
 
 /* ---------- bacterie (coördinaten bij s = 1); stapgrenzen bp = 0 · .42 · 1 ---------- */
@@ -121,8 +125,8 @@ function bacterium(p) {
   labels.push([810, 268, L(TX.nucleoid), 1, { w: 700 }]);
   GENES.forEach(([a, b], g) => { s += `<rect x="${b}" y="364" width="${a - b}" height="32" rx="5" fill="${PROT[g]}" opacity=".45"/>`; labels.push([(a + b) / 2, 350, `${L(TX.gene)} ${g + 1}`, 1, { size: 24, fill: PROT[g] }]); });
   const polX = lerp(1305, 425, clamp((p - .03) / .60)), uT = clamp(1300 - polX, 0, 875);
-  s += pol(polX, BD.y, win(.01, .03, .63, .66, p));
-  if (uT > 0) s += `<line x1="${n1(polX)}" y1="406" x2="${n1(polX)}" y2="540" stroke="${C.rna}" stroke-width="6" opacity="${(1 - ss(.63, .66, p)).toFixed(3)}"/><line x1="1300" y1="540" x2="${n1(1300 - uT)}" y2="540" stroke="${C.rna}" stroke-width="7" stroke-linecap="round"/>`;
+  const top = pol(polX, BD.y, win(.01, .03, .63, .66, p));
+  if (uT > 0) s += rnaUit(polX, BD.y, 540, 1 - ss(.63, .66, p)) + `<line x1="1300" y1="540" x2="${n1(1300 - uT)}" y2="540" stroke="${C.rna}" stroke-width="7" stroke-linecap="round"/>`;
   /* per gen twee ribosomen, die starten zodra de polymerase voorbij de start is: gekoppelde transcriptie-translatie */
   const vPol = 875 / .60, vRib = vPol * .7;
   GENES.forEach((_, g) => {
@@ -137,7 +141,7 @@ function bacterium(p) {
   labels.push([1275, 592, L(TX.rib70), win(.08, .12, .64, .68, p), { fill: K.rib }]);
   labels.push([810, 710, L(TX.coupled), win(.16, .2, .64, .68, p), { fill: K.rib }]);
   labels.push([810, 710, L(TX.none), ss(.68, .72, p), { fill: C.muted }]);
-  return { s, labels };
+  return { s, labels, top };
 }
 
 /* ---------- samenstellen: pure functie ---------- */
@@ -158,7 +162,9 @@ function draw(hp, bp, sw) {
     out += `<g opacity="${a.toFixed(3)}" transform="translate(${n1(M.tx)},${n1(M.ty)}) scale(${M.sx.toFixed(4)},1)">${L0.s}</g>`;
     for (const [x, y, tx, la, o] of L0.labels) { const [X, Yy] = M.f(x, y); labels += lbl(X, Yy, tx, la * a, o); }
   }
-  out += strands(X0, X1, Y) + labels;
+  out += strands(X0, X1, Y);
+  for (const [L0, M, a] of layers) if (L0 && L0.top) out += `<g opacity="${a.toFixed(3)}" transform="translate(${n1(M.tx)},${n1(M.ty)}) scale(${M.sx.toFixed(4)},1)">${L0.top}</g>`;   // polymerase bovenop het DNA: de strengen lopen zichtbaar door de geul
+  out += labels;
   out += lbl(1430, 820, L(TX.cyto), aH, { size: 24, fill: C.muted, anchor: 'end' });   // bij de bacterie zegt het nucleoïd-label het al
   /* badge linksboven: wisselt pas op het moment dat alleen de gedeelde onderdelen in beeld zijn */
   out += lbl(60, 70, L(TX.human), 1 - ss(.4, .5, sw), { size: 30, w: 800, anchor: 'start', fill: C.mem });

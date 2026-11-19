@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, txt, cam, sub, ease, lerp, clamp, f1, rng, squiggle } from '../../kit.js';
 import { PINK } from './_bits.js';
-import { eiwit } from '../../bio.js';
+import { eiwit, polII } from '../../bio.js';
 
 /* Zijpad: hoe integrase het provirus in een gastheerchromosoom bouwt. */
 const HOST = 640, Y0 = 330, H = 270;      // gastheer-DNA, basis van de virale lus, hoogte van de lus
@@ -69,7 +69,7 @@ export default {
       <g id="in-repair-body"></g>
     </g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Transcriptie van het provirus', 'Transcription of the provirus')}" id="in-txn" opacity="0">
-      <circle data-anchor="transcriptie" cx="690" cy="${HOST - 186}" r="1" fill="none"/>
+      <circle data-anchor="transcriptie" cx="790" cy="${HOST - 100}" r="1" fill="none"/>
       <g data-node="rnapol" data-color="${C.prot}" data-nolabel><g id="in-pol"></g></g>
       <g id="in-txn-body"></g>
     </g>
@@ -129,9 +129,9 @@ export default {
         const txnOn = step === 6 ? ease(sub(p, .15, .55)) : 0;
         $('in-txn').setAttribute('opacity', f1(txnOn));
         $('in-pol').innerHTML = txnOn > .01
-          ? `<g transform="translate(650 ${HOST - 122})">${eiwit(0, 0, 56, 42, C.prot, { seed: 12, bumps: .1 })}${txt(0, 7, 'Pol II', '#e8edf7', 20)}</g>` : '';
+          ? `<g transform="rotate(45 647 ${HOST - 142})">${polII(647, HOST - 142, 54, 24, { dir: -1, gul: 12, hoog: 1.8, vul: .4, achter: .5, uit: 1, seed: 12 })}</g>${txt(588, HOST - 176, 'Pol II', '#e8edf7', 20, 'end')}` : '';   // app-vorm (bio.js) op het linkerbeen van de lus: leest vanaf de LTR het provirus in
         $('in-txn-body').innerHTML = txnOn > .01
-          ? `<g transform="translate(650 ${HOST - 122})"><path d="M-40,-30 q-60,-60 -140,-50" stroke="${C.rna}" stroke-width="6" fill="none"/>${txt(-230, -96, T2('viraal mRNA', 'viral mRNA'), C.rna, 20)}</g>
+          ? `<g transform="translate(647 ${HOST - 142})"><path d="M37,-4 q46,6 73,-32 t64,-38" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round"/>${txt(184, -84, T2('viraal mRNA', 'viral mRNA'), C.rna, 20, 'start')}</g>
              ${txt(520, HOST + 60, T2('linker-LTR = promoter', 'left LTR = promoter'), PINK, 19)}` : '';
 
         /* notities */

@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
-import { prot, panel } from './_txn.js';
+import { panel } from './_txn.js';
+import { polymerase } from '../../bio.js';
 
 const COLX = [290, 800, 1310];
 const PC = ['#7f9cf5', '#9b7bff', '#d98cf0'];
@@ -43,12 +44,12 @@ export default {
     let s = '';
     COLX.forEach((x, i) => {
       s += `<g id="pc-col${i}">` + txt(x, 150, names[i], PC[i], 26, 'middle', 800);
-      s += `<g data-node="${nodes[i]}" data-color="${PC[i]}" data-label="${labels[i]}">` + prot(x, 280, 120, 78, PC[i], 1, 100 + i * 7, '', 15) +
+      s += `<g data-node="${nodes[i]}" data-color="${PC[i]}" data-label="${labels[i]}">` + polymerase(x, 318, 125, 40, { col: PC[i], gul: 9, hoog: 2.9, vul: .3, seed: 100 + i * 7, ctd: i === 1 ? 90 : 0, ctdStap: 13 }) +   // zelfde vorm voor Pol I, II, III (bio.js); de geul voor het DNA onderaan
         txt(x, 270, `Pol ${['I', 'II', 'III'][i]}`, '#fff', 26, 'middle', 800) + txt(x, 304, `${nsub[i]} ${L({ nl: 'subeenheden', en: 'subunits' })}`, '#fff', 19) +
         `<circle id="pc-a${i}" data-anchor="${nodes[i]}" cx="${x}" cy="206" r="1" fill="none"/></g>`;
       // 5 gedeelde subeenheden (Rpb5, 6, 8, 10, 12): grijze vlekjes IN elk enzym (zelfde grijs als de legende)
       for (let k = 0; k < 5; k++) s += `<ellipse cx="${x - 44 + k * 22}" cy="${336 - (k % 2) * 4}" rx="10" ry="8" fill="${SHR}" stroke="#0a1224" stroke-width="1.5"/>`;
-      if (i === 1) s += `<path d="M${x + 60},${340} q20,30 0,55 q-20,25 5,50" stroke="${PC[1]}" stroke-width="3" fill="none"/>` + txt(x + 95, 420, 'CTD', PC[1], 20, 'start');
+      if (i === 1) s += txt(x - 80, 440, 'CTD', PC[1], 20, 'end');   // enkel Pol II heeft de CTD (ctd-optie van bio.polymerase: onderaan achteraan)
       s += `<g id="pc-loc${i}" data-node="${i === 0 ? 'nucleolus' : 'kern'}" data-nolabel data-color="${C.muted}">` + pill(x, 397, 196, 32, loc[i], i === 0 ? '#58677f' : '#44516a', 1, 19) + '</g>';
       s += '</g>';
     });
@@ -132,7 +133,7 @@ export default {
             // factoren verschijnen na elkaar, dan Pol III
             const t0 = .15 + ri * .22;
             r.f.forEach(([n, x, k]) => { p3 += pill(x, y - 36 - (n === 'TFIIIC' && ri === 0 ? 36 : 0), n.length * 13 + 26, 32, n, n === 'TFIIIB' ? '#b066c8' : '#6f5bd6', sub(p, t0 + k * .05, t0 + k * .05 + .05), 20); });
-            p3 += `<g opacity="${f1(sub(p, t0 + .15, t0 + .2))}">` + prot(740, y - 44, 50, 28, PC[2], 1, 120 + ri, ri === 0 ? 'Pol III' : '', 20) + '</g>';
+            p3 += `<g opacity="${f1(sub(p, t0 + .15, t0 + .2))}">` + polymerase(740, y, 52, 22, { col: PC[2], gul: 13, hoog: 3.3, vul: .3, seed: 120 + ri, label: ri === 0 ? 'Pol III' : '', fs: 20, labelY: -38 }) + '</g>';
           });
           p3 += txt(1250, 446, T2('type 1–2: promoter in het gen', 'types 1–2: promoter inside the gene'), C.muted, 20) + txt(1250, 806, T2('rood = TTTT-terminator', 'red = TTTT terminator'), C.danger, 20);
           p3 += '</g>';

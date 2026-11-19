@@ -1,6 +1,6 @@
 import { C, BASE, COMP, L, T2, svgOpen, txt, mono, pill, nt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { ST } from './_a_kit.js';
-import { eiwitPad, eiwit } from '../../bio.js';
+import { eiwitPad, eiwit, polII } from '../../bio.js';
 import { NEW } from '../repl/_draw.js';   // nieuw gesynthetiseerd DNA: zelfde cyaan als in replicatie/replisoom
 
 /* bovenste streng 5'→3'; elke CG = CpG-plaats (palindroom: onderste streng leest ook 5'-CG-3') */
@@ -8,7 +8,7 @@ const SEQ = 'TACGGATCGCATTCGACGTAACGT';
 const N = SEQ.length, X0 = 110, P = 37, BW = 32, BH = 30;
 const CPG = []; for (let i = 0; i < N - 1; i++) if (SEQ[i] === 'C' && SEQ[i + 1] === 'G') CPG.push(i);
 const bx = i => X0 + i * P;
-const MCOL = C.danger;
+const MCOL = C.methyl;   // methylgroep: vaste kleur (kit C.methyl)
 
 /* één streng tekenen (bovenste: basen onder de ruggengraat; onderste: omgekeerd) */
 function strand(y, seq, top, meth, op, col, newS = false, lab = 1) {
@@ -21,7 +21,7 @@ function strand(y, seq, top, meth, op, col, newS = false, lab = 1) {
     if (meth[i] > .01) {
       const k = meth[i], y0 = top ? y - 10 : y + BH + 10, y1 = top ? y0 - 26 * k : y0 + 26 * k;
       s += `<g opacity="${f1(k)}"><line x1="${bx(i)}" y1="${y0}" x2="${bx(i)}" y2="${f1(y1)}" stroke="${MCOL}" stroke-width="3"/><circle cx="${bx(i)}" cy="${f1(y1 + (top ? -13 : 13))}" r="15" fill="${MCOL}" stroke="#0a1224" stroke-width="2"/>` +
-        (lab > .01 ? `<text x="${bx(i)}" y="${f1(y1 + (top ? -9 : 17))}" font-size="12" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="800" opacity="${f1(lab)}">CH₃</text>` : '') + `</g>`;
+        (lab > .01 ? `<text x="${bx(i)}" y="${f1(y1 + (top ? -9 : 17))}" font-size="12" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800" opacity="${f1(lab)}">CH₃</text>` : '') + `</g>`;
     }
   }
   s += txt(bx(0) - 40, y + 21, top ? "5′" : "3′", C.text, 17) + txt(bx(N - 1) + 40, y + 21, top ? "3′" : "5′", C.text, 17);
@@ -80,7 +80,7 @@ export default {
       atom(N1, 'N', '#7cc4ff') + atom(N3, 'N', '#7cc4ff') + atom([C4[0], C4[1] - 58], 'NH₂', '#7cc4ff', 18) + atom([C2[0] - 52, C2[1] + 30], 'O', '#ff8a8a') +
       txt(N1[0] + 14, N1[1] + 58, T2('suiker (dR)', 'sugar (dR)'), C.muted, 15, 'start') +
       txt(C5[0] + 6, C5[1] + 26, '5', C.muted, 14) + txt(N1[0] + 16, N1[1] - 6, '1', C.muted, 13) +
-      `<g id="dm-me">${bond(C5, [C5[0] + 48, C5[1] - 28])}<circle cx="${f1(C5[0] + 62)}" cy="${f1(C5[1] - 36)}" r="24" fill="${MCOL}"/>${txt(C5[0] + 62, C5[1] - 29, 'CH₃', '#fff', 17, 'middle', 800)}</g>` + `</g>`;
+      `<g id="dm-me">${bond(C5, [C5[0] + 48, C5[1] - 28])}<circle cx="${f1(C5[0] + 62)}" cy="${f1(C5[1] - 36)}" r="24" fill="${MCOL}"/>${txt(C5[0] + 62, C5[1] - 29, 'CH₃', '#0a1224', 17, 'middle', 800)}</g>` + `</g>`;
     chem += txt(1300, 250, T2('5-methylcytosine', '5-methylcytosine'), '#fff', 22, 'middle', 700);
     chem += `<g id="dm-chemtxt">${txt(1300, 582, T2('← Watson–Crick-kant: paart met G', '← Watson–Crick edge: pairs with G'), C.muted, 15)}${txt(1300, 604, T2('methyl op C5 → in de grote groef', 'methyl on C5 → in the major groove'), MCOL, 15)}</g>`;
     // TET-route (stap 6)
@@ -109,8 +109,8 @@ export default {
     };
     prom += `<g data-node="gen" data-color="${C.dna}" data-nolabel>` + gene(750, false, T2('gen A', 'gene A')) + gene(840, true, T2('gen B', 'gene B')) + `</g>`;
     prom += txt(540, 718, T2('CpG-eiland (promoter)', 'CpG island (promoter)'), C.trna, 19);
-    prom += `<g data-node="genregulatie" data-color="${C.ok}" data-label="${T2('Actief gen → genregulatie', 'Active gene → gene regulation')}"><path d="${eiwitPad(760, 738, 50, 26, 764, .07)}" fill="rgba(155,123,255,.4)" stroke="${C.prot}" stroke-width="2"/>${txt(760, 745, 'Pol II', '#fff', 19, 'middle', 700)}` +
-      `<path d="M800,735 q30,-30 60,-8" stroke="${C.rna}" stroke-width="4" fill="none" marker-end="url(#arrow)"/>${txt(1440, 712, T2('AAN', 'ON'), C.ok, 22, 'end', 800)}<circle data-anchor="genregulatie" cx="760" cy="712" r="1" fill="none"/></g>`;
+    prom += `<g data-node="genregulatie" data-color="${C.ok}" data-label="${T2('Actief gen → genregulatie', 'Active gene → gene regulation')}">${polII(760, 750, 52, 26, { gul: 14, hoog: 1.4, vul: .45, achter: .5, uit: 1.2, seed: 764, label: 'Pol II', fs: 19, labelY: -16 })}` +   // app-vorm (bio.js): gen-DNA door de geul
+      `<path d="M748,718 q-10,-20 -60,-16" stroke="${C.rna}" stroke-width="4" fill="none" stroke-linecap="round"/>${txt(1440, 712, T2('AAN', 'ON'), C.ok, 22, 'end', 800)}<circle data-anchor="genregulatie" cx="760" cy="700" r="1" fill="none"/></g>`;
     prom += `<g>${[420, 520, 620].map(x => `<path d="${eiwitPad(x, 800, 44, 18, 779, .07)}" fill="rgba(240,107,192,.4)" stroke="#f06bc0" stroke-width="2"/>`).join('')}` +
       txt(420, 806, 'MBD2', '#fff', 18, 'middle', 700) + txt(520, 806, 'MeCP2', '#fff', 18, 'middle', 700) + txt(620, 806, 'HDAC', '#fff', 18, 'middle', 700) +
       `<path d="M780,815 l30,30 M810,815 l-30,30" stroke="${C.danger}" stroke-width="5"/>${txt(1440, 876, T2('UIT', 'OFF'), C.danger, 22, 'end', 800)}</g>`;
@@ -149,7 +149,7 @@ export default {
         // DNMT1 schuift in stap 4 over beide dochterhelices
         const dx = step === 4 ? lerp(bx(0) - 60, bx(N - 1) + 60, sub(p, .1, .85)) : -999;
         CPG.forEach(i => { const v = step < 4 ? 0 : step === 4 ? (dx > bx(i) ? 1 : 0) : 1; nBot[i + 1] = v; nTop[i] = v; });
-        const lab = step === 7 ? 1 - ease(sub(p, 0, .3)) : 1;   // overzicht: alleen rode bolletjes
+        const lab = step === 7 ? 1 - ease(sub(p, 0, .3)) : 1;   // overzicht: alleen de methylbolletjes
         const yA1 = 330, yA2 = 420, yB2 = lerp(420, 640, rep), yB1 = 550;
         let d = '';
         d += strand(yA1, SEQ, true, mTop, 1, C.dna, false, lab);

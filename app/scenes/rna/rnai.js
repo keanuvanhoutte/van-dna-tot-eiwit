@@ -1,6 +1,6 @@
 import { C, BASE, RNA_PAIR, L, T2, svgOpen, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { prot, capG, ribo, note, arrow, snip, hb, npairs, hot, setHot } from './_rna.js';
-import { kernEnvelop, ptsLijn, eiwitPad } from '../../bio.js';
+import { kernEnvelop, ptsLijn, eiwitPad, polII } from '../../bio.js';
 
 /*
  * miRNA-route en RNA-interferentie (mens). Voorbeeld-miRNA: let-7a-5p (22 nt).
@@ -111,7 +111,7 @@ export default {
           gen += `<rect x="130" y="542" width="240" height="52" fill="none" stroke="${C.dna}" stroke-width="2" stroke-dasharray="5 4" opacity=".7"/>` + note(250, 614, T2('MIR-gen', 'MIR gene'), C.dna, 18);
           // Pol II eindigt op het 3'-uiteinde van het pri-miRNA (het RNA komt eruit), met het DNA door de onderkant
           const px = lerp(140, 412, k);   // niet tegen de kernenvelop
-          pol += `<g transform="translate(${f1(px)} 532)"><path d="${eiwitPad(0, 0, 48, 46, 22, .08)}" fill="#0b1224" fill-opacity=".45"/><path d="${eiwitPad(0, 0, 48, 46, 22, .08)}" fill="${C.prot}" fill-opacity=".28" stroke="${C.prot}" stroke-width="3"/><text x="0" y="6" font-size="16" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">Pol II</text></g>`;
+          pol += polII(px, 568, 52, 22, { gul: 14, hoog: 3.7, vul: .28, achter: .45, uit: .5, seed: 22, label: 'Pol II', fs: 16, lc: C.text, labelY: -30 });   // app-vorm (bio.js): het DNA (560/576) loopt door de geul
         }
         $('ri-dna').innerHTML = dna; $('ri-gen').innerHTML = gen; $('ri-pol').innerHTML = pol;
 

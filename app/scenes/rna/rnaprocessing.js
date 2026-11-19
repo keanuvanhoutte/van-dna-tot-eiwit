@@ -1,5 +1,5 @@
 import { C, L, svgOpen, cam, FULL } from '../../kit.js';
-import { kernEnvelop, kernporie, ptsBoog, eiwitPad } from '../../bio.js';
+import { kernEnvelop, kernporie, ptsBoog, eiwitPad, polII } from '../../bio.js';
 
 /* kernenvelop bovenaan (ver weg, dus dun): dubbel membraan langs een flauwe boog, kernporie op x = 900 */
 const ENV = ptsBoog(-50, 103, 800, 48, 1650, 103, 60);
@@ -176,9 +176,8 @@ function initProcessing(svg) {
     dn += txt((X.dse[0] + X.dse[1]) / 2, Y + 20, ph < 9 ? L({ nl: 'GU-rijk', en: 'GU-rich' }) : '', '#c07a4a', 10);
     $('pr-down').innerHTML = dn;
     // Pol II zit op het DNA (dat er dwars door loopt); het RNA komt er aan de linkerkant uit
-    // Pol II als twee lobben (klem boven, kaak onder) met het DNA in de spleet ertussen
-    const pdU = eiwitPad(0, -16, 52, 32, 22, .09), pdD = eiwitPad(6, 42, 44, 18, 23, .09);
-    $('pr-pol').innerHTML = polOp > 0 ? `<g opacity="${polOp.toFixed(2)}" transform="translate(${X.pol} ${Y})">` + [pdU, pdD].map(pd => `<path d="${pd}" fill="#0b1224" fill-opacity=".7"/><path d="${pd}" fill="${C.prot}" fill-opacity=".28" stroke="${C.prot}" stroke-width="3"/>`).join('') + `<text x="4" y="-20" font-size="12" text-anchor="middle" fill="${C.text}" font-family="Inter">Pol II</text></g>` : '';
+    // Pol II in de app-vorm (bio.js): klem boven, kaak onder, het DNA (y = Y + 18) loopt door de geul
+    $('pr-pol').innerHTML = polOp > 0 ? polII(X.pol, Y + 18, 56, 26, { op: polOp, gul: 11, hoog: 2.3, vul: .28, achter: .7, uit: .35, seed: 22, label: 'Pol II', fs: 12, lc: C.text, labelY: -38 }) : '';
     $('pr-dna').innerHTML = polOp > 0 ? `<linearGradient id="pr-dnag" gradientUnits="userSpaceOnUse" x1="${X.pol - 210}" y1="0" x2="${X.pol - 110}" y2="0"><stop offset="0" stop-color="${C.dna}" stop-opacity="0"/><stop offset="1" stop-color="${C.dna}"/></linearGradient>` +
       `<path d="M${X.pol - 210},${Y + 34} H${X.pol - 120}" stroke="url(#pr-dnag)" stroke-width="5" opacity="${polOp.toFixed(2)}"/><path d="M${X.pol - 120},${Y + 34} C${X.pol - 60},${Y + 34} ${X.pol - 40},${Y + 18} ${X.pol},${Y + 18} S${X.pol + 60},${Y + 34} 1650,${Y + 34}" stroke="${C.dna}" stroke-width="5" fill="none" opacity="${polOp.toFixed(2)}"/>` : '';
   }

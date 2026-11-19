@@ -124,6 +124,58 @@ export function tmHelix(x, y0, y1, col = C.prot, op = 1, w = 14) {
   return s + '</g>';
 }
 
+/* ---------- RNA-polymerase (zijaanzicht), app-vorm van Pol II ----------
+ * Bouw (Cramer et al. 2001, Science 292:1863; Alberts/MBoC hfst. 6): één grote eiwitklomp met een diepe geul (kloof)
+ * waar het DNA dwars doorheen loopt. Bovenaan de beweeglijke klem, onderaan de kaak; aan de voorkant (stroomafwaarts,
+ * in de leesrichting) gaat de geul open als een krabbenschaar. Het RNA verlaat het enzym bovenaan aan de achterkant
+ * (stroomopwaarts), 5′-uiteinde eerst. Enkel Pol II heeft de lange CTD-staart (heptade YSPTSPS), die onderaan achter uitsteekt.
+ * (cx, cy) = middenlijn van het DNA in de geul; rx, ry = halve breedte/hoogte; dir = +1 leest naar rechts, −1 naar links;
+ * ctdHoek = richting van de staart (90° = recht omlaag, groter = schuin naar achter); ctdStap = afstand tussen de CTD-kraaltjes (polCTD geeft hun posities voor S5P/S2P-merktekens);
+ * gul = halve hoogte van de geul (standaard ry·0,24); uit = hoek (rad) van de RNA-uitgang boven de achterkant;
+ * diep = hoe ver de geul naar achter loopt (fractie van rx); hoog = hoogte van de bovenhelft (klem) t.o.v. ry; ctd = lengte van de CTD-staart in px (0 = geen); vul = vulsterkte.
+ * Het lichaam is doorschijnend, zodat het DNA (en de bel met het RNA) erdoor zichtbaar blijft. Pol I en Pol III krijgen
+ * dezelfde vorm in hun eigen kleur (col) en zonder CTD. Geeft een SVG-string terug. */
+export function polymerase(cx, cy, rx, ry, { col = C.prot, dir = 1, op = 1, gul = null, ctd = 0, label = '', fs = 18, lc = '#fff', labelY = null, vul = .24, achter = 0, seed = 7, sw = null, uit = .78, diep = .5, hoog = 1, ctdStap = null, ctdHoek = 90 } = {}) {
+  if (op <= .01) return '';
+  const G = gul ?? ry * .24, ryT = ry * hoog, R = rng(seed * 4241 + 7), h = [2, 3, 5].map(k => [k, (R() - .5) * .1 / Math.sqrt(k), R() * 6.283]);
+  const m = G * .55, a0 = Math.asin(Math.min(.9, m / ry)), N = 56, rear = -rx * diep;
+  let d = '';
+  for (let i = 0; i <= N; i++) {            // buitenomtrek: van de onderste kaakpunt, langs de achterkant, tot de punt van de klem
+    const a = a0 + (2 * Math.PI - 2 * a0) * i / N, aw = Math.atan2(Math.sin(a), Math.cos(a));
+    let k = 1; for (const [n, amp, ph] of h) k += amp * Math.cos(n * a + ph);
+    const ab = Math.PI - Math.abs(aw); k -= .06 * Math.exp(-(ab * ab) / .03);      // achterkant: hier verlaat het DNA het enzym
+    const dU = aw + (Math.PI - uit); k -= .1 * Math.exp(-(dU * dU) / .025);        // RNA-uitgang: inkeping boven-achter
+    d += (i ? ' L' : 'M') + f1(Math.cos(a) * rx * k) + ',' + f1(Math.sin(a) * (Math.sin(a) < 0 ? ryT : ry) * k);
+  }
+  const gr = Math.min(G, rx * .2), xt = Math.cos(a0) * rx, xi = xt - rx * .2;
+  d += ` Q${f1(xi + rx * .06)},${f1(-m)} ${f1(xi)},${f1(-G)} L${f1(rear + gr)},${f1(-G)} Q${f1(rear)},${f1(-G)} ${f1(rear)},0 Q${f1(rear)},${f1(G)} ${f1(rear + gr)},${f1(G)} L${f1(xi)},${f1(G)} Q${f1(xi + rx * .06)},${f1(m)} ${f1(xt)},${f1(m)} Z`;   // de geul: smalle bek vooraan, ruimer binnenin, tot diep in het enzym
+  const sw0 = sw ?? Math.max(1.6, Math.min(3, rx / 40));
+  const ua = Math.PI + uit, ux = Math.cos(ua) * rx * .8, uy = Math.sin(ua) * ryT * .8;
+  let s = `<g opacity="${f1(op)}" transform="translate(${f1(cx)} ${f1(cy)})"><g transform="scale(${dir < 0 ? -1 : 1} 1)">`;
+  if (ctd > 0) {                             // CTD: soepele staart met kraaltjes (heptaden), onderaan achter
+    const Q = ctdLokaal(rx, ry, ctd, ctdStap, ctdHoek); let p = `M${f1(Q[0][0])},${f1(Q[0][1])}`, b = '';
+    for (const [x, y] of Q.slice(1)) { p += ` L${f1(x)},${f1(y)}`; b += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(Math.max(2, Math.min(5, (Q[1][1] - Q[0][1]) * .3)))}" fill="${col}"/>`; }
+    s += `<path d="${p}" stroke="${col}" stroke-width="${f1(sw0)}" fill="none" stroke-linejoin="round" opacity=".8"/>${b}`;
+  }
+  if (achter > 0) s += `<path d="${d}" fill="#0b1224" fill-opacity="${f1(achter)}"/>`;
+  s += `<path d="${d}" fill="${col}" fill-opacity="${f1(vul)}" stroke="${col}" stroke-width="${f1(sw0)}" stroke-linejoin="round"/>` +
+    `<path d="${eiwitPad(-rx * .08, -G - (ryT - G) * .48, rx * .5, (ryT - G) * .3, seed + 3, .08)}" fill="#fff" fill-opacity=".09"/>` +   // klem (bovenste lob)
+    `<ellipse cx="${f1(ux * .97)}" cy="${f1(uy * .97)}" rx="${f1(Math.max(3, rx * .07))}" ry="${f1(Math.max(2.5, ry * .06))}" fill="#0b1224" fill-opacity=".55" stroke="${col}" stroke-width="${f1(sw0 * .6)}"/>` +   // RNA-uitgang
+    '</g>';
+  if (label) s += `<text x="0" y="${f1(labelY ?? (-G - (ryT - G) * .45 + fs * .35))}" font-size="${fs}" text-anchor="middle" fill="${lc}" font-family="Inter" font-weight="700">${label}</text>`;
+  return s + '</g>';
+}
+export const polII = (cx, cy, rx, ry, o = {}) => polymerase(cx, cy, rx, ry, { col: C.prot, ...o });
+/* CTD-geometrie (lokaal, leesrichting +x): beginpunt onderaan achter + kraaltjes naar beneden */
+function ctdLokaal(rx, ry, ctd, stap = null, hoek = 90) {
+  const x0 = -rx * .42, y0 = ry * .86, st = stap ?? Math.max(8, ry * .11), n = Math.max(3, Math.round(ctd / st)), Q = [[x0, y0]];
+  const a = hoek * Math.PI / 180, dx = Math.cos(a), dy = Math.sin(a);   // hoek 90 = recht naar onder, > 90 = schuin naar achter
+  for (let i = 1; i <= n; i++) { const w = Math.sin(i * 1.3) * st * .55; Q.push([x0 + i * st * dx - w * dy, y0 + i * st * dy + w * dx]); }
+  return Q;
+}
+/* absolute posities van de CTD-kraaltjes (zelfde plaats als de ctd-optie), om er S5P/S2P-merktekens of een label aan te hangen */
+export const polCTD = (cx, cy, rx, ry, ctd, { dir = 1, ctdStap = null, ctdHoek = 90 } = {}) => ctdLokaal(rx, ry, ctd, ctdStap, ctdHoek).slice(1).map(([x, y]) => [cx + (dir < 0 ? -x : x), cy + y]);
+
 /* ---------- 80S-ribosoom (zijaanzicht) ----------
  * Bouw (Alberts/MBoC; Voorhees & Hegde 2016): de kleine eenheid (40S) leest het mRNA, dat tussen beide eenheden loopt.
  * tRNA's overspannen beide eenheden: het anticodon zit op het codon (40S-kant), het aminozuurende reikt tot het

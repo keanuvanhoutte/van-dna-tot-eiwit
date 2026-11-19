@@ -68,6 +68,6 @@ export default structure3d({
     { node: 'dnahelix', label: { nl: 'DNA-dubbelhelix →', en: 'DNA double helix →' }, color: C.dna },
     { node: 'histonmod', label: { nl: 'Histonmodificaties', en: 'Histone modifications' }, color: '#ff6b6b' },
     { node: 'chromatine', label: { nl: '← Chromatine', en: '← Chromatin' }, color: C.histone },
-    { node: 'dnamethyl', label: { nl: 'DNA-methylatie', en: 'DNA methylation' }, color: C.danger },
+    { node: 'dnamethyl', label: { nl: 'DNA-methylatie', en: 'DNA methylation' }, color: C.methyl },
   ],
 });

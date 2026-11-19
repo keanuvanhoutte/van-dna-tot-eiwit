@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, pill, txt, cam, sub, ease, lerp, clamp, f1, rng, squiggle } from '../../kit.js';
 import { capsid, capsidBreuk, viralGenome, microtubule, motor, kinesineGreep, linDNA, npc, PINK, FIBRE } from './_bits.js';
-import { kernEnvelopLijn, eiwitPad } from '../../bio.js';
+import { kernEnvelopLijn, polII } from '../../bio.js';
 
 /* Hoofdstuk 4: door de kernporie. Cytoplasma boven, kern onder; één groot NPC in doorsnede.
  * Kernenvelop (detailronde): twee lipidedubbellagen die aan elke porie in elkaar overgaan (kernEnvelopLijn uit bio.js;
@@ -192,10 +192,9 @@ export default {
         const txnOn = step === 8 ? ease(sub(p, .55, .9)) : 0;
         $('ki-txn').setAttribute('opacity', f1(txnOn));
         $('ki-pol').innerHTML = txnOn > .01
-          ? `<path d="${eiwitPad(960, 728, 48, 36, 12, .1)}" fill="#0b1224"/><path d="${eiwitPad(960, 728, 48, 36, 12, .1)}" fill="${C.prot}" fill-opacity=".45" stroke="${C.prot}" stroke-width="3"/>
-             ${txt(960, 735, 'Pol II', '#e8edf7', 20)}` : '';
+          ? polII(960, 740, 52, 22, { dir: -1, gul: 15, hoog: 2, vul: .45, achter: 1, uit: 1, seed: 12 }) + txt(948, 723, 'Pol II', '#e8edf7', 20) : '';   // app-vorm (bio.js): viraal DNA door de geul, RNA rechtsboven (achterkant) eruit
         $('ki-txn-body').innerHTML = txnOn > .01
-          ? `<path d="M985,696 q30,-40 90,-46 t70,-20" stroke="${C.rna}" stroke-width="5" fill="none" stroke-linecap="round"/>
+          ? `<path d="M982,710 q30,-54 93,-60 t70,-20" stroke="${C.rna}" stroke-width="5" fill="none" stroke-linecap="round"/>
              ${txt(1160, 640, T2('viraal mRNA', 'viral mRNA'), C.rna, 21, 'start')}` : '';
 
         /* notities */
