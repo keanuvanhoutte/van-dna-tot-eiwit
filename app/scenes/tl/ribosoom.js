@@ -5,7 +5,7 @@
  * Tekenen: in de app een <canvas> onder de SVG (bollen als voorgetekende, belichte sprites, van achter naar voor: vlot, ook bij
  * 60 beelden/s); in de testhulpmiddelen (init zonder api.node) dezelfde bollen als SVG-paden, zodat die de figuur blijven zien.
  */
-import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, f1 } from '../../kit.js';
+import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, f1, TRNA_SITE } from '../../kit.js';
 import { RIBO, LM } from './_ribo80s.js';
 import { hud, placeHud, stepVal, hex2rgb, rgb, mix, textBox } from './_tlkit.js';
 
@@ -20,6 +20,7 @@ const PAL = {
   ptc: { r18: '#1d3a44', p40: '#262a4a', r28: C.rrna, r58: C.rrna, r5: C.rrna, p60: '#3a3170' },
 };
 const NB = 6;                       // diepte-lagen
+const TR_R = 4.6;                   // balstraal tRNA (Å): kleiner dan het ribosoom, zodat de L-vorm leesbaar blijft
 const S0 = 2.2;                     // px per Å
 // per stap: hoek (rad), kanteling, afstand tussen subeenheden (Å), palet, dekking ribosoom, tRNA-dekking, [cx, cy, schaal]
 const K = {
@@ -118,7 +119,10 @@ void main() {
   o = vec4(c * a, a);
   gl_FragDepth = gl_FragCoord.z - h * uRadA / 800.;
 }`;
-function glRenderer(svg, hitBox) {
+/* cats = soorten in deze laag (elk een lijst bollen in RIBO); radA = balstraal in Å (diepte van het boloppervlak).
+ * Elke laag is een eigen canvas onder de SVG; een latere laag ligt boven een eerdere (tRNA's boven het ribosoom). */
+function glRenderer(svg, hitBox, cats = CATS, { radA = 9 } = {}) {
+  const CATS = cats;
   const cv = document.createElement('canvas');
   cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none';
   const gl = cv.getContext('webgl2', { premultipliedAlpha: true, antialias: true, alpha: true });
@@ -180,7 +184,7 @@ function glRenderer(svg, hitBox) {
       gl.uniform3fv(u.col, CATS.flatMap(c => col[c].map(v => v / 255)));
       gl.uniform1fv(u.alpha, CATS.map(c => alpha[c]));
       gl.uniform3fv(u.bg, BG.map(v => v / 255));
-      gl.uniform1f(u.radA, 9);
+      gl.uniform1f(u.radA, radA);
       const nS = iS.length, nT = iT.length;
       // 1) ondoorschijnende bollen, 2) hun rand (iets naar achteren: alleen zichtbaar waar de diepte verspringt)
       gl.uniform1i(u.mode, 0); gl.uniform1f(u.pad, 0); gl.uniform1f(u.push, 0);
@@ -209,7 +213,7 @@ export default {
   scale: { nl: '≈ 25–30 nm', en: '≈ 25–30 nm' },
   time: { nl: 'structuur (stilstaand beeld, langzaam gedraaid)', en: 'structure (static, slowly rotated)' },
   org: { nl: 'mens (vergelijking met bacterie)', en: 'human (compared with bacteria)' },
-  legend: [[C.rrna, 'rRNA'], [C.prot, { nl: 'ribosomale eiwitten', en: 'ribosomal proteins' }], ['#8df0dc', '40S'], ['#23a88f', '60S'], [C.trna, 'tRNA'], [C.rna, 'mRNA']],
+  legend: [[C.rrna, 'rRNA'], [C.prot, { nl: 'ribosomale eiwitten', en: 'ribosomal proteins' }], ['#8df0dc', '40S'], ['#23a88f', '60S'], [TRNA_SITE.P, { nl: 'tRNA (P-plaats)', en: 'tRNA (P site)' }], [TRNA_SITE.A, { nl: 'tRNA (A-plaats)', en: 'tRNA (A site)' }], [C.rna, 'mRNA']],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">De vorm is getekend uit echte atoomposities in PDB 6Y0G (humaan 80S-ribosoom met tRNA in A- en P-plaats, cryo-EM 3,2 Å): één P-atoom per 2–3 nucleotiden en één Cα per 4 aminozuren, elk als dikke bol, zodat ze samen de buitenvorm van elke helft geven. Flexibele rRNA-uitsteeksels die niet gemodelleerd zijn, ontbreken.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">The shape is drawn from real atom positions in PDB 6Y0G (human 80S ribosome with tRNA in the A and P sites, cryo-EM 3.2 Å): one P atom per 2–3 nucleotides and one Cα per 4 amino acids, each drawn as a thick ball so that together they give the outer shape of each half. Flexible rRNA expansion segments that were not modelled are missing.</p>' },
@@ -233,8 +237,8 @@ export default {
     return svgOpen() + `
     <g data-node="ribogenese" data-color="${C.rrna}" data-label="${T2('Hoe wordt een ribosoom gebouwd?', 'How is a ribosome built?')}"><g id="rb-body"><rect id="rb-hit" fill="transparent" rx="60"/><path id="rb-o40" fill="none" stroke-linecap="round"/><path id="rb-o60" fill="none" stroke-linecap="round"/>${bins.join('')}</g>
       <circle id="rb-bgA" data-anchor="ribogenese" r="1" fill="none"/></g>
-    <g id="rb-mg" data-node="codon" data-color="${C.rna}" data-label="${T2('mRNA · codons', 'mRNA · codons')}"><path id="rb-mrna" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle id="rb-mA" data-anchor="codon" data-pos="below" r="1" fill="none"/></g>
     <g id="rb-tg" data-node="trna" data-color="${C.trna}" data-label="tRNA"><path id="rb-tPL" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path id="rb-tP" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path id="rb-tAL" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path id="rb-tA" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle id="rb-tAnc" data-anchor="trna" r="1" fill="none"/></g>
+    <g id="rb-mg" data-node="codon" data-color="${C.rna}" data-label="${T2('mRNA · codons', 'mRNA · codons')}"><path id="rb-mrna" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle id="rb-mA" data-anchor="codon" data-pos="below" r="1" fill="none"/></g>
     <g id="rb-ov"></g>
     <g data-node="codon" data-color="${C.rna}" data-nolabel><g id="rb-dc"></g></g>
     <g data-node="peptide" data-color="${C.chain}" data-nolabel><g id="rb-ptc"></g></g>
@@ -249,6 +253,8 @@ export default {
   init(svg, api) {
     const STEPS = this?.steps ?? [];
     const body = bodyRenderer(svg, !!api?.node);
+    const trGL = api?.node ? glRenderer(svg, () => {}, ['tA', 'tP'], { radA: TR_R }) : null;   // tRNA-laag boven het ribosoom
+    const TCOL = { tA: hex2rgb(TRNA_SITE.A), tP: hex2rgb(TRNA_SITE.P) };
     const $ = id => svg.getElementById(id);
     const P = {}; for (const k in RIBO) { const a = RIBO[k], out = []; for (let i = 0; i < a.length; i += 3) out.push([a[i], a[i + 1], a[i + 2]]); P[k] = out; }
     const cols = s => { const cur = PAL[K.pal[s.step]], prev = PAL[K.pal[Math.max(0, s.step - 1)]], k = ease(sub(s.p, 0, .3)); const o = {}; for (const c of CATS) o[c] = mix(hex2rgb(prev[c]), hex2rgb(cur[c]), k); return o; };
@@ -272,11 +278,22 @@ export default {
         // tRNA's en mRNA (bovenop)
         const line = pts => pts.map((p, i) => { const [X, Y] = proj(p); return `${i ? 'L' : 'M'}${X.toFixed(1)},${Y.toFixed(1)}`; }).join('');
         const avg = (arr, ix) => ix.reduce((a, j) => a.map((v, q) => v + arr[j][q] / ix.length), [0, 0, 0]);
-        for (const [id, key, cl] of [['rb-tA', 'tA', C.trna], ['rb-tP', 'tP', '#ffe29a']]) {
-          const T = P[key], Lp = [avg(T, [33, 34, 35]), avg(T, [17, 18, 54, 55]), T[75]].map(q => proj(q));
-          const el = $(id + 'L'); el.setAttribute('d', Lp.map((q, j) => `${j ? 'L' : 'M'}${f1(q[0])},${f1(q[1])}`).join(''));
-          el.setAttribute('stroke', cl); el.setAttribute('stroke-opacity', '.35'); el.setAttribute('stroke-width', f1(S * 20));
-          const e2 = $(id); e2.setAttribute('d', line(T)); e2.setAttribute('stroke', cl); e2.setAttribute('stroke-width', f1(S * 2.2));
+        /* tRNA's: belichte bollen (één per nucleotide uit 6Y0G) in dezelfde stijl als het ribosoom, geel per plaats (TRNA_SITE:
+           P geel, A lichtgeel; zoals in de 3D-scènes van de bacterie). Live in een eigen WebGL-laag boven het ribosoom; zonder
+           WebGL (testhulpmiddelen) dezelfde bollen als SVG-paden. De onzichtbare lijn langs de L-vorm is de klikzone. */
+        const TR = S * TR_R;
+        if (trGL) trGL.draw(P, proj, 0, TCOL, { tA: 1, tP: 1 }, TR, trOp);
+        for (const [id, key] of [['rb-tA', 'tA'], ['rb-tP', 'tP']]) {
+          const T = P[key], el = $(id + 'L'), e2 = $(id);
+          if (trGL) {
+            const Lp = [avg(T, [33, 34, 35]), avg(T, [17, 18, 54, 55]), T[75]].map(q => proj(q));
+            el.setAttribute('d', Lp.map((q, j) => `${j ? 'L' : 'M'}${f1(q[0])},${f1(q[1])}`).join(''));
+            el.setAttribute('stroke', 'transparent'); el.setAttribute('stroke-width', f1(S * 20)); e2.setAttribute('d', '');
+          } else {
+            const dots = T.map(q => proj(q)).sort((a, b) => a[2] - b[2]).map(([X, Y]) => `M${X.toFixed(1)},${Y.toFixed(1)}h0`).join('');
+            el.setAttribute('d', dots); el.setAttribute('stroke', '#04070f'); el.setAttribute('stroke-width', f1(2 * TR + 5));
+            e2.setAttribute('d', dots); e2.setAttribute('stroke', TRNA_SITE[key[1]]); e2.setAttribute('stroke-width', f1(2 * TR));
+          }
         }
         $('rb-tg').setAttribute('opacity', f1(trOp));
         const m = $('rb-mrna'); m.setAttribute('d', line(P.mrna)); m.setAttribute('stroke', C.rna); m.setAttribute('stroke-width', f1(S * 4.5)); $('rb-mg').setAttribute('opacity', f1(stepVal(K.mrna, s)));
@@ -319,7 +336,7 @@ export default {
           for (const [lab, key, el] of [['E', 'acE', 'elE'], ['P', 'acP', 'elP'], ['A', 'acA', 'elA']]) {
             const a = proj(LM[key]), e = proj(LM[el]);
             o += `<g opacity="${f1(k * (i === 6 ? .5 : 1))}">` + txt(a[0], a[1] + 62, lab, '#fff', 34, 'middle', 800) + '</g>';
-            if (lab === 'E') o += `<g opacity="${f1(k * (i === 6 ? .4 : .9))}"><path d="M${f1(a[0])},${f1(a[1] - 12)} L${f1(e[0])},${f1(e[1])}" stroke="${C.trna}" stroke-width="3" stroke-dasharray="7 7" fill="none"/>` + txt(e[0] - 20, e[1] - 20, T2('E: leeg', 'E: empty'), C.muted, 20, 'end') + '</g>';
+            if (lab === 'E') o += `<g opacity="${f1(k * (i === 6 ? .4 : .9))}"><path d="M${f1(a[0])},${f1(a[1] - 12)} L${f1(e[0])},${f1(e[1])}" stroke="${TRNA_SITE.E}" stroke-width="3" stroke-dasharray="7 7" fill="none"/>` + txt(e[0] - 20, e[1] - 20, T2('E: leeg', 'E: empty'), C.muted, 20, 'end') + '</g>';
           }
           if (i === 5) o += txt(proj(LM.acA)[0] + 150, proj(LM.acA)[1] + 120, "mRNA 5′→3′", C.rna, 22, 'start').replace('<text', `<text opacity="${f1(fade)}"`);
         }
@@ -351,7 +368,7 @@ export default {
         }
         $('rb-ov').innerHTML = o; $('rb-dc').innerHTML = dcS; $('rb-ptc').innerHTML = ptcS; $('rb-tun').innerHTML = tunS;
       },
-      destroy() { body.destroy(); },
+      destroy() { body.destroy(); trGL?.destroy(); },
     };
   },
 };

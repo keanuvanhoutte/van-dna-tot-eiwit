@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, txt, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { PINK } from './_bits.js';
-import { eiwitPad } from '../../bio.js';
+import { eiwitPad, trna2dSpan } from '../../bio.js';
 
 /* Zijpad: reverse transcriptie bij HIV-1, stap voor stap als een ladder van toestanden. */
 const Y0 = 128, DY = 100, laneY = i => Y0 + i * DY;
@@ -15,10 +15,9 @@ const box = (a, b, y, lab, col, op = 1, h = 28) =>
 const strand = (a, b, y, col, op = 1, w = 6) =>
   `<line x1="${f1(a)}" y1="${f1(y)}" x2="${f1(b)}" y2="${f1(y)}" stroke="${col}" stroke-width="${w}" stroke-linecap="round" opacity="${f1(op)}"/>`;
 const gone = (a, b, y, col) => `<line x1="${f1(a)}" y1="${f1(y)}" x2="${f1(b)}" y2="${f1(y)}" stroke="${col}" stroke-width="6" stroke-dasharray="4 12" opacity=".35" stroke-linecap="round"/>`;
-/* tRNA-Lys3 als kleine L-vorm */
-const trna = (x, y, op = 1, d = 1) => `<g transform="translate(${f1(x)} ${f1(y)})" opacity="${f1(op)}">
-  <path d="M0,0 L${34 * d},-16 M${34 * d},-16 L${30 * d},-42" stroke="${TRC}" stroke-width="7" fill="none" stroke-linecap="round"/>
-  <circle cx="${30 * d}" cy="-46" r="7" fill="${TRC}"/>${txt(30 * d, -62, 'tRNA-Lys3', TRC, 18)}</g>`;   /* d = 1: naar rechts, niet over de letters van het PBS-vak; d = -1 aan de rechterrand */
+/* tRNA-Lys3 = het gedeelde tRNA-symbool (bio.js, klein): het 3′-uiteinde (CCA-kant) zit op (x, y), vast aan het PBS;
+ * de rest van het tRNA (met de anticodonlus) steekt schuin naar boven */
+const trna = (x, y, op = 1, d = 1) => `<g opacity="${f1(op)}">${trna2dSpan([x + 36 * d, y - 60], [x, y], { col: TRC, mini: true })}${txt(x + 36 * d, y - 76, 'tRNA-Lys3', TRC, 18)}</g>`;   /* d = 1: naar rechts, niet over de letters van het PBS-vak; d = -1 aan de rechterrand */
 const enz = (x, y, lab, col) => `<g transform="translate(${f1(x)} ${f1(y)})"><path d="${eiwitPad(0, 0, Math.max(34, lab.length * 6.5), 24, 23, .1)}" fill="rgba(155,123,255,.22)" stroke="${col}" stroke-width="2.5"/>${txt(0, 6, lab, col, 18)}</g>`;
 /* RT met zijn RNase H-domein: één enzym, twee lobben (het RNase H-domein zit aan het C-uiteinde van RT; Hu & Hughes 2012) */
 const rtH = (x, y, col) => `<g transform="translate(${f1(x)} ${f1(y)})"><path d="${eiwitPad(-30, 0, 40, 25, 23, .1)}" fill="rgba(155,123,255,.22)" stroke="${col}" stroke-width="2.5"/>` +
@@ -29,7 +28,7 @@ const rtH = (x, y, col) => `<g transform="translate(${f1(x)} ${f1(y)})"><path d=
 const P5 = "5′", P3 = "3′";
 const end = (x, y, lab, col) => txt(x, y + 6, lab, col, 17);
 /* tRNA dat met zijn 3′-uiteinde (18 nt) gepaard ligt op het PBS: een kort tRNA-stuk onder het PBS-vak, met basenparen,
- * dat aan de linkerkant (het 3′-OH) overloopt in het nieuwe DNA; rechts gaat het over in het L-vormige tRNA */
+ * dat aan de linkerkant (het 3′-OH) overloopt in het nieuwe DNA; rechts gaat het over in het tRNA (gedeeld symbool uit bio.js) */
 const trnaPBS = (yR, yD) => `<line x1="${SEG.PBS[0]}" y1="${yD}" x2="${SEG.PBS[1]}" y2="${yD}" stroke="${TRC}" stroke-width="7" stroke-linecap="round"/>` +
   Array.from({ length: 6 }, (_, i) => { const x = SEG.PBS[0] + 8 + i * 11; return `<line x1="${x}" y1="${yR + 15}" x2="${x}" y2="${yD - 4}" stroke="${TRC}" stroke-width="2" opacity=".6"/>`; }).join('');
 const trnaHot = (x, y) => `<g data-node="trna" data-href="../atlas/index.html?id=trna" data-color="${TRC}" data-nolabel>${trna(x, y, 1, -1)}</g>`;

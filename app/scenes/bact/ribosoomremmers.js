@@ -1,5 +1,6 @@
 import { C, T2, svgOpen, txt, FULL, sub, ease, lerp, f1 } from '../../kit.js';
 import { K, prot, panel, eenheid } from './_bkit.js';
+import { trna2d, trnaPunt, TRNA_SITE } from '../../bio.js';
 
 /* Antibiotica op het bacteriële ribosoom: tetracycline (A-plaats, 30S), aminoglycosiden (leesplek, 16S-rRNA), macroliden
  * (uitgangstunnel, 50S), kirromycine (op EF-Tu) en waarom ons ribosoom gespaard blijft.
@@ -7,13 +8,13 @@ import { K, prot, panel, eenheid } from './_bkit.js';
 const S50 = [560, 320, 320, 185], S30 = [560, 600, 280, 115];   // cx, cy, rx, ry
 const MY = 505;                                                // hoogte van het mRNA
 const SITE = { E: 425, P: 560, A: 695 };
-const DRUG = '#ff6b6b', TR = '#ffc247', TRA = '#ffe08a', CH = C.chain;
+const DRUG = '#ff6b6b', TR = TRNA_SITE.P, TRA = TRNA_SITE.A, CH = C.chain;
 
-/* vereenvoudigd tRNA: staaf met anticodon onderaan en aminozuur bovenaan */
+/* tRNA = het gedeelde symbool (bio.js trna2d), zonder letters (dit schema toont geen codons); y0 = bovenkant zoals vroeger:
+ * y0 = 300 → het tRNA zit met zijn anticodonlus op het mRNA; kleinere y0 = nog onderweg (hoger) */
+const TS = .82, trnaY = y0 => MY - 30 * TS - 4 - (300 - y0);
 function trna(x, y0, col, op = 1, aaCol = null) {
-  if (op <= .01) return '';
-  return `<g opacity="${f1(op)}"><rect x="${f1(x - 18)}" y="${f1(y0)}" width="36" height="${f1(MY - y0 - 6)}" rx="10" fill="${col}" fill-opacity=".85"/>` +
-    (aaCol ? `<circle cx="${f1(x)}" cy="${f1(y0 - 14)}" r="14" fill="${aaCol}" stroke="#0a1224" stroke-width="2"/>` : '') + '</g>';
+  return trna2d(x, trnaY(y0), { s: TS, col, op, aaCol, anticodon: null });
 }
 const pill = (x, y, op = 1, r = 13) => op <= .01 ? '' : `<g opacity="${f1(op)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${DRUG}" stroke="#fff" stroke-width="2.5"/></g>`;
 
@@ -27,8 +28,8 @@ export default {
   legend: [[K.ribo, { nl: '70S-ribosoom (50S boven, 30S onder)', en: '70S ribosome (50S top, 30S bottom)' }], [C.rna, 'mRNA'], [TR, 'tRNA'], [CH, { nl: 'nieuwe eiwitketen', en: 'new protein chain' }],
     [K.rnap, 'EF-Tu'], [DRUG, { nl: 'antibioticum', en: 'antibiotic' }]],
   simplified: {
-    nl: 'Schema, niet op schaal. Echte tRNA’s zijn L-vormig en de vorm van het ribosoom is vereenvoudigd. Elk antibioticum heeft zijn eigen precieze bindingsplek; hier staat de zone waar het zit. Macroliden houden niet elk eiwit tegen: ze remmen vooral bij bepaalde aminozuurvolgordes. Onderzoekers gebruiken kirromycine om EF-Tu op het ribosoom vast te zetten, zoals in de 3D-structuur 5AFI.',
-    en: 'Schematic, not to scale. Real tRNAs are L-shaped and the shape of the ribosome is simplified. Each antibiotic has its own precise binding spot; shown is the zone where it sits. Macrolides do not stop every protein: they mainly block at certain amino acid sequences. Researchers use kirromycin to lock EF-Tu on the ribosome, as in the 3D structure 5AFI.' },
+    nl: 'Schema, niet op schaal. tRNA’s zijn getekend als klaverblad (echte tRNA’s zijn in 3D L-vormig) en de vorm van het ribosoom is vereenvoudigd. Elk antibioticum heeft zijn eigen precieze bindingsplek; hier staat de zone waar het zit. Macroliden houden niet elk eiwit tegen: ze remmen vooral bij bepaalde aminozuurvolgordes. Onderzoekers gebruiken kirromycine om EF-Tu op het ribosoom vast te zetten, zoals in de 3D-structuur 5AFI.',
+    en: 'Schematic, not to scale. tRNAs are drawn as a cloverleaf (real tRNAs are L-shaped in 3D) and the shape of the ribosome is simplified. Each antibiotic has its own precise binding spot; shown is the zone where it sits. Macrolides do not stop every protein: they mainly block at certain amino acid sequences. Researchers use kirromycin to lock EF-Tu on the ribosome, as in the 3D structure 5AFI.' },
   steps: [
     { dur: 8500, cam: FULL, title: { nl: 'Het ribosoom: een topdoelwit', en: 'The ribosome: a top target' },
       text: { nl: 'Veel antibiotica remmen het ribosoom van de bacterie.', en: 'Many antibiotics inhibit the bacterial ribosome.' } },
@@ -74,7 +75,9 @@ export default {
         const chainLen = step === 3 ? lerp(4, 3, stall) : 6;
         let cx = SITE.P, cy = 286;
         for (let i = 0; i < chainLen; i++) {
-          const nx = SITE.P + 20 + i * 14, ny = 280 - i * 26;
+          const tp = trnaPunt(SITE.P, trnaY(300), { s: TS });   // nieuwste aminozuur op het CCA-uiteinde van het P-tRNA, de rest door de tunnel
+          const nx = i ? SITE.P + 20 + (i - 1) * 14 : tp[0], ny = i ? 280 - (i - 1) * 26 : tp[1];
+          if (i) g += `<line x1="${f1(cx)}" y1="${f1(cy)}" x2="${f1(nx)}" y2="${f1(ny)}" stroke="${CH}" stroke-width="5"/>`;
           g += `<circle cx="${f1(nx)}" cy="${f1(ny)}" r="12" fill="${step === 2 && i === 0 && p > .6 ? DRUG : CH}" stroke="#0a1224" stroke-width="2"/>`;
           cx = nx; cy = ny;
         }

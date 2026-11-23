@@ -4,6 +4,7 @@
  */
 import { C, BASE, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, f1, translate, THREE, AACLASS, CLASSCOL, aa } from '../../kit.js';
 import { hud, placeHud, textBox, koepelPad, subeenheid } from './_tlkit.js';
+import { trna2d } from '../../bio.js';
 
 const B = ['U', 'C', 'A', 'G'];
 const CX = 470, CY = 445, R = [0, 72, 150, 214, 330];
@@ -139,17 +140,17 @@ export default {
           // wobble-diagram: anticodon 3'-CGI-5' boven codon 5'-GC?-3'
           const x0 = 900, y = 430, dx = 64;
           const third = p < .36 ? 'U' : p < .68 ? 'C' : 'A', k = 1;   // diagram meteen in beeld; de 3e base wisselt U → C → A
-          tr += `<g opacity="${f1(k)}"><path d="M${x0 - 40},${y - 70} h${3 * dx + 20} v-110 h-40 v70 h-${3 * dx - 20} z" fill="rgba(255,194,71,.2)" stroke="${C.trna}" stroke-width="3"/>` +
-            ntBox(x0, y - 60, 'C', 50) + ntBox(x0 + dx, y - 60, 'G', 50) + `<g><rect x="${x0 + 2 * dx - 25}" y="${y - 60}" width="50" height="54" rx="6" fill="#d9c7ff"/><text x="${x0 + 2 * dx}" y="${y - 21}" font-size="34" text-anchor="middle" fill="#0a1224" font-family="JetBrains Mono" font-weight="700">I</text></g>` +
+          // gedeeld tRNA-symbool (bio.js): anticodon van links naar rechts 3′-C G I-5′, alanine op het CCA-uiteinde
+          tr += `<g opacity="${f1(k)}">` + trna2d(x0 + dx, y - 57, { s: .72, nt: dx / .72, tile: [50 / dx, 54 / dx], anticodon: 'CGI', aa: 'A', acTop: 30 }) +
             txt(x0 - 50, y - 26, "3′", '#fff', 22, 'end', 700) + txt(x0 + 2 * dx + 50, y - 26, "5′", '#fff', 22, 'start', 700) +
-            txt(x0 + 2 * dx, y - 88, '34', C.muted, 18) + txt(x0 + dx, y - 88, '35', C.muted, 18) + txt(x0, y - 88, '36', C.muted, 18) +
-            txt(x0 + 3 * dx + 20, y - 150, T2('tRNA-Ala (anticodon IGC)', 'tRNA-Ala (anticodon IGC)'), C.trna, 22, 'start', 700) + '</g>';
+            txt(x0 + 2 * dx, y - 70, '34', C.muted, 18) + txt(x0 + dx, y - 70, '35', C.muted, 18) + txt(x0, y - 70, '36', C.muted, 18) +
+            txt(x0 + 3 * dx + 20, y - 150, T2('tRNA-Ala (anticodon 5′-IGC-3′)', 'tRNA-Ala (anticodon 5′-IGC-3′)'), C.trna, 22, 'start', 700) + '</g>';
           tr += `<g opacity="${f1(k)}">` + ntBox(x0, y + 20, 'G', 50) + ntBox(x0 + dx, y + 20, 'C', 50) + ntBox(x0 + 2 * dx, y + 20, third, 50, 1, 'stroke="#fff" stroke-width="3"') +
             txt(x0 - 50, y + 54, "5′", C.rna, 22, 'end', 700) + txt(x0 + 2 * dx + 50, y + 54, "3′", C.rna, 22, 'start', 700) +
             txt(x0 + dx, y + 110, `mRNA: GC${third} → Ala`, C.rna, 24, 'middle', 800) + '</g>';
           for (let j = 0; j < 3; j++) tr += `<line x1="${x0 + j * dx}" y1="${y - 4}" x2="${x0 + j * dx}" y2="${y + 18}" stroke="#fff" stroke-width="3" ${j === 2 ? 'stroke-dasharray="4 4"' : ''} opacity="${f1(k)}"/>`;
           tr += txt(x0 + 2 * dx + 42, y + 12, 'wobble', '#fff', 20, 'start', 800).replace('<text', `<text opacity="${f1(k)}"`);
-          $('cd-tA').setAttribute('cx', f1(x0 + dx)); $('cd-tA').setAttribute('cy', f1(y - 190));
+          $('cd-tA').setAttribute('cx', f1(x0 - 50)); $('cd-tA').setAttribute('cy', f1(y - 150));   // links naast het tRNA, niet over het aminozuur
           ov += textBox(1140, 425, 400, [T2('G → C of U', 'G → C or U'), T2('U → A of G', 'U → A or G'), T2('I (inosine) → U, C of A', 'I (inosine) → U, C or A'), T2('C → alleen G', 'C → G only'), T2('A: zeldzaam (wordt meestal I)', 'A: rare (usually becomes I)')], { title: T2('Base 34 (anticodon) paart met:', 'Base 34 (anticodon) pairs with:'), col: C.trna, fs: 20, op: 1 });
         } else $('cd-tA').setAttribute('cx', '-9999');
         if (i === 5) {

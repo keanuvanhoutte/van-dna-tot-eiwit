@@ -1,5 +1,7 @@
 import { C, L, T2, svgOpen, txt, mono, nt, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { K, ribo, prot, panel, eenheid } from './_bkit.js';
+import { trna2d } from '../../bio.js';
+const TS = .8;
 
 /* Bacterieel mRNA: gekoppelde transcriptie–translatie, Shine-Dalgarno ↔ 16S-rRNA, fMet-tRNA, 30S + 50S = 70S,
  * polycistronisch mRNA, en een vergelijkingstabel mens ↔ bacterie.
@@ -92,7 +94,7 @@ export default {
         $('bm-over').innerHTML = ov;
 
         // close-up (stap 1–3)
-        let cl = '';
+        let cl = '', epa = '';
         const clA = step >= 1 && step <= 3 ? 1 : step === 4 ? 1 - sub(p, 0, .25) : 0;
         const P0 = p, step0 = step;
         if (clA > .01) {
@@ -107,7 +109,9 @@ export default {
             cl += `<g transform="translate(0 ${f1(lerp(-260, 0, d))})" opacity="${f1(sub(p, .05, .2))}">` + eenheid(bx(11), NY - 150, 580, 150, 50, .2) + txt(bx(1), NY - 230, '50S', K.ribo, 30, 'middle', 800) + '</g>';
             const e = sub(p, .6, .8);
             cl += `<g opacity="${f1(e)}">` + txt(bx(11), NY - 330, T2('70S-ribosoom', '70S ribosome'), K.ribo, 34, 'middle', 800) +
-              [['E', 12], ['P', 15], ['A', 18]].map(([l, i]) => `<rect x="${bx(i - 1) - 24}" y="${NY - 140}" width="${3 * NW - 4}" height="34" rx="8" fill="#0b1224" stroke="${C.muted}"/>` + txt(bx(i), NY - 116, l, C.text, 22, 'middle', 800)).join('') + '</g>';
+              [['E', 12], ['P', 15], ['A', 18]].map(([l, i]) => `<rect x="${bx(i - 1) - 24}" y="${NY - 140}" width="${3 * NW - 4}" height="34" rx="8" fill="#0b1224" stroke="${C.muted}"/>`).join('') + '</g>';
+            // letters E/P/A pas na het tRNA tekenen (zie onder), zodat de P zichtbaar blijft boven de stam
+            epa = `<g opacity="${f1(e)}">` + [['E', 12], ['P', 15], ['A', 18]].map(([l, i]) => txt(i === 15 ? bx(i) + 52 : bx(i), NY - 116, l, C.text, 22, 'middle', 800)).join('') + '</g>';
           }
           // mRNA
           cl += txt(bx(0) - 50, NY + 30, "5′", C.rna, 24, 'middle', 700) + txt(bx(SEQ.length - 1) + 50, NY + 30, "3′", C.rna, 24, 'middle', 700);
@@ -122,12 +126,12 @@ export default {
           if (step >= 2) {
             const f = step === 2 ? ease(sub(p, .1, .5)) : 1, dy = lerp(-200, 0, f);
             const x = bx(15);
-            cl += `<g transform="translate(0 ${f1(dy)})" opacity="${f1(step === 2 ? sub(p, .05, .2) : 1)}"><path d="M${x - 60},${NY - 54} V${NY - 190} H${x + 60} V${NY - 54}" fill="${C.trna}" fill-opacity=".25" stroke="${C.trna}" stroke-width="3"/>` +
-              [...'UAC'].map((c, i) => nt(bx(14 + i), NY - 50, c, 46, 40)).join('') +
-              `<circle cx="${x}" cy="${NY - 222}" r="30" fill="${C.chain}" fill-opacity=".85"/>` + txt(x, NY - 214, 'fMet', '#0a1224', 20, 'middle', 800) + '</g>';
+            // gedeeld tRNA-symbool (bio.js): anticodon U A C (3′→5′) boven AUG, fMet op het CCA-uiteinde
+            cl += `<g transform="translate(0 ${f1(dy)})" opacity="${f1(step === 2 ? sub(p, .05, .2) : 1)}">` +
+              trna2d(x, NY - 50, { s: TS, nt: NW / TS, tile: [46 / NW, 40 / NW], anticodon: 'UAC', aa: 'fMet', aaCol: C.chain, aaR: 30 / TS }) + '</g>';
             if (step === 2) cl += `<g opacity="${f1(sub(p, .55, .75))}">` + txt(bx(17) + 40, NY - 214, T2('N-formylmethionine', 'N-formylmethionine'), C.chain, 24, 'start', 700) + txt(bx(17) + 40, NY - 180, T2('mens: gewone Met', 'human: plain Met'), C.muted, 22, 'start') + '</g>';
           }
-          cl += '</g>';
+          cl += epa + '</g>';
         }
         $('bm-close').innerHTML = cl;
 

@@ -562,8 +562,33 @@ function capPlace() {
   if (!floating() || cap.hidden) return;
   const b = capBounds();
   if (prefs.capPos) return capMove(CAP_M + prefs.capPos.x * (b.maxX - CAP_M), CAP_M + prefs.capPos.y * (b.maxY - CAP_M), false);
-  const c = capCorner ?? 'bl';
-  capMove(c[1] === 'l' ? CAP_M : b.maxX, c[0] === 't' ? 54 : b.maxY, false);
+  capMove(...capPos(capCorner ?? 'bl', b), false);
+}
+/* plaatsen voor het venster: 1e letter t/m/b (boven/midden/onder), 2e l/c/r (links/midden/rechts) */
+const CAP_KEYS = ['bl', 'br', 'tr', 'tl', 'ml', 'mr', 'bc', 'tc'];
+function capPos(k, b = capBounds()) {
+  const top = 54;                                     // bovenaan iets lager: daar staan vaak knoppen van de scène
+  const x = k[1] === 'l' ? CAP_M : k[1] === 'r' ? b.maxX : (CAP_M + b.maxX) / 2;
+  const y = k[0] === 't' ? top : k[0] === 'b' ? b.maxY : (top + b.maxY) / 2;
+  return [x, y];
+}
+/* hoeveel figuurtekst (scènetekst, labels, 3D-naamkaartjes) zou het venster op (x, y) bedekken? Telt elke tekst die
+ * voor meer dan 15 % onder het venster valt; zichtbaarheid = niet verborgen en niet (bijna) doorzichtig. */
+function textCover(x, y, w, h) {
+  if (!current) return 0;
+  const sr = stage.getBoundingClientRect(), L0 = sr.left + x, T0 = sr.top + y, R0 = L0 + w, B0 = T0 + h;
+  const vis = el => { for (let e = el; e && e !== stage; e = e.parentElement) {
+    const cs = getComputedStyle(e); if (cs.display === 'none' || cs.visibility === 'hidden' || +cs.opacity < .15) return false;
+    const o = e.getAttribute?.('opacity'); if (o !== null && o !== undefined && +o < .15) return false; } return true; };
+  let n = 0;
+  for (const el of stage.querySelectorAll('svg text, .lbl, .lab3d > div')) {
+    if (cap.contains(el)) continue;
+    const r = el.getBoundingClientRect(); if (r.width < 3 || r.height < 3) continue;
+    const ix = Math.min(R0, r.right) - Math.max(L0, r.left), iy = Math.min(B0, r.bottom) - Math.max(T0, r.top);
+    if (ix <= 0 || iy <= 0 || ix * iy < .15 * r.width * r.height) continue;
+    if (vis(el)) n++;
+  }
+  return n;
 }
 /* hoe "vol" is een rechthoek van de figuur (in stage-coördinaten)? */
 function busyness(x, y, w, h) {
@@ -584,16 +609,19 @@ function busyness(x, y, w, h) {
   }
   return n;
 }
-function capAuto(force) {
+function capAuto(force, soft) {
   if (!floating() || cap.hidden || prefs.capPos || drag) return;
-  const b = capBounds(), top = 54;                 // bovenaan iets lager: daar staan vaak knoppen van de scène
-  const C4 = { bl: [CAP_M, b.maxY], br: [b.maxX, b.maxY], tr: [b.maxX, top], tl: [CAP_M, top] };
-  let best = capCorner ?? 'bl', bestS = Infinity;
-  const cur = capCorner ? busyness(...C4[capCorner], b.w, b.h) : Infinity;
-  for (const k of ['bl', 'br', 'tr', 'tl']) { const s = busyness(...C4[k], b.w, b.h); if (s < bestS) { bestS = s; best = k; } }
-  if (!force && capCorner && cur - bestS < 2) best = capCorner;   // pas verhuizen als het elders duidelijk rustiger is
-  capCorner = best; capMove(...C4[best], !force);
+  const b = capBounds();
+  const score = k => { const [x, y] = capPos(k, b); return textCover(x, y, b.w, b.h) * 10 + busyness(x, y, b.w, b.h); };
+  const curK = capCorner ?? 'bl';
+  if (soft) { const [x, y] = capPos(curK, b); if (!textCover(x, y, b.w, b.h)) return; }   // tussendoor: enkel verhuizen als het venster tekst bedekt
+  let best = curK, bestS = Infinity;
+  const cur = capCorner ? score(capCorner) : Infinity;
+  for (const k of CAP_KEYS) { const s = score(k) + (k[0] === 'm' || k[1] === 'c' ? 1.5 : 0); if (s < bestS) { bestS = s; best = k; } }   // hoeken lichtjes verkozen
+  if (!force && capCorner && cur - bestS < 2) best = capCorner;   // pas verhuizen als het elders duidelijk beter is
+  capCorner = best; capMove(...capPos(best, b), !force);
 }
+setInterval(() => { if (!document.hidden) capAuto(false, true); }, 2500);   // tekst die later in de stap verschijnt: alsnog uitwijken
 let drag = null;
 cap.addEventListener('pointerdown', e => {
   if (!floating() || e.target.closest('button, a') || e.button !== 0) return;

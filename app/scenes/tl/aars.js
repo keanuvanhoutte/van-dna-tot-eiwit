@@ -4,7 +4,7 @@
  */
 import { C, BASE, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, f1, aa } from '../../kit.js';
 import { hud, placeHud, textBox } from './_tlkit.js';
-import { eiwit } from '../../bio.js';
+import { eiwit, trna2d } from '../../bio.js';
 
 const SYN = [812, 432], EDIT = [1040, 292], ACD = [612, 770];      // synthese-plaats, editeerplaats (CP1), anticodonbindend domein
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
@@ -20,16 +20,16 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">Proef (Chapeville e.a., 1962): Cys-tRNA-Cys werd chemisch omgezet in Ala-tRNA-Cys; daarna verscheen Ala op Cys-codons. Het ribosoom controleert dus het anticodon, niet het aminozuur.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Experiment (Chapeville et al., 1962): Cys-tRNA-Cys was chemically converted into Ala-tRNA-Cys; Ala then appeared at Cys codons. So the ribosome checks the anticodon, not the amino acid.</p>' },
   simplified: {
-    nl: 'Het enzym is schematisch getekend als enkele domeinen (katalytisch domein, editeerdomein CP1, anticodonbindend domein; echte IleRS: ≈ 900–1300 aminozuren; PDB 1FFY = IleRS van S. aureus, 917 aminozuren). Het tRNA is een vereenvoudigde L-vorm. Proeflezen gebeurt zowel vóór (aa-AMP) als na de overdracht (aa-tRNA); hier tonen we de post-transfer-route. Klasse-I-enzymen laden meestal de 2′-OH, klasse II de 3′-OH (uitzondering: PheRS, klasse II, 2′-OH).',
-    en: 'The enzyme is drawn schematically as a few domains (catalytic domain, CP1 editing domain, anticodon-binding domain; real IleRS: ≈ 900–1300 amino acids; PDB 1FFY = S. aureus IleRS, 917 amino acids). The tRNA is a simplified L shape. Editing happens both before (aa-AMP) and after transfer (aa-tRNA); here we show the post-transfer route. Class I enzymes usually charge the 2′-OH, class II the 3′-OH (exception: PheRS, class II, 2′-OH).' },
+    nl: 'Het enzym is schematisch getekend als enkele domeinen (katalytisch domein, editeerdomein CP1, anticodonbindend domein; echte IleRS: ≈ 900–1300 aminozuren; PDB 1FFY = IleRS van S. aureus, 917 aminozuren). Het tRNA is getekend als vereenvoudigd klaverblad; in 3D is het L-vormig. Proeflezen gebeurt zowel vóór (aa-AMP) als na de overdracht (aa-tRNA); hier tonen we de post-transfer-route. Klasse-I-enzymen laden meestal de 2′-OH, klasse II de 3′-OH (uitzondering: PheRS, klasse II, 2′-OH).',
+    en: 'The enzyme is drawn schematically as a few domains (catalytic domain, CP1 editing domain, anticodon-binding domain; real IleRS: ≈ 900–1300 amino acids; PDB 1FFY = S. aureus IleRS, 917 amino acids). The tRNA is drawn as a simplified cloverleaf; in 3D it is L-shaped. Editing happens both before (aa-AMP) and after transfer (aa-tRNA); here we show the post-transfer route. Class I enzymes usually charge the 2′-OH, class II the 3′-OH (exception: PheRS, class II, 2′-OH).' },
   steps: [
     ST(8000, cam(820, 470, 1500), 'Een eigen enzym per aminozuur', 'Its own enzyme for each amino acid', 'Elk aminozuur heeft een eigen enzym dat het aan de juiste tRNA’s hangt. Hier wordt de code echt vertaald.', 'Each amino acid has its own enzyme that attaches it to the right tRNAs. This is where the code is really translated.'),
     ST(9000, cam(900, 460, 1000), 'Stap 1: het aminozuur klaarmaken', 'Step 1: getting the amino acid ready', 'Het enzym activeert het aminozuur (isoleucine) met energie uit ATP.', 'The enzyme activates the amino acid (isoleucine) with energy from ATP.'),
     ST(9000, cam(800, 560, 1250), 'Het enzym herkent zijn tRNA', 'The enzyme recognises its tRNA', 'Het enzym herkent ‘zijn’ tRNA aan vaste kenmerken, vooral het anticodon en de stam waar het aminozuur komt.', 'The enzyme recognises ‘its’ tRNA by fixed features, mainly the anticodon and the stem where the amino acid goes.'),
     ST(8500, cam(840, 430, 900), 'Stap 2: het tRNA wordt geladen', 'Step 2: the tRNA is loaded', 'Het aminozuur gaat naar de laatste A van het CCA-uiteinde. Het tRNA is nu geladen.', 'The amino acid moves to the last A of the CCA end. The tRNA is now loaded.'),
     ST(9000, FULL, 'Twee families van enzymen', 'Two families of enzymes', 'Er zijn twee groepen van zo’n 10 enzymen, elk met een eigen bouw. Ze grijpen het tRNA elk langs een andere kant.', 'There are two groups of about 10 enzymes, each with its own build. Each grips the tRNA from a different side.'),
-    ST(9000, cam(960, 440, 1250), 'Probleem: valine lijkt op isoleucine', 'Problem: valine looks like isoleucine', 'Fenylalanine is te groot en past niet. Maar valine is net iets kleiner dan isoleucine en past wel: een fout.', 'Phenylalanine is too big and does not fit. But valine is just slightly smaller than isoleucine and does fit: a mistake.'),
-    ST(9500, cam(980, 420, 1150), 'Nalezen: een tweede zeef', 'Checking: a second sieve', 'Een tweede, kleinere holte controleert. Valine past daar wel en wordt eraf geknipt; isoleucine niet.', 'A second, smaller pocket checks. Valine fits there and is cut off again; isoleucine does not.'),
+    ST(9000, cam(950, 462, 1300), 'Probleem: valine lijkt op isoleucine', 'Problem: valine looks like isoleucine', 'Fenylalanine is te groot en past niet. Maar valine is net iets kleiner dan isoleucine en past wel: een fout.', 'Phenylalanine is too big and does not fit. But valine is just slightly smaller than isoleucine and does fit: a mistake.'),
+    ST(9500, cam(950, 462, 1300), 'Nalezen: een tweede zeef', 'Checking: a second sieve', 'Een tweede, kleinere holte controleert. Valine past daar wel en wordt eraf geknipt; isoleucine niet.', 'A second, smaller pocket checks. Valine fits there and is cut off again; isoleucine does not.'),
     ST(8500, cam(820, 470, 1500), 'Naar het ribosoom', 'Off to the ribosome', 'Een hulpeiwit brengt het geladen tRNA naar het ribosoom. Dat controleert alleen het codon, niet het aminozuur.', 'A helper protein brings the loaded tRNA to the ribosome. It checks only the codon, not the amino acid.'),
   ],
   svg() {
@@ -60,24 +60,18 @@ export default {
   init(svg) {
     const STEPS = this?.steps ?? [];
     const $ = id => svg.getElementById(id);
-    /* vereenvoudigd tRNA (L-vorm): hoek linksboven, anticodon onderaan; tip = positie van A76 */
+    /* tRNA-Ile = het gedeelde symbool (bio.js trna2d), schuin in het enzym: anticodon in het anticodonbindende domein,
+       acceptorstam naar de synthese-plaats; het enkelstrengige CCA-uiteinde buigt naar tip (= A76).
+       Anticodon 5′-GAU-3′ (leest AUC/AUU), getekend zoals overal van links naar rechts 3′→5′: U A G. */
+    const TS = 1.7, TROT = 38;
+    let showEnds = true;   // 3′/5′ naast het anticodon alleen waar het anticodon goed in beeld is
     function trna(ox, oy, tip, charge, op = 1, hiId = 0) {
       if (op <= .01) return '';
-      const x = 520 + ox, y = 330 + oy;
-      const armEnd = [x + 210, y + 22];
-      let s = `<g opacity="${f1(op)}">`;
-      s += `<path d="M${x},${y + 430} L${x},${y + 50} Q${x},${y} ${x + 50},${y} L${x + 200},${y} L${x + 200},${y + 46} L${x + 52},${y + 46} L${x + 52},${y + 430} Z" fill="rgba(255,194,71,.22)" stroke="${C.trna}" stroke-width="3.5" stroke-linejoin="round"/>`;
-      // enkelstrengig ACCA-uiteinde
-      const mid = [(armEnd[0] + tip[0]) / 2 + 20, Math.min(armEnd[1], tip[1]) - 30];
-      s += `<path d="M${f1(armEnd[0])},${f1(armEnd[1])} Q${f1(mid[0])},${f1(mid[1])} ${f1(tip[0])},${f1(tip[1])}" stroke="${C.trna}" stroke-width="7" fill="none" stroke-linecap="round"/>`;
+      const x = 580 + ox, y = 760 + oy;
+      let s = `<g opacity="${f1(op)}">` + trna2d(x, y, { s: TS, rot: TROT, anticodon: 'UAG', nt: 34 / TS, tile: [.88, .88], tip, acHi: hiId, ends: showEnds });
       s += `<circle cx="${f1(tip[0])}" cy="${f1(tip[1])}" r="9" fill="${BASE.A}" stroke="#0a1224" stroke-width="2"/>`;
-      // anticodon G A U (5'→3' van links naar rechts)
-      ['G', 'A', 'U'].forEach((b, j) => {
-        const bx = x - 20 + j * 34, by = y + 432;
-        s += `<rect x="${bx}" y="${by}" width="30" height="30" rx="5" fill="${BASE[b]}" ${hiId ? `stroke="#fff" stroke-width="${f1(1 + 3 * hiId)}"` : ''}/><text x="${bx + 15}" y="${by + 21}" font-size="19" text-anchor="middle" fill="#0a1224" font-family="JetBrains Mono" font-weight="700">${b}</text>`;
-      });
       if (charge) s += aa(tip[0] + charge.dx, tip[1] + charge.dy, charge.a, 24);
-      $('rs-tA').setAttribute('cx', f1(x - 50)); $('rs-tA').setAttribute('cy', f1(y + 140));
+      $('rs-tA').setAttribute('cx', f1(x - 60)); $('rs-tA').setAttribute('cy', f1(y - 120));
       return s + '</g>';
     }
     const atp = (x, y, n = 3, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}">${pill(x, y, 62, 30, n === 3 ? 'ATP' : 'AMP', '#5fd3e6', 1, 16)}</g>`;
@@ -87,6 +81,7 @@ export default {
       update(t, s) {
         placeHud(svg, 'rs-hud', .015, .105, STEPS[s.step]?.cam);
         const { step: i, p } = s;
+        showEnds = [0, 2, 4, 7].includes(i);
         let tr = '', mol = '', amino = '', ov = '', eef = '';
         const dockOff = i < 2 ? [-620, 0] : i === 2 ? E2([-620, 0], [0, 0], ease(sub(p, .05, .5))) : [0, 0];
         const tipSyn = [SYN[0] + 6, SYN[1] + 30], tipOut = [520 + dockOff[0] + 250, 330 + dockOff[1] + 60];
@@ -129,7 +124,7 @@ export default {
           const ampL = i === 3 ? ease(sub(p, .6, 1)) : 0;
           mol += atp(lerp(SYN[0] + 58, 1380, ampL), lerp(SYN[1] + 20, 640, ampL), 1);
           if (i === 2) {
-            ov += `<g opacity="${f1(sub(p, .5, .65))}">` + txt(ACD[0] - 140, ACD[1] - 80, T2('anticodon GAU', 'anticodon GAU'), '#fff', 24, 'end', 800) +
+            ov += `<g opacity="${f1(sub(p, .5, .65))}">` + txt(ACD[0] - 140, ACD[1] - 80, T2('anticodon 5′-GAU-3′', 'anticodon 5′-GAU-3′'), '#fff', 24, 'end', 800) +
               txt(ACD[0] - 140, ACD[1] - 50, T2('= identiteitselement', '= identity element'), C.muted, 20, 'end') + '</g>' +
               `<g opacity="${f1(sub(p, .65, .8))}">` + txt(tipSyn[0] - 110, tipSyn[1] - 150, T2('acceptorstam + base 73', 'acceptor stem + base 73'), '#fff', 20, 'middle', 700) + '</g>';
           } else {

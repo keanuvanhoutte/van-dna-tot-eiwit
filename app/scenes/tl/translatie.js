@@ -1,6 +1,6 @@
 import { C, BASE, RNA_PAIR, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, clamp, f1, translate, THREE, AACLASS, CLASSCOL } from '../../kit.js';
 import { koepelPad, subeenheid, tunnel, factor } from './_tlkit.js';
-import { eiwit } from '../../bio.js';
+import { eiwit, trna2d, trnaPunt, anticodonVan, hexMix, TRNA_SITE } from '../../bio.js';
 
 /* mRNA 5'→3': 5'-UTR zonder AUG · Kozak GCCACC·AUG·G · 12 codons + stop UAA · 3'-UTR · poly(A) (verkort) */
 const UTR5 = 'GGAUCCAGCUUCGAAUUCGCCACC', CDS = 'AUGGCUUUCAAGGAUUGGCACGGACUGACCGAAAGCUAA', UTR3 = 'GCGGCCUCUAGC', POLYA = 'A'.repeat(18);
@@ -23,13 +23,13 @@ export default {
   title: { nl: 'Translatie', en: 'Translation' }, scale: '≈ 25 nm',
   time: { nl: '≈ 5–6 aminozuren/s (hier sterk vertraagd)', en: '≈ 5–6 amino acids/s (strongly slowed down here)' },
   org: { nl: 'eukaryoot (80S-ribosoom)', en: 'eukaryote (80S ribosome)' },
-  legend: [[C.rna, 'mRNA'], [C.trna, 'tRNA'], [C.rrna, { nl: 'ribosoom', en: 'ribosome' }], [C.prot, { nl: 'factoren (eIF, eEF, eRF)', en: 'factors (eIF, eEF, eRF)' }], [CLASSCOL.h, { nl: 'hydrofoob', en: 'hydrophobic' }], [CLASSCOL.p, { nl: 'polair', en: 'polar' }], [CLASSCOL['+'], { nl: 'positief geladen', en: 'positively charged' }], [CLASSCOL['-'], { nl: 'negatief geladen', en: 'negatively charged' }], [CLASSCOL.s, 'Gly / Pro']],
+  legend: [[C.rna, 'mRNA'], [TRNA_SITE.E, { nl: 'tRNA in E', en: 'tRNA in E' }], [TRNA_SITE.P, { nl: 'tRNA in P', en: 'tRNA in P' }], [TRNA_SITE.A, { nl: 'tRNA in A', en: 'tRNA in A' }], [C.rrna, { nl: 'ribosoom', en: 'ribosome' }], [C.prot, { nl: 'factoren (eIF, eEF, eRF)', en: 'factors (eIF, eEF, eRF)' }], [CLASSCOL.h, { nl: 'hydrofoob', en: 'hydrophobic' }], [CLASSCOL.p, { nl: 'polair', en: 'polar' }], [CLASSCOL['+'], { nl: 'positief geladen', en: 'positively charged' }], [CLASSCOL['-'], { nl: 'negatief geladen', en: 'negatively charged' }], [CLASSCOL.s, 'Gly / Pro']],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">De aminozuren worden niet getekend maar berekend uit de genetische code; anticodons zijn complementair en antiparallel (3′→5′ gelezen). A–U-paren tonen 2, G–C-paren 3 waterstofbruggen.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">The amino acids are not drawn by hand but computed from the genetic code; anticodons are complementary and antiparallel (read 3′→5′). A–U pairs show 2, G–C pairs 3 hydrogen bonds.</p>' },
   simplified: {
-    nl: 'Het ribosoom is een 2D-schets (echte structuur: PDB 4UG0, humaan 80S): 40S onder met het mRNA, 60S erboven met de tunnel van het actieve centrum naar buiten; tRNA\'s zijn vereenvoudigde L-vormen. Het mRNA schuift hier langs een vast ribosoom (in werkelijkheid beweegt het ribosoom). Hybride toestanden, GTP-hydrolyse en de gesloten lus (eIF4G–PABP) zijn weggelaten; de poly(A)-staart is ingekort. Aminozuurkleuren volgen de cursusindeling; His staat bij positief (pH-afhankelijk).',
-    en: 'The ribosome is a 2D sketch (real structure: PDB 4UG0, human 80S): 40S below holding the mRNA, 60S above with the tunnel from the active centre to the outside; tRNAs are simplified L shapes. Here the mRNA slides past a fixed ribosome (in reality the ribosome moves). Hybrid states, GTP hydrolysis and the closed loop (eIF4G–PABP) are omitted; the poly(A) tail is shortened. Amino-acid colours follow the course grouping; His is shown as positive (pH-dependent).' },
+    nl: 'Het ribosoom is een 2D-schets (echte structuur: PDB 4UG0, humaan 80S): 40S onder met het mRNA, 60S erboven met de tunnel van het actieve centrum naar buiten; tRNA\'s zijn getekend als vereenvoudigd klaverblad (in 3D is een tRNA L-vormig); de kleur toont de plaats: E oker, P geel, A lichtgeel. Het mRNA schuift hier langs een vast ribosoom (in werkelijkheid beweegt het ribosoom). Hybride toestanden, GTP-hydrolyse en de gesloten lus (eIF4G–PABP) zijn weggelaten; de poly(A)-staart is ingekort. Aminozuurkleuren volgen de cursusindeling; His staat bij positief (pH-afhankelijk).',
+    en: 'The ribosome is a 2D sketch (real structure: PDB 4UG0, human 80S): 40S below holding the mRNA, 60S above with the tunnel from the active centre to the outside; tRNAs are drawn as a simplified cloverleaf (in 3D a tRNA is L-shaped); the colour shows the site: E ochre, P yellow, A light yellow. Here the mRNA slides past a fixed ribosome (in reality the ribosome moves). Hybrid states, GTP hydrolysis and the closed loop (eIF4G–PABP) are omitted; the poly(A) tail is shortened. Amino-acid colours follow the course grouping; His is shown as positive (pH-dependent).' },
   steps: [
     ST(8000, cam(2350, 600, 4000), 'Het mRNA met de boodschap', 'The mRNA carries the message', 'Alleen het middenstuk, van het startsein (AUG) tot het stopsein (UAA), wordt vertaald in een eiwit.', 'Only the middle part, from the start signal (AUG) to the stop signal (UAA), is translated into protein.'),
     ST(8000, cam(520, 560, 1150), 'Het ribosoom begint vooraan', 'The ribosome starts at the front', 'De kleine helft van het ribosoom bindt vooraan op het mRNA, samen met een eerste tRNA dat methionine draagt.', 'The small half of the ribosome binds at the front of the mRNA, together with a first tRNA carrying methionine.'),
@@ -83,21 +83,10 @@ export default {
     const $ = id => svg.getElementById(id);
 
     /* ---- tekenfuncties ---- */
-    const anticodon = c => c.split('').map(b => RNA_PAIR[b]).join('');   // van links naar rechts = 3'→5'
-    function trna(x, y, codonIdx, aaChar, op = 1, big = false) {
-      // y = hoogte van de onderkant (anticodon) ; L-vorm ~ 230 px hoog
-      if (op <= .01) return '';
-      const ac = anticodon(CODONS[codonIdx]);
-      let s = `<g opacity="${f1(op)}">
-        <path d="M${x - 30},${y} L${x - 30},${y - 96} Q${x - 30},${y - 118} ${x - 10},${y - 124} L${x + 32},${y - 134} L${x + 32},${y - 204} L${x + 12},${y - 204} L${x + 12},${y - 150} L${x - 8},${y - 145} L${x - 8},${y}"
-          fill="rgba(255,194,71,.2)" stroke="${C.trna}" stroke-width="3" stroke-linejoin="round"/>`;
-      ac.split('').forEach((b, j) => {
-        const bx = x - NT + j * NT;
-        s += `<rect x="${f1(bx - 16)}" y="${f1(y - 4)}" width="32" height="28" rx="5" fill="${BASE[b]}"/><text x="${f1(bx)}" y="${f1(y + 16)}" font-size="17" text-anchor="middle" fill="#0a1224" font-family="JetBrains Mono" font-weight="700">${b}</text>`;
-      });
-      if (big) s += txt(x - NT - 8, y - 12, "3′", '#fff', 15, 'end') + txt(x + NT + 8, y - 12, "5′", '#fff', 15, 'start') + txt(x + NT + 30, y - 12, T2('anticodon', 'anticodon'), '#fff', 14, 'start');
-      if (aaChar) s += bead(x + 22, y - 222, aaChar, 21);
-      return s + '</g>';
+    /* tRNA = het gedeelde symbool (bio.js trna2d): anticodon (links→rechts 3'→5') op het codon, aminozuur op het CCA-uiteinde.
+       y = bovenrand van de anticodontegels; col = kleur van de plaats (TRNA_SITE: E oker, P geel, A lichtgeel) */
+    function trna(x, y, codonIdx, aaChar, op = 1, big = false, col = TRNA_SITE.P) {
+      return trna2d(x, y, { anticodon: anticodonVan(CODONS[codonIdx]), aa: aaChar, op, col, ends: big, acLabel: T2('anticodon', 'anticodon') });
     }
     /* eRF1 bootst een tRNA na (Song et al. 2000, Cell 100:311): domein N op het stopcodon (zoals de anticodonarm),
        domein M reikt met het GGQ-motief tot in het actieve centrum (zoals de acceptorarm), domein C aan de zijkant */
@@ -271,12 +260,12 @@ export default {
           const leave = sub(u, .85, 1);
           const pX = SITE.P - shift, aX = SITE.A - shift;
           const pUp = 0, pLeft = 0;
-          tr += front(trna(pX, yDock, c, null, 1), pX, yDock, ease(leave), -60, -30);   // E-tRNA verlaat het ribosoom langs de opening tussen de subeenheden
+          tr += front(trna(pX, yDock, c, null, 1, false, hexMix(TRNA_SITE.P, TRNA_SITE.E, clamp(v))), pX, yDock, ease(leave), -60, -30);   // E-tRNA verlaat het ribosoom langs de opening tussen de subeenheden
           // binnenkomend tRNA (codon c+1)
           const arr = ease(sub(u, 0, .3));
           const ix = aX, iy = yDock, kIn = 1 - arr;               // aa-tRNA·eEF1A komt van vóór de A-plaats binnen (factorkant rechts)
           const carriesOwnAa = bond < .5;
-          inc += front(trna(ix, iy, c + 1, carriesOwnAa ? AAS[c + 1] : null, 1, step === 6), ix, iy, kIn, 60, -30);
+          inc += front(trna(ix, iy, c + 1, carriesOwnAa ? AAS[c + 1] : null, 1, step === 6, hexMix(TRNA_SITE.A, TRNA_SITE.P, clamp(v))), ix, iy, kIn, 60, -30);
           const eA = u < .4 && arr > .5 ? [ix + 250, iy - 140] : u >= .62 && u < .82 ? [SITE.A + 190 - shift, 352] : [-9999, 0];
           $('tl-eefA').setAttribute('cx', f1(eA[0])); $('tl-eefA').setAttribute('cy', f1(eA[1]));
           if (u < .45) eef = front(factor(ix + 84, iy - 150, 150, 34, 'eEF1A·GTP', C.prot2, 1 - sub(u, .38, .45), 19), ix, iy, kIn, 60, -30);
@@ -284,9 +273,14 @@ export default {
           pairs += pairLines(aX, CODONS[c + 1], sub(u, .3, .38));
           if (u < .85) pairs += pairLines(pX, CODONS[c], .55);
           // keten: vóór binding aan P-tRNA (c+1 residuen), erna aan het nieuwe tRNA (c+2 residuen)
-          const pAnchor = [pX - pLeft + 22, yDock - pUp - 222], aAnchor = [ix + 22, iy - 222];
-          if (bond < .5) chain = chainSVG([lerp(pAnchor[0], aAnchor[0], ease(bond * 2) * .5), lerp(pAnchor[1], aAnchor[1], ease(bond * 2) * .5)], c + 1);
-          else chain = chainSVG([lerp(pAnchor[0], aAnchor[0], .5 + ease((bond - .5) * 2) * .5), lerp(pAnchor[1], aAnchor[1], .5 + ease((bond - .5) * 2) * .5)], c + 2);
+          const pAnchor = trnaPunt(pX - pLeft, yDock - pUp), aAnchor = trnaPunt(ix, iy);   // aminozuur op het CCA-uiteinde
+          // de keten blijft aan een CCA-uiteinde hangen (nooit los ertussen): eerst aan het P-tRNA, na de binding aan het A-tRNA;
+          // tijdens het koppelen groeit een heldere verbinding tussen beide uiteinden (de nieuwe peptidebinding)
+          chain = bond < .5 ? chainSVG(pAnchor, c + 1) : chainSVG(aAnchor, c + 2);
+          if (bond > 0 && bond < 1) {
+            const k = ease(Math.min(1, bond * 2)), o = Math.sin(bond * Math.PI);
+            chain += `<line x1="${f1(pAnchor[0])}" y1="${f1(pAnchor[1])}" x2="${f1(lerp(pAnchor[0], aAnchor[0], k))}" y2="${f1(lerp(pAnchor[1], aAnchor[1], k))}" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 7" opacity="${f1(o)}"/>`;
+          }
           if (step === 7) {
             const rx = (pAnchor[0] + aAnchor[0]) / 2, ry = pAnchor[1] + 10, lo = sub(p, 0, .25);
             ptc += `<circle cx="${f1(rx)}" cy="${f1(ry)}" r="${f1(34 + 8 * Math.sin(bond * Math.PI))}" fill="none" stroke="#fff" stroke-width="2.5" opacity="${f1(.5 + .5 * Math.sin(bond * Math.PI))}"/>` +
@@ -304,7 +298,7 @@ export default {
           const rop = step === 14 ? 1 - sub(p, 0, .4) : 1;
           rf = front((rop <= .01 ? '' : `<g opacity="${f1(rop)}">` + eRF1(rx, ry) + '</g>') + factor(rx + 100, ry - 170, 136, 34, 'eRF3·GTP', C.prot2, step === 12 ? sub(p, .1, .4) * (1 - sub(p, .7, .9)) : 0, 18), rx, ry, 1 - rin, 60, -30);
           $('tl-rfA').setAttribute('cx', rin > .5 && rop > .1 ? f1(rx + 150) : '-9999'); $('tl-rfA').setAttribute('cy', f1(ry - 60));
-          chain = chainSVG([SITE.P + 22, yDock - 222], c + 1, rel);
+          chain = chainSVG(trnaPunt(SITE.P, yDock), c + 1, rel);
           if (step === 14) abce += factor(SITE.P, 505, 110, 38, 'ABCE1', C.prot2, sub(p, .2, .45), 22);
         }
         $('tl-trnas').innerHTML = tr; $('tl-inc').innerHTML = inc; $('tl-eef').innerHTML = eef; $('tl-rf').innerHTML = rf;

@@ -28,7 +28,7 @@
  * hun onderdeel als ze verschoven zijn, en zijn klikbaar als ze een `node` hebben.
  * Testhulp: ?ang3d=90 zet het beeld vast onder die hoek (geen draaiing, geen zoomanimatie) voor beeldcontrole.
  */
-import { L, C, SPIN } from './kit.js';
+import { L, C, SPIN, TRNA_SITE } from './kit.js';
 import { pdbUrl } from '../shared/pdb.js';
 
 /* 3Dmol.js pas laden wanneer een 3D-scène het nodig heeft (anders wacht de hele app op ~1 MB van de CDN) */
@@ -48,7 +48,7 @@ export function load3Dmol() {
  * gesloten vorm in vlakke kleuren, met een donkere omlijning (optie outline). Kleuren volgen de 2D-afspraak:
  * kleine eenheid licht groenblauw, grote eenheid donker groenblauw; rRNA verzadigd, ribosoomeiwitten grijziger;
  * tRNA geel (P) / lichtgeel (A) / oker (E), mRNA oranje. Gedimde delen: één rustige, doorschijnende grijsblauwe vorm. */
-export const RIBO3D = { r30: '#8df0dc', p30: '#b2d6cf', r50: '#23a88f', p50: '#5f9a90', tP: C.trna, tA: '#ffe08a', tE: '#c9862e', mrna: C.rna, ghost: '#8a9ac0' };
+export const RIBO3D = { r30: '#8df0dc', p30: '#b2d6cf', r50: '#23a88f', p50: '#5f9a90', tP: TRNA_SITE.P, tA: TRNA_SITE.A, tE: TRNA_SITE.E, mrna: C.rna, ghost: '#8a9ac0' };
 export const blob = (color, r = 4.2) => ({ sphere: { color, radius: r } });
 /* doorschijnende bollen kosten veel grafisch werk (overlappende lagen): gedimde vormen tekenen maar één op de drie atomen,
  * met iets grotere bollen — de omtrek blijft, de grafische kaart doet ≈ 3× minder (thin: zie prepare in makeStage) */

@@ -196,3 +196,7 @@
 - [x] 3D vlot: PDB één keer geladen en bewaard, stapweergaven vooraf opgebouwd (stapwissel rnapol 233–300 → 17–50 ms), volgende scènes vooraf geladen; 80S-ribosoom in WebGL (≈ 55 → 17 ms per beeld), stap "Vooral RNA" toont de eiwitten die op hun plaats vervagen.
 - [x] Ribosomen (70S, EF-Tu) in handboekstijl: gesloten vormen, 30S licht / 50S donker, rustige doorschijnende context; alle 3D-stappen op 4 hoeken nagekeken en bijgestuurd (wiegen, ruimte rond close-ups, p53-zink zichtbaar).
 - [x] 3D-labels: blijven in beeld, overlappen niet, klikbaar waar een onderwerp bestaat; de knop Labels verbergt ze ook. Beeldcontrole + tweede controle; checks NL/EN 0 nieuwe problemen, bundeltest OK.
+
+## tRNA overal gelijk en uitlegvenster ontwijkt tekst — 23-11-2026
+- [x] tRNA overal hetzelfde: 2D = vereenvoudigd klaverblad (bio.js trna2d; aminozuur op het CCA-uiteinde, anticodon onderaan op het codon, gespiegeld zodat het anticodon 3′→5′ antiparallel op het mRNA 5′→3′ ligt), 3D = gele bollen; kleur per plaats E/P/A gelijk in 2D en 3D. Codon–anticodonparen nagekeken. Translatie "koppelen": keten hangt altijd aan een CCA-uiteinde (vroeger los ertussen). Beeldcontrole + tweede controle; check/text/clip/blank geen nieuwe meldingen.
+- [x] Zwevend uitlegvenster: kiest uit 8 plaatsen en meet exact welke figuurtekst het zou bedekken; wijkt tussendoor uit als er later in de stap tekst verschijnt. Meting over alle scènes (NL): bedekte tekst in 55 stappen → 25, de rest vooral tekst die pas tijdens de stap verschijnt (venster wijkt dan binnen 2,5 s uit). Bundeltest OK.

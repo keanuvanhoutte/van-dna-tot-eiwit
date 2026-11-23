@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { polyPath, bez, dpath, prot, capG, ribo, note, arrow } from './_rna.js';
-import { kernEnvelopLijn, eiwitPad } from '../../bio.js';
+import { kernEnvelopLijn, eiwitPad, trna2dSpan } from '../../bio.js';
 
 /*
  * mRNA-export door de kernporie (hoofdstuk 13).
@@ -236,7 +236,7 @@ export default {
           // 43S = kleine eenheid (40S) met initiatiefactoren en het start-tRNA, nog zonder grote eenheid
           const d43 = eiwitPad(0, 22, 56, 25, 40, .07);
           rb += `<g opacity="${f1(a)}" transform="translate(${f1(q[0] + 70)} ${f1(q[1] + 8)})"><path d="${d43}" fill="#0b1224"/><path d="${d43}" fill="#8df0dc" fill-opacity=".36" stroke="#8df0dc" stroke-width="3"/>` +
-            `<path d="M-8,0 l-6,-14 l10,-10" stroke="${C.trna}" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` +
+            trna2dSpan([-8, 1], [-4, -26], { col: C.trna, mini: true, aaCol: '#7fdc6a' }) +   // start-tRNA (Met) op de kleine eenheid: gedeeld tRNA-symbool
             `<text x="0" y="30" font-size="17" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">43S</text></g>`;
         }
         $('ex-ribo').innerHTML = rb;

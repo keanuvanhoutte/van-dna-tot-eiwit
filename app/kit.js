@@ -14,6 +14,8 @@ export const C = {
    * Gekozen zodat ze niet botsen met DNA/RNA/tRNA/fosfaat/ATP/keten/basen (T = rood, G = geel, A = groen). */
   methyl: '#f0e6c8', acetyl: '#c8e64c',
 };
+/* tRNA per plaats in het ribosoom, overal dezelfde afspraak (2D én 3D): E = oker, P = gewoon tRNA-geel, A = lichtgeel */
+export const TRNA_SITE = { E: '#c9862e', P: C.trna, A: '#ffe08a' };
 export const BASE = { A: '#5ad17a', T: '#ff6b6b', U: '#ff6b6b', G: '#ffc247', C: '#4fb0ff' };
 export const COMP = { A: 'T', T: 'A', G: 'C', C: 'G' };
 export const RNA_COMP = { A: 'U', T: 'A', G: 'C', C: 'G' };

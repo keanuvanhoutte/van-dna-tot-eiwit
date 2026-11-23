@@ -1,6 +1,6 @@
 /* Gedeelde tekenhulpjes voor de RNA-scènes (export, nmd, rnai, mrnaafbraak, editing, rnastructuur). */
 import { C, BASE, f1, clamp, lerp } from '../../kit.js';
-import { eiwitPad } from '../../bio.js';
+import { eiwitPad, trna2dSpan, TRNA_SITE } from '../../bio.js';
 
 /* ---------- polylijn met booglengte: punt op afstand s ---------- */
 export function polyPath(pts) {
@@ -78,8 +78,7 @@ export function ribo(x, y, s = 1, op = 1, lab = '80S', o = {}) {
   // kleine eenheid
   g += `<path d="${dS}" fill="#0b1224"/><path d="${dS}" fill="${small}" fill-opacity=".36" stroke="${small}" stroke-width="3"/>`;
   // tRNA's in de P- en A-plaats: anticodonarm op het codon, acceptorarm buigt naar het PTC
-  if (tRNA) g += `<path d="M-13,-3 V-13 Q-13,-21 1,-22" stroke="${C.trna}" stroke-width="5" fill="none" stroke-linecap="round"/>` +
-    `<path d="M15,-3 V-13 Q15,-20 10,-22" stroke="#ffe08a" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+  if (tRNA) g += trna2dSpan([-13, -4], [1, -22], { col: TRNA_SITE.P, mini: true }) + trna2dSpan([15, -4], [10, -22], { col: TRNA_SITE.A, mini: true });   // gedeeld tRNA-symbool (bio.js)
   g += `<circle cx="6" cy="-22" r="3.5" fill="#fff" fill-opacity=".85"/>`;
   if (mrna) g += `<path d="M-66,1 H66" stroke="${C.rna}" stroke-width="7" stroke-linecap="round"/>`;
   if (lab) g += `<text x="-24" y="-46" font-size="18" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">${lab}</text>`;
