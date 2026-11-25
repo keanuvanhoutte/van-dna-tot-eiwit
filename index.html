@@ -30,6 +30,9 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
   nav.top .sp { flex: 1; }
   nav.top a.nl { font-size: 13.5px; color: var(--muted); text-decoration: none; }
   nav.top a.nl:hover { color: var(--text); }
+  .lvlbtn { all: unset; cursor: pointer; font-size: 13.5px; color: var(--text); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; background: rgba(255,255,255,.04); white-space: nowrap; }
+  .lvlbtn:hover, .lvlbtn:focus-visible { border-color: var(--accent); background: rgba(124,196,255,.1); }
+  .lvlbtn span { color: var(--muted); }
   .btn { all: unset; cursor: pointer; font-size: 12.5px; padding: 6px 11px; border-radius: 8px; border: 1px solid var(--line); color: var(--muted); }
   .btn[aria-pressed=true] { color: var(--text); border-color: rgba(124,196,255,.5); background: rgba(124,196,255,.1); }
   .btn:focus-visible { outline: 2px solid var(--accent); }
@@ -129,6 +132,7 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
     <span class="sp"></span>
     <a class="nl" href="atlas/index.html" id="navAtlas"></a>
     <a class="nl" href="docs/over.html" id="navBlue"></a>
+    <button type="button" class="lvlbtn" id="lvlBtn"></button>
     <span id="langBox"></span>
   </nav>
 
@@ -230,6 +234,7 @@ import { S_EN } from './shared/graph.en.js';
 import { LINKS } from './shared/links.js';
 import { makeSearch } from './shared/search.js';
 import { mountSearch } from './shared/searchbox.js';
+import { chosenLevel, levelInfo, openLevelChooser } from './shared/level.js';
 
 const T = {
   brand: { nl: 'Dogma', en: 'Dogma' },
@@ -345,6 +350,17 @@ mountSearch(document.getElementById('homeSearch'), {
 });
 document.getElementById('langBox').append(langSwitch('btn'));
 document.getElementById('home').hidden = false;
+
+/* ---- niveau (moeilijkheidsgraad): bij het eerste bezoek eerst kiezen, daarna aanpasbaar via de knop bovenaan ---- */
+const lvlBtn = document.getElementById('lvlBtn');
+function showLevel() {
+  const l = levelInfo(chosenLevel() ?? 'bachelor');
+  lvlBtn.innerHTML = `<span>${L({ nl: 'Niveau', en: 'Level' })}:</span> ${l.ico} ${L(l.t)}`;
+  lvlBtn.title = L({ nl: 'Moeilijkheidsgraad aanpassen', en: 'Change the difficulty level' });
+}
+showLevel();
+lvlBtn.onclick = () => openLevelChooser({ onPick: showLevel });
+if (!chosenLevel()) openLevelChooser({ first: true, onPick: showLevel });
 
 /* ---- draaiende dubbele helix (canvas, licht; stilstaand bij 'minder beweging') ---- */
 const cv = document.getElementById('helix'), ctx = cv.getContext('2d');

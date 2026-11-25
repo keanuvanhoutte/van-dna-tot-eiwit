@@ -19,6 +19,8 @@ import { mountSearch, whereText, lineColor } from '../shared/searchbox.js';
 import { S_EN, SCALES_EN } from '../shared/graph.en.js';
 import { mountMap } from '../shared/contentmap.js';
 import { LINKS } from '../shared/links.js';
+import { level, rank, chosenLevel, openLevelChooser, LEVELS, saveLevel } from '../shared/level.js';
+import { STEP_LEVEL } from '../shared/levels.js';
 
 /* ---------- verhaallijnen ---------- */
 const LINE_KEY = 'dna-app-story';
@@ -59,7 +61,7 @@ const UI2 = {
   statePaused: { nl: '⏸ gepauzeerd · ▶ of spatie om verder te kijken', en: '⏸ paused · ▶ or space to continue' },
   speedLbl: { nl: 'Snelheid', en: 'Speed' }, settings: { nl: 'Instellingen', en: 'Settings' }, more: { nl: 'Verdieping', en: 'In depth' },
   pPlay: { nl: 'Vanzelf verder', en: 'Continue by itself' }, pRead: { nl: 'Leestijd na een stap', en: 'Reading time after a step' },
-  pCap: { nl: 'Uitleg bij de stap', en: 'Step explanation' }, pLabels: { nl: 'Labels in de figuur', en: 'Labels in the figure' },
+  pLevel: { nl: 'Niveau', en: 'Level' }, pCap: { nl: 'Uitleg bij de stap', en: 'Step explanation' }, pLabels: { nl: 'Labels in de figuur', en: 'Labels in the figure' },
   pReset: { nl: 'Uitlegvenster terug op zijn plaats', en: 'Put the explanation window back' },
   pKeys: { nl: 'Sneltoetsen: spatie ▶/⏸ · ← → stap · Esc uitzoomen · / zoeken · M kaart · C uitleg in-/uitklappen', en: 'Shortcuts: space ▶/⏸ · ← → step · Esc zoom out · / search · M map · C fold explanation' },
   pSaved: { nl: 'Je keuzes blijven bewaard op dit toestel tot je ze verandert.', en: 'Your choices are kept on this device until you change them.' },
@@ -116,7 +118,7 @@ const CHAPTER_WAIT = 2500;                        // extra pauze vóór een nieu
 /* leestijd: genoeg om titel + ondertitel rustig te lezen (≈ 55 ms per teken), 4–12 s, sneller bij hogere snelheid; × leestijd-keuze */
 function readMs(i) {
   const st = current?.steps[i]; if (!st) return 5000;
-  const n = (L(st.title) ?? '').length + (L(st.text) ?? '').length;
+  const n = (L(st.title) ?? '').length + stepText(st).length;
   return Math.min(12000, Math.max(4000, 1800 + 55 * n)) * prefs.read / Math.max(.5, speed);
 }
 let camNow = FULL.slice(), camTarget = FULL.slice(), camSnap = false;
@@ -155,13 +157,36 @@ function resolve(id) {
     return { def, base: def, offset: 0, ov: { ...ov, t0: before + st.dur * .999 },
       steps: [{ dur: ov.dur ?? 9000, cam: ov.cam ?? st.cam ?? FULL, title: ov.title ?? st.title, text: ov.text }] };
   }
-  if (!def.alias) return { def, base: def, steps: def.steps, offset: 0 };
+  if (!def.alias) return { def, base: def, steps: byLevel(id, mark(def.steps, 0, 0)), offset: 0 };
   const base = SCENES[def.alias];
   const from = def.from ?? 0, to = def.to ?? base.steps.length - 1;
   const offset = base.steps.slice(0, from).reduce((s, x) => s + x.dur, 0);
   const steps = base.steps.slice(from, to + 1).map((s, i) => ({ ...s, ...(def.steps?.[i] ?? {}) }));
-  return { def, base, steps, offset, from };
+  return { def, base, steps: byLevel(id, mark(steps, from, offset)), offset, from };
 }
+/* Elke stap onthoudt waar ze in de volledige scène staat (_i = index in deze knoop, _o = stapnummer in de scène,
+ * _t0 = begintijd in de scène), zodat de engine op een lager niveau stappen kan overslaan zonder de tijd van de scène te verschuiven. */
+function mark(steps, from, offset) {
+  let acc = offset;
+  return steps.map((s, i) => { const r = { ...s, _i: i, _o: from + i, _t0: acc }; acc += s.dur; return r; });
+}
+/* niveau (shared/level.js): enkel de stappen tot dat niveau (STEP_LEVEL: 1 kern, 2 secundair, 3 bachelor en master) */
+function byLevel(id, steps) {
+  const code = STEP_LEVEL[id];
+  if (rank >= 3 || !code || code.length !== steps.length) return steps;
+  const keep = steps.filter((s, i) => +code[i] <= rank);
+  return keep.length ? keep : steps;
+}
+/* uitleg bij een stap: de hobbyist krijgt enkel de eerste zin, zonder vaktermen tussen haakjes */
+function stepText(st) {
+  const x = L(st?.text) ?? '';
+  if (level !== 'hobby') return x;
+  const first = x.split(/(?<!\b(?:bv|vb|ca|nl|enz|o\.a|e\.g|i\.e|vs|resp|St))\.\s+(?=[A-ZÀ-Ý‘“'"(])/)[0];
+  const out = first.replace(/\s*\([^()]*\)/g, '').replace(/\s+([,.;:!?])/g, '$1').trim();
+  return /[.!?…→]$/.test(out) ? out : out + '.';
+}
+/* een stap van de volledige knoop (bv. uit de zoekfunctie) → de dichtstbijzijnde getoonde stap op dit niveau */
+const shownIndex = i => { let k = 0; current.steps.forEach((s, j) => { if ((s._i ?? j) <= i) k = j; }); return k; };
 const hasScene = id => !!SCENES[id];
 
 function build(id) {
@@ -241,7 +266,7 @@ function frame(now) {
     const si = stepInfo(t);
     if (si.step !== lastStep && lastStep >= 0) makeGhost();      // vorig beeld bewaren om zacht over te vloeien
     const s = current.ov ? { step: current.ov.step ?? 0, p: .999, t: current.ov.t0 + t, total: current.total }   // overzicht: vast eindbeeld, omgeving beweegt mee
-      : { step: si.step + (current.from ?? 0), p: si.p, t: t + current.offset, total: current.total };
+      : (() => { const st = current.steps[si.step]; return { step: st._o, p: si.p, t: st._t0 + (t - si.start), total: current.total }; })();
     // update(t, s) is deterministisch: zelfde tijd → zelfde beeld, dus overslaan als er niets veranderd is (3D draait wel altijd)
     const key = `${s.t}|${s.step}|${s.p}`;
     let changed = false;
@@ -294,7 +319,7 @@ function fadeGhost(now) {
 function onStep(i) {
   const st = current.steps[i];
   $('capTitle').textContent = L(st.title) ?? '';
-  $('capText').innerHTML = colourWords(esc(L(st.text) ?? ''));
+  $('capText').innerHTML = colourWords(esc(stepText(st)));
   $('stepNo').textContent = `${V('step')} ${i + 1}/${current.steps.length}`;
   side.querySelectorAll('.stepsList li').forEach((li, k) => li.classList.toggle('cur', k === i));
   syncPlayBtn();
@@ -388,6 +413,17 @@ $('pRead').onchange = e => { prefs.read = +e.target.value; savePrefs(); if (held
 $('speed').onchange = e => { speed = +e.target.value; prefs.speed = speed; savePrefs(); };
 $('pCap').onchange = e => setCapMode(e.target.value);
 $('pLabels').onchange = e => setLabels(e.target.checked);
+/* niveau: andere stappen en uitleg → de huidige animatie opnieuw openen op het nieuwe niveau */
+$('pLevel').innerHTML = LEVELS.map(l => `<option value="${l.id}">${l.ico} ${L(l.t)}</option>`).join('');
+$('pLevel').value = level;
+function reopenAtLevel() {
+  const u = new URL(location.href);
+  for (const k of ['level', 't', 'step', 'p', 'freeze', 'from']) u.searchParams.delete(k);
+  if (current) u.searchParams.set('scene', current.id);
+  u.searchParams.set('story', line);
+  location.href = u.toString();
+}
+$('pLevel').onchange = e => { saveLevel(e.target.value); reopenAtLevel(); };
 $('pReset').onclick = () => { prefs.capPos = null; savePrefs(); capAuto(true); syncPrefsUI(); };
 document.addEventListener('click', e => { if (!e.target.closest('#gear')) $('gear').open = false; });
 /* tijdlijn in stukken: één stuk per stap (klikbaar, met de naam erbij); het stuk vult zich terwijl de stap speelt,
@@ -399,7 +435,7 @@ function drawTicks() {
     b.title = `${i + 1}. ${L(s.title) ?? ''}`; b.setAttribute('aria-label', `${V('step')} ${b.title}`);
     b.innerHTML = '<span class="sl"></span><i><s></s><em></em></i><span class="tag"></span>';
     b.querySelector('.sl').textContent = L(s.title) ?? '';
-    const tag = STEP_TAGS[current.id]?.[i];
+    const tag = STEP_TAGS[current.id]?.[s._i ?? i];
     b.querySelector('.tag').textContent = tag ? (lang === 'en' ? tag[1] : tag[0]) : (L(s.title) ?? '');
     b.onclick = () => gotoStep(i);
     tr.append(b);
@@ -461,6 +497,7 @@ function placeLabels() {
     const node = el.dataset.node;
     if (seen.has(node) || el.dataset.nolabel !== undefined) continue;
     seen.add(node);
+    if (level === 'hobby' && !hobbyLabel(node)) continue;   // hobbyist: minder labels (zie hobbyLabel); klikken blijft kunnen
     const anchor = current.root.querySelector(`[data-anchor="${node}"]`) ?? el;
     const lb = document.createElement('div');
     const kind = target(el);
@@ -475,6 +512,12 @@ function placeLabels() {
     labelItems.push({ lb, anchor });
   }
   updateLabels();
+}
+/* hobbyist: enkel labels naar hoofdstukken van de hoofdverhalen en naar het volgende hoofdstuk; zijsprongen blijven klikbaar zonder label */
+const MAIN_IDS = new Set(MAIN_KEYS.flatMap(k => LINES[k].chapters.map(c => c.id)));
+function hobbyLabel(node) {
+  const ci = STORY_IDS.indexOf(current.id);
+  return MAIN_IDS.has(node) || node === STORY[ci + 1]?.id;
 }
 function visible(el) {
   for (let e = el; e && e !== current.root && e.getAttribute; e = e.parentNode) { const o = e.getAttribute('opacity'); if (o !== null && +o < .1) return false; }
@@ -718,7 +761,7 @@ async function go(id, box, dir = 'in', push = true) {
   // de nieuwe scène meteen tekenen (anders is ze tijdens de overgang leeg → zwart beeld)
   const drawFirst = () => { try {
     if (nxt.ov) nxt.api?.update?.(nxt.ov.t0, { step: nxt.ov.step ?? 0, p: .999, t: nxt.ov.t0, total: nxt.total });
-    else nxt.api?.update?.(nxt.offset, { step: nxt.from ?? 0, p: 0, t: nxt.offset, total: nxt.total });
+    else nxt.api?.update?.(nxt.steps[0]._t0, { step: nxt.steps[0]._o, p: 0, t: nxt.steps[0]._t0, total: nxt.total });
   } catch (e) { console.error(e); } };
   drawFirst();
   const firstCam = nxt.steps[0].cam ?? FULL;
@@ -877,16 +920,17 @@ function showGloss(btn) {
 }
 document.addEventListener('click', e => { const b = e.target.closest('.term'); if (b) { e.preventDefault(); showGloss(b); } });
 function detailsHTML(id, open = true) {
-  const d = DETAILS[id]; if (!d) return '';
+  const d = DETAILS[id]; if (!d || level === 'hobby') return '';   // hobbyist: enkel "In het kort"
+  const deep = level === 'master';                                  // master: verdieping meteen open
   const x = d[lang] ?? d.nl;
   let h = '';
   // de diepere uitleg (vakterminologie, cijfers, bronnen) zit samen in één dichtgeklapte laag "Verdieping"
   if (x.what) h += `<details class="sec" ${open ? 'open' : ''}><summary>${V('what')}</summary><p>${x.what}</p></details>`;
-  if (x.how?.length) h += `<details class="sec"><summary>${V('how')}</summary><ol>${x.how.map(s => `<li>${s}</li>`).join('')}</ol></details>`;
-  if (x.facts?.length) h += `<details class="sec"><summary>${V('facts')}</summary><dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
+  if (x.how?.length) h += `<details class="sec" ${deep ? 'open' : ''}><summary>${V('how')}</summary><ol>${x.how.map(s => `<li>${s}</li>`).join('')}</ol></details>`;
+  if (x.facts?.length && level !== 'secundair') h += `<details class="sec" ${deep ? 'open' : ''}><summary>${V('facts')}</summary><dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
   if (x.why) h += `<details class="sec"><summary>${V('why')}</summary><p>${x.why}</p></details>`;
   if (d.sources?.length) h += `<details class="sec"><summary>${V('sources')} (${d.sources.length})</summary><ol class="src">${d.sources.map(s => `<li>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${L(s.t)}</a>` : L(s.t)}</li>`).join('')}</ol></details>`;
-  return h ? `<details class="more"><summary>${V('more')}</summary><div class="morebody">${h}</div></details>` : '';
+  return h ? `<details class="more" ${deep ? 'open' : ''}><summary>${V('more')}</summary><div class="morebody">${h}</div></details>` : '';
 }
 function render() {
   const def = current.def, base = current.base, n = NODES[current.id];
@@ -903,14 +947,14 @@ function render() {
     <h1>${n ? title(n) : L(def.title)}${n ? `<span class="status ${n.status === 'nagekeken' ? 'ok' : ''}">${statusText(n.status)}</span>` : ''}</h1>
     ${n ? `<div class="en">${sub(n)}</div>${kortOf(current.id) ? `<div class="kort"><b>${V('inShort')}</b>${kortOf(current.id)}</div>` : `<p>${summary(n)}</p>`}` : ''}
     ${detailsHTML(current.id)}
-    <details class="sec" open><summary>${V('stepsHere')}</summary><ol class="stepsList">${current.steps.map((s, i) => { const tg = STEP_TAGS[current.id]?.[i]; return `<li data-i="${i}">${tg ? `<span class="stag">${esc(lang === 'en' ? tg[1] : tg[0])}</span>` : ''}${L(s.title)}</li>`; }).join('')}</ol></details>
+    <details class="sec" open><summary>${V('stepsHere')}</summary><ol class="stepsList">${current.steps.map((s, i) => { const tg = STEP_TAGS[current.id]?.[s._i ?? i]; return `<li data-i="${i}">${tg ? `<span class="stag">${esc(lang === 'en' ? tg[1] : tg[0])}</span>` : ''}${L(s.title)}</li>`; }).join('')}</ol></details>
     ${L(def.extra ?? base.extra) ?? ''}
-    ${(def.legend ?? base.legend) ? `<div class="card c-leg"><div class="ch"><i>🎨</i>${V('legend')}</div><div class="legend">${(def.legend ?? base.legend).map(([c, x]) => `<span style="--c:${c}"><i></i>${L(x)}</span>`).join('')}</div></div>` : ''}
+    ${(def.legend ?? base.legend) ? `<div class="card c-leg"><div class="ch"><i>🎨</i>${V('legend')}</div><div class="legend">${(def.legend ?? base.legend).slice(0, level === 'hobby' ? 4 : 99).map(([c, x]) => `<span style="--c:${c}"><i></i>${L(x)}</span>`).join('')}</div></div>` : ''}
     ${ups.length ? `<div class="card c-up"><div class="ch"><i>↑</i>${V('up')}</div>${chipsOf(ups, 'up')}</div>` : ''}
     ${n?.in.length ? `<div class="card c-in"><div class="ch"><i>🔍</i>${V('zoomIn')}</div>${chipsOf(n.in, '')}</div>` : ''}
     ${n?.next.length ? `<div class="card c-next"><div class="ch"><i>→</i>${V('next')}</div>${chipsOf(n.next, 'next')}</div>` : ''}
-    ${n?.rel.length ? `<div class="card c-rel"><div class="ch"><i>↪</i>${V('side')}</div>${chipsOf(n.rel, 'rel')}</div>` : ''}
-    ${n?.pdb.length ? `<div class="card c-pdb"><div class="ch"><i>◆</i>${V('struct3d')}</div>${n.pdb.map(p => `<a class="chip" href="https://www.rcsb.org/structure/${p}" target="_blank" rel="noopener">PDB ${p} ↗</a>`).join('')}</div>` : ''}
+    ${n?.rel.length && rank >= 2 ? `<div class="card c-rel"><div class="ch"><i>↪</i>${V('side')}</div>${chipsOf(n.rel, 'rel')}</div>` : ''}
+    ${n?.pdb.length && rank >= 3 ? `<div class="card c-pdb"><div class="ch"><i>◆</i>${V('struct3d')}</div>${n.pdb.map(p => `<a class="chip" href="https://www.rcsb.org/structure/${p}" target="_blank" rel="noopener">PDB ${p} ↗</a>`).join('')}</div>` : ''}
     <div class="simp"><b>${V('simplified')}</b><br>${L(def.simplified ?? base.simplified) ?? ''}</div>`;
   $('sheetClose').onclick = () => toggleInfo(false);
   side.querySelectorAll('.chip[data-id]').forEach(c => c.onclick = () => { if (narrow()) toggleInfo(false); chipGo(c.dataset.id); });
@@ -979,7 +1023,7 @@ async function jumpTo(r) {
   const path = loc.path.filter(hasScene);
   if (r.id === current.id) { trail = path; render(); }
   else { trail = path.slice(0, -1); await go(r.id, null, 'in'); trail = path; render(); }
-  if (r.step !== null && r.step !== undefined && current?.id === r.id) gotoStep(r.step);   // gevonden via een stapstitel: meteen naar die stap
+  if (r.step !== null && r.step !== undefined && current?.id === r.id) gotoStep(shownIndex(r.step));   // gevonden via een stapstitel: meteen naar die stap
   info(`📍 ${L({ nl: 'Je bent nu bij', en: 'You are now at' })} <b>${title(NODES[r.id])}</b><br><span>${whereText(loc, ctx)}</span>`);
 }
 mountSearch($('searchBox'), {
@@ -1019,11 +1063,16 @@ if (startId) {
   trail = ci >= 0 ? [startId] : [...trail, startId];
   camNow = (current.steps[0].cam ?? FULL).slice();
   if (q.has('t')) t = Math.min(current.total - 1, +q.get('t'));
-  if (q.has('step')) { const k = Math.max(0, Math.min(current.steps.length - 1, +q.get('step') || 0)); t = stepStart(k) + (q.has('p') ? +q.get('p') * current.steps[k].dur : 1); }   // stap buiten bereik (bv. overzichtsscène) → begrenzen
+  if (q.has('step')) { const k = shownIndex(Math.max(0, +q.get('step') || 0)); t = stepStart(k) + (q.has('p') ? +q.get('p') * current.steps[k].dur : 1); }   // stap buiten bereik (bv. overzichtsscène) → begrenzen
   camSnap = true;
   render(); drawTicks();
   playStep(stepInfo(t).step);
   if (q.has('freeze')) setPlaying(false); else scheduleWarm();
   const boot = $('boot'); if (boot) { boot.classList.add('gone'); setTimeout(() => boot.remove(), 500); }
   requestAnimationFrame(placeLabels);
+  /* nog geen niveau gekozen (bv. via een rechtstreekse link): eerst laten kiezen; niet bij tests/automatisering */
+  if (!chosenLevel() && !navigator.webdriver && !['t', 'step', 'freeze', 'rafpoly'].some(k => q.has(k))) {
+    const was = playing; setPlaying(false);
+    openLevelChooser({ first: true, onPick: id => id === level ? setPlaying(was) : reopenAtLevel() });
+  }
 }

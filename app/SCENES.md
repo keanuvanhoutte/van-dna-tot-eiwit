@@ -95,3 +95,9 @@ Daarom:
 - Het eindbeeld van stap i en het beginbeeld van stap i+1 moeten op elkaar aansluiten (geen sprong).
 - Het beginbeeld van stap 0 mag niet leeg zijn: de engine tekent het al tijdens de zoomovergang.
 - Klikt de gebruiker midden in een stap op 'volgende' of op 'vorige', dan spoelt de engine zichtbaar (~0,65 s) naar het doel.
+
+## Moeilijkheidsgraad (niveau)
+De gebruiker kiest een niveau (hobbyist · secundair · bachelor · master; `shared/level.js`, startpagina bij het eerste bezoek, daarna knop in het startmenu of ⚙).
+Per scène staat in `shared/levels.js` (STEP_LEVEL) per stap een cijfer: 1 = kern (iedereen), 2 = vanaf secundair, 3 = vanaf bachelor.
+**Bij nieuwe of gewijzigde stappen dit cijferreeksje aanpassen** (lengte = aantal stappen; anders toont de engine gewoon alle stappen).
+Hobbyist: enkel de eerste zin van `text` (tekst tussen haakjes valt weg) → zet het belangrijkste in de eerste zin. Testen: `&level=hobby`.
