@@ -19,7 +19,7 @@ import { mountSearch, whereText, lineColor } from '../shared/searchbox.js';
 import { S_EN, SCALES_EN } from '../shared/graph.en.js';
 import { mountMap } from '../shared/contentmap.js';
 import { LINKS } from '../shared/links.js';
-import { level, rank, chosenLevel, openLevelChooser, LEVELS, saveLevel } from '../shared/level.js';
+import { level, rank, levelSelect } from '../shared/level.js';
 import { STEP_LEVEL } from '../shared/levels.js';
 
 /* ---------- verhaallijnen ---------- */
@@ -414,8 +414,6 @@ $('speed').onchange = e => { speed = +e.target.value; prefs.speed = speed; saveP
 $('pCap').onchange = e => setCapMode(e.target.value);
 $('pLabels').onchange = e => setLabels(e.target.checked);
 /* niveau: andere stappen en uitleg → de huidige animatie opnieuw openen op het nieuwe niveau */
-$('pLevel').innerHTML = LEVELS.map(l => `<option value="${l.id}">${l.ico} ${L(l.t)}</option>`).join('');
-$('pLevel').value = level;
 function reopenAtLevel() {
   const u = new URL(location.href);
   for (const k of ['level', 't', 'step', 'p', 'freeze', 'from']) u.searchParams.delete(k);
@@ -423,7 +421,7 @@ function reopenAtLevel() {
   u.searchParams.set('story', line);
   location.href = u.toString();
 }
-$('pLevel').onchange = e => { saveLevel(e.target.value); reopenAtLevel(); };
+levelSelect($('pLevel'), { onChange: reopenAtLevel });
 $('pReset').onclick = () => { prefs.capPos = null; savePrefs(); capAuto(true); syncPrefsUI(); };
 document.addEventListener('click', e => { if (!e.target.closest('#gear')) $('gear').open = false; });
 /* tijdlijn in stukken: één stuk per stap (klikbaar, met de naam erbij); het stuk vult zich terwijl de stap speelt,
@@ -920,16 +918,18 @@ function showGloss(btn) {
 }
 document.addEventListener('click', e => { const b = e.target.closest('.term'); if (b) { e.preventDefault(); showGloss(b); } });
 function detailsHTML(id, open = true) {
-  const d = DETAILS[id]; if (!d || level === 'hobby') return '';   // hobbyist: enkel "In het kort"
+  const d = DETAILS[id]; if (!d) return '';
+  const hobby = level === 'hobby';                                  // hobbyist: enkel "In het kort" + de bronnen
   const deep = level === 'master';                                  // master: verdieping meteen open
   const x = d[lang] ?? d.nl;
   let h = '';
   // de diepere uitleg (vakterminologie, cijfers, bronnen) zit samen in één dichtgeklapte laag "Verdieping"
-  if (x.what) h += `<details class="sec" ${open ? 'open' : ''}><summary>${V('what')}</summary><p>${x.what}</p></details>`;
-  if (x.how?.length) h += `<details class="sec" ${deep ? 'open' : ''}><summary>${V('how')}</summary><ol>${x.how.map(s => `<li>${s}</li>`).join('')}</ol></details>`;
-  if (x.facts?.length && level !== 'secundair') h += `<details class="sec" ${deep ? 'open' : ''}><summary>${V('facts')}</summary><dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
-  if (x.why) h += `<details class="sec"><summary>${V('why')}</summary><p>${x.why}</p></details>`;
+  if (x.what && !hobby) h += `<details class="sec" ${open ? 'open' : ''}><summary>${V('what')}</summary><p>${x.what}</p></details>`;
+  if (x.how?.length && !hobby) h += `<details class="sec" ${deep ? 'open' : ''}><summary>${V('how')}</summary><ol>${x.how.map(s => `<li>${s}</li>`).join('')}</ol></details>`;
+  if (x.facts?.length && rank >= 3) h += `<details class="sec" ${deep ? 'open' : ''}><summary>${V('facts')}</summary><dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
+  if (x.why && !hobby) h += `<details class="sec"><summary>${V('why')}</summary><p>${x.why}</p></details>`;
   if (d.sources?.length) h += `<details class="sec"><summary>${V('sources')} (${d.sources.length})</summary><ol class="src">${d.sources.map(s => `<li>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${L(s.t)}</a>` : L(s.t)}</li>`).join('')}</ol></details>`;
+  if (hobby) return h;                                              // enkel de (dichtgeklapte) bronnenlijst
   return h ? `<details class="more" ${deep ? 'open' : ''}><summary>${V('more')}</summary><div class="morebody">${h}</div></details>` : '';
 }
 function render() {
@@ -1070,9 +1070,4 @@ if (startId) {
   if (q.has('freeze')) setPlaying(false); else scheduleWarm();
   const boot = $('boot'); if (boot) { boot.classList.add('gone'); setTimeout(() => boot.remove(), 500); }
   requestAnimationFrame(placeLabels);
-  /* nog geen niveau gekozen (bv. via een rechtstreekse link): eerst laten kiezen; niet bij tests/automatisering */
-  if (!chosenLevel() && !navigator.webdriver && !['t', 'step', 'freeze', 'rafpoly'].some(k => q.has(k))) {
-    const was = playing; setPlaying(false);
-    openLevelChooser({ first: true, onPick: id => id === level ? setPlaying(was) : reopenAtLevel() });
-  }
 }
