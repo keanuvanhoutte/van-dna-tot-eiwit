@@ -5,6 +5,7 @@ import { C } from '../../kit.js';
  * Lokale kopie data/pdb/6WRF.cif ingekort tot de ruggengraat (N, CA, C, O). Ketens: A–F ClpX (zesring) · H–N ClpP (één zevenring)
  * · S substraat (alleen GFP-ssrA-residuen 268–274 zichtbaar: het ssrA-staartje in de ClpX-porie). */
 const L3 = (nl, en) => ({ nl, en });
+const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 const X = ['A', 'B', 'C', 'D', 'E', 'F'], P = ['H', 'I', 'J', 'K', 'L', 'M', 'N'];
 const XC = ['#9b7bff', '#b49bff', '#8466f0', '#c4b0ff', '#9b7bff', '#b49bff'], PC = '#5fd3e6', SC = '#7fdc6a';
 const base = [
@@ -26,14 +27,15 @@ export default structure3d({
     nl: 'ClpP bestaat uit twee ringen van zeven; in deze structuur is één ring gemodelleerd. Van het substraat (GFP met ssrA-label) is alleen het staartje in de porie zichtbaar; de rest is flexibel of nog gevouwen buiten de machine. Andere proteasen (Lon, ClpAP, FtsH, HslUV) werken op een gelijkaardige manier maar zijn niet getoond. Sommige bacteriën (zoals de tuberculosebacterie) hebben wel een proteasoom, met een eigen label (Pup); HslV van E. coli is familie van het proteasoom.',
     en: 'ClpP consists of two rings of seven; one ring is modelled in this structure. Of the substrate (GFP with an ssrA tag) only the tail in the pore is visible; the rest is flexible or still folded outside the machine. Other proteases (Lon, ClpAP, FtsH, HslUV) work in a similar way but are not shown. Some bacteria (such as the tuberculosis bacterium) do have a proteasome, with their own tag (Pup); E. coli HslV is related to the proteasome.' },
   base,
+  rotate: [['x', 65]],   // schuin van opzij: motor (ClpX) en knipkamer (ClpP) zichtbaar op elkaar gestapeld
   steps: [
-    { dur: 8000, title: L3('Ook eiwitten moeten weg', 'Proteins have to go too'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('Ook eiwitten moeten weg', 'Proteins have to go too'), focus: null, zoom: {}, tags: [TAG({ chain: X }, 'motor (ClpX)', 'motor (ClpX)'), TAG({ chain: P }, 'knipkamer (ClpP)', 'cutting chamber (ClpP)')], tags: [TAG({ chain: X }, 'motor (ClpX)', 'motor (ClpX)'), TAG({ chain: P }, 'knipkamer (ClpP)', 'cutting chamber (ClpP)')], spin: .012,
       text: L3('E. coli heeft geen ubiquitine en geen proteasoom. Ze gebruikt eigen afbraakmachines, zoals ClpXP.', 'E. coli has no ubiquitin and no proteasome. It uses its own degradation machines, such as ClpXP.') },
     { dur: 8000, title: L3('ClpX: een motor van zes', 'ClpX: a motor of six'), zoom: {}, spin: .012,
       focus: X.map((c, i) => ({ sel: { chain: c }, style: { cartoon: { color: XC[i] } }, ...(i ? {} : { label: L3('ClpX-ring', 'ClpX ring') }) })),
       text: L3('ClpX is een ring van zes eiwitten die ATP verbruiken. Ze trekken een eiwit open.', 'ClpX is a ring of six proteins that use ATP. They pull a protein open.') },
     { dur: 9000, title: L3('Een staartje als afbraaklabel', 'A tail as a degradation tag'), zoom: { chain: 'S' }, rock: 30, pad: .45,
-      focus: [{ sel: { chain: 'S' }, style: { stick: { color: SC, radius: .45 } }, label: L3('ssrA-label', 'ssrA tag') }, ...X.map((c, i) => ({ sel: { chain: c }, style: { cartoon: { color: XC[i], opacity: .55 } } }))],
+      focus: [{ sel: { chain: 'S' }, style: { sphere: { color: SC, radius: 2.4 } }, label: L3('ssrA-label (het staartje)', 'ssrA tag (the tail)') }, ...X.map((c, i) => ({ sel: { chain: c }, style: { cartoon: { color: XC[i], opacity: .3 } } }))],   // alleen CA-atomen: bollen i.p.v. staafjes (staafjes hebben bindingen nodig)
       text: L3('Veel af te breken eiwitten dragen een kort label, zoals ssrA. ClpX grijpt dat staartje in zijn porie.', 'Many proteins to be broken down carry a short tag, such as ssrA. ClpX grips that tail in its pore.') },
     { dur: 9000, title: L3('ClpP: de knipkamer', 'ClpP: the cutting chamber'), zoom: {}, spin: .012,
       focus: { sel: { chain: P }, style: { cartoon: { color: PC } }, label: L3('ClpP (ring van 7)', 'ClpP (ring of 7)') },

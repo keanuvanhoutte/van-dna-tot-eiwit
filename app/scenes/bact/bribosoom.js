@@ -9,6 +9,7 @@ import { C } from '../../kit.js';
  *   50S: BA 23S-rRNA · BB 5S-rRNA · BC–BZ en B1–B7 eiwitten
  *   RNA-polymerase: CA, CB α · CC β · CD β′ · CE ω · CF NusG · CN/CT DNA-strengen */
 const L3 = (nl, en) => ({ nl, en });
+const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 const A = 'ABCDEFGHIJKLMNOPQRSTU'.slice(1).split('').map(c => 'A' + c).concat(['AY']);          // AB..AU + AY
 const B50 = 'CDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(c => 'B' + c).concat(['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7']);
 const POL = ['CA', 'CB', 'CC', 'CD', 'CE'];
@@ -44,7 +45,7 @@ export default structure3d({
   outline: { width: .3 },
   zoomPad: .85,
   steps: [
-    { dur: 8000, title: L3('Ribosoom en RNA-polymerase samen', 'Ribosome and RNA polymerase together'), focus: null, zoom: {}, spin: .01,
+    { dur: 8000, title: L3('Ribosoom en RNA-polymerase samen', 'Ribosome and RNA polymerase together'), focus: null, zoom: {}, tags: [TAG({ chain: [...S30, ...S50] }, 'ribosoom', 'ribosome'), TAG({ chain: POL }, 'RNA-polymerase', 'RNA polymerase')], tags: [TAG({ chain: [...S30, ...S50] }, 'ribosoom', 'ribosome'), TAG({ chain: POL }, 'RNA-polymerase', 'RNA polymerase')], spin: .01,
       text: L3('Hier zie je een bacterieel ribosoom dat vlak achter het RNA-polymerase hetzelfde mRNA leest.', 'Here a bacterial ribosome reads the same mRNA right behind RNA polymerase.') },
     { dur: 8000, title: L3('De kleine eenheid: 30S', 'The small subunit: 30S'), zoom: {}, spin: .01,
       focus: [GH([...S50, ...POL, ...OTHER]), { sel: { chain: 'AA' }, style: RNA(COL.r16), label: '16S-rRNA', labelColor: COL.r16 }, { sel: { chain: A }, style: PROT(COL.p30) }],

@@ -33,7 +33,7 @@ export default structure3d({
     { sel: DNA, style: { stick: { color: C.dna, radius: .3 } } },
   ],
   steps: [
-    { dur: 8000, spin: .012, focus: null,
+    { dur: 8000, spin: .012, focus: null, tags: [{ sel: { chain: 'A' }, label: { nl: 'RPA: twee grijpdelen', en: 'RPA: two gripping parts' } }, { sel: { chain: 'B' }, label: { nl: 'losse DNA-streng', en: 'single DNA strand' }, labelColor: C.dna }],
       title: { nl: 'RPA houdt een losse DNA-streng vast', en: 'RPA holds a single DNA strand' },
       text: { nl: 'Een deel van het echte menselijke eiwit RPA, met een losse DNA-streng. De streng ligt in een goot van het eiwit.', en: 'Part of the real human protein RPA, with a single DNA strand. The strand lies in a groove of the protein.' } },
     { dur: 9000, spin: .01, focus: { sel: DNA, style: { stick: { color: C.dna, radius: .35 } }, label: { nl: 'ssDNA: basen liggen bloot', en: 'ssDNA: bases exposed' } }, zoom: DNA,
@@ -48,7 +48,7 @@ export default structure3d({
     { dur: 9000, spin: .008, focus: [{ sel: AROM, style: { stick: { color: '#ffc247', radius: .35 } }, label: { nl: 'Phe238 · Phe269 · Trp361 · Phe386', en: 'Phe238 · Phe269 · Trp361 · Phe386' } }, { sel: DNA, style: { stick: { color: C.dna, radius: .3 } } }], zoom: { chain: 'B' },
       title: { nl: 'Platte ringen grijpen de basen', en: 'Flat rings grip the bases' },
       text: { nl: 'Platte ringen van enkele aminozuren stapelen op de basen. Zo kan RPA elke DNA-volgorde vasthouden.', en: 'Flat rings of a few amino acids stack on the bases. This lets RPA hold any DNA sequence.' } },
-    { dur: 9000, spin: .015, focus: null, zoom: {},
+    { dur: 9000, spin: .015, focus: null, tags: [{ sel: { chain: 'A' }, label: { nl: 'RPA: twee grijpdelen', en: 'RPA: two gripping parts' } }, { sel: { chain: 'B' }, label: { nl: 'losse DNA-streng', en: 'single DNA strand' }, labelColor: C.dna }], zoom: {},
       title: { nl: 'RPA slaat alarm en geeft door', en: 'RPA raises the alarm and hands over' },
       text: { nl: 'Het volledige RPA bedekt zo’n 30 basen. Het roept een alarmeiwit op en geeft het DNA door aan andere enzymen.', en: 'Complete RPA covers about 30 bases. It calls in an alarm protein and hands the DNA on to other enzymes.' } },
   ],

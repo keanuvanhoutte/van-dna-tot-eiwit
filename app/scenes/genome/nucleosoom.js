@@ -10,6 +10,11 @@ const DNA = { chain: ['I', 'J'] };
 const H3 = { chain: ['A', 'E'] }, H4 = { chain: ['B', 'F'] }, H2A = { chain: ['C', 'G'] }, H2B = { chain: ['D', 'H'] };
 const cart = color => ({ cartoon: { color } });
 const dnaStyle = { cartoon: { color: C.dna } };
+/* overzicht met namen (niets gedimd): wat is het DNA, wat zijn de histonen */
+const OVER = (dnaLab, dnaSel = { chain: 'I', resi: 0 }) => [
+  { sel: H3, style: cart(HC.H3) }, { sel: H4, style: cart(HC.H4) }, { sel: H2A, style: cart(HC.H2A) }, { sel: H2B, style: cart(HC.H2B) },
+  { sel: DNA, style: dnaStyle, label: dnaLab, labelSel: dnaSel, labelColor: C.dna },
+  { sel: H4, style: cart(HC.H4), label: { nl: 'kern: 8 histon-eiwitten', en: 'core: 8 histone proteins' }, labelSel: { chain: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'] }, labelColor: HC.H3 }];
 
 export default structure3d({
   id: 'nucleosoom',
@@ -31,7 +36,7 @@ export default structure3d({
     { sel: H2A, style: cart(HC.H2A) }, { sel: H2B, style: cart(HC.H2B) },
   ],
   steps: [
-    { dur: 7500, spin: .02, focus: null, zoom: {},
+    { dur: 7500, spin: .02, focus: OVER({ nl: 'DNA, 1,7 keer rondgewikkeld', en: 'DNA, wrapped 1.7 times' }), zoom: {},
       title: { nl: 'Het nucleosoom', en: 'The nucleosome' },
       text: { nl: 'Dit is de echte structuur: DNA gewikkeld rond acht eiwitten. Samen vormen ze een schijfje van ~11 nm.', en: 'This is the real structure: DNA wrapped around eight proteins. Together they form a disc of ~11 nm.' } },
     { dur: 8500, spin: .015, focus: { sel: DNA, style: dnaStyle, label: { nl: '147 bp DNA', en: '147 bp DNA' } },
@@ -60,7 +65,7 @@ export default structure3d({
       zoom: {},
       title: { nl: 'Hoe het DNA vastzit', en: 'How the DNA is held' },
       text: { nl: 'Histonen pakken de buitenkant van het DNA vast, niet de letters. Daarom past bijna elk stuk DNA eromheen.', en: 'Histones grip the outside of the DNA, not the letters. That is why almost any piece of DNA can wrap around them.' } },
-    { dur: 7500, spin: .02, focus: null, zoom: {},
+    { dur: 7500, spin: .02, focus: OVER({ nl: 'hier loopt het DNA verder naar het volgende nucleosoom', en: 'here the DNA runs on to the next nucleosome' }, { chain: 'I', resi: 73 }), zoom: {},
       title: { nl: 'Verder inzoomen op het DNA', en: 'Zooming further into the DNA' },
       text: { nl: 'Dit is één nucleosoom; in de cel loopt het DNA verder naar het volgende. Hierna: de DNA-dubbelhelix zelf.', en: 'This is one nucleosome; in the cell the DNA runs on to the next one. Next: the DNA double helix itself.' } },
   ],

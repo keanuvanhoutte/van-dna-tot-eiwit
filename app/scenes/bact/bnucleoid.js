@@ -6,6 +6,7 @@ import { C } from '../../kit.js';
  * Nagekeken in het mmCIF-bestand (04-11-2026): de prolines die tussen de basen schuiven, liggen in de β-armen,
  * motief R-N-P-x-T-G: IHFα Pro65 (A 63–67 RNPKT) en IHFβ Pro64 (B 62–66 RNPKT). */
 const L3 = (nl, en) => ({ nl, en });
+const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 const COL = { A: '#ffb27a', B: '#5fd3e6' };
 const base = [
   { sel: { chain: 'A' }, style: { cartoon: { color: COL.A, opacity: .95 } } },
@@ -29,7 +30,7 @@ export default structure3d({
     en: 'One IHF on a short 35 bp piece of DNA. In the cell, tens of thousands of copies of different nucleoid proteins (HU, IHF, H-NS, Fis, …) sit on a 4.6 million bp DNA; their numbers change with growth phase. H-NS, Fis, HU and gyrase are not in this structure: they are only mentioned in the text.' },
   base,
   steps: [
-    { dur: 8000, title: L3('DNA opvouwen zonder histonen', 'Folding DNA without histones'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('DNA opvouwen zonder histonen', 'Folding DNA without histones'), focus: null, zoom: {}, tags: [TAG({ chain: ['A', 'B'] }, 'buigeiwit (IHF)', 'bending protein (IHF)'), TAG({ chain: 'C' }, 'DNA', 'DNA', undefined, [-170, 70])], tags: [TAG({ chain: ['A', 'B'] }, 'buigeiwit (IHF)', 'bending protein (IHF)'), TAG({ chain: 'C' }, 'DNA (de andere helpers zitten niet in deze structuur)', 'DNA (the other helpers are not in this structure)', undefined, [-170, 70])], tags: [TAG({ chain: ['A', 'B'] }, 'buigeiwit (IHF)', 'bending protein (IHF)'), TAG({ chain: 'C' }, 'DNA', 'DNA', undefined, [-170, 70])], spin: .012,
       text: L3('E. coli en de meeste bacteriën hebben geen histonen. Kleine eiwitten buigen en bundelen hun DNA.', 'E. coli and most bacteria have no histones. Small proteins bend and bundle their DNA.') },
     { dur: 8000, title: L3('IHF: twee kleine eiwitten samen', 'IHF: two small proteins together'), zoom: {}, spin: .012,
       focus: [{ sel: { chain: 'A' }, style: { cartoon: { color: COL.A } }, label: 'IHFα', labelColor: COL.A, labelOff: [-80, -18] }, { sel: { chain: 'B' }, style: { cartoon: { color: COL.B } }, label: 'IHFβ', labelColor: COL.B, labelOff: [80, 18] }],

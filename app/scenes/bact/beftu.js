@@ -55,7 +55,7 @@ export default structure3d({
   zoomPad: .85,
   rotate: [['y', 225]],                 // beginstand: EF-Tu aan de voorkant; daarna wiegen (rock) i.p.v. rond draaien
   steps: [
-    { dur: 8000, title: L3('Een nieuw tRNA komt aan', 'A new tRNA arrives'), focus: TOTAL, zoom: {}, rock: 35,
+    { dur: 8000, title: L3('Een nieuw tRNA komt aan', 'A new tRNA arrives'), focus: TOTAL, zoom: {}, tags: [{ sel: { chain: ['a', ...S30P, 'A', 'B', ...S50P] }, label: { nl: 'ribosoom', en: 'ribosome' }, labelOff: [0, 120] }], rock: 35,
       text: L3('Het eiwit EF-Tu brengt een tRNA met een aminozuur naar het ribosoom.', 'The protein EF-Tu brings a tRNA carrying an amino acid to the ribosome.') },
     { dur: 8500, title: L3('EF-Tu en zijn tRNA', 'EF-Tu and its tRNA'), zoom: { chain: ['z', 'y'] }, rock: 35, pad: .7,
       focus: [...RIBO, EFTU('EF-Tu'), { ...TRNA('y', COL.tA, L3('tRNA met Phe', 'tRNA with Phe')), node: 'trna' }, TRNA('v', COL.tP), { sel: { chain: 'x' }, style: { cartoon: { color: COL.mrna } } }],
@@ -74,7 +74,7 @@ export default structure3d({
     { dur: 8500, title: L3('Drie tRNA’s op het ribosoom', 'Three tRNAs on the ribosome'), zoom: { chain: ['v', 'w', 'y'] }, rock: 35,
       focus: [...RIBO, { ...TRNA('v', COL.tP, L3('start-tRNA (P)', 'start tRNA (P)')), labelColor: COL.tP, node: 'trna' }, { ...TRNA('y', COL.tA, L3('nieuw tRNA', 'new tRNA')), labelColor: COL.tA, node: 'trna' }, { ...TRNA('w', COL.tW, L3('tweede start-tRNA (E)', 'second start tRNA (E)')), labelColor: COL.tW, node: 'trna' }, { sel: { chain: 'x' }, style: { cartoon: { color: COL.mrna } } }],
       text: L3('Het start-tRNA draagt het eerste aminozuur. Laat EF-Tu los, dan schuift het nieuwe tRNA helemaal in de A-plaats en volgt de koppeling.', 'The start tRNA carries the first amino acid. Once EF-Tu lets go, the new tRNA moves fully into the A site and joining follows.') },
-    { dur: 8000, title: L3('Vergelijk: bij ons doet eEF1A dit', 'Compare: in humans eEF1A does this'), focus: TOTAL, zoom: {}, rock: 35,
+    { dur: 8000, title: L3('Vergelijk: bij ons doet eEF1A dit', 'Compare: in humans eEF1A does this'), focus: TOTAL, zoom: {}, tags: [{ sel: { chain: ['a', ...S30P, 'A', 'B', ...S50P] }, label: { nl: 'ribosoom', en: 'ribosome' }, labelOff: [0, 120] }], rock: 35,
       text: L3('In onze cellen brengt eEF1A de tRNA’s. Het werkt op dezelfde manier als EF-Tu.', 'In our cells eEF1A delivers the tRNAs. It works the same way as EF-Tu.') },
   ],
   hotspots: [

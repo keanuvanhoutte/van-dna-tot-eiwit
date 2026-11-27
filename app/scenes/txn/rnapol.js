@@ -21,6 +21,7 @@ const base = [
 ];
 const MG = { resn: 'MG' };
 const L3 = (nl, en) => ({ nl, en });
+const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 
 export default structure3d({
   id: 'rnapol', pdb: '5FLM',
@@ -36,7 +37,7 @@ export default structure3d({
     en: 'Bovine (Bos taurus) instead of human structure: Rpb1 is nearly identical. The DNA and RNA strands are short synthetic pieces (39 nt DNA, 20 nt RNA) and part of the DNA upstream and downstream of the enzyme is missing. The CTD and some flexible loops (e.g. the tip of the trigger loop) are not visible in the density.' },
   base,
   steps: [
-    { dur: 8000, title: L3('Een machine van 12 eiwitten', 'A machine of 12 proteins'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('Een machine van 12 eiwitten', 'A machine of 12 proteins'), focus: null, zoom: {}, tags: [TAG({ chain: ['A', 'B'] }, 'RNA-polymerase (12 eiwitten)', 'RNA polymerase (12 proteins)'), TAG({ chain: 'N' }, 'DNA', 'DNA'), TAG({ chain: 'P' }, 'nieuw RNA', 'new RNA')], spin: .012,
       text: L3('Het enzym dat RNA maakt (RNA-polymerase II) bestaat uit 12 eiwitten. In de middelste kloof zitten DNA en RNA.', 'The enzyme that makes RNA (RNA polymerase II) consists of 12 proteins. DNA and RNA sit in the central cleft.') },
     { dur: 8000, title: L3('Het grootste onderdeel: Rpb1', 'The largest part: Rpb1'), zoom: {}, spin: .012,
       focus: { sel: { chain: 'A' }, style: { cartoon: { color: COL.A } }, label: L3('Rpb1', 'Rpb1') },
@@ -53,7 +54,7 @@ export default structure3d({
       text: L3('Het nieuwe RNA blijft ~8 basen lang aan het DNA vast. Dan verlaat het het enzym via een eigen uitgang.', 'The new RNA stays attached to the DNA for ~8 bases. Then it leaves the enzyme through its own exit.') },
     { dur: 9000, title: L3('Het hart: een magnesiumion', 'The heart: a magnesium ion'), zoom: { chain: 'A', resi: range(484, 506) }, spin: .006, pad: .45,
       focus: [{ sel: { chain: 'A', resi: [495, 497, 499] }, style: { stick: { color: COL.A, radius: .3 } } },
-        { sel: MG, style: { sphere: { color: '#7fdc6a', radius: 1.8 } }, label: L3('Mg²⁺ op de Asp-lus (NADFDGD)', 'Mg²⁺ on the Asp loop (NADFDGD)') }, { sel: { chain: 'P' }, style: { stick: { color: C.rna, radius: .25 } } }],
+        { sel: MG, style: { sphere: { color: '#7fdc6a', radius: 3.4 } }, label: L3('Mg²⁺ op de Asp-lus (NADFDGD)', 'Mg²⁺ on the Asp loop (NADFDGD)') }, { sel: { chain: 'P' }, style: { stick: { color: C.rna, radius: .25 } } }],
       text: L3('Rpb1 houdt een magnesiumion (Mg²⁺) vast. Dat ion helpt elke nieuwe bouwsteen aan het RNA te koppelen.', 'Rpb1 holds a magnesium ion (Mg²⁺). This ion helps join each new building block to the RNA.') },
     { dur: 9000, title: L3('Een lusje dat dichtklapt', 'A loop that snaps shut'), zoom: { chain: 'A', resi: range(832, 869).concat(range(1099, 1129), [495]) }, spin: .008,
       focus: [{ sel: { chain: 'A', resi: range(832, 869) }, style: { cartoon: { color: '#7fdc6a' } }, label: L3('brughelix', 'bridge helix') },

@@ -6,6 +6,7 @@ import { structure3d, ghost } from '../../kit3d.js';
  * CA-atomen + volledige His41 en Cys145 + nirmatrelvir; geen water (4 870 → 776 atomen). Nagekeken in het bestand (05-11-2026):
  * Cys145-SG ligt 1,92 Å van atoom C3 van 4WI (covalente binding), His41-NE2 3,62 Å van Cys145-SG (katalytische dyade). */
 const L3 = (nl, en) => ({ nl, en });
+const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 const PA = '#b39ddb', PB = '#7e6bd6', SITE = '#ff6b6b', DRUG = '#5fd3e6';
 const S = (color, r = 2.4) => ({ sphere: { color, radius: r } });
 const PROT = { atom: 'CA', hetflag: false };
@@ -29,7 +30,7 @@ export default structure3d({
   base,
   dimOpacity: false,
   steps: [
-    { dur: 8000, title: L3('Een virusschaar knipt de lange keten', 'The virus’s scissors cut the long chain'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('Een virusschaar knipt de lange keten', 'The virus’s scissors cut the long chain'), focus: null, zoom: {}, tags: [TAG({ chain: 'A' }, 'virusschaar: helft 1', 'virus scissors: half 1', undefined, [-150, 60]), TAG({ chain: 'B' }, 'helft 2', 'half 2', undefined, [150, -60])], tags: [TAG({ chain: 'A' }, 'virusschaar: helft 1', 'virus scissors: half 1', undefined, [-150, 60]), TAG({ chain: 'B' }, 'helft 2', 'half 2', undefined, [150, -60])], spin: .012,
       text: L3('Dit is de echte schaar van het coronavirus. Ze knipt de lange eiwitketen op minstens elf plaatsen.', 'This is the real scissors of the coronavirus. It cuts the long protein chain in at least eleven places.') },
     { dur: 8500, title: L3('De schaar werkt als paar', 'The scissors work as a pair'), zoom: {}, spin: .01,
       focus: [{ sel: { chain: 'A', ...PROT }, style: S(PA, 2.6) }, { sel: { chain: 'B', ...PROT }, style: S(PB, 2.6) },

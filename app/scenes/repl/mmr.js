@@ -8,6 +8,7 @@ import { NEW } from './_draw.js';
  *  - Phe432 van MSH6 (keten B) ligt binnen 4 Å van E7, E8, F23 en F24: het "Phe-X-Glu"-motief (met Glu434) tegen het mispaar.
  *  - Voor het verhaal noemen we streng F (met de T) de nieuwe streng; in het kristal is er geen oude of nieuwe streng. */
 const L3 = (nl, en) => ({ nl, en });
+const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 const COL = { msh2: '#9b7bff', msh6: '#5fd3e6' };
 const base = [
   { sel: { chain: 'A' }, style: { cartoon: { color: COL.msh2, opacity: .9 } } },
@@ -35,7 +36,7 @@ export default structure3d({
     en: 'The structure shows recognition only. Proofreading by the polymerase and the later steps (nicking by MutLα, removal by EXO1, resynthesis by Pol δ and ligase) are not visible in this structure and are only told. In the crystal no strand is "new"; we call the strand with the T the new one. Part of MSH6 (the N-terminal tail) is missing in the crystal.' },
   base,
   steps: [
-    { dur: 8000, title: L3('Eerst leest de polymerase zelf na', 'First the polymerase proofreads itself'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('Eerst leest de polymerase zelf na', 'First the polymerase proofreads itself'), focus: null, zoom: {}, tags: [TAG({ chain: ['A', 'B'] }, 'herstelklem: vangt de fouten die de polymerase miste', 'repair clamp: catches the errors the polymerase missed'), TAG({ chain: 'E' }, 'DNA', 'DNA')], spin: .012,
       text: L3('Zet de polymerase een foute letter, dan haalt ze die meestal meteen weg. Hier zie je de hulp voor de zeldzame fout die toch ontsnapt.', 'If the polymerase puts in a wrong letter, it usually removes it at once. Here you see the help for the rare error that still escapes.') },
     { dur: 8000, title: L3('Een klem uit twee delen', 'A clamp made of two parts'), zoom: {}, spin: .012,
       focus: [{ sel: { chain: 'A' }, style: { cartoon: { color: COL.msh2 } }, label: L3('deel 1', 'part 1') }, { sel: { chain: 'B' }, style: { cartoon: { color: COL.msh6 } }, label: L3('deel 2', 'part 2') }, ...DNA],

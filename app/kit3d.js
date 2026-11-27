@@ -7,6 +7,7 @@
  *   base: [ { sel: {...3Dmol-selectie}, style: {...} }, ... ],   // basisweergave (volgorde telt)
  *   steps: [ { dur, title, text,
  *              focus: { sel, style, label: {nl,en}, node } | [ … ] | null,   // wat deze stap uitlicht (rest wordt gedimd)
+ *              tags: [ { sel, label: {nl,en}, labelColor, labelOff } ],   // optioneel: enkel naamkaartjes, zonder iets te dimmen of te herkleuren
  *                     (optioneel labelSel: selectie waarop het label staat, labelColor: randkleur van het label,
  *                      labelOff: [dx, dy] verschuiving in px (dy > 0 = omhoog), node: knoop/scène waarnaar een klik op het label gaat)
  *              zoom: sel | null,                                  // waarop inzoomen (standaard focus.sel of alles)
@@ -479,7 +480,7 @@ export function structure3d(o) {
         const z = st.zoom === undefined ? ([].concat(st.focus ?? [])[0]?.sel ?? {}) : (st.zoom ?? {});
         stage.cam(z, first || FIXANG !== null ? 0 : 900, motion(st, o).pad);
         first = false;
-        labs.set(labelsOf(st.focus).map(l => ({ ...l, pos: stage.centroid(l.sel) })));
+        labs.set(labelsOf([].concat(st.focus ?? [], st.tags ?? [])).map(l => ({ ...l, pos: stage.centroid(l.sel) })));
         avT = 0;
         stage.render(nNew);
         place();
@@ -556,7 +557,7 @@ export function inset3d(svg, o) {
     if (first) { stage.cam({}, 0); for (const [axis, deg] of o.rotate ?? []) v.rotate(deg, axis); if (FIXANG) v.rotate(FIXANG, 'y'); }   // o.rotate: beginoriëntatie zoals bij structure3d
     stage.cam(st.zoom ?? {}, first || FIXANG !== null ? 0 : 900, motion({ zoom: st.zoom ?? {}, ...st }, o).pad);
     first = false;
-    labs.set(labelsOf(st.focus).map(l => ({ ...l, pos: stage.centroid(l.sel) })));
+    labs.set(labelsOf([].concat(st.focus ?? [], st.tags ?? [])).map(l => ({ ...l, pos: stage.centroid(l.sel) })));
     stage.render(nNew);
     labs.place();
     stage.plan(i);

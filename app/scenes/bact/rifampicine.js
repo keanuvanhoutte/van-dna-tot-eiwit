@@ -9,6 +9,7 @@ import { C } from '../../kit.js';
  * (o.a. D516, H526, S531: de drie posities uit Molodtsov 2017). Het Mg-ion zit tussen β′ D460, D462 en D464 (de actieve plek)
  * (NADFDGD-motief dat het Mg²⁺ van de actieve plek vasthoudt: Zaychikov et al., Science 1996) en ligt 14,4 Å van rifampicine (Campbell 2001: "meer dan 12 Å van de actieve plek"). Grootste afstand tussen twee atomen van RFP: 14,1 Å. */
 const L3 = (nl, en) => ({ nl, en });
+const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 const COL = { a: '#8190b0', a2: '#94a3bf', b: '#d98cf0', b2: '#9b7bff', w: '#c9a574', s: '#e8a23a', rif: '#ff6b6b', mg: '#7fdc6a', mut: '#ffc247' };
 const POCKET = [509, 510, 512, 513, 514, 516, 526, 529, 531, 533, 540, 564, 572, 687];
 const MUT = [516, 526, 531];
@@ -37,7 +38,7 @@ export default structure3d({
   base,
   hide: { resn: ['HOH', 'WAT', 'ZN'] },
   steps: [
-    { dur: 8000, title: L3('Een antibioticum in het RNA-polymerase', 'An antibiotic inside RNA polymerase'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('Een antibioticum in het RNA-polymerase', 'An antibiotic inside RNA polymerase'), focus: null, zoom: {}, tags: [TAG({ chain: ['A', 'B', 'C', 'D', 'E', 'F'], hetflag: false }, 'RNA-polymerase', 'RNA polymerase'), TAG({ resn: 'RFP' }, 'antibioticum (rifampicine)', 'antibiotic (rifampicin)')], tags: [TAG({ chain: ['A', 'B', 'C', 'D', 'E', 'F'], hetflag: false }, 'RNA-polymerase', 'RNA polymerase'), TAG({ resn: 'RFP' }, 'antibioticum (rifampicine)', 'antibiotic (rifampicin)')], spin: .012,
       text: L3('Dit is het RNA-polymerase van E. coli, met het antibioticum rifampicine erin (rood).', 'This is the RNA polymerase of E. coli, with the antibiotic rifampicin inside (red).') },
     { dur: 8500, title: L3('Het zit in de β-eenheid', 'It sits in the β subunit'), zoom: { chain: 'C' }, spin: .01,
       focus: [{ sel: { chain: 'C', hetflag: false }, style: { cartoon: { color: COL.b } }, label: 'β' }, RIF(L3('rifampicine', 'rifampicin'))],

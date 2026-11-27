@@ -16,6 +16,7 @@ const base = [
   { sel: { chain: 'Q' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .15 } } },
 ];
 const L3 = (nl, en) => ({ nl, en });
+const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 const DNA = [{ sel: { chain: 'P' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .2 } } }, { sel: { chain: 'Q' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .2 } } }];
 const M35 = [{ sel: { chain: 'P', resi: range(26, 31) }, style: { stick: { color: '#ffc247', radius: .35 } }, label: L3('−35 (TTGACA)', '−35 (TTGACA)') }, { sel: { chain: 'Q', resi: range(65, 70) }, style: { stick: { color: '#ffc247', radius: .35 } } }];
 const M10 = { sel: { chain: 'P', resi: range(49, 54) }, style: { stick: { color: '#ff8a3d', radius: .35 } }, label: L3('−10', '−10') };
@@ -35,7 +36,7 @@ export default structure3d({
   base,
   hide: { resn: ['HOH', 'WAT', '1N7'] },
   steps: [
-    { dur: 8000, title: L3('Eén enzym maakt alle RNA', 'One enzyme makes all RNA'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('Eén enzym maakt alle RNA', 'One enzyme makes all RNA'), focus: null, zoom: {}, tags: [TAG({ chain: ['G', 'H', 'I', 'J', 'K'] }, 'RNA-polymerase', 'RNA polymerase'), TAG({ chain: 'L' }, 'σ: de gids', 'σ: the guide'), TAG({ chain: 'P' }, 'DNA', 'DNA')], spin: .012,
       text: L3('Bacteriën hebben maar één soort RNA-polymerase. Hier zit het op een promoter, met het DNA al open.', 'Bacteria have only one kind of RNA polymerase. Here it sits on a promoter, with the DNA already open.') },
     { dur: 8000, title: L3('De kern: vijf eiwitten', 'The core: five proteins'), zoom: {}, spin: .012,
       focus: [{ sel: { chain: 'J' }, style: { cartoon: { color: COL.J } }, label: 'β′' }, { sel: { chain: 'I' }, style: { cartoon: { color: COL.I } }, label: 'β' },

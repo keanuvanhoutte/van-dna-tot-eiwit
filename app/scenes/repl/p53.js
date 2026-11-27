@@ -6,6 +6,7 @@ import { C } from '../../kit.js';
  * A en C raken het DNA maar op enkele plaatsen. Zink: A951, B952, C953 (één per kerndomein).
  * Hotspots volgens Olivier et al. 2010: contactmutanten R248, R273; structurele mutanten R175, G245, R249, R282. */
 const L3 = (nl, en) => ({ nl, en });
+const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 const P = '#9b7bff', P2 = '#6f6aa8';
 const base = [
   { sel: { chain: 'B' }, style: { cartoon: { color: P, opacity: .95 } } },
@@ -32,7 +33,7 @@ export default structure3d({
     en: 'Only the core domain of p53 is shown (about residues 94–289); the rest of the protein (activation part, tetramerisation domain, tail) is missing. In the cell p53 binds as a tetramer (four chains); this crystal holds three core domains, one of which really grips the recognition site. The signalling chain (ATM/ATR, MDM2, p21, apoptosis) is not visible in the structure and is only told.' },
   base,
   steps: [
-    { dur: 8000, title: L3('De bewaker van het genoom', 'The guardian of the genome'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('De bewaker van het genoom', 'The guardian of the genome'), focus: null, zoom: {}, tags: [TAG({ chain: ['A', 'B', 'C'] }, 'p53 (grijpt het DNA)', 'p53 (grips the DNA)'), TAG({ chain: ['E', 'F'] }, 'DNA', 'DNA')], tags: [TAG({ chain: ['A', 'B', 'C'] }, 'p53 (grijpt het DNA)', 'p53 (grips the DNA)'), TAG({ chain: ['E', 'F'] }, 'DNA', 'DNA')], spin: .012,
       text: L3('p53 is een eiwit dat alarm slaat bij DNA-schade. Hier zit het vast op een stuk DNA.', 'p53 is a protein that raises the alarm when DNA is damaged. Here it is bound to a piece of DNA.') },
     { dur: 9000, title: L3('Schade zet het alarm aan', 'Damage switches on the alarm'), zoom: {}, spin: .012,
       focus: [OTHER, ...DNA, { ...B, label: 'p53' }],

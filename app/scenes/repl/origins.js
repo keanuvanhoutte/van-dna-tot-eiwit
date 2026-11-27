@@ -8,6 +8,7 @@ import { C } from '../../kit.js';
  *   ring 2: A = MCM2 · B = MCM3 · C = MCM4 · D = MCM5 · E = MCM6 · F = MCM7   (z ≈ 267–278 Å)
  *   DNA: O en S (49 nt elk, polyAT/polyTA), loopt door beide ringen. */
 const L3 = (nl, en) => ({ nl, en });
+const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 const R1 = ['2', '3', '4', '5', '6', '7'], R2 = ['A', 'B', 'C', 'D', 'E', 'F'], DNA = ['O', 'S'];
 const SUB = ['#9b7bff', '#5fd3e6', '#7fdc6a', '#ffc247', '#ff8a3d', '#e0708f'];      // MCM2 … MCM7
 const RING1 = '#8f86ff', RING2 = '#4fc3d9';
@@ -34,7 +35,7 @@ export default structure3d({
   dimOpacity: false,
   rotate: [['x', 90]],                       // de lange as van de dubbelhexameer (z) verticaal: ringen boven elkaar, DNA verticaal
   steps: [
-    { dur: 8000, title: L3('Kopiëren begint op vaste startplaatsen', 'Copying begins at fixed starting points'), focus: null, zoom: {}, spin: .01,
+    { dur: 8000, title: L3('Kopiëren begint op vaste startplaatsen', 'Copying begins at fixed starting points'), focus: null, zoom: {}, tags: [TAG({ chain: R1 }, 'ring 1', 'ring 1'), TAG({ chain: R2 }, 'ring 2', 'ring 2'), TAG({ chain: 'O' }, 'DNA', 'DNA')], tags: [TAG({ chain: R1 }, 'ring 1', 'ring 1'), TAG({ chain: R2 }, 'ring 2', 'ring 2'), TAG({ chain: 'O' }, 'DNA', 'DNA')], spin: .01,
       text: L3('Op tienduizenden plaatsen in ons DNA ligt zo’n machine klaar. Hier zie je er één, rond een echt stuk DNA.', 'At tens of thousands of places in our DNA such a machine lies ready. Here you see one, around a real piece of DNA.') },
     { dur: 8000, title: L3('Zes verschillende eiwitten vormen één ring', 'Six different proteins form one ring'), zoom: { chain: R1 }, spin: .01,
       focus: [FADE([...R2]), ...dnaS(1.6), ...bySub(R1, 2.6), { sel: { chain: '4' }, style: T(SUB[2], 2.6), label: L3('ring van 6', 'ring of 6') }],
@@ -44,7 +45,7 @@ export default structure3d({
         { sel: { chain: R2 }, style: T(RING2, 2.4) }, { sel: { chain: 'D' }, style: T(RING2, 2.4), label: L3('ring 2', 'ring 2') }],
       text: L3('In de eerste fase van de celcyclus (G1) worden twee ringen rond het DNA gelegd. Ze raken elkaar in het midden.', 'In the first phase of the cell cycle (G1) two rings are placed around the DNA. They touch in the middle.') },
     { dur: 9000, title: L3('Het DNA loopt door beide ringen', 'The DNA runs through both rings'), zoom: { chain: DNA }, spin: .008,
-      focus: [FADE([...R1, ...R2]), { sel: { chain: 'O' }, style: T(C.dna, 3), label: 'DNA' }, { sel: { chain: 'S' }, style: T(C.dna2, 3) }],
+      focus: [{ sel: { chain: R1 }, style: T(RING1, .9) }, { sel: { chain: R2 }, style: T(RING2, .9) }, { sel: { chain: 'O' }, style: T(C.dna, 3), label: 'DNA' }, { sel: { chain: 'S' }, style: T(C.dna2, 3) }, { sel: { chain: 'D' }, style: T(RING2, .9), label: L3('ring 2 (dun getekend)', 'ring 2 (drawn thin)') }, { sel: { chain: '5' }, style: T(RING1, .9), label: L3('ring 1 (dun getekend)', 'ring 1 (drawn thin)') }],
       text: L3('Het dubbele DNA zit in het gat van beide ringen. Waar de ringen elkaar raken, is het al een beetje opengeduwd.', 'The double-stranded DNA sits in the hole of both rings. Where the rings meet, it is already pushed open a little.') },
     { dur: 8000, title: L3('Klaar, maar nog uit', 'Ready, but still switched off'), zoom: {}, spin: .01,
       focus: [...bySub(R1, 1.9), ...bySub(R2, 1.9), ...dnaS(2.8), { sel: { chain: 'O', resi: 25 }, style: T(C.dna, 2.8), label: L3('klaargelegd', 'loaded') }],

@@ -10,6 +10,7 @@ import { C } from '../../kit.js';
  *   19S-deksel: V W X Y Z a c d e (PSMD3, 12, 11, 6, 7, 13, 14, 8, SEM1); c = PSMD14 (Rpn11, haalt ubiquitine eraf)
  *   ubiquitine: u en w */
 const L3 = (nl, en) => ({ nl, en });
+const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 const A1 = ['G', 'H', 'I', 'J', 'K', 'L', 'M'], B1 = ['N', 'O', 'P', 'Q', 'R', 'S', 'T'], B2 = ['n', 'o', 'p', 'q', 'r', 's', 't'], A2 = ['g', 'h', 'i', 'j', 'k', 'l', 'm'];
 const CORE = [...A1, ...B1, ...B2, ...A2];
 const ATP = ['A', 'B', 'C', 'D', 'E', 'F'], BASEX = ['U', 'f', 'b'], LID = ['V', 'W', 'X', 'Y', 'Z', 'a', 'c', 'd', 'e'], UBQ = ['u', 'w'];
@@ -43,7 +44,7 @@ export default structure3d({
   dimOpacity: false,
   outline: { width: .3 },
   steps: [
-    { dur: 8000, title: L3('Een machine die eiwitten afbreekt', 'A machine that breaks proteins down'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('Een machine die eiwitten afbreekt', 'A machine that breaks proteins down'), focus: null, zoom: {}, tags: [TAG({ chain: CAP }, 'deksel met motor', 'lid with motor'), TAG({ chain: CORE }, 'knipbuis: korte stukjes komen hier vrij', 'cutting barrel: short pieces come out here')], tags: [TAG({ chain: CAP }, 'deksel met motor', 'lid with motor'), TAG({ chain: CORE }, 'knipbuis', 'cutting barrel')], spin: .012,
       text: L3('Dit is het echte afbraakapparaat van de mens, het proteasoom. Het bestaat uit ruim 30 verschillende eiwitten.', 'This is the real human breakdown machine, the proteasome. It is built from more than 30 different proteins.') },
     { dur: 8500, title: L3('Een buis van vier ringen van zeven', 'A tube of four rings of seven'), zoom: { chain: CORE }, spin: .01,
       focus: [DIM(CAP), { sel: { chain: [...A1, ...A2] }, style: S(COL.a, 2.6) }, { sel: { chain: [...B1, ...B2] }, style: S(COL.b, 2.6) },

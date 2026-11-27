@@ -5,6 +5,7 @@ import { C } from '../../kit.js';
  * (Adams et al., Nature 2004). Ketens: B intron-RNA (197 nt) · C exon-RNA (22 nt, "GROUP I EXON") · D kort exon-stukje (3 nt)
  * · A U1A-eiwit (kristallisatiehulp: bindt een ingebouwde lus, geen natuurlijk onderdeel). */
 const L3 = (nl, en) => ({ nl, en });
+const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 const COL = { B: '#c9a574', C: C.rna, D: '#ffd27a', A: '#8a93a8' };
 const base = [
   { sel: { chain: 'B' }, style: { cartoon: { color: COL.B, opacity: .95 } } },
@@ -28,7 +29,7 @@ export default structure3d({
     en: 'The RNA is slightly modified so it can be crystallised: a loop binds the U1A protein, and the exons are short synthetic pieces. The structure shows one moment, just before the second step of splicing. Group II introns and inteins are not in this structure; they are only discussed in the text.' },
   base,
   steps: [
-    { dur: 8000, title: L3('Splicen zonder spliceosoom', 'Splicing without a spliceosome'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('Splicen zonder spliceosoom', 'Splicing without a spliceosome'), focus: null, zoom: {}, tags: [TAG({ chain: 'B' }, 'intron: het RNA is zelf het enzym', 'intron: the RNA itself is the enzyme'), TAG({ chain: 'C' }, 'exon', 'exon'), TAG({ chain: 'A' }, 'hulpje (U1A)', 'helper (U1A)')], tags: [TAG({ chain: 'B' }, 'intron: het RNA is zelf het enzym', 'intron: the RNA itself is the enzyme'), TAG({ chain: 'C' }, 'exon', 'exon'), TAG({ chain: 'A' }, 'hulpje (U1A)', 'helper (U1A)')], tags: [TAG({ chain: 'B' }, 'intron: het RNA is zelf het enzym', 'intron: the RNA itself is the enzyme'), TAG({ chain: 'C' }, 'exon', 'exon'), TAG({ chain: 'A' }, 'hulpje (U1A)', 'helper (U1A)')], spin: .012,
       text: L3('Bacteriën hebben geen spliceosoom. Toch knippen enkele zeldzame introns zichzelf uit hun RNA.', 'Bacteria have no spliceosome. Yet a few rare introns cut themselves out of their RNA.') },
     { dur: 8000, title: L3('Het intron is zelf het enzym', 'The intron itself is the enzyme'), zoom: {}, spin: .012,
       focus: { sel: { chain: 'B' }, style: { cartoon: { color: COL.B } }, label: L3('groep I-intron', 'group I intron') },

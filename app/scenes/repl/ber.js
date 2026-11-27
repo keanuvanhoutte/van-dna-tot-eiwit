@@ -6,6 +6,7 @@ import { C, BASE } from '../../kit.js';
  *  - P2U = 2'-deoxypseudo-uridine (lijkt op dU maar de suikerbinding kan niet geknipt worden), op B5, volledig uit de helix geklapt.
  *  - Binnen 4 Å van P2U: Gln144, Asp145, Pro146, Tyr147, Cys157, Phe158, Pro167–Ser169, Asn204, His268 (de uracilholte). Partner van B5 is A C27. */
 const L3 = (nl, en) => ({ nl, en });
+const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 const ENZ = '#9b7bff';
 const base = [
   { sel: { chain: 'A' }, style: { cartoon: { color: ENZ, opacity: .9 } } },
@@ -31,7 +32,7 @@ export default structure3d({
     en: 'To "catch" the enzyme before cutting, the researchers used a fake U (pseudouridine) that cannot be cut. In the crystal the U sits opposite an A (as after dUTP incorporation); after deamination of C it sits opposite a G. The next steps (APE1, Pol β, ligase) are not visible in this structure and are only told. Shown is the catalytic part of UNG; the nuclear and mitochondrial forms differ only at the start of the chain.' },
   base,
   steps: [
-    { dur: 8000, title: L3('Eén letter is vanzelf veranderd', 'One letter has changed by itself'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('Eén letter is vanzelf veranderd', 'One letter has changed by itself'), focus: null, zoom: {}, tags: [TAG({ chain: 'A' }, 'herstelenzym', 'repair enzyme', undefined, [140, -90]), TAG({ chain: ['B', 'C'] }, 'DNA', 'DNA'), TAG({ chain: 'B', resi: 5 }, 'foute letter (U)', 'wrong letter (U)')], tags: [TAG({ chain: 'A' }, 'herstelenzym', 'repair enzyme', undefined, [140, -90]), TAG({ chain: ['B', 'C'] }, 'DNA', 'DNA'), TAG({ chain: 'B', resi: 5 }, 'foute letter (U)', 'wrong letter (U)')], spin: .012,
       text: L3('Een C kan vanzelf in een U veranderen. U hoort niet in DNA en geeft bij de volgende kopie een fout.', 'A C can turn into a U by itself. U does not belong in DNA and causes an error at the next copy.') },
     { dur: 8000, title: L3('Een enzym tast het DNA af', 'An enzyme scans the DNA'), zoom: {}, spin: .012,
       focus: [{ sel: { chain: 'A' }, style: { cartoon: { color: ENZ } }, label: L3('herstelenzym', 'repair enzyme') }, ...DNA],
