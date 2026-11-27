@@ -56,6 +56,10 @@ const kindOf = s => {
 };
 const SOURCES = [...SRC.values()].map(s => ({ ...s, kind: kindOf(s) })).sort((a, b) => a.t.localeCompare(b.t));
 const nKind = k => SOURCES.filter(s => s.kind === k).length;
+/* PDB-pagina's ≠ 3D-structuren: een bron kan een structuurpagina of een PDB-101-artikel zijn, en niet elke geciteerde structuur is in 3D te bekijken */
+const pdbPages = SOURCES.filter(s => s.kind === 'pdb');
+const pdbStructPages = pdbPages.filter(s => /rcsb\.org\/structure\//i.test(s.url)).length;
+const pdbOther = pdbPages.length - pdbStructPages;
 
 /* ---------- teksten ---------- */
 const T = {
@@ -68,7 +72,7 @@ const T = {
   sTopics: { nl: 'onderwerpen, elk met een animatie', en: 'topics, each with an animation' },
   sLines: { nl: 'verhalen en zijpaden', en: 'stories and side paths' },
   sSrc: { nl: 'verschillende bronnen', en: 'distinct sources' },
-  sPdb: { nl: 'echte 3D-structuren (PDB)', en: 'real 3D structures (PDB)' },
+  sPdb: { nl: 'echte 3D-structuren om zelf te draaien (PDB)', en: 'real 3D structures you can rotate (PDB)' },
   sRounds: { nl: 'controlerondes', en: 'verification rounds' },
   tabs: {
     about: { nl: 'Wat is Dogma?', en: 'What is Dogma?' }, nav: { nl: 'Zo navigeer je', en: 'How to navigate' }, map: { nl: 'Inhoudskaart', en: 'Content map' },
@@ -184,7 +188,7 @@ function tabSci() {
   <details class="acc"><summary>2 · ${esc(L({ nl: 'Welke bronnen wel, en welke niet', en: 'Which sources are used, and which are not' }))} <small>${esc(L({ nl: 'rangorde van betrouwbaarheid', en: 'order of reliability' }))}</small></summary><div class="in"><div class="tiers">
     <div class="tier"><div class="lv">${esc(L({ nl: 'Artikels', en: 'Papers' }))}<small>${nKind('paper')} ${esc(L({ nl: 'in de app', en: 'in the app' }))}</small></div><p>${esc(L({ nl: 'Peer-reviewed onderzoeksartikels en overzichtsartikels (reviews) in wetenschappelijke tijdschriften, opgezocht via PubMed en gelezen via PubMed Central of Europe PMC. Eerste keuze voor getallen, mechanismen en recente inzichten. Bij voorkeur een recente review van erkende experts; voor een ontdekking het oorspronkelijke artikel.', en: 'Peer-reviewed research papers and review articles in scientific journals, found via PubMed and read via PubMed Central or Europe PMC. First choice for numbers, mechanisms and recent insights. Preferably a recent review by recognised experts; for a discovery, the original paper.' }))}</p></div>
     <div class="tier"><div class="lv">${esc(L({ nl: 'Handboeken', en: 'Textbooks' }))}<small>${nKind('book')} ${esc(L({ nl: 'in de app', en: 'in the app' }))}</small></div><p>${esc(L({ nl: 'Gratis universitaire handboeken op NCBI Bookshelf, zoals Alberts (Molecular Biology of the Cell), Lodish, Berg en Cooper, plus Cell Biology by the Numbers. Basis voor algemene processen. Omdat Bookshelf soms een captcha toonde, is elke uitspraak die enkel op een handboek steunde, opnieuw bevestigd met een gelezen artikel of herschreven.', en: 'Free university textbooks on NCBI Bookshelf, such as Alberts (Molecular Biology of the Cell), Lodish, Berg and Cooper, plus Cell Biology by the Numbers. The basis for general processes. Because Bookshelf sometimes showed a captcha, every statement that relied only on a textbook was confirmed again with a read paper, or rewritten.' }))}</p></div>
-    <div class="tier"><div class="lv">${esc(L({ nl: 'Structuurdata', en: 'Structure data' }))}<small>${nKind('pdb')} ${esc(L({ nl: 'in de app', en: 'in the app' }))}</small></div><p>${esc(L({ nl: 'RCSB Protein Data Bank (gemeten structuren met auteurs, methode en resolutie) en PDB-101, de educatieve kant van de PDB.', en: 'RCSB Protein Data Bank (measured structures with authors, method and resolution) and PDB-101, the educational side of the PDB.' }))}</p></div>
+    <div class="tier"><div class="lv">${esc(L({ nl: 'Structuurdata', en: 'Structure data' }))}<small>${nKind('pdb')} ${esc(L({ nl: 'pagina’s in de app', en: 'pages in the app' }))}</small></div><p>${esc(L({ nl: 'RCSB Protein Data Bank (gemeten structuren met auteurs, methode en resolutie) en PDB-101, de educatieve kant van de PDB.', en: 'RCSB Protein Data Bank (measured structures with authors, method and resolution) and PDB-101, the educational side of the PDB.' }))}</p></div>
     <div class="tier"><div class="lv">${esc(L({ nl: 'Databanken', en: 'Databases' }))}<small>${nKind('db')} ${esc(L({ nl: 'in de app', en: 'in the app' }))}</small></div><p>${esc(L({ nl: 'Gecureerde wetenschappelijke databanken: UniProt (eiwitten), GENCODE en Ensembl (genen), ICTV en ViralZone (virussen), BioNumbers (getallen uit de celbiologie).', en: 'Curated scientific databases: UniProt (proteins), GENCODE and Ensembl (genes), ICTV and ViralZone (viruses), BioNumbers (numbers from cell biology).' }))}</p></div>
     <div class="tier no"><div class="lv">${esc(L({ nl: 'Niet gebruikt', en: 'Not used' }))}<small>${esc(L({ nl: 'nooit als bron', en: 'never as a source' }))}</small></div><p>${esc(L({ nl: 'Wikipedia, blogs, populaire media, lesnotities en samenvattingen door AI. Zulke teksten mogen hoogstens helpen om de echte bron te vinden; in de app staat dan altijd die echte bron. Een getal dat alleen “uit het hoofd” of uit een opdracht kwam, telt niet: het moet in een gelezen bron staan.', en: 'Wikipedia, blogs, popular media, lecture notes and AI summaries. Such texts may at most help to find the real source; the app then always lists that real source. A number that came only “from memory” or from an instruction does not count: it must be in a source that was read.' }))}</p></div>
   </div></div></details>
@@ -220,10 +224,10 @@ function tabSci() {
 }
 
 /* ---------- tab 5: alle bronnen ---------- */
-const KIND = { paper: { nl: 'Artikels', en: 'Papers' }, book: { nl: 'Handboeken', en: 'Textbooks' }, pdb: { nl: 'Structuurdata (PDB)', en: 'Structure data (PDB)' }, db: { nl: 'Databanken', en: 'Databases' } };
+const KIND = { paper: { nl: 'Artikels', en: 'Papers' }, book: { nl: 'Handboeken', en: 'Textbooks' }, pdb: { nl: 'PDB-pagina’s', en: 'PDB pages' }, db: { nl: 'Databanken', en: 'Databases' } };
 function tabSrc() {
   return `<h2>${esc(L({ nl: 'Alle bronnen', en: 'All sources' }))}</h2>
-  <p class="sub">${esc(L({ nl: `Deze lijst wordt bij het openen opgebouwd uit de bronnen die echt in de app staan: ${SOURCES.length} verschillende bronnen. Onder elke bron zie je waar ze gebruikt wordt; klik om die animatie of dat 3D-item te openen.`, en: `This list is built when the page opens from the sources that are actually in the app: ${SOURCES.length} distinct sources. Under each source you see where it is used; click to open that animation or 3D item.` }))}</p>
+  <p class="sub">${esc(L({ nl: `Deze lijst wordt bij het openen opgebouwd uit de bronnen die echt in de app staan: ${SOURCES.length} verschillende bronnen. Onder elke bron zie je waar ze gebruikt wordt; klik om die animatie of dat 3D-item te openen. De ${nKind('pdb')} PDB-pagina’s zijn ${pdbStructPages} structuurpagina’s en ${pdbOther} uitlegartikels (PDB-101). Dat is iets anders dan de ${pdbSet.size} 3D-structuren bovenaan: dat zijn de structuren die je in de app zelf kan draaien.`, en: `This list is built when the page opens from the sources that are actually in the app: ${SOURCES.length} distinct sources. Under each source you see where it is used; click to open that animation or 3D item. The ${nKind('pdb')} PDB pages are ${pdbStructPages} structure pages and ${pdbOther} explainer articles (PDB-101). That is not the same as the ${pdbSet.size} 3D structures at the top: those are the structures you can rotate yourself in the app.` }))}</p>
   <div class="srctools"><input type="search" id="srcQ" placeholder="${esc(L({ nl: 'Zoek op auteur, jaartal, tijdschrift of onderwerp…', en: 'Search by author, year, journal or topic…' }))}">
     <button class="f" data-k="" aria-pressed="true">${esc(L({ nl: 'Alles', en: 'All' }))}</button>${Object.keys(KIND).map(k => `<button class="f" data-k="${k}" aria-pressed="false">${esc(L(KIND[k]))} (${nKind(k)})</button>`).join('')}
     <span class="n" id="srcN"></span></div>
