@@ -18,9 +18,12 @@ import prot from './prot.js';
 import bact from './bact.js';
 import signal from './signal.js';
 import misc from './misc.js';
+import live, { patterns as livePatterns } from './live.js';   // labels die tijdens het afspelen met een getal opgebouwd worden
 import polish from './polish.js';   // woordvervangingen in technische zijpaneelvelden (eerst; de takken gaan voor)
-const parts = [entry, repl, txn, genome, rna, tl, prot, bact, signal, misc];
+const parts = [entry, repl, txn, genome, rna, tl, prot, bact, signal, misc, live];
 export const PRO_LABELS = { nl: Object.assign({}, ...parts.map(p => p.labels?.nl)), en: Object.assign({}, ...parts.map(p => p.labels?.en)) };
+/* opgebouwde labels: [animatie-id, patroon, vervanging], enkel gebruikt als er geen exacte sleutel is */
+export const PRO_PATTERNS = livePatterns;
 export const PRO_STEPS = Object.assign({}, ...parts.map(p => p.steps));
 /* zijpaneel: per knoop en per taal veld voor veld samenvoegen (polish eerst, zodat een tak die een veld volledig herschrijft voorgaat) */
 export const PRO_DETAILS = {};

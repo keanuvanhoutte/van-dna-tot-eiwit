@@ -23,7 +23,7 @@ import { level, rank, levelSelect } from '../shared/level.js';
 import { SIMPLE } from '../shared/simple/index.js';
 import { LABELS, LEGEND } from '../shared/simple/labels.js';
 import { SEC_LABELS } from '../shared/simple/labels-sec.js';
-import { PRO_LABELS, PRO_STEPS, PRO_DETAILS, PRO_GLOSS, PRO_BRIDGE, PRO_META } from '../shared/pro/index.js';   // hoger onderwijs: vaktaal-laag
+import { PRO_LABELS, PRO_STEPS, PRO_DETAILS, PRO_GLOSS, PRO_BRIDGE, PRO_META, PRO_PATTERNS } from '../shared/pro/index.js';   // hoger onderwijs: vaktaal-laag
 import { STEP_LEVEL } from '../shared/levels.js';
 
 /* ---------- verhaallijnen ---------- */
@@ -240,7 +240,10 @@ const bridgeOf = b => (rank >= 3 && b && PRO_BRIDGE[b.nl]) || b;
 /* hoger onderwijs: dezelfde vervanging, maar naar vaktaal (shared/pro/) */
 /* secundair: enkel ruis weg of korter, per animatie (shared/simple/labels-sec.js) */
 const LMAP = level === 'hobby' ? LABELS[lang] ?? null : level === 'secundair' ? SEC_LABELS[lang] ?? null : rank >= 3 && Object.keys(PRO_LABELS[lang] ?? {}).length ? PRO_LABELS[lang] : null;
-const pickLabel = (k, map, id) => { const sk = id + '|' + k; return sk in map ? map[sk] : k in map ? map[k] : undefined; };
+const LPAT = rank >= 3 ? PRO_PATTERNS[lang] ?? [] : [];
+/* geen exacte sleutel: op hoger nog de patronen voor labels met een getal (shared/pro/live.js) */
+const patLabel = (k, id) => { for (const [pid, re, out] of LPAT) if (pid === id && re.test(k)) return k.replace(re, out); };
+const pickLabel = (k, map, id) => { const sk = id + '|' + k; return sk in map ? map[sk] : k in map ? map[k] : map === LMAP && LPAT.length ? patLabel(k, id) : undefined; };
 const easyLabel = s => { if (!LMAP || !s) return s; const v = pickLabel(s.replace(/\s+/g, ' ').trim(), LMAP, current?.id ?? ''); return v === undefined ? s : v; };
 /* voor 3D-labels die in het beeld zelf getekend worden (geen tekst in de pagina): de scène vraagt de eenvoudige tekst op */
 const easyFor = (s, id) => { if (!LMAP || typeof s !== 'string' || !s) return s; const v = pickLabel(s.replace(/\s+/g, ' ').trim(), LMAP, id); return v === undefined ? s : v; };
