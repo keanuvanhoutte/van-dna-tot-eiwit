@@ -23,6 +23,11 @@ const isBeta = r => r.phi < -45 && (r.psi > 90 || r.psi < -150);
 const polyPath = poly => poly.map((p, i) => `${i ? 'L' : 'M'}${f1(X(p[0]))},${f1(Y(p[1]))}`).join('') + 'Z';
 const CHAIN = { A: 'α1', B: 'β1', C: 'α2', D: 'β2' };
 
+/* kleine pictogrammen: spiraal (helix) en pijl (β-streng), zoals in cartoontekeningen van eiwitten */
+const HELIX_G = (x, y, col, sc = 1) => [0, 1, 2, 3].map(i => `<ellipse cx="${f1(x + i * 11 * sc)}" cy="${f1(y)}" rx="${f1(8 * sc)}" ry="${f1(14 * sc)}" fill="none" stroke="${col}" stroke-width="${f1(3.5 * sc)}"/>`).join('');
+const STRAND_G = (x, y, col, sc = 1) => `<path d="M${f1(x - 8 * sc)},${f1(y - 6 * sc)} h${f1(34 * sc)} v${f1(-9 * sc)} l${f1(20 * sc)},${f1(15 * sc)} l${f1(-20 * sc)},${f1(15 * sc)} v${f1(-9 * sc)} h${f1(-34 * sc)}z" fill="${col}"/>`;
+const HCOL = '#ffc247', BCOL = '#4fd1ff';
+
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 
 export default {
@@ -55,7 +60,8 @@ export default {
       const s = a < 0 ? '−' + (-a) : String(a);
       ticks.push(txt(X(a), Y0 + S + 34, s, C.muted, 22), txt(X0 - 14, Y(a) + 8, s, C.muted, 22, 'end'));
     }
-    const reg = (id, x, y, s, anchor = 'middle', col = '#dfe8ff') => `<text id="${id}" x="${f1(x)}" y="${f1(y)}" font-size="25" text-anchor="${anchor}" fill="${col}" font-family="Inter" font-weight="700" opacity="0" paint-order="stroke" stroke="#0b1224" stroke-width="5" stroke-linejoin="round">${s}</text>`;
+    /* gebiedsnaam (met pictogram links ervan): groot, met donkere rand zodat ze leesbaar blijft boven de punten */
+    const reg = (id, x, y, s, anchor = 'middle', col = '#dfe8ff', glyph = '', size = 27) => `<g id="${id}" opacity="0">${glyph}<text x="${f1(x)}" y="${f1(y)}" font-size="${size}" text-anchor="${anchor}" fill="${col}" font-family="Inter" font-weight="700" paint-order="stroke" stroke="#0b1224" stroke-width="6" stroke-linejoin="round">${s}</text></g>`;
     return svgOpen() + `
     <rect x="${X0}" y="${Y0}" width="${S}" height="${S}" fill="#0b1224" stroke="#3a4a6b" stroke-width="2"/>
     <g id="ra-reg" opacity="0">
@@ -69,15 +75,16 @@ export default {
     <g>
       <g data-node="secundair" data-color="${C.trna}" data-nolabel>
         <rect x="${X(-180)}" y="${Math.min(Y(180), Y(90))}" width="${X(-45) - X(-180)}" height="${Math.abs(Y(90) - Y(180))}" fill="transparent"/>
-        ${reg('ra-lb', X(-115), Y(160), T2('β-streng', 'β-strand'))}
+        ${reg('ra-lb', X(-150) + 58, Y(150) + 9, T2('β-blad (gestrekt)', 'β-sheet (stretched)'), 'start', BCOL, STRAND_G(X(-150), Y(150), BCOL))}
       </g>
       <g data-node="secundair" data-color="${C.prot}" data-label="${T2('α-helix → secundaire structuur', 'α-helix → secondary structure')}">
         <rect x="${X(-100)}" y="${Y(10)}" width="${X(-30) - X(-100)}" height="${Y(-80) - Y(10)}" fill="transparent"/>
-        ${reg('ra-la', X(-20), Y(-72), T2('α (rechts)', 'α (right)'), 'start')}
+        ${reg('ra-la', X(-12) + 52, Y(-40) + 9, T2('α-helix', 'α-helix'), 'start', HCOL, HELIX_G(X(-12), Y(-40), HCOL))}
         <circle data-anchor="secundair" cx="1245" cy="720" r="1" fill="none"/>
       </g>
-      ${reg('ra-ll', X(105), Y(85), T2('α (links)', 'α (left)'), 'start')}
-      ${reg('ra-lf', X(90), Y(-120), T2('verboden', 'forbidden'), 'middle', '#93a0bb')}
+      ${reg('ra-ll', X(100), Y(40) + 8, T2('linkse helix', 'left-handed helix'), 'start', '#dfe8ff', '', 22)}
+      ${reg('ra-lf', X(90), Y(-110), T2('verboden:', 'forbidden:'), 'middle', '#93a0bb')}
+      ${reg('ra-lf2', X(90), Y(-110) + 34, T2('atomen botsen', 'atoms clash'), 'middle', '#93a0bb', '', 23)}
     </g>
     <g id="ra-hi"></g>
     <!-- één residu: waar liggen φ en ψ -->
@@ -111,7 +118,7 @@ export default {
     const deg = v => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(Math.round(v)) + '°';
     const box = (y, h) => `<rect x="930" y="${y}" width="630" height="${h}" rx="16" fill="#0d1426" stroke="#2a3550" stroke-width="2"/>`;
     /* welk gebiedslabel is zichtbaar in welke stap (stap 1–2: alle vier) */
-    const REG = { 'ra-lb': 4, 'ra-la': 3, 'ra-ll': 5, 'ra-lf': 7 };
+    const REG = { 'ra-lb': 4, 'ra-la': 3, 'ra-ll': 5, 'ra-lf': 7, 'ra-lf2': 7 };
     const vis = (id, k) => k <= 0 ? 0 : k <= 2 ? 1 : REG[id] === k ? 1 : 0;
     let lastKey = '';
     return {
@@ -145,16 +152,35 @@ export default {
         const title = s2 => txt(960, 434, s2, C.text, 25, 'start');
         const big = (s2, col) => `<text x="960" y="492" font-size="36" fill="${col}" font-family="JetBrains Mono" font-weight="700">${s2}</text>`;
         const small = s2 => txt(960, 545, s2, '#c3cde2', 23, 'start');
-        /* voorbeeldpunt (ideale α-helix) + kaderje; in stap 1 vervagen ze */
-        const exBox = op => `<g opacity="${f1(op)}">` + box(390, 150) + title(T2('Voorbeeld: ideale α-helix', 'Example: ideal α-helix')) + big('φ −60°  ψ −45°', C.text) + '</g>';
-        if (step === 0 || (step === 1 && p < .35)) {
-          const k = step === 0 ? ease(sub(p, .2, .7)) : 1, fo = step === 0 ? 1 : 1 - ease(sub(p, 0, .3));
-          const ph = -180 + k * 120, ps = 0 - k * 45;
-          info = exBox(fo);
-          hi += `<g opacity="${f1(fo)}"><line x1="${f1(X(ph))}" y1="${Y0 + S}" x2="${f1(X(ph))}" y2="${f1(Y(ps))}" stroke="${C.chain}" stroke-width="2.5" stroke-dasharray="6 5"/>` +
-            `<line x1="${X0}" y1="${f1(Y(ps))}" x2="${f1(X(ph))}" y2="${f1(Y(ps))}" stroke="${C.trna}" stroke-width="2.5" stroke-dasharray="6 5"/>` +
-            `<circle cx="${f1(X(ph))}" cy="${f1(Y(ps))}" r="11" fill="#ffc247" stroke="#fff" stroke-width="2"/>` +
-            txt(X(ph) + 20, Y(ps) - 20, `(${deg(ph)}, ${deg(ps)})`, '#fff', 26, 'start') + '</g>';
+        /* Stap 1: eerst φ kiezen (groene lijn langs de onderas → verticale hulplijn), dan ψ (gele lijn langs de zijas →
+         * horizontale hulplijn); waar beide lijnen kruisen komt het punt: zo leest de kijker hoe een punt ontstaat.
+         * Stap 2: het helixpunt blijft staan, er komt een voorbeeldpunt van een β-streng bij; vanaf de echte data verdwijnen ze. */
+        const exBox = (op, ph, ps, k2) => `<g opacity="${f1(op)}">` + box(390, 150) + title(T2('Voorbeeld: ideale α-helix', 'Example: ideal α-helix')) +
+          `<text x="960" y="492" font-size="36" font-family="JetBrains Mono" font-weight="700"><tspan fill="${C.chain}">φ ${deg(ph)}</tspan><tspan fill="${C.trna}" dx="28">ψ ${k2 > 0 ? deg(ps) : '?'}</tspan></text>` + '</g>';
+        const dot = (ph, ps, col, r = 11) => `<circle cx="${f1(X(ph))}" cy="${f1(Y(ps))}" r="${r}" fill="${col}" stroke="#fff" stroke-width="2.5"/>`;
+        if (step === 0) {
+          const k1 = ease(sub(p, .06, .34)), k2 = ease(sub(p, .4, .68)), k3 = ease(sub(p, .72, .84));
+          const ph = -180 + k1 * 120, ps = -180 + k2 * 135;
+          info = exBox(1, ph, ps, k2);
+          const bot = Y0 + S, lft = X0;
+          // φ: dikke groene balk langs de onderas + verticale hulplijn
+          hi += `<line x1="${lft}" y1="${bot}" x2="${f1(X(ph))}" y2="${bot}" stroke="${C.chain}" stroke-width="7" stroke-linecap="round" opacity="${f1(k1 > 0 ? 1 : 0)}"/>`;
+          if (k1 > 0) hi += `<line x1="${f1(X(ph))}" y1="${Y0}" x2="${f1(X(ph))}" y2="${bot}" stroke="${C.chain}" stroke-width="2.5" stroke-dasharray="7 6" opacity=".9"/>` +
+            `<text x="${f1(X(ph))}" y="${bot - 16}" font-size="27" text-anchor="middle" fill="${C.chain}" font-family="JetBrains Mono" font-weight="700" paint-order="stroke" stroke="#0b1224" stroke-width="6">φ ${deg(ph)}</text>`;
+          // ψ: dikke gele balk langs de zijas + horizontale hulplijn
+          if (k2 > 0) hi += `<line x1="${lft}" y1="${bot}" x2="${lft}" y2="${f1(Y(ps))}" stroke="${C.trna}" stroke-width="7" stroke-linecap="round"/>` +
+            `<line x1="${lft}" y1="${f1(Y(ps))}" x2="${X0 + S}" y2="${f1(Y(ps))}" stroke="${C.trna}" stroke-width="2.5" stroke-dasharray="7 6" opacity=".9"/>` +
+            `<text x="${lft + 16}" y="${f1(Y(ps) + 34)}" font-size="27" fill="${C.trna}" font-family="JetBrains Mono" font-weight="700" paint-order="stroke" stroke="#0b1224" stroke-width="6">ψ ${deg(ps)}</text>`;
+          // snijpunt = het punt van dit aminozuur
+          if (k3 > 0) hi += `<g opacity="${f1(k3)}">` + `<circle cx="${f1(X(-60))}" cy="${f1(Y(-45))}" r="${f1(11 + 14 * (1 - k3))}" fill="none" stroke="#fff" stroke-width="2"/>` + dot(-60, -45, HCOL) +
+            HELIX_G(X(-60) + 34, Y(-45) - 34, HCOL) + `<text x="${f1(X(-60) + 86)}" y="${f1(Y(-45) - 25)}" font-size="27" fill="${HCOL}" font-family="Inter" font-weight="700" paint-order="stroke" stroke="#0b1224" stroke-width="6">${T2('α-helix', 'α-helix')}</text></g>`;
+        } else if (step === 1) {
+          const kb = ease(sub(p, .62, .8));
+          info = `<g opacity="${f1(1 - ease(sub(p, 0, .3)))}">` + exBox(1, -60, -45, 1) + '</g>';
+          hi += dot(-60, -45, HCOL) + `<g opacity="${f1(kb)}">${dot(-120, 130, BCOL)}</g>`;
+        } else if (step === 2 && p < .25) {
+          const fo = 1 - ease(sub(p, 0, .25));
+          hi += `<g opacity="${f1(fo)}">${dot(-60, -45, HCOL)}${dot(-120, 130, BCOL)}</g>`;
         }
         if (step === 1) {
           info += `<g opacity="${f1(ease(sub(p, .35, .6)))}">` + box(390, 150) +
