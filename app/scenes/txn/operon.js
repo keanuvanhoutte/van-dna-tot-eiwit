@@ -127,7 +127,7 @@ export default {
       (blocked > .01 ? `<g opacity="${f1(blocked)}" stroke="${C.danger}" stroke-width="5"><line x1="${x + 84}" y1="${Y0 - 100}" x2="${x + 112}" y2="${Y0 - 72}"/><line x1="${x + 112}" y1="${Y0 - 100}" x2="${x + 84}" y2="${Y0 - 72}"/></g>` : '') + '</g>';
     const laci = (x, y, op, allo = 0) => op <= .01 ? '' : `<g opacity="${f1(op)}">` +
       [[-22, -16], [22, -16], [-22, 16], [22, 16]].map(([dx, dy], i) => prot(x + dx, y + dy, 22, 16, K.laci, 1, 60 + i)).join('') + txt(x, y + 7, 'LacI', '#fff', 19) +
-      (allo > .01 ? [[-44, -30], [44, -30], [-44, 30], [44, 30]].map(([dx, dy]) => hex(x + dx, y + dy, 8, K.allo, allo)).join('') : '') + '</g>';
+      (allo > .01 ? [[-46, -32], [46, -32], [-46, 32], [46, 32]].map(([dx, dy]) => hex(x + dx, y + dy, 12, K.allo, allo)).join('') : '') + '</g>';
     const capP = (op, camp = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}">` + prot(305, Y0 - 44, 24, 20, K.cap, 1, 70) + prot(335, Y0 - 44, 24, 20, K.cap, 1, 71) + txt(320, Y0 - 78, 'CAP', K.cap, 19) +
       hex(305, Y0 - 44, 7, K.camp, camp) + hex(335, Y0 - 44, 7, K.camp, camp) + '</g>';
 
@@ -138,7 +138,7 @@ export default {
         let st;
         if (step <= 1) st = { glc: 1, lac: 0, laci: step === 1 ? 0 : 0, cap: 0, lvl: 0, rn: step === 1 ? ease(sub(p, .2, .5)) : 0 };
         else if (step === 2) st = { glc: 1, lac: 0, laci: ease(sub(p, .1, .4)), cap: 0, lvl: 0, rn: 1 };
-        else if (step === 3) st = { glc: 1, lac: 1, laci: 1 - ease(sub(p, .45, .8)), allo: ease(sub(p, .15, .4)), cap: 0, lvl: 0, rn: 1 };
+        else if (step === 3) st = { glc: 1, lac: 1, laci: 1 - ease(sub(p, .45, .8)), allo: sub(p, .36, .4), cap: 0, lvl: 0, rn: 1 };
         else if (step === 4) st = { glc: 1, lac: 1, laci: 0, cap: 0, lvl: 1, rn: 1 };
         else if (step === 5) st = { glc: 1 - sub(p, 0, .2), lac: 1, laci: 0, cap: ease(sub(p, .2, .45)), lvl: sub(p, .35, .5) > 0 ? 2 : 1, rn: 1 };
         else if (step === 6) st = { glc: 0, lac: 1, laci: 0, cap: 1, lvl: 2, rn: 1 };
@@ -163,6 +163,13 @@ export default {
         if (st.cap > .5 && step >= 5) pr += `<line x1="330" y1="${Y0 - 60}" x2="380" y2="${Y0 - 70}" stroke="${K.cap}" stroke-width="2.5" stroke-dasharray="4 3"/>` + (step === 5 ? txt(372, Y0 - 108, 'αCTD', K.cap, 19) : '');
         pr += laci(541, Y0 + 44, st.laci, st.allo ?? (st.lac ? 1 : 0) * (1 - st.laci));
         if (step === 3 && st.laci < .99) pr += laci(541 + 150 * Math.sqrt(1 - st.laci), Y0 + 44 + 106 * (1 - st.laci), 1 - st.laci, 1);   // losgelaten LacI drijft weg naar rechtsonder, niet over het operatorlabel
+        if (step === 3) {
+          // de suiker (allolactose) zweeft aan en klikt op de rem; daarna laat de rem het DNA los
+          const k = ease(sub(p, .08, .38)), fromXY = [[760, Y0 + 230], [860, Y0 + 180], [800, Y0 + 290], [930, Y0 + 250]], to = [[-46, -32], [46, -32], [-46, 32], [46, 32]];
+          if (p < .4) to.forEach(([dx, dy], i) => { pr += hex(lerp(fromXY[i][0], 541 + dx, k), lerp(fromXY[i][1], Y0 + 44 + dy, k), 12, K.allo, sub(p, .02, .1)); });
+          pr += `<g opacity="${f1(sub(p, .05, .15) * (1 - sub(p, .4, .5)))}">` + txt(860, Y0 + 140, T2('suiker uit lactose', 'sugar from lactose'), K.allo, 26, 'middle', 800) + txt(860, Y0 + 166, '(allolactose)', C.muted, 18, 'middle', 600) + '</g>';
+          pr += `<g opacity="${f1(sub(p, .42, .55))}">` + txt(800, Y0 + 132, T2('suiker op de rem', 'sugar on the brake'), K.allo, 26, 'start', 800) + txt(800, Y0 + 160, T2('→ rem laat het DNA los', '→ brake lets go of the DNA'), C.text, 22, 'start', 700) + '</g>';
+        }
         // RNAP aan de promoter (wacht), plus bewegende polymerasen bij expressie
         const blocked = st.laci > .5 ? 1 : 0;
         pr += rnap(470, st.rn, 1, blocked);
