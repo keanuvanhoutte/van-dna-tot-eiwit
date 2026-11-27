@@ -58,7 +58,7 @@ export default {
       text: { nl: 'Het enzym dat RNA maakt (RNA-polymerase II) komt aan en wordt precies boven het startpunt gezet.', en: 'The enzyme that makes RNA (RNA polymerase II) arrives and is placed right above the start point.' } },
     { dur: 7000, cam: cam(720, 430, 1300), title: { nl: 'De startmachine is compleet', en: 'The start machine is complete' },
       text: { nl: 'Nog twee hulpeiwitten komen erbij. De startmachine is nu klaar, maar het DNA is nog dicht.', en: 'Two more helper proteins join. The start machine is now ready, but the DNA is still closed.' } },
-    { dur: 8000, cam: cam(760, 460, 1200), title: { nl: 'Het DNA gaat open', en: 'The DNA opens' },
+    { dur: 8000, cam: cam(730, 460, 1240), title: { nl: 'Het DNA gaat open', en: 'The DNA opens' },
       text: { nl: 'Een hulpeiwit opent met energie (ATP) het DNA bij het startpunt. Het enzym koppelt de eerste RNA-bouwstenen.', en: 'A helper protein uses energy (ATP) to open the DNA at the start point. The enzyme joins the first RNA building blocks.' } },
     { dur: 8000, cam: cam(900, 450, 1200), title: { nl: 'Een fosfaat op de staart', en: 'A phosphate on the tail' },
       text: { nl: 'Het enzym krijgt fosfaatgroepjes op zijn lange staart. Daarna laat het de meeste hulpeiwitten los en vertrekt.', en: 'The enzyme gets phosphate groups on its long tail. It then lets go of most helper proteins and sets off.' } },
@@ -131,15 +131,15 @@ export default {
           el += `<g opacity="${f1(appear)}"><rect x="${f1(cm[0] - w / 2)}" y="${f1(cm[1] - 30)}" width="${f1(w)}" height="60" rx="8" fill="${ec}" fill-opacity="${main ? .16 : .07}" stroke="${ec}" stroke-width="${main ? 3 : 1.5}" stroke-opacity="${main ? 1 : .6}" transform="rotate(${f1(rot)} ${f1(cm[0])} ${f1(cm[1])})"/>`;
           const bent = theta > .05 && e.b < -24;
           const isT = theta > .05 && e.id === 'TATA';
-          const lx = isT ? cm[0] - 105 : bent ? cm[0] - 70 : cm[0], ly = isT ? cm[1] + 36 : bent ? cm[1] + 10 : Y0 + 52;
+          const lx = isT ? cm[0] - 85 : bent ? cm[0] - 70 : cm[0], ly = isT ? cm[1] + 66 : bent ? cm[1] + 10 : Y0 + 52;   // geknikte TATA-box: label links onder, naast het afbuigende DNA (niet erdoor)
           const nm = e.id === 'TATA' ? T2('TATA-box', 'TATA box') : e.id;
-          elLab += `<g opacity="${f1(appear)}">` + txt(lx, ly + 4, nm, ec, main ? 24 : 17, 'middle', main ? 800 : 600);
+          elLab += `<g opacity="${f1(appear)}">` + txt(lx, ly + 4, nm, ec, main ? 24 : 17, isT ? 'end' : 'middle', main ? 800 : 600);
           elLab += '</g>';
           el += '</g>';
         });
         if (step === 0) el += txt(bx(1) + 30, Y0 - 62, T2('startpunt +1', 'start site +1'), C.text, 24, 'start', 800) +
           `<g opacity="${f1(sub(p, .6, .75))}">${txt(bx(8), Y0 + 176, T2('grijs: andere herkenningsstukjes (niet bij elk gen)', 'grey: other recognition stretches (not in every gene)'), GRIJS, 19, 'middle', 600)}</g>`;
-        $('pr-elem').innerHTML = el; $('pr-elemlab').innerHTML = elLab + (step === 5 ? txt(aX + 10, Y0 - 44, T2('eerste RNA', 'first RNA'), C.rna, 19, 'start') : '');
+        $('pr-elem').innerHTML = el; $('pr-elemlab').innerHTML = elLab + (step === 5 ? txt(aX - 10, Y0 - 56, T2('eerste RNA', 'first RNA'), C.rna, 19, 'middle') : '');
 
         // noot over CpG-eilanden (stap 0) + zijpad-knop Pol I/III
         const nOp = step === 0 ? sub(p, .7, .85) : 0;
@@ -164,8 +164,8 @@ export default {
         if (step >= 1 && step <= 2 && theta > .1) g += txt(T[0] + 110, Y0 + 190, `≈ ${Math.round(theta * 180 / Math.PI)}°`, C.trna, 22);
         g += rp(T[0] - 150, T[1] - 56, 140, T2('houdt TBP vast', 'holds TBP'), 'TFIIA', G.a, fin(2, .05, .35));
         const B = ctr(bx(-20));
-        const tb = fin(3, .05, .45);   // zodra Pol II komt, schuift TFIIB mee tegen de achterkant van Pol II (TFIIB overbrugt TBP en Pol II)
-        g += rp(bx(-14) + 40 * tb, Y0 - 70 + 4 * tb, 170, T2('brug naar het enzym', 'bridge to the enzyme'), 'TFIIB', G.b, fin(2, .35, .7) * (1 - leave), 16);
+        const tb = fin(3, .05, .45);   // zodra Pol II komt, schuift het TFIIB-label iets opzij, zodat het niet op de Pol II-rand valt
+        g += rp(bx(-14) - 60 * tb, Y0 - 70 + 4 * tb, 170, T2('brug naar het enzym', 'bridge to the enzyme'), 'TFIIB', G.b, fin(2, .35, .7) * (1 - leave), 16);
         const polOp = fin(3, .05, .45);
         const px = aX - 30, py = Y0 - 88;
         g += rp(px + 138, py - 108, 120, T2('begeleider', 'escort'), 'TFIIF', G.f,   // TFIIF, TFIIE en TFIIH raken Pol II; TFIIH ligt op het DNA stroomafwaarts (He et al. 2016)

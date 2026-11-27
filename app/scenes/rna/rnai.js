@@ -196,7 +196,7 @@ export default {
           ago += '</g>';
         }
         $('ri-ago').innerHTML = ago;
-        setHot(svg, 'ri-gA', agoOp > .5 && step !== 6 ? [gx(18), YG - 44, 120, 16] : null);
+        setHot(svg, 'ri-gA', agoOp > .5 && step !== 6 ? [gx(20), YG - 44, 120, 16] : null);   // links genoeg: raakt de titel 'zoekeiwit (AGO2)' niet (EN is langer)
 
         // ---------- stap 5–7: doel-mRNA ----------
         let tg = '', rib = '', dec = '';

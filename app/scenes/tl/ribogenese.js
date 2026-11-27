@@ -123,6 +123,7 @@ export default {
         }
         $('rg-lab').innerHTML = lab;
         $('rg-nA').setAttribute('cx', i === 0 ? '-9999' : f1(NO[0] + NO[2] - 40));   // stap 1 heeft de titel 'nucleolus' al op die plek
+        $('rg-nA').setAttribute('cy', f1(NO[1] + (i >= 4 ? -40 : 40)));   // vanaf de eiwitten: hoger, zodat het niet op het label pre-60S valt
         // rDNA-kerstboom (stap 1–2)
         if (i <= 2) {
           const op = i === 0 ? .6 : i === 2 ? 1 - .7 * sub(p, 0, .3) : 1;

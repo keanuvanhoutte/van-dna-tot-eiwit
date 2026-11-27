@@ -75,8 +75,10 @@ export default {
       ${prot(300, 300, 34, 32, 23)}${prot(360, 300, 30, 28, 24)}
       ${T(500, 309, T2('ook gevouwen ✓', 'folded too ✓'), { size: 26, anchor: 'start', col: C.ok })}
     </g>
+    <g id="px-nav">
     ${btn('sortering', 40, 330, T2('↑ overzicht adreslabels', '↑ address labels overview'), C.ok)}
     ${btn('ubiquitine', 1160, 400, T2('volgende: eiwitten afbreken →', 'next: breaking proteins down →'), '#ffd166')}
+    </g>
     </svg>`;
   },
   init(svg) {
@@ -85,6 +87,9 @@ export default {
     return {
       update(t, s) {
         const { step, p } = s;
+        // navigatieknoppen staan bovenaan de volledige figuur: tijdens ingezoomde stappen verbergen (vielen half buiten de bovenrand)
+        { const Z = [1, 2], nz = i => Z.includes(i) ? 0 : 1, navOp = lerp(step > 0 ? nz(step - 1) : nz(step), nz(step), ease(sub(p, 0, .25)));
+          $('px-nav').setAttribute('opacity', f1(navOp)); }
         const ph = (i, a, b) => step > i ? 1 : step < i ? 0 : ease(sub(p, a, b));
         const kLet = ph(1, .2, .5), kRec = ph(2, .1, .7), kMove = ph(3, .05, .85), kBack = ph(4, .1, .9), kCmp = step === 5 ? ease(sub(p, .05, .3)) : step === 6 ? 1 - ease(sub(p, 0, .2)) : 0;
         const kZw = ph(6, .15, .85);

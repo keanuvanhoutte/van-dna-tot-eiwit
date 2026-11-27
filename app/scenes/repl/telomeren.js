@@ -132,7 +132,7 @@ const scene = {
             // TERT-lichaam (achter de letters: wordt vooraan in m gezet)
             const cx = xOf(jStart + 5), cy = (YT + YB + BH) / 2 + 40 + (1 - kIn) * 90;
             const tert = `<g opacity="${f1(kIn)}"><path d="${eiwitPad(cx, cy, 250, 140, 33, .06)}" fill="${C.prot}" fill-opacity=".14" stroke="${C.prot}" stroke-width="3"/>` +
-              txt(cx + 200, cy + 60, 'TERT', '#fff', 22, 'middle', 700) + '</g>';
+              txt(cx + 190, cy + 26, 'TERT', '#fff', 22, 'middle', 700) + '</g>';   // binnen de rand, rechts naast de RNA-lus
             tertS = tert;
             // hTR: matrijs + (gestippeld) de rest van het 451-nt RNA
             let r = '';

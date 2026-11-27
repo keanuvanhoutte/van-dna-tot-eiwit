@@ -180,7 +180,7 @@ export default {
           cd += `<line x1="${f1(x0)}" y1="${f1(yb + 14)}" x2="${f1(x1)}" y2="${f1(yb + 14)}" stroke="${C.rna}" stroke-width="5" opacity="${f1(k * .8)}"/>`;
           cd = `<line x1="${f1(x0)}" y1="${f1(yb + 14)}" x2="${f1(x1)}" y2="${f1(yb + 14)}" stroke="${C.rna}" stroke-width="5" opacity="${f1(k * .8)}"/>` + cd;
           cd += `<g opacity="${f1(k)}">${txt(x0 - 12, yb + 22, "3′", C.rna, 22, 'end', 700)}${txt(x1 + 12, yb + 22, "5′", C.rna, 22, 'start', 700)}${txt((x0 + x1) / 2, yb + 70, T2("codon op het mRNA: UUC (lees ←)", "codon on the mRNA: UUC (read ←)"), C.rna, 22, 'middle', 700)}</g>`;
-          $('tr-cA').setAttribute('cx', f1(x1 + 60)); $('tr-cA').setAttribute('cy', f1(yb + 30));
+          $('tr-cA').setAttribute('cx', f1(x1 + 190)); $('tr-cA').setAttribute('cy', f1(yb - 8));   // rechts naast het 5′-uiteinde, niet over de codonregel
           o += `<g opacity="${f1(sub(p, .55, .75))}">` + txt(pos[34][0] - 30, pos[34][1] + 2, T2('past losser', 'fits loosely'), '#fff', 22, 'end', 700) +
             txt(pos[34][0] - 30, pos[34][1] + 24, '(wobble)', C.muted, 16, 'end', 600) +
             '</g>' + `<g opacity="${f1(sub(p, .2, .4))}">` +

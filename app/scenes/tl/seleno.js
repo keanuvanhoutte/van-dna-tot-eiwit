@@ -107,7 +107,7 @@ export default {
           mr = mrna(shift, 'UGA', i === 0 ? sub(p, .2, .4) : i === 3 ? 1 : 0);
           rb = ribo(P, i === 0 ? sub(p, 0, .2) : 1);
           $('se-rA').setAttribute('cx', f1(P - 170)); $('se-rA').setAttribute('cy', f1(YM - 285));   // links van de keten, zodat 'Met' vrij blijft
-          $('se-cA').setAttribute('cx', f1(A - shift)); $('se-cA').setAttribute('cy', f1(YM + (i === 0 ? 122 : 142)));
+          $('se-cA').setAttribute('cx', f1(A - shift)); $('se-cA').setAttribute('cy', f1(YM + (i === 0 ? 172 : 142)));   // stap 0: onder het label 'UGA in het leesraam'
           // P-plaats-tRNA met keten (Met-Ala-Cys)
           /* keten: nieuwste aminozuur aan de punt van zijn tRNA (bij het PTC), de oudere door de tunnel van de 60S naar buiten (N-uiteinde voorop) */
           const SLOT = [[P + 26, YM - 334], [P + 36, YM - 382], [P + 52, YM - 428]];
@@ -153,7 +153,7 @@ export default {
             }
           }
           if (i === 0) {
-            ov += `<g opacity="${f1(sub(p, .3, .5))}">${txt(A, YM + 96, T2('UGA in het leesraam', 'UGA in the reading frame'), '#fff', 22, 'middle', 800)}${txt(cx(6), YM + 96, T2('echte stop', 'real stop'), C.danger, 22, 'middle', 700)}</g>`;
+            ov += `<g opacity="${f1(sub(p, .3, .5))}">${txt(A, YM + 150, T2('UGA in het leesraam', 'UGA in the reading frame'), '#fff', 22, 'middle', 800)}${txt(cx(6), YM + 150, T2('echte stop', 'real stop'), C.danger, 22, 'middle', 700)}</g>`;
             aaS += `<g opacity="${f1(sub(p, .55, .75))}">` + textBox(960, 140, 440, [T2('Cys: –CH₂–SH', 'Cys: –CH₂–SH'), T2('Sec: –CH₂–SeH', 'Sec: –CH₂–SeH')], { title: T2('Selenocysteïne (Sec, U)', 'Selenocysteine (Sec, U)'), col: SEC_COL, fs: 24 }) + '</g>';
             $('se-aA').setAttribute('cx', '400'); $('se-aA').setAttribute('cy', '140');
           } else hide('se-aA');

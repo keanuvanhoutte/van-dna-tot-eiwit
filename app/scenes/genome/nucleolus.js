@@ -41,7 +41,7 @@ export default {
     ST(8500, cam(1130, 610, 860), 'Eén lang RNA', 'One long RNA',
       'Het eerste RNA: drie ribosoomstukken met tussenstukken. Kleine gids-RNA’s wijzen aan waar het wordt aangepast.',
       'The first RNA holds three ribosome pieces with spacers. Small guide RNAs point out where it gets modified.'),
-    ST(9000, cam(1130, 660, 860), 'Knippen en bouwen', 'Cutting and building',
+    ST(9000, cam(1160, 660, 980), 'Knippen en bouwen', 'Cutting and building',
       'De tussenstukken worden weggeknipt. De RNA’s gaan met ongeveer 80 eiwitten samen tot twee ribosoomdelen.',
       'The spacers are cut out. The RNAs join about 80 proteins to form two ribosome parts.'),
     ST(8500, cam(420, 740, 700), 'De delen gaan de kern uit', 'The parts leave the nucleus',
@@ -114,7 +114,7 @@ export default {
     </g>
     <g id="nl-envelope">
       <g data-node="kernimport" data-color="${C.prot}" data-nolabel>${kernEnvelop(ptsBoog(40, 838, 370, 777, 700, 822, 40), { closed: false, poriën: [.576], poreW: 58, w: 11, gap: 11, binnen: -1, s: 1.1 })}</g>
-      ${txt(560, 770, T2('kernenvelop · kernporie', 'nuclear envelope · pore'), C.muted, 15, 'start')}
+      <g id="nl-envlab">${txt(560, 770, T2('kernenvelop · kernporie', 'nuclear envelope · pore'), C.muted, 15, 'start')}</g>
       ${txt(140, 862, T2('cytoplasma ↓', 'cytoplasm ↓'), C.muted, 15)}
     </g>
     <g data-node="ribogenese" data-color="${C.rrna}" data-label="${T2('Ribosoombiogenese', 'Ribosome biogenesis')}"><g id="nl-exp"></g><circle data-anchor="ribogenese" cx="560" cy="640" r="1" fill="none"/></g>
@@ -139,9 +139,10 @@ export default {
           `<line x1="${gx - 47}" y1="${gy - 8}" x2="200" y2="520" stroke="#fff" stroke-width="2"/><circle cx="${gx - 47}" cy="${gy - 8}" r="4" fill="#fff"/>` + zone(170, 520, '#4a5d8a', T2('midden: bijwerken', 'middle: modifying'), T2('dicht fibrillair deel (DFC)', 'dense fibrillar part (DFC)')) +
           `<line x1="590" y1="330" x2="640" y2="290" stroke="#fff" stroke-width="2"/><circle cx="590" cy="330" r="4" fill="#fff"/>` + zone(670, 262, '#2f4677', T2('buiten: in elkaar zetten', 'outside: assembling'), T2('granulair deel (GC)', 'granular part (GC)')) + '</g>' : '';
         // niet-centrale delen ver genoeg dimmen (< 0,3) zodat wat half buiten de camera valt niet als afgesneden figuur oogt
-        $('nl-left').setAttribute('opacity', step >= 2 && step <= 5 ? .2 : 1);
+        $('nl-left').setAttribute('opacity', step === 4 || step === 5 ? 0 : step >= 2 && step <= 3 ? .2 : 1);   // bij het 47S-paneel geen resten van de kern links
         $('nl-chr').setAttribute('opacity', step === 1 ? .2 : 1);
-        $('nl-envelope').setAttribute('opacity', step >= 2 && step <= 5 ? .2 : 1);
+        $('nl-envelope').setAttribute('opacity', step === 4 || step === 5 ? 0 : step >= 2 && step <= 3 ? .2 : 1);
+        $('nl-envlab').setAttribute('opacity', step === 0 ? 0 : 1);   // in het overzicht valt dit label achter de ondertitel
         // panelen pas tonen als ze aan de beurt zijn (geen vaag spookpaneel op de achtergrond)
         $('nl-mil').setAttribute('opacity', step === 2 || step === 3 || step === 7 ? 1 : 0);
         $('nl-pre').setAttribute('opacity', step === 4 || step === 5 || step === 7 ? 1 : 0);

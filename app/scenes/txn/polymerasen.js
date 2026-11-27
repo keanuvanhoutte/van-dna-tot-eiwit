@@ -110,7 +110,7 @@ export default {
         setA('pc-vaA', COLX[2] + 150, 468 + 5 * 30 - 14, va > .5);
         const p2 = step === 2 ? sub(p, .6, .75) : 0;
         $('pc-p2').innerHTML = p2 > .01 ? `<g opacity="${f1(p2)}">` + txt(COLX[1], 610, T2('kernpromoter: TATA, Inr, DPE… + TFIID', 'core promoter: TATA, Inr, DPE… + TFIID'), C.muted, 16) + '</g>' : '';
-        setA('pc-p2A', COLX[1], 634, p2 > .5);
+        setA('pc-p2A', COLX[1] + 230, 634, p2 > .5);   // knop rechts naast de kernpromoter-regel, niet erover (lager verbergt de engine hem)
 
         // Pol III-promoters (stap 4)
         let p3 = '';

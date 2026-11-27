@@ -279,7 +279,7 @@ export default {
 
     return {
       update(t, s) {
-        placeHud(svg, 'rb-hud', .015, .105, STEPS[s.step]?.cam);
+        placeHud(svg, 'rb-hud', stepVal([.015, .015, .015, .63, .015, .015, .015, .015], s), .105, STEPS[s.step]?.cam);   // stap 3: de 60S ligt linksboven, dus de knoppen rechtsboven
         const rock = .22 * Math.sin(Math.PI * sub(s.p, .3, 1));
         const th = stepVal(K.ang, s) + (s.step === 5 || s.step === 6 ? rock * .3 : rock), ph = stepVal(K.tilt, s);
         const pop = stepVal(K.pop, s), sep = stepVal(K.sep, s), op = stepVal(K.op, s), trOp = stepVal(K.trna, s), [cx, cy, sc] = stepVal(K.pos, s);

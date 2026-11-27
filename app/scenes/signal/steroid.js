@@ -171,7 +171,8 @@ export default {
           T(820, MY - 16, T2('plasmamembraan', 'plasma membrane'), { size: 24, col: C.mem, op: k });
         k = on(1.2, 1.5, 2.02, 2.2);
         if (k > .01) L += T(620, 150, T2('passieve diffusie', 'passive diffusion'), { size: 22, col: C.text, op: k }) +
-          T(700, MY + MH / 2 + 8, T2('hydrofobe kern', 'hydrophobic core'), { size: 20, col: '#f1d7a8', op: k, anchor: 'start' });
+          `<line x1="760" y1="${MY + MH / 2}" x2="760" y2="${MY + MH + 10}" stroke="#f1d7a8" stroke-width="2" opacity="${f1(k)}"/>` +   // label onder het membraan, met een streepje naar de kern
+          T(700, MY + MH + 32, T2('hydrofobe kern', 'hydrophobic core'), { size: 20, col: '#f1d7a8', op: k, anchor: 'start' });
         k = on(2.2, 2.5, 3.02, 3.2);
         if (k > .01) L += T(GX - 75, GY + 66, T2('receptor', 'receptor'), { size: 26, col: C.prot, op: k }) +
           T(GX - 75, GY + 90, '(GR)', { size: 18, col: C.muted, op: k }) +

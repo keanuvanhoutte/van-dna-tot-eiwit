@@ -48,7 +48,7 @@ export default {
     S(8000, cam(520, 400, 1150), 'Van gen naar eiwit', 'From gene to protein',
       'Dit is het begin van een gen voor hemoglobine. Elke drie basen (een codon) bepalen één aminozuur.',
       'This is the start of a gene for haemoglobin. Every three bases (a codon) specify one amino acid.'),
-    S(8000, cam(520, 660, 1150), 'Eén base wordt vervangen', 'One base is swapped',
+    S(8000, cam(620, 560, 1300), 'Eén base wordt vervangen', 'One base is swapped',
       'Bij een puntmutatie verandert één base. Soms in een base van hetzelfde type, soms in een ander type.',
       'In a point mutation one base changes. Sometimes into a base of the same type, sometimes into another type.'),
     S(8000, cam(330, 430, 900), 'Een stille mutatie', 'A silent mutation',

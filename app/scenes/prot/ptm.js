@@ -221,7 +221,7 @@ export default {
         us += ubL + ubB;
         if (step === 8) us += T(LYS[0] + 170, LYS[1] + 90, T2('K48-polyubiquitine', 'K48 polyubiquitin'), { size: 22, col: '#ffd166', op: sub(p, .7, .85), anchor: 'start' }) + T(LYS[0] + 170, LYS[1] + 122, T2('= “breek mij af”', '= “degrade me”'), { size: 22, op: sub(p, .75, .9), anchor: 'start' });
         $('pt-ub').innerHTML = us;
-        $('pt-ubA').setAttribute('cx', LYS[0] - 110); $('pt-ubA').setAttribute('cy', nUb ? LYS[1] + 30 : -9999);
+        $('pt-ubA').setAttribute('cx', LYS[0] - 175);   /* links van het Lys-bolletje, niet erover */ $('pt-ubA').setAttribute('cy', nUb ? LYS[1] + 30 : -9999);
 
         /* ---------- paneel B: cascade ---------- */
         const cp = step === 5 ? p : step > 5 ? 1 : 0;

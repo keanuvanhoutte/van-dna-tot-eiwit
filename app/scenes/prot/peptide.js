@@ -116,7 +116,7 @@ export default {
     <g id="pe-hs-tl" data-node="elongatie" data-color="${C.rrna}" data-label="${T2('In de cel: het ribosoom', 'In the cell: the ribosome')}">
       <rect x="700" y="712" width="500" height="56" rx="12" fill="rgba(44,198,168,.12)" stroke="${C.rrna}"/>
       ${txt(950, 749, T2('Gevormd in het ribosoom (elongatie)', 'Made in the ribosome (elongation)'), C.rrna, 23)}
-      <circle data-anchor="elongatie" cx="950" cy="712" r="1" fill="none"/>
+      <circle data-anchor="elongatie" cx="1060" cy="712" r="1" fill="none"/>
     </g>
     </svg>`;
   },

@@ -71,7 +71,7 @@ export default {
       }
       if (X.are > from && X.are < to) m += `<rect x="${X.are - 34}" y="${Y - 10}" width="68" height="20" rx="4" fill="#ffd36b" opacity=".85"/>`;
       if (labels) {
-        if (b2 - a2 > 200) m += note((a2 + b2) / 2, Y + 76, T2('coderend deel (ORF)', 'coding region (ORF)'), C.rna, 19);
+        if (b2 - a2 > 200) m += note(Math.min((a2 + b2) / 2 + 80, b2 - 120), Y + 76, T2('coderend deel (ORF)', 'coding region (ORF)'), C.rna, 19);
         if (b3 - a3 > 150) m += note(X.u3[0] + 60, Y + 46, "3′-UTR", '#d9854a', 19);
         if (tb - ta > 60) m += note((ta + tb) / 2, Y + 46, 'poly(A)', C.cap, 19);
       }

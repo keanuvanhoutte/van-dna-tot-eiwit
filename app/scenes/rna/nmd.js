@@ -85,7 +85,7 @@ export default {
         const labOp = cut ? 1 - .5 * sub(chew, .8, 1) : 1;        // labels dimmen als het mRNA weg is
         m += `<g opacity="${f1(labOp)}">` + note((X.e1[0] + X.e1[1]) / 2, Y + 44, 'exon 1', C.rna, 18) + note((X.e2[0] + X.e2[1]) / 2, Y + 44, 'exon 2', C.rna, 18) + note(X.e3[0] + 50, Y + 44, T2('exon 3 (laatste)', 'exon 3 (last)'), C.rna, 18) + note((X.pa[0] + X.pa[1]) / 2, Y + 44, 'poly(A)', C.cap, 17);
         // normaal stopcodon
-        m += note(X.stop, Y + 76, T2('normaal stop', 'normal stop'), C.text, 17) + '</g>';
+        m += note(X.stop + 30, Y + 76, T2('normaal stop', 'normal stop'), C.text, 17, 'end') + '</g>';
         if (!cut || rightStart < X.stop - 20) m += `<rect x="${X.stop - 20}" y="${Y - 11}" width="40" height="22" rx="4" fill="#fff" opacity=".9"/>`;
         // cap (+ CBC) verdwijnt bij decapping
         const capOp = cut ? 1 - sub(chew, .8, 1) : 1;

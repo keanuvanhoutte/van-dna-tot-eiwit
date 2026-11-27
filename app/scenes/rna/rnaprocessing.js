@@ -181,7 +181,7 @@ function initProcessing(svg) {
     const f3 = ph < 7 ? 0 : ph === 7 ? fadeIn(7) : ph <= 9 ? 1 : 0;
     const cstf = ph < 7 ? 0 : ph === 7 ? fadeIn(7) : ph === 8 ? 1 - prog(8) : 0;
     let p3 = `<g ${up}>`;
-    p3 += pill((X.pas[0] + X.pas[1]) / 2, Y - 24, 64, 24, 'CPSF', '#8e6cf0', f3);   // CPSF zit op AAUAAA
+    p3 += pill((X.pas[0] + X.pas[1]) / 2, Y - 46, 64, 24, 'CPSF', '#8e6cf0', f3);   // CPSF zit op AAUAAA (net erboven, zodat het signaal leesbaar blijft)
     p3 += `</g>`;
     p3 += pill((X.dse[0] + X.dse[1]) / 2, Y - 14, 60, 22, 'CstF', '#5a4bb8', cstf);   // CstF op het GU-rijke RNA stroomafwaarts van de knipplaats
     if (ph === 8 && prog(8) > .3 && prog(8) < .6) p3 += `<path d="M${X.cut - 10},${Y - 22} l20,44 M${X.cut + 10},${Y - 22} l-20,44" stroke="#fff" stroke-width="3" opacity=".9"/>`;

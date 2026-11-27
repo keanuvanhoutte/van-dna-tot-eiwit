@@ -203,8 +203,9 @@ export default {
 
         // indicatoren
         const indOp = step >= 2 && step <= 5 ? 1 : 0;
-        const lvlTxt = [T2('uit', 'off'), T2('laag', 'low'), T2('hoog', 'high')][st.lvl];
-        const lvlCol = [C.muted, C.trna, C.ok][st.lvl];
+        const indLvl = step === 3 && st.laci < .5 ? 1 : st.lvl;   // repressor weg, glucose nog aanwezig: laag (zoals in de tabel)
+        const lvlTxt = [T2('uit', 'off'), T2('laag', 'low'), T2('hoog', 'high')][indLvl];
+        const lvlCol = [C.muted, C.trna, C.ok][indLvl];
         const dot = (x, y, on, col) => `<circle cx="${x}" cy="${y}" r="9" fill="${on > .5 ? col : 'none'}" stroke="${col}" stroke-width="2"/>`;
         $('op-ind').innerHTML = indOp ? panel(1100, 580, 400, 170) +
           dot(1132, 616, st.glc, K.glc) + txt(1152, 623, 'glucose', C.text, 20, 'start') +
@@ -229,7 +230,7 @@ export default {
             cells.forEach((c, k) => { tb += txt(x + cw[k] / 2, y + 2, c, k === 2 ? [C.muted, C.trna, C.ok][r.lvl] : C.text, k < 2 ? 26 : 22, 'middle', k === 2 ? 800 : 600); x += cw[k]; });
           });
         }
-        $('op-table').innerHTML = tb;
+        $('op-table').innerHTML = tb ? `<g transform="translate(-295 45.5) scale(.75)">${tb}</g>` : '';   // tabel links boven de promoter, niet over de mRNA's
       },
     };
   },

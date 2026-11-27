@@ -144,7 +144,7 @@ const SCENE = {
     ST(7000, cam(800, 470, 1500), 'Een groeifactor komt aan', 'A growth factor arrives',
       'De groeifactor EGF, een klein eiwit, komt aan. In het membraan wachten losse receptoren, nog uit.',
       'The growth factor EGF, a small protein, arrives. Separate receptors wait in the membrane, still off.'),
-    ST(8500, cam(800, 290, 1250), 'EGF bindt: de receptor gaat open', 'EGF binds: the receptor opens',
+    ST(8500, cam(880, 390, 1400), 'EGF bindt: de receptor gaat open', 'EGF binds: the receptor opens',
       'EGF wordt vastgeklemd in de receptor. De buitenkant klapt open en er komt een ‘arm’ vrij.',
       'EGF gets clamped in the receptor. The outer part swings open and an ‘arm’ is exposed.'),
     ST(8000, cam(800, 300, 1150), 'Twee receptoren vormen een paar', 'Two receptors pair up',

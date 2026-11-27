@@ -68,13 +68,13 @@ export default {
       <g id="tx-pol">
         ${polII(0, -9, 172, 152, { gul: 100, vul: .2, uit: .4, diep: .82, seed: 77, ...CTDO })}<!-- app-vorm van Pol II (bio.js): de bel met het RNA–DNA-hybride ligt in de geul -->
         <g id="tx-ctdp"></g>
-        <text id="tx-ctdlab" x="-20" y="240" fill="${C.muted}" font-size="18" font-family="Inter">CTD (YSPTSPS)×52</text>
+        <text id="tx-ctdlab" x="40" y="208" fill="${C.muted}" font-size="18" font-family="Inter">CTD (YSPTSPS)×52</text>
         <circle data-anchor="rnapol" cx="0" cy="-184" r="1" fill="none"/>
         <circle id="tx-act" cx="96" cy="0" r="7" fill="#fff" opacity=".85" filter="url(#glow)"/>
       </g>
     </g>
     <!-- factoren boven Pol II: de omtrek van Pol II loopt niet door hun labels -->
-    <g data-node="promoter" data-nolabel data-color="${C.prot}"><text id="tx-tata" x="187" y="592" text-anchor="middle" font-family="JetBrains Mono" font-size="18" fill="#c9b8ff">TATAAAA</text>
+    <g data-node="promoter" data-nolabel data-color="${C.prot}"><text id="tx-tata" x="170" y="592" text-anchor="middle" font-family="JetBrains Mono" font-size="18" fill="#c9b8ff">TATAAAA</text>
     <g id="tx-gtf"></g></g>
     <g data-node="supercoiling" data-color="${C.dna2}" data-label="${T2('Supercoiling', 'Supercoiling')}"><g id="tx-sc"></g><circle id="tx-scA" data-anchor="supercoiling" cx="-99" cy="-99" r="1" fill="none" opacity="0"/></g>
     <g font-family="JetBrains Mono, monospace" font-size="16" fill="${C.text}">
