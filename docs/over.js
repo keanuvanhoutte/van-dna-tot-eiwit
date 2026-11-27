@@ -6,7 +6,7 @@ import { S_EN, SCALES_EN } from '../shared/graph.en.js';
 import { DETAILS } from '../shared/details/index.js';
 import { LINES, MAIN_KEYS, SIDE_KEYS } from '../app/story.js';
 import { ENTRIES } from '../atlas/entries.js';
-import { LOCAL } from '../shared/pdb.js';
+import { localPdb } from '../shared/pdb.js';
 import { LINKS } from '../shared/links.js';
 import { L, lang, langSwitch } from '../shared/i18n.js';
 import { makeSearch } from '../shared/search.js';
@@ -33,9 +33,9 @@ const REPORTS = {
 const nodeIds = Object.keys(NODES);
 const lineCount = MAIN_KEYS.length + SIDE_KEYS.length;
 const pdbSet = new Set();
-for (const n of Object.values(NODES)) for (const p of n.pdb ?? []) pdbSet.add(p.toUpperCase());
+/* enkel structuren die je echt kan bekijken: 'Bekijk echt in 3D' (knoop + lokale kopie) of de 3D-bibliotheek */
+for (const n of Object.values(NODES)) for (const p of n.pdb ?? []) if (localPdb(p)) pdbSet.add(p.toUpperCase());
 for (const e of ENTRIES) if (e.pdb) pdbSet.add(String(e.pdb).toUpperCase());
-for (const f of LOCAL) pdbSet.add(f.split('.')[0].toUpperCase());
 
 /* alle bronnen: uitlegpanelen (per knoop) + 3D-bibliotheek (per item), ontdubbeld op adres */
 const SRC = new Map();
