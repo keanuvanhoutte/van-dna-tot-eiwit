@@ -47,7 +47,7 @@ export default structure3d({
       // eerlijk: APE1, Pol β en ligase zitten niet in deze structuur — alleen de plek waar ze daarna werken wordt aangeduid
       focus: [GREY, ...DNA, { ...U, label: L3('hier werken daarna 3 helpers (niet in deze structuur)', 'next, 3 helpers work here (not in this structure)'), labelColor: C.ok, labelOff: [0, 120] }],
       text: L3('Een tweede enzym knipt de streng open, een polymerase zet de juiste letter terug en een ligase plakt dicht.', 'A second enzyme cuts the strand open, a polymerase puts back the right letter and a ligase seals it.') },
-    { dur: 8000, title: L3('Kleine schade, snel hersteld', 'Small damage, quickly repaired'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('Kleine schade, snel hersteld', 'Small damage, quickly repaired'), focus: null, zoom: {}, tags: [TAG({ chain: 'A' }, 'herstelenzym', 'repair enzyme', undefined, [140, -90]), TAG({ chain: ['B', 'C'] }, 'DNA', 'DNA')], spin: .012,
       text: L3('Zo wordt telkens één beschadigde letter vervangen. Grotere schade vraagt een andere aanpak.', 'This replaces one damaged letter at a time. Bigger damage needs a different approach.') },
   ],
   hotspots: [

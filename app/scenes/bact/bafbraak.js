@@ -30,7 +30,7 @@ export default structure3d({
   rotate: [['x', 65]],   // schuin van opzij: motor (ClpX) en knipkamer (ClpP) zichtbaar op elkaar gestapeld
   zoomPad: .85,                         // overzicht: iets meer ruimte rondom (raakte de bovenrand)
   steps: [
-    { dur: 8000, title: L3('Ook eiwitten moeten weg', 'Proteins have to go too'), focus: null, zoom: {}, tags: [TAG({ chain: X }, 'motor (ClpX)', 'motor (ClpX)'), TAG({ chain: P }, 'knipkamer (ClpP)', 'cutting chamber (ClpP)')], tags: [TAG({ chain: X }, 'motor (ClpX)', 'motor (ClpX)'), TAG({ chain: P }, 'knipkamer (ClpP)', 'cutting chamber (ClpP)')], spin: .012,
+    { dur: 8000, title: L3('Ook eiwitten moeten weg', 'Proteins have to go too'), focus: null, zoom: {}, tags: [TAG({ chain: X }, 'motor (ClpX)', 'motor (ClpX)'), TAG({ chain: P }, 'knipkamer (ClpP)', 'cutting chamber (ClpP)')], spin: .012,
       text: L3('E. coli heeft geen ubiquitine en geen proteasoom. Ze gebruikt eigen afbraakmachines, zoals ClpXP.', 'E. coli has no ubiquitin and no proteasome. It uses its own degradation machines, such as ClpXP.') },
     { dur: 8000, title: L3('ClpX: een motor van zes', 'ClpX: a motor of six'), zoom: {}, spin: .012,
       focus: X.map((c, i) => ({ sel: { chain: c }, style: { cartoon: { color: XC[i] } }, ...(i ? {} : { label: L3('ClpX-ring', 'ClpX ring') }) })),
@@ -41,7 +41,7 @@ export default structure3d({
     { dur: 9000, title: L3('ClpP: de knipkamer', 'ClpP: the cutting chamber'), zoom: {}, spin: .012,
       focus: { sel: { chain: P }, style: { cartoon: { color: PC } }, label: L3('ClpP (ring van 7)', 'ClpP (ring of 7)') },
       text: L3('ClpX duwt de ontvouwen keten in ClpP. Binnenin knippen enzymen haar in kleine stukjes.', 'ClpX pushes the unfolded chain into ClpP. Inside, enzymes cut it into small pieces.') },
-    { dur: 8000, title: L3('Vergelijk: het proteasoom', 'Compare: the proteasome'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('Vergelijk: het proteasoom', 'Compare: the proteasome'), focus: null, zoom: {}, tags: [TAG({ chain: X }, 'motor (ClpX)', 'motor (ClpX)'), TAG({ chain: P }, 'knipkamer (ClpP)', 'cutting chamber (ClpP)')], spin: .012,
       text: L3('Bij de mens markeert ubiquitine eiwitten voor het proteasoom. Het principe is hetzelfde: ontvouwen en in een kamer knippen.', 'In humans ubiquitin marks proteins for the proteasome. The principle is the same: unfold and cut in a chamber.') },
   ],
   hotspots: [

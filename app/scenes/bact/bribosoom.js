@@ -79,7 +79,7 @@ export default structure3d({
         { sel: { chain: 'CF' }, style: blob(COL.nusg, 4.5), label: 'NusG', labelColor: COL.nusg, labelOff: [-30, 50] },
         { sel: { chain: 'AJ' }, style: blob(COL.us10, 4.5), label: L3('ribosoomeiwit uS10', 'ribosomal protein uS10'), labelColor: COL.us10, labelOff: [100, -30] }],
       text: L3('Het eiwit NusG houdt met één kant het polymerase vast en met de andere kant het ribosoom.', 'The protein NusG holds the polymerase with one end and the ribosome with the other.') },
-    { dur: 8000, title: L3('Vergelijk: ons 80S-ribosoom', 'Compare: our 80S ribosome'), focus: null, zoom: {}, spin: .01,
+    { dur: 8000, title: L3('Vergelijk: ons 80S-ribosoom', 'Compare: our 80S ribosome'), focus: null, zoom: {}, tags: [TAG({ chain: [...S30, ...S50] }, 'bacterieel ribosoom (70S)', 'bacterial ribosome (70S)'), TAG({ chain: POL }, 'RNA-polymerase', 'RNA polymerase')], spin: .01,
       text: L3('Ons ribosoom is groter (80S) en leest het mRNA pas buiten de kern. Het principe is hetzelfde.', 'Our ribosome is larger (80S) and only reads the mRNA outside the nucleus. The principle is the same.') },
   ],
   hotspots: [

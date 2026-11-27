@@ -51,7 +51,7 @@ export default structure3d({
     { dur: 9000, title: L3('Nog twee uitzonderingen', 'Two more exceptions'), focus: null, zoom: {}, spin: .012,
       tags: [TAG({ chain: 'B' }, 'groep I-intron (groep II-introns en inteïnes zitten niet in deze structuur)', 'group I intron (group II introns and inteins are not in this structure)', COL.B, [0, 130])],
       text: L3('Groep II-introns knippen zich op een andere manier uit. Inteïnes zijn stukken eiwit die zichzelf uit een eiwit knippen.', 'Group II introns cut themselves out in a different way. Inteins are pieces of protein that cut themselves out of a protein.') },
-    { dur: 8000, title: L3('Vergelijk: splicing bij de mens', 'Compare: splicing in humans'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('Vergelijk: splicing bij de mens', 'Compare: splicing in humans'), focus: null, zoom: {}, tags: [TAG({ chain: 'B' }, 'bacterieel intron: knipt zichzelf', 'bacterial intron: cuts itself out')], spin: .012,
       text: L3('Bijna al onze genen hebben introns. Een grote machine, het spliceosoom, knipt ze eruit.', 'Almost all our genes have introns. A large machine, the spliceosome, cuts them out.') },
   ],
   hotspots: [

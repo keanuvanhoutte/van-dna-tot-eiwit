@@ -55,7 +55,7 @@ export default structure3d({
         { sel: { chain: 'C', resi: MUT }, style: { stick: { color: COL.mut, radius: .4 } } },
         RES(531, 'S531', [130, 50]), RES(526, 'H526', [-130, 50]), RES(516, 'D516', [-60, -100])],
       text: L3('Bij resistente bacteriën is vaak één van deze drie bouwstenen veranderd. Dan past rifampicine slecht of niet.', 'In resistant bacteria one of these three building blocks has often changed. Then rifampicin fits poorly or not at all.') },
-    { dur: 8500, title: L3('Waarom ons enzym niet geraakt wordt', 'Why our enzyme is not hit'), focus: null, zoom: {}, spin: .012,
+    { dur: 8500, title: L3('Waarom ons enzym niet geraakt wordt', 'Why our enzyme is not hit'), focus: null, zoom: {}, tags: [TAG({ chain: ['A', 'B', 'C', 'D', 'E', 'F'], hetflag: false }, 'bacterieel RNA-polymerase', 'bacterial RNA polymerase'), TAG({ resn: 'RFP' }, 'antibioticum (rifampicine)', 'antibiotic (rifampicin)')], spin: .012,
       text: L3('Deze holte is bij bacteriën sterk bewaard, maar bij ons RNA-polymerase is ze anders gebouwd.', 'This pocket is well conserved in bacteria, but in our RNA polymerase it is built differently.') },
   ],
   hotspots: [

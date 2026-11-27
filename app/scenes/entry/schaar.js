@@ -45,7 +45,7 @@ export default structure3d({
     { dur: 8500, title: L3('Elke helft heeft een eigen groef', 'Each half has its own groove'), zoom: {}, spin: .01,
       focus: [{ sel: { chain: 'A', ...PROT }, style: S(PA, 2.2) }, { sel: { chain: 'B', ...PROT }, style: S(PB, 2.2) }, ...DYAD('A', 3.6, L3('actief centrum 1', 'active site 1')), ...DYAD('B', 3.6, L3('actief centrum 2', 'active site 2')), DRUGS('A', null, 2), DRUGS('B', null, 2)],
       text: L3('Elke helft heeft een eigen knipplek, met elk een medicijn. Het tweede ligt achteraan en draait zo in beeld.', 'Each half has its own cutting site, each with a medicine. The second one lies at the back and turns into view.') },
-    { dur: 9000, title: L3('Zonder knippen geen kopieermachine', 'No cutting, no copying machine'), focus: null, zoom: {}, spin: .012,
+    { dur: 9000, title: L3('Zonder knippen geen kopieermachine', 'No cutting, no copying machine'), focus: null, zoom: {}, tags: [TAG({ chain: 'A', resi: 250, atom: 'CA' }, 'helft 1', 'half 1', PA), TAG({ chain: 'B', resi: 250, atom: 'CA' }, 'helft 2', 'half 2', PB)], spin: .012,
       text: L3('Blijft de keten heel, dan ontstaat er geen kopieermachine. Het virus kan zich dan veel minder vermenigvuldigen.', 'If the chain stays whole, no copying machine is formed. The virus can then multiply much less.') },
   ],
   hotspots: [
