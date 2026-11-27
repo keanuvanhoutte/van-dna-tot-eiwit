@@ -364,7 +364,9 @@ function makeLabels(host, viewer, onNode, fs) {
   return { set, place, remove: () => wrap.remove() };
 }
 
-/* de draaiing van een stap: rond draaien (spin) of heen en weer wiegen (rock, ± graden) */
+/* de draaiing van een stap: rond draaien (spin) of heen en weer wiegen (rock, ± graden).
+ * Wiegen gaat bewust heel traag (één volle zwaai per 60 s): snel heen en weer leidt af en helpt niet om de figuur te lezen. */
+const ROCK_PERIOD = 60000;
 function rotor(viewer) {
   let lastT = performance.now(), rockA = 0, tRock = 0;
   return (st, force) => {
@@ -374,7 +376,7 @@ function rotor(viewer) {
     if (FIXANG !== null || dt > 200) return true;
     if (st.rock) {
       tRock += dt;
-      const a = st.rock * Math.sin(tRock / 9000 * 2 * Math.PI);
+      const a = st.rock * Math.sin(tRock / ROCK_PERIOD * 2 * Math.PI);
       viewer.rotate(a - rockA, 'y'); rockA = a;
     } else {
       const spin = (st.spin ?? .012) * SPIN;
