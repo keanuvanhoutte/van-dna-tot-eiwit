@@ -123,7 +123,7 @@ export default {
         $('in-repair').setAttribute('opacity', f1(rOn));   // de 5-bp-duplicatie blijft zichtbaar
         $('in-repair-body').innerHTML = rOn > .01
           ? `<g opacity="${f1(rOn)}">${[[E1 - 26, E1], [E2, E2 + 26]].map(([a, b]) => `<rect x="${a}" y="${HOST - 14}" width="${b - a}" height="28" rx="4" fill="${C.chain}" opacity=".85"/>`).join('')}
-             ${step === 4 ? `${txt(E1 - 70, HOST - 34, T2('herstel', 'repair'), C.chain, 17)}${txt(E2 + 70, HOST - 34, T2('herstel', 'repair'), C.chain, 17)}` : ''}</g>` : '';
+             ${step === 4 ? `${txt(E1 - 110, HOST + 46, T2('herstel', 'repair'), C.chain, 18)}${txt(E2 + 110, HOST + 46, T2('herstel', 'repair'), C.chain, 18)}` : ''}</g>` : '';
 
         /* transcriptie */
         const txnOn = step === 6 ? ease(sub(p, .15, .55)) : 0;
@@ -132,31 +132,31 @@ export default {
           ? `<g transform="rotate(45 647 ${HOST - 142})">${polII(647, HOST - 142, 54, 24, { dir: -1, gul: 12, hoog: 1.8, vul: .4, achter: .5, uit: 1, seed: 12 })}</g>${txt(588, HOST - 176, 'Pol II', '#e8edf7', 20, 'end')}` : '';   // app-vorm (bio.js) op het linkerbeen van de lus: leest vanaf de LTR het provirus in
         $('in-txn-body').innerHTML = txnOn > .01
           ? `<g transform="translate(647 ${HOST - 142})"><path d="M37,-4 q46,6 73,-32 t64,-38" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round"/>${txt(184, -84, T2('viraal mRNA', 'viral mRNA'), C.rna, 20, 'start')}</g>
-             ${txt(520, HOST + 60, T2('linker-LTR = promoter', 'left LTR = promoter'), PINK, 19)}` : '';
+             ${txt(560, HOST + 60, T2('aan-knop (promoter) in de LTR', 'on switch (promoter) in the LTR'), PINK, 20)}` : '';
 
         /* notities */
         let no = '';
         if (step === 0) no += `<g opacity="${f1(ease(sub(p, .3, .7)))}">${txt(800, Y0 + 90, T2('lineair dsDNA met twee LTR\'s (uit de reverse transcriptie)', 'linear dsDNA with two LTRs (from reverse transcription)'), C.text, 20)}</g>`;
         if (step === 2) {
-          const k = ease(sub(p, .2, .6)), dr = 40 * ease(sub(p, .5, 1));
-          no += `<g opacity="${f1(k)}">
-            ${txt(E1 - 70, Y0 + 80 + dr * .7, 'GT', '#ff6b6b', 22)}${txt(E2 + 70, Y0 + 80 + dr * .7, 'GT', '#ff6b6b', 22)}
-            ${txt(800, Y0 - 130, "…CA-3′-OH", '#7fdc6a', 19)}
-            ${txt(800, Y0 + 150, T2("2 nt per 3′-uiteinde weg → vrije 3′-OH", "2 nt removed per 3′ end → free 3′-OH"), '#ff6b6b', 19)}</g>`;
+          // de twee weggeknipte letters (GT) springen van elk uiteinde weg
+          const k = ease(sub(p, .15, .35)), fly = ease(sub(p, .35, .8));
+          no += `<g opacity="${f1(k * (1 - .55 * fly))}">
+            ${txt(E1 - 20 - 120 * fly, Y0 + 30 + 70 * fly, 'GT', '#ff6b6b', 28, 'middle', 800)}${txt(E2 + 20 + 120 * fly, Y0 + 30 + 70 * fly, 'GT', '#ff6b6b', 28, 'middle', 800)}</g>
+            <g opacity="${f1(sub(p, .5, .7))}">${txt(800, Y0 + 165, T2('2 letters eraf aan elk uiteinde', '2 letters off each end'), '#ff6b6b', 26, 'middle', 700)}</g>`;
         }
         if (step === 3) {
           const k = ease(sub(p, .6, .95));
           no += `<g opacity="${f1(k)}">
-            <path d="M${E1},${HOST + 66} L${E1},${HOST + 80} L${E2},${HOST + 80} L${E2},${HOST + 66}" stroke="#7fdc6a" stroke-width="3" fill="none"/>
-            ${txt(800, HOST + 110, T2('5 bp uit elkaar, op de twee strengen', '5 bp apart, on the two strands'), '#7fdc6a', 20)}</g>`;
+            <path d="M${E1},${HOST + 62} L${E1},${HOST + 74} L${E2},${HOST + 74} L${E2},${HOST + 62}" stroke="#7fdc6a" stroke-width="3" fill="none"/>
+            ${txt(E2 + 24, HOST + 80, T2('5 basenparen uit elkaar', '5 base pairs apart'), '#7fdc6a', 20, 'start')}</g>`;
         }
-        if (step === 4) no += `<g opacity="${f1(ease(sub(p, .5, .9)))}">${txt(800, HOST + 110, T2('5 bp gastheersequentie staat nu dubbel', '5 bp of host sequence is now duplicated'), C.chain, 19)}</g>`;
+        if (step === 4) no += `<g opacity="${f1(ease(sub(p, .5, .9)))}">${txt(800, HOST + 110, T2('5 basenparen van de cel staan nu dubbel', '5 base pairs of the cell are now doubled'), C.chain, 20)}</g>`;
         if (step === 5) {
           const k = ease(sub(p, .2, .6));
           no += `<g opacity="${f1(k)}">${txt(800, HOST - H - 70, T2('provirus — permanent deel van het genoom', 'provirus — a permanent part of the genome'), PINK, 23)}
             ${txt(800, HOST + 74, T2('LEDGF/p75 stuurt HIV-1 naar actieve genen', 'LEDGF/p75 steers HIV-1 towards active genes'), C.muted, 20)}</g>`;
         }
-        if (step === 6) no += `<g opacity="${f1(ease(sub(p, .45, .85)))}">${txt(1080, HOST + 60, T2('stil provirus = latent reservoir', 'silent provirus = latent reservoir'), C.muted, 19)}</g>`;
+        if (step === 6) no += `<g opacity="${f1(ease(sub(p, .45, .85)))}">${txt(1090, HOST + 60, T2('blijft het stil: slapend virus (latent)', 'if it stays silent: sleeping virus (latent)'), C.muted, 20)}</g>`;
         $('in-notes').innerHTML = no;
       },
     };
