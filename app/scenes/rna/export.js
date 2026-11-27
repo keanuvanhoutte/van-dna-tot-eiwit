@@ -28,13 +28,13 @@ export default {
   time: { nl: 'doortocht ≈ 0,2 s (hier vertraagd)', en: 'passage ≈ 0.2 s (slowed down here)' },
   org: { nl: 'mens', en: 'human' },
   legend: [[C.rna, 'mRNA'], [C.cap, { nl: "m⁷G-cap / poly(A)", en: "m⁷G cap / poly(A)" }], ['#7a62e0', { nl: 'EJC & kapbindende eiwitten', en: 'EJC & cap-binding proteins' }],
-    ['#d06bd8', 'NXF1–NXT1'], ['#5a8fd6', 'TREX'], ['#9db4d8', { nl: 'kernporie (nucleoporinen)', en: 'nuclear pore (nucleoporins)' }], [C.rrna, { nl: 'ribosoom', en: 'ribosome' }]],
+    ['#d06bd8', { nl: 'transporteiwit (NXF1–NXT1)', en: 'transport protein (NXF1–NXT1)' }], ['#5a8fd6', { nl: 'exportlabel (TREX)', en: 'export tag (TREX)' }], ['#9db4d8', { nl: 'kernporie (nucleoporinen)', en: 'nuclear pore (nucleoporins)' }], [C.rrna, { nl: 'ribosoom', en: 'ribosome' }]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Richting komt niet van RanGTP maar van de ATPase DDX19 aan de cytoplasmatische kant: die haalt NXF1 van het mRNA, zodat het niet meer terug kan glijden. Vergelijk met <b>Exportine-5</b> (pre-miRNA) en CRM1, die wél RanGTP gebruiken.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">Directionality does not come from RanGTP but from the ATPase DDX19 on the cytoplasmic side: it strips NXF1 off the mRNA so it cannot slide back. Compare <b>Exportin-5</b> (pre-miRNA) and CRM1, which do use RanGTP.</p>' },
   simplified: {
-    nl: 'Niet op schaal: de kernporie is ≈ 120 nm breed (≈ 110 MDa, ≈ 30 soorten nucleoporinen in 8-voudige symmetrie), een mRNP is veel langer en dichter bepakt dan getekend. Slechts enkele eiwitten zijn getoond; SR-eiwitten, THOC5, CHTOP en andere adaptoren zijn weggelaten. IP6 is getekend zoals bij gist; menselijk DDX19 heeft het niet nodig om actief te worden. De richting waarin het mRNA door de porie gaat (hier kapje voorop) is een voorbeeld. De EJC\'s worden pas door het eerste ribosoom verwijderd; de volgorde van de CBC→eIF4E-wissel ten opzichte van die eerste ronde is vereenvoudigd.',
-    en: 'Not to scale: the nuclear pore is ≈ 120 nm wide (≈ 110 MDa, ≈ 30 kinds of nucleoporins in 8-fold symmetry), and an mRNP is much longer and more densely packed than drawn. Only a few proteins are shown; SR proteins, THOC5, CHTOP and other adaptors are omitted. IP6 is drawn as in yeast; human DDX19 does not need it to become active. The direction in which the mRNA passes the pore (here cap first) is an example. EJCs are only removed by the first ribosome; the timing of the CBC→eIF4E exchange relative to that first round is simplified.' },
+    nl: 'Niet op schaal: de kernporie is ≈ 120 nm breed (≈ 110 MDa, ≈ 30 soorten nucleoporinen in 8-voudige symmetrie), een mRNP is veel langer en dichter bepakt dan getekend. Slechts enkele eiwitten zijn getoond; SR-eiwitten, THOC5, CHTOP en andere adaptoren zijn weggelaten. De richting waarin het mRNA door de porie gaat (hier kapje voorop) is een voorbeeld. De EJC\'s worden pas door het eerste ribosoom verwijderd; de volgorde van de CBC→eIF4E-wissel ten opzichte van die eerste ronde is vereenvoudigd.',
+    en: 'Not to scale: the nuclear pore is ≈ 120 nm wide (≈ 110 MDa, ≈ 30 kinds of nucleoporins in 8-fold symmetry), and an mRNP is much longer and more densely packed than drawn. Only a few proteins are shown; SR proteins, THOC5, CHTOP and other adaptors are omitted. The direction in which the mRNA passes the pore (here cap first) is an example. EJCs are only removed by the first ribosome; the timing of the CBC→eIF4E exchange relative to that first round is simplified.' },
   steps: [
     ST(7000, cam(520, 690, 1050), "Het rijpe mRNA in de kern", "The mature mRNA in the nucleus",
       "Het rijpe mRNA is ingepakt met eiwitten: op het kapje, bij elke naad tussen exonen en op de staart.",
@@ -133,8 +133,8 @@ export default {
         }
         $('ex-fg').innerHTML = fg;
         const npOp = step >= 3 && step <= 5 ? 1 : 0;
-        $('ex-nplab').innerHTML = note(PX - 140, Y_IN + 110, T2('kernkorf (TPR)', 'nuclear basket (TPR)'), '#aab8dc', 18, 'end', npOp) +
-          note(PX - 44, Y_OUT + 46, 'FG', '#e0cbff', 18, 'middle', step >= 3 && step <= 4 ? 1 : 0) +
+        $('ex-nplab').innerHTML = note(PX - 140, Y_IN + 110, T2('kernkorf', 'nuclear basket'), '#aab8dc', 18, 'end', npOp) +
+          note(PX - 160, Y_OUT + 50, T2('eiwitdraden', 'protein strands'), '#e0cbff', 19, 'end', step >= 3 && step <= 4 ? 1 : 0) +
           note(PX + 120, Y_OUT - 90, T2('cytoplasmatische filamenten', 'cytoplasmic filaments'), '#aab8dc', 18, 'start', step === 5 ? 1 : 0);
 
         // mRNA-streng (+ poly(A) apart)
@@ -161,7 +161,7 @@ export default {
           pa += `<circle cx="${f1(q[0])}" cy="${f1(q[1])}" r="13" fill="${exch > .5 ? '#6f5bd6' : '#7a62e0'}" stroke="#0a1224" stroke-width="1.5"/>`;
         });
         const pl = side(sOf(684), -56);
-        pa += note(pl[0], pl[1] + 6, exch > .5 ? 'PABPC1' : 'PABPN1', exch > .5 ? '#b9a6ff' : '#b9a8ff', 19, 'middle', step >= 6 ? 1 : (step <= 2 ? 1 : 0));
+        pa += note(pl[0], pl[1] + 6, exch > .5 ? 'PABPC1' : 'PABPN1', '#9a8fc4', 15, 'middle', step >= 6 ? 1 : (step <= 2 ? 1 : 0));
         const pt = side(sOf(680), 26); pa += step <= 1 ? note(pt[0], pt[1], 'poly(A)', C.cap, 18) : '';   // boven de staart zelf
         $('ex-pa').innerHTML = pa;
         // stap 9: label naast de staart, niet op de lus-lijn
@@ -174,18 +174,19 @@ export default {
         const capP = side(head + 16, 0);
         pr += capG(capP[0], capP[1], 22);
         const cbcP = side(head + 14, 36);
-        pr += prot(cbcP[0], cbcP[1], 70, 34, 'CBC', '#7a62e0', 1 - exch, 18);
-        pr += prot(cbcP[0], cbcP[1], 83, 34, 'eIF4E', '#6f5bd6', exch, 18);
+        pr += prot(cbcP[0], cbcP[1], 60, 30, 'CBC', '#6a5bb0', 1 - exch, 15);
+        pr += prot(cbcP[0], cbcP[1], 70, 30, 'eIF4E', '#6a5bb0', exch, 15);
         $('ex-cap').innerHTML = pr; pr = '';
         // TREX: stap 1 bindt, stap 2 wordt NXF1 geladen, UAP56/THO gaan weg, ALYREF blijft tot aan de porie
         const trexIn = step === 1 ? ease(sub(p, 0, .45)) : step === 2 ? 1 - ease(sub(p, .55, 1)) : 0;
         const alyOp = step === 1 ? ease(sub(p, 0, .45)) : step === 2 ? 1 : step === 3 ? 1 - ease(sub(p, .3, .8)) : 0;
         const tA = side(sOf(84), 34), tB = side(sOf(70), 72), tC = side(sOf(165), 72);
-        pr += prot(tA[0], tA[1], 103, 36, 'ALYREF', '#5a8fd6', alyOp, 18);
-        pr += prot(tB[0], tB[1], 84, 36, 'THO', '#4a78bb', trexIn, 18);
-        pr += prot(tC[0], tC[1], 106, 36, 'UAP56', '#4a78bb', trexIn, 18);
-        if (step === 1) pr += note((tB[0] + tC[0]) / 2, tB[1] - 30, 'TREX', '#9cc0ff', 19, 'middle', trexIn);
-        if (step === 2) pr += note(tC[0], tC[1] - 30, 'ATP → ADP', '#5fd3e6', 18, 'middle', sub(p, .1, .3) * (1 - sub(p, .6, .9)));
+        pr += prot(tA[0], tA[1], 84, 30, 'ALYREF', '#4f73a8', alyOp, 14);
+        pr += prot(tB[0], tB[1], 64, 30, 'THO', '#46658f', trexIn, 14);
+        pr += prot(tC[0], tC[1], 78, 30, 'UAP56', '#46658f', trexIn, 14);
+        if (step === 1 || step === 2) pr += note((tB[0] + tC[0]) / 2, tB[1] - 46, T2('exportlabel', 'export tag'), '#9cc0ff', 24, 'middle', trexIn) +
+          note((tB[0] + tC[0]) / 2, tB[1] - 24, '(TREX)', '#9cc0ff', 15, 'middle', trexIn);
+        if (step === 2) pr += note(tC[0] - 90, tC[1] + 6, 'ATP → ADP', '#5fd3e6', 18, 'middle', sub(p, .1, .3) * (1 - sub(p, .6, .9)));
         // NXF1–NXT1
         const nxfIn = step < 2 ? 0 : step === 2 ? ease(sub(p, .2, .6)) : 1;
         D.nxf.forEach((d, i) => {
@@ -194,20 +195,21 @@ export default {
           let q = side(s0, -36);
           if (k > 0) q = [q[0] + k * 170, q[1] - k * 30];
           const op = nxfIn * (1 - k);
-          pr += prot(q[0], q[1], 110, 32, 'NXF1·NXT1', '#d06bd8', op, 15);
+          /* één transporteiwit met naam (het voorste); de andere kopieën dezelfde kleur, zonder tekst, zodat ze de EJC's niet overlappen */
+          pr += i === 0 ? prot(q[0], q[1], 138, 34, T2('transporteiwit', 'transport protein'), '#d06bd8', op, 16) : prot(q[0], q[1], 64, 30, '', '#d06bd8', op, 14);
+          if (i === 0 && step >= 2 && step <= 4) pr += note(q[0], q[1] + 38, 'NXF1·NXT1', '#e7a6ee', 14, 'middle', op);
         });
         // NXF1–NXT1 keert terug door het centrale kanaal van de porie (niet door de envelop)
         if (step === 6) pr += `<path d="M${PX + 180},330 C${PX + 50},336 ${PX + 22},366 ${PX + 22},420 L${PX + 22},600" stroke="#d06bd8" stroke-width="3" fill="none" marker-end="url(#arrow)" opacity="${f1(sub(p, .2, .5))}"/>` +
-          note(PX + 130, 610, T2('NXF1–NXT1 → kern', 'NXF1–NXT1 → nucleus'), '#e7a6ee', 20, 'start', sub(p, .2, .5));
+          note(PX + 130, 610, T2('transporteiwit → terug de kern in', 'transport protein → back into the nucleus'), '#e7a6ee', 20, 'start', sub(p, .2, .5));
         // DDX19 + Gle1 aan de filamenten
         const ddxOp = step >= 3 ? 1 : 0;
         const pulse = step === 5 ? .5 + .5 * Math.sin(t / 160) : 0;
         pr += `<g opacity="${ddxOp}"><circle cx="${PX - 150}" cy="${Y_OUT - 86}" r="${f1(34 + 6 * pulse)}" fill="none" stroke="#ffd36b" stroke-width="2" opacity="${f1(pulse * .8)}"/></g>`;
-        pr += prot(PX - 150, Y_OUT - 86, 94, 36, 'DDX19', '#b8862a', ddxOp, 19);
-        pr += prot(PX - 170, Y_OUT - 42, 86, 34, 'Gle1', '#8c6a2a', ddxOp, 19);
-        pr += note(PX - 214, Y_OUT - 36, T2('IP6 (gist)', 'IP6 (yeast)'), '#ffd36b', 19, 'end', ddxOp);
-        if (step === 5) pr += note(PX - 150, Y_OUT - 124, 'ATP → ADP + Pᵢ', '#5fd3e6', 18, 'middle', sub(p, .15, .35));
-        if (step === 4) pr += note(PX + 150, Y_IN + 70, T2('geen RanGTP nodig', 'no RanGTP needed'), C.muted, 18, 'start', sub(p, .2, .4));
+        pr += prot(PX - 150, Y_OUT - 86, 108, 36, T2('losmaker', 'releaser'), '#b8862a', ddxOp, 18);
+        pr += note(PX - 150, Y_OUT - 118, 'DDX19', '#e7c98a', 14, 'middle', ddxOp);
+        pr += prot(PX - 170, Y_OUT - 42, 60, 28, 'Gle1', '#6e5a36', ddxOp, 14);
+        if (step === 5) pr += note(PX - 220, Y_OUT - 86, T2('ATP', 'ATP'), '#5fd3e6', 20, 'end', sub(p, .15, .35));
         $('ex-prot').innerHTML = pr;
 
         // EJC's: vallen af als het pioniersribosoom passeert
@@ -216,7 +218,7 @@ export default {
         D.ejc.forEach(d => {
           const k = step >= 7 ? clamp((rd - d + 40) / 60) : 0;
           const q = side(sOf(d), -30);
-          ej += prot(q[0], q[1] - k * 90, 62, 34, 'EJC', '#7a62e0', 1 - k, 18);
+          ej += prot(q[0], q[1] - k * 90, 52, 30, 'EJC', '#6a5bb0', 1 - k, 15);
         });
         $('ex-ejc').innerHTML = ej;
         const eq = side(sOf(D.ejc[0]), -52); $('ex-eA').dataset.pos = 'below'; $('ex-eA').setAttribute('cx', f1(eq[0])); $('ex-eA').setAttribute('cy', f1(eq[1]));
@@ -228,11 +230,11 @@ export default {
         if (step === 8) {
           const a = ease(sub(p, .45, .85));
           const q = P.at(sOf(10));
-          rb += prot(capP[0] + 76, capP[1] - 64, 89, 36, 'eIF4G', '#6f5bd6', exch, 18) + prot(capP[0] + 52, capP[1] - 100, 89, 36, 'eIF4A', '#5a4bb8', exch, 18);
+          rb += prot(capP[0] + 82, capP[1] - 64, 104, 34, T2('verbinder', 'linker'), '#6f5bd6', exch, 16) + note(capP[0] + 82, capP[1] - 36, 'eIF4G', '#b9a6ff', 14, 'middle', exch) + prot(capP[0] + 40, capP[1] - 100, 56, 28, 'eIF4A', '#4f4690', exch, 13);
           // gesloten lus: eIF4G ↔ PABPC1
           const pq = side(sOf(684), -22);
           rb += `<path d="M${f1(capP[0] + 112)},${f1(capP[1] - 64)} C${f1(capP[0] + 300)},${f1(capP[1] - 190)} ${f1(pq[0])},${f1(pq[1] - 200)} ${f1(pq[0])},${f1(pq[1] - 16)}" stroke="#b9a6ff" stroke-width="3" fill="none" stroke-dasharray="7 6" opacity="${f1(sub(p, .3, .5))}"/>`;
-          rb += note((capP[0] + pq[0]) / 2 + 60, capP[1] - 176, T2('gesloten lus (eIF4G–PABPC1)', 'closed loop (eIF4G–PABPC1)'), '#b9a6ff', 18, 'middle', sub(p, .3, .5));
+          rb += note((capP[0] + pq[0]) / 2 + 60, capP[1] - 176, T2('kapje en staart vormen een lus', 'cap and tail form a loop'), '#b9a6ff', 20, 'middle', sub(p, .3, .5));
           // 43S = kleine eenheid (40S) met initiatiefactoren en het start-tRNA, nog zonder grote eenheid
           const d43 = eiwitPad(0, 22, 56, 25, 40, .07);
           rb += `<g opacity="${f1(a)}" transform="translate(${f1(q[0] + 70)} ${f1(q[1] + 8)})"><path d="${d43}" fill="#0b1224"/><path d="${d43}" fill="#8df0dc" fill-opacity=".36" stroke="#8df0dc" stroke-width="3"/>` +
