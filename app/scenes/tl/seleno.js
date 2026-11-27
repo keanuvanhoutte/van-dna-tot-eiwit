@@ -63,7 +63,8 @@ export default {
     const bead = (x, y, lab, col, r = 22) => `<circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${col}" stroke="#0a1224" stroke-width="2"/><text x="${f1(x)}" y="${f1(y + r * .3)}" font-size="${Math.round(r * .68)}" text-anchor="middle" fill="#0a1224" font-family="Inter" font-weight="800">${lab}</text>`;
     const ntb = (x, y, b, w = 30, extra = '') => `<rect x="${f1(x - w / 2)}" y="${f1(y)}" width="${w}" height="${w}" rx="5" fill="${BASE[b]}" ${extra}/><text x="${f1(x)}" y="${f1(y + w * .72)}" font-size="${f1(w * .62)}" text-anchor="middle" fill="#0a1224" font-family="JetBrains Mono" font-weight="700">${b}</text>`;
     /* tRNA = het gedeelde symbool (bio.js trna2d): anticodon (links→rechts 3′→5′) op (x, y), aminozuur op het CCA-uiteinde */
-    const TS = 1, top = (x, y) => trnaPunt(x, y, { s: TS });
+    // kleiner dan 1: de echte vouwing is ~1,4 codon breed; zo staan de tRNA's in P en A naast elkaar i.p.v. over elkaar
+    const TS = .68, top = (x, y) => trnaPunt(x, y, { s: TS });
     function trna(x, y, ac, charge, op = 1, big = false, col = TRNA_SITE.P) {
       return trna2d(x, y, { anticodon: ac, nt: 32 / TS, tile: [.875, .875], aa: charge?.[0] ?? null, aaCol: charge?.[1] ?? null, op, col, ends: big, s: TS });
     }
