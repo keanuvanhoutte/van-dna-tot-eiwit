@@ -151,34 +151,54 @@ export default {
         const rb = ribbon(st);
         $('sc-rib').innerHTML = `<g opacity="${f1(st.fade)}">${rb.svg}</g>`;
         let ann = '', enz = '', cnt = '', pol = '', nucpic = '', nucOp = 0;
-        // tellers
-        const showCnt = step >= 1 && step <= 7;
+        // eenvoudige meter: hoe strak is het DNA gedraaid? (te los ↔ normaal ↔ te strak; volgt het aantal slagen Lk)
+        const showCnt = step >= 2 && step <= 7 && step !== 5;
         if (showCnt) {
-          const hl = step === 1 ? 1 : 0;
-          cnt += box(1090, 130, 330, 170) + txt(1115, 180, `Lk = ${num(st.lk)}`, '#fff', 34, 'start', 800, 'JetBrains Mono') +
-            txt(1115, 225, `Tw = ${num(st.tw)}`, C.dna, 30, 'start', 700, 'JetBrains Mono') + txt(1115, 268, `Wr = ${num(st.wr)}`, '#ffc247', 30, 'start', 700, 'JetBrains Mono');
+          const mx = 1255 + clamp((st.lk - LK0) * 46.5, -130, 130);
+          cnt += box(1090, 130, 330, 160) + txt(1255, 172, T2('hoe strak gedraaid?', 'how tightly wound?'), '#fff', 24) +
+            `<rect x="1115" y="200" width="93" height="22" rx="6" fill="#4f8ff7" opacity=".55"/><rect x="1208" y="200" width="94" height="22" fill="${C.ok}" opacity=".55"/><rect x="1302" y="200" width="93" height="22" rx="6" fill="#ff6b6b" opacity=".55"/>` +
+            `<path d="M${f1(mx)},226 l-11,-0 l11,-18 l11,18 z" transform="rotate(180 ${f1(mx)} 217)" fill="#fff"/><rect x="${f1(mx - 3)}" y="196" width="6" height="30" rx="2" fill="#fff"/>` +
+            txt(1161, 256, T2('te los', 'too loose'), '#7cb4ff', 20) + txt(1255, 256, T2('normaal', 'normal'), C.ok, 20) + txt(1348, 256, T2('te strak', 'too tight'), '#ff8a8a', 20);
         }
+        // genummerde slagen boven de helix: zo zie je hoeveel keer de strengen rond elkaar gaan
+        const turnNums = op => {
+          if (op <= 0 || st.w > 0) return '';
+          let o = '';
+          const n = Math.floor(st.tw + .5);
+          for (let k = 1; k <= n; k++) {
+            const sk = (k - .5) / st.tw; if (sk > 1) break;
+            const x = X0 + (X1 - X0) * sk;
+            o += `<circle cx="${f1(x)}" cy="${Y0 - 58}" r="15" fill="#0d1426" stroke="#ffc247" stroke-width="2"/>` + txt(x, Y0 - 51, String(k), '#ffc247', 19, 'middle', 700);
+          }
+          return `<g opacity="${f1(op)}">${o}</g>`;
+        };
         if (step === 0) {
           const k = ease(sub(p, .3, .6));
-          ann += `<g opacity="${f1(k)}"><path d="M${X0},${Y0 - 90} H${X0 + 100}" stroke="#fff" stroke-width="2.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>${txt(X0 + 50, Y0 - 104, '10,5 bp'.replace(',', L({ nl: ',', en: '.' })), '#fff', 22)}</g>`;
-          ann += `<g opacity="${f1(ease(sub(p, .55, .8)))}">${txt(800, 260, T2('126 bp ÷ 10,5 = 12 windingen → Lk₀ = 12', '126 bp ÷ 10.5 = 12 turns → Lk₀ = 12'), '#fff', 30)}</g>`;
+          ann += `<g opacity="${f1(k)}"><path d="M${X0},${Y0 - 100} H${X0 + 100}" stroke="#fff" stroke-width="2.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>${txt(X0 + 50, Y0 - 114, T2('1 slag = 10,5 basenparen', '1 turn = 10.5 base pairs'), '#fff', 22, 'start')}</g>`;
+          ann += turnNums(ease(sub(p, .55, .8)));
+          ann += `<g opacity="${f1(ease(sub(p, .6, .85)))}">${txt(800, 280, T2('ontspannen: 12 slagen', 'relaxed: 12 turns'), '#fff', 30)}</g>`;
         }
         if (step === 1) {
-          const k = ease(sub(p, .1, .35));
-          ann += `<g opacity="${f1(k)}">${box(170, 130, 820, 200)}${txt(580, 205, 'Lk = Tw + Wr', '#fff', 52, 'middle', 800, 'JetBrains Mono')}
-            ${txt(580, 255, T2('Lk: geheel getal, topologisch (verandert enkel na knippen)', 'Lk: integer, topological (changes only after cutting)'), C.text, 22)}
-            ${txt(580, 292, T2('Tw: windingen rond de as · Wr: kronkeling van de as', 'Tw: turns around the axis · Wr: coiling of the axis'), C.muted, 20)}</g>`;
+          // de slagen één voor één tellen
+          const n = Math.min(12, Math.floor(clamp(sub(p, .05, .75)) * 12.999));
+          let o = '';
+          for (let k = 1; k <= 12; k++) {
+            const x = X0 + (X1 - X0) * (k - .5) / 12;
+            o += `<g opacity="${k <= n ? 1 : .3}"><circle cx="${f1(x)}" cy="${Y0 - 58}" r="15" fill="#0d1426" stroke="#ffc247" stroke-width="2"/>` + txt(x, Y0 - 51, String(k), '#ffc247', 19, 'middle', 700) + '</g>';
+          }
+          ann += o + (n < 1 ? "" : txt(800, 300, T2(`de strengen gaan ${n} keer rond elkaar`, `the strands wind ${n} times round each other`), '#fff', 30)) +
+            `<g opacity="${f1(ease(sub(p, .78, .92)))}">${txt(800, 340, T2('(dit getal heet Lk; het verandert alleen als een streng breekt)', '(this number is called Lk; it only changes if a strand breaks)'), C.muted, 22)}</g>`;
         }
         if (step === 2) {
           const k = ease(sub(p, .15, .6));
-          ann += `<g opacity="${f1(sub(p, .05, .2) * (1 - sub(p, .85, 1) * 0))}"><ellipse cx="${X1 + 23}" cy="${Y0}" rx="42" ry="72" fill="none" stroke="#ffc247" stroke-width="4" stroke-dasharray="10 8" transform="rotate(${f1(-k * 720)} ${X1 + 23} ${Y0})"/>${txt(X1 - 60, Y0 - 100, T2('2 windingen terugdraaien', 'unwind 2 turns'), '#ffc247', 22, 'end')}</g>`;
-          ann += `<g opacity="${f1(ease(sub(p, .65, .85)))}">${txt(700, 300, T2('onderwonden: ≈ 12,6 bp per winding i.p.v. 10,5', 'underwound: ≈ 12.6 bp per turn instead of 10.5'), '#fff', 26)}</g>`;
+          ann += `<g opacity="${f1(sub(p, .05, .2))}"><ellipse cx="${X1 + 23}" cy="${Y0}" rx="42" ry="72" fill="none" stroke="#ffc247" stroke-width="4" stroke-dasharray="10 8" transform="rotate(${f1(-k * 720)} ${X1 + 23} ${Y0})"/>${txt(X1 + 23, Y0 - 140, T2('2 slagen terugdraaien', 'turn back 2 turns'), '#ffc247', 22, 'end')}</g>`;
+          ann += turnNums(1);
+          ann += `<g opacity="${f1(ease(sub(p, .65, .85)))}">${txt(640, 300, T2('2 slagen minder: nu 10 i.p.v. 12', '2 turns fewer: now 10 instead of 12'), '#fff', 30)}${txt(640, 342, T2('→ te los: de strengen gaan makkelijker open', '→ too loose: the strands open more easily'), '#7cb4ff', 24)}</g>`;
         }
         if (step === 3) {
-          ann += `<g opacity="${f1(ease(sub(p, .7, .85)))}">${txt(430, 250, T2('plectoneem', 'plectoneme'), '#ffc247', 30)}${txt(430, 284, T2('2 kruisingen → Wr ≈ −2', '2 crossings → Wr ≈ −2'), C.muted, 22)}${txt(430, 314, T2('(rechtshandig gewonden)', '(right-handed interwound)'), C.muted, 20)}</g>`;
+          ann += `<g opacity="${f1(ease(sub(p, .7, .85)))}">${txt(430, 250, T2('kronkel (2 kruisingen)', 'coil (2 crossings)'), '#ffc247', 30)}${txt(430, 286, T2('vangt de 2 ontbrekende', 'takes up the 2 missing'), C.muted, 22)}${txt(430, 314, T2('slagen op', 'turns'), C.muted, 22)}</g>`;
         }
         if (step === 4) {
-          ann += `<g opacity="${f1(ease(sub(p, .05, .25)))}">${box(130, 580, 560, 130)}${txt(410, 628, 'σ = ΔLk / Lk₀', '#fff', 32, 'middle', 800, 'JetBrains Mono')}${txt(410, 675, T2('hier −2/12 ≈ −0,17 · cel ≈ −0,05', 'here −2/12 ≈ −0.17 · cell ≈ −0.05'), C.muted, 24)}</g>`;
           // nucleosoom als toroïdale (linkshandige) supercoil
           const k = ease(sub(p, .35, .6));
           nucOp = k;   // opacity op de hotspotgroep zelf, zodat de engine hem pas klikbaar maakt als hij zichtbaar is
@@ -193,19 +213,18 @@ export default {
             <path d="M${f1(xs + 30)},${Y0 - 70} h70" stroke="${C.prot}" stroke-width="4" marker-end="url(#arrow)"/>
             <path d="M${f1(xs - 20)},${Y0 - 55} C${f1(xs - 60)},${Y0 - 140} ${f1(xs - 140)},${Y0 - 150} ${f1(xs - 200)},${Y0 - 200}" stroke="${C.rna}" stroke-width="6" fill="none"/>${txt(xs - 210, Y0 - 212, 'RNA', C.rna, 20)}</g>`;
           const k = ease(sub(p, .3, .5));
-          ann += `<g opacity="${f1(k)}"><circle cx="${f1((xs + X1) / 2)}" cy="${Y0 + 110}" r="26" fill="none" stroke="#fff" stroke-width="3"/>${txt((xs + X1) / 2, Y0 + 120, '+', '#fff', 34, 'middle', 800)}${txt((xs + X1) / 2, Y0 + 170, T2('overwonden', 'overwound'), '#fff', 22)}
-            <circle cx="${f1((xs + X0) / 2)}" cy="${Y0 + 110}" r="26" fill="none" stroke="#fff" stroke-width="3"/>${txt((xs + X0) / 2, Y0 + 121, '−', '#fff', 36, 'middle', 800)}${txt((xs + X0) / 2, Y0 + 170, T2('onderwonden', 'underwound'), '#fff', 22)}</g>`;
+          ann += `<g opacity="${f1(k)}"><circle cx="${f1((xs + X1) / 2)}" cy="${Y0 + 110}" r="26" fill="none" stroke="#fff" stroke-width="3"/>${txt((xs + X1) / 2, Y0 + 120, '+', '#fff', 34, 'middle', 800)}${txt((xs + X1) / 2, Y0 + 170, T2('te strak', 'too tight'), '#ff8a8a', 24)}
+            <circle cx="${f1((xs + X0) / 2)}" cy="${Y0 + 110}" r="26" fill="none" stroke="#fff" stroke-width="3"/>${txt((xs + X0) / 2, Y0 + 121, '−', '#fff', 36, 'middle', 800)}${txt((xs + X0) / 2, Y0 + 170, T2('te los', 'too loose'), '#7cb4ff', 24)}</g>`;
           $('sc-a-tx').setAttribute('cx', f1(xs)); $('sc-a-tx').setAttribute('cy', f1(Y0 - 60));
-          ann += `<g opacity="${f1(ease(sub(p, .6, .8)))}">${txt(560, 250, T2('Liu & Wang (1987): het twin-supercoiled-domain-model', 'Liu & Wang (1987): the twin-supercoiled-domain model'), C.muted, 22)}</g>`;
         }
         if (step === 6) {
           const xs = X0 + (X1 - X0) * .3425;
           const on = ease(sub(p, .08, .2)) * (1 - ease(sub(p, .9, 1)));
           enz += `<g opacity="${f1(on)}"><path d="M${f1(xs - 80)},${Y0 - 20} C${f1(xs - 90)},${Y0 - 110} ${f1(xs + 90)},${Y0 - 110} ${f1(xs + 80)},${Y0 - 20} L${f1(xs + 70)},${Y0 + 60} C${f1(xs + 40)},${Y0 + 100} ${f1(xs - 40)},${Y0 + 100} ${f1(xs - 70)},${Y0 + 60} Z" fill="rgba(155,123,255,.28)" stroke="${C.prot}" stroke-width="3"/>${txt(xs, Y0 - 70, 'TOP1', '#fff', 22)}</g>`;
-          if (p > .2 && p < .88) ann += `<g>${txt(xs, Y0 + 140, T2('knip in één streng · Tyr–DNA (covalent)', 'nick in one strand · Tyr–DNA (covalent)'), '#ffc247', 22)}</g>`;
+          if (p > .2 && p < .88) ann += `<g>${txt(xs, Y0 + 140, T2('knip in één streng', 'cut in one strand'), '#ffc247', 24)}</g>`;
           const rot = (p > .3 && p < .5) || (p > .6 && p < .8);
           if (rot) ann += `<ellipse cx="${f1(xs + 150)}" cy="${Y0}" rx="26" ry="60" fill="none" stroke="#ffc247" stroke-width="4" stroke-dasharray="9 7" transform="rotate(${f1(p * 2000)} ${f1(xs + 150)} ${Y0})"/>`;
-          ann += `<g opacity="${f1(ease(sub(p, .3, .45)))}">${box(200, 150, 640, 150)}${txt(520, 195, T2('rotatie van de geknipte streng → Lk + 1', 'rotation of the nicked strand → Lk + 1'), '#fff', 24)}${txt(520, 235, T2('geen ATP nodig · relaxeert + én − supercoils', 'no ATP needed · relaxes both + and − supercoils'), C.muted, 21)}${txt(520, 272, T2('geremd door camptothecine (irinotecan, topotecan)', 'inhibited by camptothecin (irinotecan, topotecan)'), C.muted, 20)}</g>`;
+          ann += `<g opacity="${f1(ease(sub(p, .3, .45)))}">${box(200, 150, 640, 120)}${txt(520, 198, T2('geknipte streng draait: 1 slag erbij', 'cut strand turns: 1 turn added'), '#fff', 26)}${txt(520, 242, T2('geen ATP nodig', 'no ATP needed'), C.muted, 22)}</g>`;
         }
         if (step === 7) {
           // enzym op de onderste kruising van de plectoneem
@@ -213,15 +232,15 @@ export default {
           enz += `<g opacity="${f1(on)}"><path d="${eiwitPad(XM - 60, cy, 60, 80, 1473, .07)}" fill="rgba(111,91,214,.3)" stroke="${C.prot2}" stroke-width="3"/><path d="${eiwitPad(XM + 60, cy, 60, 80, 1474, .07)}" fill="rgba(111,91,214,.3)" stroke="${C.prot2}" stroke-width="3"/>
             ${txt(XM, f1(cy + 115), T2('TOP2', 'TOP2'), '#fff', 22)}${pill(XM - 110, cy - 95, 60, 26, 'ATP', '#5fd3e6', sub(p, .15, .25) * (1 - sub(p, .55, .65)), 14)}${pill(XM + 110, cy - 95, 60, 26, 'ATP', '#5fd3e6', sub(p, .15, .25) * (1 - sub(p, .55, .65)), 14)}</g>`;
           const k1 = ease(sub(p, .2, .35)), k2 = ease(sub(p, .35, .5));
-          if (p > .2 && p < .5) ann += `<g opacity="${f1(k1)}"><path d="M${XM - 30},${f1(cy - 20)} L${XM + 30},${f1(cy + 20)}" stroke="#ff6b6b" stroke-width="5"/><path d="M${XM - 30},${f1(cy + 20)} L${XM + 30},${f1(cy - 20)}" stroke="#ff6b6b" stroke-width="5"/>${txt(XM + 150, f1(cy - 130), T2('dubbelstrengbreuk (G-segment)', 'double-strand break (G segment)'), '#ff6b6b', 22, 'start')}
-            <path d="M${XM},${f1(cy - 60)} V${f1(cy + 60 * k2)}" stroke="#ffc247" stroke-width="4" marker-end="url(#arrow)" opacity="${f1(k2)}"/>${txt(XM + 150, f1(cy - 100), T2('T-segment gaat erdoor', 'T segment passes through'), '#ffc247', 22, 'start')}</g>`;
-          ann += `<g opacity="${f1(ease(sub(p, .5, .65)))}">${box(170, 150, 600, 150)}${txt(470, 195, T2('ΔLk = +2 per doorgang', 'ΔLk = +2 per passage'), '#fff', 26)}${txt(470, 235, T2('ATP-afhankelijk · ontwart ook gekoppelde chromatiden', 'ATP-dependent · also untangles linked chromatids'), C.muted, 20)}${txt(470, 272, T2('geremd door etoposide, doxorubicine', 'inhibited by etoposide, doxorubicin'), C.muted, 20)}</g>`;
+          if (p > .2 && p < .5) ann += `<g opacity="${f1(k1)}"><path d="M${XM - 30},${f1(cy - 20)} L${XM + 30},${f1(cy + 20)}" stroke="#ff6b6b" stroke-width="5"/><path d="M${XM - 30},${f1(cy + 20)} L${XM + 30},${f1(cy - 20)}" stroke="#ff6b6b" stroke-width="5"/>${txt(XM + 150, f1(cy - 130), T2('knip in beide strengen', 'cut in both strands'), '#ff6b6b', 22, 'start')}
+            <path d="M${XM},${f1(cy - 60)} V${f1(cy + 60 * k2)}" stroke="#ffc247" stroke-width="4" marker-end="url(#arrow)" opacity="${f1(k2)}"/>${txt(XM + 150, f1(cy - 100), T2('ander stuk DNA gaat erdoor', 'another piece of DNA passes through'), '#ffc247', 22, 'start')}</g>`;
+          ann += `<g opacity="${f1(ease(sub(p, .5, .65)))}">${box(170, 150, 600, 120)}${txt(470, 198, T2('2 slagen erbij per doorgang', '2 turns added per passage'), '#fff', 26)}${txt(470, 242, T2('kost ATP', 'uses ATP'), C.muted, 22)}</g>`;
         }
         if (step === 8) {
           ann += `${box(230, 170, 520, 215, C.prot)}${txt(490, 215, T2('Topo-isomerase I (TOP1)', 'Topoisomerase I (TOP1)'), C.prot, 26, 'middle', 800)}
-            ${[T2('knipt één streng', 'cuts one strand'), T2('geen ATP', 'no ATP'), T2('Lk verandert telkens met 1', 'Lk changes in steps of 1')].map((l, i) => txt(270, 262 + i * 44, '• ' + l, '#e8edf7', 26, 'start', 500)).join('')}
+            ${[T2('knipt één streng', 'cuts one strand'), T2('geen ATP', 'no ATP'), T2('telkens 1 slag erbij of eraf', '1 turn added or removed')].map((l, i) => txt(270, 262 + i * 44, '• ' + l, '#e8edf7', 26, 'start', 500)).join('')}
             ${box(850, 170, 520, 215, C.prot2)}${txt(1110, 215, T2('Topo-isomerase II (TOP2A/B)', 'Topoisomerase II (TOP2A/B)'), '#b3a4ff', 26, 'middle', 800)}
-            ${[T2('knipt beide strengen', 'cuts both strands'), T2('ATP-afhankelijk', 'ATP-dependent'), T2('Lk verandert telkens met 2', 'Lk changes in steps of 2')].map((l, i) => txt(890, 262 + i * 44, '• ' + l, '#e8edf7', 26, 'start', 500)).join('')}`;
+            ${[T2('knipt beide strengen', 'cuts both strands'), T2('ATP-afhankelijk', 'ATP-dependent'), T2('telkens 2 slagen erbij of eraf', '2 turns added or removed')].map((l, i) => txt(890, 262 + i * 44, '• ' + l, '#e8edf7', 26, 'start', 500)).join('')}`;
         }
         $('sc-ann').innerHTML = ann; $('sc-enz').innerHTML = enz; $('sc-cnt').innerHTML = cnt; $('sc-pol').innerHTML = pol; $('sc-nucpic').innerHTML = nucpic; $('sc-nucpic').setAttribute('opacity', f1(nucOp));
         vis('sc-clamps', step === 8 ? .3 : 1);
