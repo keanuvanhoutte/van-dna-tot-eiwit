@@ -31,9 +31,9 @@ export default {
       text: { nl: 'Het nieuwe RNA vouwt een stevige haarspeld met veel G–C-paren. Die trekt aan het enzym.', en: 'The new RNA folds a firm hairpin with many G–C pairs. It pulls on the enzyme.' } },
     { dur: 8000, cam: cam(900, 470, 1000), title: { nl: 'Een rij U’s: zwak vast, dus los', en: 'A row of U’s: weakly held, so it lets go' },
       text: { nl: 'Achter de haarspeld volgen U’s. Die houden het DNA maar zwak vast: het RNA en het enzym komen los.', en: 'After the hairpin come U’s. They hold the DNA only weakly: the RNA and the enzyme come free.' } },
-    { dur: 9000, cam: cam(800, 460, 1600), title: { nl: 'Stop 2: het eiwit Rho', en: 'Stop 2: the protein Rho' },
+    { dur: 9000, cam: cam(780, 450, 1300), title: { nl: 'Stop 2: het eiwit Rho', en: 'Stop 2: the protein Rho' },
       text: { nl: 'Bij andere genen bindt een ring van eiwitten (Rho) op vrij RNA. Rho kruipt naar het enzym toe.', en: 'At other genes a ring of proteins (Rho) binds free RNA. Rho crawls towards the enzyme.' } },
-    { dur: 8000, cam: cam(800, 460, 1600), title: { nl: 'Rho haalt in en stopt het kopiëren', en: 'Rho catches up and stops copying' },
+    { dur: 8000, cam: cam(780, 450, 1300), title: { nl: 'Rho haalt in en stopt het kopiëren', en: 'Rho catches up and stops copying' },
       text: { nl: 'Rho haalt het RNA-polymerase in en duwt het van het DNA. Het RNA komt vrij.', en: 'Rho catches up with RNA polymerase and pushes it off the DNA. The RNA is released.' } },
     { dur: 9000, cam: cam(800, 460, 1600), title: { nl: 'Ribosomen houden Rho tegen', en: 'Ribosomes keep Rho away' },
       text: { nl: 'Zolang ribosomen het mRNA lezen, kan Rho er niet op. Zo stopt Rho vooral RNA dat niet vertaald wordt.', en: 'As long as ribosomes read the mRNA, Rho cannot get on. So Rho mainly stops RNA that is not being translated.' } },
@@ -70,14 +70,13 @@ export default {
         }
         $('bt-dna').innerHTML = dna(termOp);
         // RNA (+ loslaten: RNA en polymerase schuiven omhoog weg)
-        const dy = -140 * rel, op = 1 - .85 * rel;
+        const dy = -140 * rel, op = 1 - .2 * rel;   // wat loskomt blijft goed zichtbaar
         let r = `<g transform="translate(${f1(60 * rel)} ${f1(dy)})" opacity="${f1(op)}">` + rnaPath(x, len);
         if (hp > .01) {
           const [hx, hy] = rnaPt(x, 34);
           let st = ''; for (let i = 0; i < 5; i++) st += `<line x1="${f1(hx - 12)}" y1="${f1(hy - 10 - i * 16)}" x2="${f1(hx + 12)}" y2="${f1(hy - 10 - i * 16)}" stroke="${K.term}" stroke-width="2.5"/>`;
           r += `<g opacity="${f1(hp)}" transform="translate(0 ${f1((1 - hp) * 30)})"><path d="M${f1(hx - 12)},${f1(hy)} V${f1(hy - 86)} a12,12 0 0 1 24,0 V${f1(hy)}" stroke="${C.rna}" stroke-width="4.5" fill="none"/>${st}` + txt(hx - 26, hy - 44, 'G–C', K.term, 20, 'end', 800) + '</g>';
         }
-        if (uu > .01) r += `<g opacity="${f1(uu)}">` + mono(x - 8, Y - 30, 'UUUUUUU', C.rna, 18) + '</g>';
         if (ribos) for (let d = 120; d < len - 60; d += 150) { const [qx, qy] = rnaPt(x, len - d); r += ribo(qx, qy - 6, 2.2, 1); }
         r += '</g>';
         $('bt-rna').innerHTML = r;
@@ -85,13 +84,17 @@ export default {
         let o = `<g transform="translate(${f1(60 * rel)} ${f1(dy)})" opacity="${f1(op * rnapOp)}">` + polymerase(x, Y, 66, 34, { col: K.rnap, dir: 1, gul: 10, hoog: 1.35, vul: .4, op: 1, seed: 31, label: 'RNAP', fs: 23 })   /* bacteriële RNAP (bio.js): DNA door de geul, RNA achter-boven eruit */ + '</g>';
         if (rhoOp > .01 && rhoD >= 0) {
           const [qx, qy] = rnaPt(x, rhoD);
-          o += `<g transform="translate(${f1(60 * rel)} ${f1(dy)})">` + rhoRing(qx, qy, rhoOp * (step === 4 ? 1 - .85 * rel : 1)) + '</g>';
+          o += `<g transform="translate(${f1(60 * rel)} ${f1(dy)})">` + rhoRing(qx, qy, rhoOp * (step === 4 ? 1 - .2 * rel : 1))
+            + (step === 3 || step === 4 ? `<g opacity="${f1(rhoOp * (step === 4 ? 1 - sub(p, .45, .6) : 1))}">` + txt(qx - 10, qy - 48, T2('Rho: trekt het RNA los', 'Rho: pulls the RNA free'), RHO, 24, 'middle', 800) + '</g>' : '') + '</g>';
           if (step === 5) o += `<g opacity="${f1(rhoOp)}"><path d="M${f1(qx - 18)},${f1(qy - 52)} l36,36 m0,-36 l-36,36" stroke="${C.danger}" stroke-width="6"/></g>`;
         }
+        // de rij U's zit in het enzym, gepaard met de A's van het DNA: bovenop het enzym getekend zodat ze zichtbaar zijn
+        if (uu > .01) o += `<g transform="translate(${f1(60 * rel)} ${f1(dy)})" opacity="${f1(uu * op)}"><rect x="${f1(x - 74)}" y="${Y - 15}" width="116" height="30" rx="8" fill="#0b1224" fill-opacity=".85" stroke="${C.rna}" stroke-width="2"/>` + mono(x - 16, Y + 7, 'UUUUUU', C.rna, 22)
+          + `<g opacity="${f1(step === 2 ? sub(p, .2, .35) : 0)}">` + txt(x + 74, Y + 8, T2("U's: zwak vast", "U's: weakly held"), C.rna, 22, 'start', 800) + '</g></g>';
         $('bt-obj').innerHTML = o;
         // labels
         let l = '';
-        if (step === 2) l += `<g opacity="${f1(sub(p, .6, .8))}">` + txt(1200, 360, T2('RNA en enzym los', 'RNA and enzyme released'), C.text, 26, 'middle', 700) + '</g>';
+        if (step === 2) l += `<g opacity="${f1(sub(p, .6, .8))}">` + txt(1230, 330, T2('RNA en enzym los', 'RNA and enzyme released'), C.text, 26, 'middle', 700) + '</g>';
         if (step === 3) l += `<g opacity="${f1(sub(p, .3, .5))}">` + txt(330, 230, T2('geen ribosomen op dit RNA', 'no ribosomes on this RNA'), C.muted, 24, 'middle', 700) + '</g>';
         if (step === 4) l += `<g opacity="${f1(sub(p, .55, .8))}">` + txt(1250, 330, T2('kopiëren gestopt', 'copying stopped'), C.text, 26, 'middle', 700) + '</g>';
         if (step === 5) l += `<g opacity="${f1(sub(p, .35, .55))}">` + txt(330, 230, T2('ribosomen bedekken het mRNA', 'ribosomes cover the mRNA'), K.ribo, 24, 'middle', 700) + '</g>';
