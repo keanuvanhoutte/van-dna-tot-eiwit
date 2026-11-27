@@ -150,10 +150,10 @@ export default molScene({
           c.cyl(p, n, '#ffc247', .3, true);   // de zoutbrug zelf (N⁺ ··· O⁻)
           c.addStyle({ chain: 'B', resi: p.resi, atom: p.atom }, { sphere: { color: CLASSCOL['+'], radius: 1.05 } });
           c.addStyle({ chain: 'B', resi: n.resi, atom: n.atom }, { sphere: { color: CLASSCOL['-'], radius: 1.05 } });
-          c.label(`${p.resn[0]}${p.resn.slice(1).toLowerCase()}${p.resi}–${n.resn[0]}${n.resn.slice(1).toLowerCase()}${n.resi}`, { x: (p.x + n.x) / 2, y: (p.y + n.y) / 2, z: (p.z + n.z) / 2 }, { size: 16, border: '#ffc247', offset: [30, -30, 30, -30, 30][i % 5], dx: [0, 0, 80, -80, -80][i % 5] });
+          c.label(`${p.resn[0]}${p.resn.slice(1).toLowerCase()}${p.resi}–${n.resn[0]}${n.resn.slice(1).toLowerCase()}${n.resi}`, { x: (p.x + n.x) / 2, y: (p.y + n.y) / 2, z: (p.z + n.z) / 2 }, { size: 16, border: '#ffc247', offset: 26 });
         });
       },
-      zoom: B, zoomFactor: 1.45, spin: .02,   // groter: de 5 labels liggen verder uit elkaar
+      zoom: B, spin: .02,
       panel: c => phead(T2('Elektrostatische interacties', 'Electrostatic interactions')) + plines(222, [
         [T2(`${c.data.sb?.length ?? '…'} zoutbruggen in keten β`, `${c.data.sb?.length ?? '…'} salt bridges in chain β`), '#ffc247', 23, 700],
         [T2('(N⁺ en O⁻ binnen 4 Å)', '(N⁺ and O⁻ within 4 Å)'), C.muted, 21], '',

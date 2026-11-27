@@ -274,7 +274,7 @@ function makeStage(M, el, master, views, o) {
 }
 
 /* HTML-naamkaartjes boven een 3D-beeld */
-function makeLabels(host, viewer, onNode, fs) {
+export function makeLabels(host, viewer, onNode, fs) {
   const wrap = document.createElement('div');
   wrap.className = 'lab3d';
   wrap.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden';

@@ -131,7 +131,7 @@ export default molScene({
           c.addStyle({ chain: p.chain, resi: p.resi, atom: p.atom }, { sphere: { color: CLASSCOL['+'], radius: .8 } });
           c.addStyle({ chain: n.chain, resi: n.resi, atom: n.atom }, { sphere: { color: CLASSCOL['-'], radius: .8 } });
         }
-        placed.forEach((g, i) => c.label(g.text, g, { size: 15, border: '#ffc247', offset: i % 2 ? -30 : 30 }));
+        placed.forEach(g => c.label(g.text, g, { size: 15, border: '#ffc247', offset: 26 }));
       },
       zoom: {}, spin: .02,
       panel: c => phead(T2('Contacten tussen de ketens', 'Contacts between the chains')) + plines(222, [

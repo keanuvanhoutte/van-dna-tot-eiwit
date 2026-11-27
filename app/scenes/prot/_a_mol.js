@@ -9,7 +9,7 @@
  */
 import { pdbUrl } from '../../../shared/pdb.js';
 import { L, C, f1, clamp, ease, SPIN } from '../../kit.js';
-import { load3Dmol } from '../../kit3d.js';
+import { load3Dmol, makeLabels } from '../../kit3d.js';
 
 export const PANEL_X = 1000;
 
@@ -33,7 +33,7 @@ export function molScene(o) {
       layer.querySelectorAll('.a-ov [data-node]').forEach(e => { e.style.pointerEvents = 'auto'; });
       const el = layer.querySelector('.v3d'), panelEl = layer.querySelector('.a-panel'), ov = layer.querySelector('.a-ov');
       let viewer = null, dead = false;
-      let ready = false, lastStep = -1, labels = [], shapes = [], model = null, q0 = [0, 0, 0, 1];
+      let ready = false, lastStep = -1, labels = [], shapes = [], model = null, q0 = [0, 0, 0, 1], pend = [], labs = null;
       const zoomCache = {};
       let vFrom = null, vTo = null, stepT0 = 0, lastPanelKey = '';
       const ctx = {
@@ -42,10 +42,10 @@ export function molScene(o) {
         sel: s => model ? model.selectedAtoms(s) : [],
         style(sel, st) { viewer.setStyle(sel, st); },
         addStyle(sel, st) { viewer.addStyle(sel, st); },
+        /* labels als HTML-naamkaartjes (makeLabels uit kit3d): ze ontwijken elkaar, blijven in beeld en krijgen een lijntje
+         * naar hun atoom als ze verschoven zijn. opt.offset (px, > 0 = omhoog) en opt.dx: beginpositie naast het anker. */
         label(text, pos, opt = {}) {
-          // opt.offset (px): label boven zijn anker (negatief = eronder), zodat het het atoom of de brug niet bedekt
-          labels.push(viewer.addLabel(text, { fontSize: Math.max(16, opt.size ?? 18), fontColor: opt.color ?? 'white', backgroundColor: opt.bg ?? '#0b1224', backgroundOpacity: .82, borderThickness: 1.5, borderColor: opt.border ?? '#7cc4ff', inFront: true,
-            alignment: opt.offset ? (opt.offset > 0 ? 'bottomCenter' : 'topCenter') : 'center', ...(opt.offset ? { screenOffset: { x: opt.dx ?? 0, y: -opt.offset } } : {}), position: pos }));
+          pend.push({ text, pos: { x: pos.x, y: pos.y, z: pos.z }, color: opt.border ?? '#7cc4ff', off: opt.offset || opt.dx ? [opt.dx ?? 0, opt.offset ?? 0] : null });
         },
         cyl(a, b, col, r = .12, dashed = true) { shapes.push(viewer.addCylinder({ start: { x: a.x, y: a.y, z: a.z }, end: { x: b.x, y: b.y, z: b.z }, radius: r, color: col, dashed, fromCap: 1, toCap: 1 })); },
         sphere(p, col, r = .6) { shapes.push(viewer.addSphere({ center: { x: p.x, y: p.y, z: p.z }, radius: r, color: col })); },
@@ -56,6 +56,7 @@ export function molScene(o) {
         if (dead) return;
         viewer = M.createViewer(el, { backgroundColor: '#0b1224', backgroundAlpha: 0, antialias: true });
         model = viewer.addModel(txt, fmt);
+        labs = makeLabels(el, viewer, () => {}, 15);
         viewer.setStyle({}, {});
         o.onload?.(ctx);
         viewer.zoomTo(); viewer.render();
@@ -76,11 +77,12 @@ export function molScene(o) {
         return (zoomCache[i] = v);
       }
       function applyStep(i) {
-        labels.forEach(l => viewer.removeLabel(l)); labels = [];
+        labels.forEach(l => viewer.removeLabel(l)); labels = []; pend = [];
         shapes.forEach(s => viewer.removeShape(s)); shapes = [];
         viewer.removeAllSurfaces?.();
         viewer.setStyle({}, {});
         o.steps[i].show(ctx);
+        labs.set(pend);
         viewer.setStyle({ resn: ['HOH', 'WAT'] }, {});
       }
       /* totale draaihoek (graden) tot tijd t: som over de stappen van spin × duur */
@@ -114,8 +116,9 @@ export function molScene(o) {
           const q = qmul(qx, qmul(qy, q0));
           viewer.setView([...v, ...q]);
           viewer.render();
+          labs.place();
         },
-        destroy() { dead = true; try { viewer?.clear(); } catch {} },
+        destroy() { dead = true; labs?.remove(); try { viewer?.clear(); } catch {} },
       };
     },
   };
