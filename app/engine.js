@@ -20,6 +20,7 @@ import { S_EN, SCALES_EN } from '../shared/graph.en.js';
 import { mountMap } from '../shared/contentmap.js';
 import { LINKS } from '../shared/links.js';
 import { level, rank, levelSelect } from '../shared/level.js';
+import { SIMPLE } from '../shared/simple/index.js';
 import { STEP_LEVEL } from '../shared/levels.js';
 
 /* ---------- verhaallijnen ---------- */
@@ -118,7 +119,7 @@ const CHAPTER_WAIT = 2500;                        // extra pauze vóór een nieu
 /* leestijd: genoeg om titel + ondertitel rustig te lezen (≈ 55 ms per teken), 4–12 s, sneller bij hogere snelheid; × leestijd-keuze */
 function readMs(i) {
   const st = current?.steps[i]; if (!st) return 5000;
-  const n = (L(st.title) ?? '').length + stepText(st).length;
+  const n = stepTitle(st).length + stepText(st).length;
   return Math.min(12000, Math.max(4000, 1800 + 55 * n)) * prefs.read / Math.max(.5, speed);
 }
 let camNow = FULL.slice(), camTarget = FULL.slice(), camSnap = false;
@@ -170,15 +171,24 @@ function mark(steps, from, offset) {
   let acc = offset;
   return steps.map((s, i) => { const r = { ...s, _i: i, _o: from + i, _t0: acc }; acc += s.dur; return r; });
 }
-/* niveau (shared/level.js): enkel de stappen tot dat niveau (STEP_LEVEL: 1 kern, 2 secundair, 3 bachelor en master) */
+/* niveau (shared/level.js): hobbyist en secundair zien enkel de kernstappen (STEP_LEVEL cijfer 1), hoger onderwijs alles */
 function byLevel(id, steps) {
   const code = STEP_LEVEL[id];
   if (rank >= 3 || !code || code.length !== steps.length) return steps;
-  const keep = steps.filter((s, i) => +code[i] <= rank);
+  const keep = steps.filter((s, i) => code[i] === '1');
   return keep.length ? keep : steps;
 }
-/* uitleg bij een stap: de hobbyist krijgt enkel de eerste zin, zonder vaktermen tussen haakjes */
+/* eenvoudige teksten per niveau (shared/simple/*.js): titel, uitleg en korte naam van een kernstap, en "In het kort" */
+const simpleOf = id => (rank < 3 ? SIMPLE[id]?.[level] : null) ?? null;
+const simpleStep = st => simpleOf(current?.id)?.steps?.[st?._i ?? 0] ?? null;
+const stepTitle = st => L(simpleStep(st)?.title ?? st?.title) ?? '';
+function stepTag(st, i) {
+  const tg = simpleStep(st)?.tag ?? STEP_TAGS[current.id]?.[st._i ?? i];
+  return tg ? (lang === 'en' ? tg[1] : tg[0]) : '';
+}
+/* uitleg bij een stap: eenvoudige tekst van het niveau; ontbreekt die, dan krijgt de hobbyist de eerste zin zonder haakjes */
 function stepText(st) {
+  const sx = simpleStep(st)?.text; if (sx) return L(sx);
   const x = L(st?.text) ?? '';
   if (level !== 'hobby') return x;
   const first = x.split(/(?<!\b(?:bv|vb|ca|nl|enz|o\.a|e\.g|i\.e|vs|resp|St))\.\s+(?=[A-ZÀ-Ý‘“'"(])/)[0];
@@ -318,7 +328,7 @@ function fadeGhost(now) {
 
 function onStep(i) {
   const st = current.steps[i];
-  $('capTitle').textContent = L(st.title) ?? '';
+  $('capTitle').textContent = stepTitle(st);
   $('capText').innerHTML = colourWords(esc(stepText(st)));
   $('stepNo').textContent = `${V('step')} ${i + 1}/${current.steps.length}`;
   side.querySelectorAll('.stepsList li').forEach((li, k) => li.classList.toggle('cur', k === i));
@@ -430,11 +440,10 @@ function drawTicks() {
   const tr = $('track'); tr.innerHTML = ''; segKey = ''; curSeg = -1;
   current.steps.forEach((s, i) => {
     const b = document.createElement('button'); b.className = 'seg';
-    b.title = `${i + 1}. ${L(s.title) ?? ''}`; b.setAttribute('aria-label', `${V('step')} ${b.title}`);
+    b.title = `${i + 1}. ${stepTitle(s)}`; b.setAttribute('aria-label', `${V('step')} ${b.title}`);
     b.innerHTML = '<span class="sl"></span><i><s></s><em></em></i><span class="tag"></span>';
-    b.querySelector('.sl').textContent = L(s.title) ?? '';
-    const tag = STEP_TAGS[current.id]?.[s._i ?? i];
-    b.querySelector('.tag').textContent = tag ? (lang === 'en' ? tag[1] : tag[0]) : (L(s.title) ?? '');
+    b.querySelector('.sl').textContent = stepTitle(s);
+    b.querySelector('.tag').textContent = stepTag(s, i) || stepTitle(s);
     b.onclick = () => gotoStep(i);
     tr.append(b);
   });
@@ -905,7 +914,15 @@ const chipsOf = (ids, cls) => ids.filter(i => NODES[i]).map(i => `<button class=
  * Vaktermen staan erin als [[zoals in de zin|sleutel]] → aantikbaar woord met een uitleg van één zin (shared/glossary.js). */
 const glossOf = k => { const g = GLOSSARY[k]; return g ? (g[lang] ?? g.nl) : null; };
 const termsHTML = txt => txt.replace(/\[\[([^\]|]+)\|([a-z0-9-]+)\]\]/g, (_, w, k) => glossOf(k) ? `<button class="term" data-g="${k}">${w}</button>` : w);
-const kortOf = id => { const d = DETAILS[id]; return d ? termsHTML(colourWords((d[lang] ?? d.nl).kort ?? '')) : ''; };
+const kortOf = id => {
+  const k = simpleOf(id)?.kort; if (k) return colourWords(esc(L(k)));            // hobbyist / secundair: eigen eenvoudige versie
+  const d = DETAILS[id]; return d ? termsHTML(colourWords((d[lang] ?? d.nl).kort ?? '')) : '';
+};
+/* secundair: lijstje kernbegrippen met uitleg van één zin */
+function termsCard(id) {
+  const t = level === 'secundair' ? simpleOf(id)?.terms : null; if (!t?.length) return '';
+  return `<div class="card c-terms"><div class="ch"><i>🔑</i>${L({ nl: 'Kernbegrippen', en: 'Key terms' })}</div><dl class="facts">${t.map(([a, b]) => `<dt>${esc(L(a))}</dt><dd>${esc(L(b))}</dd>`).join('')}</dl></div>`;
+}
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 function showGloss(btn) {
   const box = btn.closest('.kort, .cardbox'); if (!box) return;
@@ -919,18 +936,17 @@ function showGloss(btn) {
 document.addEventListener('click', e => { const b = e.target.closest('.term'); if (b) { e.preventDefault(); showGloss(b); } });
 function detailsHTML(id, open = true) {
   const d = DETAILS[id]; if (!d) return '';
-  const hobby = level === 'hobby';                                  // hobbyist: enkel "In het kort" + de bronnen
-  const deep = level === 'master';                                  // master: verdieping meteen open
+  const hobby = rank < 3;                                           // hobbyist en secundair: enkel "In het kort" (+ kernbegrippen) en de bronnen
   const x = d[lang] ?? d.nl;
   let h = '';
   // de diepere uitleg (vakterminologie, cijfers, bronnen) zit samen in één dichtgeklapte laag "Verdieping"
   if (x.what && !hobby) h += `<details class="sec" ${open ? 'open' : ''}><summary>${V('what')}</summary><p>${x.what}</p></details>`;
-  if (x.how?.length && !hobby) h += `<details class="sec" ${deep ? 'open' : ''}><summary>${V('how')}</summary><ol>${x.how.map(s => `<li>${s}</li>`).join('')}</ol></details>`;
-  if (x.facts?.length && rank >= 3) h += `<details class="sec" ${deep ? 'open' : ''}><summary>${V('facts')}</summary><dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
+  if (x.how?.length && !hobby) h += `<details class="sec" ><summary>${V('how')}</summary><ol>${x.how.map(s => `<li>${s}</li>`).join('')}</ol></details>`;
+  if (x.facts?.length && !hobby) h += `<details class="sec" ><summary>${V('facts')}</summary><dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
   if (x.why && !hobby) h += `<details class="sec"><summary>${V('why')}</summary><p>${x.why}</p></details>`;
   if (d.sources?.length) h += `<details class="sec"><summary>${V('sources')} (${d.sources.length})</summary><ol class="src">${d.sources.map(s => `<li>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${L(s.t)}</a>` : L(s.t)}</li>`).join('')}</ol></details>`;
   if (hobby) return h;                                              // enkel de (dichtgeklapte) bronnenlijst
-  return h ? `<details class="more" ${deep ? 'open' : ''}><summary>${V('more')}</summary><div class="morebody">${h}</div></details>` : '';
+  return h ? `<details class="more"><summary>${V('more')}</summary><div class="morebody">${h}</div></details>` : '';
 }
 function render() {
   const def = current.def, base = current.base, n = NODES[current.id];
@@ -946,10 +962,10 @@ function render() {
     <div class="kind">${n ? U(n.kind === 'process' ? 'process' : 'structure') : ''} · ${L(def.org ?? base.org) ?? ''} · ${n ? stageTitle(STAGES.find(s => s.id === n.stage)) : ''}</div>
     <h1>${n ? title(n) : L(def.title)}${n ? `<span class="status ${n.status === 'nagekeken' ? 'ok' : ''}">${statusText(n.status)}</span>` : ''}</h1>
     ${n ? `<div class="en">${sub(n)}</div>${kortOf(current.id) ? `<div class="kort"><b>${V('inShort')}</b>${kortOf(current.id)}</div>` : `<p>${summary(n)}</p>`}` : ''}
-    ${detailsHTML(current.id)}
-    <details class="sec" open><summary>${V('stepsHere')}</summary><ol class="stepsList">${current.steps.map((s, i) => { const tg = STEP_TAGS[current.id]?.[s._i ?? i]; return `<li data-i="${i}">${tg ? `<span class="stag">${esc(lang === 'en' ? tg[1] : tg[0])}</span>` : ''}${L(s.title)}</li>`; }).join('')}</ol></details>
+    ${termsCard(current.id)}${detailsHTML(current.id)}
+    <details class="sec" open><summary>${V('stepsHere')}</summary><ol class="stepsList">${current.steps.map((s, i) => { const tg = stepTag(s, i); return `<li data-i="${i}">${tg ? `<span class="stag">${esc(tg)}</span>` : ''}${esc(stepTitle(s))}</li>`; }).join('')}</ol></details>
     ${L(def.extra ?? base.extra) ?? ''}
-    ${(def.legend ?? base.legend) ? `<div class="card c-leg"><div class="ch"><i>🎨</i>${V('legend')}</div><div class="legend">${(def.legend ?? base.legend).slice(0, level === 'hobby' ? 4 : 99).map(([c, x]) => `<span style="--c:${c}"><i></i>${L(x)}</span>`).join('')}</div></div>` : ''}
+    ${(def.legend ?? base.legend) ? `<div class="card c-leg"><div class="ch"><i>🎨</i>${V('legend')}</div><div class="legend">${(def.legend ?? base.legend).slice(0, level === 'hobby' ? 4 : level === 'secundair' ? 6 : 99).map(([c, x]) => `<span style="--c:${c}"><i></i>${L(x)}</span>`).join('')}</div></div>` : ''}
     ${ups.length ? `<div class="card c-up"><div class="ch"><i>↑</i>${V('up')}</div>${chipsOf(ups, 'up')}</div>` : ''}
     ${n?.in.length ? `<div class="card c-in"><div class="ch"><i>🔍</i>${V('zoomIn')}</div>${chipsOf(n.in, '')}</div>` : ''}
     ${n?.next.length ? `<div class="card c-next"><div class="ch"><i>→</i>${V('next')}</div>${chipsOf(n.next, 'next')}</div>` : ''}
@@ -982,7 +998,7 @@ function showCard(id) {
     <div class="kind" style="font:500 10.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)">${U(n.kind === 'process' ? 'process' : 'structure')}</div>
     <h2 style="margin:6px 0 2px">${title(n)}<span class="status ${n.status === 'nagekeken' ? 'ok' : ''}">${statusText(n.status)}</span></h2>
     <div style="color:var(--muted);font-style:italic;font-size:13px">${sub(n)}</div>
-    ${kortOf(id) ? `<div class="kort"><b>${V('inShort')}</b>${kortOf(id)}</div>` : `<p style="font-size:14px;line-height:1.6;color:#c9d2e4">${summary(n)}</p>`}${detailsHTML(id, true)}
+    ${kortOf(id) ? `<div class="kort"><b>${V('inShort')}</b>${kortOf(id)}</div>` : `<p style="font-size:14px;line-height:1.6;color:#c9d2e4">${summary(n)}</p>`}${termsCard(id)}${detailsHTML(id, true)}
     <div>${chipsOf(n.in, '')}${chipsOf(n.next, 'next')}${chipsOf(n.rel, 'rel')}</div>
     <p style="font-size:12.5px;color:var(--muted);margin-top:14px">${V('noScene')}</p>`;
   $('card').classList.add('show');

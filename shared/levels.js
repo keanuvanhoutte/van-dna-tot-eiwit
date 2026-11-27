@@ -1,5 +1,6 @@
-/* Moeilijkheidsgraad: per animatie per stap een cijfer — 1 = kern (iedereen, ook hobbyist), 2 = vanaf secundair, 3 = vanaf bachelor.
- * Master en bachelor zien alle stappen. Bij nieuwe of gewijzigde stappen hier aanvullen (lengte = aantal stappen). */
+/* Moeilijkheidsgraad: per animatie per stap een cijfer. 1 = kernstap: die zien hobbyist en secundair (met eigen eenvoudige teksten in shared/simple/).
+ * 2 en 3 = enkel hoger onderwijs (2 = belangrijke tussenstap, 3 = detail; het onderscheid wordt nu niet gebruikt, maar blijft bewaard).
+ * Hoger onderwijs ziet alle stappen. Bij nieuwe of gewijzigde stappen hier aanvullen (lengte = aantal stappen). */
 export const STEP_LEVEL = {
   "virus": "1112231",
   "adeno": "11132221",

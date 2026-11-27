@@ -97,7 +97,9 @@ Daarom:
 - Klikt de gebruiker midden in een stap op 'volgende' of op 'vorige', dan spoelt de engine zichtbaar (~0,65 s) naar het doel.
 
 ## Moeilijkheidsgraad (niveau)
-De gebruiker kiest een niveau (hobbyist · secundair · bachelor · master; `shared/level.js`) met een keuzelijst in het startmenu en in ⚙; niets gekozen = bachelor. Laatste optie van de lijst = uitlegvenster per niveau (wat wel/niet getoond wordt: SHOW in level.js, bijwerken als de regels veranderen).
-Per scène staat in `shared/levels.js` (STEP_LEVEL) per stap een cijfer: 1 = kern (iedereen), 2 = vanaf secundair, 3 = vanaf bachelor.
-**Bij nieuwe of gewijzigde stappen dit cijferreeksje aanpassen** (lengte = aantal stappen; anders toont de engine gewoon alle stappen).
-Hobbyist: enkel de eerste zin van `text` (tekst tussen haakjes valt weg) → zet het belangrijkste in de eerste zin. Testen: `&level=hobby`.
+De gebruiker kiest een niveau (hobbyist · secundair · hoger onderwijs; `shared/level.js`) met een keuzelijst in het startmenu en in ⚙; niets gekozen = hoger onderwijs. Laatste optie van de lijst = uitlegvenster per niveau (wat wel/niet getoond wordt: SHOW in level.js, bijwerken als de regels veranderen).
+- Hoger onderwijs: alle stappen en teksten zoals in de scène.
+- Hobbyist en secundair: enkel de **kernstappen** (`shared/levels.js`, STEP_LEVEL, cijfer 1) met eigen teksten uit `shared/simple/<tak>.js`:
+  hobbyist in alledaagse woorden zonder vaktermen, secundair kort met de kernterm + een lijstje kernbegrippen (`terms`).
+**Bij nieuwe of gewijzigde stappen:** het cijferreeksje in levels.js aanpassen (lengte = aantal stappen) en voor de kernstappen de teksten in shared/simple aanvullen
+(ontbreken ze, dan toont de app de gewone tekst; hobbyist dan de eerste zin zonder haakjes). Testen: `&level=hobby` / `&level=secundair`.
