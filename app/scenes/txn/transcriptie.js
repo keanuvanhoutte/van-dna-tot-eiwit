@@ -180,11 +180,21 @@ export default {
 
         // supercoils
         const sc = step >= 4 ? 1 : 0;
-        { const a = $('tx-scA'); a.setAttribute('cx', f1(polX + 230)); a.setAttribute('cy', 612); a.setAttribute('opacity', sc); }   // knop boven de +-supercoils, niet over de CTD
+        { const a = $('tx-scA'); a.setAttribute('cx', f1(polX + (step === 7 ? -230 : 230))); a.setAttribute('cy', 612); a.setAttribute('opacity', sc); }   // knop boven de +-supercoils, niet over de CTD
         $('tx-sc').innerHTML = sc ? `
           <g transform="translate(${f1(polX + 230)} 640)"><circle r="17" fill="none" stroke="${C.dna2}" stroke-width="2"/><text y="6" text-anchor="middle" fill="${C.dna2}" font-size="18" font-family="Inter">+</text></g>
           <g transform="translate(${f1(polX - 230)} 640)"><circle r="17" fill="none" stroke="${C.dna2}" stroke-width="2"/><text y="6" text-anchor="middle" fill="${C.dna2}" font-size="20" font-family="Inter">−</text></g>
-          ${txt(polX + 230, 684, T2('positieve supercoils', 'positive supercoils'), C.muted, 18)}${txt(polX - 230, 684, T2('negatieve supercoils', 'negative supercoils'), C.muted, 18)}` : '';
+          ${txt(polX + 230, 684, T2('strakker opgedraaid (+)', 'wound tighter (+)'), C.muted, step === 7 ? 22 : 18, 'middle', step === 7 ? 700 : 400)}${txt(polX - 230, 684, T2('losser (−)', 'looser (−)'), C.muted, step === 7 ? 22 : 18, 'middle', step === 7 ? 700 : 400)}` : '';
+        if (step === 7) {
+          // het knip-enzym (topo-isomerase) gaat op het strakke DNA vóór het enzym zitten, knipt het even door en laat het losser draaien
+          const tx = polX + 330, kIn = ease(sub(p, .15, .35)), cut = sub(p, .45, .6), spin = ease(sub(p, .7, .85));
+          let tp = `<g opacity="${f1(kIn)}" transform="translate(0 ${f1(-60 * (1 - kIn))})">` + ePill(tx, CY, 120, 56, T2('topo', 'topo'), '#e0a040', 1, 22) + '</g>';
+          if (cut > 0 && cut < 1) tp += `<circle cx="${f1(tx)}" cy="${CY}" r="${f1(20 + 50 * cut)}" fill="none" stroke="#fff" stroke-width="4" opacity="${f1(1 - cut)}"/>`;
+          tp += `<g opacity="${f1(sub(p, .45, .55) * (1 - sub(p, .64, .72)))}">${txt(tx, CY + 118, T2('✂ knipt even', '✂ cuts briefly'), '#fff', 24, 'middle', 800)}</g>`;
+          if (spin > 0) tp += `<g opacity="${f1(spin)}"><path d="M${f1(tx - 70)},${CY + 40} A 80 34 0 0 0 ${f1(tx + 70)},${CY + 40}" stroke="#e0a040" stroke-width="4" fill="none" marker-end="url(#arrow)"/>${txt(tx, CY + 118, T2('→ DNA weer losser', '→ DNA looser again'), C.ok, 24, 'middle', 800)}</g>`;
+          tp += `<g opacity="${f1(kIn)}">${txt(tx, CY - 150, T2('knip-enzym', 'cutting enzyme'), '#e0a040', 28, 'middle', 800)}${txt(tx, CY - 124, '(topo-isomerase)', C.muted, 18, 'middle', 600)}</g>`;
+          $('tx-sc').innerHTML += tp;
+        }
       },
     };
   },
