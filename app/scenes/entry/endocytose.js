@@ -145,8 +145,13 @@ export default {
         if (step === 2) {
           // dynamine: ringen rond de hals van de kuil; weg zodra het blaasje los is
           const c = KR * (2 * Math.min(.985, kn || .97) - 1), hc = KR * Math.sin(Math.acos(Math.max(-1, Math.min(1, -c / KR))));
-          cl += `<g opacity="${f1(1 - ease(sub(p, .5, .7)))}">
-            ${[0, 1].map(i => `<ellipse cx="${PX}" cy="${f1(MEM - 4 + i * 13)}" rx="${f1(hc + 14)}" ry="8" fill="none" stroke="${C.prot}" stroke-width="6"/>`).join('')}</g>`;
+          // de spiraal knijpt de hals dicht (ringen worden smaller); na het loskomen valt dynamine eraf en blijft even zichtbaar
+          const sq = ease(sub(p, .1, .5)), hw = p < .5 ? lerp(hc + 30, hc + 14, sq) : 18, dn = 0;
+          cl += `<g opacity="${f1(sub(p, 0, .1) * (1 - .4 * ease(sub(p, .5, .9))))}">
+            ${[0, 1, 2].map(i => `<ellipse cx="${PX}" cy="${f1(MEM - 10 + i * 13 + dn)}" rx="${f1(hw)}" ry="8" fill="none" stroke="${C.prot}" stroke-width="7"/>`).join('')}
+            ${p < .55 ? `<path d="M${f1(PX - hw - 70)},${f1(MEM + 3)} h40" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/><path d="M${f1(PX + hw + 70)},${f1(MEM + 3)} h-40" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/>` : ''}
+            ${txt(PX + 120, MEM + 70 + dn, T2('dynamine', 'dynamin'), C.prot, 28, 'start', 800)}
+            ${txt(PX + 120, MEM + 98 + dn, p < .5 ? T2('knijpt de hals dicht', 'squeezes the neck shut') : T2('valt eraf', 'falls off'), C.text, 22, 'start', 600)}</g>`;
         }
         $('en-clath').innerHTML = cl;
 
@@ -222,7 +227,8 @@ export default {
         $('en-lyso-body').innerHTML = lyOn > .01
           ? `${blaasje(LY[0], LY[1], LY[2], { w: 20, lumen: 'rgba(255,107,107,.11)', rand: '#ff6b6b' })}
              ${[[-60, -40], [40, -70], [70, 30], [-30, 60], [0, -10]].map(([a, b], i) => `<path d="M${LY[0] + a},${LY[1] + b} q10,-12 20,0 t18,4" stroke="#ff9f9f" stroke-width="4" fill="none" opacity=".8"/>`).join('')}
-             ${txt(LY[0], LY[1] - LY[2] - 76, T2('hydrolasen breken alles af', 'hydrolases degrade everything'), '#ff9f9f', 21)}` : '';
+             ${txt(LY[0], LY[1] - LY[2] - 112, T2('lysosoom', 'lysosome'), '#ff6b6b', 34, 'middle', 800)}
+             ${txt(LY[0], LY[1] - LY[2] - 76, T2('afbraakenzymen breken alles af', 'enzymes break everything down'), '#ff9f9f', 21)}` : '';
 
         /* vrijgekomen mRNA + ribosomen */
         const rOn = step === 6 ? ease(sub(p, .55, .95)) : step >= 7 ? 1 : 0;
