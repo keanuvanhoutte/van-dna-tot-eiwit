@@ -50,7 +50,7 @@ export default {
     ST(7000, cam(RX, 420, 880), 'Route B: het virus versmelt met de cel', 'Route B: the virus fuses with the cell',
       'Een virus met een eigen membraan (envelop) kan dat laten versmelten met het celmembraan. Zo kan HIV-1 binnenkomen.',
       'A virus with its own membrane (envelope) can fuse it with the cell membrane. This is one way HIV-1 can get in.'),
-    ST(7000, cam(790, 578, 1000), 'Het virus pakt zich uit', 'The virus unpacks',
+    ST(7000, cam(770, 578, 1060), 'Het virus pakt zich uit', 'The virus unpacks',
       'De eiwitjas valt (deels) uit elkaar. Het virale DNA of RNA komt vrij, en de cel kan het nu ook opmerken.',
       'The protein coat (partly) falls apart. The viral DNA or RNA is released, and the cell can now notice it too.'),
     ST(8000, cam(800, 700, 1250), 'De route hangt af van het genoom', 'The route depends on the genome',
@@ -64,8 +64,8 @@ export default {
   svg() {
     return svgOpen() + `
     <rect x="-400" y="${MEM}" width="2400" height="1400" fill="url(#gCyto)"/>
-    <text x="70" y="${MEM - 44}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">${T2('extracellulair', 'extracellular')}</text>
-    <text x="195" y="${MEM + 60}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">cytosol</text>
+    <text id="vi-ext" x="520" y="${MEM - 22}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">${T2('extracellulair', 'extracellular')}</text>
+    <text id="vi-cyt" x="195" y="${MEM + 60}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">cytosol</text>
     <g id="vi-mem"></g>
     <g id="vi-rec"></g>
     <g data-node="endocytose" data-color="${C.mem}" data-label="${T2('Endocytose & ontsnapping', 'Endocytosis & escape')}">
@@ -85,7 +85,7 @@ export default {
       ${txt(800, 858, T2('genoomtype → hoe maak je mRNA?', 'genome type → how do you make mRNA?'), C.trna, 23)}
     </g>
     <g data-node="kernimport" data-color="${C.prot}" data-label="${T2('Naar de kern', 'To the nucleus')}" id="vi-nuc" opacity="0">
-      <circle data-anchor="kernimport" cx="${LX}" cy="742" r="1" fill="none"/>
+      <circle data-anchor="kernimport" data-pos="below" cx="${LX}" cy="802" r="1" fill="none"/>   <!-- onder het kernporiekader, niet tegen "viraal DNA" -->
       <g id="vi-nuc-body"></g>
     </g>
     <g id="vi-notes"></g>
@@ -99,6 +99,8 @@ export default {
       update(t, s) {
         const { step, p } = s;
         const tt = t / 1000;
+        // stap 5 (uitpakken): de zone-labels zouden half links buiten beeld vallen
+        for (const id of ['vi-ext', 'vi-cyt']) $(id).setAttribute('opacity', f1(.7 * (step === 4 ? 1 - sub(p, 0, .15) : step === 5 ? sub(p, 0, .15) : 1)));
 
         /* membraan: knop links (stap 2: de cel slokt het virus op) of uitstulping rechts (stap 3: de envelop versmelt) */
         const BR = 104, lk = step === 2 ? ease(sub(p, .05, .5)) : 0;
