@@ -108,7 +108,7 @@ export default {
       },
     },
     secundair: {
-      kort: { nl: 'Bacteriën hebben één soort RNA-polymerase voor alle RNA. De σ-factor leidt het enzym naar de promoter en helpt het DNA openen. Samen vormen ze het holo-enzym.', en: 'Bacteria have one kind of RNA polymerase for all RNA. The sigma factor guides the enzyme to the promoter and helps open the DNA. Together they form the holoenzyme.' },
+      kort: { nl: 'Bacteriën hebben één soort RNA-polymerase voor alle RNA. De σ-factor leidt het enzym naar de promoter en helpt het DNA openen.', en: 'Bacteria have one kind of RNA polymerase for all RNA. The sigma factor guides the enzyme to the promoter and helps open the DNA.' },
       terms: [
         [{ nl: 'RNA-polymerase', en: 'RNA polymerase' }, { nl: 'Enzym dat RNA maakt door een DNA-streng af te lezen.', en: 'Enzyme that makes RNA by reading a DNA strand.' }],
         [{ nl: 'σ-factor', en: 'sigma factor' }, { nl: 'Hulpeiwit dat RNA-polymerase naar de promoter leidt.', en: 'Helper protein that guides RNA polymerase to the promoter.' }],
@@ -141,7 +141,7 @@ export default {
       ],
       steps: {
         0: { tag: ['terminator', 'terminator'], title: { nl: 'Elk transcript eindigt aan een terminator', en: 'Every transcript ends at a terminator' }, text: { nl: 'Achter een gen of operon ligt een terminator. Daar laat RNA-polymerase het DNA en het RNA los.', en: 'Behind a gene or operon lies a terminator. There RNA polymerase lets go of the DNA and the RNA.' } },
-        1: { tag: ['haarspeld', 'hairpin'], title: { nl: 'Stop 1: een haarspeld in het RNA', en: 'Stop 1: a hairpin in the RNA' }, text: { nl: 'Het nieuwe RNA vouwt een stevige haarspeld met veel G–C-paren. Die trekt aan het RNA-polymerase.', en: 'The new RNA folds a firm hairpin with many G–C pairs. It pulls on RNA polymerase.' } },
+        1: { tag: ['haarspeld', 'hairpin'], title: { nl: 'Stoppen met een haarspeld in het RNA', en: 'Stopping with a hairpin in the RNA' }, text: { nl: 'Het nieuwe RNA vouwt een stevige haarspeld met veel G–C-paren. Die trekt aan het RNA-polymerase.', en: 'The new RNA folds a firm hairpin with many G–C pairs. It pulls on RNA polymerase.' } },
       },
     },
   },
@@ -206,7 +206,7 @@ export default {
       },
     },
     secundair: {
-      kort: { nl: 'Bacteriën breken eiwitten af zonder ubiquitine of proteasoom. Proteasen zoals ClpXP grijpen een eiwit bij een label, ontvouwen het met ATP en knippen het in een afgesloten kamer.', en: 'Bacteria break down proteins without ubiquitin or a proteasome. Proteases such as ClpXP grab a protein by a tag, unfold it using ATP and cut it up in a closed chamber.' },
+      kort: { nl: 'Bacteriën breken eiwitten af zonder proteasoom. Proteasen zoals ClpXP grijpen een eiwit bij een label, ontvouwen het met ATP en knippen het in een afgesloten kamer.', en: 'Bacteria break down proteins without a proteasome. Proteases such as ClpXP grab a protein by a tag, unfold it using ATP and cut it up in a closed chamber.' },
       terms: [
         [{ nl: 'protease', en: 'protease' }, { nl: 'Enzym dat eiwitten in stukken knipt.', en: 'Enzyme that cuts proteins into pieces.' }],
         [{ nl: 'ClpX', en: 'ClpX' }, { nl: 'Ring van zes eiwitten die met ATP een eiwit ontvouwt.', en: 'Ring of six proteins that unfolds a protein using ATP.' }],
@@ -214,7 +214,7 @@ export default {
         [{ nl: 'ATP', en: 'ATP' }, { nl: 'De energiedrager van de cel.', en: 'The energy carrier of the cell.' }],
       ],
       steps: {
-        0: { tag: ['eiwitafbraak', 'protein breakdown'], title: { nl: 'Ook eiwitten moeten weg', en: 'Proteins must go too' }, text: { nl: 'E. coli heeft geen ubiquitine en geen proteasoom. Ze gebruikt eigen proteasen, zoals ClpXP.', en: 'E. coli has no ubiquitin and no proteasome. It uses its own proteases, such as ClpXP.' } },
+        0: { tag: ['eiwitafbraak', 'protein breakdown'], title: { nl: 'Ook eiwitten moeten weg', en: 'Proteins must go too' }, text: { nl: 'E. coli heeft geen proteasoom zoals onze cellen. Ze gebruikt eigen proteasen, zoals ClpXP.', en: 'E. coli has no proteasome like our cells do. It uses its own proteases, such as ClpXP.' } },
         1: { tag: ['ClpX', 'ClpX'], title: { nl: 'ClpX: een motor van zes', en: 'ClpX: a motor of six' }, text: { nl: 'ClpX is een ring van zes eiwitten die ATP verbruiken. Zo trekken ze een eiwit open.', en: 'ClpX is a ring of six proteins that use ATP. That is how they pull a protein open.' } },
         3: { tag: ['ClpP', 'ClpP'], title: { nl: 'ClpP: de knipkamer', en: 'ClpP: the cutting chamber' }, text: { nl: 'ClpX duwt de ontvouwen keten in ClpP. Binnenin wordt ze in kleine stukjes geknipt.', en: 'ClpX pushes the unfolded chain into ClpP. Inside, it is cut into small pieces.' } },
       },
@@ -264,7 +264,7 @@ export default {
       ],
       steps: {
         0: { tag: ['trp-operon', 'trp operon'], title: { nl: 'Het trp-operon: vijf genen, één aminozuur', en: 'The trp operon: five genes, one amino acid' }, text: { nl: 'Deze vijf genen maken samen het aminozuur tryptofaan. Is er genoeg tryptofaan, dan moeten ze uit.', en: 'These five genes together make the amino acid tryptophan. When there is enough tryptophan, they should switch off.' } },
-        1: { tag: ['repressor', 'repressor'], title: { nl: 'Knop 1: de repressor', en: 'Knob 1: the repressor' }, text: { nl: 'Met tryptofaan erop bindt de Trp-repressor de operator. Dan wordt het operon nog maar weinig getranscribeerd.', en: 'With tryptophan on board, the Trp repressor binds the operator. Then the operon is hardly transcribed anymore.' } },
+        1: { tag: ['repressor', 'repressor'], title: { nl: 'Uitzetten met de repressor', en: 'Switching off with the repressor' }, text: { nl: 'Met tryptofaan erop bindt de Trp-repressor de operator. Dan wordt het operon nog maar weinig getranscribeerd.', en: 'With tryptophan on board, the Trp repressor binds the operator. Then the operon is hardly transcribed anymore.' } },
       },
     },
   },
@@ -340,7 +340,7 @@ export default {
       steps: {
         0: { tag: ['spacer', 'spacer'], title: { nl: 'Bacteriën onthouden hun vijanden', en: 'Bacteria remember their enemies' }, text: { nl: 'Sommige bacteriën overleven een faag. Ze knippen een stukje uit zijn DNA en bewaren dat als spacer.', en: 'Some bacteria survive a phage. They cut a piece out of its DNA and keep it as a spacer.' } },
         1: { tag: ['CRISPR-rij', 'CRISPR array'], title: { nl: 'CRISPR: een geheugen in het eigen DNA', en: 'CRISPR: a memory in their own DNA' }, text: { nl: 'De spacer komt vooraan in de CRISPR-rij in het eigen DNA. Elke nieuwe faag voegt een spacer toe.', en: 'The spacer goes at the front of the CRISPR array in their own DNA. Each new phage adds a spacer.' } },
-        4: { tag: ['Cas knipt', 'Cas cuts'], title: { nl: 'Past het crRNA, dan knipt Cas', en: 'If the crRNA fits, Cas cuts' }, text: { nl: 'Komt dezelfde faag terug, dan past een crRNA op zijn DNA. Het Cas-eiwit knipt dat DNA door.', en: 'If the same phage returns, a crRNA fits its DNA. The Cas protein cuts that DNA.' } },
+        4: { tag: ['Cas knipt', 'Cas cuts'], title: { nl: 'Past het crRNA, dan knipt Cas', en: 'If the crRNA fits, Cas cuts' }, text: { nl: 'De cel maakt van elke spacer een RNA-gids (crRNA). Komt dezelfde faag terug, dan past die gids op zijn DNA. Het Cas-eiwit knipt dat DNA door.', en: 'The cell turns each spacer into an RNA guide (crRNA). If the same phage returns, that guide fits its DNA. The Cas protein cuts that DNA.' } },
         5: { tag: ['genbewerking', 'gene editing'], title: { nl: 'Cas9 als werktuig voor genbewerking', en: 'Cas9 as a tool for gene editing' }, text: { nl: 'Onderzoekers geven Cas9 een zelfgekozen gids-RNA. Zo knippen ze een gen op een gekozen plek om het aan te passen.', en: 'Researchers give Cas9 a guide RNA of their choice. That way they cut a gene at a chosen spot to change it.' } },
       },
     },
@@ -383,7 +383,7 @@ export default {
       },
     },
     secundair: {
-      kort: { nl: 'Een tRNA komt niet vanzelf naar het ribosoom: het eiwit EF-Tu brengt het aan. Past het anticodon op het codon, dan zet EF-Tu zijn GTP om in GDP en laat het los. Daarna koppelt het ribosoom het aminozuur.', en: 'A tRNA does not reach the ribosome on its own: the protein EF-Tu delivers it. If the anticodon fits the codon, EF-Tu turns its GTP into GDP and lets go. Then the ribosome links the amino acid.' },
+      kort: { nl: 'Een tRNA komt niet vanzelf naar het ribosoom: het eiwit EF-Tu brengt het aan. Past het anticodon op het codon, dan laat EF-Tu het los. Daarna koppelt het ribosoom het aminozuur.', en: 'A tRNA does not reach the ribosome on its own: the protein EF-Tu delivers it. If the anticodon fits the codon, EF-Tu lets go. Then the ribosome links the amino acid.' },
       terms: [
         [{ nl: 'EF-Tu', en: 'EF-Tu' }, { nl: 'Eiwit dat een tRNA met aminozuur naar het ribosoom brengt.', en: 'Protein that brings a tRNA with its amino acid to the ribosome.' }],
         [{ nl: 'codon', en: 'codon' }, { nl: 'Drie letters op het mRNA die voor één aminozuur coderen.', en: 'Three letters on the mRNA that code for one amino acid.' }],
@@ -444,7 +444,7 @@ export default {
       steps: {
         0: { tag: ['rifampicine', 'rifampicin'], title: { nl: 'Rifampicine in het RNA-polymerase', en: 'Rifampicin in RNA polymerase' }, text: { nl: 'Dit is het RNA-polymerase van E. coli, met het antibioticum rifampicine erin in het rood.', en: 'This is the RNA polymerase of E. coli, with the antibiotic rifampicin inside shown in red.' } },
         3: { tag: ['RNA botst', 'RNA blocked'], title: { nl: 'Het nieuwe RNA botst ertegen', en: 'The new RNA bumps into it' }, text: { nl: 'Na enkele nucleotiden stoot het nieuwe RNA op rifampicine. Verder groeien lukt niet: de transcriptie stopt.', en: 'After a few nucleotides, the new RNA hits rifampicin. It cannot grow further: transcription stops.' } },
-        5: { tag: ['selectief', 'selective'], title: { nl: 'Waarom ons enzym niet geraakt wordt', en: 'Why our enzyme is not hit' }, text: { nl: 'Bij bacteriën is deze holte sterk bewaard. In ons RNA-polymerase is ze anders gebouwd.', en: 'In bacteria, this pocket is highly conserved. In our RNA polymerase, it is built differently.' } },
+        5: { tag: ['selectief', 'selective'], title: { nl: 'Waarom ons enzym niet geraakt wordt', en: 'Why our enzyme is not hit' }, text: { nl: 'De holte waarin rifampicine past, ziet er bij bacteriën bijna altijd hetzelfde uit. In ons RNA-polymerase is ze anders gebouwd.', en: 'The pocket where rifampicin fits looks almost the same in all bacteria. In our RNA polymerase, it is built differently.' } },
       },
     },
   },

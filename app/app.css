@@ -416,6 +416,8 @@ html, body { height: 100%; overflow: hidden; }
 .facts { gap: 0; }
 .facts dt, .facts dd { padding: 5px 8px; border-top: 1px solid var(--line); }
 .facts dd { font-family: inherit; font-size: 13px; font-weight: 500; }
+.c-terms .facts { grid-template-columns: minmax(0, 40%) 1fr; }                    /* kernbegrippen: lange term breekt af i.p.v. de uitleg smal te duwen */
+.c-terms .facts dt { overflow-wrap: anywhere; hyphens: auto; }
 /* kleurwoorden ("de blauwe streng"): bolletje in die kleur, zodat tekst en figuur bij elkaar horen */
 .cw { white-space: nowrap; font-weight: 600; color: color-mix(in srgb, var(--c) 75%, white); }
 .cw::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--c); margin-right: 4px; box-shadow: 0 0 0 2px rgba(255,255,255,.08); }
