@@ -96,19 +96,25 @@ export default {
           sd += txt(DX + W / 2, Y1 - 18, T2('donor (met plasmide)', 'donor (with plasmid)'), C.text, 22) + txt(DX + W / 2, Y2 + H + 36, T2('ontvanger', 'recipient'), C.text, 22);
           // pilus + contactplek
           const pil = step === 3 ? ease(sub(p, 0, .3)) : 1;
-          sd += `<line x1="${DX + W / 2}" y1="${Y1 + H - 4}" x2="${DX + W / 2}" y2="${lerp(Y1 + H, Y2 + 4, pil)}" stroke="${K.tra}" stroke-width="7" stroke-linecap="round"/>`;
-          sd += `<g opacity="${f1(pil)}">` + txt(DX + W / 2 + 18, (Y1 + H + Y2) / 2 + 8, 'pilus', K.tra, 24, 'start', 700) + '</g>';
+          // pilus = doorschijnende buis tussen de cellen (zodat de streng erin zichtbaar is)
+          const pyEnd = lerp(Y1 + H, Y2 + 4, pil);
+          sd += `<line x1="${DX + W / 2}" y1="${Y1 + H - 4}" x2="${DX + W / 2}" y2="${f1(pyEnd)}" stroke="${K.tra}" stroke-width="26" stroke-linecap="round" stroke-opacity=".28"/>` +
+            `<line x1="${DX + W / 2 - 13}" y1="${Y1 + H - 4}" x2="${DX + W / 2 - 13}" y2="${f1(pyEnd)}" stroke="${K.tra}" stroke-width="3"/><line x1="${DX + W / 2 + 13}" y1="${Y1 + H - 4}" x2="${DX + W / 2 + 13}" y2="${f1(pyEnd)}" stroke="${K.tra}" stroke-width="3"/>`;
+          sd += `<g opacity="${f1(pil)}">` + txt(DX + W / 2 + 30, (Y1 + H + Y2) / 2 - 30, 'pilus', K.tra, 24, 'start', 700) + '</g>';
           // plasmide in donor: blijft; in ontvanger: groeiende enkele streng, daarna dubbel
           sd += dsRing(DX + 160, Y1 + H / 2, 40, K.plas, 4);
           if (tr > .01) {
-            const [x0, y0] = [DX + W / 2, Y1 + H];
-            const yy = lerp(y0, Y2 + 30, Math.min(1, tr * 1.6));
-            sd += `<line x1="${x0}" y1="${y0}" x2="${x0}" y2="${f1(yy)}" stroke="${K.plas}" stroke-width="3" stroke-dasharray="6 4" opacity="${f1(1 - dbl)}"/>`;
+            // de enkele streng loopt van het donorplasmide door de pilus naar de ontvanger (heldere roze draad met kop)
+            const pts = [[DX + 200, Y1 + H / 2], [DX + W / 2, Y1 + H - 6], [DX + W / 2, Y2 + 6], [DX + 200, Y2 + H / 2]];
+            const segL = pts.slice(1).map((q, i) => Math.hypot(q[0] - pts[i][0], q[1] - pts[i][1])), tot = segL.reduce((a, b) => a + b, 0);
+            let left = Math.min(1, tr * 1.6) * tot, d = `M${pts[0][0]},${pts[0][1]}`, hx = pts[0][0], hy = pts[0][1];
+            for (let i = 0; i < segL.length && left > 0; i++) { const k = Math.min(1, left / segL[i]); hx = lerp(pts[i][0], pts[i + 1][0], k); hy = lerp(pts[i][1], pts[i + 1][1], k); d += ` L${f1(hx)},${f1(hy)}`; left -= segL[i]; }
+            sd += `<g opacity="${f1(1 - dbl)}"><path d="${d}" stroke="${K.plas}" stroke-width="6" fill="none" stroke-linejoin="round"/>` + (tr * 1.6 < 1 ? `<circle cx="${f1(hx)}" cy="${f1(hy)}" r="9" fill="#fff"/>` : '') + '</g>';
+            if (step === 3) sd += `<g opacity="${f1(sub(p, .45, .6))}">` + txt(DX + W / 2 - 30, (Y1 + H + Y2) / 2 + 20, T2('één streng', 'one strand'), K.plas, 26, 'end', 800) + txt(DX + W / 2 - 30, (Y1 + H + Y2) / 2 + 50, T2('gaat over ↓', 'passes over ↓'), C.text, 22, 'end', 600) + '</g>';
             const ang = clamp((tr - .5) * 2) * 359.5;
             if (ang > 1 && dbl < .99) sd += `<path d="${arcPath(DX + 160, Y2 + H / 2, 40, 0, ang)}" stroke="${K.plas}" stroke-width="4" fill="none"/>`;
           }
           if (dbl > .01) sd += dsRing(DX + 160, Y2 + H / 2, 40, K.plas, 4, dbl);
-          if (step === 3) sd += `<g opacity="${f1(sub(p, .55, .75))}">` + txt(DX + 360, Y2 + H / 2 + 8, T2('één streng', 'one strand'), K.plas, 22, 'middle', 700) + '</g>';
           if (step === 4) sd += `<g opacity="${f1(sub(p, .55, .75))}">` + txt(DX + 360, Y2 + H / 2 - 6, T2('weer dubbel', 'double again'), K.plas, 22, 'middle', 700) + txt(DX + 360, Y2 + H / 2 + 26, T2('→ ook resistent', '→ resistant too'), C.ok, 22, 'middle', 700) + '</g>';
         }
         $('bp-side').innerHTML = sd;
