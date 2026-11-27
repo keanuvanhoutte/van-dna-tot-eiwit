@@ -47,9 +47,9 @@ export default {
   steps: [
     { dur: 7500, cam: FULL, title: L3('Het peroxisoom breekt lange vetzuren af', 'The peroxisome breaks down long fatty acids'),
       text: L3('Een peroxisoom is een klein blaasje met één membraan. Het breekt onder meer zeer lange vetzuren af.', 'A peroxisome is a small vesicle with one membrane. Among other things it breaks down very long fatty acids.') },
-    { dur: 7500, cam: cam(520, 470, 900), title: L3('Drie letters op het einde zijn het adres', 'Three letters at the end are the address'),
+    { dur: 7500, cam: cam(830, 470, 1250), title: L3('Drie letters op het einde zijn het adres', 'Three letters at the end are the address'),
       text: L3('Helemaal aan het einde van het eiwit staan drie bouwstenen: S, K en L. Dat is het adres.', 'At the very end of the protein are three building blocks: S, K and L. That is the address.') },
-    { dur: 8000, cam: cam(520, 440, 1000), title: L3('Een drager grijpt het label', 'A carrier grabs the label'),
+    { dur: 8000, cam: cam(830, 470, 1250), title: L3('Een drager grijpt het label', 'A carrier grabs the label'),
       text: L3('In het cytosol grijpt een drager het label vast. Het eiwit mag dan al opgevouwen zijn.', 'In the cytosol a carrier grabs the label. By then the protein may already be folded.') },
     { dur: 9000, cam: FULL, title: L3('Gevouwen mee naar binnen', 'Taken inside still folded'),
       text: L3('De drager brengt het eiwit door het membraan zonder het uit te rollen. Zelfs een groepje eiwitten samen kan erin.', 'The carrier brings the protein through the membrane without unrolling it. Even a group of proteins together can get in.') },
