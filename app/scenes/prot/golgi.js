@@ -75,7 +75,7 @@ export default {
       for (let a = -1; a <= 1; a += .16) er += ribosoomKlein(-60 + (r + 21) * Math.cos(a), 450 + (r + 21) * Math.sin(a), { s: .55, rot: a * 180 / Math.PI + 90 });
     });
     // plasmamembraan
-    const pm = membraanPts(ptsBoog(PMX, 40, PMX + 40, 450, PMX, 860, 50), { w: 20 }) + TL(PMX + 56, 590, [T2('buiten', 'outside'), T2('de cel', 'the cell')], { size: 20, col: C.muted });
+    const pm = membraanPts(ptsBoog(PMX, 40, PMX + 40, 450, PMX, 860, 50), { w: 20 }) + TL(PMX + 96, 590, [T2('buiten', 'outside'), T2('de cel', 'the cell')], { size: 20, col: C.muted });
     // endosoom en lysosoom
     const el = blaasje(ENDO[0], ENDO[1], 44, { w: 9, lumen: 'rgba(201,165,116,.14)', rand: C.mem }) + `<g id="go-ell1">` + TL(ENDO[0], ENDO[1] + 78, [T2('endosoom', 'endosome'), T2('pH ≈ 5,5–6,5', 'pH ≈ 5.5–6.5')], { size: 22, col: '#ff6b6b' }) + '</g>' +
       blaasje(LYSO[0], LYSO[1], 54, { w: 9, lumen: 'rgba(255,107,107,.11)', rand: '#ff6b6b' }) + `<g id="go-ell2">` + TL(LYSO[0], LYSO[1] + 88, [T2('lysosoom', 'lysosome'), T2('pH ≈ 4,5–5', 'pH ≈ 4.5–5')], { size: 22, col: C.danger }) + '</g>';
@@ -212,7 +212,7 @@ export default {
           lb += T(460, 360, 'COPII', { size: 24, col: COPII, w: 800 });
           lb += T(ERGIC[0] + 10, ERGIC[1] + 110, 'ERGIC', { size: 22, col: C.mem, w: 700 });
           lb += T(X0, GY - GH - 34, 'cis-Golgi', { size: 22, col: C.mem, w: 700 });
-          lb += T(610, 640, T2('alleen goed gevouwen eiwitten mogen mee', 'only correctly folded proteins may leave'), { size: 20, col: C.chain });
+          lb += TL(495, 618, [T2('alleen goed gevouwen', 'only correctly folded'), T2('eiwitten mogen mee', 'proteins may leave')], { size: 20, col: C.chain });   // twee regels: vrij van de cis-cisterne
         }
         if (step === 2) {
           lb += T(530, 205, T2('COPI (retrograad)', 'COPI (retrograde)'), { size: 24, col: COPI, w: 800 });
@@ -240,8 +240,8 @@ export default {
         }
         $('go-lbl').innerHTML = lb;
         // namen endosoom/lysosoom (klikbaar): in stap 8 weg van de pijl "receptor terug"
-        $('go-endoA').setAttribute('cx', step === 7 ? ENDO[0] - 130 : step === 4 ? ENDO[0] - 70 : step === 5 ? ENDO[0] + 40 : ENDO[0] - 40); $('go-endoA').setAttribute('cy', step === 7 ? ENDO[1] + 80 : step === 5 ? ENDO[1] - 60 : ENDO[1] - 70);
-        $('go-lysoA').setAttribute('cx', step === 7 ? LYSO[0] : step === 4 ? LYSO[0] - 40 : step === 5 ? LYSO[0] + 60 : step === 0 ? LYSO[0] - 20 : LYSO[0] + 30); $('go-lysoA').setAttribute('cy', step === 7 ? LYSO[1] - 80 : step === 5 ? LYSO[1] - 62 : step === 0 ? LYSO[1] - 135 : LYSO[1] - 70);   // overzicht: lysosoomknop hoger dan de endosoomknop (niet ertegenaan)
+        $('go-endoA').setAttribute('cx', step === 7 ? ENDO[0] - 130 : step === 4 ? ENDO[0] - 70 : step === 5 ? ENDO[0] + 62 : ENDO[0] - 40); $('go-endoA').setAttribute('cy', step === 7 ? ENDO[1] + 80 : step === 5 ? ENDO[1] - 64 : ENDO[1] - 70);   // stap 6: boven het endosoom, vrij van de lysosomale blaasjes
+        $('go-lysoA').setAttribute('cx', step === 7 ? LYSO[0] : step === 4 ? LYSO[0] - 40 : step === 5 ? LYSO[0] + 40 : step === 0 ? LYSO[0] - 20 : LYSO[0] + 30); $('go-lysoA').setAttribute('cy', step === 7 ? LYSO[1] - 80 : step === 5 ? LYSO[1] - 100 : step === 0 ? LYSO[1] - 135 : LYSO[1] - 70);   // overzicht: lysosoomknop hoger dan de endosoomknop (niet ertegenaan)
         const ellOp = f1(step === 0 ? 1 : step === 7 ? sub(p, 0, .15) : 0);   // namen endosoom/lysosoom alleen waar ze volledig in beeld zijn
         $('go-ell1').setAttribute('opacity', ellOp); $('go-ell2').setAttribute('opacity', ellOp);
         // hotspot-overlay op de granules
