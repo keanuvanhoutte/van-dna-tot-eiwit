@@ -49,6 +49,7 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
 
     <div class="stage" id="stage">
       <div class="labels" id="labels"></div>
+      <button class="backfig" id="bBack" type="button" hidden><span>‹</span><b></b><small></small></button>
       <div class="boot" id="boot" role="status"><i></i><span>Dogma wordt geladen…<br><small>Loading…</small></span></div>
       <script>/* laadtekst meteen in de gekozen taal (vóór de app geladen is) */
         try { var q = new URLSearchParams(location.search).get('lang'), l = q || localStorage.getItem('dna-app-lang');

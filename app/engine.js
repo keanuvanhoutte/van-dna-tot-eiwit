@@ -73,6 +73,7 @@ const UI2 = {
   capGrip: { nl: 'uitleg · versleep mij', en: 'explanation · drag me' }, capMin: { nl: 'In- of uitklappen (C)', en: 'Fold or unfold (C)' }, capDockTip: { nl: 'Onder de figuur zetten', en: 'Put below the figure' },
   stateChapter: { nl: '▶ speelt · stopt aan het einde van het hoofdstuk', en: '▶ playing · stops at the end of the chapter' },
   real3d: { nl: 'Bekijk echt in 3D', en: 'View in real 3D' },
+  backFig: { nl: 'Terug', en: 'Back' }, backTip: { nl: 'Terug naar de vorige figuur, bij de stap waar je was (Backspace)', en: 'Back to the previous figure, at the step where you were (Backspace)' },
   homeTip: { nl: 'Terug naar het startmenu (kies een ander verhaal of zijpad)', en: 'Back to the main menu (pick another story or side path)' }, upTip: { nl: 'Eén niveau uitzoomen (Esc)', en: 'Zoom out one level (Esc)' },
 };
 const V = k => L(UI2[k]);
@@ -752,18 +753,19 @@ const tween = (ms, fn) => new Promise(res => {
 });
 const lerpBox = (a, b, k) => a.map((x, i) => x + (b[i] - x) * k);
 
-async function go(id, box, dir = 'in', push = true) {
+async function go(id, box, dir = 'in', push = true, back = false) {
   if (busy || !hasScene(id)) return id && !hasScene(id) ? showCard(id) : null;
   if (current && id === current.id) return showSelf();
   real3d.close();
-  busy = true; hideOverlays(); labelsEl.classList.add('hide'); $('nextCh').classList.remove('show');
+  busy = true; hideOverlays(); labelsEl.classList.add('hide'); $('nextCh').classList.remove('show'); $('bBack').hidden = true;
   const old = current;
   let nxt;
   try { nxt = build(id); } catch (e) {
-    console.error(e); busy = false; labelsEl.classList.remove('hide');
+    console.error(e); busy = false; labelsEl.classList.remove('hide'); renderBack();
     toast(L({ nl: 'Deze scène kon niet geladen worden. Probeer opnieuw of kies een andere.', en: 'This scene could not be loaded. Try again or choose another one.' }));
     return;
   }
+  if (old && !back) { backStack.push({ id: old.id, step: stepInfo(t).step }); saveBack(); }   // onthouden waar je was (terugknop)
   nxt.layer.style.opacity = 0;
   // de nieuwe scène meteen tekenen (anders is ze tijdens de overgang leeg → zwart beeld)
   const drawFirst = () => { try {
@@ -833,11 +835,32 @@ async function go(id, box, dir = 'in', push = true) {
   if (push) { const i = trail.indexOf(id); trail = STORY_IDS.includes(id) ? [id] : i >= 0 ? trail.slice(0, i + 1) : [...trail, id]; }
   const ci = STORY_IDS.indexOf(id); if (ci >= 0) lastChapter = ci;
   render(); drawTicks();
-  busy = false;
+  busy = false; renderBack();
   labelsEl.classList.toggle('hide', !showLabels);
   requestAnimationFrame(placeLabels);
   history.replaceState(null, '', `?scene=${id}&story=${line}`);
 }
+
+/* ---------- terugknop naast de figuur: terug naar de vorige figuur, bij de stap waar je was ("terugspoelen") ----------
+ * Elke sprong naar een andere figuur (doorklikken, uitzoomen, hoofdstuk, zoeken) legt de figuur en stap waar je was op een
+ * stapel; ‹ Terug haalt de bovenste er weer af. Bewaard per tabblad, zodat herladen het niet wist. */
+let backStack = [];
+try { backStack = JSON.parse(sessionStorage.getItem('dogma-back') || '[]').filter(b => b && hasScene(b.id)); } catch {}
+function saveBack() { backStack = backStack.slice(-30); try { sessionStorage.setItem('dogma-back', JSON.stringify(backStack)); } catch {} }
+function renderBack() {
+  const b = backStack[backStack.length - 1], el = $('bBack');
+  el.hidden = !b || busy;
+  if (b) { const nm = NODES[b.id] ? title(NODES[b.id]) : ''; el.querySelector('small').textContent = nm; el.title = `${V('backTip')}${nm ? ` — ${nm}` : ''}`; }
+}
+async function goBack() {
+  if (busy || !backStack.length) return;
+  const b = backStack.pop(); saveBack();
+  if (current?.id !== b.id) await go(b.id, null, 'out', true, true);
+  if (current?.id === b.id) gotoStep(b.step ?? 0);
+  renderBack();
+}
+$('bBack').querySelector('b').textContent = V('backFig');
+$('bBack').onclick = goBack;
 
 function parentOf(id) {
   const n = NODES[id]; if (!n) return 'cel';
@@ -1057,6 +1080,7 @@ document.addEventListener('keydown', e => {
   else if (e.key === ' ') { e.preventDefault(); $('tPlay').click(); }   // ▶ vanzelf verder / ⏸ blijf bij deze stap
   else if (e.key === 'ArrowRight') $('tNext').click();
   else if (e.key === 'ArrowLeft') $('tPrev').click();
+  else if (e.key === 'Backspace') { e.preventDefault(); goBack(); }
   else if (e.key === 'm') showMap();
   else if (e.key === 'c') toggleCap();
   else if (e.key === 'a') $('tPlay').click();
@@ -1081,7 +1105,7 @@ if (startId) {
   if (q.has('t')) t = Math.min(current.total - 1, +q.get('t'));
   if (q.has('step')) { const k = shownIndex(Math.max(0, +q.get('step') || 0)); t = stepStart(k) + (q.has('p') ? +q.get('p') * current.steps[k].dur : 1); }   // stap buiten bereik (bv. overzichtsscène) → begrenzen
   camSnap = true;
-  render(); drawTicks();
+  render(); drawTicks(); renderBack();
   playStep(stepInfo(t).step);
   if (q.has('freeze')) setPlaying(false); else scheduleWarm();
   const boot = $('boot'); if (boot) { boot.classList.add('gone'); setTimeout(() => boot.remove(), 500); }
