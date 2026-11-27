@@ -80,30 +80,35 @@ const T = {
   },
 };
 
+/* ---------- gedeelde bouwstenen: in één oogopslag ---------- */
+const glance = (big, small) => `<div class="glance"><span class="gk">${esc(L({ nl: 'In één oogopslag', en: 'At a glance' }))}</span><p class="gb">${L(big)}</p>${small ? `<p class="gs">${L(small)}</p>` : ''}</div>`;
+const fact = (ic, h, p) => `<div class="fact"><span class="ic">${ic}</span><div><b>${esc(L(h))}</b><span>${L(p)}</span></div></div>`;
+
 /* ---------- tab 1: wat is Dogma ---------- */
 function tabAbout() {
-  const lineItem = k => `<li><a href="../app/index.html?scene=${LINES[k].chapters[0].id}&story=${k}">${esc(L(LINES[k].title))}</a> <small>· ${LINES[k].chapters.length} ${en ? 'chapters' : 'hoofdstukken'}</small></li>`;
+  const lineItem = k => `<li><a href="../app/index.html?scene=${LINES[k].chapters[0].id}&story=${k}">${esc(L(LINES[k].title).replace(/^(Zijpad|Side path)\s*·\s*/, ''))}</a> <small>· ${LINES[k].chapters.length} ${en ? 'chapters' : 'hoofdstukken'}</small></li>`;
   return `
   <h2>${esc(L({ nl: 'Wat is Dogma?', en: 'What is Dogma?' }))}</h2>
-  <p class="sub">${esc(L({ nl: 'De naam verwijst naar het centrale dogma van de biologie: de volgorde-informatie gaat van DNA naar RNA naar eiwit. Dogma maakt die weg zichtbaar als één samenhangend verhaal, waarin je op elk onderdeel kan klikken om dieper te gaan.', en: 'The name refers to the central dogma of biology: sequence information flows from DNA to RNA to protein. Dogma makes that path visible as one connected story, in which you can click any part to go deeper.' }))}</p>
-  <div class="grid">
-    <div class="card"><h4><span class="ic">🎓</span>${esc(L({ nl: 'Voor wie?', en: 'Who is it for?' }))}</h4><p>${esc(L({ nl: 'Leerlingen in het secundair onderwijs (wetenschappelijke richtingen) en beginnende bachelorstudenten in biologie, biomedische wetenschappen, bio-informatica en verwante richtingen. Voorkennis is niet nodig: elke animatie begint eenvoudig.', en: 'Secondary-school pupils (science tracks) and first-year bachelor students in biology, biomedical sciences, bioinformatics and related fields. No prior knowledge is needed: every animation starts simple.' }))}</p></div>
-    <div class="card"><h4><span class="ic">🧩</span>${esc(L({ nl: 'Twee lagen uitleg', en: 'Two layers of explanation' }))}</h4><p>${esc(L({ nl: 'Elke stap heeft één korte zin in gewone taal, met hooguit één nieuw vakwoord dat meteen uitgelegd wordt. Wie meer wil, kiest in het uitlegpaneel een tabblad: Wat, Zo werkt het, Kerncijfers of Waarom belangrijk (met vaktermen), en onder Meer de bronnen.', en: 'Each step has one short sentence in plain language, with at most one new technical term that is explained right away. Those who want more pick a tab in the explanation panel: What, How it works, Key numbers or Why it matters (with technical terms), and under More the sources.' }))}</p></div>
-    <div class="card"><h4><span class="ic">🔬</span>${esc(L({ nl: 'Echte structuren', en: 'Real structures' }))}</h4><p>${esc(L({ nl: 'Zodra je tot op molecuulniveau inzoomt, toont Dogma geen tekening meer maar echte, gemeten 3D-structuren uit de Protein Data Bank (PDB).', en: 'Once you zoom in to the molecular level, Dogma no longer shows a drawing but real, measured 3D structures from the Protein Data Bank (PDB).' }))}</p></div>
-    <div class="card"><h4><span class="ic">🦠</span>${esc(L({ nl: 'Mens én bacterie', en: 'Human and bacterium' }))}</h4><p>${esc(L({ nl: 'Het hoofdverhaal speelt in een menselijke cel. Een tweede verhaal volgt dezelfde weg in de bacterie E. coli, en een schakelaar springt tussen de twee waar er een echte tegenhanger is.', en: 'The main story takes place in a human cell. A second story follows the same path in the bacterium E. coli, and a switch jumps between the two wherever there is a real counterpart.' }))}</p></div>
-    <div class="card"><h4><span class="ic">🌐</span>${esc(L({ nl: 'Nederlands en Engels', en: 'Dutch and English' }))}</h4><p>${esc(L({ nl: 'Alles bestaat in beide talen. Kies je Engels, dan is ook alles Engels (geen gemengde teksten).', en: 'Everything exists in both languages. If you choose English, everything is in English (no mixed texts).' }))}</p></div>
-    <div class="card"><h4><span class="ic">⚖️</span>${esc(L({ nl: 'Wat Dogma níet is', en: 'What Dogma is not' }))}</h4><p>${esc(L({ nl: 'Geen vervanging van een handboek of les. Animaties zijn schematisch: groottes, aantallen en snelheden zijn aangepast om iets zichtbaar te maken. Elke animatie zegt daarom zelf wat er vereenvoudigd is.', en: 'Not a replacement for a textbook or a lesson. Animations are schematic: sizes, numbers and speeds are adjusted to make something visible. That is why every animation states what has been simplified.' }))}</p></div>
+  ${glance({ nl: 'Korte animaties die tonen hoe een cel van <b>DNA</b> via <b>RNA</b> tot <b>eiwit</b> komt.', en: 'Short animations that show how a cell gets from <b>DNA</b> via <b>RNA</b> to <b>protein</b>.' },
+    { nl: 'Van de hele cel tot op de atomen · bij de mens én bij een bacterie · elke uitspraak met een bron. De naam komt van het centrale dogma van de biologie.', en: 'From the whole cell down to the atoms · in humans and in a bacterium · every statement with a source. The name comes from the central dogma of biology.' })}
+  <div class="facts">
+    ${fact('🎓', { nl: 'Voor wie', en: 'Who for' }, { nl: 'Secundair (wetenschappen) en 1ste bachelor. Geen voorkennis nodig.', en: 'Secondary school (science) and first-year bachelor. No prior knowledge needed.' })}
+    ${fact('🧩', { nl: 'Twee lagen uitleg', en: 'Two layers' }, { nl: 'Per stap één korte zin. Meer uitleg in het paneel rechts.', en: 'One short sentence per step. More in the panel on the right.' })}
+    ${fact('🔬', { nl: 'Echte 3D', en: 'Real 3D' }, { nl: 'Gemeten structuren uit de Protein Data Bank.', en: 'Measured structures from the Protein Data Bank.' })}
+    ${fact('🦠', { nl: 'Mens én bacterie', en: 'Human and bacterium' }, { nl: 'Hetzelfde proces in E. coli, met één klik wisselen.', en: 'The same process in E. coli, one click to switch.' })}
+    ${fact('🌐', { nl: 'Nederlands en Engels', en: 'Dutch and English' }, { nl: 'Alles in beide talen, nooit gemengd.', en: 'Everything in both languages, never mixed.' })}
+    ${fact('⚖️', { nl: 'Geen handboek', en: 'Not a textbook' }, { nl: 'Animaties zijn schematisch; elke animatie zegt wat vereenvoudigd is.', en: 'Animations are schematic; each one says what is simplified.' })}
   </div>
 
-  <h3>${esc(L({ nl: 'Wat zit erin?', en: 'What is inside?' }))}</h3>
+  <h3>${esc(L({ nl: 'Waar begin je?', en: 'Where do you start?' }))}</h3>
   <div class="grid">
-    <div class="card"><h4>${esc(L({ nl: 'Hoofdverhalen', en: 'Main stories' }))}</h4><ul>${MAIN_KEYS.map(lineItem).join('')}</ul></div>
-    <div class="card"><h4>${esc(L({ nl: 'Zijpaden', en: 'Side paths' }))}</h4><ul>${SIDE_KEYS.map(lineItem).join('')}</ul></div>
-    <div class="card"><h4>${esc(L({ nl: '3D-bibliotheek', en: '3D library' }))}</h4><p>${esc(L({ nl: `${ENTRIES.length} uitgekozen vormen van DNA, RNA en eiwitcomplexen in echte 3D, met uitleg per onderdeel. Je kan er ook zelf een eiwit of gen opzoeken: de app zoekt dan in de volledige PDB naar gemeten structuren.`, en: `${ENTRIES.length} selected forms of DNA, RNA and protein complexes in real 3D, with an explanation per part. You can also look up a protein or gene yourself: the app then searches the full PDB for measured structures.` }))}</p><p><a href="../atlas/index.html">${esc(L({ nl: 'Open de 3D-bibliotheek →', en: 'Open the 3D library →' }))}</a></p></div>
+    <div class="card"><h4><span class="ic">🧬</span>${esc(L({ nl: 'Hoofdverhalen', en: 'Main stories' }))}</h4><p>${esc(L({ nl: 'Het hele traject, hoofdstuk na hoofdstuk.', en: 'The whole route, chapter by chapter.' }))}</p><ul>${MAIN_KEYS.map(lineItem).join('')}</ul></div>
+    <div class="card"><h4><span class="ic">↳</span>${esc(L({ nl: 'Zijpaden', en: 'Side paths' }))}</h4><p>${esc(L({ nl: 'Eén thema, kort en apart.', en: 'One theme, short and separate.' }))}</p><ul>${SIDE_KEYS.map(lineItem).join('')}</ul></div>
+    <div class="card"><h4><span class="ic">📚</span>${esc(L({ nl: '3D-bibliotheek', en: '3D library' }))}</h4><p>${esc(L({ nl: `${ENTRIES.length} vormen van DNA, RNA en eiwitcomplexen in echte 3D. Of zoek zelf een eiwit of gen in de volledige PDB.`, en: `${ENTRIES.length} forms of DNA, RNA and protein complexes in real 3D. Or look up a protein or gene yourself in the full PDB.` }))}</p><p><a href="../atlas/index.html">${esc(L({ nl: 'Open de 3D-bibliotheek →', en: 'Open the 3D library →' }))}</a></p></div>
   </div>
 
   <h3>${esc(L({ nl: 'Hoe werkt de app achter de schermen?', en: 'How does the app work behind the scenes?' }))}</h3>
-  <details class="acc"><summary>${esc(L({ nl: 'In gewone taal uitgelegd', en: 'Explained in plain language' }))} <small>${esc(L({ nl: 'voor wie wil weten hoe het gebouwd is', en: 'for those who want to know how it is built' }))}</small></summary><div class="in"><ul>
+  <details class="acc"><summary>${esc(L({ nl: 'In gewone taal uitgelegd', en: 'Explained in plain language' }))} <small>${esc(L({ nl: 'privacy, 3D, broncode, AI', en: 'privacy, 3D, source code, AI' }))}</small></summary><div class="in"><ul>
     <li>${L({ nl: '<b>Een website, niets te installeren.</b> Dogma draait volledig in de browser van de gebruiker. Er is geen account, Dogma verzamelt geen gegevens en er is geen volgsoftware. Enkel je taalkeuze, je laatst gekozen verhaal, je recent bekeken 3D-codes en enkele weergavekeuzes worden in je eigen browser onthouden. Lettertypes, de 3D-viewer en het zoeken in de 3D-bibliotheek halen wel bestanden op bij externe diensten (Google Fonts, jsDelivr, RCSB PDB en UniProt).', en: '<b>A website, nothing to install.</b> Dogma runs entirely in the user’s browser. There is no account, Dogma collects no data and there is no tracking software. Only your language choice, your last chosen story, your recently viewed 3D codes and a few display choices are remembered in your own browser. Fonts, the 3D viewer and the search in the 3D library do fetch files from external services (Google Fonts, jsDelivr, RCSB PDB and UniProt).' })}</li>
     <li>${L({ nl: '<b>Eén kennisnetwerk.</b> Alle onderwerpen staan in één lijst, met per onderwerp waar je kan inzoomen, wat erna komt en wat ermee samenhangt. Daaruit worden de verhalen, de inhoudskaart, het zoeken en deze pagina opgebouwd.', en: '<b>One knowledge network.</b> All topics are in one list, with for each topic where you can zoom in, what comes next and what it connects to. The stories, the content map, the search and this page are built from it.' })}</li>
     <li>${L({ nl: '<b>Animaties als stappen.</b> Elke animatie bestaat uit korte stappen. Een stap toont één ding; je kan pauzeren, herhalen, terugspoelen en de snelheid kiezen.', en: '<b>Animations as steps.</b> Each animation consists of short steps. A step shows one thing; you can pause, repeat, rewind and choose the speed.' })}</li>
@@ -117,16 +122,46 @@ function tabAbout() {
 /* ---------- tab 2: navigeren ---------- */
 function tabNav() {
   const card = (ic, h, p) => `<div class="card"><h4><span class="ic">${ic}</span>${esc(L(h))}</h4><p>${L(p)}</p></div>`;
-  const keys = [
-    ['<kbd>␣</kbd> ' + L({ nl: 'spatie', en: 'space' }), { nl: 'afspelen / pauzeren', en: 'play / pause' }],
-    ['<kbd>←</kbd> <kbd>→</kbd>', { nl: 'vorige / volgende stap', en: 'previous / next step' }],
-    ['<kbd>Esc</kbd>', { nl: 'één niveau uitzoomen, of een open venster sluiten', en: 'zoom out one level, or close an open window' }],
-    ['<kbd>M</kbd>', { nl: 'inhoudskaart ("Waar ben ik?")', en: 'content map ("Where am I?")' }],
-    ['<kbd>/</kbd>', { nl: 'naar de zoekbalk', en: 'go to the search bar' }],
-    ['<kbd>C</kbd>', { nl: 'uitleg bij de stap inklappen of weer tonen', en: 'fold the step explanation or show it again' }],
+  const K = s => s.split(' ').map(k => `<kbd>${k}</kbd>`).join(' ');
+  const goals = [
+    [{ nl: 'verder in het verhaal', en: 'move on in the story' }, { nl: '▶ speelt vanzelf door; of <b>Volgend</b> rechtsonder', en: '▶ plays on by itself; or <b>Next</b> at the bottom right' }, K(L({ nl: 'spatie', en: 'space' }))],
+    [{ nl: 'een stap terug of vooruit', en: 'go one step back or forward' }, { nl: '‹ › in de afspeelbalk, of klik een bolletje', en: '‹ › in the playback bar, or click a dot' }, K('← →')],
+    [{ nl: 'een stap opnieuw zien', en: 'see a step again' }, { nl: '🔁 in de afspeelbalk', en: '🔁 in the playback bar' }, ''],
+    [{ nl: 'dieper ingaan op een onderdeel', en: 'go deeper into a part' }, { nl: 'klik op wat oplicht in de figuur', en: 'click what lights up in the figure' }, ''],
+    [{ nl: 'terug naar waar ik was', en: 'go back to where I was' }, { nl: '<b>Uitzoomen</b>, of het kruimelpad bovenaan', en: '<b>Zoom out</b>, or the breadcrumb trail at the top' }, K('Esc')],
+    [{ nl: 'iets opzoeken', en: 'look something up' }, { nl: 'de zoekbalk (NL of EN, ook met een tikfout)', en: 'the search bar (Dutch or English, typos are fine)' }, K('/')],
+    [{ nl: 'zien waar ik ben in het geheel', en: 'see where I am in the whole' }, { nl: '<b>Waar ben ik?</b> opent de inhoudskaart', en: '<b>Where am I?</b> opens the content map' }, K('M')],
+    [{ nl: 'meer uitleg of de bronnen', en: 'more explanation or the sources' }, { nl: 'het uitlegpaneel rechts; bronnen onder <b>Meer</b>', en: 'the explanation panel on the right; sources under <b>More</b>' }, ''],
+    [{ nl: 'de echte molecule zien', en: 'see the real molecule' }, { nl: '<b>Bekijk echt in 3D</b>', en: '<b>View in real 3D</b>' }, ''],
+    [{ nl: 'hetzelfde bij een bacterie', en: 'the same in a bacterium' }, { nl: '<b>Mens ⇄ Bacterie</b> bovenaan (als er een tegenhanger is)', en: '<b>Human ⇄ Bacterium</b> at the top (when there is a counterpart)' }, ''],
+    [{ nl: 'de figuur groter', en: 'a bigger figure' }, { nl: '› klapt het uitlegpaneel in; ▾ de stapuitleg', en: '› folds the explanation panel; ▾ the step explanation' }, K('C')],
+    [{ nl: 'snelheid, leestijd of labels', en: 'speed, reading time or labels' }, { nl: '⚙ in de afspeelbalk; <b>Labels</b> aan/uit', en: '⚙ in the playback bar; <b>Labels</b> on/off' }, ''],
+    [{ nl: 'een andere taal', en: 'another language' }, { nl: '<b>NL | EN</b>', en: '<b>NL | EN</b>' }, ''],
+  ];
+  const zones = [
+    [1, { nl: 'Bovenbalk', en: 'Top bar' }, { nl: 'in welk verhaal en hoofdstuk je zit; Mens ⇄ Bacterie', en: 'which story and chapter you are in; Human ⇄ Bacterium' }],
+    [2, { nl: 'Verhaal links', en: 'Story on the left' }, { nl: 'één streepje per hoofdstuk; geel = hier ben je', en: 'one stripe per chapter; yellow = you are here' }],
+    [3, { nl: 'Figuur', en: 'Figure' }, { nl: 'klik wat oplicht om in te zoomen', en: 'click what lights up to zoom in' }],
+    [4, { nl: 'Uitlegpaneel', en: 'Explanation panel' }, { nl: 'meer uitleg, kerncijfers en bronnen', en: 'more explanation, key numbers and sources' }],
+    [5, { nl: 'Afspeelbalk', en: 'Playback bar' }, { nl: '▶ ⏸ 🔁, de stappen, Volgend en ⚙', en: '▶ ⏸ 🔁, the steps, Next and ⚙' }],
   ];
   return `
   <h2>${esc(L({ nl: 'Zo navigeer je', en: 'How to navigate' }))}</h2>
+  ${glance({ nl: 'Klik wat <b>oplicht</b> om in te zoomen · <b>▶</b> om verder te spelen · <b>Esc</b> om terug te gaan.', en: 'Click what <b>lights up</b> to zoom in · <b>▶</b> to play on · <b>Esc</b> to go back.' },
+    { nl: 'Kwijt? <b>Waar ben ik?</b> (toets M) toont waar je zit in het geheel.', en: 'Lost? <b>Where am I?</b> (M key) shows where you are in the whole.' })}
+
+  <h3>${esc(L({ nl: 'Wat zie je op het scherm?', en: 'What is on the screen?' }))}</h3>
+  <div class="scr">
+    <div class="mock" aria-hidden="true"><i class="z1">1</i><i class="z2">2</i><i class="z3">3</i><i class="z4">4</i><i class="z5">5</i></div>
+    <ol class="zones">${zones.map(([n, h, p]) => `<li><span class="zn">${n}</span><div><b>${esc(L(h))}</b><span>${esc(L(p))}</span></div></li>`).join('')}</ol>
+  </div>
+
+  <h3>${esc(L({ nl: 'Ik wil…', en: 'I want to…' }))}</h3>
+  <div class="tscroll"><table class="goals"><thead><tr><th>${esc(L({ nl: 'Ik wil…', en: 'I want to…' }))}</th><th>${esc(L({ nl: 'Zo doe je het', en: 'How' }))}</th><th>${esc(L({ nl: 'Toets', en: 'Key' }))}</th></tr></thead>
+    <tbody>${goals.map(([g, h, k]) => `<tr><td><b>${esc(L(g))}</b></td><td>${L(h)}</td><td class="k">${k}</td></tr>`).join('')}</tbody></table></div>
+
+  <h3>${esc(L({ nl: 'Meer weten?', en: 'Want to know more?' }))}</h3>
+  <details class="acc"><summary>${esc(L({ nl: 'Alle details per onderdeel', en: 'All details per part' }))} <small>${esc(L({ nl: 'drie manieren om te bewegen, elk onderdeel van het scherm', en: 'three ways to move, every part of the screen' }))}</small></summary><div class="in">
   <p class="sub">${esc(L({ nl: 'De inhoud is geen rechte lijn maar een netwerk: het ribosoom hoort zowel bij translatie als bij de bouw van ribosomen. Daarom kan je op drie manieren bewegen, en vind je altijd de weg terug.', en: 'The content is not a straight line but a network: the ribosome belongs to translation as well as to the building of ribosomes. That is why you can move in three ways, and you can always find your way back.' }))}</p>
   <div class="moves">
     <div style="--c:#7fdc6a"><b>① ${esc(L({ nl: 'Inzoomen', en: 'Zoom in' }))}</b><span>${esc(L({ nl: 'Klik op wat oplicht. De camera vliegt erheen en een nieuwe animatie toont dat onderdeel in detail.', en: 'Click what lights up. The camera flies there and a new animation shows that part in detail.' }))}</span></div>
@@ -134,9 +169,7 @@ function tabNav() {
     <div style="--c:#9b7bff"><b>③ ${esc(L({ nl: 'Zijsprong', en: 'Detour' }))}</b><span>${esc(L({ nl: 'Knoppen in de animatie en het uitlegpaneel brengen je naar iets wat ermee samenhangt. Het kruimelpad bovenaan en het verhaal links tonen dat je een zijsprong maakt; onderaan staat een knop terug naar het hoofdstuk.', en: 'Buttons in the animation and in the explanation panel take you to something related. The breadcrumb trail at the top and the story on the left show that you are on a detour; at the bottom there is a button back to the chapter.' }))}</span></div>
     <div style="--c:#93a0bb"><b>↩ ${esc(L({ nl: 'Terug', en: 'Back' }))}</b><span>${esc(L({ nl: '"Uitzoomen" (of Esc) gaat één niveau terug; het kruimelpad bovenaan toont de weg die je kwam; "Startmenu" brengt je naar de startpagina.', en: '"Zoom out" (or Esc) goes back one level; the breadcrumb trail at the top shows the way you came; "Main menu" takes you to the home page.' }))}</span></div>
   </div>
-
-  <h3>${esc(L({ nl: 'Alle manieren om je weg te vinden', en: 'All ways to find your way' }))}</h3>
-  <div class="grid">
+  <div class="grid" style="margin-top:14px">
     ${card('🏁', { nl: 'Startpagina', en: 'Home page' }, { nl: 'Kies een hoofdverhaal (menselijke cel of bacterie), een zijpad over één thema, de 3D-bibliotheek, of zoek meteen wat je wil zien.', en: 'Pick a main story (human cell or bacterium), a side path about one theme, the 3D library, or search right away for what you want to see.' })}
     ${card('🔎', { nl: 'Zoeken', en: 'Search' }, { nl: 'Typ een woord in het Nederlands of Engels, ook met een tikfout of een andere naam (bv. "crosslink" vindt alkylering). Je krijgt "Bedoel je…" en ziet in welk verhaal het zit. Sneltoets: <kbd>/</kbd>.', en: 'Type a word in Dutch or English, even with a typo or another name (e.g. "crosslink" finds alkylation). You get "Did you mean…" and see which story it is in. Shortcut: <kbd>/</kbd>.' })}
     ${card('🗺️', { nl: 'Inhoudskaart ("Waar ben ik?")', en: 'Content map ("Where am I?")' }, { nl: 'Het overzicht van alles: als verhalen met haltes, per onderwerp of van groot naar klein. Klik een onderwerp voor een korte uitleg en open dan de animatie. Hier ben je = geel omrand. Sneltoets: <kbd>M</kbd>. Ook op deze pagina, bij het tabblad Inhoudskaart.', en: 'The overview of everything: as stories with stops, by topic, or from large to small. Click a topic for a short explanation, then open the animation. You are here = yellow outline. Shortcut: <kbd>M</kbd>. Also on this page, in the Content map tab.' })}
@@ -147,15 +180,19 @@ function tabNav() {
     ${card('🧬', { nl: 'Bekijk echt in 3D', en: 'View in real 3D' }, { nl: 'Bij een tekening die een echte structuur heeft, opent deze knop de gemeten 3D-structuur. Met "Atoomniveau" zie je waterstofbruggen, helices en bladen, en bij eiwitten een gekoppelde Ramachandran-grafiek.', en: 'For a drawing that has a real structure, this button opens the measured 3D structure. With "Atomic level" you see hydrogen bonds, helices and sheets, and for proteins a linked Ramachandran plot.' })}
     ${card('📚', { nl: '3D-bibliotheek', en: '3D library' }, { nl: 'Een aparte verzameling vormen van DNA, RNA en complexen in 3D, met weergaven, kleuren per onderdeel, "Wat is welk deel?", vergelijken naast elkaar, en zelf zoeken in de volledige PDB.', en: 'A separate collection of DNA, RNA and complex shapes in 3D, with display modes, colours per part, "Which part is which?", side-by-side comparison, and searching the full PDB yourself.' })}
     ${card('🏷️', { nl: 'Labels en taal', en: 'Labels and language' }, { nl: '"Labels" zet de namen in de figuur aan of uit. NL | EN wisselt de taal van alles.', en: '"Labels" turns the names in the figure on or off. NL | EN switches the language of everything.' })}
-  </div>
-  <h3>${esc(L({ nl: 'Sneltoetsen in een animatie', en: 'Keyboard shortcuts in an animation' }))}</h3>
-  <div class="tscroll" style="max-width:640px"><table><tbody>${keys.map(([k, v]) => `<tr><td style="white-space:nowrap">${k}</td><td>${esc(L(v))}</td></tr>`).join('')}</tbody></table></div>`;
+  </div></div></details>`;
 }
 
 /* ---------- tab 3: inhoudskaart ---------- */
 function tabMap() {
   return `<h2>${esc(L({ nl: 'Inhoudskaart', en: 'Content map' }))}</h2>
-  <p class="sub">${esc(L({ nl: 'Alles wat in Dogma zit, op één plek. Kies bovenaan hoe je wil kijken, klik een onderwerp voor een korte uitleg, en open dan de animatie. Dezelfde kaart open je in de app met "Waar ben ik?" of de toets M.', en: 'Everything in Dogma in one place. Choose at the top how you want to look, click a topic for a short explanation, and then open the animation. You open the same map in the app with "Where am I?" or the M key.' }))}</p>
+  ${glance({ nl: 'Alles wat in Dogma zit, op één kaart.', en: 'Everything in Dogma, on one map.' })}
+  <ol class="how3">
+    <li><b>1</b>${esc(L({ nl: 'Zoek een onderwerp, of kies links een verhaal', en: 'Search for a topic, or pick a story on the left' }))}</li>
+    <li><b>2</b>${esc(L({ nl: 'Klik een halte voor een korte uitleg', en: 'Click a stop for a short explanation' }))}</li>
+    <li><b>3</b>${esc(L({ nl: 'Open de animatie', en: 'Open the animation' }))}</li>
+  </ol>
+  <p class="hint">${esc(L({ nl: 'In de app open je dezelfde kaart met "Waar ben ik?" of de toets M.', en: 'In the app you open the same map with "Where am I?" or the M key.' }))}</p>
   <div id="mapHost"></div>`;
 }
 

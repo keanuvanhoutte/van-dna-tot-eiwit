@@ -112,6 +112,51 @@
   .moves div { border-radius: 14px; padding: 14px 16px; border: 1px solid var(--line); background: var(--bg-2); border-top: 3px solid var(--c); }
   .moves b { display: block; font-size: 15px; margin-bottom: 4px; }
   .moves span { font-size: 14px; color: var(--muted); }
+  /* in één oogopslag (tabs Wat is Dogma, Zo navigeer je, Inhoudskaart) */
+  .glance { border: 1px solid rgba(124,196,255,.35); border-left: 4px solid var(--accent); border-radius: 14px; background: linear-gradient(90deg, rgba(124,196,255,.09), rgba(124,196,255,.02)); padding: 14px 18px; margin: 12px 0 18px; max-width: 980px; }
+  .glance .gk { font: 600 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+  .glance .gb { font-size: 20px; font-weight: 600; color: var(--text); margin: 8px 0 0; line-height: 1.35; }
+  .glance .gb b { color: var(--accent); }
+  .glance .gs { color: var(--muted); font-size: 14.5px; margin: 6px 0 0; }
+  .glance .gs b { color: var(--text); }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; max-width: 980px; }
+  .fact { display: flex; gap: 12px; align-items: flex-start; background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .fact .ic { font-size: 22px; line-height: 1; }
+  .fact b { display: block; font-size: 15px; }
+  .fact span { color: var(--muted); font-size: 13.5px; }
+  .scr { display: grid; grid-template-columns: minmax(260px, 380px) 1fr; gap: 22px; align-items: center; max-width: 980px; }
+  .mock { aspect-ratio: 16 / 10; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); padding: 6px; display: grid; gap: 5px;
+    grid-template: "a a a" 14% "b c d" 1fr "b e d" 14% / 13% 1fr 30%; }
+  .mock i { font: 700 15px var(--mono); font-style: normal; display: grid; place-items: center; border-radius: 6px; border: 1px solid; }
+  .mock .z1 { grid-area: a; color: #7cc4ff; border-color: rgba(124,196,255,.5); background: rgba(124,196,255,.10); }
+  .mock .z2 { grid-area: b; color: #ffc247; border-color: rgba(255,194,71,.5); background: rgba(255,194,71,.10); }
+  .mock .z3 { grid-area: c; color: #7fdc6a; border-color: rgba(127,220,106,.5); background: rgba(127,220,106,.08); }
+  .mock .z4 { grid-area: d; color: #9b7bff; border-color: rgba(155,123,255,.5); background: rgba(155,123,255,.10); }
+  .mock .z5 { grid-area: e; color: #ff8a3d; border-color: rgba(255,138,61,.5); background: rgba(255,138,61,.10); }
+  ol.zones { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  ol.zones li { display: flex; gap: 12px; align-items: baseline; }
+  ol.zones .zn { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 700 12px var(--mono); background: rgba(124,196,255,.14); color: var(--accent); }
+  ol.zones li:nth-child(2) .zn { background: rgba(255,194,71,.14); color: #ffc247; }
+  ol.zones li:nth-child(3) .zn { background: rgba(127,220,106,.14); color: #7fdc6a; }
+  ol.zones li:nth-child(4) .zn { background: rgba(155,123,255,.16); color: #9b7bff; }
+  ol.zones li:nth-child(5) .zn { background: rgba(255,138,61,.14); color: #ff8a3d; }
+  ol.zones b { font-size: 15px; margin-right: 6px; }
+  ol.zones span { color: var(--muted); font-size: 14px; }
+  @media (max-width: 760px) { .scr { grid-template-columns: 1fr; } }
+  table.goals { max-width: 980px; }
+  table.goals td { font-size: 14.5px; color: #c3cbdc; }
+  table.goals td b { color: var(--text); }
+  table.goals td:first-child { width: 34%; }
+  table.goals td.k { white-space: nowrap; width: 90px; }
+  table.goals tbody tr:hover td { background: rgba(124,196,255,.05); }
+  ol.how3 { list-style: none; padding: 0; margin: 0 0 6px; display: flex; flex-wrap: wrap; gap: 8px; }
+  ol.how3 li { display: flex; align-items: center; gap: 9px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px 7px 7px; font-size: 14.5px; }
+  ol.how3 b { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 700 12px var(--mono); background: rgba(124,196,255,.14); color: var(--accent); }
+  .hint { color: var(--muted); font-size: 13px; margin: 6px 0 16px; }
+  /* inhoudskaart: zoeken eerst en breed */
+  #mapHost .cm-top { display: flex; flex-direction: column-reverse; align-items: stretch; gap: 10px; }
+  #mapHost .cm-tabs { align-self: flex-start; }
+  #mapHost .cm-q { flex: none; height: auto; width: 100%; max-width: none; box-sizing: border-box; font-size: 16px; padding: 12px 14px; }
   footer { padding: 26px 0 50px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
   footer a { color: var(--muted); }
   #loading { padding: 40px 0; color: var(--muted); }
