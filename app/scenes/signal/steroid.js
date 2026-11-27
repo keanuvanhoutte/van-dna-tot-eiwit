@@ -110,7 +110,7 @@ export default {
         H += cop > .01 ? `<g opacity="${f1(cop)}">${eiwit(p23[0], p23[1], 16, 14, P23C, { seed: 61 })}${eiwit(fk[0], fk[1], 27, 22, FKBPC, { seed: 62 })}</g>` : '';
         $('st-chap').innerHTML = H;
         $('st-chapG').setAttribute('opacity', g < 4.2 ? '1' : '0');
-        $('st-chapA').setAttribute('cx', f1(hs[0])); $('st-chapA').setAttribute('cy', f1(hs[1] + 120));
+        $('st-chapA').setAttribute('cx', f1(GX + 255)); $('st-chapA').setAttribute('cy', f1(GY + 62));   // onder het label 'helpers', niet op de kernenvelop
         $('st-chapA').setAttribute('opacity', g > 1.9 && g < 3.6 ? '1' : '0');
 
         /* ---------- GR ---------- */
@@ -143,12 +143,12 @@ export default {
         let N = '';
         /* GRE-consensus AGAACAnnnTGTTCT: twee omgekeerde halve plaatsen (palindroom) met 3 nt ertussen (Lodish, Molecular Cell Biology; Meijsing et al., Science 2009) */
         const gk = K(g, 5.05, 5.4);
-        N += `<g opacity="${f1(.35 + .65 * gk)}"><text x="${H1}" y="${DY + 50}" font-size="23" text-anchor="middle" fill="#cfe0ff" font-family="JetBrains Mono" font-weight="700">AGAACA</text>` +
-          `<text x="1000" y="${DY + 50}" font-size="22" text-anchor="middle" fill="${C.muted}" font-family="JetBrains Mono" font-weight="700">nnn</text>` +
-          `<text x="${H2}" y="${DY + 50}" font-size="23" text-anchor="middle" fill="#cfe0ff" font-family="JetBrains Mono" font-weight="700">TGTTCT</text></g>`;
+        N += `<g opacity="${f1(.35 + .65 * gk)}"><text x="${H1}" y="${DY + 50}" font-size="18" text-anchor="middle" fill="#9fb4d8" font-family="JetBrains Mono" font-weight="700">AGAACA</text>` +
+          `<text x="1000" y="${DY + 50}" font-size="17" text-anchor="middle" fill="${C.muted}" font-family="JetBrains Mono" font-weight="700">nnn</text>` +
+          `<text x="${H2}" y="${DY + 50}" font-size="18" text-anchor="middle" fill="#9fb4d8" font-family="JetBrains Mono" font-weight="700">TGTTCT</text></g>`;
         const co = track(g, [[6.05, 1150, 660, 0], [6.4, 1000, 612, 1]]);   // kerneiwitten: verschijnen in de kern
         if (co[2] > .01) N += `<g opacity="${f1(co[2])}">${eiwit(co[0], co[1], 108, 32, COAC, { seed: 63, bumps: .08 })}` +
-          `<text x="${f1(co[0])}" y="${f1(co[1] + 8)}" font-size="22" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">CBP/p300 · SRC</text></g>`;
+          `<text x="${f1(co[0])}" y="${f1(co[1] + 8)}" font-size="24" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">${T2('helpers', 'helpers')}</text></g>`;
         const pol = K(g, 6.3, 6.5);
         $('st-nuc').innerHTML = N;
         N = '';                                                 // Pol II apart (klikbaar naar RNA-polymerase II), mRNA erna
@@ -173,30 +173,31 @@ export default {
         if (k > .01) L += T(620, 150, T2('passieve diffusie', 'passive diffusion'), { size: 22, col: C.text, op: k }) +
           T(700, MY + MH / 2 + 8, T2('hydrofobe kern', 'hydrophobic core'), { size: 20, col: '#f1d7a8', op: k, anchor: 'start' });
         k = on(2.2, 2.5, 3.02, 3.2);
-        if (k > .01) L += T(GX - 60, GY + 70, 'GR', { size: 24, col: C.prot, op: k }) +
-          T(GX + 105, GY + 92, 'Hsp90', { size: 22, col: HSPC, op: k, anchor: 'start' }) +
-          T(GX + 80, GY - 110, 'p23', { size: 22, col: P23C, op: k, anchor: 'start' }) +
-          T(GX + 155, GY - 50, 'FKBP51', { size: 22, col: FKBPC, op: k, anchor: 'start' }) +
-          T(GX - 110, GY + 35, 'NTD', { size: 18, col: C.muted, op: k }) + T(GX - 40, GY + 35, 'DBD', { size: 18, col: C.muted, op: k }) + T(GX + 112, GY + 34, 'LBD', { size: 18, col: C.muted, op: k, anchor: 'start' });
+        if (k > .01) L += T(GX - 75, GY + 66, T2('receptor', 'receptor'), { size: 26, col: C.prot, op: k }) +
+          T(GX - 75, GY + 90, '(GR)', { size: 18, col: C.muted, op: k }) +
+          /* één naam voor de hele groep helpers; de eiwitnamen klein eronder */
+          T(GX + 175, GY + 8, T2('helpers', 'helpers'), { size: 28, col: HSPC, op: k, anchor: 'start' }) +
+          T(GX + 175, GY + 34, '(Hsp90 · p23 · FKBP51)', { size: 18, col: C.muted, op: k, anchor: 'start', w: 400 });
         k = on(3.4, 3.7, 4.02, 4.2);
         if (k > .01) L += T(GX + 45, GY + 70, T2('ligandbindend domein', 'ligand-binding domain'), { size: 22, col: C.prot, op: k }) +
           T(GX - 20, GY - 60, 'NLS', { size: 22, col: NLSC, op: k * nls }) +
-          T(930, 280, T2('chaperones laten los', 'chaperones let go'), { size: 22, col: HSPC, op: k * rel, anchor: 'start' });
+          T(930, 280, T2('helpers laten los', 'helpers let go'), { size: 22, col: HSPC, op: k * rel, anchor: 'start' });
         k = on(4.2, 4.45, 4.85, 5.0);
         if (k > .01) L += T(PORE + 110, 470, T2('importine α/β', 'importin α/β'), { size: 22, col: '#b9a6ff', op: k, anchor: 'start' }) +
           T(PORE + 90, NY + 55, T2('kernporie', 'nuclear pore'), { size: 22, col: C.prot, op: k, anchor: 'start' });
         k = on(5.3, 5.6, 6.02, 6.2);
-        if (k > .01) L += T(1165, 690, T2('GR-homodimeer', 'GR homodimer'), { size: 24, col: C.prot, op: k, anchor: 'start' }) +
-          T(1000, DY + 88, 'GRE', { size: 24, col: '#cfe0ff', op: k }) +
-          T(H2 + 36, DY - 30, T2('← zinkvingers', '← zinc fingers'), { size: 20, col: '#cfd6e6', op: k, anchor: 'start' });
+        if (k > .01) L += T(1165, 680, T2('twee receptoren samen', 'two receptors together'), { size: 24, col: C.prot, op: k, anchor: 'start' }) +
+          T(1165, 704, T2('(GR-dimeer)', '(GR dimer)'), { size: 17, col: C.muted, op: k, anchor: 'start' }) +
+          T(1000, DY + 92, T2('vaste plek in het DNA', 'specific spot in the DNA'), { size: 24, col: '#cfe0ff', op: k }) +
+          T(1000, DY + 116, '(GRE)', { size: 17, col: C.muted, op: k });
         k = on(6.2, 6.5, 7.02, 7.2);
-        if (k > .01) L += T(1122, 618, T2('co-activatoren', 'co-activators'), { size: 22, col: COAC, op: k, anchor: 'start' }) +
+        if (k > .01) L += T(1122, 618, T2('(co-activatoren)', '(co-activators)'), { size: 18, col: C.muted, op: k, anchor: 'start' }) +
           T(1330, DY + 58, T2('doelgen', 'target gene'), { size: 22, col: C.text, op: k * K(g, 6.4, 6.6) }) +
           T(1420, 690, 'mRNA', { size: 22, col: C.rna, op: k * K(g, 6.7, 6.95) });
         k = K(g, 7.1, 7.4);
         if (k > .01) {
-          const pts = [[7.1, 560, 290, T2('1 door het membraan', '1 through the membrane')], [7.25, 700, 470, T2('2 bindt GR, chaperones los', '2 binds GR, chaperones off'), 'end'],
-            [7.4, PORE - 70, NY + 62, T2('3 kernimport', '3 nuclear import'), 'end'], [7.55, 1250, 872, T2('4 GRE → mRNA', '4 GRE → mRNA')]];
+          const pts = [[7.1, 560, 290, T2('1 door het membraan', '1 through the membrane')], [7.25, 700, 470, T2('2 bindt de receptor, helpers los', '2 binds the receptor, helpers off'), 'end'],
+            [7.4, PORE - 70, NY + 62, T2('3 kernimport', '3 nuclear import'), 'end'], [7.55, 1250, 872, T2('4 gen gaat aan → mRNA', '4 gene switches on → mRNA')]];
           for (const [g0, x, y, s0, an] of pts) L += T(x, y, s0, { size: 26, col: '#ffd98a', op: K(g, g0, g0 + .2), anchor: an ?? 'start' });
         }
         $('st-lab').innerHTML = L;
