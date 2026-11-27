@@ -18,8 +18,8 @@ const base = [
 const L3 = (nl, en) => ({ nl, en });
 const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 const DNA = [{ sel: { chain: 'P' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .2 } } }, { sel: { chain: 'Q' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .2 } } }];
-const M35 = [{ sel: { chain: 'P', resi: range(26, 31) }, style: { stick: { color: '#ffc247', radius: .35 } }, label: L3('−35 (TTGACA)', '−35 (TTGACA)') }, { sel: { chain: 'Q', resi: range(65, 70) }, style: { stick: { color: '#ffc247', radius: .35 } } }];
-const M10 = { sel: { chain: 'P', resi: range(49, 54) }, style: { stick: { color: '#ff8a3d', radius: .35 } }, label: L3('−10', '−10') };
+const M35 = [{ sel: { chain: 'P', resi: range(26, 31) }, style: { stick: { color: '#ffc247', radius: .35 } }, label: L3('−35 (TTGACA)', '−35 (TTGACA)'), labelColor: '#ffc247', labelOff: [150, -60] }, { sel: { chain: 'Q', resi: range(65, 70) }, style: { stick: { color: '#ffc247', radius: .35 } } }];
+const M10 = { sel: { chain: 'P', resi: range(49, 54) }, style: { stick: { color: '#ff8a3d', radius: .35 } }, label: L3('−10', '−10'), labelColor: '#ff8a3d', labelOff: [-150, -60] };
 
 export default structure3d({
   id: 'bpol', pdb: '6OUL',
@@ -36,27 +36,32 @@ export default structure3d({
   base,
   hide: { resn: ['HOH', 'WAT', '1N7'] },
   steps: [
-    { dur: 8000, title: L3('Eén enzym maakt alle RNA', 'One enzyme makes all RNA'), focus: null, zoom: {}, tags: [TAG({ chain: ['G', 'H', 'I', 'J', 'K'] }, 'RNA-polymerase', 'RNA polymerase'), TAG({ chain: 'L' }, 'σ: de gids', 'σ: the guide'), TAG({ chain: 'P' }, 'DNA', 'DNA')], spin: .012,
+    { dur: 8000, title: L3('Eén enzym maakt alle RNA', 'One enzyme makes all RNA'), focus: null, zoom: {}, tags: [TAG({ chain: ['G', 'H', 'I', 'J', 'K'] }, 'RNA-polymerase', 'RNA polymerase', COL.J, [-160, 80]), TAG({ chain: 'L' }, 'σ: de gids', 'σ: the guide', COL.L, [160, 80]), TAG({ chain: 'P' }, 'DNA', 'DNA', C.dna, [150, -80])], spin: .012,
       text: L3('Bacteriën hebben maar één soort RNA-polymerase. Hier zit het op een promoter, met het DNA al open.', 'Bacteria have only one kind of RNA polymerase. Here it sits on a promoter, with the DNA already open.') },
     { dur: 8000, title: L3('De kern: vijf eiwitten', 'The core: five proteins'), zoom: {}, spin: .012,
-      focus: [{ sel: { chain: 'J' }, style: { cartoon: { color: COL.J } }, label: 'β′' }, { sel: { chain: 'I' }, style: { cartoon: { color: COL.I } }, label: 'β' },
-        { sel: { chain: 'G' }, style: { cartoon: { color: COL.G } }, label: 'α' }, { sel: { chain: 'H' }, style: { cartoon: { color: COL.H } } }, { sel: { chain: 'K' }, style: { cartoon: { color: COL.K } }, label: 'ω' }],
+      focus: [{ sel: { chain: 'J' }, style: { cartoon: { color: COL.J } }, label: L3('β′ (groot)', 'β′ (large)'), labelColor: COL.J, labelOff: [-150, 70] }, { sel: { chain: 'I' }, style: { cartoon: { color: COL.I } }, label: L3('β (groot)', 'β (large)'), labelColor: COL.I, labelOff: [150, 70] },
+        { sel: { chain: ['G', 'H'] }, style: { cartoon: { color: COL.G } }, label: L3('α (2×)', 'α (2×)'), labelColor: COL.G, labelOff: [-150, -70] }, { sel: { chain: 'H' }, style: { cartoon: { color: COL.H } } }, { sel: { chain: 'K' }, style: { cartoon: { color: COL.K } }, label: 'ω', labelColor: COL.K, labelOff: [150, -70] }],
       text: L3('Twee α’s, β, β′ en ω vormen de kern. β en β′ zijn de grootste en vormen kaken rond het DNA.', 'Two α subunits, β, β′ and ω form the core. β and β′ are the largest and form jaws around the DNA.') },
     { dur: 8000, title: L3('De σ-factor is de gids', 'The σ factor is the guide'), zoom: {}, spin: .012,
       focus: [{ sel: { chain: 'L' }, style: { cartoon: { color: COL.L } }, label: 'σ70' }, ...DNA],
       text: L3('σ70 ligt over de buitenkant. Zonder σ vindt de kern de promoter niet.', 'σ70 lies across the outside. Without σ the core cannot find the promoter.') },
     { dur: 9000, title: L3('σ leest de −35', 'σ reads the −35'), zoom: { chain: 'P', resi: range(22, 35) }, spin: .006,
-      focus: [{ sel: { chain: 'L', resi: range(540, 613) }, style: { cartoon: { color: COL.L } }, label: L3('σ-domein 4', 'σ domain 4') }, ...DNA, ...M35],
+      focus: [{ sel: { chain: 'L', resi: range(540, 613) }, style: { cartoon: { color: COL.L } }, label: L3('σ-domein 4', 'σ domain 4'), labelColor: COL.L, labelOff: [-150, 60] }, ...DNA, ...M35],
       text: L3('Het uiteinde van σ70 (domein 4) past in de groef van het DNA en leest de −35.', 'The end of σ70 (domain 4) fits into the groove of the DNA and reads the −35.') },
     { dur: 9000, title: L3('σ grijpt de −10 en opent het DNA', 'σ grips the −10 and opens the DNA'), zoom: { chain: 'P', resi: range(46, 57) }, spin: .006,
-      focus: [{ sel: { chain: 'L', resi: range(375, 449) }, style: { cartoon: { color: COL.L } }, label: L3('σ-domein 2', 'σ domain 2') }, ...DNA, M10],
+      // de open bubbel: niet-matrijsstreng P 50–57 (los, fel) en de matrijsstreng ertegenover (Q 31–36 en 47–50; Q 37–46 niet gemodelleerd)
+      focus: [{ sel: { chain: 'L', resi: range(375, 449) }, style: { cartoon: { color: COL.L, opacity: .7 } }, label: L3('σ-domein 2', 'σ domain 2'), labelColor: COL.L, labelOff: [-160, 70] }, ...DNA, M10,
+        { sel: { chain: 'P', resi: range(55, 57) }, style: { stick: { color: '#ffe066', radius: .45 }, sphere: { color: '#ffe066', radius: .8 } } },
+        { sel: { chain: 'P', resi: range(50, 54) }, style: { stick: { color: '#ff8a3d', radius: .45 }, sphere: { color: '#ff8a3d', radius: .8 } } },
+        { sel: { chain: 'Q', resi: [...range(31, 36), ...range(47, 50)] }, style: { stick: { color: '#5fd3e6', radius: .45 }, sphere: { color: '#5fd3e6', radius: .8 } }, label: L3('andere streng', 'other strand'), labelColor: '#5fd3e6', labelOff: [160, -60] }],
+      tags: [TAG({ chain: 'P', resi: range(53, 57) }, 'open bubbel: strengen uit elkaar', 'open bubble: strands apart', '#ffe066', [0, 120])],
       text: L3('Domein 2 bindt de −10. Daar gaan de twee strengen uit elkaar: een open bubbel.', 'Domain 2 binds the −10. There the two strands come apart: an open bubble.') },
     { dur: 8000, title: L3('Klaar om RNA te maken', 'Ready to make RNA'), zoom: {}, spin: .01,
-      focus: [{ sel: { chain: 'Q' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .25 } }, label: L3('matrijsstreng', 'template strand') }, { sel: { chain: 'P' }, style: { cartoon: { color: C.dna } } },
+      focus: [{ sel: { chain: 'Q' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .25 } }, label: L3('matrijsstreng', 'template strand'), labelColor: C.dna2, labelOff: [-150, 70] }, { sel: { chain: 'P' }, style: { cartoon: { color: C.dna } } },
         { sel: { chain: 'J' }, style: { cartoon: { color: COL.J, opacity: .55 } } }, { sel: { chain: 'I' }, style: { cartoon: { color: COL.I, opacity: .55 } } }],
       text: L3('De matrijsstreng ligt nu in de kloof. Zodra het enzym de promoter verlaat, laat σ meestal los.', 'The template strand now lies in the cleft. Once the enzyme leaves the promoter, σ usually lets go.') },
     { dur: 8000, title: L3('Vergelijk: ons RNA-polymerase II', 'Compare: our RNA polymerase II'), zoom: {}, spin: .012,
-      focus: [{ sel: { chain: 'J' }, style: { cartoon: { color: COL.J } }, label: L3('β′ ≈ Rpb1', 'β′ ≈ Rpb1'), node: 'rnapol' }, { sel: { chain: 'I' }, style: { cartoon: { color: COL.I } }, label: L3('β ≈ Rpb2', 'β ≈ Rpb2'), node: 'rnapol' }],
+      focus: [{ sel: { chain: 'J' }, style: { cartoon: { color: COL.J } }, label: L3('β′ ≈ Rpb1', 'β′ ≈ Rpb1'), labelColor: COL.J, labelOff: [-150, 60], node: 'rnapol' }, { sel: { chain: 'I' }, style: { cartoon: { color: COL.I } }, label: L3('β ≈ Rpb2', 'β ≈ Rpb2'), labelColor: COL.I, labelOff: [150, -60], node: 'rnapol' }],
       text: L3('Ons Pol II telt 12 eiwitten, maar de kern lijkt sterk: β′ en β zijn familie van Rpb1 en Rpb2.', 'Our Pol II has 12 proteins, but the core is very similar: β′ and β are relatives of Rpb1 and Rpb2.') },
   ],
   hotspots: [
