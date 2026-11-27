@@ -168,7 +168,7 @@ export default {
       steps: {
         0: { tag: ['synthetase', 'synthetase'], title: { nl: 'Een eigen enzym per aminozuur', en: 'One enzyme per amino acid' }, text: { nl: 'Elk aminozuur heeft een eigen synthetase die het aan de juiste tRNA’s koppelt. Hier wordt de code echt vertaald.', en: 'Each amino acid has its own synthetase that attaches it to the right tRNAs. This is where the code is really translated.' } },
         3: { tag: ['tRNA laden', 'tRNA charging'], title: { nl: 'Het tRNA wordt geladen', en: 'The tRNA is charged' }, text: { nl: 'Het enzym koppelt het aminozuur aan de laatste A van het CCA-uiteinde. Het tRNA is nu geladen.', en: 'The enzyme attaches the amino acid to the last A of the CCA end. The tRNA is now charged.' } },
-        7: { tag: ['naar ribosoom', 'to ribosome'], title: { nl: 'Naar het ribosoom', en: 'To the ribosome' }, text: { nl: 'Een hulpeiwit brengt het geladen tRNA naar het ribosoom. Dat controleert alleen codon en anticodon, niet het aminozuur.', en: 'A helper protein brings the charged tRNA to the ribosome. It only checks codon and anticodon, not the amino acid.' } },
+        7: { tag: ['naar ribosoom', 'to ribosome'], title: { nl: 'Naar het ribosoom', en: 'To the ribosome' }, text: { nl: 'Het geladen tRNA komt los van het enzym en een hulpeiwit brengt het naar het ribosoom. Dat controleert alleen codon en anticodon, niet het aminozuur.', en: 'The charged tRNA comes off the enzyme and a helper protein takes it to the ribosome. That only checks codon and anticodon, not the amino acid.' } },
       },
     },
   },
@@ -217,7 +217,7 @@ export default {
       ],
       steps: {
         0: { tag: ['nucleolus', 'nucleolus'], title: { nl: 'De bouw start in de nucleolus', en: 'Building starts in the nucleolus' }, text: { nl: 'De nucleolus is een plek in de kern zonder membraan, rond de genen voor rRNA.', en: 'The nucleolus is a spot in the nucleus without a membrane, around the genes for rRNA.' } },
-        5: { tag: ['eiwitten erbij', 'proteins join'], title: { nl: 'Ribosomale eiwitten komen erbij', en: 'Ribosomal proteins join' }, text: { nl: 'Ribosomale eiwitten worden buiten de kern gemaakt en binnengebracht. Een klein rRNA gaat naar de grote subeenheid.', en: 'Ribosomal proteins are made outside the nucleus and brought in. A small rRNA goes to the large subunit.' } },
+        5: { tag: ['eiwitten erbij', 'proteins join'], title: { nl: 'Ribosomale eiwitten komen erbij', en: 'Ribosomal proteins join' }, text: { nl: 'Het lange rRNA wordt in stukken geknipt. Samen met ribosomale eiwitten, gemaakt buiten de kern, vormen ze een kleine en een grote subeenheid (pre-40S en pre-60S). Een klein rRNA gaat naar de grote.', en: 'The long rRNA is cut into pieces. Together with ribosomal proteins, made outside the nucleus, they form a small and a large subunit (pre-40S and pre-60S). A small rRNA joins the large one.' } },
         6: { tag: ['kernporie', 'nuclear pore'], title: { nl: 'Apart door de kernporiën', en: 'Separately through the nuclear pores' }, text: { nl: 'De twee subeenheden verlaten apart de kern via kernporiën, met hulp van transporteiwitten.', en: 'The two subunits leave the nucleus separately through nuclear pores, helped by transport proteins.' } },
       },
     },
@@ -241,7 +241,7 @@ export default {
       ],
       steps: {
         0: { tag: ['UGA niet stop', 'UGA not stop'], title: { nl: 'UGA: stop… of selenocysteïne', en: 'UGA: stop… or selenocysteine' }, text: { nl: 'In 25 van onze genen betekent UGA niet stop maar selenocysteïne: cysteïne met selenium in plaats van zwavel.', en: 'In 25 of our genes UGA does not mean stop but selenocysteine: cysteine with selenium instead of sulfur.' } },
-        3: { tag: ['UGA aflezen', 'reading UGA'], title: { nl: 'Het ribosoom komt bij UGA', en: 'The ribosome reaches UGA' }, text: { nl: 'Een speciaal hulpeiwit levert het selenocysteïne-tRNA af in plaats van het gewone. Zijn anticodon past op UGA.', en: 'A special helper protein delivers the selenocysteine tRNA instead of the usual one. Its anticodon fits UGA.' } },
+        3: { tag: ['UGA aflezen', 'reading UGA'], title: { nl: 'Het ribosoom komt bij UGA', en: 'The ribosome reaches UGA' }, text: { nl: 'Een lus in het mRNA (de SECIS-lus) roept een speciaal hulpeiwit op. Dat levert het selenocysteïne-tRNA af in plaats van het gewone. Zijn anticodon past op UGA.', en: 'A loop in the mRNA (the SECIS loop) calls in a special helper protein. That delivers the selenocysteine tRNA instead of the usual one. Its anticodon fits UGA.' } },
         4: { tag: ['inbouwen', 'insertion'], title: { nl: 'Ingebouwd, en verder lezen', en: 'Built in, and reading on' }, text: { nl: 'Selenocysteïne wordt gekoppeld en het ribosoom leest door. Zonder selenium of SECIS-lus stopt het hier meestal.', en: 'Selenocysteine is linked on and the ribosome reads on. Without selenium or the SECIS loop it usually stops here.' } },
       },
     },

@@ -22,6 +22,7 @@ import { LINKS } from '../shared/links.js';
 import { level, rank, levelSelect } from '../shared/level.js';
 import { SIMPLE } from '../shared/simple/index.js';
 import { LABELS, LEGEND } from '../shared/simple/labels.js';
+import { SEC_LABELS } from '../shared/simple/labels-sec.js';
 import { PRO_LABELS, PRO_STEPS, PRO_DETAILS, PRO_GLOSS, PRO_BRIDGE, PRO_META } from '../shared/pro/index.js';   // hoger onderwijs: vaktaal-laag
 import { STEP_LEVEL } from '../shared/levels.js';
 
@@ -237,7 +238,8 @@ const bridgeOf = b => (rank >= 3 && b && PRO_BRIDGE[b.nl]) || b;
  * update(): een MutationObserver vervangt elke nieuwe of gewijzigde tekst meteen. Daarna: een langer woord in een pil wordt kleiner gezet
  * tot het past, en een pil waarvan alle tekst verborgen is verdwijnt mee (geen lege vakjes). */
 /* hoger onderwijs: dezelfde vervanging, maar naar vaktaal (shared/pro/) */
-const LMAP = level === 'hobby' ? LABELS[lang] ?? null : rank >= 3 && Object.keys(PRO_LABELS[lang] ?? {}).length ? PRO_LABELS[lang] : null;
+/* secundair: enkel ruis weg of korter, per animatie (shared/simple/labels-sec.js) */
+const LMAP = level === 'hobby' ? LABELS[lang] ?? null : level === 'secundair' ? SEC_LABELS[lang] ?? null : rank >= 3 && Object.keys(PRO_LABELS[lang] ?? {}).length ? PRO_LABELS[lang] : null;
 const pickLabel = (k, map, id) => { const sk = id + '|' + k; return sk in map ? map[sk] : k in map ? map[k] : undefined; };
 const easyLabel = s => { if (!LMAP || !s) return s; const v = pickLabel(s.replace(/\s+/g, ' ').trim(), LMAP, current?.id ?? ''); return v === undefined ? s : v; };
 /* voor 3D-labels die in het beeld zelf getekend worden (geen tekst in de pagina): de scène vraagt de eenvoudige tekst op */
