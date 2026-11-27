@@ -845,8 +845,8 @@ export default {
         'Het deksel stabiliseert de ATPase-ring; één subeenheid (Rpn11) verwijdert de ubiquitineketen voordat het substraat binnengaat.',
         'The lid stabilises the ATPase ring; one subunit (Rpn11) removes the ubiquitin chain before the substrate enters.', ['Rpn11', 'Rpn11']),
       S('Peptiden als product', 'Peptides as product',
-        'Het proteasoom levert peptiden van 3 tot ~20 residuen, die verder afgebroken en hergebruikt worden.',
-        'The proteasome releases peptides of 3 to ~20 residues, which are further degraded and recycled.', ['peptiden', 'peptides']),
+        'Het proteasoom levert peptiden van 3 tot 22 residuen, die verder afgebroken en hergebruikt worden.',
+        'The proteasome releases peptides of 3 to 22 residues, which are further degraded and recycled.', ['peptiden', 'peptides']),
     ],
     autofagie: [
       S('Macroautofagie', 'Macroautophagy',

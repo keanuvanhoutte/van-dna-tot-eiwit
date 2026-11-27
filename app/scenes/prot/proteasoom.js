@@ -63,7 +63,7 @@ export default structure3d({
         { sel: { chain: UBQ }, style: S(COL.ub, 3.2) }, { sel: { chain: 'u' }, style: S(COL.ub, 3.2), label: L3('label', 'tag') }],
       text: L3('Het deksel houdt de motor op zijn plek. Eén deel knipt het afbraaklabel los voordat het eiwit naar binnen gaat.', 'The lid holds the motor in place. One part cuts the breakdown tag loose before the protein goes in.') },
     { dur: 9000, title: L3('Er komen korte stukjes uit', 'Short pieces come out'), focus: null, zoom: {}, spin: .012,
-      text: L3('Uit de buis komen stukjes van 3 tot ongeveer 20 bouwstenen. Die worden verder afgebroken en hergebruikt.', 'Pieces of 3 to about 20 building blocks come out of the tube. They are broken down further and reused.') },
+      text: L3('Uit de buis komen stukjes van 3 tot 22 bouwstenen. Die worden verder afgebroken en hergebruikt.', 'Pieces of 3 to 22 building blocks come out of the tube. They are broken down further and reused.') },
   ],
   hotspots: [
     { node: 'ubiquitine', label: L3('↑ Het afbraaklabel (ubiquitine)', '↑ The breakdown tag (ubiquitin)'), color: '#ffd166' },

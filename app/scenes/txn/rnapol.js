@@ -43,7 +43,7 @@ export default structure3d({
       text: L3('Rpb1 is het grootste onderdeel. Het bevat de plek waar het RNA gebouwd wordt (het actieve centrum).', 'Rpb1 is the largest part. It holds the spot where the RNA is built (the active site).') },
     { dur: 8000, title: L3('Twee kaken rond het DNA', 'Two jaws around the DNA'), zoom: {}, spin: .012,
       focus: [{ sel: { chain: 'A' }, style: { cartoon: { color: COL.A } }, label: L3('Rpb1', 'Rpb1') }, { sel: { chain: 'B' }, style: { cartoon: { color: COL.B } }, label: L3('Rpb2', 'Rpb2') }],
-      text: L3('Rpb1 en Rpb2 vormen samen twee kaken rond een diepe kloof. Een beweeglijke klem sluit zich over het DNA.', 'Rpb1 and Rpb2 together form two jaws around a deep cleft. A movable clamp closes over the DNA.') },
+      text: L3('Rpb1 en Rpb2 vormen samen een diepe kloof. Kaken van Rpb1, Rpb5 en Rpb9 grijpen het DNA verderop, en een beweeglijke klem sluit zich erover.', 'Rpb1 and Rpb2 together form a deep cleft. Jaws of Rpb1, Rpb5 and Rpb9 grip the DNA further downstream, and a movable clamp closes over it.') },
     { dur: 8000, title: L3('Het DNA in de kloof', 'The DNA in the cleft'), zoom: { chain: ['T', 'N', 'P'] }, spin: .01,
       focus: [{ sel: { chain: 'T' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .2 } }, label: L3('matrijsstreng', 'template strand'), labelColor: C.dna2, labelOff: [-90, 22] },
         { sel: { chain: 'N' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .2 } }, label: L3('niet-matrijsstreng', 'non-template strand'), labelColor: C.dna, labelOff: [90, -22] }],

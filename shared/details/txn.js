@@ -25,6 +25,7 @@ const S = {
   jonkers14: { t: 'Jonkers, Kwak & Lis (2014) Genome-wide dynamics of Pol II elongation. eLife 3:e02407 (PMC4001325)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4001325/' },
   rasmussen: { t: 'Rasmussen & Lis (1993) In vivo transcriptional pausing and cap formation on three Drosophila heat shock genes. PNAS 90:7923 (PMC47259)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC47259/' },
   liuwang: { t: 'Liu & Wang (1987) Supercoiling of the DNA template during transcription. PNAS 84:7024 (PMC299221)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC299221/' },
+  cramer00: { t: 'Cramer et al. (2000) Architecture of RNA polymerase II and implications for the transcription mechanism. Science 288:640 — kaken = Rpb1, Rpb5, Rpb9; klem = Rpb1, Rpb2, Rpb6 / jaws = Rpb1, Rpb5, Rpb9; clamp = Rpb1, Rpb2, Rpb6 (abstract via Europe PMC)', url: 'https://europepmc.org/article/MED/10784442' },
   gnatt: { t: 'Gnatt et al. (2001) Structural basis of transcription: an RNA polymerase II elongation complex at 3.3 Å resolution. Science 292:1876 (PubMed 11313499)', url: 'https://pubmed.ncbi.nlm.nih.gov/11313499/' },
   bernecky: { t: 'Bernecky et al. (2016) Structure of transcribing mammalian RNA polymerase II. Nature 529:551 (PubMed 26789250)', url: 'https://pubmed.ncbi.nlm.nih.gov/26789250/' },
   bushnell03: { t: 'Bushnell & Kornberg (2003) Complete, 12-subunit RNA polymerase II at 4.1 Å resolution. PNAS 100:6969 (PubMed 12746498)', url: 'https://pubmed.ncbi.nlm.nih.gov/12746498/' },
@@ -182,7 +183,7 @@ export default {
       facts: [['Subunits', '12 (Rpb1–Rpb12)'], ['Mass', '≈ 0.5 MDa'], ['CTD (human)', '52 heptads YSPTSPS'], ['Active site', 'Mg²⁺ on the Asp loop NADFDGD (Rpb1)'], ['α-Amanitin', 'binds beneath the bridge helix and so hinders translocation along the DNA'], ['Structures', '5FLM (mammal, 3.4 Å), 1I6H (yeast, 10 subunits)']],
       why: 'Pol II is the structural core of gene expression: almost every regulatory step (Mediator, pausing, the CTD code) acts on this one enzyme. It is also a target of toxins (α-amanitin) and of viruses that get their genes transcribed by the cell.',
     },
-    sources: [S.pdb5flm, S.bernecky, S.pdb1i6h, S.gnatt, S.bushnell03, S.hsin, S.bushnell, S.allen, S.motm],
+    sources: [S.pdb5flm, S.bernecky, S.pdb1i6h, S.cramer00, S.gnatt, S.bushnell03, S.hsin, S.bushnell, S.allen, S.motm],
   },
 
   operon: {

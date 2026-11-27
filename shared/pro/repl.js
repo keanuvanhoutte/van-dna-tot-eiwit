@@ -244,8 +244,8 @@ export default {
     ],
     origins: [
       S('Replicatie start op origins', 'Replication starts at origins',
-        'Op duizenden origins in het genoom ligt zo’n complex geladen. Hier: de menselijke MCM-dubbelhexameer op DNA (PDB 7W1Y).',
-        'Thousands of origins in the genome carry such a loaded complex. Shown: the human MCM double hexamer on DNA (PDB 7W1Y).'),
+        'Op tienduizenden origins in het genoom ligt zo’n complex geladen. Hier: de menselijke MCM-dubbelhexameer op DNA (PDB 7W1Y).',
+        'Tens of thousands of origins in the genome carry such a loaded complex. Shown: the human MCM double hexamer on DNA (PDB 7W1Y).'),
       S('MCM2-7: een heterohexameer', 'MCM2-7: a heterohexamer',
         'Elke kleur is een andere subeenheid (MCM2 tot MCM7). Samen vormen ze een ring rond het DNA.',
         'Each colour is a different subunit (MCM2 to MCM7). Together they form a ring around the DNA.'),

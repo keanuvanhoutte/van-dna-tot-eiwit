@@ -35,7 +35,7 @@ export default structure3d({
   rotate: [['x', 90]],                       // de lange as van de dubbelhexameer (z) verticaal: ringen boven elkaar, DNA verticaal
   steps: [
     { dur: 8000, title: L3('Kopiëren begint op vaste startplaatsen', 'Copying begins at fixed starting points'), focus: null, zoom: {}, spin: .01,
-      text: L3('Op duizenden plaatsen in ons DNA ligt zo’n machine klaar. Hier zie je er één, rond een echt stuk DNA.', 'At thousands of places in our DNA such a machine lies ready. Here you see one, around a real piece of DNA.') },
+      text: L3('Op tienduizenden plaatsen in ons DNA ligt zo’n machine klaar. Hier zie je er één, rond een echt stuk DNA.', 'At tens of thousands of places in our DNA such a machine lies ready. Here you see one, around a real piece of DNA.') },
     { dur: 8000, title: L3('Zes verschillende eiwitten vormen één ring', 'Six different proteins form one ring'), zoom: { chain: R1 }, spin: .01,
       focus: [FADE([...R2]), ...dnaS(1.6), ...bySub(R1, 2.6), { sel: { chain: '4' }, style: T(SUB[2], 2.6), label: L3('ring van 6', 'ring of 6') }],
       text: L3('Elke kleur is een ander eiwit. Samen vormen ze een ring rond het DNA.', 'Each colour is a different protein. Together they form a ring around the DNA.') },

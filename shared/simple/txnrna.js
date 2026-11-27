@@ -111,7 +111,7 @@ export default {
       kort: { nl: 'In de celkern zit een grote kopieermachine die genen voor eiwitten naar RNA overschrijft. Ze heeft een diepe kloof waarin het DNA gelezen en het RNA gebouwd wordt. Een lange staart roept onderweg helpers op die het RNA verder afwerken.', en: 'In the nucleus sits a big copying machine that copies genes for proteins into RNA. It has a deep groove where the DNA is read and the RNA is built. A long tail calls in helpers along the way that finish the RNA.' },
       steps: {
         0: { tag: ['twaalf delen', 'twelve parts'], title: { nl: 'Een machine uit twaalf eiwitten', en: 'A machine of twelve proteins' }, text: { nl: 'De kopieermachine die RNA maakt bestaat uit twaalf eiwitten, met in het midden een kloof waar DNA en RNA zitten.', en: 'The copying machine that makes RNA is built from twelve proteins, with a groove in the middle that holds DNA and RNA.' } },
-        2: { tag: ['kaken', 'jaws'], title: { nl: 'Twee kaken rond het DNA', en: 'Two jaws around the DNA' }, text: { nl: 'De twee grootste eiwitten vormen samen twee kaken, en een beweeglijke klem sluit zich over het DNA.', en: 'The two biggest proteins together form two jaws, and a movable clamp closes over the DNA.' } },
+        2: { tag: ['kaken', 'jaws'], title: { nl: 'Twee kaken rond het DNA', en: 'Two jaws around the DNA' }, text: { nl: 'Een paar eiwitten vormen samen kaken die het DNA vastgrijpen, en een beweeglijke klem sluit zich erover.', en: 'A few proteins together form jaws that grip the DNA, and a movable clamp closes over it.' } },
         3: { tag: ['DNA binnen', 'DNA enters'], title: { nl: 'Het DNA in de kloof', en: 'The DNA in the groove' }, text: { nl: 'Het DNA komt dubbel binnen en gaat open, en alleen de streng die gelezen wordt loopt verder naar binnen.', en: 'The DNA comes in double and opens up, and only the strand being read goes further inside.' } },
       },
     },
@@ -124,7 +124,7 @@ export default {
       ],
       steps: {
         0: { tag: ['subeenheden', 'subunits'], title: { nl: 'Een enzym van 12 subeenheden', en: 'An enzyme of 12 subunits' }, text: { nl: 'RNA-polymerase II bestaat uit 12 eiwitten, de subeenheden. In de middelste kloof zitten DNA en RNA.', en: 'RNA polymerase II is made of 12 proteins, the subunits. DNA and RNA sit in the central cleft.' } },
-        2: { tag: ['klem', 'clamp'], title: { nl: 'Twee kaken rond het DNA', en: 'Two jaws around the DNA' }, text: { nl: 'De twee grootste subeenheden vormen kaken rond een diepe kloof. Een beweeglijke klem sluit zich over het DNA.', en: 'The two largest subunits form jaws around a deep cleft. A movable clamp closes over the DNA.' } },
+        2: { tag: ['klem', 'clamp'], title: { nl: 'Twee kaken rond het DNA', en: 'Two jaws around the DNA' }, text: { nl: 'De twee grootste subeenheden vormen een diepe kloof. Kaken grijpen het DNA en een beweeglijke klem sluit zich erover.', en: 'The two largest subunits form a deep cleft. Jaws grip the DNA and a movable clamp closes over it.' } },
         3: { tag: ['matrijsstreng', 'template strand'], title: { nl: 'De matrijsstreng gaat naar binnen', en: 'The template strand goes inside' }, text: { nl: 'Het dubbele DNA komt binnen en gaat open. Alleen de matrijsstreng, die wordt afgelezen, loopt door naar binnen.', en: 'The double DNA comes in and opens. Only the template strand, the one being read, goes on inside.' } },
       },
     },

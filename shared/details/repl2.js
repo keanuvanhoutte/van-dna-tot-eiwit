@@ -3,6 +3,7 @@
 const ALB_INIT = { t: 'Alberts et al., MBoC 4e ed. — The Initiation and Completion of DNA Replication in Chromosomes (NCBI Bookshelf)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK26826/' };
 const ALB_REPAIR = { t: 'Alberts et al., MBoC 4e ed. — DNA Repair (NCBI Bookshelf)', url: 'https://www.ncbi.nlm.nih.gov/books/NBK26879/' };
 const BURGERS = { t: 'Burgers & Kunkel (2017) Eukaryotic DNA replication fork. Annu Rev Biochem 86:417 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5597965/' };
+const KIRSTEIN = { t: 'Kirstein et al. (2021) eLife 10:e62161 (PMC, open toegang) — bij de mens 20 000–50 000 actieve origins per celcyclus, gekozen uit een 5–10× overmaat aan gelicenseerde origins / in humans 20,000–50,000 active origins per cell cycle, chosen from a 5–10-fold excess of licensed origins', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7993996/' };
 const BLOW = { t: 'Blow & Hodgson (2002) Replication licensing — defining the proliferative state? Trends Cell Biol 12:72 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3604914/' };
 const LI = { t: 'Li et al. (2023) The human pre-replication complex is an open complex. Cell 186:98 (PubMed 36608662)', url: 'https://pubmed.ncbi.nlm.nih.gov/36608662/' };
 const KUNKEL = { t: 'Kunkel & Erie (2015) Eukaryotic mismatch repair in relation to DNA replication. Annu Rev Genet 49:291 (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5439269/' };
@@ -56,7 +57,7 @@ export default {
       facts: [['Licensing', 'late mitosis + G1'], ['Firing', 'S phase (DDK + CDK)'], ['MCM2-7', 'ring of 6 different proteins; loaded as a double hexamer'], ['Active helicase', "CMG = Cdc45 + MCM2-7 + GINS, moves 3′→5′"], ['Structure', 'PDB 7W1Y: human MCM double hexamer on DNA (cryo-EM 2.59 Å)']],
       why: 'If a piece of DNA were copied twice, the cell would gain extra copies of genes and breaks would arise: genome instability. Separating licensing (G1) from firing (S) is therefore one of the most important safeguards of the cell cycle.',
     },
-    sources: [BLOW, BURGERS, LI, PDB('7W1Y', 'human MCM double hexamer bound to natural DNA duplex'), ALB_INIT,
+    sources: [BLOW, KIRSTEIN, BURGERS, LI, PDB('7W1Y', 'human MCM double hexamer bound to natural DNA duplex'), ALB_INIT,
       { t: 'Méchali (2010) Eukaryotic DNA replication origins: many choices for appropriate answers. Nat Rev Mol Cell Biol 11:728 (PubMed 20861881)', url: 'https://pubmed.ncbi.nlm.nih.gov/20861881/' }],
   },
 
