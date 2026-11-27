@@ -9,9 +9,24 @@ const REG = [[260, 400], [470, 610], [680, 820], [890, 1030]];   // regio 1..4 o
 const RC = ['#ffc247', '#5fd3e6', '#ff8a3d', '#7fdc6a'];
 const TRP = '#d98cf0';
 const trpMol = (x, y, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}"><path d="M${x - 9},${y - 7} l9,-6 l9,6 v10 l-9,6 l-9,-6z" fill="${TRP}" fill-opacity=".6" stroke="${TRP}" stroke-width="2"/></g>`;
-/* boog tussen twee regio's (paring) boven het leider-RNA */
-const pairArc = (i, j, col, op, lab) => { if (op <= .01) return ''; const a = (REG[i][0] + REG[i][1]) / 2, b = (REG[j][0] + REG[j][1]) / 2, h = 70 + (b - a) * .25;
-  return `<g opacity="${f1(op)}"><path d="M${a},${YL - 14} C${a},${YL - 14 - h} ${b},${YL - 14 - h} ${b},${YL - 14}" stroke="${col}" stroke-width="6" fill="none"/>` + txt((a + b) / 2, YL - 26 - h * .75, lab, col, 24, 'middle', 800) + '</g>'; };
+/* plaats van nucleotide-positie s (x langs het rechte leider-RNA) als regio i en j een haarspeld vormen (f = 0 recht … 1 gevouwen).
+ * De stam staat recht omhoog op het begin van regio i; regio j komt er naast terug omlaag; de rest van het RNA rekt mee tot het 3′-uiteinde. */
+const END = 1130, STEM = 1, GAP = 46;
+function fold(sx, i, j, f) {
+  if (f <= .001 || i < 0) return [sx, YL];
+  const [a, b] = REG[i], [c, d] = REG[j], H = (b - a) * STEM, r = GAP / 2;
+  let q;
+  if (sx <= a) q = [sx, YL];
+  else if (sx <= b) q = [a, YL - (sx - a) * STEM];
+  else if (sx < c) { const th = Math.PI * (sx - b) / (c - b); q = [a + r - r * Math.cos(th), YL - H - r * Math.sin(th)]; }
+  else if (sx <= d) q = [a + GAP, YL - H + (sx - c) * STEM];
+  else q = [a + GAP + (sx - d) * (END - a - GAP) / (END - d), YL];
+  return [lerp(sx, q[0], f), lerp(YL, q[1], f)];
+}
+const foldPath = (s0, s1, i, j, f) => { let d = ''; for (let s = s0; s <= s1 + .01; s += 5) { const [x, y] = fold(Math.min(s, s1), i, j, f); d += `${d ? 'L' : 'M'}${f1(x)},${f1(y)}`; } return d; };
+/* haarspeld-sporten tussen de twee strengen */
+const rungs = (i, j, f, col) => { if (f < .75) return ''; const [a, b] = REG[i], H = (b - a) * STEM; let r = '';
+  for (let k = 1; k < 7; k++) { const y = YL - H * k / 7; r += `<line x1="${a + 8}" y1="${f1(y)}" x2="${a + GAP - 8}" y2="${f1(y)}" stroke="${col}" stroke-width="3" opacity="${f1((f - .75) * 4)}"/>`; } return r; };
 
 export default {
   id: 'btrp',
@@ -29,9 +44,9 @@ export default {
       text: { nl: 'Met Trp erop bindt de Trp-repressor de operator. Dan wordt het operon nog maar weinig gekopieerd.', en: 'With Trp bound, the Trp repressor binds the operator. Then the operon is copied only rarely.' } },
     { dur: 9000, cam: cam(780, 540, 1500), title: { nl: 'Knop 2: een kort leiderstuk', en: 'Switch 2: a short leader' },
       text: { nl: 'Vóór de genen ligt een leiderstuk met twee Trp-codons. Een ribosoom vertaalt het meteen, nog tijdens het kopiëren.', en: 'Before the genes lies a leader with two Trp codons. A ribosome translates it straight away, while copying goes on.' } },
-    { dur: 9000, cam: cam(780, 520, 1500), title: { nl: 'Veel Trp: het ribosoom rijdt door', en: 'Plenty of Trp: the ribosome rides on' },
+    { dur: 9000, cam: cam(790, 560, 1400), title: { nl: 'Veel Trp: het ribosoom rijdt door', en: 'Plenty of Trp: the ribosome rides on' },
       text: { nl: 'Het ribosoom bedekt regio 2. Regio 3 en 4 vormen een stop-haarspeld: het kopiëren stopt.', en: 'The ribosome covers region 2. Regions 3 and 4 form a stop hairpin: copying stops.' } },
-    { dur: 9000, cam: cam(780, 520, 1500), title: { nl: 'Weinig Trp: het ribosoom wacht', en: 'Little Trp: the ribosome waits' },
+    { dur: 9000, cam: cam(790, 560, 1400), title: { nl: 'Weinig Trp: het ribosoom wacht', en: 'Little Trp: the ribosome waits' },
       text: { nl: 'Bij weinig Trp blijft het ribosoom op de Trp-codons staan. Regio 2 paart met 3: geen stop, de genen worden gekopieerd.', en: 'With little Trp the ribosome stalls on the Trp codons. Region 2 pairs with 3: no stop, the genes are copied.' } },
     { dur: 8000, cam: cam(800, 420, 1600), title: { nl: 'Kan alleen zonder kern', en: 'Only possible without a nucleus' },
       text: { nl: 'Dit trucje werkt omdat kopiëren en vertalen in bacteriën tegelijk gebeuren.', en: 'This trick works because copying and translating happen at the same time in bacteria.' } },
@@ -51,7 +66,7 @@ export default {
       update(t, s) {
         const { step, p } = s;
         // operonkaart bovenaan
-        const mapOp = step === 2 ? lerp(1, .35, ease(sub(p, .15, .45))) : step === 3 || step === 4 ? .35 : step === 5 ? lerp(.35, 1, ease(sub(p, 0, .3))) : 1;
+        const mapOp = step === 2 ? lerp(1, .35, ease(sub(p, .15, .45))) : step === 3 || step === 4 ? .12 : step === 5 ? lerp(.35, 1, ease(sub(p, 0, .3))) : 1;
         let m = `<g opacity="${f1(mapOp)}"><line x1="120" y1="${YG - 8}" x2="1420" y2="${YG - 8}" stroke="${C.dna}" stroke-width="5"/><line x1="120" y1="${YG + 8}" x2="1420" y2="${YG + 8}" stroke="${C.dna2}" stroke-width="5"/>`;
         m += `<rect x="180" y="${YG - 20}" width="120" height="40" rx="6" fill="${K.sig}" fill-opacity=".18" stroke="${K.sig}" stroke-width="2.5"/>` + txt(240, YG + 60, T2('promoter + operator', 'promoter + operator'), K.sig, 22, 'middle', 700);
         m += `<rect x="320" y="${YG - 20}" width="180" height="40" rx="6" fill="#c9d2e4" fill-opacity=".12" stroke="#c9d2e4" stroke-width="2"/>` + txt(410, YG + 60, T2('leider', 'leader'), '#c9d2e4', 22, 'middle', 700);
@@ -74,25 +89,40 @@ export default {
           const step = step0 === 5 ? 4 : step0, p = step0 === 5 ? 1 : P0;
           const a = (step === 2 ? sub(p, .05, .25) : 1) * leadA;
           l += `<g opacity="${f1(a)}">` + `<path d="M410,${YG + 30} L160,${YL - 40} M500,${YG + 30} L1120,${YL - 40}" stroke="#2a3a5f" stroke-width="2" stroke-dasharray="6 6"/>`;
-          l += `<line x1="150" y1="${YL}" x2="1130" y2="${YL}" stroke="${C.rna}" stroke-width="6" stroke-linecap="round"/>` + txt(130, YL + 8, "5′", C.rna, 22, 'end');
-          REG.forEach(([x0, x1], i) => { l += `<rect x="${x0}" y="${YL - 12}" width="${x1 - x0}" height="24" rx="8" fill="${RC[i]}" fill-opacity=".55" stroke="${RC[i]}" stroke-width="2"/>` + txt((x0 + x1) / 2, YL + 72, `${i + 1}`, RC[i], 30, 'middle', 800); });
+          // welke haarspeld vormt er? stap 3: 3:4 (stopteken); stap 4: eerst 3:4 terug open, dan 2:3
+          const back = step === 4 ? 1 - ease(sub(p, 0, .15)) : 0;
+          const f34 = step === 3 ? ease(sub(p, .4, .62)) : back, f23 = step === 4 ? ease(sub(p, .3, .52)) : 0;
+          const [pi, pj, pf] = f23 > 0 ? [1, 2, f23] : f34 > 0 ? [2, 3, f34] : [-1, -1, 0];
+          l += `<path d="${foldPath(150, END, pi, pj, pf)}" stroke="${C.rna}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>` + txt(130, YL + 8, "5′", C.rna, 26, 'end');
+          REG.forEach(([x0, x1], i) => {
+            l += `<path d="${foldPath(x0, x1, pi, pj, pf)}" stroke="${RC[i]}" stroke-width="20" stroke-linecap="round" fill="none" opacity=".85"/>`;
+            const [mx, my] = fold((x0 + x1) / 2, pi, pj, pf), side = pf > .5 && i === pi ? -1 : pf > .5 && i === pj ? 1 : 0;
+            l += side ? txt(mx + side * 36, my + 12, `${i + 1}`, RC[i], 36, 'middle', 800) : txt(mx, YL + 76, `${i + 1}`, RC[i], 36, 'middle', 800);
+          });
+          l += rungs(pi, pj, pf, pi === 2 ? RC[3] : RC[1]);
           // Trp-codons in regio 1
-          l += mono(330, YL + 116, 'UGG UGG', RC[0], 22) + txt(330, YL + 150, T2('2 Trp-codons', '2 Trp codons'), RC[0], 21, 'middle', 700);
+          l += mono(330, YL + 122, 'UGG UGG', RC[0], 28) + txt(330, YL + 160, T2('2 Trp-codons', '2 Trp codons'), RC[0], 24, 'middle', 700);
           // polymerase aan het 3′-uiteinde
-          const goOn = step === 4 ? ease(sub(p, .55, .95)) : 0, stop = step === 3 ? ease(sub(p, .55, .9)) : 0;
+          const goOn = step === 4 ? ease(sub(p, .55, .95)) : 0, stop = step === 3 ? ease(sub(p, .6, .9)) : back;
           const px = lerp(1150, 1400, goOn);
           l += `<g transform="translate(${f1(stop * 40)} ${f1(stop * -110)})" opacity="${f1(1 - .8 * stop)}">` + prot(px, YL - 4, 54, 36, K.rnap, 1, 31, 'RNAP', 21) + '</g>';
-          if (goOn > .01) l += `<line x1="1130" y1="${YL}" x2="${f1(px - 50)}" y2="${YL}" stroke="${C.rna}" stroke-width="6"/>` + `<g opacity="${f1(sub(p, .75, .95))}">` + txt(1380, YL + 70, T2('→ trpE … trpA', '→ trpE … trpA'), '#b98cff', 22, 'middle', 700) + '</g>';
-          // ribosoom
+          if (goOn > .01) l += `<line x1="1130" y1="${YL}" x2="${f1(px - 50)}" y2="${YL}" stroke="${C.rna}" stroke-width="7"/>` + `<g opacity="${f1(sub(p, .75, .95))}">` + txt(1380, YL + 70, T2('→ trpE … trpA', '→ trpE … trpA'), '#b98cff', 24, 'middle', 700) + '</g>';
+          // ribosoom (in stap 4 vervaagt het ribosoom van stap 3 en begint een nieuw situatie)
           let rx = 200;
-          if (step === 3) rx = lerp(200, (REG[1][0] + REG[1][1]) / 2, ease(sub(p, .05, .45)));
-          if (step === 4) rx = lerp(200, 320, ease(sub(p, .05, .3)));
-          l += ribo(rx, YL - 10, 4, 1);
-          if (step === 4) l += `<g opacity="${f1(sub(p, .3, .45))}">` + txt(rx, YL - 90, T2('wacht op Trp-tRNA', 'waiting for Trp-tRNA'), C.trna, 20, 'middle', 700) + '</g>';
-          // paringen
-          if (step === 3) l += pairArc(2, 3, RC[3], ease(sub(p, .4, .6)), T2('3:4 = STOP', '3:4 = STOP'));
-          if (step === 4) l += pairArc(1, 2, RC[1], ease(sub(p, .3, .5)), T2('2:3 = geen stop', '2:3 = no stop'));
-          if (step === 3) l += `<g opacity="${f1(sub(p, .6, .8))}">` + txt(1300, YL - 150, T2('kopiëren stopt', 'copying stops'), C.danger, 24, 'middle', 800) + '</g>';
+          if (step === 3) rx = lerp(200, (REG[1][0] + REG[1][1]) / 2, ease(sub(p, .05, .4)));
+          if (step === 4) rx = lerp(200, 320, ease(sub(p, .15, .3)));
+          if (step === 4 && p < .15) l += ribo((REG[1][0] + REG[1][1]) / 2, YL - 10, 4, 1 - p / .15);
+          l += ribo(rx, YL - 10, 4, step === 4 ? sub(p, 0, .15) : 1);
+          if (step === 3) l += `<g opacity="${f1(sub(p, .3, .42))}">` + txt(rx, YL - 96, T2('bedekt regio 2', 'covers region 2'), C.trna, 22, 'middle', 700) + '</g>';
+          if (step === 4) l += `<g opacity="${f1(sub(p, .3, .45))}">` + txt(rx, YL - 96, T2('wacht op Trp-tRNA', 'waiting for Trp-tRNA'), C.trna, 22, 'middle', 700) + '</g>';
+          // labels bij de haarspelden
+          const topY = YL - (REG[0][1] - REG[0][0]) * STEM - GAP;
+          if (step === 3) l += `<g opacity="${f1(sub(p, .6, .75))}">` + txt(REG[2][0] + GAP / 2, topY - 26, T2('stopteken (3:4)', 'stop signal (3:4)'), C.danger, 28, 'middle', 800) + '</g>';
+          if (step === 4) {
+            l += `<g opacity="${f1(sub(p, .5, .62))}">` + txt(REG[1][0] + GAP / 2, topY - 26, T2('geen stopteken (2:3)', 'no stop signal (2:3)'), RC[1], 26, 'middle', 800) + '</g>';
+            l += `<g opacity="${f1(sub(p, .55, .7))}"><path d="M880,${YL - 70} H1110" stroke="${C.ok}" stroke-width="7" stroke-linecap="round"/><path d="M1104,${YL - 86} l22,16 l-22,16" fill="none" stroke="${C.ok}" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>` + txt(995, YL - 90, T2('doorgaan', 'continue'), C.ok, 28, 'middle', 800) + '</g>';
+          }
+          if (step === 3) l += `<g opacity="${f1(sub(p, .7, .9))}">` + txt(1260, YL - 150, T2('kopiëren stopt', 'copying stops'), C.danger, 26, 'middle', 800) + '</g>';
           l += '</g>';
         }
         $('bw-lead').innerHTML = l;
