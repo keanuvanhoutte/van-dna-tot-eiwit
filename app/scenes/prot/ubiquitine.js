@@ -31,10 +31,10 @@ export default {
     ST(7500, cam(880, 440, 1760), 'Elk eiwit wordt ooit afgebroken', 'Every protein is eventually broken down',
       'Beschadigde of overbodige eiwitten krijgen een label (het eiwitje ubiquitine) en worden in stukjes geknipt.',
       'Damaged or unneeded proteins get a label, the small protein ubiquitin, and are then cut into pieces.'),
-    ST(8000, cam(340, 320, 920), 'Enzym 1 laadt het label', 'Enzyme 1 loads the label',
+    ST(8000, cam(330, 392, 990), 'Enzym 1 laadt het label', 'Enzyme 1 loads the label',
       'Drie enzymen (E1, E2, E3) hangen het label aan. E1 neemt het op met energie uit ATP.',
       'Three enzymes (E1, E2, E3) attach the label. E1 picks it up using energy from ATP.'),
-    ST(7500, cam(330, 432, 900), 'Doorgeven aan enzym 2', 'Passing it to enzyme 2',
+    ST(7500, cam(340, 400, 990), 'Doorgeven aan enzym 2', 'Passing it to enzyme 2',
       'E1 geeft het label door aan het tweede enzym, E2.',
       'E1 passes the label on to the second enzyme, E2.'),
     ST(8000, cam(540, 480, 900), 'Enzym 3 kiest het doelwit', 'Enzyme 3 picks the target',
@@ -191,6 +191,8 @@ export default {
         }
         if (step === 2 && p < .35) e1 += ub(E1[0] + 70, E1[1] + 10, 26);
         $('ub-e1').innerHTML = step <= 2 ? e1 : '';
+        // stap 2–3 (E1 → E2): het proteasoom zou rechts half in beeld hangen → even weg, keert terug bij E3
+        $('ub-prot').setAttribute('opacity', f1(step === 1 ? 1 - sub(p, 0, .25) : step === 2 ? 0 : step === 3 ? sub(p, 0, .25) : 1));
 
         /* E2 */
         let e2 = '', e2x = E2DOCK[0], e2y = E2DOCK[1], e2ub = false;
