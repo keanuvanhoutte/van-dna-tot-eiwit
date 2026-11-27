@@ -29,7 +29,7 @@ export default {
     ST(7500, cam(420, 425, 1040), 'De nucleolus', 'The nucleolus',
       'Het grootste lichaampje in de kern, zonder membraan. Hij vormt zich rond de genen voor het meeste ribosoom-RNA.',
       'The largest body in the nucleus, without a membrane. It forms around the genes for most ribosomal RNA.'),
-    ST(8000, cam(420, 460, 700), 'Drie zones in elkaar', 'Three zones, one inside the other',
+    ST(8000, cam(420, 450, 780), 'Drie zones in elkaar', 'Three zones, one inside the other',
       'De nucleolus heeft drie zones in elkaar. Het RNA ontstaat binnenin en schuift naar buiten terwijl het rijpt.',
       'The nucleolus has three zones nested inside each other. The RNA is made inside and moves outwards as it matures.'),
     ST(8000, cam(1155, 190, 960), 'Honderden kopieën van één gen', 'Hundreds of copies of one gene',
@@ -101,6 +101,7 @@ export default {
     pre += `<g id="nl-47s">`;
     segs.forEach(([a, b, n, c]) => { pre += `<rect x="${a}" y="${PRE.y - 18}" width="${b - a}" height="36" fill="${c}" stroke="#0a1224" stroke-width="2"/>` + (n === '18S' || n === '28S' ? K : h => h)(txt((a + b) / 2, PRE.y + (n.length > 4 || b - a < 50 ? 46 : 6), n, n.includes('S') && !n.includes('ETS') && !n.includes('ITS') && b - a >= 50 ? '#0a1224' : '#fff', n.length > 4 || b - a < 50 ? 14 : 17, 'middle', 700)); });
     pre += txt(PRE.x0 - 14, PRE.y + 6, "5′", C.text, 16, 'end') + txt(x + 14, PRE.y + 6, "3′", C.text, 16, 'start') + txt(PRE.x0, PRE.y - 56, '47S pre-rRNA (~13 kb)', C.rrna, 17, 'start', 700);
+    pre += txt(PRE.x0 + 300, PRE.y - 56, T2('grijs = opvulstukken (ETS, ITS): worden weggeknipt', 'grey = spacers (ETS, ITS): cut out'), '#9aa8c4', 16, 'start', 600);
     pre += `</g><g id="nl-mods"></g>`;
     pre += `<g id="nl-prod"></g>`;
     return svgOpen() + `
@@ -108,8 +109,8 @@ export default {
       <g id="nl-chr" data-node="chromosoom" data-color="${C.dna}" data-label="${T2('Acrocentrische chromosomen (NOR)', 'Acrocentric chromosomes (NOR)')}">${chr}<circle data-anchor="chromosoom" cx="420" cy="300" r="1" fill="none"/></g>
       ${nuc}${gc}${fc}
       <g id="nl-lab"></g>
-      <rect x="${FCS[1][0] - 60}" y="${FCS[1][1] - 60}" width="120" height="120" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="6 4"/>
-      <path d="M${FCS[1][0] + 60},${FCS[1][1] - 60} L720,90 M${FCS[1][0] + 60},${FCS[1][1] + 60} L720,420" stroke="#fff" stroke-width="1.5" stroke-dasharray="6 5" opacity=".4"/>
+      <g id="nl-zoom"><rect x="${FCS[1][0] - 60}" y="${FCS[1][1] - 60}" width="120" height="120" fill="none" stroke="#fff" stroke-width="2" stroke-dasharray="6 4"/>
+      <path d="M${FCS[1][0] + 60},${FCS[1][1] - 60} L720,90 M${FCS[1][0] + 60},${FCS[1][1] + 60} L720,420" stroke="#fff" stroke-width="1.5" stroke-dasharray="6 5" opacity=".4"/></g>
     </g>
     <g id="nl-envelope">
       <g data-node="kernimport" data-color="${C.prot}" data-nolabel>${kernEnvelop(ptsBoog(40, 838, 370, 777, 700, 822, 40), { closed: false, poriën: [.576], poreW: 58, w: 11, gap: 11, binnen: -1, s: 1.1 })}</g>
@@ -128,18 +129,23 @@ export default {
       update(t, s) {
         const { step, p } = s;
         // labels van de compartimenten
-        const lop = step === 1 ? ease(sub(p, .1, .4)) : step === 0 ? 0 : step === 7 ? 1 : .0;
+        const lop = step === 1 ? ease(sub(p, .1, .4)) : 0;   // in het overzicht staan de zones in de legende
         const [fx, fy] = FCS[0], [gx, gy] = FCS[2];
+        /* zone-label: functie in gewone taal, de afkorting klein eronder */
+        const zone = (x, y, col, main, abbr) => `<rect x="${x - 112}" y="${y - 27}" width="224" height="54" rx="14" fill="${col}" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/>`
+          + K(txt(x, y - 2, main, '#fff', 19, 'middle', 700)) + K(txt(x, y + 18, abbr, '#dfe7fb', 13, 'middle', 600));
         $('nl-lab').innerHTML = lop > .01 ? `<g opacity="${f1(lop)}">` +
-          `<line x1="${fx - 20}" y1="${fy}" x2="190" y2="410" stroke="#fff" stroke-width="2"/>` + K(pill(150, 410, 80, 30, 'FC', '#6f82ad', 1, 16)) +
-          `<line x1="${gx - 48}" y1="${gy - 8}" x2="190" y2="500" stroke="#fff" stroke-width="2"/>` + K(pill(150, 500, 80, 30, 'DFC', '#4a5d8a', 1, 16)) +
-          `<line x1="600" y1="330" x2="660" y2="300" stroke="#fff" stroke-width="2"/>` + K(pill(700, 300, 80, 30, 'GC', '#2f4677', 1, 16)) + '</g>' : '';
+          `<line x1="${fx}" y1="${fy}" x2="200" y2="400" stroke="#fff" stroke-width="2"/><circle cx="${fx}" cy="${fy}" r="4" fill="#fff"/>` + zone(170, 400, '#6f82ad', T2('binnen: RNA maken', 'inside: making RNA'), T2('fibrillair centrum (FC)', 'fibrillar centre (FC)')) +
+          `<line x1="${gx - 47}" y1="${gy - 8}" x2="200" y2="520" stroke="#fff" stroke-width="2"/><circle cx="${gx - 47}" cy="${gy - 8}" r="4" fill="#fff"/>` + zone(170, 520, '#4a5d8a', T2('midden: bijwerken', 'middle: modifying'), T2('dicht fibrillair deel (DFC)', 'dense fibrillar part (DFC)')) +
+          `<line x1="590" y1="330" x2="640" y2="290" stroke="#fff" stroke-width="2"/><circle cx="590" cy="330" r="4" fill="#fff"/>` + zone(670, 262, '#2f4677', T2('buiten: in elkaar zetten', 'outside: assembling'), T2('granulair deel (GC)', 'granular part (GC)')) + '</g>' : '';
         // niet-centrale delen ver genoeg dimmen (< 0,3) zodat wat half buiten de camera valt niet als afgesneden figuur oogt
         $('nl-left').setAttribute('opacity', step >= 2 && step <= 5 ? .2 : 1);
         $('nl-chr').setAttribute('opacity', step === 1 ? .2 : 1);
         $('nl-envelope').setAttribute('opacity', step >= 2 && step <= 5 ? .2 : 1);
-        $('nl-mil').setAttribute('opacity', step === 2 || step === 3 ? 1 : step === 7 ? 1 : .2);
-        $('nl-pre').setAttribute('opacity', step === 4 || step === 5 ? 1 : step === 7 ? 1 : .2);
+        // panelen pas tonen als ze aan de beurt zijn (geen vaag spookpaneel op de achtergrond)
+        $('nl-mil').setAttribute('opacity', step === 2 || step === 3 || step === 7 ? 1 : 0);
+        $('nl-pre').setAttribute('opacity', step === 4 || step === 5 || step === 7 ? 1 : 0);
+        $('nl-zoom').setAttribute('opacity', step >= 2 ? 1 : 0);
 
         // kerstboom: Pol I met groeiende transcripten (lengte ∝ afstand tot de promoter)
         let tr = '';
@@ -160,7 +166,7 @@ export default {
         /* snoRNP = gids-RNA (haarspeld die met het rRNA paart) + eiwitten, onder de balk zodat de paneltitel vrij blijft */
         const snoRNP = (x, y, col, lab, seed) => `<path d="M${x - 26},${y - 8} C${x - 30},${y - 50} ${x - 4},${y - 70} ${x + 6},${y - 46} C${x + 14},${y - 30} ${x + 2},${y - 18} ${x + 22},${y - 8}" stroke="${col}" stroke-width="6" fill="none" stroke-linecap="round"/>` +
           eiwit(x, y + 6, 34, 18, C.prot, { seed, bumps: .1 }) + eiwit(x + 30, y - 10, 13, 11, C.prot2, { seed: seed + 9 }) +
-          txt(x + 54, y + 12, lab, C.text, 15, 'start', 700);
+          txt(x + 54, y + 4, lab[0], C.text, 17, 'start', 700) + txt(x + 54, y + 24, lab[1], '#b9c4dc', 14, 'start', 600);
         const mk = step === 4 ? ease(sub(p, .3, .8)) : step > 4 && step < 7 ? 1 : step === 7 ? 1 : 0;
         if (mk > .01) {
           const rr = rng(12);
@@ -170,7 +176,7 @@ export default {
             const x = x0 + 6 + rr() * (seg[1] - 12), me = rr() < .55;
             mods += `<g opacity="${f1(mk * (i / 26 < mk ? 1 : 0))}"><line x1="${f1(x)}" y1="${PRE.y - 18}" x2="${f1(x)}" y2="${PRE.y - 30}" stroke="${me ? C.trna : '#ff8a8a'}" stroke-width="2"/><circle cx="${f1(x)}" cy="${PRE.y - 33}" r="3.5" fill="${me ? C.trna : '#ff8a8a'}"/></g>`;
           }
-          mods += `<g opacity="${f1(step === 4 ? mk : step === 5 ? 1 - ease(sub(p, 0, .3)) : 0)}">${snoRNP(860, 740, C.trna, T2('box C/D-snoRNP → 2′-O-Me', 'box C/D snoRNP → 2′-O-Me'), 41)}${snoRNP(1190, 740, '#ff8a8a', T2('box H/ACA-snoRNP → Ψ', 'box H/ACA snoRNP → Ψ'), 42)}</g>`;
+          mods += `<g opacity="${f1(step === 4 ? mk : step === 5 ? 1 - ease(sub(p, 0, .3)) : 0)}">${snoRNP(860, 760, C.trna, [T2('gids-RNA', 'guide RNA'), T2('zet een methylgroep (box C/D)', 'adds a methyl group (box C/D)')], 41)}${snoRNP(1190, 760, '#ff8a8a', [T2('gids-RNA', 'guide RNA'), T2('verbouwt een U tot Ψ (box H/ACA)', 'turns a U into Ψ (box H/ACA)')], 42)}</g>`;
         }
         $('nl-mods').innerHTML = mods;
 
@@ -205,7 +211,7 @@ export default {
             const kl = n === 'pre-40S', rx = kl ? 22 : 27;   // kleine en grote subeenheid apart, elk smal genoeg voor de porie
             ex += `<g opacity="${f1(k > 0 && k < 1 ? 1 : step === 7 ? 1 : k >= 1 ? .8 : 0)}">${eiwit(x, y, rx, kl ? 13 : 19, c, { seed: kl ? 40 : 60, bumps: .08 })}${kl ? txt(x - rx - 8, y + 5, n, '#fff', 15, 'end', 700) : txt(x + rx + 8, y + 5, n, '#fff', 15, 'start', 700)}</g>`;
           });
-          ex += `<g opacity="${f1(step === 6 ? sub(p, .1, .3) : 1 - ease(sub(p, 0, .3)))}">${pill(300, 760, 130, 30, 'CRM1 (XPO1)', C.prot2, 1, 14)}</g>`;
+          ex += `<g opacity="${f1(step === 6 ? sub(p, .1, .3) : 1 - ease(sub(p, 0, .3)))}">${pill(290, 760, 200, 32, T2('exporteiwit (CRM1)', 'export protein (CRM1)'), C.prot2, 1, 16)}</g>`;
         }
         $('nl-exp').innerHTML = ex;
         // overzicht (laatste stap): alleen de hoofdlabels blijven staan
