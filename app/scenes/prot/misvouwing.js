@@ -36,10 +36,10 @@ export default {
     ST(9000, cam(2500, 470, 1500), 'Eerst een kiem, dan snelle groei', 'First a seed, then fast growth',
       'Een eerste kiem vormen gaat traag. Daarna groeien vezels snel. Een toegevoegde kiem slaat het wachten over.',
       'Forming a first seed is slow. Then fibres grow fast. An added seed skips the waiting.'),
-    ST(9000, cam(4200, 470, 1500), 'Hoe een vezel is opgebouwd', 'How a fibre is built',
+    ST(9000, cam(4235, 470, 1620), 'Hoe een vezel is opgebouwd', 'How a fibre is built',
       'In zo’n vezel (amyloïd) liggen gestrekte stukken keten dwars op de vezel, netjes gestapeld.',
       'In such a fibre (amyloid), stretched-out pieces of chain lie across the fibre, neatly stacked.'),
-    ST(8500, cam(5925, 470, 1650), 'Ziekten door klonten', 'Diseases caused by clumps',
+    ST(8500, cam(5910, 470, 1780), 'Ziekten door klonten', 'Diseases caused by clumps',
       'Zulke klonten spelen mee bij Alzheimer, Parkinson en type 2-diabetes. Vooral kleine klontjes lijken giftig.',
       'Such clumps play a role in Alzheimer’s, Parkinson’s and type 2 diabetes. Small clumps in particular seem toxic.'),
     ST(8500, cam(7600, 470, 1450), 'Prionen: besmettelijk vouwen', 'Prions: infectious folding',
@@ -195,7 +195,8 @@ export default {
           // ongevouwen eiwitten in het lumen
           for (let i = 0; i < 9; i++) { const x = 8700 + i * 150 + (i % 2) * 40, y = 640 + (i % 3) * 50; up += `<g opacity="${f1(clamp(unf * 9 - i))}">` + chain([[x - 40, y], [x - 15, y - 25], [x + 10, y + 10], [x + 40, y - 18]], { w: 6, dash: '10 5' }) + '</g>'; }
           up += T(9300, 820, T2('ongevouwen eiwitten hopen zich op', 'unfolded proteins pile up'), { size: 25, col: HYD, op: unf });
-          const SENS = [[8800, 'IRE1'], [9300, 'PERK'], [9800, 'ATF6']];
+          const SENS = [[8800, 'IRE1', T2('alarm 1', 'alarm 1')], [9300, 'PERK', T2('alarm 2', 'alarm 2')], [9800, 'ATF6', T2('alarm 3', 'alarm 3')]];
+          const name = (x, lab, al, op = 1) => T(x, 244, al, { size: 28, col: '#c9b8ff', w: 800, op }) + T(x, 272, `(${lab})`, { size: 20, col: C.muted, op });
           // ATF6 reist in een COPII-blaasje naar het Golgi (daar knippen S1P/S2P): het blaasje knopt af uit het ER-membraan
           const kBud = ease(sub(q, .66, .84)), kGo = ease(sub(q, .84, .97));
           const bud = kBud > 0 ? knop([AX, ERY], [0, -1], AVR, kBud, { hole: 'none', w: ERW, gap: 30, lumen: 'rgba(143,179,232,.12)' }) : null;
@@ -205,14 +206,14 @@ export default {
           if (key !== ermKey) { ermKey = key; $('mf-erm').innerHTML = gap ? bilayer(8540, gap[0], ERY, { h: ERW }) + bilayer(gap[1], 10060, ERY, { h: ERW }) : bilayer(8540, 10060, ERY, { h: ERW }); }
           const V = [60 * kGo, -10 * kGo];
           if (bud) up += `<g transform="translate(${f1(V[0])} ${f1(V[1])})">${bud.svg}</g>`;
-          SENS.forEach(([x, lab], i) => {
+          SENS.forEach(([x, lab, al], i) => {
             const a2 = act[i];
             const tm = (xx, o = 1) => `<rect x="${f1(xx - 14)}" y="${ERY - 30}" width="28" height="60" rx="8" fill="rgba(155,123,255,.45)" stroke="${C.prot}" stroke-width="3" opacity="${f1(o)}"/>`;
             if (i < 2) {
               // dimeer: elk monomeer heeft een luminaal deel, één transmembraanhelix en een cytosolisch deel
               up += tm(x) + enz(x, 500, 46, 34, '', { col: C.prot }) + enz(x, 330, 60, 44, '', { col: C.prot, fillOp: a2 > .5 ? .55 : .25 }) +
                 (a2 > .01 ? tm(x + 70 * a2, a2) + enz(x + 70 * a2, 330, 60, 44, '', { col: C.prot, op: a2, fillOp: .55 }) + enz(x + 70 * a2, 500, 46, 34, '', { col: C.prot, op: a2 }) : '') +
-                T(x, 262, lab, { size: 27, col: '#c9b8ff', w: 800 });
+                name(x, lab, al);
             } else {
               // ATF6 zit in de wand van de knop: luminaal deel in het blaasje, cytosolisch deel erbuiten
               // plek op de knop: draait tijdens het afknoppen naar rechtsboven, zodat het cytosolische deel naast het blaasje uitsteekt
@@ -222,18 +223,19 @@ export default {
                 P = [lerp(x, Q[0], w) + V[0], lerp(ERY, Q[1], w) + V[1]]; ang = 65 * kBud;
               }
               up += `<g transform="translate(${f1(P[0])} ${f1(P[1])}) rotate(${f1(ang)}) translate(${-x} ${-ERY})">` + tm(x) + enz(x, 500, 46, 34, '', { col: C.prot }) + enz(x, 330, 60, 44, '', { col: C.prot, fillOp: a2 > .5 ? .55 : .25 }) + '</g>' +
-                T(x, 262, lab, { size: 27, col: '#c9b8ff', w: 800, op: 1 - ease(sub(q, .6, .67)) });   // weg vóór de knop het domein optilt
-              if (bud) up += T(bud.c[0] + V[0] - AVR - 40, bud.c[1] + V[1] - 30, T2('COPII-blaasje met ATF6', 'COPII vesicle with ATF6'), { size: 22, col: C.mem, anchor: 'end', op: kGo });
+                name(x, lab, al, 1 - ease(sub(q, .6, .67)));   // weg vóór de knop het domein optilt
+              if (bud) up += T(bud.c[0] + V[0] - AVR - 40, bud.c[1] + V[1] - 30, T2('alarm 3 in een blaasje', 'alarm 3 in a vesicle'), { size: 23, col: C.mem, anchor: 'end', op: kGo });
             }
             // BiP gebonden → los
             bip += enz(x - 50 + (-80 * rel), 540 + 60 * rel, 40, 26, 'BiP', { col: C.prot2, fs: 19, fillOp: .6 });
             if (i < 2) up += phos(x + 35, 300, 16, a2);
           });
           // uitkomsten
-          up += T(8800, 212, T2('XBP1-mRNA splicen', 'splice XBP1 mRNA'), { size: 23, col: C.text, op: act[0] });
-          up += T(9300, 212, T2('eIF2α-P → translatie ↓', 'eIF2α-P → translation ↓'), { size: 23, col: C.text, op: act[1] });
-          up += T(9780, 212, T2('naar Golgi → ATF6(N)', 'to Golgi → ATF6(N)'), { size: 23, col: C.text, anchor: 'end', op: act[2] });
-          up += panel(8700, 100, 1200, 66, { op: fin, col: C.ok }) + T(9300, 142, T2('meer chaperones + ERAD · <tspan fill="#ff6b6b">te lang → apoptose</tspan>', 'more chaperones + ERAD · <tspan fill="#ff6b6b">too long → apoptosis</tspan>'), { size: 25, col: C.ok, op: fin });
+          /* gevolg van elk alarm in gewone taal (mechanisme: zie 'Meer' van de scène) */
+          up += T(8800, 204, T2('meer helpers maken', 'make more helpers'), { size: 25, col: C.text, op: act[0] });
+          up += T(9300, 204, T2('minder nieuw eiwit', 'less new protein'), { size: 25, col: C.text, op: act[1] });
+          up += T(9790, 204, T2('reist weg → meer helpers', 'travels off → more helpers'), { size: 25, col: C.text, anchor: 'end', op: act[2] });
+          up += panel(8700, 96, 1200, 66, { op: fin, col: C.ok }) + T(9300, 138, T2('minder last, meer helpers · <tspan fill="#ff6b6b">duurt het te lang → de cel sterft</tspan>', 'less load, more helpers · <tspan fill="#ff6b6b">lasts too long → the cell dies</tspan>'), { size: 26, col: C.ok, op: fin });
         }
         $('mf-upr').innerHTML = up; $('mf-bip').innerHTML = bip;
       },
