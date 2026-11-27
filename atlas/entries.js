@@ -218,7 +218,7 @@ export const ENTRIES = [
     bentNote: {
       nl: 'Sterk geknikte helix: één rechte cilinder past slecht, dus twist, stijging en diameter zijn ruwe schattingen. Het kristal bevat twee duplexen; hier wordt er één getoond.',
       en: 'Strongly kinked helix: a single straight cylinder fits poorly, so twist, rise and diameter are rough estimates. The crystal contains two duplexes; one is shown here.' },
-    src: [doi('10.1016/j.ejphar.2014.07.025', 'Dasari & Tchounwou (2014) Eur J Pharmacol 740:364 — gebruik tegen kanker / use against cancer'), doi('10.1038/377649a0', 'Takahara et al. (1995) Nature 377:649'), doi('10.1021/ja9625079', 'Takahara et al. (1996) J Am Chem Soc 118:12309'), doi('10.1021/bi973176v', 'Gelasco & Lippard (1998) Biochemistry 37:9230 (NMR)')],
+    src: [doi('10.1016/j.ejphar.2014.07.025', 'Dasari & Tchounwou (2014) Eur J Pharmacol 740:364 — gebruik tegen kanker / use against cancer'), doi('10.1038/377649a0', 'Takahara et al. (1995) Nature 377:649'), doi('10.1021/ja9625079', 'Takahara et al. (1996) J Am Chem Soc 118:12309'), doi('10.1021/bi973176v', 'Gelasco & Lippard (1998) Biochemistry 37:9230 (NMR)'), doi('10.1016/j.jinorgbio.2010.04.005', 'Todd & Lippard (2010) J Inorg Biochem 104:902 — open toegang (PMC2917232): knik 35–40°, ontwinding ~25° / open access: bend 35–40°, unwinding ~25°')],
   },
 
   /* ================= RNA en hybriden ================= */

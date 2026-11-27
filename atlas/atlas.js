@@ -14,7 +14,7 @@ import { ENTRIES, FILTERS, PRESETS } from './entries.js';
 import { preparePdb, analyse, orient, parentBase, LIGNAME, IONLABEL } from './analyse.js';
 import { DIAGRAMS, diagramLegend } from './diagrams.js';
 import { SIMPLE, EXTRA_GLOSS } from './simple.js';
-import { PRO } from './pro.js';
+import { PRO, PRO_TITLE } from './pro.js';
 import { GLOSSARY } from '../shared/glossary.js';
 import { colourWords } from '../shared/colourwords.js';
 import { CODE_RE, fetchMeta, fetchCoords, coordUrl, customEntry, searchPDB } from './custom.js';
@@ -55,7 +55,13 @@ const termFirst = n => {
   const rest = /^.[a-zà-ÿ]/.test(m[1]) ? m[1][0].toLowerCase() + m[1].slice(1) : m[1];
   return [term, rest];
 };
-const nameHTML = e => { if (e.custom) return `PDB ${e.pdb}`; const [a, b] = termFirst(nameOf(e)); return b ? `${a} <small class="alt">(${b})</small>` : a; };
+const nameHTML = e => {
+  if (e.custom) return `PDB ${e.pdb}`;
+  let a, b;
+  if (rank >= 3 && PRO_TITLE[e.id]) { const n = L(PRO_TITLE[e.id]), i = n.indexOf(' ('); [a, b] = i < 0 ? [n, ''] : [n.slice(0, i), n.slice(i + 2, -1)]; }   // hoger: vakomschrijving
+  else [a, b] = termFirst(nameOf(e));
+  return b ? `${a} <small class="alt">(${b})</small>` : a;
+};
 const listName = nameHTML;
 const listSub = e => e.custom ? L(e.name) : subOf(e);
 /* hoger onderwijs (niveau): de vakondertitel en de vakuitleg (entries.js) zijn de hoofdinhoud; de eenvoudige laag (simple.js) is voor hobbyist en secundair */
