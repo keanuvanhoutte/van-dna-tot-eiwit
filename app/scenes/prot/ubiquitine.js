@@ -174,7 +174,7 @@ export default {
           if (step === 7) ss += spark(1000, 330, (p * 3) % 1) + tag(1000, 290, 'ATP', ATPC, { fs: 17, op: sub(p, .3, .4) }) + T(1000, 250, T2('ontvouwen', 'unfolding'), { size: 20, col: '#2cc6a8', op: sub(p, .35, .5) });
         }
         $('ub-sub').innerHTML = ss;
-        $('ub-subA').setAttribute('cx', f1(S[0] + 20)); $('ub-subA').setAttribute('cy', f1(S[1] - (step < 6 ? 140 : 9999)));
+        $('ub-subA').setAttribute('cx', f1(S[0] + (step === 3 ? 230 : 20))); $('ub-subA').setAttribute('cy', f1(S[1] - (step === 3 ? 40 : step < 6 ? 140 : 9999)));   // stap 4: knop rechts naast het doelwit, niet op de bindingstekst
 
         /* E1 */
         let e1 = enz(E1[0], E1[1], 120, 66, 'E1', { fs: 30, dy: -18 });
