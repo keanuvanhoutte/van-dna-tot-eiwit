@@ -34,10 +34,10 @@ export default {
     nl: 'De haarspeld is ingekort en recht getekend (echte pri-miRNA-stammen ≈ 35 bp met mismatches en bulges). Microprocessor = 1 Drosha + 2 DGCR8. Het laden in AGO2 vraagt chaperones (HSC70/HSP90) die niet getekend zijn. Mensen hebben 4 AGO-eiwitten; vrijwel alleen AGO2 knipt (AGO3 slechts beperkt). Het siRNA wordt hier met dezelfde gidsvolgorde getoond om het verschil in paring te laten zien.',
     en: 'The hairpin is shortened and drawn straight (real pri-miRNA stems ≈ 35 bp with mismatches and bulges). Microprocessor = 1 Drosha + 2 DGCR8. Loading into AGO2 needs chaperones (HSC70/HSP90) that are not drawn. Humans have 4 AGO proteins; essentially only AGO2 slices (AGO3 only weakly). The siRNA is shown with the same guide sequence to highlight the difference in pairing.' },
   steps: [
-    ST(7500, cam(300, 420, 820), "Een gen voor een mini-RNA", "A gene for a mini RNA",
+    ST(7500, cam(250, 372, 980), "Een gen voor een mini-RNA", "A gene for a mini RNA",
       "Een gen voor een microRNA (een heel kort regel-RNA) wordt afgelezen. Dat RNA is nog lang en vouwt tot een haarspeld.",
       "A gene for a microRNA (a very short control RNA) is read. That RNA is still long and folds into a hairpin."),
-    ST(7500, cam(300, 412, 760), "Een eerste knip in de kern", "A first cut in the nucleus",
+    ST(7500, cam(250, 365, 900), "Een eerste knip in de kern", "A first cut in the nucleus",
       "In de kern knipt een enzym de haarspeld los aan de voet. Er blijft een korte haarspeld over.",
       "In the nucleus an enzyme cuts the hairpin free at its base. A short hairpin remains."),
     ST(8500, cam(620, 430, 1080), "Door de kernporie naar buiten", "Out through the nuclear pore",
@@ -64,6 +64,7 @@ export default {
     <rect x="-800" y="-600" width="${MEM + 800}" height="2200" fill="url(#gNuc)" opacity=".55"/>
     <g data-node="export" data-color="#8a9bc4" data-label="${T2('Kernporie (vgl. mRNA-export)', 'Nuclear pore (cf. mRNA export)')}">
       ${kernEnvelop(ptsLijn(MEM, -600, MEM, 1500), { closed: false, poriën: [(PORE_Y + 600) / 2100], w: 12, gap: 16, poreW: 64, s: 1.3 })}
+      <circle data-anchor="export" cx="${MEM}" cy="${PORE_Y + 130}" r="1" fill="none"/>
     </g>
     ${note(MEM - 40, 220, T2('kern', 'nucleus'), C.muted, 20, 'end')}${note(MEM + 40, 220, T2('cytoplasma', 'cytoplasm'), C.muted, 20, 'start')}
     <g data-node="dnahelix" data-color="${C.dna}" data-nolabel><g id="ri-dna"></g></g><g data-node="gen" data-color="${C.dna}" data-nolabel><g id="ri-gen"></g></g><g data-node="rnapol" data-color="${C.prot}" data-nolabel><g id="ri-pol"></g></g><g data-node="rnastructuur" data-color="${C.rna}" data-nolabel><g id="ri-hp"></g></g><g id="ri-enz"></g><g id="ri-ago"></g><g data-node="translatie" data-color="${C.rna}" data-nolabel><g id="ri-tgt"></g></g><g data-node="ribosoom" data-color="${C.rrna}" data-nolabel><g id="ri-rib"></g></g><g data-node="mrnaafbraak" data-color="#8a5a3a" data-nolabel><g id="ri-dec"></g></g>
@@ -102,15 +103,15 @@ export default {
         const { step, p } = s;
         // ---------- stap 0–1: transcriptie + Microprocessor ----------
         let pol = '', dna = '', gen = '';
-        const base0 = [250, 410];
+        const base0 = [200, 410];   // gen + Pol II ruim in de kern, weg van de envelop
         if (step === 0) {
           const k = ease(sub(p, 0, .5));
           // het DNA loopt verder (vervaagt), het stopt niet tegen de envelop
-          dna += `<linearGradient id="ri-dg" gradientUnits="userSpaceOnUse" x1="${MEM - 120}" y1="0" x2="${MEM - 40}" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><mask id="ri-dm"><rect x="-300" y="500" width="${MEM + 300}" height="120" fill="url(#ri-dg)"/></mask>` +
-            `<g mask="url(#ri-dm)"><line x1="-200" y1="560" x2="${MEM - 40}" y2="560" stroke="${C.dna}" stroke-width="7"/><line x1="-200" y1="576" x2="${MEM - 40}" y2="576" stroke="${C.dna2}" stroke-width="5"/></g>`;
-          gen += `<rect x="130" y="542" width="240" height="52" fill="none" stroke="${C.dna}" stroke-width="2" stroke-dasharray="5 4" opacity=".7"/>` + note(250, 614, T2('MIR-gen', 'MIR gene'), C.dna, 18);
+          dna += `<linearGradient id="ri-dg" gradientUnits="userSpaceOnUse" x1="${MEM - 170}" y1="0" x2="${MEM - 90}" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><mask id="ri-dm"><rect x="-300" y="500" width="${MEM + 300}" height="120" fill="url(#ri-dg)"/></mask>` +
+            `<g mask="url(#ri-dm)"><line x1="-200" y1="560" x2="${MEM - 90}" y2="560" stroke="${C.dna}" stroke-width="7"/><line x1="-200" y1="576" x2="${MEM - 90}" y2="576" stroke="${C.dna2}" stroke-width="5"/></g>`;
+          gen += `<rect x="80" y="542" width="240" height="52" fill="none" stroke="${C.dna}" stroke-width="2" stroke-dasharray="5 4" opacity=".7"/>` + note(200, 614, T2('MIR-gen', 'MIR gene'), C.dna, 18);
           // Pol II eindigt op het 3'-uiteinde van het pri-miRNA (het RNA komt eruit), met het DNA door de onderkant
-          const px = lerp(140, 412, k);   // niet tegen de kernenvelop
+          const px = lerp(90, 362, k);   // niet tegen de kernenvelop
           pol += polII(px, 568, 52, 22, { gul: 14, hoog: 3.7, vul: .28, achter: .45, uit: .5, seed: 22, label: 'Pol II', fs: 16, lc: C.text, labelY: -30 });   // app-vorm (bio.js): het DNA (560/576) loopt door de geul
         }
         $('ri-dna').innerHTML = dna; $('ri-gen').innerHTML = gen; $('ri-pol').innerHTML = pol;
@@ -245,7 +246,7 @@ export default {
         $('ri-hp').innerHTML = hp;
         $('ri-enz').innerHTML = enz;
         setHot(svg, 'ri-hA', step === 0 && p > .6 || step === 1 && p < .5 ? [base0[0], base0[1] - 90, 40, 150] : null);
-        setHot(svg, 'ri-hP', step === 0 ? [lerp(140, 420, ease(sub(p, 0, .5))), 546, 92, 76] : null);
+        setHot(svg, 'ri-hP', step === 0 ? [lerp(90, 370, ease(sub(p, 0, .5))), 546, 92, 76] : null);
       },
     };
   },
