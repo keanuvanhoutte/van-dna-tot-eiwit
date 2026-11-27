@@ -4,7 +4,7 @@
  * ze niet (die hebben shared/simple/). Eén bestand per tak, elk met:
  *   labels:  { nl: { 'origineel': 'vaktaal', 'animatie-id|origineel': 'vaktaal' }, en: {…} }   — tekst IN de figuren (SVG, 3D-labels, legende)
  *   steps:   { 'animatie-id': [ { title?: {nl,en}, text?: {nl,en}, tag?: ['nl','en'] } | null, … ] } — per stap (index zoals in de scène), null = ongewijzigd; tag = korte naam op de tijdlijn
- *   meta:    { 'animatie-id': { simplified?: {nl,en} } }                                     — tekst 'Wat is vereenvoudigd?' in het zijpaneel
+ *   meta:    { 'animatie-id': { title?: {nl,en}, simplified?: {nl,en} } }                   — titel van de scène (o.a. knop 'Volgend') en 'Wat is vereenvoudigd?'
  *   details: { 'animatie-id': { nl: { kort?, what?, how?, facts?, why? }, en: {…} } }       — zijpaneel, enkel de velden die wijzigen
  *   gloss:   { 'sleutel': { nl: [term, uitleg], en: [term, uitleg] } }                       — woordenlijst (shared/glossary.js)
  */

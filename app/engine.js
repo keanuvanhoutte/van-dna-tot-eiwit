@@ -228,6 +228,8 @@ function stepText(st) {
 const shownIndex = i => { let k = 0; current.steps.forEach((s, j) => { if ((s._i ?? j) <= i) k = j; }); return k; };
 const hasScene = id => !!SCENES[id];
 /* overgangszin naar het volgende hoofdstuk; op niveau hoger de vaktaalversie (shared/pro/misc.js) */
+/* titel van een scène; op niveau hoger de vaktaalversie (shared/pro/, meta.title) */
+const sceneTitle = id => (rank >= 3 && PRO_META[id]?.title) || SCENES[id]?.title;
 const bridgeOf = b => (rank >= 3 && b && PRO_BRIDGE[b.nl]) || b;
 
 /* hobbyist: teksten IN de figuur (SVG-tekst, 3D-labels) vervangen door eenvoudige woorden (shared/simple/labels-*.js; '' = verbergen).
@@ -434,7 +436,7 @@ function onStep(i) {
 function renderBridge(i) {
   const el = $('capBridge'), ci = current ? STORY_IDS.indexOf(current.id) : -1, ch = ci >= 0 ? STORY[ci] : null;
   let h = '';
-  if (ch && i === 0 && ch.intro && !(done && current.steps.length === 1)) h = `<b>${L({ nl: 'In het verhaal', en: 'In the story' })}</b>${colourWords(esc(L(ch.intro)))}`;
+  if (ch && i === 0 && ch.intro && !(done && current.steps.length === 1)) h = `<b>${L({ nl: 'In het verhaal', en: 'In the story' })}</b>${colourWords(esc(L(bridgeOf(ch.intro))))}`;
   else if (ch && done && i === current.steps.length - 1 && ci < STORY.length - 1 && ch.bridge) h = `<b>${L({ nl: 'Zo gaat het verder', en: 'What happens next' })}</b>${colourWords(esc(L(bridgeOf(ch.bridge))))}`;
   if (el.innerHTML === h) return;
   el.innerHTML = h; el.hidden = !h; capPlace();
@@ -1021,7 +1023,7 @@ function renderRail() {
   /* uitgeklapt: fases › hoofdstukken › stappen */
   const steps = () => `<div class="rsteps">${current.steps.map((s, i) => `<button class="rst" data-i="${i}" title="${esc(stepTitle(s))}">${esc(stepTag(s, i) || stepTitle(s))}</button>`).join('')}</div>`;
   const jumps = () => trail.filter(id => !STORY_IDS.includes(id)).map(id => {
-    const me = id === current.id, nmj = NODES[id] ? title(NODES[id]) : L(SCENES[id]?.title) ?? id;
+    const me = id === current.id, nmj = NODES[id] ? title(NODES[id]) : L(sceneTitle(id)) ?? id;
     return `<button class="rch jump ${me ? 'cur' : ''}" ${me ? '' : `data-go="${id}"`}><i>↪</i>${esc(nmj)}</button>${me ? steps() : ''}`;
   }).join('');
   let h = '';
@@ -1054,7 +1056,7 @@ function renderRail() {
 }
 /* Waar ben ik? Kruimelpad = [gekleurde lijn] › hoofdstuk N › zijsprong › … (lange paden ingekort in het midden) */
 function renderCrumbs() {
-  const nm = id => L(SCENES[id]?.title) ?? (NODES[id] ? title(NODES[id]) : id);
+  const nm = id => L(sceneTitle(id)) ?? (NODES[id] ? title(NODES[id]) : id);
   const ln = LINES[line];
   const items = trail.map((id, i) => {
     const k = STORY_IDS.indexOf(id), last = i === trail.length - 1;
@@ -1134,7 +1136,7 @@ function render() {
   const st = n ? STAGES.find(s => s.id === n.stage) : null, org = L(def.org ?? base.org) ?? '';
   $('sideKind').textContent = `${V(n?.kind === 'process' || !n ? 'about' : 'aboutS')}${org ? ` · ${org}` : ''}`;
   $('sideKind').title = `${n ? U(n.kind === 'process' ? 'process' : 'structure') : ''}${org ? ` · ${org}` : ''}${st ? ` · ${stageTitle(st)}` : ''}`;
-  $('sideTitle').innerHTML = `${n ? title(n) : L(def.title) ?? ''}${n ? `<span class="status ${n.status === 'nagekeken' ? 'ok' : ''}">${statusText(n.status)}</span>` : ''}`;
+  $('sideTitle').innerHTML = `${n ? title(n) : L(sceneTitle(current.id) ?? def.title) ?? ''}${n ? `<span class="status ${n.status === 'nagekeken' ? 'ok' : ''}">${statusText(n.status)}</span>` : ''}`;
   $('sideSub').textContent = n ? sub(n) : '';
   const d = DETAILS[current.id], x = detailOf(current.id), hobby = rank < 3;
   const legend = def.legend ?? base.legend;
