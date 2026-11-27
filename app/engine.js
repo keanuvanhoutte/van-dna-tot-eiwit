@@ -618,7 +618,7 @@ function updateLabels() {
     lb.style.display = off ? 'none' : '';
     const below = anchor.dataset.pos === 'below';
     /* binnen het beeld houden: een knop aan de rand schuift naar binnen in plaats van afgesneden te worden */
-    const w = lb.offsetWidth, h = lb.offsetHeight, M = 6;
+    const w = lb.__w || (lb.__w = lb.offsetWidth), h = lb.__h || (lb.__h = lb.offsetHeight), M = 6;   // maat één keer meten (tekst verandert niet)
     const x = Math.max(w / 2 + M, Math.min(s.width - w / 2 - M, r.left - s.left + r.width / 2));
     const y = below ? Math.min(s.height - h - M, r.bottom - s.top + 6) : Math.max(h + M, r.top - s.top - 6);
     lb.style.left = x + 'px';
