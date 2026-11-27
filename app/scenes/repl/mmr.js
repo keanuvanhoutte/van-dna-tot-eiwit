@@ -20,6 +20,7 @@ const DNA = [{ sel: { chain: 'E' }, style: { cartoon: { color: C.dna }, stick: {
 const G = { sel: { chain: 'E', resi: 8 }, style: { stick: { color: BASE.G, radius: .4 } }, label: 'G' };
 const Tm = { sel: { chain: 'F', resi: 23 }, style: { stick: { color: BASE.T, radius: .4 } }, label: 'T' };
 const PHE = { sel: { chain: 'B', resi: 432 }, style: { stick: { color: '#ffffff', radius: .45 } }, label: L3('vinger', 'finger') };
+const CUT = { chain: 'F', resi: [16, 17, 18, 19, 20, 21, 22, 23, 24, 25] };   // stuk van de nieuwe streng dat in het verhaal weggehaald en opnieuw gemaakt wordt
 const MIS = { chain: ['E', 'F'], resi: [4, 5, 6, 7, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23, 24, 25, 26, 27] };   // ruim rond het mispaar (E8 · F23)
 
 export default structure3d({
@@ -52,11 +53,14 @@ export default structure3d({
       text: L3('Eén bouwsteen van de klem steekt in het DNA, precies tegen de foute T. Zo weet de klem waar de fout zit.', 'One building block of the clamp pokes into the DNA, right against the wrong T. That is how the clamp knows where the error is.') },
     { dur: 9000, title: L3('Het foute stuk van de nieuwe streng gaat eruit', 'The faulty stretch of the new strand is removed'), zoom: { chain: ['E', 'F'] }, spin: .008,
       focus: [{ sel: { chain: ['A', 'B'] }, style: { cartoon: { color: '#56607a', opacity: .3 } } }, { sel: { chain: 'E' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .2 } }, label: L3('oude streng', 'old strand'), labelSel: { chain: 'E', resi: 1 }, labelColor: C.dna, labelOff: [150, -30] },
-        { sel: { chain: 'F' }, style: { stick: { color: NEW, radius: .35 } }, label: L3('nieuwe streng', 'new strand'), labelSel: { chain: 'F', resi: 16 }, labelColor: NEW }],   // labels aan tegenovergestelde uiteinden (E1 paart met F30, F16 met E15): niet meer over elkaar
+        { sel: { chain: 'F' }, style: { cartoon: { color: NEW }, stick: { color: NEW, radius: .2 } } },
+        // het weg te halen stuk: van het 5′-uiteinde van F (16) tot voorbij de foute T (F23); EXO1 breekt af vanaf een knip 5′ van de fout
+        { sel: CUT, style: { stick: { color: '#ff6b6b', radius: .45 }, sphere: { color: '#ff6b6b', radius: .7 } }, label: L3('dit stuk (met de fout) gaat eruit', 'this stretch (with the error) is removed'), labelColor: '#ff6b6b', labelOff: [-150, -80] }],
       text: L3('Partnereiwitten knippen de nieuwe streng in en halen een stuk met de fout weg. De oude streng blijft heel.', 'Partner proteins nick the new strand and remove a stretch containing the error. The old strand stays intact.') },
     { dur: 9000, title: L3('Opnieuw gemaakt, nu juist', 'Made again, now correct'), zoom: { chain: ['E', 'F'] }, spin: .008,
       focus: [{ sel: { chain: ['A', 'B'] }, style: { cartoon: { color: '#56607a', opacity: .3 } } }, { sel: { chain: 'E' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .2 } } },
-        { sel: { chain: 'F' }, style: { stick: { color: C.ok, radius: .35 } }, label: L3('opnieuw gemaakt', 'resynthesised stretch') }],
+        { sel: { chain: 'F' }, style: { cartoon: { color: NEW }, stick: { color: NEW, radius: .2 } } },
+        { sel: CUT, style: { stick: { color: C.ok, radius: .45 }, sphere: { color: C.ok, radius: .7 } }, label: L3('opnieuw gemaakt', 'resynthesised stretch'), labelColor: C.ok, labelOff: [-150, -80] }],
       text: L3('De polymerase maakt het stuk opnieuw, met de oude streng als voorbeeld. Zo gebeuren er ongeveer honderd keer minder fouten.', 'The polymerase makes the stretch again, using the old strand as a guide. This gives about a hundred times fewer errors.') },
   ],
   hotspots: [
