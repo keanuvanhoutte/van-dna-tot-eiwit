@@ -11,4 +11,5 @@ import legend from './labels-legend.js';   // legende in het zijpaneel (apart: k
 const parts = [entry, genome, repl, txnrna, tl, prot, bact];
 export const LABELS = { nl: Object.assign({}, ...parts.map(p => p.nl)), en: Object.assign({}, ...parts.map(p => p.en)) };
 /* legende: eerst de eigen legendewoorden, anders dezelfde vervanging als in de figuur */
-export const LEGEND = { nl: { ...LABELS.nl, ...legend.nl }, en: { ...LABELS.en, ...legend.en } };
+const shown = m => Object.fromEntries(Object.entries(m).filter(([, v]) => v));   // in de figuur verborgen ('') ≠ weg uit de legende
+export const LEGEND = { nl: { ...shown(LABELS.nl), ...shown(legend.nl) }, en: { ...shown(LABELS.en), ...shown(legend.en) } };
