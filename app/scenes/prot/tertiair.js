@@ -8,7 +8,9 @@ const HYD = ['ALA', 'VAL', 'LEU', 'ILE', 'MET', 'PHE', 'TRP', 'PRO', 'GLY'];
 const POL = ['SER', 'THR', 'CYS', 'ASN', 'GLN', 'TYR'];
 const B = { chain: 'B' };
 const rng = (a, b) => `${a}-${b}`;
-const cartoon = (color, extra = {}) => ({ cartoon: { color, thickness: .5, ...extra } });
+/* 'spectrum' = begin blauw → einde rood (zoals de ondertitel zegt); de 3Dmol-eigen 'spectrum' begint bij paars */
+const SPECTRUM = { colorscheme: { prop: 'resi', gradient: 'roygb', min: 146, max: 1 } };
+const cartoon = (color, extra = {}) => ({ cartoon: { ...(color === 'spectrum' ? SPECTRUM : { color }), thickness: .5, ...extra } });
 
 const ST = (dur, nl, en, tnl, ten, o) => ({ dur, title: { nl, en }, text: { nl: tnl, en: ten }, ...o });
 const hemeStyle = { stick: { colorscheme: 'orangeCarbon', radius: .22 } };
@@ -69,7 +71,13 @@ export default molScene({
   },
   steps: [
     ST(8000, 'Eén keten, één vouw', 'One chain, one fold', 'De keten van 146 aminozuren vouwt tot een compact bolletje. Kleur: van begin (blauw) tot einde (rood).', 'The chain of 146 amino acids folds into a compact ball. Colour: from start (blue) to end (red).', {
-      show(c) { c.style(B, cartoon('spectrum')); c.style({ chain: 'B', resn: 'HEM' }, hemeStyle); },
+      show(c) {
+        c.style(B, cartoon('spectrum')); c.style({ chain: 'B', resn: 'HEM' }, hemeStyle);
+        const at = (r, a = 'CA') => c.sel({ chain: 'B', resi: r, atom: a })[0];
+        if (at(1)) c.label(T2('begin', 'start'), at(1), { border: '#4f6bff', size: 16 });
+        if (at(146)) c.label(T2('einde', 'end'), at(146), { border: '#ff4b4b', size: 16 });
+        const fe = c.sel({ chain: 'B', resn: 'HEM', atom: 'FE' })[0]; if (fe) c.label(T2('heem', 'haem'), fe, { border: '#ff8a3d', size: 16 });
+      },
       zoom: B, spin: .02,
       panel: () => phead(T2('β-globine (hemoglobine)', 'β-globin (haemoglobin)')) + plines(222, [
         [T2('• één keten: 146 residuen', '• one chain: 146 residues'), C.text], [T2('• globulair (bolvormig, oplosbaar)', '• globular (spherical, soluble)'), C.text],
@@ -173,7 +181,16 @@ export default molScene({
         T2('• vooral in eiwitten buiten de cel', '• mainly in proteins outside the cell'), T2('• gevormd in het ER (bv. antistoffen)', '• formed in the ER (e.g. antibodies)'), T2('• verbindt ook verre residuen', '• can join residues far apart')]),
     }),
     ST(9000, 'Vaste combinaties', 'Recurring combinations', 'Kleine combinaties van spiralen of strengen komen vaak terug (motieven), zoals helix-bocht-helix.', 'Small combinations of spirals or strands recur often (motifs), such as helix-turn-helix.', {
-      show(c) { c.style(B, cartoon('#56607a')); HEL.forEach(([n, a, b], i) => c.style({ chain: 'B', resi: rng(a, b) }, cartoon(HCOL[i]))); },
+      show(c) {
+        /* voorbeeld in dit eiwit: helix G en H liggen tegen elkaar, verbonden door een korte lus (een α-haarspeld) */
+        c.style(B, cartoon('#3f4864'));
+        c.style({ chain: 'B', resi: rng(99, 117) }, cartoon(HCOL[6])); c.style({ chain: 'B', resi: rng(123, 143) }, cartoon(HCOL[7]));
+        c.style({ chain: 'B', resi: rng(118, 122) }, cartoon('#ffffff'));
+        const mid = (a, b) => c.center(c.sel({ chain: 'B', resi: rng(a, b), atom: 'CA' }));
+        c.label(T2('spiraal G', 'spiral G'), mid(99, 117), { border: HCOL[6], size: 17 });
+        c.label(T2('spiraal H', 'spiral H'), mid(123, 143), { border: HCOL[7], size: 17 });
+        c.label(T2('korte bocht', 'short turn'), mid(118, 122), { border: '#ffffff', size: 16, offset: 30 });
+      },
       zoom: B, spin: .02,
       panel: () => phead(T2('Motieven (topologie)', 'Motifs (topology)')) + motifs(),
     }),
@@ -184,14 +201,24 @@ export default molScene({
     }),
     ST(7500, 'Nog niet het hele eiwit', 'Not yet the whole protein', 'Hemoglobine bestaat uit vier zulke ketens. Hoe ze samen passen, heet de quaternaire structuur.', 'Haemoglobin is made of four such chains. How they fit together is called the quaternary structure.', {
       show(c) {
-        c.style({}, cartoon('#343d57'));
+        /* de keten van deze scène in kleur; de drie andere ketens zacht in hun eigen kleur (α paars, β groen, zoals bij quaternair) */
+        c.style({ chain: ['A', 'C'] }, cartoon('#5d5490'));
+        c.style({ chain: 'D' }, cartoon('#3c6a4c'));
         c.style(B, cartoon('spectrum'));
         c.style({ resn: 'HEM' }, { stick: { colorscheme: 'orangeCarbon', radius: .2 } });
+        const mid = k => c.center(c.sel({ chain: k, atom: 'CA' }));
+        c.label(T2('deze keten (β)', 'this chain (β)'), mid('B'), { border: '#ffc247', size: 18 });
+        c.label('α', mid('A'), { border: '#b39dff', size: 18 }); c.label('α', mid('C'), { border: '#b39dff', size: 18 });
+        c.label('β', mid('D'), { border: '#7fdc6a', size: 18 });
       },
       zoom: {}, spin: .03,
       panel: () => phead(T2('Op naar het tetrameer', 'On to the tetramer')) + plines(222, [
         T2('Hydrofobe plekken op β-globine', 'Hydrophobic patches on β-globin'), T2('passen tegen de α-ketens.', 'fit against the α chains.'), '',
-        [T2('Samen: α₂β₂', 'Together: α₂β₂'), C.text, 27, 700]]),
+        [T2('Samen: α₂β₂', 'Together: α₂β₂'), C.text, 27, 700]]) +
+        [['#b39dff', 'α'], ['#7fdc6a', 'β'], ['#b39dff', 'α'], ['url(#tspec)', 'β']].map(([col, t], i) =>
+          `<circle cx="${PX + 60 + (i % 2) * 64}" cy="${430 + Math.floor(i / 2) * 64}" r="29" fill="${col}"/>` + ptxt(PX + 60 + (i % 2) * 64, 439 + Math.floor(i / 2) * 64, t, '#0a1224', 24, 700, 'middle')).join('') +
+        '<defs><linearGradient id="tspec"><stop offset="0" stop-color="#4f6bff"/><stop offset=".5" stop-color="#7fdc6a"/><stop offset="1" stop-color="#ff4b4b"/></linearGradient></defs>' +
+        ptxt(PX + 170, 455, T2('regenboog = de keten', 'rainbow = the chain'), C.muted, 22) + ptxt(PX + 170, 485, T2('uit deze scène', 'from this scene'), C.muted, 22),
     }),
   ],
 });
@@ -213,10 +240,12 @@ function motifs() {
     [T2('Rossmann-vouw (βαβαβ)', 'Rossmann fold (βαβαβ)'), (x, y) => st(x + 10, y + Bm, y + T) + hx(x + 26, y + 26, 20, 56) + st(x + 62, y + Bm, y + T) + hx(x + 78, y + 26, 20, 56) + st(x + 114, y + Bm, y + T), 'α/β'],
     [T2('hoefijzer (LRR)', 'horseshoe (LRR)'), (x, y) => `<path d="M${x + 20},${y + Bm} A44,44 0 1,1 ${x + 108},${y + Bm}" fill="none" stroke="#ffc247" stroke-width="11"/><path d="M${x},${y + Bm} A64,64 0 0,1 ${x + 128},${y + Bm}" fill="none" stroke="#9b7bff" stroke-width="9" stroke-dasharray="24 9"/>`, ''],
   ];
-  return items.map(([name, draw, cls], i) => {
-    const col = i % 2, row = Math.floor(i / 2), x = PX + col * 262, y = 188 + row * 130;
-    return draw(x + 4, y) + ptxt(x + 190, y + 50, cls, cls === 'α' ? '#9b7bff' : cls === 'β' ? '#ffc247' : '#7fdc6a', 23, 700) + ptxt(x, y + 118, name, '#c3cde2', 21, 600);
-  }).join('');
+  /* vier duidelijke voorbeelden (2 × 2, groter getekend); de volledige lijst staat in het uitlegpaneel */
+  return [0, 1, 2, 5].map(k => items[k]).map(([name, draw, cls], i) => {
+    const col = i % 2, row = Math.floor(i / 2), x = PX + col * 262, y = 200 + row * 215;
+    return `<g transform="translate(${x + 10},${y}) scale(1.35) translate(${-x - 10},${-y})">${draw(x + 10, y)}</g>` +
+      ptxt(x + 215, y + 30, cls, cls === 'α' ? '#9b7bff' : '#ffc247', 26, 700) + ptxt(x + 4, y + 168, name, '#e2e8f5', 24, 600);
+  }).join('') + ptxt(PX, 640, T2('wit in de figuur: de bocht tussen', 'white in the figure: the turn between'), C.muted, 22) + ptxt(PX, 670, T2('twee spiralen (G en H)', 'two spirals (G and H)'), C.muted, 22);
 }
 function classes() {
   const row = (y, name, desc, col) => ptxt(PX, y, name, col, 23, 700) + ptxt(PX + 110, y, desc, '#c3cde2', 22, 500);

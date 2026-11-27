@@ -9,6 +9,8 @@ const hemes = c => c.style({ resn: 'HEM' }, { stick: { colorscheme: 'orangeCarbo
 const chainLabels = c => Object.entries(CH).forEach(([k, [n, col]]) => c.label(n, c.center(c.sel({ chain: k, atom: 'CA' })), { size: 22, border: col }));
 const ST = (dur, nl, en, tnl, ten, o) => ({ dur, title: { nl, en }, text: { nl: tnl, en: ten }, ...o });
 const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
+/* punt iets naar buiten schuiven, weg van het midden van het tetrameer (labels liggen dan niet allemaal in het midden op elkaar) */
+const outward = (c, p, k = .6) => { const m = c.center(c.sel({ hetflag: false, atom: 'CA' })); return { x: p.x + (p.x - m.x) * k, y: p.y + (p.y - m.y) * k, z: p.z + (p.z - m.z) * k }; };
 
 export default molScene({
   id: 'quaternair', pdb: '1BBB',
@@ -24,14 +26,14 @@ export default molScene({
     en: 'Haemoglobin switches between a deoxy (T) and an oxy (R) state; with CO (not O₂) bound, 1BBB shows a second liganded form, the R2 state (a "third quaternary structure" besides T and R). Contact criteria are simple distance cut-offs; hydrogens and water molecules are not shown.' },
   overlay: () => `
     <g class="q-hs1" data-node="primair" data-color="${C.chain}" data-label="${T2('Sequentie: Glu6 → Val', 'Sequence: Glu6 → Val')}">
-      <rect x="1030" y="470" width="520" height="50" rx="12" fill="rgba(127,220,106,.10)" stroke="${C.chain}" stroke-dasharray="5 4"/>
-      <text x="1290" y="503" font-size="22" text-anchor="middle" fill="${C.chain}" font-family="Inter" font-weight="600">${T2('Eén letter in de primaire structuur', 'One letter in the primary structure')}</text>
-      <circle data-anchor="primair" cx="1290" cy="470" r="1" fill="none"/>
+      <rect x="1030" y="568" width="520" height="46" rx="12" fill="rgba(127,220,106,.10)" stroke="${C.chain}" stroke-dasharray="5 4"/>
+      <text x="1290" y="599" font-size="22" text-anchor="middle" fill="${C.chain}" font-family="Inter" font-weight="600">${T2('Eén letter in de primaire structuur', 'One letter in the primary structure')}</text>
+      <circle data-anchor="primair" cx="1290" cy="568" r="1" fill="none"/>
     </g>
     <g class="q-hs2" data-node="ptm" data-color="${C.prot}" data-label="${T2('Volgende: post-translationele modificaties', 'Next: post-translational modifications')}">
-      <rect x="1030" y="640" width="520" height="56" rx="12" fill="rgba(155,123,255,.16)" stroke="${C.prot}"/>
-      <text x="1290" y="677" font-size="23" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="600">${T2('Verder: modificaties na de translatie', 'Next: modifications after translation')}</text>
-      <circle data-anchor="ptm" cx="1290" cy="640" r="1" fill="none"/>
+      <rect x="1030" y="662" width="520" height="48" rx="12" fill="rgba(155,123,255,.16)" stroke="${C.prot}"/>
+      <text x="1290" y="694" font-size="22" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="600">${T2('Verder: modificaties na de translatie', 'Next: modifications after translation')}</text>
+      <circle data-anchor="ptm" cx="1290" cy="662" r="1" fill="none"/>
     </g>`,
   overlayUpdate(ov, t, s) {
     ov.querySelector('.q-hs1').setAttribute('opacity', s.step === 7 ? 1 : 0);
@@ -84,8 +86,8 @@ export default molScene({
     }),
     ST(8500, 'Twee gelijke paren', 'Two identical pairs', 'Hemoglobine bestaat uit twee identieke αβ-paren: de bouwsteen die zich herhaalt (protomeer).', 'Haemoglobin is made of two identical αβ pairs: the repeating building block (protomer).', {
       show(c) { c.style({ chain: ['A', 'B'] }, cart('#ffc247')); c.style({ chain: ['C', 'D'] }, cart('#4fb0ff')); hemes(c);
-        c.label(T2('protomeer 1 (α1β1)', 'protomer 1 (α1β1)'), c.center(c.sel({ chain: ['A', 'B'], atom: 'CA' })), { size: 18, border: '#ffc247' });
-        c.label(T2('protomeer 2 (α2β2)', 'protomer 2 (α2β2)'), c.center(c.sel({ chain: ['C', 'D'], atom: 'CA' })), { size: 18, border: '#4fb0ff' }); },
+        c.label(T2('protomeer 1 (α1β1)', 'protomer 1 (α1β1)'), outward(c, c.center(c.sel({ chain: ['A', 'B'], atom: 'CA' })), 1.2), { size: 18, border: '#ffc247' });
+        c.label(T2('protomeer 2 (α2β2)', 'protomer 2 (α2β2)'), outward(c, c.center(c.sel({ chain: ['C', 'D'], atom: 'CA' })), 1.2), { size: 18, border: '#4fb0ff' }); },
       zoom: {}, spin: .02,
       panel: () => phead(T2('Oligomeren benoemen', 'Naming oligomers')) + plines(222, [
         [T2('1 keten  → monomeer', '1 chain  → monomer'), C.text], [T2('2 ketens → dimeer', '2 chains → dimer'), C.text], [T2('3 ketens → trimeer', '3 chains → trimer'), C.text],
@@ -94,7 +96,10 @@ export default molScene({
     ST(8500, 'Een stevig contactvlak', 'A firm contact surface', 'Waar α en β elkaar raken, ligt een contactvlak. Dit vlak (α1β1) is groot: veel contacten houden α en β samen.', 'Where α and β touch is a contact surface. This one (α1β1) is large: many contacts hold α and β together.', {
       show(c) {
         c.style({}, cart('#343d57')); c.style({ chain: 'A' }, cart(CH.A[1])); c.style({ chain: 'B' }, cart(CH.B[1]));
-        if (c.data.ab) { c.style({ chain: 'A', resi: c.data.ab.A }, { sphere: { color: CH.A[1] } }); c.style({ chain: 'B', resi: c.data.ab.B }, { sphere: { color: CH.B[1] } }); }
+        if (c.data.ab) {
+          c.style({ chain: 'A', resi: c.data.ab.A }, { sphere: { color: CH.A[1] } }); c.style({ chain: 'B', resi: c.data.ab.B }, { sphere: { color: CH.B[1] } });
+          c.label(T2('contactvlak', 'contact surface'), c.center(c.sel({ chain: 'A', resi: c.data.ab.A, atom: 'CA' }).concat(c.sel({ chain: 'B', resi: c.data.ab.B, atom: 'CA' }))), { size: 18, border: '#ffc247', offset: -30 });
+        }
         c.label('α1', c.center(c.sel({ chain: 'A', atom: 'CA' })), { size: 20, border: CH.A[1] }); c.label('β1', c.center(c.sel({ chain: 'B', atom: 'CA' })), { size: 20, border: CH.B[1] });
       },
       zoom: { chain: ['A', 'B'] }, spin: .02,
@@ -105,7 +110,10 @@ export default molScene({
     ST(8500, 'Een scharnier', 'A hinge', 'Het kleinere vlak (α1β2) is een scharnier: bindt zuurstof, dan schuiven de twee paren tegen elkaar.', 'The smaller surface (α1β2) is a hinge: when oxygen binds, the two pairs slide against each other.', {
       show(c) {
         c.style({}, cart('#343d57')); c.style({ chain: 'A' }, cart(CH.A[1])); c.style({ chain: 'D' }, cart(CH.D[1]));
-        if (c.data.ad) { c.style({ chain: 'A', resi: c.data.ad.A }, { sphere: { color: CH.A[1] } }); c.style({ chain: 'D', resi: c.data.ad.D }, { sphere: { color: CH.D[1] } }); }
+        if (c.data.ad) {
+          c.style({ chain: 'A', resi: c.data.ad.A }, { sphere: { color: CH.A[1] } }); c.style({ chain: 'D', resi: c.data.ad.D }, { sphere: { color: CH.D[1] } });
+          c.label(T2('scharnier', 'hinge'), c.center(c.sel({ chain: 'A', resi: c.data.ad.A, atom: 'CA' }).concat(c.sel({ chain: 'D', resi: c.data.ad.D, atom: 'CA' }))), { size: 18, border: '#ffc247', offset: -30 });
+        }
         c.label('α1', c.center(c.sel({ chain: 'A', atom: 'CA' })), { size: 20, border: CH.A[1] }); c.label('β2', c.center(c.sel({ chain: 'D', atom: 'CA' })), { size: 20, border: CH.D[1] });
       },
       zoom: { chain: ['A', 'D'] }, spin: .02,
@@ -161,8 +169,21 @@ export default molScene({
       },
       zoom: {}, spin: .02,
       panel: () => phead(T2('Primair → quaternair', 'Primary → quaternary')) + plines(222, [
-        ['GAG → GTG  ·  Glu6 → Val (β)', '#ffc247', 23, 700], '',
-        T2('Glu (−, polair) → Val (hydrofoob)', 'Glu (−, polar) → Val (hydrophobic)'), T2('deoxy-HbS vormt lange vezels', 'deoxy-HbS forms long fibres')]),
+        ['GAG → GTG  ·  Glu6 → Val (β)', '#ffc247', 23, 700],
+        T2('Glu (−, polair) → Val (hydrofoob)', 'Glu (−, polar) → Val (hydrophobic)')]) + fibre(),
     }),
   ],
 });
+
+/* sikkelcel: hemoglobines (zonder O₂) haken met hun Val6-plek (rood) in de volgende → een lange vezel */
+function fibre() {
+  const y = 372, out = [];
+  for (let i = 0; i < 5; i++) {
+    const x = PX + 46 + i * 98;
+    out.push(`<ellipse cx="${x}" cy="${y}" rx="44" ry="34" fill="#2b3550" stroke="#7fdc6a" stroke-width="3"/>`,
+      `<path d="M${x - 44},${y - 9} a10,10 0 0,1 0,18" fill="#0d1426"/>`,          // het zakje waar de Val van de buur in past
+      i < 4 ? `<circle cx="${x + 46}" cy="${y}" r="9" fill="${CLASSCOL['-']}"/>` : '');
+  }
+  return out.join('') + ptxt(PX, y + 70, T2('zonder O₂ haakt de Val-plek (rood)', 'without O₂ the Val spot (red)'), C.text, 23, 600) +
+    ptxt(PX, y + 102, T2('in de buur → een lange vezel', 'hooks into the next → a long fibre'), C.text, 23, 600);
+}

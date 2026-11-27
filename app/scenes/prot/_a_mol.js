@@ -20,14 +20,17 @@ export function molScene(o) {
     kind: '3d',
     warm() { load3Dmol().catch(() => {}); fetch(pdbUrl(o.pdb, fmt)).catch(() => {}); },   // bibliotheek en bestand al ophalen (HTTP-cache)
     html() {
-      return `<div class="v3d" style="left:0;right:auto;width:${f1(100 * PANEL_X / 1600)}%;top:84px;bottom:150px"></div>
-        <svg class="a-ov" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">
+      /* 3D links over de volle hoogte; het uitlegpaneel rechts heeft een eigen viewBox (enkel het paneel), zodat het
+       * niet met het hele 1600×900-beeld mee krimpt: grotere tekst, en de molecule krijgt alle ruimte ernaast. */
+      const W = f1(100 * PANEL_X / 1600);
+      return `<div class="v3d" style="left:0;right:auto;width:${W}%;top:0;bottom:0"></div>
+        <svg class="a-ov" viewBox="${PANEL_X} 96 600 640" preserveAspectRatio="xMidYMid meet" style="position:absolute;top:0;right:0;width:${f1(100 - +W)}%;height:100%;pointer-events:none">
           <rect x="${PANEL_X + 10}" y="110" width="560" height="610" rx="18" fill="#0d1426" fill-opacity=".92" stroke="#2a3550" stroke-width="2"/>
           <g class="a-panel"></g>
           ${o.overlay ? o.overlay() : ''}
         </svg>
-        <div class="load3d" style="width:${f1(100 * PANEL_X / 1600)}%">${L({ nl: `Structuur ${o.pdb} laden uit de Protein Data Bank…`, en: `Loading structure ${o.pdb} from the Protein Data Bank…` })}</div>
-        <a class="pdbtag" href="https://www.rcsb.org/structure/${o.pdb}" target="_blank" rel="noopener">PDB ${o.pdb} ↗</a>`;
+        <div class="load3d" style="width:${W}%">${L({ nl: `Structuur ${o.pdb} laden uit de Protein Data Bank…`, en: `Loading structure ${o.pdb} from the Protein Data Bank…` })}</div>
+        <a class="pdbtag" style="right:auto;left:12px" href="https://www.rcsb.org/structure/${o.pdb}" target="_blank" rel="noopener">PDB ${o.pdb} ↗</a>`;
     },
     init(layer, api) {
       EASY = api?.easy ?? null;   // hobbyist: verborgen paneelregels overslaan (geen gaten)
@@ -64,6 +67,7 @@ export function molScene(o) {
         const v = viewer.getView(); q0 = v.slice(4, 8);
         layer.querySelector('.load3d')?.remove();
         ready = true; lastStep = -1;
+        if (lastArgs) self.update(...lastArgs);   // gepauzeerd tijdens het laden: de engine roept update niet opnieuw aan
       }).catch(e => { const l = layer.querySelector('.load3d'); if (l) l.textContent = L({ nl: `Structuur ${o.pdb} kon niet geladen worden (geen internet?)`, en: `Structure ${o.pdb} could not be loaded (offline?)` }) + ` · ${e.message}`; });
 
       /* camera per stap (positie + zoom; onafhankelijk van de draaiing) */
@@ -97,8 +101,10 @@ export function molScene(o) {
         a[3] * b[1] - a[0] * b[2] + a[1] * b[3] + a[2] * b[0],
         a[3] * b[2] + a[0] * b[1] - a[1] * b[0] + a[2] * b[3],
         a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2]];
-      return {
+      let lastArgs = null;
+      const self = {
         update(t, s) {
+          lastArgs = [t, s];
           const key = s.step + '|' + (o.panelKey ? o.panelKey(t, s, ctx) : '') + '|' + ready;
           if (key !== lastPanelKey && o.steps[s.step].panel) { lastPanelKey = key; panelEl.innerHTML = o.steps[s.step].panel(ctx, t, s); }
           o.overlayUpdate?.(ov, t, s, ctx);
@@ -121,6 +127,7 @@ export function molScene(o) {
         },
         destroy() { dead = true; labs?.remove(); try { viewer?.clear(); } catch {} },
       };
+      return self;
     },
   };
 }
@@ -130,16 +137,16 @@ export const PX = PANEL_X + 34;
 export function ptxt(x, y, s, col = C.text, size = 23, w = 600, anchor = 'start') {
   return `<text x="${f1(x)}" y="${f1(y)}" font-size="${size}" text-anchor="${anchor}" fill="${col}" font-family="Inter" font-weight="${w}">${s}</text>`;
 }
-export const phead = s => ptxt(PX, 162, s, C.text, 27, 700);
+export const phead = s => ptxt(PX, 164, s, C.text, 30, 700);
 /* regels met automatische y (elk item: [tekst, kleur?, grootte?, gewicht?] of '' = witregel) */
 let EASY = null;
-export function plines(y0, items, dy = 38) {
+export function plines(y0, items, dy = 44) {
   let y = y0, out = '';
   for (const it of items) {
     if (!it) { y += dy * .6; continue; }
     const [s, col, size, w] = [].concat(it);
     if (EASY && typeof s === 'string' && EASY(s.replace(/<[^>]*>/g, '')) === '') continue;   // verborgen regel: geen lege plek
-    out += ptxt(PX, y, s, col ?? '#c3cde2', size ?? 23, w ?? 600); y += dy;
+    out += ptxt(PX, y, s, col ?? '#c3cde2', Math.max(23, (size ?? 23) + 2), w ?? 600); y += dy;   // iets groter dan opgegeven: het paneel krijgt nu zijn eigen schaal
   }
   return out;
 }
