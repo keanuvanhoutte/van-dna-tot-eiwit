@@ -33,10 +33,12 @@ export default structure3d({
     en: 'Only the core domain of p53 is shown (about residues 94–289); the rest of the protein (activation part, tetramerisation domain, tail) is missing. In the cell p53 binds as a tetramer (four chains); this crystal holds three core domains, one of which really grips the recognition site. The signalling chain (ATM/ATR, MDM2, p21, apoptosis) is not visible in the structure and is only told.' },
   base,
   steps: [
-    { dur: 8000, title: L3('De bewaker van het genoom', 'The guardian of the genome'), focus: null, zoom: {}, tags: [TAG({ chain: ['A', 'B', 'C'] }, 'p53 (grijpt het DNA)', 'p53 (grips the DNA)'), TAG({ chain: ['E', 'F'] }, 'DNA', 'DNA')], tags: [TAG({ chain: ['A', 'B', 'C'] }, 'p53 (grijpt het DNA)', 'p53 (grips the DNA)'), TAG({ chain: ['E', 'F'] }, 'DNA', 'DNA')], spin: .012,
+    { dur: 8000, title: L3('De bewaker van het genoom', 'The guardian of the genome'), focus: null, zoom: {}, tags: [TAG({ chain: ['A', 'B', 'C'] }, 'p53 (grijpt het DNA)', 'p53 (grips the DNA)'), TAG({ chain: ['E', 'F'] }, 'DNA', 'DNA')], spin: .012,
       text: L3('p53 is een eiwit dat alarm slaat bij DNA-schade. Hier zit het vast op een stuk DNA.', 'p53 is a protein that raises the alarm when DNA is damaged. Here it is bound to a piece of DNA.') },
     { dur: 9000, title: L3('Schade zet het alarm aan', 'Damage switches on the alarm'), zoom: {}, spin: .012,
-      focus: [OTHER, ...DNA, { ...B, label: 'p53' }],
+      focus: [OTHER, ...DNA, { ...B, label: 'p53', labelColor: P, labelOff: [-150, 60] }],
+      // het merkteken (fosfaat op Ser15/Ser20) komt op het begin van p53, dat niet in dit kristal zit (alleen het kerndomein 94–289)
+      tags: [TAG({ chain: 'B', resi: [96, 97, 98, 99, 100] }, 'merkteken: op de staart van p53 (niet in deze structuur)', 'mark: on the tail of p53 (not in this structure)', '#93a0bb', [150, -100])],
       text: L3('Bij een breuk zetten alarm-enzymen een merkteken op p53. Daardoor wordt p53 niet meer afgebroken en stapelt het zich op.', 'At a break, alarm enzymes put a mark on p53. Then p53 is no longer broken down and builds up.') },
     { dur: 9000, title: L3('p53 grijpt een vaste plek op het DNA', 'p53 grips a fixed spot on the DNA'), zoom: { chain: ['B', 'E', 'F'] }, spin: .008,
       focus: [OTHER, { sel: { chain: 'E' }, style: { cartoon: { color: C.dna }, stick: { color: C.dna, radius: .25 } }, label: L3('herkenningsplaats', 'recognition site') }, { sel: { chain: 'F' }, style: { cartoon: { color: C.dna2 }, stick: { color: C.dna2, radius: .25 } } }, B],
@@ -45,6 +47,7 @@ export default structure3d({
       focus: [OTHER, ...DNA, { ...B, label: L3('zet de rem aan', 'applies the brake') }],
       text: L3('Een van die genen maakt een rem op de celdeling. Zo krijgt de cel tijd om het DNA te herstellen.', 'One of those genes makes a brake on cell division. This gives the cell time to repair the DNA.') },
     { dur: 9000, title: L3('Te veel schade: de cel ruimt zichzelf op', 'Too much damage: the cell self-destructs (apoptosis)'), focus: null, zoom: {}, spin: .012,
+      tags: [TAG({ chain: 'B' }, 'p53 zet genen voor celdood aan', 'p53 switches on genes for cell death', P, [-130, 70]), TAG({ chain: ['E', 'F'] }, 'DNA', 'DNA', C.dna, [130, -60])],
       text: L3('Is de schade te groot, dan zet p53 genen aan waardoor de cel sterft. Zo geeft ze de schade niet door.', 'If the damage is too great, p53 switches on genes that make the cell die. That way it does not pass on the damage.') },
     { dur: 8000, title: L3('Een zinkatoom houdt de grijper in vorm', 'A zinc ion keeps the gripper in shape'), zoom: { chain: 'B', resi: [176, 179, 238, 242] }, spin: .006, pad: .45,
       // het lint doorschijnend en de vier zinkhouders (Cys176, His179, Cys238, Cys242) als staafjes: zo verdwijnt het zink niet achter het lint
