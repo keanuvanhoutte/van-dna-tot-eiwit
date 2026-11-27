@@ -161,9 +161,8 @@ export default {
           o += `<g opacity="${f1(fade)}">` +
             `<path d="M${f1(pos[74][0] - 20)},${f1(pos[76][1] - 18)} q-14,0 -14,14 v${f1(pos[74][1] - pos[76][1] + 8)} q0,14 14,14" stroke="#fff" stroke-width="2.5" fill="none"/>` +
             txt(pos[74][0] - 44, (pos[74][1] + pos[76][1]) / 2 + 8, 'CCA', '#fff', 24, 'end', 800) +
-            txt(pos[73][0] + 28, pos[73][1] + 8, T2('A73 = discriminatorbase', 'A73 = discriminator base'), C.muted, 18, 'start') +
-            txt(705, 290, T2('7 bp', '7 bp'), '#ffc247', 22, 'end', 700) + '</g>' +
-            `<g opacity="${f1(sub(p, .6, .8))}">` + txt(p76[0] + 40, p76[1] + 14, T2('esterbinding aan', 'ester bond to'), C.chain, 18, 'start', 600) + txt(p76[0] + 40, p76[1] + 36, T2("2′/3′-OH van A76", "2′/3′-OH of A76"), C.chain, 18, 'start', 600) + '</g>';
+            '</g>' +
+            `<g opacity="${f1(sub(p, .6, .8))}">` + txt(p76[0] + 34, p76[1] + 18, T2('hier hangt', 'the amino acid'), C.chain, 26, 'start', 800) + txt(p76[0] + 34, p76[1] + 48, T2('het aminozuur', 'hangs here'), C.chain, 26, 'start', 800) + txt(p76[0] + 34, p76[1] + 72, T2('(aan de laatste A)', '(on the last A)'), C.muted, 17, 'start', 600) + '</g>';
         }
         // codon onder het anticodon
         let cd = '';
@@ -180,18 +179,22 @@ export default {
           const x0 = pos[34][0] - 80, x1 = pos[36][0] + 80;
           cd += `<line x1="${f1(x0)}" y1="${f1(yb + 14)}" x2="${f1(x1)}" y2="${f1(yb + 14)}" stroke="${C.rna}" stroke-width="5" opacity="${f1(k * .8)}"/>`;
           cd = `<line x1="${f1(x0)}" y1="${f1(yb + 14)}" x2="${f1(x1)}" y2="${f1(yb + 14)}" stroke="${C.rna}" stroke-width="5" opacity="${f1(k * .8)}"/>` + cd;
-          cd += `<g opacity="${f1(k)}">${txt(x0 - 12, yb + 22, "3′", C.rna, 22, 'end', 700)}${txt(x1 + 12, yb + 22, "5′", C.rna, 22, 'start', 700)}${txt((x0 + x1) / 2, yb + 70, T2("codon 5′-UUC-3′ (lees ←)", "codon 5′-UUC-3′ (read ←)"), C.rna, 22, 'middle', 700)}</g>`;
+          cd += `<g opacity="${f1(k)}">${txt(x0 - 12, yb + 22, "3′", C.rna, 22, 'end', 700)}${txt(x1 + 12, yb + 22, "5′", C.rna, 22, 'start', 700)}${txt((x0 + x1) / 2, yb + 70, T2("codon op het mRNA: UUC (lees ←)", "codon on the mRNA: UUC (read ←)"), C.rna, 22, 'middle', 700)}</g>`;
           $('tr-cA').setAttribute('cx', f1(x1 + 60)); $('tr-cA').setAttribute('cy', f1(yb + 30));
-          o += `<g opacity="${f1(sub(p, .55, .75))}">` + txt(pos[34][0] - 30, pos[34][1] + 8, T2('Gm34 = wobble', 'Gm34 = wobble'), '#fff', 20, 'end', 700) +
-            txt(pos[36][0] + 150, pos[35][1] - 120, T2('anticodon', 'anticodon'), '#f06bc0', 24, 'start', 800) +
-            txt(pos[36][0] + 150, pos[35][1] - 92, "5′-GmAA-3′", '#fff', 22, 'start', 700) +
+          o += `<g opacity="${f1(sub(p, .55, .75))}">` + txt(pos[34][0] - 30, pos[34][1] + 2, T2('past losser', 'fits loosely'), '#fff', 22, 'end', 700) +
+            txt(pos[34][0] - 30, pos[34][1] + 24, '(wobble)', C.muted, 16, 'end', 600) +
+            '</g>' + `<g opacity="${f1(sub(p, .2, .4))}">` +
+            txt(pos[36][0] + 120, pos[35][1] - 110, T2('anticodon', 'anticodon'), '#f06bc0', 30, 'start', 800) +
+            txt(pos[36][0] + 120, pos[35][1] - 80, T2('leest het codon', 'reads the codon'), '#fff', 22, 'start', 700) +
+            `<path d="M${f1(pos[36][0] + 112)},${f1(pos[35][1] - 90)} Q${f1(pos[36][0] + 60)},${f1(pos[35][1] - 60)} ${f1(pos[36][0] + 22)},${f1(pos[35][1] - 10)}" stroke="#f06bc0" stroke-width="2.5" fill="none"/>` +
             '</g>';
         } else { $('tr-cA').setAttribute('cx', '-9999'); }
         $('tr-codon').innerHTML = cd;
         if (i0 === 4) {
           const names = { 10: 'm²G', 16: 'D', 26: 'm²₂G', 32: 'Cm', 34: 'Gm', 37: 'yW', 39: 'Ψ', 40: 'm⁵C', 46: 'm⁷G', 49: 'm⁵C', 54: 'T', 55: 'Ψ', 58: 'm¹A' };
           const off = { 10: [-10, 44, 'middle'], 16: [-26, -24, 'end'], 26: [-26, 30, 'end'], 32: [-26, 0, 'end'], 34: [-24, 26, 'end'], 37: [24, 30, 'start'], 39: [-10, 44, 'start'], 40: [30, 22, 'start'], 46: [34, 12, 'start'], 49: [-34, 42, 'end'], 54: [8, 44, 'start'], 55: [26, 18, 'start'], 58: [8, -26, 'middle'] };
-          for (const k in names) { const [dx, dy, an] = off[k]; o += `<g opacity="${f1(sub(p, .15, .35))}">${txt(pos[k][0] + dx, pos[k][1] + dy, names[k], '#fff', 19, an, 700)}</g>`; }
+          for (const k in names) { const [dx, dy, an] = off[k]; o += `<g opacity="${f1(sub(p, .3, .5))}">${txt(pos[k][0] + dx, pos[k][1] + dy, names[k], C.muted, 14, an, 600)}</g>`; }
+          o += `<g opacity="${f1(sub(p, .1, .3))}">${txt(330, 600, T2('aangepaste letters', 'modified letters'), '#fff', 34, 'start', 800)}${txt(330, 634, T2('= wit omrand', '= white rim'), C.muted, 20, 'start', 600)}${txt(330, 662, T2('kleine namen: hun scheikundige code', 'small names: their chemical code'), C.muted, 16, 'start', 600)}</g>`;
         }
         if (i0 >= 5) {
           const k = i0 === 5 ? sub(p, .8, 1) : 1;
