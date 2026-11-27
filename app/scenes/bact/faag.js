@@ -63,11 +63,18 @@ export default {
         const burst = ph(3, .25, .7), bOn = ph(4, 0, .2);
 
         /* cellen + chromosomen */
-        let c = rodCell(...A, 1 - burst * .85) + `<g opacity="${f1(1 - burst)}">${chrom(AX, 560)}</g>`;
-        if (burst > .01) for (let k = 0; k < 6; k++) {          // brokstukken van de envelop
-          const a = k * 60 + 20, r = 200 + 160 * burst;
-          const x0 = AX + r * Math.cos(a * Math.PI / 180), y0 = 530 + .55 * r * Math.sin(a * Math.PI / 180);
-          c += membraanPts(ptsBoog(x0, y0, x0 + 22, y0 - 18, x0 + 44, y0, 8), { w: 10, op: 1 - burst * .6 });   // stukjes membraan
+        let c = rodCell(...A, 1 - burst * .96) + `<g opacity="${f1(1 - burst)}">${chrom(AX, 560)}</g>`;
+        if (burst > .01) for (let k = 0; k < 10; k++) {          // brokstukken van de envelop: groter en duidelijk naar buiten
+          const a = k * 36 + 10, r = 150 + 230 * burst;
+          const x0 = AX + r * Math.cos(a * Math.PI / 180), y0 = 530 + .6 * r * Math.sin(a * Math.PI / 180);
+          c += membraanPts(ptsBoog(x0 - 30, y0, x0, y0 - 24, x0 + 30, y0, 10), { w: 14, op: 1 - burst * .35 });   // stukjes membraan
+        }
+        if (step === 3) {
+          // flits op het moment dat de cel openscheurt
+          const fl = sub(p, .22, .32) * (1 - sub(p, .4, .6));
+          if (fl > .01) c += `<g opacity="${f1(fl)}">` + Array.from({ length: 12 }, (_, k) => { const a = k * 30 * Math.PI / 180; return `<path d="M${f1(AX + 90 * Math.cos(a))},${f1(530 + 60 * Math.sin(a))} L${f1(AX + 260 * Math.cos(a))},${f1(530 + 170 * Math.sin(a))}" stroke="#fff3b0" stroke-width="6" stroke-linecap="round"/>`; }).join('') + '</g>';
+          c += T(AX, 530, T2('barst open!', 'bursts open!'), { size: 44, col: C.danger, w: 800, anchor: 'middle', op: ease(sub(p, .3, .45)) });
+          c += T(AX, 574, T2('nieuwe fagen komen vrij', 'new phages are released'), { size: 28, col: C.text, w: 600, anchor: 'middle', op: ease(sub(p, .5, .7)) });
         }
         if (bOn > .01) c += rodCell(...B, bOn) + `<g opacity="${f1(bOn)}">${chrom(BX, 560)}</g>`;
         c += T(AX, 780, T2('weg 1: kopiëren (lytisch)', 'path 1: copy (lytic)'), { size: 28, col: C.text, w: 700, op: ph(2, 0, .2) });
@@ -91,10 +98,10 @@ export default {
         MINI.forEach(([x, y], i) => {
           const k = ph(2, .15 + i * .07, .4 + i * .07);
           if (k <= .01) return;
-          const dx = (x - AX) * .85 * burst, dy = (y - 540) * .9 * burst - 40 * burst;
+          const dx = (x - AX) * 1.3 * burst, dy = (y - 540) * 1.2 * burst - 40 * burst;
           f += phage(x + dx, y + dy + 40, .3, k, 1, (x - AX) * .25 * burst);
         });
-        if (step === 3) fx += T(AX - 70, 215, T2('≈ 20 minuten', '≈ 20 minutes'), { size: 26, col: C.trna, w: 700, anchor: 'end', op: ease(sub(p, 0, .2)) });
+        if (step === 3) fx += T(AX, 470, T2('na ≈ 20 minuten', 'after ≈ 20 minutes'), { size: 26, col: C.trna, w: 700, anchor: 'middle', op: ease(sub(p, .3, .45)) });
 
         /* faag B: landt, spuit, DNA wordt ingebouwd (stap 4); komt los bij UV (stap 5) */
         let pro = '';
