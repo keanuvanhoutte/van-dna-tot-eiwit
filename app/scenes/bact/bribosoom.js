@@ -9,6 +9,7 @@ import { C } from '../../kit.js';
  *   50S: BA 23S-rRNA · BB 5S-rRNA · BC–BZ en B1–B7 eiwitten
  *   RNA-polymerase: CA, CB α · CC β · CD β′ · CE ω · CF NusG · CN/CT DNA-strengen */
 const L3 = (nl, en) => ({ nl, en });
+const range = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
 const TAG = (sel, nl, en, labelColor, labelOff) => ({ sel, label: { nl, en }, labelColor, labelOff });   // naamkaartje in een overzichtsstap (niets gedimd)
 const A = 'ABCDEFGHIJKLMNOPQRSTU'.slice(1).split('').map(c => 'A' + c).concat(['AY']);          // AB..AU + AY
 const B50 = 'CDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(c => 'B' + c).concat(['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7']);
@@ -45,7 +46,7 @@ export default structure3d({
   outline: { width: .3 },
   zoomPad: .85,
   steps: [
-    { dur: 8000, title: L3('Ribosoom en RNA-polymerase samen', 'Ribosome and RNA polymerase together'), focus: null, zoom: {}, tags: [TAG({ chain: [...S30, ...S50] }, 'ribosoom', 'ribosome'), TAG({ chain: POL }, 'RNA-polymerase', 'RNA polymerase')], tags: [TAG({ chain: [...S30, ...S50] }, 'ribosoom', 'ribosome'), TAG({ chain: POL }, 'RNA-polymerase', 'RNA polymerase')], spin: .01,
+    { dur: 8000, title: L3('Ribosoom en RNA-polymerase samen', 'Ribosome and RNA polymerase together'), focus: null, zoom: {}, tags: [TAG({ chain: [...S30, ...S50] }, 'ribosoom', 'ribosome'), TAG({ chain: POL }, 'RNA-polymerase', 'RNA polymerase')], spin: .01,
       text: L3('Hier zie je een bacterieel ribosoom dat vlak achter het RNA-polymerase hetzelfde mRNA leest.', 'Here a bacterial ribosome reads the same mRNA right behind RNA polymerase.') },
     { dur: 8000, title: L3('De kleine eenheid: 30S', 'The small subunit: 30S'), zoom: {}, spin: .01,
       focus: [GH([...S50, ...POL, ...OTHER]), { sel: { chain: 'AA' }, style: RNA(COL.r16), label: '16S-rRNA', labelColor: COL.r16 }, { sel: { chain: A }, style: PROT(COL.p30) }],
@@ -54,13 +55,16 @@ export default structure3d({
       focus: [GH([...S30, ...POL, ...OTHER]), { sel: { chain: 'BA' }, style: RNA(COL.r23), label: '23S-rRNA', labelColor: COL.r23 }, { sel: { chain: 'BB' }, style: RNA(COL.r23) }, { sel: { chain: B50 }, style: PROT(COL.p50) }],
       text: L3('De 50S-eenheid heeft twee RNA’s (23S en 5S) en ruim 30 eiwitten. Hier worden aminozuren gekoppeld.', 'The 50S subunit has two RNAs (23S and 5S) and over 30 proteins. Here amino acids are joined.') },
     { dur: 8000, title: L3('Een machine vooral uit RNA', 'A machine made mostly of RNA'), zoom: {}, spin: .01,
-      focus: [GH([...A, ...B50, ...POL, ...OTHER], .14), { sel: { chain: 'AA' }, style: RNA(COL.r16), label: '16S', labelColor: COL.r16, labelOff: [-110, 30] }, { sel: { chain: 'BA' }, style: RNA(COL.r23), label: '23S', labelColor: COL.r23, labelOff: [110, -30] }, { sel: { chain: 'BB' }, style: RNA(COL.r23) }],
+      focus: [GH([...A, ...B50, ...POL, ...OTHER], .14),
+        { sel: { chain: 'AA' }, style: RNA(COL.r16), label: '16S', labelColor: COL.r16, labelOff: [-60, -40] }, { sel: { chain: 'BA' }, style: RNA(COL.r23), label: '23S', labelColor: COL.r23, labelOff: [60, -40] }, { sel: { chain: 'BB' }, style: RNA(COL.r23) },
+        // peptidyltransferasecentrum: 23S-domein V (E. coli A2451, U2585, A2602 e.o.) — puur RNA; het ligt diep binnenin (kaartje met lijntje)
+        { sel: { chain: 'BA', resi: [...range(2447, 2455), ...range(2500, 2506), ...range(2583, 2587), ...range(2600, 2605)] }, style: blob('#ffc247', 11), label: L3('koppelplaats: binnenin, van RNA', 'joining site: inside, made of RNA'), labelColor: '#ffc247', labelOff: [0, 110] }],
       text: L3('Ongeveer twee derde van het ribosoom is RNA. Het RNA doet ook het koppelen zelf.', 'About two thirds of the ribosome is RNA. The RNA also does the joining itself.') },
-    { dur: 9000, title: L3('Twee tRNA’s op het mRNA', 'Two tRNAs on the mRNA'), zoom: { chain: ['AW', 'AX', 'AV'] }, rock: 40,
-      focus: [GH(S30, .22), GH(S50, .14), GH([...POL, 'CF', 'CN', 'CT'], .1),
-        { sel: { chain: 'AW' }, style: TR(COL.tP), label: L3('start-tRNA (P)', 'start tRNA (P)'), labelColor: COL.tP, labelOff: [-90, -18], node: 'trna' },
-        { sel: { chain: 'AX' }, style: TR(COL.tA), label: L3('tRNA (A)', 'tRNA (A)'), labelColor: COL.tA, labelOff: [90, 18], node: 'trna' },
-        { sel: { chain: 'AV' }, style: THIN(COL.mrna), label: 'mRNA', labelColor: COL.mrna, labelOff: [0, -70], node: 'bmrna' }],
+    { dur: 9000, title: L3('Twee tRNA’s op het mRNA', 'Two tRNAs on the mRNA'), zoom: { chain: ['AW', 'AX'] }, pad: .62, rock: 40,
+      focus: [GH(S30, .3), GH(S50, .2), GH([...POL, 'CF', 'CN', 'CT'], .1),
+        { sel: { chain: 'AW' }, style: TR(COL.tP), label: L3('start-tRNA (P)', 'start tRNA (P)'), labelColor: COL.tP, labelOff: [-130, 30], node: 'trna' },
+        { sel: { chain: 'AX' }, style: TR(COL.tA), label: L3('tRNA (A)', 'tRNA (A)'), labelColor: COL.tA, labelOff: [130, 30], node: 'trna' },
+        { sel: { chain: 'AV' }, style: THIN(COL.mrna), labelSel: { chain: 'AV', resi: range(14, 22) }, label: 'mRNA', labelColor: COL.mrna, labelOff: [0, -80], node: 'bmrna' }],
       text: L3('In de P-plaats zit het start-tRNA (tRNA-fMet), in de A-plaats het volgende tRNA.', 'The P site holds the start tRNA (tRNA-fMet), the A site holds the next tRNA.') },
     { dur: 9000, title: L3('Het mRNA komt recht uit het polymerase', 'The mRNA comes straight out of the polymerase'), zoom: { chain: [...POL, 'AV'] }, rock: 45,
       // polymerase en 30S doorschijnend in hun eigen kleur, zodat mRNA en DNA erdoorheen te zien zijn
