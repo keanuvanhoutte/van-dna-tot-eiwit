@@ -116,7 +116,7 @@ export default {
           const x = lerp(X.pa[0] + 26, X.u5[0] + 8, ease(sub(p, .15, .85)));
           m += mrna({ capOn: 1, tail: X.pa[0] + 26, pab: 0, to: x, labels: p < .5 });          // hetzelfde gedeadenyleerde mRNA, nu vanaf het 3'-uiteinde
           const eo = sub(p, 0, .06);
-          fa += debris(x + 160, X.pa[0] + 40) + note(Math.max(x + 300, 800), Y + 110, T2('losse bouwstenen (nucleotiden)', 'loose building blocks (nucleotides)'), C.muted, 19, 'middle', sub(p, .3, .45));
+          fa += debris(x + 160, X.pa[0] + 40) + note(Math.max(x + 300, 800), Y + 146, T2('losse bouwstenen (nucleotiden)', 'loose building blocks (nucleotides)'), C.muted, 19, 'middle', sub(p, .3, .45));
           fa += exosoom(x + 76, Y, 72, 40, eo, '');   // ringvormig exosoom; het 3'-uiteinde loopt door het kanaal
           fa += note(x + 76, Y + 98, T2('afbraakring (exosoom)', 'breakdown ring (exosome)'), '#e0b089', 21, 'middle', eo);
           fa += prot(x + 64, Y - 70, 139, 36, T2('SKI-complex', 'SKI complex'), '#6b4a33', eo * (1 - sub(p, .76, .84)), 19);
