@@ -149,6 +149,12 @@
   table.goals td:first-child { width: 34%; }
   table.goals td.k { white-space: nowrap; width: 90px; }
   table.goals tbody tr:hover td { background: rgba(124,196,255,.05); }
+  ol.flow { list-style: none; counter-reset: f; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; max-width: 980px; }
+  ol.flow li { counter-increment: f; position: relative; background: var(--bg-2); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 12px; padding: 12px 14px; }
+  ol.flow li::before { content: counter(f); font: 700 12px var(--mono); color: var(--accent); margin-right: 8px; }
+  ol.flow b { font-size: 15px; }
+  ol.flow span { display: block; color: var(--muted); font-size: 13.5px; margin-top: 4px; }
+  ol.flow li:not(:last-child)::after { content: "→"; position: absolute; right: -9px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 14px; z-index: 1; }
   ol.how3 { list-style: none; padding: 0; margin: 0 0 6px; display: flex; flex-wrap: wrap; gap: 8px; }
   ol.how3 li { display: flex; align-items: center; gap: 9px; background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px 7px 7px; font-size: 14.5px; }
   ol.how3 b { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 700 12px var(--mono); background: rgba(124,196,255,.14); color: var(--accent); }

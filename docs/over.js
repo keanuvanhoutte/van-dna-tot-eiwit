@@ -206,14 +206,43 @@ function tabSci() {
       <p style="font-size:13px">${repLinks(r.nr)}${en ? ' <small>(reports in Dutch)</small>' : ''}</p></div></details>`).join('');
 
   return `<h2>${esc(L({ nl: 'Wetenschappelijke borging', en: 'Scientific quality assurance' }))}</h2>
-  <p class="sub">${esc(L({ nl: 'Uitgangspunt: geen enkele uitspraak in Dogma zonder een wetenschappelijke bron die echt gelezen is, en elke vereenvoudiging wordt benoemd. Hieronder staat hoe dat in de praktijk gebeurde, met de verslagen erbij.', en: 'Starting point: no statement in Dogma without a scientific source that was actually read, and every simplification is named. Below is how that was done in practice, with the reports included.' }))}</p>
+  ${glance({ nl: 'Elke uitspraak steunt op een <b>wetenschappelijke bron die echt gelezen is</b>, en werd daarna door een <b>aparte controleur</b> nagekeken.', en: 'Every statement rests on a <b>scientific source that was actually read</b>, and was then checked by a <b>separate reviewer</b>.' },
+    { nl: 'Wat vereenvoudigd is, staat er altijd bij. Wat niet in een bron staat, werd geschrapt.', en: 'What is simplified is always stated. What is not in a source was removed.' })}
+
+  <h3>${esc(L({ nl: 'Van bron tot zin in de app', en: 'From source to sentence in the app' }))}</h3>
+  <ol class="flow">
+    <li><b>${esc(L({ nl: 'Opzoeken', en: 'Search' }))}</b><span>${esc(L({ nl: 'recente review of het oorspronkelijke artikel (PubMed)', en: 'recent review or the original paper (PubMed)' }))}</span></li>
+    <li><b>${esc(L({ nl: 'Lezen', en: 'Read' }))}</b><span>${esc(L({ nl: 'de tekst zelf, niet enkel de titel', en: 'the text itself, not just the title' }))}</span></li>
+    <li><b>${esc(L({ nl: 'Gewone taal', en: 'Plain language' }))}</b><span>${esc(L({ nl: 'één korte zin; details in het uitlegpaneel', en: 'one short sentence; details in the explanation panel' }))}</span></li>
+    <li><b>${esc(L({ nl: 'Controleren', en: 'Check' }))}</b><span>${esc(L({ nl: 'een aparte controleur legt elke zin opnieuw naast de bron, in NL en EN', en: 'a separate reviewer compares every sentence with the source again, in Dutch and English' }))}</span></li>
+  </ol>
+
+  <h3>${esc(L({ nl: 'Welke bronnen?', en: 'Which sources?' }))}</h3>
+  <div class="facts">
+    ${fact('📄', { nl: `Artikels · ${nKind('paper')}`, en: `Papers · ${nKind('paper')}` }, { nl: 'peer-reviewed onderzoek en reviews: eerste keuze', en: 'peer-reviewed research and reviews: first choice' })}
+    ${fact('📘', { nl: `Handboeken · ${nKind('book')}`, en: `Textbooks · ${nKind('book')}` }, { nl: 'universitaire handboeken (NCBI Bookshelf)', en: 'university textbooks (NCBI Bookshelf)' })}
+    ${fact('🧊', { nl: `PDB-pagina’s · ${nKind('pdb')}`, en: `PDB pages · ${nKind('pdb')}` }, { nl: 'gemeten 3D-structuren en PDB-101', en: 'measured 3D structures and PDB-101' })}
+    ${fact('🗄️', { nl: `Databanken · ${nKind('db')}`, en: `Databases · ${nKind('db')}` }, { nl: 'UniProt, Ensembl, ICTV, BioNumbers…', en: 'UniProt, Ensembl, ICTV, BioNumbers…' })}
+    ${fact('🚫', { nl: 'Nooit als bron', en: 'Never a source' }, { nl: 'Wikipedia, blogs, populaire media, AI-samenvattingen', en: 'Wikipedia, blogs, popular media, AI summaries' })}
+  </div>
+
+  <h3>${esc(L({ nl: 'Ik wil…', en: 'I want to…' }))}</h3>
+  <div class="tscroll"><table class="goals"><tbody>
+    <tr><td><b>${esc(L({ nl: 'de bron van een uitspraak zien', en: 'see the source of a statement' }))}</b></td><td>${L({ nl: 'in de animatie: uitlegpaneel → <b>Meer</b> → Bronnen', en: 'in the animation: explanation panel → <b>More</b> → Sources' })}</td></tr>
+    <tr><td><b>${esc(L({ nl: 'weten wat vereenvoudigd is', en: 'know what is simplified' }))}</b></td><td>${L({ nl: '<b>Wat is hier vereenvoudigd?</b> bij elke animatie', en: '<b>What is simplified here?</b> in every animation' })}</td></tr>
+    <tr><td><b>${esc(L({ nl: 'alle bronnen doorzoeken', en: 'search all sources' }))}</b></td><td><a href="#src">${esc(L({ nl: 'tabblad Alle bronnen →', en: 'All sources tab →' }))}</a></td></tr>
+    <tr><td><b>${esc(L({ nl: 'de controleverslagen lezen', en: 'read the verification reports' }))}</b></td><td>${L({ nl: 'hieronder, <b>Wat er gecontroleerd is</b>', en: 'below, <b>What was checked</b>' })}</td></tr>
+    <tr><td><b>${esc(L({ nl: 'de grenzen van de app kennen', en: 'know the limits of the app' }))}</b></td><td>${L({ nl: 'hieronder, <b>Bekende grenzen</b>', en: 'below, <b>Known limitations</b>' })}</td></tr>
+  </tbody></table></div>
+
+  <h3>${esc(L({ nl: 'Alle details', en: 'All details' }))}</h3>
   <div class="stats" style="margin-top:0">
     <div><b>${SOURCES.length}</b><span>${esc(L({ nl: 'bronnen in de app', en: 'sources in the app' }))}</span></div>
     <div><b>${VERIF.totals.dois_checked}</b><span>${esc(L({ nl: "DOI's nagekeken via Crossref", en: 'DOIs checked via Crossref' }))}</span></div>
     <div><b>${nodeIds.filter(id => DETAILS[id]?.sources?.length).length}/${nodeIds.length}</b><span>${esc(L({ nl: 'onderwerpen met bronnen', en: 'topics with sources' }))}</span></div>
   </div>
 
-  <details class="acc" open><summary>1 · ${esc(L({ nl: 'Werkwijze in zes regels', en: 'Method in six rules' }))}</summary><div class="in"><ol class="steps">
+  <details class="acc"><summary>1 · ${esc(L({ nl: 'Werkwijze in zes regels', en: 'Method in six rules' }))}</summary><div class="in"><ol class="steps">
     <li>${L({ nl: '<b>Bron per uitspraak.</b> Elk getal, elke naam en elke volgorde in een ondertitel, label of uitleg moet terug te vinden zijn in een bron die bij dat onderwerp in de app staat (uitlegpaneel → tabblad Meer → Bronnen).', en: '<b>A source per statement.</b> Every number, name and order in a caption, label or explanation must be traceable to a source listed for that topic in the app (explanation panel → More tab → Sources).' })}</li>
     <li>${L({ nl: '<b>Gelezen, niet enkel geciteerd.</b> Een bron telt pas als de tekst echt opgehaald en gelezen is (samenvatting via PubMed, volledige tekst via PubMed Central). Wat niet in de gelezen tekst staat, wordt herschreven of geschrapt, ook als het “waarschijnlijk klopt”.', en: '<b>Read, not just cited.</b> A source only counts once its text has actually been retrieved and read (abstract via PubMed, full text via PubMed Central). What is not in the text that was read is rewritten or removed, even if it is “probably right”.' })}</li>
     <li>${L({ nl: '<b>Onafhankelijke controle.</b> Na het bouwen legt een afzonderlijke controleur, die de tekst niet zelf schreef, elke uitspraak opnieuw tegen de bron. Dat is voor de hele app gebeurd: alle verhalen, zijpaden, uitlegpanelen, de woordenlijst en de 3D-bibliotheek. Daarna wordt nagekeken of elke correctie juist en in beide talen verwerkt is.', en: '<b>Independent check.</b> After building, a separate reviewer who did not write the text checks every statement against its source again. This was done for the whole app: all stories, side paths, explanation panels, the glossary and the 3D library. Afterwards it is checked that every correction was made correctly and in both languages.' })}</li>
