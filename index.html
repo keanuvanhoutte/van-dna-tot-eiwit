@@ -126,7 +126,8 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
     .how { grid-template-columns: 1fr; }
     .sides { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
-  @media (max-width: 560px) { .sides, .aud { grid-template-columns: 1fr; } .aud > div:first-child { border-right: 0; padding: 0 0 14px; } .aud > div:last-child { padding: 0; } h1 { font-size: 42px; } }
+  @media (max-width: 560px) { nav.top { gap: 10px 14px; } #lvlLbl { display: none; } .lvlbtn select { font-size: 13px; padding: 7px 8px; max-width: 200px; }
+    .sides, .aud { grid-template-columns: 1fr; } .aud > div:first-child { border-right: 0; padding: 0 0 14px; } .aud > div:last-child { padding: 0; } h1 { font-size: 42px; } }
   @media (prefers-reduced-motion: reduce) { a.side, a.door, a.story { transition: none; } }
 </style>
 </head>
