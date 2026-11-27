@@ -208,8 +208,9 @@ export default {
             const pts = [[470, 640], [430, 730], [418, 803], [xe, 872]];   // na de porie uit elkaar
             const seg = Math.min(2.999, k * 3), i = Math.floor(seg), f = seg - i;
             const x = lerp(pts[i][0], pts[i + 1][0], f), y = lerp(pts[i][1], pts[i + 1][1], f);
+            const lo = step === 7 ? 1 : clamp(1 - sub(k, .22, .3) + sub(k, .85, .95));   // naam niet tonen tijdens de doortocht door de porie (zou op het membraan staan)
             const kl = n === 'pre-40S', rx = kl ? 22 : 27;   // kleine en grote subeenheid apart, elk smal genoeg voor de porie
-            ex += `<g opacity="${f1(k > 0 && k < 1 ? 1 : step === 7 ? 1 : k >= 1 ? .8 : 0)}">${eiwit(x, y, rx, kl ? 13 : 19, c, { seed: kl ? 40 : 60, bumps: .08 })}${kl ? txt(x - rx - 8, y + 5, n, '#fff', 15, 'end', 700) : txt(x + rx + 8, y + 5, n, '#fff', 15, 'start', 700)}</g>`;
+            ex += `<g opacity="${f1(k > 0 && k < 1 ? 1 : step === 7 ? 1 : k >= 1 ? .8 : 0)}">${eiwit(x, y, rx, kl ? 13 : 19, c, { seed: kl ? 40 : 60, bumps: .08 })}<g opacity="${f1(lo)}">${kl ? txt(x - rx - 8, y + 5, n, '#fff', 15, 'end', 700) : txt(x + rx + 8, y + 5, n, '#fff', 15, 'start', 700)}</g></g>`;
           });
           ex += `<g opacity="${f1(step === 6 ? sub(p, .1, .3) : 1 - ease(sub(p, 0, .3)))}">${pill(290, 760, 200, 32, T2('exporteiwit (CRM1)', 'export protein (CRM1)'), C.prot2, 1, 16)}</g>`;
         }
