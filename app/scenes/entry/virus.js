@@ -64,7 +64,7 @@ export default {
   svg() {
     return svgOpen() + `
     <rect x="-400" y="${MEM}" width="2400" height="1400" fill="url(#gCyto)"/>
-    <text x="195" y="${MEM - 44}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">${T2('extracellulair', 'extracellular')}</text>
+    <text x="70" y="${MEM - 44}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">${T2('extracellulair', 'extracellular')}</text>
     <text x="195" y="${MEM + 60}" font-size="22" fill="${C.muted}" font-family="Inter" opacity=".7">cytosol</text>
     <g id="vi-mem"></g>
     <g id="vi-rec"></g>

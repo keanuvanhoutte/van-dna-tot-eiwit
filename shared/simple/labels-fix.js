@@ -2,6 +2,9 @@
  * Uit de beeldcontroles (overlap, afgesneden, lege pillen, vaktermen) en voor woorden die per figuur iets anders betekenen. */
 export default {
   nl: {
+    "tertiair|Meest begraven 25 %: 89 % hydrofoob": "binnenin: vooral delen die water mijden",
+    "tertiair|Meest blootgestelde 25 %: 27 % hydrofoob": "buitenkant: vooral delen die water zoeken",
+    "export|EJC": "merk",
     "secundair|β1": "stuk 1",
     "secundair|β2": "stuk 2",
     "secundair|β5": "stuk 5",
@@ -221,6 +224,9 @@ export default {
     "viruskopie|S · E · M · N: later, via kortere kopieën": "andere eiwitten: later",
   },
   en: {
+    "tertiair|Most buried 25 %: 89 % hydrophobic": "inside: mostly parts that avoid water",
+    "tertiair|Most exposed 25 %: 27 % hydrophobic": "outside: mostly parts that like water",
+    "export|EJC": "mark",
     "secundair|β1": "piece 1",
     "secundair|β2": "piece 2",
     "secundair|β5": "piece 5",

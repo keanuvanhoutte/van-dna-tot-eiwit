@@ -617,8 +617,12 @@ function updateLabels() {
     const off = r.width === 0 && r.height === 0 || r.right < s.left || r.left > s.right || r.bottom < s.top + 40 || r.top > s.bottom - 120 || !visible(anchor);
     lb.style.display = off ? 'none' : '';
     const below = anchor.dataset.pos === 'below';
-    lb.style.left = (r.left - s.left + r.width / 2) + 'px';
-    lb.style.top = (below ? r.bottom - s.top + 6 : r.top - s.top - 6) + 'px';
+    /* binnen het beeld houden: een knop aan de rand schuift naar binnen in plaats van afgesneden te worden */
+    const w = lb.offsetWidth, h = lb.offsetHeight, M = 6;
+    const x = Math.max(w / 2 + M, Math.min(s.width - w / 2 - M, r.left - s.left + r.width / 2));
+    const y = below ? Math.min(s.height - h - M, r.bottom - s.top + 6) : Math.max(h + M, r.top - s.top - 6);
+    lb.style.left = x + 'px';
+    lb.style.top = y + 'px';
   }
 }
 /* ---------- in- en uitklappen (bewaard in prefs): rail links, uitlegpaneel rechts, uitleg bij de stap ---------- */

@@ -29,7 +29,8 @@ export function molScene(o) {
         <div class="load3d" style="width:${f1(100 * PANEL_X / 1600)}%">${L({ nl: `Structuur ${o.pdb} laden uit de Protein Data Bank…`, en: `Loading structure ${o.pdb} from the Protein Data Bank…` })}</div>
         <a class="pdbtag" href="https://www.rcsb.org/structure/${o.pdb}" target="_blank" rel="noopener">PDB ${o.pdb} ↗</a>`;
     },
-    init(layer) {
+    init(layer, api) {
+      EASY = api?.easy ?? null;   // hobbyist: verborgen paneelregels overslaan (geen gaten)
       layer.querySelectorAll('.a-ov [data-node]').forEach(e => { e.style.pointerEvents = 'auto'; });
       const el = layer.querySelector('.v3d'), panelEl = layer.querySelector('.a-panel'), ov = layer.querySelector('.a-ov');
       let viewer = null, dead = false;
@@ -131,11 +132,13 @@ export function ptxt(x, y, s, col = C.text, size = 23, w = 600, anchor = 'start'
 }
 export const phead = s => ptxt(PX, 162, s, C.text, 27, 700);
 /* regels met automatische y (elk item: [tekst, kleur?, grootte?, gewicht?] of '' = witregel) */
+let EASY = null;
 export function plines(y0, items, dy = 38) {
   let y = y0, out = '';
   for (const it of items) {
     if (!it) { y += dy * .6; continue; }
     const [s, col, size, w] = [].concat(it);
+    if (EASY && typeof s === 'string' && EASY(s.replace(/<[^>]*>/g, '')) === '') continue;   // verborgen regel: geen lege plek
     out += ptxt(PX, y, s, col ?? '#c3cde2', size ?? 23, w ?? 600); y += dy;
   }
   return out;

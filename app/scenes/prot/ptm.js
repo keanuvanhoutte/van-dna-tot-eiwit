@@ -126,7 +126,8 @@ export default {
     ${T(5900, 734, T2('tekort aan vitamine C → scheurbuik', 'vitamin C deficiency → scurvy'), { size: 25, col: C.danger, w: 600 })}
     </svg>`;
   },
-  init(svg) {
+  init(svg, api) {
+    const hob = api?.level === 'hobby';   // hobbyist: de reactie in woorden, zonder formules (kort kader)
     const $ = id => svg.getElementById(id);
     const kinPos = k => [lerp(KIN[0] - 380, KIN[0], k), lerp(KIN[1] - 180, KIN[1], k)];
     const atpAt = ([x, y]) => [x + 150, y + 62];
@@ -184,12 +185,20 @@ export default {
         let ch = '';
         if (chemK > .01) {
           const x = 1300;
+          if (hob) {
+            ch += panel(1060, 150, 480, 270, { op: chemK, col: C.prot });
+            ch += T(x, 200, T2('Wat er gebeurt', 'What happens'), { size: 24, col: C.prot, w: 700, op: chemK });
+            ch += T(x, 256, T2('bouwsteen + energie', 'building block + energy'), { size: 24, w: 700, col: CLASSCOL.p, op: chemK });
+            ch += T(x, 306, '↓  ' + T2('een helper-eiwit', 'a helper protein'), { size: 22, col: C.prot, op: chemK });
+            ch += T(x, 360, T2('bouwsteen met een labeltje', 'building block with a tag'), { size: 24, w: 700, col: PHOS, op: chemK });
+          } else {
           ch += panel(1060, 150, 480, 470, { op: chemK, col: C.prot });
           ch += T(x, 200, T2('De reactie', 'The reaction'), { size: 24, col: C.prot, w: 700, op: chemK });
           ch += T(x, 256, 'Ser–CH₂–OH', { size: 26, font: 'JetBrains Mono', w: 700, col: CLASSCOL.p, op: chemK }) + T(x, 296, '+ ATP', { size: 24, font: 'JetBrains Mono', col: ATPC, op: chemK });
           ch += T(x, 350, '↓  ' + T2('kinase', 'kinase'), { size: 24, col: C.prot, op: chemK });
           ch += T(x, 406, 'Ser–CH₂–O–PO₃²⁻', { size: 26, font: 'JetBrains Mono', w: 700, col: PHOS, op: chemK }) + T(x, 446, '+ ADP', { size: 24, font: 'JetBrains Mono', col: ATPC, op: chemK });
           ch += TL(x, 510, [T2('ook op Thr (OH) en Tyr (fenol-OH)', 'also on Thr (OH) and Tyr (phenol OH)'), T2('mens: ~500 eiwitkinasen', 'human: ~500 protein kinases')], { size: 19, col: '#c9d2e4', w: 500, op: chemK });
+          }
         }
         $('pt-chem').innerHTML = ch;
         // ubiquitine (stap 8)

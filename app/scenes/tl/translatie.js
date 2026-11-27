@@ -135,7 +135,7 @@ export default {
       $('tl-cap').innerHTML = `<circle cx="${f1(capX)}" cy="${YM}" r="23" fill="${C.cap}" stroke="${C.rna}" stroke-width="2"/><text x="${f1(capX)}" y="${YM + 5}" font-size="15" text-anchor="middle" fill="#3a1a05" font-family="Inter" font-weight="700" opacity="${f1(lo)}">m⁷G</text>` + txt(capX - 50 * ov, YM - 34 + 10 * ov, "5′", C.text, f1(18 + 70 * ov));
       const aS = ntX(MRNA.length - POLYA.length, c, v, scan) - NT / 2, aE = x1;
       $('tl-polya').innerHTML = `<rect x="${f1(aS)}" y="${YM - 16}" width="${f1(aE - aS)}" height="70" fill="transparent"/>` + (lo > .01 ? `<g opacity="${f1(lo)}"><path d="M${f1(aS + 4)},${YM + 76} v10 H${f1(aE - 4)} v-10" stroke="${C.rna}" stroke-width="2" fill="none"/>` +
-        (kortA === 2 ? txt(aS + 8, YM + 112, 'poly(A)', C.rna, 24, 'start', 700) : kortA === 1 ? txt(aS - 8, YM + 112, 'poly(A) →', C.rna, 24, 'end', 700) :   // stopstappen: het midden van de staart valt buiten beeld
+        (kortA === 2 ? txt(aS - 8, YM + 112, 'poly(A) →', C.rna, 24, 'end', 700) :   // links van de staart: niet tegen de rechterrand kortA === 1 ? txt(aS - 8, YM + 112, 'poly(A) →', C.rna, 24, 'end', 700) :   // stopstappen: het midden van de staart valt buiten beeld
           txt((aS + aE) / 2, YM + 114, T2('poly(A)-staart (verkort)', 'poly(A) tail (shortened)'), C.rna, 20)) + '</g>' : '');
       $('tl-polyaA').setAttribute('cx', f1((aS + aE) / 2)); $('tl-polyaA').setAttribute('cy', YM + 150 + 60 * ov);
       // UTR-labels (alleen in de stappen waar ze ertoe doen)

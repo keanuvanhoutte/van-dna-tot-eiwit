@@ -62,7 +62,7 @@ export default {
     return svgOpen() + `
     <g id="rs-main"></g>
     <g id="rs-h1" data-node="rifampicine" data-color="${K.rnap}" data-label="${T2('Voorbeeld: rifampicine', 'Example: rifampicin')}"><rect x="580" y="340" width="240" height="170" fill="transparent"/><circle data-anchor="rifampicine" cx="700" cy="610" r="1" fill="none"/></g>
-    <g id="rs-h2" data-node="bplasmide" data-color="${K.plas}" data-label="${T2('Plasmiden', 'Plasmids')}"><rect x="140" y="420" width="760" height="240" fill="transparent"/><circle data-anchor="bplasmide" cx="520" cy="735" r="1" fill="none"/></g>
+    <g id="rs-h2" data-node="bplasmide" data-color="${K.plas}" data-label="${T2('Plasmiden', 'Plasmids')}"><rect x="140" y="420" width="760" height="240" fill="transparent"/><circle data-anchor="bplasmide" cx="790" cy="735" r="1" fill="none"/></g>
     <g id="rs-h3" data-node="antibiotica" data-color="${DRUG}" data-label="${T2('Waar antibiotica aangrijpen', 'Where antibiotics strike')}"><rect x="1010" y="640" width="530" height="50" fill="transparent"/><circle data-anchor="antibiotica" cx="1275" cy="690" r="1" fill="none"/></g>
     <g id="rs-side"></g>
     </svg>`;

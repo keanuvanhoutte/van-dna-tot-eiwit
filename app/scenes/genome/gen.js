@@ -111,7 +111,7 @@ export default {
       <g id="gn-loop"></g>
       <g data-node="genregulatie" data-color="${col.enh}" data-label="${T2('Enhancer → genregulatie', 'Enhancer → gene regulation')}">
         <g id="gn-enh">${`<rect x="${ENH[0]}" y="${Y - 20}" width="${ENH[1] - ENH[0]}" height="40" rx="10" fill="#4a3d1c" stroke="${col.enh}" stroke-width="3"/>`}${txt((ENH[0] + ENH[1]) / 2, Y + 7, 'enhancer', '#fff', 21, 'middle', 700)}
-        <circle id="gn-enhA" data-anchor="genregulatie" cx="${(ENH[0] + ENH[1]) / 2 + 60}" cy="${Y + 62}" r="1" fill="none" data-pos="below"/></g>
+        <circle id="gn-enhA" data-anchor="genregulatie" cx="${(ENH[0] + ENH[1]) / 2}" cy="${Y - 52}" r="1" fill="none"/></g>   <!-- boven het DNA: niet tegen het promoterlabel eronder -->
       </g>
       <g data-node="promoter" data-color="${col.prom}" data-label="${T2('Promoter', 'Promoter')}">
         <rect x="${PROM[0]}" y="${Y - 22}" width="${PROM[1] - PROM[0]}" height="44" rx="10" fill="#2e2556" stroke="${col.prom}" stroke-width="3"/>
@@ -184,7 +184,7 @@ export default {
         $('gn-dna').setAttribute('opacity', f1(step === 6 ? 1 - .8 * ease(sub(p, 0, .05)) : step === 7 ? .2 + .8 * ease(sub(p, 0, .3)) : 1));
         $('gn-pre').setAttribute('opacity', step === 6 ? 1 : step === 0 || step === 7 ? .9 : .15);
         // in stap 3 (promoter) schuiven de knoppen 'Enhancer' en 'Promoter' onder de uitleg van de TATA-box; DNA-label enkel waar het in beeld valt
-        $('gn-enhA').setAttribute('cy', step === 2 ? Y + 150 : Y + 62); $('gn-enhA').setAttribute('cx', step === 2 ? 180 : (ENH[0] + ENH[1]) / 2 + 60);
+        $('gn-enhA').setAttribute('cy', step === 2 ? Y + 150 : Y - 52); $('gn-enhA').setAttribute('cx', step === 2 ? 180 : (ENH[0] + ENH[1]) / 2);
         $('gn-promA').setAttribute('cy', step === 2 ? Y + 150 : Y + 84); $('gn-promA').setAttribute('cx', step === 2 ? 420 : (PROM[0] + PROM[1]) / 2);
         $('gn-dnalab').setAttribute('opacity', step === 1 || step === 2 || step === 5 ? 0 : 1);
         const m = step === 6 ? ease(sub(p, .35, .8)) : step === 0 || step === 7 ? .9 : .15;
