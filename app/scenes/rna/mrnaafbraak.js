@@ -65,7 +65,10 @@ export default {
       if (b2 > a2) m += seg(a2, b2, C.rna, 12);
       if (b3 > a3) m += seg(a3, b3, '#d9854a', 8);
       const ta = Math.max(X.pa[0], from), tb = Math.min(tail, to);
-      if (tb > ta) m += `<line x1="${f1(ta)}" y1="${Y}" x2="${f1(tb)}" y2="${Y}" stroke="${C.cap}" stroke-width="7" stroke-dasharray="3 3"/>`;
+      if (tb > ta) {
+        m += `<line x1="${f1(ta)}" y1="${Y}" x2="${f1(tb)}" y2="${Y}" stroke="${C.cap}" stroke-width="16" stroke-linecap="round" opacity=".35"/>`;
+        for (let xa = X.pa[0] + 9; xa < tb - 4; xa += 17) if (xa > ta) m += `<text x="${f1(xa)}" y="${Y + 5}" font-size="13" text-anchor="middle" fill="${C.cap}" font-family="JetBrains Mono" font-weight="700">A</text>`;
+      }
       if (X.are > from && X.are < to) m += `<rect x="${X.are - 34}" y="${Y - 10}" width="68" height="20" rx="4" fill="#ffd36b" opacity=".85"/>`;
       if (labels) {
         if (b2 - a2 > 200) m += note((a2 + b2) / 2, Y + 76, T2('coderend deel (ORF)', 'coding region (ORF)'), C.rna, 19);
@@ -99,27 +102,28 @@ export default {
           if (step === 3) {
             const fly = sub(p, .6, 1);
             m += `<g opacity="${f1(1 - sub(p, .85, 1))}" transform="translate(${f1(-60 * fly)} ${f1(-120 * fly)})">${capG(X.cap, Y, 22, sub(p, .55, .6))}</g>`;
-            m += note(X.cap - 60, Y - 160, 'm⁷GDP', C.cap, 19, 'middle', sub(p, .7, .85) * (1 - sub(p, .88, .95)));
-            m += note(X.cap + 16, Y - 26, "5′-p", '#ffd36b', 19, 'middle', sub(p, .7, .85));
+            m += note(X.cap - 60, Y - 160, T2('kapje', 'cap'), C.cap, 20, 'middle', sub(p, .7, .85) * (1 - sub(p, .88, .95)));
+            m += note(X.cap + 20, Y - 30, T2('onbeschermd begin', 'unprotected start'), '#ffd36b', 20, 'start', sub(p, .7, .85));
           }
         } else if (step === 4) {
           const x = lerp(X.u5[0], X.pa[0] + 26, ease(sub(p, .1, .95)));
           m += mrna({ capOn: 0, tail, pab: 0, from: x, labels: p < .5 });
           fa += debris(X.u5[0], x - 80) + prot(x - 30, Y, 78, 45, 'XRN1', '#8a5a3a', 1, 19);
-          fa += `<g opacity="${f1(1 - sub(p, .9, 1))}">` + arrow(x + 10, Y - 60, x + 110, Y - 60, '#e0b089', 3) + `</g>` + note(x + 60, Y - 72, "5′ → 3′", '#e0b089', 19, 'middle', 1 - sub(p, .9, 1));
-          fa += note(Math.min(x - 90, 800), Y + 110, T2('losse nucleotiden (NMP)', 'free nucleotides (NMPs)'), C.muted, 19, 'middle', sub(p, .2, .35));
+          fa += note(x - 30, Y - 44, T2('afbraakenzym', 'breakdown enzyme'), '#e0b089', 21, 'middle', sub(p, 0, .1));
+          fa += `<g opacity="${f1(1 - sub(p, .9, 1))}">` + arrow(x + 30, Y - 90, x + 130, Y - 90, '#e0b089', 3) + `</g>` + note(x + 80, Y - 102, T2('eet van 5′ naar 3′', 'eats from 5′ to 3′'), '#e0b089', 19, 'middle', 1 - sub(p, .9, 1));
+          fa += note(Math.min(x - 90, 800), Y + 110, T2('losse bouwstenen (nucleotiden)', 'loose building blocks (nucleotides)'), C.muted, 19, 'middle', sub(p, .2, .35));
         } else if (step === 5) {
           const x = lerp(X.pa[0] + 26, X.u5[0] + 8, ease(sub(p, .15, .85)));
           m += mrna({ capOn: 1, tail: X.pa[0] + 26, pab: 0, to: x, labels: p < .5 });          // hetzelfde gedeadenyleerde mRNA, nu vanaf het 3'-uiteinde
           const eo = sub(p, 0, .06);
-          fa += debris(x + 160, X.pa[0] + 40) + note(Math.max(x + 300, 800), Y + 110, T2('losse nucleotiden (NMP)', 'free nucleotides (NMPs)'), C.muted, 19, 'middle', sub(p, .3, .45));
+          fa += debris(x + 160, X.pa[0] + 40) + note(Math.max(x + 300, 800), Y + 110, T2('losse bouwstenen (nucleotiden)', 'loose building blocks (nucleotides)'), C.muted, 19, 'middle', sub(p, .3, .45));
           fa += exosoom(x + 76, Y, 72, 40, eo, '');   // ringvormig exosoom; het 3'-uiteinde loopt door het kanaal
-          fa += note(x + 76, Y + 98, T2('exosoom (ring)', 'exosome (ring)'), '#e0b089', 20, 'middle', eo);
+          fa += note(x + 76, Y + 98, T2('afbraakring (exosoom)', 'breakdown ring (exosome)'), '#e0b089', 21, 'middle', eo);
           fa += prot(x + 64, Y - 70, 139, 36, T2('SKI-complex', 'SKI complex'), '#6b4a33', eo * (1 - sub(p, .76, .84)), 19);
           fa += note(x + 64, Y + 70, "3′ → 5′", '#e0b089', 19, 'middle', sub(p, .04, .12) * (1 - sub(p, .8, .87)));
           if (p > .8) {
             fa += prot(X.cap + 30, Y - 64, 81, 36, 'DcpS', '#8a5a3a', sub(p, .8, .88), 19);
-            fa += note(X.cap + 30, Y + 60, 'm⁷GpppN → m⁷GMP', C.cap, 19, 'middle', sub(p, .85, .95));
+            fa += note(X.cap + 30, Y - 104, T2('ruimt het kapje op', 'clears the cap'), C.cap, 19, 'middle', sub(p, .85, .95));
           }
         } else {
           // P-bodies: een paar niet-vertaalde mRNA's in een druppel
@@ -149,16 +153,19 @@ export default {
         }
         if (step === 2) {
           const ph = p < .45;
-          fa += prot(tail + 34, Y - 40, ph ? 110 : 110, 30, ph ? 'PAN2–PAN3' : 'CCR4–NOT', '#8a5a3a', sub(p, 0, .1), 19);
-          fa += note(tail + 34, Y + 44, 'A A A …', C.cap, 19, 'middle', 1 - sub(p, .8, .9));
+          fa += prot(tail + 34, Y - 44, 110, 30, ph ? 'PAN2–PAN3' : 'CCR4–NOT', '#8a5a3a', sub(p, 0, .1), 17);
+          const nA = Math.round(lerp(250, 15, dead));   // ≈ 250 A's bij de start, ingekort tot een korte rest (zie 'simplified')
+          fa += note(tail + 30, Y - 120, T2(`staart: ${nA} A’s`, `tail: ${nA} A’s`), C.cap, 22, 'middle', sub(p, 0, .1));
+          fa += note(tail + 34, Y - 82, T2('knabbelt de staart af', 'nibbles the tail away'), '#e0b089', 19, 'middle', sub(p, .05, .15));
           for (let i = 0; i < 6; i++) { const drop = clamp((PAB[i] - tail) / 50); if (drop > 0 && drop < 1) fa += `<path d="${eiwitPad(PAB[i] + 20 * drop, Y - 22 - 120 * drop, 15, 13, 50 + i, .1)}" fill="#6f5bd6" opacity="${f1((1 - drop) * (1 - sub(p, .85, .95)))}"/>`; }   // losgelaten PABPC1 drijft weg en blijft niet zweven
           fa += note(900, Y - 160, T2('translatie stopt', 'translation stops'), '#ffd36b', 19, 'middle', sub(p, .5, .7));
         }
         if (step === 3) {
           const k = ease(sub(p, 0, .3));
-          fa += prot(X.pa[0] + 20, Y + 44, 149, 36, 'LSm1–7·PAT1', '#6b4a33', k, 19);
+          fa += prot(X.pa[0] + 20, Y + 44, 149, 36, 'LSm1–7·PAT1', '#6b4a33', k, 15);
           fa += `<path d="M${X.pa[0] - 40},${Y + 44} C${X.pa[0] - 400},${Y + 180} ${X.cap + 200},${Y + 160} ${X.cap + 60},${Y + 60}" stroke="#e0b089" stroke-width="3" fill="none" stroke-dasharray="7 6" opacity="${f1(sub(p, .2, .35))}"/>`;
-          fa += prot(X.cap + 70, Y + 48, 81, 36, 'DCP2', '#8a5a3a', sub(p, .3, .45), 19) + prot(X.cap + 150, Y + 80, 87, 34, 'DCP1', '#6b4a33', sub(p, .3, .45), 19);
+          fa += prot(X.cap + 70, Y + 48, 81, 36, 'DCP2', '#8a5a3a', sub(p, .3, .45), 19);
+          fa += note(X.cap - 50, Y + 104, T2('kapje-knipper', 'cap cutter'), '#e0b089', 21, 'middle', sub(p, .3, .45));
         }
         $('md-mrna').innerHTML = m;
         $('md-tli').innerHTML = tli; $('md-rib').innerHTML = rib; $('md-fac').innerHTML = fa;
@@ -166,7 +173,7 @@ export default {
         // hotspots naar miRNA en NMD
         $('md-mi').innerHTML = step === 2 ? prot(1260, Y + 110, 160, 36, 'miRNA·AGO2', '#9b7bff', sub(p, .5, .7), 19) : '';
         setHot(svg, 'md-iA', step === 2 && p > .6 ? [1260, Y + 110, 118, 30] : step === 6 && p > .3 ? [905, 445, 60, 28] : null);
-        $('md-nmd').innerHTML = step === 4 ? prot(1250, 250, 204, 36, T2('NMD (SMG6-knip)', 'NMD (SMG6 cut)'), '#e0679a', sub(p, .3, .5), 19) : '';
+        $('md-nmd').innerHTML = '';   // geen losse NMD-pil in de figuur; de link naar NMD blijft als klikbaar label
         setHot(svg, 'md-nA', step === 4 && p > .4 ? [1250, 250, 150, 30] : null);
         setHot(svg, 'md-kA', step === 6 && p > .5 ? [800, 242, 110, 30] : null);   // zijpad RNA-lot: P-body → druppels bij stress
       },
