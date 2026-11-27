@@ -7,6 +7,9 @@
  *   const a3 = atoms3d(svg, { box: 'se-box', steps: { 1: true, … } });
  *   a3.setAtoms(R, sheetLines)            // residuen (byResi + addH) en HELIX/SHEET-regels uit het PDB-bestand
  *   const op = a3.update(s, spec)         // spec = { key, ids, M, center, zoom, hb, dim, cb, cart, labels, cap }
+ * Bewegende atomen (bv. een draaiende φ/ψ): geef in spec ook `R` (residuen zoals hierboven, nieuw per beeld) en `viewKey`
+ * (camera enkel opnieuw bij een andere viewKey). Extra vormen: planes [[p1, p2, p3, p4, kleur, dekking]],
+ * rods [[a, b, kleur, straal, gestippeld]], balls [[midden, straal, kleur, dekking]] (punten als [x, y, z]).
  *   a3.destroy()
  * Het venster ligt dekkend boven het SVG-kader (box); zonder WebGL of in testhulpmiddelen (off) tekent de scène zelf.
  */
@@ -50,15 +53,16 @@ export function atoms3d(svg, o) {
   const cap = document.createElement('div');
   cap.style.cssText = 'position:absolute;left:0;right:0;top:4%;text-align:center;font:700 clamp(14px,1.6vw,25px) Inter,sans-serif;color:#7fdc6a;text-shadow:0 0 6px #070b16,0 0 3px #070b16;transition:opacity .4s;opacity:0';
   el.append(vdiv, cap); host.append(el);
-  let R = null, text = '', viewer = null, model = null, loading = false, dead = false, lastKey = '', lastSize = '', shapes = [], labels = [], base = null;
+  let R = null, text = '', viewer = null, model = null, loading = false, dead = false, lastKey = '', lastSize = '', shapes = [], labels = [], base = null, lastView = '';
 
   function ensure() {
-    if (viewer || loading || !R) return;
+    if (viewer || loading || (!R && !o.dynamic)) return;
     loading = true;
     load3Dmol().then(M => {
       if (dead) return;
       viewer = M.createViewer(vdiv, { backgroundColor: BG, antialias: true });
-      model = viewer.addModel(text, 'pdb', { keepH: true });
+      if (o.dynamic) viewer.enableFog?.(false);   // bewegende atomen: geen dieptemist (de camera ligt vast, verre atomen werden te donker)
+      if (text) model = viewer.addModel(text, 'pdb', { keepH: true });
       viewer.setStyle({}, {});
       lastKey = '';
     }).catch(e => console.warn('[atoms3d] ' + e.message));
@@ -66,9 +70,18 @@ export function atoms3d(svg, o) {
   function apply(spec) {
     labels.forEach(l => viewer.removeLabel(l)); labels = [];
     shapes.forEach(s => viewer.removeShape(s)); shapes = [];
+    if (spec.R) { viewer.removeAllModels(); R = spec.R; model = viewer.addModel(pdbText(R, []), 'pdb', { keepH: true }); }
+    const V = p => ({ x: p[0], y: p[1], z: p[2] });
+    for (const [a, b, c, d, col, op] of spec.planes ?? []) {
+      const n = (() => { const u = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], v = [d[0] - a[0], d[1] - a[1], d[2] - a[2]]; return V([u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]]); })();
+      const m = V([-n.x, -n.y, -n.z]);   // tweezijdig: voor- en achterkant elk met hun eigen normaal (anders is één kant donker)
+      try { shapes.push(viewer.addCustom({ vertexArr: [a, b, c, d, a, b, c, d].map(q => V(q.x === undefined ? q : [q.x, q.y, q.z])), normalArr: [n, n, n, n, m, m, m, m], faceArr: [0, 1, 2, 0, 2, 3, 4, 6, 5, 4, 7, 6], color: col, opacity: op ?? .3 })); } catch {}
+    }
+    for (const [a, b, col, r, dashed] of spec.rods ?? []) shapes.push(viewer.addCylinder({ start: V(a), end: V(b), radius: r ?? .2, color: col, dashed: !!dashed, dashLength: .3, gapLength: .22, fromCap: 1, toCap: 1 }));
+    for (const [c, r, col, op] of spec.balls ?? []) shapes.push(viewer.addSphere({ center: V(c), radius: r, color: col, opacity: op ?? .25 }));
     viewer.setStyle({}, {});
     const dim = spec.dim ?? (() => false);
-    const col = a => { const c = a.atom === 'CB' ? EL.CB : (EL[a.atom === 'CA' ? 'C' : a.atom] ?? EL.C); return dim(a.resi) ? mix(c, BG, .5) : c; };
+    const col = a => { const c = a.atom === 'CB' ? (o.cbColor ?? EL.CB) : (EL[a.atom === 'CA' ? 'C' : a.atom] ?? EL.C); return dim(a.resi) ? mix(c, BG, .5) : c; };
     const bond = a => dim(a.resi) ? mix('#8a96b3', BG, .5) : '#8a96b3';
     const sel = { resi: spec.ids };
     viewer.setStyle(sel, { stick: { radius: .17, colorfunc: bond }, sphere: { scale: .3, colorfunc: col } });
@@ -83,11 +96,16 @@ export function atoms3d(svg, o) {
       labels.push(viewer.addLabel(L(lb.text), { position: { x: lb.pos[0], y: lb.pos[1], z: lb.pos[2] }, fontSize: lb.size ?? 19, fontColor: lb.color ?? '#fff',
         backgroundColor: BG, backgroundOpacity: .85, borderThickness: 1.5, borderColor: lb.color ?? '#7cc4ff', inFront: true, alignment: 'center' }));
     }
-    /* camera: midden en afstand van het geheel (los van de draaiing, die zet update() elk beeld) */
-    viewer.zoomTo(spec.zoomSel ?? sel, 0);
-    base = viewer.getView().slice(0, 4);
-    if (spec.center) { base[0] = -spec.center[0]; base[1] = -spec.center[1]; base[2] = -spec.center[2]; }
-    if (spec.zoom) base[3] = 150 - (150 - base[3]) / spec.zoom;   // zelfde rekenwijze als viewer.zoom() (CAMERA_Z = 150)
+    /* camera: midden en afstand van het geheel (los van de draaiing, die zet update() elk beeld); bij bewegende atomen
+     * enkel opnieuw als de viewKey verandert (anders verspringt het beeld elke keer dat een hoek verandert) */
+    const vk = spec.viewKey ?? spec.key;
+    if (vk !== lastView || !base) {
+      lastView = vk;
+      viewer.zoomTo(spec.zoomSel ?? sel, 0);
+      base = viewer.getView().slice(0, 4);
+      if (spec.center) { base[0] = -spec.center[0]; base[1] = -spec.center[1]; base[2] = -spec.center[2]; }
+      if (spec.zoom) base[3] = 150 - (150 - base[3]) / spec.zoom;   // zelfde rekenwijze als viewer.zoom() (CAMERA_Z = 150)
+    }
   }
   return {
     live: false,
@@ -97,7 +115,7 @@ export function atoms3d(svg, o) {
       this.live = op > .005;
       el.style.opacity = op.toFixed(3);
       el.style.visibility = this.live ? 'visible' : 'hidden';
-      if (!this.live) { lastKey = ''; return op; }
+      if (!this.live) { lastKey = ''; lastView = ''; return op; }
       ensure();
       const hb = host.getBoundingClientRect(), bb = box.getBoundingClientRect();
       el.style.left = `${(bb.left - hb.left).toFixed(1)}px`; el.style.top = `${(bb.top - hb.top).toFixed(1)}px`;
@@ -106,7 +124,7 @@ export function atoms3d(svg, o) {
       if (spec?.capColor) cap.style.color = spec.capColor;
       if (!viewer || !spec) return op;
       const size = `${Math.round(bb.width)}x${Math.round(bb.height)}`;
-      if (size !== lastSize) { lastSize = size; viewer.resize(); lastKey = ''; }
+      if (size !== lastSize) { lastSize = size; viewer.resize(); lastKey = ''; lastView = ''; }
       if (spec.key !== lastKey) { lastKey = spec.key; apply(spec); }
       viewer.setView([...base, ...quat(spec.M)]);
       viewer.render();

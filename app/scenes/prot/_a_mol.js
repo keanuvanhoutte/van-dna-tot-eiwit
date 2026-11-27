@@ -43,7 +43,9 @@ export function molScene(o) {
         style(sel, st) { viewer.setStyle(sel, st); },
         addStyle(sel, st) { viewer.addStyle(sel, st); },
         label(text, pos, opt = {}) {
-          labels.push(viewer.addLabel(text, { fontSize: Math.max(16, opt.size ?? 18), fontColor: opt.color ?? 'white', backgroundColor: opt.bg ?? '#0b1224', backgroundOpacity: .82, borderThickness: 1.5, borderColor: opt.border ?? '#7cc4ff', inFront: true, alignment: 'center', position: pos }));
+          // opt.offset (px): label boven zijn anker (negatief = eronder), zodat het het atoom of de brug niet bedekt
+          labels.push(viewer.addLabel(text, { fontSize: Math.max(16, opt.size ?? 18), fontColor: opt.color ?? 'white', backgroundColor: opt.bg ?? '#0b1224', backgroundOpacity: .82, borderThickness: 1.5, borderColor: opt.border ?? '#7cc4ff', inFront: true,
+            alignment: opt.offset ? (opt.offset > 0 ? 'bottomCenter' : 'topCenter') : 'center', ...(opt.offset ? { screenOffset: { x: opt.dx ?? 0, y: -opt.offset } } : {}), position: pos }));
         },
         cyl(a, b, col, r = .12, dashed = true) { shapes.push(viewer.addCylinder({ start: { x: a.x, y: a.y, z: a.z }, end: { x: b.x, y: b.y, z: b.z }, radius: r, color: col, dashed, fromCap: 1, toCap: 1 })); },
         sphere(p, col, r = .6) { shapes.push(viewer.addSphere({ center: { x: p.x, y: p.y, z: p.z }, radius: r, color: col })); },

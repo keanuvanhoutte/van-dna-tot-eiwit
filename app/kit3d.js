@@ -377,10 +377,10 @@ function rotor(viewer) {
     if (st.rock) {
       tRock += dt;
       const a = st.rock * Math.sin(tRock / ROCK_PERIOD * 2 * Math.PI);
-      viewer.rotate(a - rockA, 'y'); rockA = a;
+      viewer.rotate(a - rockA, st.axis ?? 'y'); rockA = a;
     } else {
       const spin = (st.spin ?? .012) * SPIN;
-      if (spin) viewer.rotate(dt * spin, 'y');
+      if (spin) viewer.rotate(dt * spin, st.axis ?? 'y');   // as in het modelassenstelsel (3Dmol), standaard y
     }
     return true;
   };
@@ -405,7 +405,7 @@ function whenSettled(layer, cb) {
 const isClose = z => !!z && !!(z.resi || z.resn || z.or || z.atom);
 export function motion(st, o) {
   const z = st.zoom === undefined ? [].concat(st.focus ?? [])[0]?.sel : st.zoom, close = isClose(z);
-  return { spin: st.spin, rock: st.rock ?? (close ? 30 : 0), pad: st.pad ?? (close ? .7 : o.zoomPad ?? 1) };
+  return { spin: st.spin, rock: st.rock ?? (close ? 30 : 0), pad: st.pad ?? (close ? .7 : o.zoomPad ?? 1), axis: st.spinAxis };
 }
 
 function labelsOf(focus) {
@@ -543,7 +543,7 @@ export function inset3d(svg, o) {
   function applyStep(key) {
     const st = o.steps[key], v = stage.viewer, i = keys.indexOf(key);
     const nNew = stage.show(i);
-    if (first) { stage.cam({}, 0); if (FIXANG) v.rotate(FIXANG, 'y'); }
+    if (first) { stage.cam({}, 0); for (const [axis, deg] of o.rotate ?? []) v.rotate(deg, axis); if (FIXANG) v.rotate(FIXANG, 'y'); }   // o.rotate: beginoriëntatie zoals bij structure3d
     stage.cam(st.zoom ?? {}, first || FIXANG !== null ? 0 : 900, motion({ zoom: st.zoom ?? {}, ...st }, o).pad);
     first = false;
     labs.set(labelsOf(st.focus).map(l => ({ ...l, pos: stage.centroid(l.sel) })));

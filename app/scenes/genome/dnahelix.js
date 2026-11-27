@@ -1,6 +1,17 @@
 import { C, BASE, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, clamp, f1, SPIN } from '../../kit.js';
 import { buildHelix, drawHelix, grooveFront, projector } from './_b_helix.js';
 import { loadPDB, drawPDB } from './_b_pdb.js';
+import { inset3d, withInset, warm3d } from '../../kit3d.js';
+
+/* stap 7 'het echte molecuul': 1BNA echt in 3D (3Dmol), atomen als bollen op ware grootte (van-der-Waals), in de kleuren
+ * van de rest van de scène: fosfor oranje, suiker-fosfaatruggengraat per streng, basen in hun basekleur. Helixas verticaal. */
+const BBAT = ['P', 'OP1', 'OP2', 'O1P', 'O2P', "O5'", "C5'", "C4'", "O4'", "C3'", "O3'", "C2'", "C1'"];
+const SPH = color => ({ sphere: { color } });
+const DNA3 = [
+  ...[['DA', BASE.A], ['DT', BASE.T], ['DG', BASE.G], ['DC', BASE.C]].map(([resn, col]) => ({ sel: { resn }, style: SPH(col) })),
+  { sel: { chain: 'A', atom: BBAT }, style: SPH('#7d8db3') }, { sel: { chain: 'B', atom: BBAT }, style: SPH('#b9c3da') },   // ruggengraat grijsblauw / lichtgrijs: los van de basekleuren (C is ook blauw)
+  { sel: { atom: 'P' }, style: SPH('#ff9f43') },
+];
 
 /* 24 bp; begint met de Dickerson-sequentie CGCGAATTCGCG (PDB 1BNA) */
 const SEQ = 'CGCGAATTCGCGATGCCTAGGATC';
@@ -27,6 +38,7 @@ function spinAt(step, p) { let a = 25; for (let i = 0; i < step; i++) a += STEPS
 
 export default {
   id: 'dnahelix',
+  warm() { warm3d('1BNA', 'pdb'); },   // stap 7: bestand al ophalen en parsen
   title: { nl: 'DNA-dubbelhelix', en: 'DNA double helix' },
   scale: { nl: '≈ 2 nm breed', en: '≈ 2 nm wide' },
   time: { nl: 'structuur (draait enkel om te bekijken)', en: 'structure (rotates only for viewing)' },
@@ -51,6 +63,7 @@ export default {
     </g>
     <g id="dh-grooves-lbl"></g>
     <g id="dh-helix"></g>
+    <rect id="dh-box" x="${CX - 320}" y="165" width="640" height="${CY + 165 - 165}" rx="16" fill="#0b1224" opacity="0"/>
     <g id="dh-pdb"></g>
     <g id="dh-ann"></g>
     <g id="dh-hs-nt" data-node="nucleotide" data-color="#c9a574" data-label="${T2('Nucleotide: suiker + fosfaat + base', 'Nucleotide: sugar + phosphate + base')}"><circle id="dh-a-nt" data-anchor="nucleotide" r="26" fill="transparent"/></g>
@@ -72,19 +85,23 @@ export default {
     </g>
     </svg>`;
   },
-  init(svg) {
+  init(svg, api) {
     const $ = id => svg.getElementById(id);
     let mol = null, err = null;
+    const v3 = inset3d(svg, { pdb: '1BNA', format: 'pdb', box: 'dh-box', base: DNA3, dimOpacity: false, off: !api?.node,
+      rotate: [['x', -90]], steps: { 7: { spin: .012, pad: .9, spinAxis: 'z' } } });   // na x −90° staat de helixas (z in 1BNA) verticaal: draai rond die as
     loadPDB('1BNA').then(m => { mol = m; }).catch(e => { err = e.message; });
     const setA = (id, q) => { const e = $(id); if (e && q) { e.setAttribute('cx', f1(q[0])); e.setAttribute('cy', f1(q[1])); } };
     const vis = (id, op) => { const e = $(id); e.setAttribute('opacity', f1(op)); e.style.pointerEvents = op < .1 ? 'none' : ''; };
     const callout = (q, tx, ty, text, col = '#e8edf7', fs = 18, anchor = 'middle') =>
       `<line x1="${f1(q[0])}" y1="${f1(q[1])}" x2="${f1(tx)}" y2="${f1(ty + (ty < q[1] ? 8 : -24))}" stroke="${col}" stroke-width="2" opacity=".8"/><circle cx="${f1(q[0])}" cy="${f1(q[1])}" r="5" fill="${col}"/>` +
       txt(tx, ty, text, col, fs, anchor, 700);
-    return {
+    return withInset({
+      destroy() { v3.destroy(); },
       update(t, s) {
         const { step, p } = s;
         const spin = spinAt(step, p);
+        $('dh-box').setAttribute('opacity', f1(v3.update(s)));
         // kantelen naar bovenaanzicht in stap 6, terug in stap 8
         const tilt = step === 6 ? 90 * ease(sub(p, .05, .4)) : step === 7 ? 90 : step === 8 ? 90 * (1 - ease(sub(p, 0, .3))) : 0;
         const helixOp = step === 7 ? 1 - sub(p, 0, .2) : step === 8 ? ease(sub(p, .04, .22)) : 1;
@@ -182,7 +199,7 @@ export default {
           if (mol) {
             const vv = { cx: CX, cy: CY - 20, S: 17, spin: (step === 7 ? spinAt(step, p) : spinAt(7, 1)) * 1.5, tilt: 0, rot: 90 };
             const m = mol.meas, dec = x => x.toFixed(1).replace('.', L({ nl: ',', en: '.' }));
-            pdb = `<g opacity="${f1(k)}">${drawPDB(mol, vv)}
+            pdb = `<g opacity="${f1(k)}">${api?.node ? '' : drawPDB(mol, vv)}
               <rect x="${CX - 390}" y="${CY + 175}" width="780" height="92" rx="14" fill="#0d1426" stroke="rgba(124,196,255,.4)"/>
               ${txt(CX, CY + 208, T2(`Gemeten in 1BNA (${m.nbp} bp): stijging ${dec(m.rise)} Å/bp · twist ${dec(m.twist)}°/bp`, `Measured in 1BNA (${m.nbp} bp): rise ${dec(m.rise)} Å/bp · twist ${dec(m.twist)}°/bp`), '#fff', 20)}
               ${txt(CX, CY + 242, T2(`→ ${dec(360 / m.twist)} bp/winding · C1′–C1′ ${dec(m.c1c1)} Å · P–P-diameter ${dec(m.pp)} Å`, `→ ${dec(360 / m.twist)} bp/turn · C1′–C1′ ${dec(m.c1c1)} Å · P–P diameter ${dec(m.pp)} Å`), C.muted, 19)}</g>`;
@@ -204,6 +221,6 @@ export default {
         vis('dh-menu', step === 8 ? ease(sub(p, .25, .5)) : 0);
         vis('dh-nuc', step === 0 ? 1 : 0);
       },
-    };
+    }, v3);
   },
 };

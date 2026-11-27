@@ -2,6 +2,8 @@ import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, clamp, f1, CLASSCOL
 import { at, bd, ACOL } from './_a_chem.js';
 import { sub3, add3, mul3, cross3, norm3, len3, dot3, frameAlong, projector, rotX, mm, centroid } from './_a_geo.js';
 import { ballStick, EL } from './_a_draw.js';
+import { atoms3d } from './_a_atoms3d.js';
+import { withInset } from '../../kit3d.js';
 
 /* ---------- ideale backbone-geometrie (Engh & Huber-achtige waarden) en NeRF-opbouw ---------- */
 const BL = { NCA: 1.458, CAC: 1.525, CN: 1.329 }, BA = { NCAC: 111.2, CACN: 116.2, CNCA: 121.7 };
@@ -34,7 +36,7 @@ function chain({ psi0 = 135, phi1 = -60, psi1 = -45, phi2 = -120 }) {
   return R;
 }
 /* kortste afstand tussen atomen die ≥ 4 bindingen uit elkaar liggen (sterische botsing?) */
-const LIM = { HH: 1.9, HO: 2.4, HN: 2.4, HC: 2.2, OO: 2.7, NO: 2.6, CO: 2.7, NN: 2.6, CN: 2.8, CC: 3.0 };
+const LIM = { HH: 1.9, HO: 2.4, HN: 2.4, CH: 2.2, OO: 2.7, NO: 2.6, CO: 2.7, NN: 2.6, CN: 2.8, CC: 3.0 };
 function clash(R) {
   const A = [], E = [];
   const add = (k, p, el) => { A.push({ k, p, el }); return A.length - 1; };
@@ -68,13 +70,14 @@ function clash(R) {
 
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 const PX = 1010, CX = 480, CY = 450;
+const CB3 = '#c9a0ff';   // Cβ in lila: groen is hier de φ-as
 
 export default {
   id: 'peptide',
   title: { nl: 'Peptidebinding & φ/ψ', en: 'Peptide bond & φ/ψ' },
   scale: { nl: '≈ 0,1–1 nm', en: '≈ 0.1–1 nm' }, time: { nl: 'in het ribosoom ≈ 6 bindingen/s (zoogdiercel)', en: 'in the ribosome ≈ 6 bonds/s (mammalian cell)' },
   org: { nl: 'alle organismen', en: 'all organisms' },
-  legend: [[ACOL.N, 'N'], [ACOL.O, 'O'], [ACOL.C, 'C, Cα'], [EL.H, 'H'], [EL.CB, { nl: 'Cβ (zijketen)', en: 'Cβ (side chain)' }], ['#5fd3e6', { nl: 'peptidevlak', en: 'peptide plane' }], [C.chain, 'φ (N–Cα)'], [C.trna, 'ψ (Cα–C)']],
+  legend: [[ACOL.N, 'N'], [ACOL.O, 'O'], [ACOL.C, 'C, Cα'], [EL.H, 'H'], [CB3, { nl: 'Cβ (zijketen)', en: 'Cβ (side chain)' }], ['#5fd3e6', { nl: 'peptidevlak', en: 'peptide plane' }], [C.chain, 'φ (N–Cα)'], [C.trna, 'ψ (Cα–C)']],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">De 3D-stappen gebruiken een berekende tripeptide-backbone met ideale bindingslengtes en -hoeken (ω = 180°, trans). φ en ψ van het middelste residu worden echt verdraaid; de rode stippellijn toont telkens het dichtste paar atomen dat minstens vier bindingen uit elkaar ligt.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">The 3D steps use a computed tripeptide backbone with ideal bond lengths and angles (ω = 180°, trans). φ and ψ of the middle residue are really rotated; the red dashed line always shows the closest pair of atoms that are at least four bonds apart.</p>' },
@@ -97,6 +100,7 @@ export default {
     <g id="pe-2d"></g>
     <g data-node="aminozuren" data-color="${CLASSCOL.h}" data-nolabel><g id="pe-aa"></g></g>
     <g data-node="primair" data-color="${C.chain}" data-nolabel><g id="pe-pri"></g></g>
+    <rect id="pe-box" x="40" y="110" width="930" height="610" rx="16" fill="#0b1224" opacity="0"/>
     <g id="pe-3d"></g>
     <g id="pe-panel"></g>
     <g id="pe-hs-rama" data-node="ramachandran" data-color="#ffc247" data-label="${T2('Alle toegestane φ/ψ: Ramachandran-plot', 'All allowed φ/ψ: Ramachandran plot')}">
@@ -116,8 +120,10 @@ export default {
     </g>
     </svg>`;
   },
-  init(svg) {
+  init(svg, api) {
     const $ = id => svg.getElementById(id);
+    /* stap 5–7: de tripeptide echt in 3D (3Dmol), met bewegende φ/ψ; de SVG-tekening blijft enkel voor de testhulpmiddelen */
+    const a3 = atoms3d(svg, { box: 'pe-box', steps: { 5: 1, 6: 1, 7: 1 }, dynamic: true, off: !api?.node, cbColor: CB3 });
 
     /* ---- 2D: Gly + Ala → Gly-Ala + H₂O ---- */
     function dipeptide(p1, step) {
@@ -197,15 +203,16 @@ export default {
       const a = rad(val) - Math.PI / 2, r = 56;
       return `<circle cx="${x}" cy="${y}" r="${r}" fill="#0f1830" stroke="#2a3550" stroke-width="3"/>` +
         `<line x1="${x}" y1="${y}" x2="${f1(x + r * Math.cos(a))}" y2="${f1(y + r * Math.sin(a))}" stroke="${col}" stroke-width="6" stroke-linecap="round"/>` +
-        txt(x, y - r - 14, name, col, 28) + `<text x="${x + r + 22}" y="${y + 10}" font-size="30" fill="${col}" font-family="JetBrains Mono" font-weight="700">${(val > 0 ? '+' : val < 0 ? '−' : '') + Math.abs(Math.round(val))}°</text>` +
+        txt(x, y - r - 14, name, col, 28) + `<text x="${x + r + 22}" y="${y + 10}" font-size="30" fill="${col}" font-family="JetBrains Mono" font-weight="700">${(Math.round(val) > 0 ? '+' : Math.round(val) < 0 ? '−' : '') + Math.abs(Math.round(val))}°</text>` +
         txt(x + r + 22, y + 44, axisName, C.muted, 24, 'start');
     };
     const box = inner => `<rect x="${PX}" y="130" width="560" height="570" rx="18" fill="#0d1426" stroke="#2a3550" stroke-width="2"/>${inner}`;
 
-    return {
+    return withInset({
+      destroy() { a3.destroy(); },
       update(t, s) {
         const { step, p } = s;
-        let d2 = '', d3 = '', pan = '';
+        let d2 = '', d3 = '', pan = '', spec = null;
         $('pe-hs-rama').setAttribute('opacity', step === 7 ? 1 : 0);
         $('pe-hs-sec').setAttribute('opacity', step === 8 ? 1 : 0);
         $('pe-hs-tl').setAttribute('opacity', step === 2 ? 1 : 0);
@@ -248,7 +255,27 @@ export default {
             phi = lerp(path[i][0], path[i + 1][0], f); psi = lerp(path[i][1], path[i + 1][1], f);
           }
           const r = draw3d(phi, psi, mode, t);
-          d3 = r.s;
+          d3 = api?.node ? '' : r.s;
+          {
+            const R = chain({ phi1: phi, psi1: psi }), M = mm(rotX(-0.5 + 0.15 * Math.sin(t * 0.0004)), F);
+            const up = q => add3(q, mul3(M[1], 1.25));   // label recht boven zijn atoom op het scherm (M[1] = schermas omhoog)
+            const away = (q, from) => add3(q, mul3(norm3(sub3(q, from)), 1.35));   // N weg van zijn H, C weg van zijn O: het label wijst ondubbelzinnig dat atoom aan
+            const pl = (a, h, b, o) => [Pp(R[a].at.CA), R[h].H, Pp(R[b].at.CA), Pp(R[o].at.O), '#5fd3e6', .4];
+            const rods = [];
+            /* rand van elk peptidevlak als dunne cyaan staafjes (het vlak zelf is licht doorschijnend) */
+            for (const q of [pl(0, 1, 1, 0), pl(1, 2, 2, 1)]) for (let k = 0; k < 4; k++) rods.push([q[k], q[(k + 1) % 4], '#5fd3e6', .06]);
+            if (mode === 'phi' || mode === 'clash') rods.push([Pp(R[1].at.N), Pp(R[1].at.CA), C.chain, .34]);
+            if (mode === 'psi' || mode === 'clash') rods.push([Pp(R[1].at.CA), Pp(R[1].at.C), C.trna, .34]);
+            const balls = [];
+            if (mode === 'clash' && r.info) {
+              const bad = r.info.d < r.info.lim, A = r.info.a.p, B = r.info.b.p;
+              rods.push([A, B, bad ? C.danger : '#93a0bb', .14, true]);
+              if (bad) balls.push([mul3(add3(A, B), .5), r.info.d / 2 + .8, C.danger, .35]);
+            }
+            spec = { key: `${step}:${phi.toFixed(0)}:${psi.toFixed(0)}`, viewKey: 'pe', R, ids: [0, 1, 2], M, cb: true, zoom: 1,
+              planes: [pl(0, 1, 1, 0), pl(1, 2, 2, 1)], rods, balls,
+              labels: [{ text: 'Cα', pos: up(Pp(R[1].at.CA)) }, { text: 'N', pos: away(Pp(R[1].at.N), R[1].H), color: ACOL.N }, { text: 'C', pos: away(Pp(R[1].at.C), Pp(R[1].at.O)), color: '#dfe6f3' }] };
+          }
           pan = box(dial(PX + 120, 260, phi, C.chain, 'φ', 'N–Cα') + dial(PX + 120, 430, psi, C.trna, 'ψ', 'Cα–C') +
             (step === 7 && r.info ? (() => {
               const bad = r.info.d < r.info.lim, nm = x => x.k.replace(/^(\d)(.*)$/, (m, i, a) => `${a.replace('CB', 'Cβ').replace('CA', 'Cα')}(${['i−1', 'i', 'i+1'][+i]})`);
@@ -276,7 +303,8 @@ export default {
         // stap 0: twee losse aminozuren · stap 8: de keten (primaire structuur) — elk klikbaar naar hun eigen hoofdstuk
         $('pe-aa').innerHTML = step === 0 ? d2 : ''; $('pe-pri').innerHTML = step === 8 ? d2 : '';
         $('pe-2d').innerHTML = step === 0 || step === 8 ? '' : d2; $('pe-3d').innerHTML = d3; $('pe-panel').innerHTML = pan;
+        $('pe-box').setAttribute('opacity', f1(a3.update(s, spec)));
       },
-    };
+    }, a3);
   },
 };

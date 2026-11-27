@@ -116,13 +116,22 @@ export default molScene({
     }),
     ST(8500, 'Wat houdt de ketens samen?', 'What holds the chains together?', 'Dezelfde krachten als binnen één keten: waterschuwe contacten, zoutbruggen en waterstofbruggen.', 'The same forces as inside one chain: water-avoiding contacts, salt bridges and hydrogen bonds.', {
       show(c) {
-        allChains(c);
+        Object.entries(CH).forEach(([k, [, col]]) => c.style({ chain: k }, { cartoon: { color: col, thickness: .5 } }));
+        const placed = [];
         for (const { p, n } of c.data.sb ?? []) {
-          c.style({ chain: p.chain, resi: p.resi, not: { atom: ['N', 'C', 'O'] } }, { stick: { radius: .35, colorscheme: 'whiteCarbon' } });
-          c.style({ chain: n.chain, resi: n.resi, not: { atom: ['N', 'C', 'O'] } }, { stick: { radius: .35, colorscheme: 'whiteCarbon' } });
+          c.style({ chain: p.chain, resi: p.resi, not: { atom: ['N', 'C', 'O'] } }, { stick: { radius: .42, colorscheme: 'whiteCarbon' } });
+          c.style({ chain: n.chain, resi: n.resi, not: { atom: ['N', 'C', 'O'] } }, { stick: { radius: .42, colorscheme: 'whiteCarbon' } });
+          c.cyl(p, n, '#ffc247', .28, true);   // zoutbrug tussen twee ketens
+          const nm = a => `${CH[a.chain][0]} ${a.resn[0]}${a.resn.slice(1).toLowerCase()}${a.resi}`;
+          const m = { x: (p.x + n.x) / 2, y: (p.y + n.y) / 2, z: (p.z + n.z) / 2 };
+          const same = q => q.p.resn + q.p.resi === p.resn + p.resi && q.q.resn + q.q.resi === n.resn + n.resi;
+          const g = placed.find(q => same(q) && Math.hypot(q.x - m.x, q.y - m.y, q.z - m.z) < 10);   // dezelfde brug in de twee αβ-paren, vlak bij elkaar: één label
+          if (g) { g.n++; g.text = `${CH[g.p.chain][0][0]} ${g.p.resn[0]}${g.p.resn.slice(1).toLowerCase()}${g.p.resi} – ${CH[g.q.chain][0][0]} ${g.q.resn[0]}${g.q.resn.slice(1).toLowerCase()}${g.q.resi} (${g.n}×)`; }
+          else placed.push({ ...m, p, q: n, n: 1, text: `${nm(p)} – ${nm(n)}` });
           c.addStyle({ chain: p.chain, resi: p.resi, atom: p.atom }, { sphere: { color: CLASSCOL['+'], radius: .8 } });
           c.addStyle({ chain: n.chain, resi: n.resi, atom: n.atom }, { sphere: { color: CLASSCOL['-'], radius: .8 } });
         }
+        placed.forEach((g, i) => c.label(g.text, g, { size: 15, border: '#ffc247', offset: i % 2 ? -30 : 30 }));
       },
       zoom: {}, spin: .02,
       panel: c => phead(T2('Contacten tussen de ketens', 'Contacts between the chains')) + plines(222, [
@@ -133,9 +142,9 @@ export default molScene({
     }),
     ST(8500, 'Vier hemen werken samen', 'Four haems work together', 'Elke keten bindt één zuurstofmolecuul. Het eerste bindt moeilijk, de volgende makkelijker. (Dit model bindt CO.)', 'Each chain binds one oxygen molecule. The first binds with difficulty, the next ones more easily. (This model binds CO.)', {
       show(c) {
-        Object.entries(CH).forEach(([k, [, col]]) => c.style({ chain: k }, { cartoon: { color: col, style: 'trace', thickness: .3 } }));
-        c.style({ resn: 'HEM' }, { stick: { colorscheme: 'orangeCarbon', radius: .3 } });
-        c.style({ resn: 'HEM', atom: 'FE' }, { sphere: { color: '#ff8a3d', radius: 1 } });
+        Object.entries(CH).forEach(([k, [, col]]) => c.style({ chain: k }, { cartoon: { color: col, thickness: .5 } }));
+        c.style({ resn: 'HEM' }, { stick: { colorscheme: 'orangeCarbon', radius: .4 } });
+        c.style({ resn: 'HEM', atom: 'FE' }, { sphere: { color: '#ff8a3d', radius: 1.3 } });
         c.style({ resn: 'CMO' }, { sphere: { radius: .6 } });
         for (const k of Object.keys(CH)) { const fe = c.sel({ chain: k, resn: 'HEM', atom: 'FE' }); if (fe.length) c.label(`Fe (${CH[k][0]})`, fe[0], { size: 16, border: '#ff8a3d' }); }
       },

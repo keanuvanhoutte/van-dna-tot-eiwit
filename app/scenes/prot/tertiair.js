@@ -118,34 +118,42 @@ export default molScene({
     }),
     ST(9000, 'Een zakje voor het heem', 'A pocket for the haem', 'Het heem (een ring met een ijzeratoom) ligt in een waterschuw zakje. Daar bindt zuurstof (hier CO).', 'The haem (a ring with an iron atom) sits in a water-avoiding pocket. Oxygen binds there (here CO).', {
       show(c) {
-        c.style(B, { cartoon: { style: 'trace', color: '#465171', thickness: .25 } });
-        c.style({ chain: 'B', resi: rng(57, 76) }, { cartoon: { style: 'trace', color: HCOL[4], thickness: .35 } }); c.style({ chain: 'B', resi: rng(85, 93) }, { cartoon: { style: 'trace', color: HCOL[5], thickness: .35 } });
-        c.style({ chain: 'B', resn: 'HEM' }, { stick: { colorscheme: 'orangeCarbon', radius: .25 } });
-        c.style({ chain: 'B', resn: 'HEM', atom: 'FE' }, { sphere: { color: '#ff8a3d', radius: .9 } });
-        c.style({ chain: 'B', resn: 'CMO' }, { stick: { radius: .25 }, sphere: { radius: .45 } });
-        c.style({ chain: 'B', resi: [63, 92], not: { atom: ['N', 'C', 'O'] } }, { stick: { colorscheme: 'greenCarbon', radius: .25 } });
-        const lab = (s, t, col) => { const a = c.sel(s); if (a.length) c.label(t, c.center(a), { border: col, size: 16 }); };
+        /* volwaardig lint (geen Cα-lijn): helix E en F in hun kleur, de rest grijsblauw; het heem ligt in de open zak en komt tijdens het draaien in beeld */
+        /* enkel het zakje: lint van de residuen binnen 12 Å van het heem (de rest van de keten zou het heem verbergen) */
+        const near = { chain: 'B', byres: true, within: { distance: 12, sel: { chain: 'B', resn: 'HEM' } } };
+        c.style({ ...near, not: { resn: ['HEM', 'CMO', 'HOH'] } }, cartoon('#6b7699'));
+        c.style({ ...near, resi: rng(57, 76) }, cartoon(HCOL[4])); c.style({ ...near, resi: rng(85, 93) }, cartoon(HCOL[5]));
+        c.style({ chain: 'B', resn: 'HEM' }, { stick: { colorscheme: 'orangeCarbon', radius: .3 } });
+        c.style({ chain: 'B', resn: 'HEM', atom: 'FE' }, { sphere: { color: '#ff8a3d', radius: 1.1 } });
+        c.style({ chain: 'B', resn: 'CMO' }, { stick: { radius: .3 }, sphere: { scale: .35 } });
+        c.style({ chain: 'B', resi: [63, 92], not: { atom: ['N', 'C', 'O'] } }, { stick: { colorscheme: 'greenCarbon', radius: .3 } });
+        /* coördinatie: His92 NE2 → Fe (proximaal) en Fe → C van CO (distaal) */
+        const fe = c.sel({ chain: 'B', resn: 'HEM', atom: 'FE' })[0], ne = c.sel({ chain: 'B', resi: 92, atom: 'NE2' })[0], co = c.sel({ chain: 'B', resn: 'CMO', atom: 'C' })[0];
+        if (fe && ne) c.cyl(ne, fe, '#ff8a3d', .16, true);
+        if (fe && co) c.cyl(fe, co, '#ff8a3d', .16, true);
+        const lab = (s, t, col, off = 26) => { const a = c.sel(s); if (a.length) c.label(t, c.center(a), { border: col, size: 16, offset: off }); };
         // labels uit elkaar: His92 op zijn Cα (verder van het heem dan NE2), CO op het O-atoom; het Fe-label staat al in het paneel
         lab({ chain: 'B', resi: 92, atom: 'CA' }, 'His92 (F8)', '#2cc6a8'); lab({ chain: 'B', resi: 63, atom: 'NE2' }, 'His63 (E7)', '#7fdc6a');
-        lab({ chain: 'B', resn: 'CMO', atom: 'O' }, 'CO', '#ffffff');
+        lab({ chain: 'B', resn: 'CMO', atom: 'O' }, 'CO', '#ffffff', -22);
       },
-      zoom: { chain: 'B', within: { distance: 9, sel: { chain: 'B', resn: 'HEM' } } }, spin: .018,
+      zoom: { chain: 'B', byres: true, within: { distance: 12, sel: { chain: 'B', resn: 'HEM' } } }, zoomFactor: 2.2, spin: .018,
       panel: () => phead(T2('Liganden stabiliseren de vouw', 'Ligands stabilise the fold')) + plines(222, [
         [T2('Heem = protoporfyrine IX + Fe²⁺', 'Haem = protoporphyrin IX + Fe²⁺'), C.text, 23, 700], '',
         T2('• His92 (F8) bindt het Fe²⁺', '• His92 (F8) binds the Fe²⁺'), T2('• O₂ bindt aan de andere kant', '• O₂ binds on the other side'), T2('• His63 (E7) ligt aan de O₂-kant', '• His63 (E7) sits on the O₂ side')]),
     }),
     ST(8500, 'Bruggen houden de vouw vast', 'Bonds hold the fold in place', 'Plus- en mingeladen zijketens trekken elkaar aan, en andere vormen waterstofbruggen. Zo blijft de vouw vast.', 'Plus and minus charged side chains attract each other, and others form hydrogen bonds. This holds the fold.', {
       show(c) {
-        c.style(B, cartoon('#465171'));
+        c.style(B, cartoon('#5a6585'));
         c.style({ chain: 'B', resn: 'HEM' }, hemeStyle);
         (c.data.sb ?? []).forEach(({ p, n }, i) => {
-          c.style({ chain: 'B', resi: [p.resi, n.resi], not: { atom: ['N', 'C', 'O'] } }, { stick: { radius: .35, colorscheme: 'whiteCarbon' } });
-          c.addStyle({ chain: 'B', resi: p.resi, atom: p.atom }, { sphere: { color: CLASSCOL['+'], radius: .8 } });
-          c.addStyle({ chain: 'B', resi: n.resi, atom: n.atom }, { sphere: { color: CLASSCOL['-'], radius: .8 } });
-          if (i < 3) c.label(`${p.resn[0]}${p.resn.slice(1).toLowerCase()}${p.resi}–${n.resn[0]}${n.resn.slice(1).toLowerCase()}${n.resi}`, { x: (p.x + n.x) / 2, y: (p.y + n.y) / 2, z: (p.z + n.z) / 2 }, { size: 16, border: '#ffc247' });
+          c.style({ chain: 'B', resi: [p.resi, n.resi], not: { atom: ['N', 'C', 'O'] } }, { stick: { radius: .38, colorscheme: 'whiteCarbon' } });
+          c.cyl(p, n, '#ffc247', .3, true);   // de zoutbrug zelf (N⁺ ··· O⁻)
+          c.addStyle({ chain: 'B', resi: p.resi, atom: p.atom }, { sphere: { color: CLASSCOL['+'], radius: 1.05 } });
+          c.addStyle({ chain: 'B', resi: n.resi, atom: n.atom }, { sphere: { color: CLASSCOL['-'], radius: 1.05 } });
+          c.label(`${p.resn[0]}${p.resn.slice(1).toLowerCase()}${p.resi}–${n.resn[0]}${n.resn.slice(1).toLowerCase()}${n.resi}`, { x: (p.x + n.x) / 2, y: (p.y + n.y) / 2, z: (p.z + n.z) / 2 }, { size: 16, border: '#ffc247', offset: [30, -30, 30, -30, 30][i % 5], dx: [0, 0, 80, -80, -80][i % 5] });
         });
       },
-      zoom: B, spin: .02,
+      zoom: B, zoomFactor: 1.45, spin: .02,   // groter: de 5 labels liggen verder uit elkaar
       panel: c => phead(T2('Elektrostatische interacties', 'Electrostatic interactions')) + plines(222, [
         [T2(`${c.data.sb?.length ?? '…'} zoutbruggen in keten β`, `${c.data.sb?.length ?? '…'} salt bridges in chain β`), '#ffc247', 23, 700],
         [T2('(N⁺ en O⁻ binnen 4 Å)', '(N⁺ and O⁻ within 4 Å)'), C.muted, 21], '',
@@ -154,13 +162,14 @@ export default molScene({
     }),
     ST(8000, 'Zwavelbruggen? Hier niet', 'Disulfide bonds? Not here', 'Twee cysteïnes kunnen een sterke zwavelbrug maken. Hier niet: in de celvloeistof lukt dat meestal niet.', 'Two cysteines can form a strong disulfide bond. Not here: in the cell fluid that usually does not work.', {
       show(c) {
-        c.style(B, cartoon('#465171'));
-        c.style({ chain: 'B', resn: 'CYS' }, { stick: { radius: .3, colorscheme: 'yellowCarbon' }, sphere: { radius: .5, colorscheme: 'yellowCarbon' } });
-        for (const r of [93, 112]) { const a = c.sel({ chain: 'B', resi: r, atom: 'SG' }); if (a.length) c.label(`Cys${r} – SH`, a[0], { border: '#ffc247', size: 16 }); }
+        c.style(B, cartoon('#5a6585'));
+        c.style({ chain: 'B', resn: 'CYS', not: { atom: ['N', 'C', 'O'] } }, { stick: { radius: .38, colorscheme: 'yellowCarbon' } });
+        c.addStyle({ chain: 'B', resn: 'CYS', atom: 'SG' }, { sphere: { color: '#ffd84a', radius: 1.3 } });   // het zwavelatoom (S–H)
+        for (const r of [93, 112]) { const a = c.sel({ chain: 'B', resi: r, atom: 'SG' }); if (a.length) c.label(`Cys${r} – SH`, a[0], { border: '#ffc247', size: 16, offset: 30 }); }
       },
       zoom: { chain: 'B', within: { distance: 9, sel: { chain: 'B', resn: 'CYS' } } }, spin: .02,
       panel: () => phead(T2('Covalent: de disulfidebrug', 'Covalent: the disulfide bond')) + plines(222, [
-        ['Cys–SH + HS–Cys → Cys–S–S–Cys', '#ffc247', 22, 700], '',
+        ['Cys–SH + HS–Cys → Cys–S–S–Cys', '#ffc247', 22, 700], [T2('(oxidatie: + 2 H⁺ + 2 e⁻)', '(oxidation: + 2 H⁺ + 2 e⁻)'), C.muted, 20], '',
         T2('• vooral in eiwitten buiten de cel', '• mainly in proteins outside the cell'), T2('• gevormd in het ER (bv. antistoffen)', '• formed in the ER (e.g. antibodies)'), T2('• verbindt ook verre residuen', '• can join residues far apart')]),
     }),
     ST(9000, 'Vaste combinaties', 'Recurring combinations', 'Kleine combinaties van spiralen of strengen komen vaak terug (motieven), zoals helix-bocht-helix.', 'Small combinations of spirals or strands recur often (motifs), such as helix-turn-helix.', {
