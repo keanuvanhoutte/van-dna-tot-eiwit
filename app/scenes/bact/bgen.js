@@ -55,18 +55,18 @@ const SC = {
     <g id="bg-dna">
       <line x1="60" y1="${Y0 - 9}" x2="1540" y2="${Y0 - 9}" stroke="${C.dna}" stroke-width="5"/><line x1="60" y1="${Y0 + 9}" x2="1540" y2="${Y0 + 9}" stroke="${C.dna2}" stroke-width="5"/>
       ${txt(40, Y0 - 2, "5′", C.muted, 18)}${txt(1562, Y0 - 2, "3′", C.muted, 18)}
-      <g data-node="bpol" data-color="${COL.prom}" data-label="${T2('RNA-polymerase in 3D', 'RNA polymerase in 3D')}"><g id="bg-m35">${box('m35', COL.prom, '−35')}</g><g id="bg-m10">${box('m10', COL.prom, '−10')}</g><circle data-anchor="bpol" cx="190" cy="40" r="1" fill="none"/></g>
+      <g data-node="bpol" data-color="${COL.prom}" data-label="${T2('RNA-polymerase in 3D', 'RNA polymerase in 3D')}"><g id="bg-m35">${box('m35', COL.prom, '−35')}</g><g id="bg-m10">${box('m10', COL.prom, '−10')}</g><circle data-anchor="bpol" cx="170" cy="40" r="1" fill="none"/></g>
       <g id="bg-plab">${txt(285, Y0 + 104, 'promoter', COL.prom, 22)}</g>
-      <g data-node="operon" data-color="${COL.op}" data-label="${T2('Voorbeeld: lac-operon', 'Example: lac operon')}"><g id="bg-op">${box('op', COL.op, 'operator', 22, 104)}</g><circle data-anchor="operon" cx="480" cy="40" r="1" fill="none"/></g>
+      <g data-node="operon" data-color="${COL.op}" data-label="${T2('Voorbeeld: lac-operon', 'Example: lac operon')}"><g id="bg-op">${box('op', COL.op, 'operator', 22, 104)}</g><circle data-anchor="operon" cx="490" cy="40" r="1" fill="none"/></g>
       <g id="bg-tss"><path d="M${TSS},${Y0 - 24} v-36 h28" stroke="${C.text}" stroke-width="3" fill="none" marker-end="url(#arrow)"/>${txt(TSS - 8, Y0 - 40, '+1', C.text, 22, 'end')}</g>
-      <g data-node="bmrna" data-color="${COL.sd}" data-label="${T2('mRNA & ribosoom', 'mRNA & ribosome')}"><g id="bg-sd">${box('sd', COL.sd, 'SD', 24)}</g><circle data-anchor="bmrna" cx="760" cy="40" r="1" fill="none"/></g>
+      <g data-node="bmrna" data-color="${COL.sd}" data-label="${T2('mRNA & ribosoom', 'mRNA & ribosome')}"><g id="bg-sd">${box('sd', COL.sd, 'SD', 24)}</g><circle data-anchor="bmrna" cx="790" cy="40" r="1" fill="none"/></g>
       <g id="bg-orf">${box('orf', COL.orf, T2('coderend deel', 'coding part'), 24, 104)}</g>
       <g id="bg-start">${box('start', '#7fdc6a', 'ATG', 22)}</g><g id="bg-stop">${box('stop', C.danger, 'TAA', 22)}</g>
       <g id="bg-term">${box('term', COL.term, 'terminator', 22, 64)}</g>
-      <g data-node="bterm" data-color="${COL.term}" data-label="${T2('Hoe de terminator werkt', 'How the terminator works')}"><circle data-anchor="bterm" cx="1110" cy="40" r="1" fill="none"/><rect x="1109" y="39" width="2" height="2" fill="none"/></g>
-      <g data-node="bsplicing" data-color="${C.intron}" data-label="${T2('Introns die zichzelf uitknippen (3D)', 'Introns that cut themselves out (3D)')}"><circle data-anchor="bsplicing" cx="430" cy="92" r="1" fill="none"/><rect x="329" y="91" width="2" height="2" fill="none"/></g>
-      <g data-node="breplicatie" data-color="${K.ori}" data-label="${T2('Replicatie vanaf oriC', 'Replication from oriC')}"><circle data-anchor="breplicatie" cx="1250" cy="92" r="1" fill="none"/><rect x="1249" y="91" width="2" height="2" fill="none"/></g>
-      <g data-node="gen" data-color="${C.text}" data-label="${T2('Vergelijk: menselijk gen', 'Compare: human gene')}"><rect x="1400" y="39" width="1" height="1" fill="none"/><circle data-anchor="gen" cx="1400" cy="40" r="1" fill="none"/></g>
+      <g data-node="bterm" data-color="${COL.term}" data-label="${T2('Hoe de terminator werkt', 'How the terminator works')}"><circle data-anchor="bterm" cx="1120" cy="40" r="1" fill="none"/><rect x="1119" y="39" width="2" height="2" fill="none"/></g>
+      <g data-node="bsplicing" data-color="${C.intron}" data-label="${T2('Introns die zichzelf uitknippen (3D)', 'Introns that cut themselves out (3D)')}"><circle data-anchor="bsplicing" cx="330" cy="92" r="1" fill="none"/><rect x="329" y="91" width="2" height="2" fill="none"/></g>
+      <g data-node="breplicatie" data-color="${K.ori}" data-label="${T2('Replicatie vanaf oriC', 'Replication from oriC')}"><circle data-anchor="breplicatie" cx="840" cy="92" r="1" fill="none"/><rect x="839" y="91" width="2" height="2" fill="none"/></g>
+      <g data-node="gen" data-color="${C.text}" data-label="${T2('Vergelijk: menselijk gen', 'Compare: human gene')}"><rect x="1250" y="91" width="1" height="1" fill="none"/><circle data-anchor="gen" cx="1250" cy="92" r="1" fill="none"/></g>
     </g>
     <g id="bg-over"></g>
     <g id="bg-panel"></g>
