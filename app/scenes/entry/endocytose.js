@@ -31,7 +31,7 @@ export default {
     ST(6000, cam(PX, 250, 820), 'Het membraan stulpt in', 'The membrane folds inward',
       'Het eiwit klathrine vormt een gebogen mandje. Daardoor stulpt het membraan naar binnen.',
       'The protein clathrin forms a curved cage. This makes the membrane fold inward.'),
-    ST(6000, cam(PX, 300, 720), 'Het blaasje komt los', 'The vesicle comes free',
+    ST(6000, cam(PX + 40, 300, 760), 'Het blaasje komt los', 'The vesicle comes free',
       'Het eiwit dynamine draait als een spiraal om de hals en knijpt die dicht. Het blaasje komt los.',
       'The protein dynamin winds around the neck like a spiral and squeezes it shut. The vesicle comes free.'),
     ST(7000, cam(600, 400, 900), 'Het blaasje wordt zuur', 'The vesicle turns acidic',
@@ -150,8 +150,8 @@ export default {
           cl += `<g opacity="${f1(sub(p, 0, .1) * (1 - .4 * ease(sub(p, .5, .9))))}">
             ${[0, 1, 2].map(i => `<ellipse cx="${PX}" cy="${f1(MEM - 10 + i * 13 + dn)}" rx="${f1(hw)}" ry="8" fill="none" stroke="${C.prot}" stroke-width="7"/>`).join('')}
             ${p < .55 ? `<path d="M${f1(PX - hw - 70)},${f1(MEM + 3)} h40" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/><path d="M${f1(PX + hw + 70)},${f1(MEM + 3)} h-40" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/>` : ''}
-            ${txt(PX + 120, MEM + 70 + dn, T2('dynamine', 'dynamin'), C.prot, 28, 'start', 800)}
-            ${txt(PX + 120, MEM + 98 + dn, p < .5 ? T2('knijpt de hals dicht', 'squeezes the neck shut') : T2('valt eraf', 'falls off'), C.text, 22, 'start', 600)}</g>`;
+            ${txt(PX + 190, MEM + 56 + dn, T2('dynamine', 'dynamin'), C.prot, 28, 'start', 800)}
+            ${txt(PX + 190, MEM + 82 + dn, p < .5 ? T2('knijpt de hals dicht', 'squeezes the neck shut') : T2('valt eraf', 'falls off'), C.text, 20, 'start', 600)}</g>`;   // naast het blaasje, niet op de wand
         }
         $('en-clath').innerHTML = cl;
 
