@@ -15,7 +15,7 @@
  * })
  */
 
-const STAGECOL = { entry: '#f06bc0', genome: '#4f8ff7', repl: '#9cc0ff', txn: '#9b7bff', rna: '#ff8a3d', tl: '#2cc6a8', prot: '#7fdc6a', bact: '#d65a5a' };
+const STAGECOL = { entry: '#c9a574', genome: '#4f8ff7', repl: '#9cc0ff', txn: '#9b7bff', rna: '#ff8a3d', tl: '#2cc6a8', prot: '#7fdc6a', bact: '#d65a5a' };
 const LINECOL = { virus: '#ff8a3d', signaal: '#7fdc6a', bacterie: '#ff8f8f', herstel: '#4f8ff7', targeting: '#9b7bff', epigen: '#ffc247', virusroute: '#ff9d5c', rnalot: '#2cc6a8', antibiotica: '#e8a23a' };
 const lineCol = k => LINECOL[k] ?? '#7cc4ff';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
