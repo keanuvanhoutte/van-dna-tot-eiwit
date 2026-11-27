@@ -259,7 +259,17 @@ function makeStage(M, el, master, views, o) {
     const to = viewer.getView();
     if (!dur) { anim = null; return; }
     viewer.setView(cur, true);
-    anim = { from: cur, to, t0: performance.now(), dur };
+    anim = { from: cur, to, t0: performance.now(), dur, sel, pad };
+  }
+  /* aan het einde van een camerabeweging nog één keer precies op de selectie richten: het berekende eindpunt kwam bij
+   * een stapwissel soms naast het onderdeel uit (het stond dan half buiten beeld of piepklein in een lege ruimte) */
+  function settle(a) {
+    const q = viewer.getView();
+    viewer.zoomTo({ ...a.sel, model: proxy });
+    if (a.pad !== 1) viewer.zoom(a.pad);
+    const v = viewer.getView();
+    for (const j of [4, 5, 6, 7]) v[j] = q[j];          // de draaiing niet aanraken
+    viewer.setView(v, true);
   }
   function tick() {
     if (!anim) return false;
@@ -267,7 +277,7 @@ function makeStage(M, el, master, views, o) {
     const v = viewer.getView();
     for (const j of [0, 1, 2, 3, 8, 9]) if (anim.to[j] !== undefined && anim.from[j] !== undefined) v[j] = anim.from[j] + (anim.to[j] - anim.from[j]) * e;
     viewer.setView(v, true);
-    if (k >= 1) anim = null;
+    if (k >= 1) { const a = anim; anim = null; settle(a); }
     return true;
   }
   return { viewer, proxy, show, plan, pump, buildView, render, centroid, stats, cam, tick, get moving() { return !!anim; }, get shown() { return shown; } };

@@ -9,6 +9,11 @@ const ACE = '#7fc9b6', RBD = '#ff9d5c', HOT = '#ffd166';
 const S = (color, r = 2.6) => ({ sphere: { color, radius: r } });
 const IA = [24, 27, 28, 30, 31, 34, 35, 37, 38, 41, 42, 79, 82, 83, 330, 353, 354, 355, 357, 393];
 const IE = [417, 446, 449, 453, 455, 456, 475, 486, 487, 489, 493, 496, 498, 500, 501, 502, 505];
+/* overzicht zonder dimmen: beide delen gelabeld (wat is sleutel, wat is slot, waar zit virus en cel) */
+const OVER = (k = L3('sleutel: top van het virus', 'key: tip of the virus'), l = L3('slot: eiwit op onze cel', 'lock: protein on our cell')) => [
+  { sel: { chain: 'A' }, style: S(ACE) }, { sel: { chain: 'E' }, style: S(RBD) },
+  { sel: { chain: 'E', resi: 360 }, style: S(RBD), label: k },
+  { sel: { chain: 'A', resi: 600 }, style: S(ACE), label: l }];
 const base = [{ sel: { chain: 'A' }, style: S(ACE) }, { sel: { chain: 'E' }, style: S(RBD) }];
 
 export default structure3d({
@@ -27,21 +32,24 @@ export default structure3d({
   base,
   dimOpacity: false,
   steps: [
-    { dur: 8000, title: L3('De sleutel past op het slot van onze cel', 'The key fits the lock on our cell'), focus: null, zoom: {}, spin: .012,
+    { dur: 8000, title: L3('De sleutel past op het slot van onze cel', 'The key fits the lock on our cell'), focus: OVER(), zoom: {}, spin: .012, pad: .9,
       text: L3('Dit is een echt stukje coronavirus (oranje) vast op een eiwit van onze cel (groen).', 'This is a real piece of coronavirus (orange) stuck to a protein of our cell (green).') },
     { dur: 8500, title: L3('Het slot zit op onze cel', 'The lock sits on our cell'), zoom: { chain: 'A' }, spin: .01,
       focus: [{ sel: { chain: 'E' }, style: ghost(4, .12) }, { sel: { chain: 'A' }, style: S(ACE, 2.8) }, { sel: { chain: 'A', resi: 600 }, style: S(ACE, 2.8), label: L3('slot (eiwit van de cel)', 'lock (protein of the cell)') }],
       text: L3('Dit eiwit zit op cellen in onder meer de neus, de longen en de darm. Voor het virus is het een slot.', 'This protein sits on cells in the nose, the lungs and the gut, among other places. For the virus it is a lock.') },
-    { dur: 8500, title: L3('De sleutel zit op het virus', 'The key sits on the virus'), zoom: { chain: 'E' }, spin: .01,
+    { dur: 8500, title: L3('De sleutel zit op het virus', 'The key sits on the virus'), zoom: { chain: 'E' }, spin: .01, pad: .7,
       focus: [{ sel: { chain: 'A' }, style: ghost(4, .12) }, { sel: { chain: 'E' }, style: S(RBD, 3) }, { sel: { chain: 'E', resi: 360 }, style: S(RBD, 3), label: L3('sleutel (top van het uitsteeksel)', 'key (tip of the spike)') }],
       text: L3('Het virus is bedekt met uitsteeksels. Alleen het topje ervan past op het slot.', 'The virus is covered in spikes. Only their tip fits the lock.') },
-    { dur: 9000, title: L3('Sleutel en slot passen precies', 'Key and lock fit exactly'), zoom: { chain: 'A', resi: IA }, spin: .006,
+    { dur: 9000, title: L3('Sleutel en slot passen precies', 'Key and lock fit exactly'), zoom: { chain: 'A', resi: IA }, spin: .006, pad: .75,
       focus: [{ sel: { chain: 'A' }, style: S(ACE, 2) }, { sel: { chain: 'E' }, style: S(RBD, 2) },
         { sel: { chain: 'E', resi: IE }, style: S(HOT, 3.4) }, { sel: { chain: 'A', resi: IA }, style: S(HOT, 3.4) }, { sel: { chain: 'E', resi: 493 }, style: S(HOT, 3.4), label: L3('raakvlak', 'contact surface') }],
       text: L3('Op het raakvlak passen 17 bouwstenen van de sleutel op 20 bouwstenen van het slot.', 'At the contact surface, 17 building blocks of the key fit onto 20 building blocks of the lock.') },
-    { dur: 8500, title: L3('Een uitsteeksel heeft drie sleutels', 'A spike has three keys'), focus: null, zoom: {}, spin: .012,
+    { dur: 8500, title: L3('Een uitsteeksel heeft drie sleutels', 'A spike has three keys'), zoom: {}, spin: .012, pad: .9,
+      focus: [{ sel: { chain: 'A' }, style: ghost(4, .12) }, { sel: { chain: 'E' }, style: S(RBD, 3) },
+        { sel: { chain: 'E', resi: 360 }, style: S(RBD, 3), label: L3('1 van de 3 sleutels (de andere 2 zijn hier niet getekend)', '1 of the 3 keys (the other 2 are not drawn here)') }],
       text: L3('Een heel uitsteeksel bestaat uit drie gelijke delen, elk met zo’n sleuteltop. Hier zie je er één.', 'A whole spike consists of three identical parts, each with such a key tip. Here you see one of them.') },
-    { dur: 9000, title: L3('Daarna versmelt het virus met de cel', 'Then the virus fuses with the cell'), focus: null, zoom: {}, spin: .01,
+    { dur: 9000, title: L3('Daarna versmelt het virus met de cel', 'Then the virus fuses with the cell'), zoom: {}, spin: .01, pad: .9,
+      focus: OVER(L3('↑ naar het virus', '↑ towards the virus'), L3('↓ naar onze cel (hier versmelten straks de membranen)', '↓ towards our cell (where the membranes will fuse)')),
       text: L3('Een eiwit van de cel knipt het uitsteeksel, aan de buitenkant of in een blaasje. Dan versmelt het virusmembraan met de cel.', 'A protein of the cell cuts the spike, on the outside or in a vesicle. Then the virus membrane fuses with the cell.') },
   ],
   hotspots: [
