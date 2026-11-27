@@ -54,7 +54,7 @@ const UI2 = {
   up: { nl: 'Uitzoomen naar', en: 'Zoom out to' }, zoomIn: { nl: 'Inzoomen', en: 'Zoom in' }, next: { nl: 'Volgende stap →', en: 'Next step →' }, side: { nl: 'Zijsprongen', en: 'Side paths' },
   legend: { nl: 'Legende', en: 'Legend' }, simplified: { nl: 'Wat is hier vereenvoudigd?', en: 'What is simplified here?' },
   struct3d: { nl: '3D-structuren (PDB)', en: '3D structures (PDB)' }, mapTitle: { nl: 'Waar ben ik?', en: 'Where am I?' },
-  mapSub: { nl: 'Alle verhalen, zijpaden en onderwerpen. Geel omrand = hier ben je. Klik op een onderwerp voor uitleg, en open dan de animatie.', en: 'All stories, side paths and topics. Yellow outline = you are here. Click a topic for an explanation, then open the animation.' },
+  mapSub: { nl: 'Zie waar je zit in het verhaal en spring naar een ander onderwerp.', en: 'See where you are in the story and jump to another topic.' },
   close: { nl: 'Sluiten', en: 'Close' }, noScene: { nl: 'Voor deze knoop is nog geen animatie gebouwd.', en: 'No animation has been built for this node yet.' },
   play: { nl: 'Afspelen (spatie)', en: 'Play (space)' }, pause: { nl: 'Pauze (spatie)', en: 'Pause (space)' }, prevStep: { nl: 'Vorige stap (←)', en: 'Previous step (←)' }, nextStep: { nl: 'Volgende stap (→)', en: 'Next step (→)' }, inShort: { nl: 'In het kort', en: 'In short' },
   repeatOn: { nl: 'Herhalen staat aan: deze stap speelt opnieuw tot je verder klikt (klik om uit te zetten)', en: 'Repeat is on: this step replays until you click on (click to turn off)' },
@@ -76,6 +76,23 @@ const UI2 = {
   real3d: { nl: 'Bekijk echt in 3D', en: 'View in real 3D' },
   backFig: { nl: 'Terug', en: 'Back' }, backTip: { nl: 'Terug naar de vorige figuur, bij de stap waar je was (Backspace)', en: 'Back to the previous figure, at the step where you were (Backspace)' },
   homeTip: { nl: 'Terug naar het startmenu (kies een ander verhaal of zijpad)', en: 'Back to the main menu (pick another story or side path)' }, upTip: { nl: 'Eén niveau uitzoomen (Esc)', en: 'Zoom out one level (Esc)' },
+  /* lay-out "3a": verhaal links (rail), uitleg rechts in tabbladen, speler onderaan */
+  story: { nl: 'Verhaal', en: 'Story' }, railOpen: { nl: 'Het hele verhaal tonen: fases, hoofdstukken en stappen', en: 'Show the whole story: phases, chapters and steps' },
+  railClose: { nl: 'Verhaal inklappen', en: 'Fold the story away' }, railNav: { nl: 'Verhaal', en: 'Story' },
+  sideClose: { nl: 'Uitleg inklappen (de figuur wordt groter)', en: 'Fold the explanation away (the figure gets bigger)' }, sideOpen: { nl: 'Uitleg over het proces tonen', en: 'Show the explanation of the process' },
+  about: { nl: 'Over het proces', en: 'About the process' }, aboutS: { nl: 'Over de structuur', en: 'About the structure' }, tabMore: { nl: 'Meer', en: 'More' },
+  nextShort: { nl: 'Volgend', en: 'Next' }, stepWord: { nl: 'Stap', en: 'Step' },
+  capFold: { nl: 'Uitleg bij de stap inklappen (C)', en: 'Fold the step explanation (C)' }, capUnfold: { nl: 'Uitleg bij de stap tonen (C)', en: 'Show the step explanation (C)' },
+  stPlay: { nl: 'speelt', en: 'playing' }, stPause: { nl: 'gepauzeerd', en: 'paused' }, stRepeat: { nl: 'herhaalt', en: 'repeating' }, stChapter: { nl: 'speelt tot einde hoofdstuk', en: 'playing to end of chapter' },
+  jumpFrom: { nl: 'Zijsprong vanuit hoofdstuk', en: 'Detour from chapter' },
+  sources2: { nl: 'Bronnen', en: 'Sources' },
+};
+/* korte namen van de fases (kleur per fase in de rail; dezelfde indeling als in de inhoudskaart) */
+const PHASE = {
+  entry: { nl: 'Binnenkomst', en: 'Entry', c: 'var(--membrane)' }, genome: { nl: 'Genoom', en: 'Genome', c: 'var(--dna)' },
+  repl: { nl: 'Replicatie', en: 'Replication', c: 'var(--dna-2)' }, txn: { nl: 'Transcriptie', en: 'Transcription', c: 'var(--prot)' },
+  rna: { nl: 'RNA', en: 'RNA', c: 'var(--rna)' }, tl: { nl: 'Translatie', en: 'Translation', c: 'var(--rrna)' },
+  prot: { nl: 'Eiwit', en: 'Protein', c: 'var(--chain)' }, bact: { nl: 'Bacterie', en: 'Bacterium', c: 'var(--bact)' },
 };
 const V = k => L(UI2[k]);
 
@@ -113,7 +130,14 @@ if (!['all', 'chapter', 'step'].includes(prefs.play)) {          // overnemen ui
 }
 { const u = new URLSearchParams(location.search).get('auto'); if (u === '0' || u === '1') prefs.play = u === '1' ? 'all' : 'step'; }
 if (![.6, 1, 1.6].includes(prefs.read)) prefs.read = 1;
-if (!['float', 'dock', 'off'].includes(prefs.cap)) prefs.cap = 'float';
+/* uitleg bij de stap: standaard onder de figuur (ontwerp 3a). Eén keer omzetten: 'float' was vroeger de standaard, niet zelf gekozen. */
+if (prefs.capV !== 2) { if (prefs.cap !== 'off') prefs.cap = 'dock'; prefs.capV = 2; }
+if (!['float', 'dock', 'off'].includes(prefs.cap)) prefs.cap = 'dock';
+/* in- en uitgeklapt (bewaard): rail (verhaal links, standaard ingeklapt), uitlegpaneel rechts (standaard open), uitleg bij de stap (standaard open) */
+if (typeof prefs.rail !== 'boolean') prefs.rail = false;
+if (typeof prefs.side !== 'boolean') prefs.side = true;
+if (typeof prefs.capFold !== 'boolean') prefs.capFold = false;
+savePrefs();
 let auto = prefs.play !== 'step';
 if ([.5, .75, 1, 1.5, 2].includes(prefs.speed)) speed = prefs.speed;
 if (typeof prefs.labels === 'boolean') showLabels = prefs.labels;
@@ -128,8 +152,10 @@ let camNow = FULL.slice(), camTarget = FULL.slice(), camSnap = false;
 
 /* ---------- vaste teksten ---------- */
 document.querySelectorAll('[data-u]').forEach(e => e.textContent = V(e.dataset.u));
-$('bHome').title = V('homeTip'); $('bUp').title = V('upTip');
+$('bHome').title = V('homeTip'); $('bUp').title = V('upTip'); $('bAtlas').title = V('atlas');
 $('tPrev').title = V('prevStep'); $('tNext').title = V('nextStep'); $('gearBtn').title = V('settings');
+for (const [id, k] of [['railBtn', 'railOpen'], ['railClose', 'railClose'], ['bMap', 'whereAmI'], ['sideClose', 'sideClose'], ['sideTab', 'sideOpen']]) { $(id).title = V(k); $(id).setAttribute('aria-label', V(k)); }
+$('rail').setAttribute('aria-label', V('railNav'));
 $('langBox').append(langSwitch('btn'));
 document.title = 'Dogma';
 if (lang === 'en') for (const o of $('speed').options) o.textContent = o.textContent.replace(',', '.');   // 0,5× → 0.5×
@@ -358,11 +384,14 @@ function fadeGhost(now) {
 }
 
 function onStep(i) {
-  const st = current.steps[i];
+  const st = current.steps[i], n = current.steps.length;
   $('capTitle').textContent = stepTitle(st);
   $('capText').innerHTML = colourWords(esc(stepText(st)));
-  $('stepNo').textContent = `${V('step')} ${i + 1}/${current.steps.length}`;
+  $('capNum').textContent = `${i + 1}/${n}`;
+  $('stepNo').innerHTML = `${i + 1}/${n} · <b>${esc(stepTag(st, i) || stepTitle(st))}</b>`;
+  $('stepNo').title = `${V('stepWord')} ${i + 1}/${n}: ${stepTitle(st)}`;
   side.querySelectorAll('.stepsList li').forEach((li, k) => li.classList.toggle('cur', k === i));
+  $('railList').querySelectorAll('.rst').forEach((b, k) => { b.classList.toggle('cur', k === i); b.classList.toggle('done', k < i); });
   syncPlayBtn();
   // zwevend uitlegvenster: kort na het begin van de stap de rustigste hoek kiezen (en bij de grootte van de nieuwe tekst)
   capPlace(); clearTimeout(onStep.h); onStep.h = setTimeout(() => capAuto(), 900);
@@ -380,6 +409,11 @@ function syncPlayBtn() {
   $('tPlay').setAttribute('aria-label', $('tPlay').title);
   $('tRepeat').setAttribute('aria-pressed', String(!auto)); $('tRepeat').title = V(auto ? 'repeatOff' : 'repeatOn'); $('tRepeat').setAttribute('aria-label', $('tRepeat').title);
   $('playState').textContent = V(!playing ? 'statePaused' : !auto ? 'stateRepeat' : prefs.play === 'chapter' ? 'stateChapter' : 'stateAuto');
+  if (current) {                                   // bovenregel van de uitleg: STAP 5/9 · SPEELT
+    const i = stepInfo(t).step;
+    $('capMeta').textContent = `${V('stepWord')} ${i + 1}/${current.steps.length} · ${V(!playing ? 'stPause' : !auto ? 'stRepeat' : prefs.play === 'chapter' ? 'stChapter' : 'stPlay')}`;
+    $('capMeta').title = $('playState').textContent;
+  }
   if ($('pPlay').value !== prefs.play) $('pPlay').value = prefs.play;
   const last = !!current && isLast();
   $('tNext').disabled = last;
@@ -400,7 +434,7 @@ function setAuto(v) {
 }
 function hold() {
   held = true; holdT = 0; done = true; syncPlayBtn();
-  if (isLast() && !endedOnce) { endedOnce = true; showNextChapter(); }
+  if (isLast() && !endedOnce) { endedOnce = true; renderNext(); }
 }
 /* speel stap i vanaf tijdstip 'from' (optioneel eerst zichtbaar spoelen) tot het einde van die stap */
 function playStep(i, from = null) {
@@ -465,56 +499,24 @@ function reopenAtLevel() {
 levelSelect($('pLevel'), { onChange: reopenAtLevel });
 $('pReset').onclick = () => { prefs.capPos = null; savePrefs(); capAuto(true); syncPrefsUI(); };
 document.addEventListener('click', e => { if (!e.target.closest('#gear')) $('gear').open = false; });
-/* tijdlijn in stukken: één stuk per stap (klikbaar, met de naam erbij); het stuk vult zich terwijl de stap speelt,
- * een lichtere vulling toont de leespauze voor het vanzelf verder gaat */
+/* stappen als bolletjes in de speler (klikbaar, met de naam als tooltip); het huidige bolletje is breder en vult zich
+ * terwijl de stap speelt, een lichtere vulling toont de leespauze voor het vanzelf verder gaat. De namen staan in de rail. */
 function drawTicks() {
-  const tr = $('track'); tr.innerHTML = ''; segKey = ''; curSeg = -1;
+  const tr = $('track'); tr.innerHTML = ''; segKey = '';
   current.steps.forEach((s, i) => {
     const b = document.createElement('button'); b.className = 'seg';
     b.title = `${i + 1}. ${stepTitle(s)}`; b.setAttribute('aria-label', `${V('step')} ${b.title}`);
-    b.innerHTML = '<span class="sl"></span><i><s></s><em></em></i><span class="tag"></span>';
-    b.querySelector('.sl').textContent = stepTitle(s);
-    b.querySelector('.tag').textContent = stepTag(s, i) || stepTitle(s);
+    b.innerHTML = '<i><s></s><em></em></i>';
     b.onclick = () => gotoStep(i);
     tr.append(b);
   });
-  requestAnimationFrame(fitTags);
 }
-/* korte stapnamen onder de tijdlijn: over max. 2 regels; past één woord niet in de breedte van zijn stuk,
- * dan wordt die ene naam iets kleiner gezet (11,5 → min. 9 px; daarna afkorten met …, nooit midden in een woord breken) in plaats van midden in het woord te breken */
-function fitTags() {
-  const tr = $('track'), segs = [...tr.children];
-  // 1) de actieve stap krijgt altijd de breedte die zijn volledige naam nodig heeft (op 1 of 2 regels, 11,5 px vet);
-  //    de andere stukken delen de rest en worden zo nodig kleiner/afgekort
-  const cur = segs.find(b => b.classList.contains('cur'));
-  for (const b of segs) b.style.flex = '';
-  if (cur) {
-    const t = cur.querySelector('.tag'), ctx = (fitTags.c ??= document.createElement('canvas').getContext('2d'));
-    ctx.font = `600 11.5px ${getComputedStyle(t).fontFamily}`;
-    const words = (t.textContent || '').split(/\s+/).filter(Boolean), w = x => ctx.measureText(x).width;
-    let need = w(words.join(' '));
-    for (let i = 1; i < words.length; i++) need = Math.min(need, Math.max(w(words.slice(0, i).join(' ')), w(words.slice(i).join(' '))));
-    need = Math.max(need, ...words.map(w)) + 8;
-    if (need > cur.clientWidth) cur.style.flex = `0 0 ${Math.min(need, tr.clientWidth * .3).toFixed(0)}px`;
-  }
-  for (const b of segs) {
-    const t = b.querySelector('.tag');
-    t.style.fontSize = ''; t.style.display = ''; t.style.whiteSpace = ''; t.style.textOverflow = '';
-    if (b === cur) continue;   // actieve stap: nooit verkleinen of afkorten
-    const over = () => t.scrollWidth > t.clientWidth + 1 || t.scrollHeight > t.clientHeight + 1;
-    for (let fs = 11.5; fs > 9 && over(); fs -= .5) t.style.fontSize = fs - .5 + 'px';
-    if (over()) { t.style.display = 'block'; t.style.whiteSpace = 'nowrap'; t.style.textOverflow = 'ellipsis'; }   // nog te lang: afkorten met … (nooit een woord splitsen; volledige naam in de tooltip van de knop)
-  }
-}
-let curSeg = -1;
-addEventListener('resize', () => requestAnimationFrame(fitTags));
 let segKey = '';
 function updateSegs(si) {
   const sk = `${si.step}|${si.p.toFixed(3)}|${autoFill.toFixed(3)}|${$('track').children.length}`;
   if (sk === segKey) return;
   segKey = sk;
   const segs = $('track').children;
-  if (si.step !== curSeg) { curSeg = si.step; requestAnimationFrame(fitTags); }   // nieuwe actieve stap: breedtes opnieuw verdelen
   for (let i = 0; i < segs.length; i++) {
     const b = segs[i], k = i < si.step ? 1 : i > si.step ? 0 : si.p;
     b.classList.toggle('cur', i === si.step); b.classList.toggle('done', i < si.step);
@@ -579,23 +581,45 @@ function updateLabels() {
     lb.style.top = (below ? r.bottom - s.top + 6 : r.top - s.top - 6) + 'px';
   }
 }
-let showCap = true;
-/* uitlegpaneel: op brede schermen in- en uitklappen, op smalle schermen als paneel van onderaan */
+/* ---------- in- en uitklappen (bewaard in prefs): rail links, uitlegpaneel rechts, uitleg bij de stap ---------- */
 const narrow = () => matchMedia('(max-width: 1000px)').matches;
-function toggleInfo(force) {
-  const app = document.querySelector('.app');
-  if (narrow()) { const on = force ?? !app.classList.contains('sideopen'); app.classList.toggle('sideopen', on); $('bInfo').setAttribute('aria-pressed', on); }
-  else { const on = force ?? app.classList.contains('noside'); app.classList.toggle('noside', !on); $('bInfo').setAttribute('aria-pressed', on); }
-  requestAnimationFrame(placeLabels);
+const appEl = $('app');
+function setSide(on) {
+  prefs.side = on; savePrefs();
+  appEl.classList.toggle('noside', !on);
+  $('sideTab').setAttribute('aria-expanded', String(on)); $('sideClose').setAttribute('aria-expanded', String(on));
 }
-$('bInfo').onclick = () => toggleInfo();
-/* klik op een onderdeel dat deze scène zelf is: toon de uitleg erover (zijpaneel open, bovenaan, even oplichten) */
+$('sideClose').onclick = () => setSide(false);
+$('sideTab').onclick = () => { setSide(true); $('sideClose').focus({ preventScroll: true }); };
+/* klik op een onderdeel dat deze scène zelf is: toon de uitleg erover (paneel open, eerste tabblad, even oplichten) */
 function showSelf() {
-  toggleInfo(true); side.scrollTop = 0;
+  setSide(true); selectTab('kort'); side.scrollTop = 0;
   side.classList.remove('flash'); void side.offsetWidth; side.classList.add('flash');
 }
-$('bInfo').setAttribute('aria-pressed', !narrow());
-function toggleCap() { showCap = !showCap; $('caption').classList.toggle('mini', !showCap); capAuto(); }
+function setRail(on) {
+  prefs.rail = on; savePrefs();
+  $('rail').classList.toggle('open', on);
+  $('railBtn').setAttribute('aria-expanded', String(on));
+  if (on) requestAnimationFrame(() => $('railList').querySelector('.rch.cur, .rch.from')?.scrollIntoView({ block: 'nearest' }));
+}
+$('railBtn').onclick = () => setRail(true);
+$('railClose').onclick = () => setRail(false);
+setSide(prefs.side); setRail(prefs.rail);
+/* uitleg bij de stap in- of uitklappen (▾ / C); onder de figuur wordt ze dan een klein pilletje, zwevend enkel de titel */
+function setCapFold(v) {
+  prefs.capFold = v; savePrefs();
+  $('caption').classList.toggle('folded', v);
+  const k = v ? 'capUnfold' : 'capFold';
+  $('capFold').textContent = v ? '▴' : '▾'; $('capFold').title = V(k); $('capFold').setAttribute('aria-label', V(k)); $('capFold').setAttribute('aria-expanded', String(!v));
+  labelsDirty = true; capAuto();
+}
+function toggleCap() { setCapFold(!prefs.capFold); }
+$('capFold').onclick = e => { e.stopPropagation(); toggleCap(); };
+$('caption').addEventListener('click', e => { if (prefs.capFold && !floating() && !e.target.closest('button')) toggleCap(); });   // pilletje: klik = weer openklappen
+/* de figuur verandert van grootte (paneel of rail in-/uitgeklapt, uitleg ingeklapt): labels en zwevend venster opnieuw plaatsen */
+/* contextknoppen (echt 3D, mens ⇄ bacterie) zichtbaar: in de bovenbalk wat woorden weglaten zodat alles op één rij past */
+for (const b of [$('bReal3d'), $('bOrg')]) new MutationObserver(() => appEl.classList.toggle('r3', !$('bReal3d').hidden || !$('bOrg').hidden)).observe(b, { attributes: true, attributeFilter: ['hidden'] });
+new ResizeObserver(() => { labelsDirty = true; requestAnimationFrame(() => { placeLabels(); capPlace(); }); }).observe(stage);
 function setLabels(v) {
   showLabels = v; prefs.labels = v; savePrefs();
   $('bLabels').setAttribute('aria-pressed', v); labelsEl.classList.toggle('hide', !v); stage.classList.toggle('nolab', !v); $('pLabels').checked = v;
@@ -604,7 +628,7 @@ function setLabels(v) {
 $('bLabels').onclick = () => setLabels(!showLabels);
 $('bLabels').setAttribute('aria-pressed', showLabels); labelsEl.classList.toggle('hide', !showLabels); stage.classList.toggle('nolab', !showLabels);
 
-/* ---------- uitleg bij de stap: zwevend venster (versleepbaar) of onder de figuur ----------
+/* ---------- uitleg bij de stap: onder de figuur (standaard) of als zwevend venster (versleepbaar) ----------
  * Zwevend: het venster ligt op de figuur, in de hoek waar op dat moment het minst te zien is (gemeten met
  * elementsFromPoint op een raster punten; grote achtergrondvlakken en het 3D-canvas tellen niet als inhoud).
  * Heeft de gebruiker het zelf versleept, dan blijft het daar (bewaard), tot "terug op zijn plaats". */
@@ -621,12 +645,12 @@ function setCapMode(m) {
 function applyCapMode() {
   const fl = floating();
   if (fl && cap.parentNode !== stage) stage.append(cap);
-  if (!fl && cap.parentNode !== dockEl) dockEl.prepend(cap);
+  if (!fl && cap.nextElementSibling !== dockEl) dockEl.before(cap);   // onder de figuur, boven de speler
   cap.classList.toggle('float', fl);
   cap.hidden = prefs.cap === 'off';
   if (!fl) { cap.style.left = cap.style.top = ''; }
   labelsDirty = true;
-  requestAnimationFrame(() => { placeLabels(); fitTags(); capPlace(); });
+  requestAnimationFrame(() => { placeLabels(); capPlace(); });
 }
 const CAP_M = 12;                                  // marge tot de rand van de figuur
 function capBounds() {
@@ -728,7 +752,7 @@ const endDrag = () => {
 };
 cap.addEventListener('pointerup', endDrag); cap.addEventListener('pointercancel', endDrag);
 addEventListener('resize', () => { applyCapMode(); });
-applyCapMode(); syncPrefsUI();
+applyCapMode(); syncPrefsUI(); setCapFold(prefs.capFold);
 
 /* ---------- op voorhand laden ----------
  * Kort nadat een scène start, laten de scènes waar je waarschijnlijk naartoe gaat (volgend hoofdstuk, aanklikbare onderdelen)
@@ -916,25 +940,62 @@ function chapterGo(i) {
   const el = dir === 'in' && current.svg ? [...current.root.querySelectorAll(`[data-node="${id}"]`)].find(e => e.__v !== false && visible(e)) : null;
   go(id, el ? boxOf(el) : null, dir);
 }
-function renderStory() {
-  const ci = STORY_IDS.indexOf(current.id);
-  const dots = STORY.map((c, i) => `<button class="${i === ci ? 'cur' : i === lastChapter && ci < 0 ? 'from' : i <= lastChapter ? 'on' : ''}" data-ci="${i}" title="${V('chapter')} ${i + 1}: ${title(NODES[c.id])}"></button>`).join('');
-  if (ci >= 0) {
-    $('sInfo').innerHTML = `${V('chapter')} <b>${ci + 1}</b> ${L({ nl: 'van', en: 'of' })} ${STORY.length}<div class="dots">${dots}</div>`;
-    const pv = STORY[ci - 1], nx = STORY[ci + 1];   // hoofdstukken enkel hier, met de naam van het vorige/volgende erbij
-    $('sPrevName').textContent = pv ? title(NODES[pv.id]) : ''; $('sNextName').textContent = nx ? title(NODES[nx.id]) : '';
-    $('sPrev').title = pv ? `${V('chapter')} ${ci}: ${title(NODES[pv.id])}` : ''; $('sNext').title = nx ? `${V('chapter')} ${ci + 2}: ${title(NODES[nx.id])}` : '';
-    $('sPrev').disabled = !pv; $('sNext').disabled = !nx;
-    $('sPrev').onclick = () => chapterGo(ci - 1); $('sNext').onclick = () => chapterGo(ci + 1);
-  } else {
+/* ---------- rail links: het verhaal ----------
+ * Ingeklapt: per fase een groepje streepjes in de kleur van die fase (één per hoofdstuk; huidig = breder en geel).
+ * Uitgeklapt (☰): de fases met hun hoofdstukken; de fase waarin je zit staat open, met onder het huidige hoofdstuk de stappen. */
+function phasesOf() {
+  const out = [];
+  STORY.forEach((c, i) => {
+    const st = NODES[c.id]?.stage ?? 'entry', g = out[out.length - 1];
+    if (g && g.stage === st) g.to = i; else out.push({ stage: st, from: i, to: i });
+  });
+  return out;
+}
+const phaseCol = st => PHASE[st]?.c ?? 'var(--accent)';
+const phaseName = st => PHASE[st] ? L(PHASE[st]) : (stageTitle(STAGES.find(s => s.id === st) ?? { t: st, en: st }));
+let railOpenPh = null, railKey = '';
+function renderRail() {
+  const ci = STORY_IDS.indexOf(current.id), here = ci >= 0 ? ci : lastChapter, ln = LINES[line];
+  const groups = phasesOf(), nm = i => title(NODES[STORY[i].id]);
+  const key = `${line}|${here}`;
+  if (key !== railKey) { railKey = key; railOpenPh = new Set([groups.findIndex(g => here >= g.from && here <= g.to)]); }
+  $('railTitle').innerHTML = `${V('story')}<span>${here + 1}/${STORY.length}</span>`;   // zoals in het ontwerp: VERHAAL 11/21 (welk verhaal: kruimelpad bovenaan en tooltip)
+  $('railTitle').title = L(ln.title);
+  /* ingeklapt: streepjes */
+  $('railStripes').innerHTML = groups.map(g => STORY.slice(g.from, g.to + 1).map((c, k) => {
+    const i = g.from + k, cls = ['rs', k === 0 ? 'ps' : '', i === ci ? 'cur' : ci < 0 && i === lastChapter ? 'from' : i > here ? 'fut' : ''].join(' ');
+    return `<button class="${cls}" style="--c:${phaseCol(g.stage)}" data-ci="${i}" title="${V('chapter')} ${i + 1}: ${esc(nm(i))} · ${esc(phaseName(g.stage))}" aria-label="${V('chapter')} ${i + 1}: ${esc(nm(i))}"${i === ci ? ' aria-current="step"' : ''}><i></i></button>`;
+  }).join('')).join('');
+  /* uitgeklapt: fases › hoofdstukken › stappen */
+  const steps = () => `<div class="rsteps">${current.steps.map((s, i) => `<button class="rst" data-i="${i}" title="${esc(stepTitle(s))}">${esc(stepTag(s, i) || stepTitle(s))}</button>`).join('')}</div>`;
+  const jumps = () => trail.filter(id => !STORY_IDS.includes(id)).map(id => {
+    const me = id === current.id, nmj = NODES[id] ? title(NODES[id]) : L(SCENES[id]?.title) ?? id;
+    return `<button class="rch jump ${me ? 'cur' : ''}" ${me ? '' : `data-go="${id}"`}><i>↪</i>${esc(nmj)}</button>${me ? steps() : ''}`;
+  }).join('');
+  let h = '';
+  if (ci < 0) {
     const deep = Math.max(1, trail.length - 1);
-    $('sInfo').innerHTML = `<span class="jumpinfo">${V('sidePath')} ${L({ nl: 'vanuit hoofdstuk', en: 'from chapter' })} <b>${lastChapter + 1}</b> · ${deep} ${L(deep === 1 ? { nl: 'niveau dieper', en: 'level deeper' } : { nl: 'niveaus dieper', en: 'levels deeper' })}</span><div class="dots">${dots}</div>`;
-    $('sPrevName').textContent = ''; $('sPrev').title = ''; $('sPrev').disabled = true;
-    $('sNextName').textContent = `${V('backTo')} ${lastChapter + 1}`; $('sNext').title = title(NODES[STORY[lastChapter].id]);
-    $('sNext').disabled = false; $('sNext').onclick = () => chapterGo(lastChapter);
+    h += `<div class="rnote">${V('jumpFrom')} ${lastChapter + 1} · ${deep} ${L(deep === 1 ? { nl: 'niveau dieper', en: 'level deeper' } : { nl: 'niveaus dieper', en: 'levels deeper' })}<button data-back="1">${V('backTo')} ${lastChapter + 1}</button></div>`;
   }
-  $('sNext').classList.toggle('back', ci < 0);
-  $('sInfo').querySelectorAll('.dots button').forEach(b => b.onclick = () => { const i = +b.dataset.ci; if (STORY[i].id !== current.id) { trail = []; chapterGo(i); } });
+  groups.forEach((g, gi) => {
+    const open = railOpenPh.has(gi), cur = here >= g.from && here <= g.to;
+    h += `<button class="rph ${cur ? 'cur' : ''}" style="--c:${phaseCol(g.stage)}" data-g="${gi}" aria-expanded="${open}"><span>${esc(phaseName(g.stage))}</span><span class="rr">${g.from + 1}${g.to > g.from ? '–' + (g.to + 1) : ''}</span></button>`;
+    if (!open) return;
+    for (let i = g.from; i <= g.to; i++) {
+      const cls = i === ci ? 'cur' : ci < 0 && i === lastChapter ? 'from' : '';
+      h += `<button class="rch ${cls}" style="--c:${phaseCol(g.stage)}" data-ci="${i}"${i === ci ? ' aria-current="step"' : ''}><i>${i + 1}</i>${esc(nm(i))}</button>`;
+      if (i === ci) h += steps();
+      if (ci < 0 && i === lastChapter) h += jumps();
+    }
+  });
+  $('railList').innerHTML = h;
+  const toChapter = i => { if (STORY[i].id === current.id) return; trail = []; chapterGo(i); };
+  $('railStripes').querySelectorAll('.rs').forEach(b => b.onclick = () => toChapter(+b.dataset.ci));
+  $('railList').querySelectorAll('.rch[data-ci]').forEach(b => b.onclick = () => toChapter(+b.dataset.ci));
+  $('railList').querySelectorAll('.rch[data-go]').forEach(b => b.onclick = () => go(b.dataset.go, null, 'out'));
+  $('railList').querySelectorAll('.rst').forEach(b => b.onclick = () => gotoStep(+b.dataset.i));
+  $('railList').querySelectorAll('.rph').forEach(b => b.onclick = () => { const gi = +b.dataset.g; railOpenPh.has(gi) ? railOpenPh.delete(gi) : railOpenPh.add(gi); renderRail(); onStep(stepInfo(t).step); });
+  $('railList').querySelector('[data-back]')?.addEventListener('click', () => chapterGo(lastChapter));
 }
 /* Waar ben ik? Kruimelpad = [gekleurde lijn] › hoofdstuk N › zijsprong › … (lange paden ingekort in het midden) */
 function renderCrumbs() {
@@ -952,13 +1013,18 @@ function renderCrumbs() {
   $('crumbs').querySelectorAll('button[data-i]').forEach(b => b.onclick = () => go(trail[+b.dataset.i], null, 'out'));
   $('lineBadge').onclick = showMap;
 }
-function showNextChapter() {
-  const ci = STORY_IDS.indexOf(current.id);
-  const box = $('nextCh');
-  if (ci < 0 || ci >= STORY.length - 1) return;
-  const nx = STORY[ci + 1];
-  box.innerHTML = `<button title="${L(STORY[ci].bridge)}"><span>${V('nextChapter')}: <b>${title(NODES[nx.id])}</b> ›</span></button>`;
-  box.querySelector('button').onclick = () => chapterGo(ci + 1);
+/* speler rechts: "Volgend: <hoofdstuk> ›" (vult zich tijdens de leespauze na de laatste stap); na een zijsprong: terug naar het hoofdstuk */
+function renderNext() {
+  const ci = STORY_IDS.indexOf(current.id), box = $('nextCh');
+  if (ci < 0) {
+    const ch = STORY[lastChapter]; if (!ch) { box.classList.remove('show'); return; }
+    box.innerHTML = `<button class="back" title="${esc(title(NODES[ch.id]))}">${V('backTo')} ${lastChapter + 1}</button>`;
+    box.querySelector('button').onclick = () => chapterGo(lastChapter);
+  } else if (ci < STORY.length - 1) {
+    const nx = STORY[ci + 1], nm = title(NODES[nx.id]);
+    box.innerHTML = `<button title="${esc(L(STORY[ci].bridge) ?? '')}" aria-label="${V('nextChapter')}: ${esc(nm)}"><span>${V('nextShort')}: <b>${esc(nm)}</b> ›</span></button>`;
+    box.querySelector('button').onclick = () => chapterGo(ci + 1);
+  } else { box.classList.remove('show'); box.innerHTML = ''; return; }
   box.classList.add('show');
 }
 
@@ -1011,28 +1077,50 @@ function render() {
     (sc ? `<span title="${L({ nl: 'Hoe groot dit in werkelijkheid is', en: 'How big this is in reality' })}: ${sc.replace(/"/g, '&quot;')}">📏 <span class="k">${L({ nl: 'Echte grootte', en: 'Real size' })}:</span> <b>${sc}</b></span>` : '') +
     (tm ? `<span title="${L({ nl: 'Hoe lang dit proces in de cel echt duurt. De animatie is vertraagd of versneld om het te kunnen volgen.', en: 'How long this process really takes in the cell. The animation is slowed down or sped up so you can follow it.' })} (${tm.replace(/"/g, '&quot;')})">⏱ <span class="k">${L({ nl: 'Echte duur', en: 'Real duration' })}:</span> <b>${tm}</b></span>` : '');
   const ups = n ? [...new Set([...n.parents, ...n.prev])] : [];
-  side.innerHTML = `
-    <button class="btn sheetclose" id="sheetClose">${V('close')} ✕</button>
-    <div class="kind">${n ? U(n.kind === 'process' ? 'process' : 'structure') : ''} · ${L(def.org ?? base.org) ?? ''} · ${n ? stageTitle(STAGES.find(s => s.id === n.stage)) : ''}</div>
-    <h1>${n ? title(n) : L(def.title)}${n ? `<span class="status ${n.status === 'nagekeken' ? 'ok' : ''}">${statusText(n.status)}</span>` : ''}</h1>
-    ${n ? `<div class="en">${sub(n)}</div>${kortOf(current.id) ? `<div class="kort"><b>${V('inShort')}</b>${kortOf(current.id)}</div>` : `<p>${summary(n)}</p>`}` : ''}
-    ${termsCard(current.id)}${detailsHTML(current.id)}
+  /* uitlegpaneel rechts: kop + tabbladen (In het kort · Wat · Zo werkt het · Kerncijfers · Waarom belangrijk · Meer).
+   * Een tabblad zonder inhoud (voor dit onderwerp of dit niveau) wordt niet getoond. */
+  const st = n ? STAGES.find(s => s.id === n.stage) : null, org = L(def.org ?? base.org) ?? '';
+  $('sideKind').textContent = `${V(n?.kind === 'process' || !n ? 'about' : 'aboutS')}${org ? ` · ${org}` : ''}`;
+  $('sideKind').title = `${n ? U(n.kind === 'process' ? 'process' : 'structure') : ''}${org ? ` · ${org}` : ''}${st ? ` · ${stageTitle(st)}` : ''}`;
+  $('sideTitle').innerHTML = `${n ? title(n) : L(def.title) ?? ''}${n ? `<span class="status ${n.status === 'nagekeken' ? 'ok' : ''}">${statusText(n.status)}</span>` : ''}`;
+  $('sideSub').textContent = n ? sub(n) : '';
+  const d = DETAILS[current.id], x = d ? (d[lang] ?? d.nl) : null, hobby = rank < 3;
+  const legend = def.legend ?? base.legend;
+  const tabs = [];
+  const kort = n ? (kortOf(current.id) ? `<div class="kort"><b>${V('inShort')}</b>${kortOf(current.id)}</div>` : `<p>${summary(n)}</p>`) : '';
+  const legendH = legend ? `<div class="card c-leg"><div class="ch"><i>🎨</i>${V('legend')}</div><div class="legend">${legend.slice(0, level === 'hobby' ? 4 : level === 'secundair' ? 6 : 99).map(([c, t]) => `<span style="--c:${c}"><i></i>${L(t)}</span>`).join('')}</div></div>` : '';
+  if (kort || legendH) tabs.push(['kort', V('inShort'), kort + termsCard(current.id) + legendH]);
+  if (x?.what && !hobby) tabs.push(['what', V('what'), `<p>${x.what}</p>`]);
+  if (x?.how?.length && !hobby) tabs.push(['how', V('how'), `<ol class="how">${x.how.map(s => `<li>${s}</li>`).join('')}</ol>`]);
+  if (x?.facts?.length && !hobby) tabs.push(['facts', V('facts'), `<dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`]);
+  if (x?.why && !hobby) tabs.push(['why', V('why'), `<p>${x.why}</p>`]);
+  tabs.push(['more', V('tabMore'), `
     <details class="sec" open><summary>${V('stepsHere')}</summary><ol class="stepsList">${current.steps.map((s, i) => { const tg = stepTag(s, i); return `<li data-i="${i}">${tg ? `<span class="stag">${esc(tg)}</span>` : ''}${esc(stepTitle(s))}</li>`; }).join('')}</ol></details>
     ${level === 'hobby' ? '' : L(def.extra ?? base.extra) ?? ''}
-    ${(def.legend ?? base.legend) ? `<div class="card c-leg"><div class="ch"><i>🎨</i>${V('legend')}</div><div class="legend">${(def.legend ?? base.legend).slice(0, level === 'hobby' ? 4 : level === 'secundair' ? 6 : 99).map(([c, x]) => `<span style="--c:${c}"><i></i>${L(x)}</span>`).join('')}</div></div>` : ''}
     ${ups.length ? `<div class="card c-up"><div class="ch"><i>↑</i>${V('up')}</div>${chipsOf(ups, 'up')}</div>` : ''}
     ${n?.in.length ? `<div class="card c-in"><div class="ch"><i>🔍</i>${V('zoomIn')}</div>${chipsOf(n.in, '')}</div>` : ''}
     ${n?.next.length ? `<div class="card c-next"><div class="ch"><i>→</i>${V('next')}</div>${chipsOf(n.next, 'next')}</div>` : ''}
     ${n?.rel.length && rank >= 2 ? `<div class="card c-rel"><div class="ch"><i>↪</i>${V('side')}</div>${chipsOf(n.rel, 'rel')}</div>` : ''}
     ${n?.pdb.length && rank >= 3 ? `<div class="card c-pdb"><div class="ch"><i>◆</i>${V('struct3d')}</div>${n.pdb.map(p => `<a class="chip" href="https://www.rcsb.org/structure/${p}" target="_blank" rel="noopener">PDB ${p} ↗</a>`).join('')}</div>` : ''}
-    <div class="simp"><b>${V('simplified')}</b><br>${L(def.simplified ?? base.simplified) ?? ''}</div>`;
-  $('sheetClose').onclick = () => toggleInfo(false);
-  side.querySelectorAll('.chip[data-id]').forEach(c => c.onclick = () => { if (narrow()) toggleInfo(false); chipGo(c.dataset.id); });
-  side.querySelectorAll('.stepsList li').forEach(li => li.onclick = () => gotoStep(+li.dataset.i));
+    <div class="simp"><b>${V('simplified')}</b><br>${L(def.simplified ?? base.simplified) ?? ''}</div>
+    ${d?.sources?.length ? `<details class="sec" open><summary>${V('sources')} (${d.sources.length})</summary><ol class="src">${d.sources.map(s => `<li>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${L(s.t)}</a>` : L(s.t)}</li>`).join('')}</ol></details>` : ''}`]);
+  sideTabs = tabs;
+  $('sideTabs').innerHTML = tabs.map(([k, lbl]) => `<button class="tab" role="tab" data-t="${k}" aria-selected="false">${lbl}</button>`).join('');
+  $('sideTabs').querySelectorAll('.tab').forEach(b => b.onclick = () => { prefs.tab = b.dataset.t; savePrefs(); selectTab(b.dataset.t); });
+  selectTab(tabs.some(([k]) => k === prefs.tab) ? prefs.tab : tabs[0][0]);
   side.scrollTop = 0;
-  renderStory();
+  renderRail(); renderNext();
   onStep(stepInfo(t).step);
   real3d.sync(current.id, current.is3d); syncOrg();
+}
+let sideTabs = [];
+function selectTab(k) {
+  const tab = sideTabs.find(([key]) => key === k) ?? sideTabs[0]; if (!tab) return;
+  $('sideTabs').querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.t === tab[0])));
+  const body = $('sideBody'); body.innerHTML = tab[2];
+  body.querySelectorAll('.chip[data-id]').forEach(c => c.onclick = () => chipGo(c.dataset.id));
+  body.querySelectorAll('.stepsList li').forEach(li => { li.onclick = () => gotoStep(+li.dataset.i); });
+  if (current) { const i = stepInfo(t).step; body.querySelectorAll('.stepsList li').forEach((li, j) => li.classList.toggle('cur', j === i)); }
 }
 function chipGo(id) {
   const el = current.root.querySelector(`[data-node="${id}"]`);

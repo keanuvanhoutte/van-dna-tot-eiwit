@@ -31,7 +31,7 @@ const ready = async fr => { for (let i = 0; i < 600; i++) { const e = fr.content
   segs(d)[4].click(); await wait(400); st('klik op stuk 5 van de tijdlijn');
   const last = segs(d).length - 1; segs(d)[last].click(); await wait(400);
   log.push(`laatste stap: › uit=${g('tNext').disabled} · volgend-hoofdstukknop=${g('nextCh').classList.contains('show') ? g('nextCh').textContent.trim() : '-'}`);
-  log.push(`bovenbalk: ‹ "${g('sPrev').textContent.trim()}" · › "${g('sNext').textContent.trim()}"`);
+  log.push(`rail: ${d.querySelectorAll('#railStripes .rs').length} streepjes · huidig=${[...d.querySelectorAll('#railStripes .rs')].findIndex(b => b.classList.contains('cur')) + 1} · titel "${g('railTitle').textContent}"`);
   /* deel 2: vanzelf verder (auto=1) */
   const f2 = document.createElement('iframe'); f2.style.cssText = 'width:1600px;height:900px';
   f2.src = '../app/index.html?scene=rt&rafpoly&auto=1'; document.body.append(f2);
@@ -52,7 +52,7 @@ const ready = async fr => { for (let i = 0; i < 600; i++) { const e = fr.content
   await ready(f3); await wait(3000);
   const g3 = id => f3.contentDocument.getElementById(id);
   log.push(`HOOFDSTUK laatste stap: ${g3('stepNo').textContent} · › uit=${g3('tNext').disabled} · knop="${g3('nextCh').classList.contains('show') ? g3('nextCh').textContent.trim() : '-'}"`);
-  log.push(`HOOFDSTUK bovenbalk: ${g3('sInfo').textContent.trim()} · ‹ "${g3('sPrev').textContent.trim()}" · › "${g3('sNext').textContent.trim()}"`);
+  log.push(`HOOFDSTUK rail: ${g3('railTitle').textContent} · huidig streepje ${[...f3.contentDocument.querySelectorAll('#railStripes .rs')].findIndex(b => b.classList.contains('cur')) + 1} · kruimelpad "${g3('crumbs').textContent.trim()}"`);
   out.textContent = log.join('\n');
 })();
 </script>
