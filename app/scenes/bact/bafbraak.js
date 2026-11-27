@@ -28,6 +28,7 @@ export default structure3d({
     en: 'ClpP consists of two rings of seven; one ring is modelled in this structure. Of the substrate (GFP with an ssrA tag) only the tail in the pore is visible; the rest is flexible or still folded outside the machine. Other proteases (Lon, ClpAP, FtsH, HslUV) work in a similar way but are not shown. Some bacteria (such as the tuberculosis bacterium) do have a proteasome, with their own tag (Pup); E. coli HslV is related to the proteasome.' },
   base,
   rotate: [['x', 65]],   // schuin van opzij: motor (ClpX) en knipkamer (ClpP) zichtbaar op elkaar gestapeld
+  zoomPad: .85,                         // overzicht: iets meer ruimte rondom (raakte de bovenrand)
   steps: [
     { dur: 8000, title: L3('Ook eiwitten moeten weg', 'Proteins have to go too'), focus: null, zoom: {}, tags: [TAG({ chain: X }, 'motor (ClpX)', 'motor (ClpX)'), TAG({ chain: P }, 'knipkamer (ClpP)', 'cutting chamber (ClpP)')], tags: [TAG({ chain: X }, 'motor (ClpX)', 'motor (ClpX)'), TAG({ chain: P }, 'knipkamer (ClpP)', 'cutting chamber (ClpP)')], spin: .012,
       text: L3('E. coli heeft geen ubiquitine en geen proteasoom. Ze gebruikt eigen afbraakmachines, zoals ClpXP.', 'E. coli has no ubiquitin and no proteasome. It uses its own degradation machines, such as ClpXP.') },

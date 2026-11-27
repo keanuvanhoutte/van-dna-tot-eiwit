@@ -32,7 +32,7 @@ export default structure3d({
   base,
   dimOpacity: false,
   steps: [
-    { dur: 8000, title: L3('De sleutel past op het slot van onze cel', 'The key fits the lock on our cell'), focus: OVER(), zoom: {}, spin: .012, pad: .9,
+    { dur: 8000, title: L3('De sleutel past op het slot van onze cel', 'The key fits the lock on our cell'), focus: OVER(), zoom: {}, spin: .012, pad: .7,
       text: L3('Dit is een echt stukje coronavirus (oranje) vast op een eiwit van onze cel (groen).', 'This is a real piece of coronavirus (orange) stuck to a protein of our cell (green).') },
     { dur: 8500, title: L3('Het slot zit op onze cel', 'The lock sits on our cell'), zoom: { chain: 'A' }, spin: .01,
       focus: [{ sel: { chain: 'E' }, style: ghost(4, .12) }, { sel: { chain: 'A' }, style: S(ACE, 2.8) }, { sel: { chain: 'A', resi: 600 }, style: S(ACE, 2.8), label: L3('slot (eiwit van de cel)', 'lock (protein of the cell)') }],
