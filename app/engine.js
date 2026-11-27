@@ -22,6 +22,7 @@ import { LINKS } from '../shared/links.js';
 import { level, rank, levelSelect } from '../shared/level.js';
 import { SIMPLE } from '../shared/simple/index.js';
 import { LABELS, LEGEND } from '../shared/simple/labels.js';
+import { PRO_LABELS, PRO_STEPS, PRO_DETAILS, PRO_GLOSS, PRO_BRIDGE, PRO_META } from '../shared/pro/index.js';   // hoger onderwijs: vaktaal-laag
 import { STEP_LEVEL } from '../shared/levels.js';
 
 /* ---------- verhaallijnen ---------- */
@@ -208,7 +209,7 @@ function byLevel(id, steps) {
 }
 /* eenvoudige teksten per niveau (shared/simple/*.js): titel, uitleg en korte naam van een kernstap, en "In het kort" */
 const simpleOf = id => (rank < 3 ? SIMPLE[id]?.[level] : null) ?? null;
-const simpleStep = st => simpleOf(current?.id)?.steps?.[st?._i ?? 0] ?? null;
+const simpleStep = st => (rank >= 3 ? PRO_STEPS[current?.id]?.[st?._i ?? 0] : simpleOf(current?.id)?.steps?.[st?._i ?? 0]) ?? null;   // hoger: vaktaal-versie van de stap
 const stepTitle = st => L(simpleStep(st)?.title ?? st?.title) ?? '';
 function stepTag(st, i) {
   const tg = simpleStep(st)?.tag ?? STEP_TAGS[current.id]?.[st._i ?? i];
@@ -226,12 +227,15 @@ function stepText(st) {
 /* een stap van de volledige knoop (bv. uit de zoekfunctie) → de dichtstbijzijnde getoonde stap op dit niveau */
 const shownIndex = i => { let k = 0; current.steps.forEach((s, j) => { if ((s._i ?? j) <= i) k = j; }); return k; };
 const hasScene = id => !!SCENES[id];
+/* overgangszin naar het volgende hoofdstuk; op niveau hoger de vaktaalversie (shared/pro/misc.js) */
+const bridgeOf = b => (rank >= 3 && b && PRO_BRIDGE[b.nl]) || b;
 
 /* hobbyist: teksten IN de figuur (SVG-tekst, 3D-labels) vervangen door eenvoudige woorden (shared/simple/labels-*.js; '' = verbergen).
  * Eerst een vervanging voor deze animatie ('id|tekst', labels-fix.js), anders de algemene. Scènes schrijven hun tekst vaak opnieuw in
  * update(): een MutationObserver vervangt elke nieuwe of gewijzigde tekst meteen. Daarna: een langer woord in een pil wordt kleiner gezet
  * tot het past, en een pil waarvan alle tekst verborgen is verdwijnt mee (geen lege vakjes). */
-const LMAP = level === 'hobby' ? LABELS[lang] ?? null : null;
+/* hoger onderwijs: dezelfde vervanging, maar naar vaktaal (shared/pro/) */
+const LMAP = level === 'hobby' ? LABELS[lang] ?? null : rank >= 3 && Object.keys(PRO_LABELS[lang] ?? {}).length ? PRO_LABELS[lang] : null;
 const pickLabel = (k, map, id) => { const sk = id + '|' + k; return sk in map ? map[sk] : k in map ? map[k] : undefined; };
 const easyLabel = s => { if (!LMAP || !s) return s; const v = pickLabel(s.replace(/\s+/g, ' ').trim(), LMAP, current?.id ?? ''); return v === undefined ? s : v; };
 /* voor 3D-labels die in het beeld zelf getekend worden (geen tekst in de pagina): de scène vraagt de eenvoudige tekst op */
@@ -279,7 +283,7 @@ function easyWatch(layer, id) {
     .observe(layer, { subtree: true, childList: true, characterData: true });
 }
 /* hobbyist: ook de legende in het zijpaneel in eenvoudige woorden */
-if (LMAP) new MutationObserver(() => side.querySelectorAll('.legend span').forEach(sp => sp.childNodes.forEach(n => { if (n.nodeType === 3) easyText(n, LEGEND[lang] ?? LMAP); })))
+if (LMAP) new MutationObserver(() => side.querySelectorAll('.legend span').forEach(sp => sp.childNodes.forEach(n => { if (n.nodeType === 3) easyText(n, level === 'hobby' ? LEGEND[lang] ?? LMAP : LMAP); })))
   .observe(side, { subtree: true, childList: true });
 
 function build(id) {
@@ -431,7 +435,7 @@ function renderBridge(i) {
   const el = $('capBridge'), ci = current ? STORY_IDS.indexOf(current.id) : -1, ch = ci >= 0 ? STORY[ci] : null;
   let h = '';
   if (ch && i === 0 && ch.intro && !(done && current.steps.length === 1)) h = `<b>${L({ nl: 'In het verhaal', en: 'In the story' })}</b>${colourWords(esc(L(ch.intro)))}`;
-  else if (ch && done && i === current.steps.length - 1 && ci < STORY.length - 1 && ch.bridge) h = `<b>${L({ nl: 'Zo gaat het verder', en: 'What happens next' })}</b>${colourWords(esc(L(ch.bridge)))}`;
+  else if (ch && done && i === current.steps.length - 1 && ci < STORY.length - 1 && ch.bridge) h = `<b>${L({ nl: 'Zo gaat het verder', en: 'What happens next' })}</b>${colourWords(esc(L(bridgeOf(ch.bridge))))}`;
   if (el.innerHTML === h) return;
   el.innerHTML = h; el.hidden = !h; capPlace();
 }
@@ -1073,7 +1077,7 @@ function renderNext() {
     box.querySelector('button').onclick = () => chapterGo(lastChapter);
   } else if (ci < STORY.length - 1) {
     const nx = STORY[ci + 1], nm = title(NODES[nx.id]);
-    box.innerHTML = `<button title="${esc(L(STORY[ci].bridge) ?? '')}" aria-label="${V('nextChapter')}: ${esc(nm)}"><span>${V('nextShort')}: <b>${esc(nm)}</b> ›</span></button>`;
+    box.innerHTML = `<button title="${esc(L(bridgeOf(STORY[ci].bridge)) ?? '')}" aria-label="${V('nextChapter')}: ${esc(nm)}"><span>${V('nextShort')}: <b>${esc(nm)}</b> ›</span></button>`;
     box.querySelector('button').onclick = () => chapterGo(ci + 1);
   } else { box.classList.remove('show'); box.innerHTML = ''; return; }
   box.classList.add('show');
@@ -1083,12 +1087,14 @@ function renderNext() {
 const chipsOf = (ids, cls) => ids.filter(i => NODES[i]).map(i => `<button class="chip ${cls} ${hasScene(i) ? 'has' : ''}" data-id="${i}">${title(NODES[i])}</button>`).join('');
 /* "In het kort": 2–3 zinnen in eenvoudige taal (details[lang].kort), bovenaan het uitlegpaneel.
  * Vaktermen staan erin als [[zoals in de zin|sleutel]] → aantikbaar woord met een uitleg van één zin (shared/glossary.js). */
-const glossOf = k => { const g = GLOSSARY[k]; return g ? (g[lang] ?? g.nl) : null; };
+const glossOf = k => { const g = (rank >= 3 && PRO_GLOSS[k]) || GLOSSARY[k]; return g ? (g[lang] ?? g.nl) : null; };
 const termsHTML = txt => txt.replace(/\[\[([^\]|]+)\|([a-z0-9-]+)\]\]/g, (_, w, k) => glossOf(k) ? `<button class="term" data-g="${k}">${w}</button>` : w);
 const kortOf = id => {
   const k = simpleOf(id)?.kort; if (k) return colourWords(esc(L(k)));            // hobbyist / secundair: eigen eenvoudige versie
-  const d = DETAILS[id]; return d ? termsHTML(colourWords((d[lang] ?? d.nl).kort ?? '')) : '';
+  const d = DETAILS[id]; return d ? termsHTML(colourWords(detailOf(id).kort ?? '')) : '';
 };
+/* uitleg van een knoop in de gekozen taal; op niveau hoger met de vaktaal-velden van shared/pro/ erover */
+const detailOf = id => { const d = DETAILS[id]; if (!d) return null; return { ...(d[lang] ?? d.nl), ...(rank >= 3 ? PRO_DETAILS[id]?.[lang] ?? PRO_DETAILS[id]?.nl : null) }; };
 /* secundair: lijstje kernbegrippen met uitleg van één zin */
 function termsCard(id) {
   const t = level === 'secundair' ? simpleOf(id)?.terms : null; if (!t?.length) return '';
@@ -1108,7 +1114,7 @@ document.addEventListener('click', e => { const b = e.target.closest('.term'); i
 function detailsHTML(id, open = true) {
   const d = DETAILS[id]; if (!d) return '';
   const hobby = rank < 3;                                           // hobbyist en secundair: enkel "In het kort" (+ kernbegrippen) en de bronnen
-  const x = d[lang] ?? d.nl;
+  const x = detailOf(id);
   let h = '';
   // de diepere uitleg (vakterminologie, cijfers, bronnen) zit samen in één dichtgeklapte laag "Verdieping"
   if (x.what && !hobby) h += `<details class="sec" ${open ? 'open' : ''}><summary>${V('what')}</summary><p>${x.what}</p></details>`;
@@ -1130,7 +1136,7 @@ function render() {
   $('sideKind').title = `${n ? U(n.kind === 'process' ? 'process' : 'structure') : ''}${org ? ` · ${org}` : ''}${st ? ` · ${stageTitle(st)}` : ''}`;
   $('sideTitle').innerHTML = `${n ? title(n) : L(def.title) ?? ''}${n ? `<span class="status ${n.status === 'nagekeken' ? 'ok' : ''}">${statusText(n.status)}</span>` : ''}`;
   $('sideSub').textContent = n ? sub(n) : '';
-  const d = DETAILS[current.id], x = d ? (d[lang] ?? d.nl) : null, hobby = rank < 3;
+  const d = DETAILS[current.id], x = detailOf(current.id), hobby = rank < 3;
   const legend = def.legend ?? base.legend;
   const tabs = [];
   const kort = n ? (kortOf(current.id) ? `<div class="kort"><b>${V('inShort')}</b>${kortOf(current.id)}</div>` : `<p>${summary(n)}</p>`) : '';
@@ -1148,7 +1154,7 @@ function render() {
     ${n?.next.length ? `<div class="card c-next"><div class="ch"><i>→</i>${V('next')}</div>${chipsOf(n.next, 'next')}</div>` : ''}
     ${n?.rel.length && rank >= 2 ? `<div class="card c-rel"><div class="ch"><i>↪</i>${V('side')}</div>${chipsOf(n.rel, 'rel')}</div>` : ''}
     ${n?.pdb.length && rank >= 3 ? `<div class="card c-pdb"><div class="ch"><i>◆</i>${V('struct3d')}</div>${n.pdb.map(p => `<a class="chip" href="https://www.rcsb.org/structure/${p}" target="_blank" rel="noopener">PDB ${p} ↗</a>`).join('')}</div>` : ''}
-    <div class="simp"><b>${V('simplified')}</b><br>${L(def.simplified ?? base.simplified) ?? ''}</div>
+    <div class="simp"><b>${V('simplified')}</b><br>${L((rank >= 3 && PRO_META[current.id]?.simplified) || def.simplified || base.simplified) ?? ''}</div>
     ${d?.sources?.length ? `<details class="sec" open><summary>${V('sources')} (${d.sources.length})</summary><ol class="src">${d.sources.map(s => `<li>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${L(s.t)}</a>` : L(s.t)}</li>`).join('')}</ol></details>` : ''}`]);
   sideTabs = tabs;
   $('sideTabs').innerHTML = tabs.map(([k, lbl]) => `<button class="tab" role="tab" data-t="${k}" aria-selected="false">${lbl}</button>`).join('');
