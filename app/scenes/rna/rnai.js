@@ -40,7 +40,7 @@ export default {
     ST(7500, cam(300, 412, 760), "Een eerste knip in de kern", "A first cut in the nucleus",
       "In de kern knipt een enzym de haarspeld los aan de voet. Er blijft een korte haarspeld over.",
       "In the nucleus an enzyme cuts the hairpin free at its base. A short hairpin remains."),
-    ST(8500, cam(620, 450, 1000), "Door de kernporie naar buiten", "Out through the nuclear pore",
+    ST(8500, cam(620, 430, 1080), "Door de kernporie naar buiten", "Out through the nuclear pore",
       "Een transporteiwit brengt de korte haarspeld door de kernporie naar het cytoplasma.",
       "A transport protein carries the short hairpin through the nuclear pore to the cytoplasm."),
     ST(7500, cam(930, 450, 720), "De lus gaat eraf", "The loop comes off",
@@ -127,10 +127,14 @@ export default {
           if (step === 1) {
             const k = ease(sub(p, 0, .3));
             enz += prot(base0[0] - 90, base0[1] + 10, 94, 34, 'Drosha', '#6f5bd6', k * (1 - sub(p, .8, 1)), 17);
+            enz += note(base0[0] - 90, base0[1] - 34, T2('knip-enzym', 'cutting enzyme'), '#c9b8ff', 20, 'middle', k * (1 - sub(p, .8, 1)));
             enz += prot(base0[0] + 110, base0[1] + 60, 82, 30, 'DGCR8', '#5a4bb8', k * (1 - sub(p, .8, 1)), 15) + prot(base0[0] + 110, base0[1] + 98, 82, 30, 'DGCR8', '#5a4bb8', k * (1 - sub(p, .8, 1)), 15);
-            enz += snip(base0[0], base0[1] + 2, sub(p, .4, .5) * (1 - sub(p, .6, .7)));
-            enz += note(base0[0] + 30, base0[1] + 36, T2("2-nt 3′-overhang", "2-nt 3′ overhang"), '#ffd36b', 15, 'start', sub(p, .65, .8));
-            enz += note(base0[0] - 50, base0[1] - 150, 'pre-miRNA', C.rna, 20, 'end', sub(p, .65, .8));
+            /* de knip: groot geel knipteken op de voet van de stam + 'knipt!'; daarna vallen de flanken weg */
+            const kk = sub(p, .38, .48) * (1 - sub(p, .72, .82));
+            enz += `<g transform="translate(${base0[0]} ${base0[1] + 2}) scale(1.6) translate(${-base0[0]} ${-base0[1] - 2})">${snip(base0[0], base0[1] + 2, kk, '#ffd36b')}</g>`;
+            enz += note(base0[0] + 34, base0[1] - 26, T2('knipt!', 'cuts!'), '#ffd36b', 22, 'start', kk);
+            enz += note(base0[0] - 40, base0[1] - 160, T2('korte haarspeld', 'short hairpin'), C.rna, 20, 'end', sub(p, .7, .85));
+            enz += note(base0[0] - 40, base0[1] - 138, '(pre-miRNA)', C.muted, 15, 'end', sub(p, .7, .85));
           }
         }
 
@@ -142,13 +146,13 @@ export default {
           const a = [base0[0], base0[1]], b = [MEM - 330, PORE_Y], c = [800, PORE_Y];
           org = r < 1 ? [lerp(a[0], b[0], r), lerp(a[1], b[1], r)] : [lerp(b[0], c[0], m), PORE_Y];
           hp += `<g transform="translate(${f1(org[0])} ${f1(org[1])}) rotate(${f1(rot)})">` + hairpin({ loop: 1 }) + `</g>`;
-          const eo = 1 - sub(p, .85, 1);
-          const ex = org[0] + 120, ey = org[1] - 2 - 60 * sub(p, .85, 1);
-          enz += `<g opacity="${f1(eo)}"><path d="${eiwitPad(ex, ey, 150, 23, 55, .05)}" fill="rgba(155,123,255,.22)" stroke="${C.prot}" stroke-width="3"/></g>`;
-          enz += note(ex, ey - 50, T2('Exportine-5', 'Exportin-5'), '#c9b8ff', 18, 'middle', eo);
+          /* het transporteiwit omsluit de haarspeld en draait mee (lokale coördinaten van de haarspeld) */
+          const eo = 1 - sub(p, .85, 1), lift = 60 * sub(p, .85, 1);
+          enz += `<g opacity="${f1(eo)}" transform="translate(${f1(org[0])} ${f1(org[1] - lift)}) rotate(${f1(rot)})"><path d="${eiwitPad(0, -120, 26, 150, 55, .05)}" fill="rgba(155,123,255,.22)" stroke="${C.prot}" stroke-width="3"/></g>`;
+          const lx = org[0] + (r < 1 ? 60 : 120), ly = org[1] - lift - (r < 1 ? 120 : 52);
+          enz += note(lx, ly, T2('transporteiwit', 'transport protein'), '#c9b8ff', 20, r < 1 ? 'start' : 'middle', eo) + note(lx, ly + 20, '(Exportine-5)', C.muted, 15, r < 1 ? 'start' : 'middle', eo);
           const gtp = p < .82;
-          enz += prot(ex - 205, ey + 46, 98, 30, gtp ? 'Ran·GTP' : 'Ran·GDP', gtp ? '#3fb6c9' : '#5a7a88', eo, 15);
-          if (!gtp) enz += note(ex - 205, ey + 90, 'GTP → GDP + Pᵢ', '#5fd3e6', 15, 'middle', eo);
+          enz += prot(org[0] - 85, org[1] - lift + 46, 70, 30, 'Ran', gtp ? '#3fb6c9' : '#5a7a88', eo * r, 15);
         }
         const DB = [800, PORE_Y];
         if (step === 3) {
@@ -157,8 +161,9 @@ export default {
             `<g opacity="${f1(lo)}" transform="translate(${f1(30 * (1 - lo))} ${f1(-60 * (1 - lo))})">` + `<path d="M-12,${-NB * BP} L-12,${-NB * BP - 34} C-12,${-NB * BP - 80} 12,${-NB * BP - 80} 12,${-NB * BP - 34} L12,${-NB * BP}" stroke="${C.rna}" stroke-width="7" fill="none"/></g></g>`;
           const k = ease(sub(p, 0, .3)), ko = k * (1 - sub(p, .85, 1));
           enz += `<g opacity="${f1(ko)}"><path d="${eiwitPad(DB[0] + 168, DB[1] + 10, 116, 70, 63, .06)}" fill="rgba(155,123,255,.2)" stroke="${C.prot}" stroke-width="3"/></g>`;
-          enz += note(DB[0] + 150, DB[1] - 84, 'Dicer', '#c9b8ff', 20, 'middle', ko) + prot(DB[0] + 150, DB[1] + 110, 70, 30, 'TRBP', '#5a4bb8', ko, 15);
-          enz += snip(DB[0] + NB * BP + 2, DB[1], sub(p, .4, .5) * (1 - sub(p, .6, .7)));
+          enz += note(DB[0] + 150, DB[1] - 104, T2('tweede knip-enzym', 'second cutting enzyme'), '#c9b8ff', 20, 'middle', ko) + note(DB[0] + 150, DB[1] - 84, '(Dicer)', C.muted, 15, 'middle', ko) + prot(DB[0] + 150, DB[1] + 110, 70, 30, 'TRBP', '#5a4bb8', ko, 15);
+          const kk = sub(p, .38, .48) * (1 - sub(p, .66, .76)), sx = DB[0] + NB * BP + 2;
+          enz += `<g transform="translate(${sx} ${DB[1]}) scale(1.6) translate(${-sx} ${-DB[1]})">${snip(sx, DB[1], kk, '#ffd36b')}</g>` + note(sx + 26, DB[1] - 44, T2('knipt!', 'cuts!'), '#ffd36b', 22, 'start', kk);
           enz += `<g opacity="${f1(sub(p, .6, .8))}"><path d="M${DB[0] - 12},${DB[1] + 44} v10 H${DB[0] + NB * BP} v-10" stroke="#ffd36b" stroke-width="2.5" fill="none"/></g>` + note(DB[0] + NB * BP / 2, DB[1] + 80, T2('≈ 22 nt', '≈ 22 nt'), '#ffd36b', 18, 'middle', sub(p, .6, .8));
         }
         // ---------- stap 4: laden in AGO2 ----------
@@ -167,27 +172,26 @@ export default {
         if (step === 4) {
           const mv = ease(sub(p, 0, .35));
           const o = [lerp(DB[0], 1100, mv), lerp(DB[1], 500, mv)];
-          const pOp = 1 - sub(p, .55, .8), pUp = 90 * sub(p, .5, .8);
+          const pOp = 1 - sub(p, .72, .95), pUp = 150 * ease(sub(p, .42, .85));   // de andere streng gaat zichtbaar weg en verdwijnt
           const gOp = 1 - sub(p, .6, .8);
           hp += `<g transform="translate(${f1(o[0])} ${f1(o[1])}) rotate(90)">` + hairpin({ loop: 0, duplexOnly: 1, passOp: 0, guideOp: gOp }) + `</g>`;
           hp += `<g transform="translate(${f1(o[0])} ${f1(o[1] - pUp)}) rotate(90)">` + hairpin({ loop: 0, duplexOnly: 1, passOp: pOp, guideOp: 0 }) + `</g>`;
-          hp += note(o[0] + 110, o[1] - 40 - pUp, T2('passagiersstreng', 'passenger strand'), '#bdb3d0', 16, 'middle', sub(p, .45, .55) * pOp);
-          hp += note(o[0] - 30, o[1] - 20, "5′", '#ff9ec3', 16, 'middle', gOp * sub(p, .3, .45)) + note(o[0] - 26, o[1] + 34, T2('gids', 'guide'), '#ff9ec3', 16, 'end', gOp * sub(p, .3, .45));
+          hp += note(o[0] + 88, o[1] - 30 - pUp, T2('andere streng: weg', 'other strand: removed'), '#bdb3d0', 20, 'middle', sub(p, .4, .5) * pOp);
+          hp += note(o[0] - 30, o[1] - 20, "5′", '#ff9ec3', 16, 'middle', gOp * sub(p, .3, .45)) + note(o[0] + NB * BP + 16, o[1] - 5, T2('gids (blijft)', 'guide (stays)'), '#ff9ec3', 20, 'start', gOp * sub(p, .3, .45));
         }
         // AGO2 met gids (5' rechts in MID, 3' links in PAZ)
         if (step >= 4) {                                  // lege AGO2 staat al klaar vanaf het begin van stap 4; de gids komt erin
           const x0 = gx(NB) - 50, x1 = gx(1) + 60;
           ago += `<g><path d="${eiwitPad((x0 + x1) / 2, YG + 4, (x1 - x0) / 2 + 4, 62, 77, .035)}" fill="rgba(155,123,255,.18)" stroke="${C.prot}" stroke-width="3"/>`;
-          ago += note((x0 + x1) / 2, YG - 68, 'AGO2 (RISC)', '#c9b8ff', 20);
-          ago += note(x0 + 30, YG - 28, 'PAZ', '#c9b8ff', 14, 'start') + note(x1 - 30, YG - 28, 'MID', '#c9b8ff', 14, 'end') + `</g><g opacity="${f1(step === 4 ? sub(p, .6, .8) : agoOp)}">`;   // gids verschijnt in AGO2 terwijl hij uit het duplex verdwijnt (nooit dubbel)
+          ago += note((x0 + x1) / 2, YG - 70, T2('zoekeiwit (AGO2)', 'search protein (AGO2)'), '#c9b8ff', 22);
+          ago += note(x0 + 30, YG - 28, 'PAZ', C.muted, 11, 'start') + note(x1 - 30, YG - 28, 'MID', C.muted, 11, 'end') + `</g><g opacity="${f1(step === 4 ? sub(p, .6, .8) : agoOp)}">`;   // gids verschijnt in AGO2 terwijl hij uit het duplex verdwijnt (nooit dubbel)
           for (let i = 1; i <= NB; i++) {
             const seed = i >= 2 && i <= 8, x = gx(i);
             ago += `<rect x="${x - 13}" y="${YG}" width="26" height="30" rx="5" fill="${BASE[GUIDE[i - 1]]}" ${seed && step >= 5 ? 'stroke="#fff" stroke-width="2.5"' : ''}/>` +
               `<text x="${x}" y="${YG + 21}" font-size="17" text-anchor="middle" fill="#0a1224" font-family="JetBrains Mono" font-weight="700">${GUIDE[i - 1]}</text>`;
-            if (step >= 5 && (i === 1 || i === 2 || i === 8 || i === 10 || i === 11 || i === 22) && !(step === 6 && p > .2)) ago += `<text opacity="${step === 6 ? f1(1 - sub(p, 0, .2)) : 1}" x="${x}" y="${YG - 6}" font-size="14" text-anchor="middle" fill="${C.muted}" font-family="JetBrains Mono">${i}</text>`;
           }
           ago += note(gx(1) + 30, YG + 22, "5′", '#ff9ec3', 17, 'start') + note(gx(NB) - 26, YG + 22, "3′", '#ff9ec3', 17, 'end');
-          if (step === 5 || step === 6) { const so = step === 5 ? 1 : 1 - sub(p, 0, .2); ago += `<path d="M${gx(8) - 15},${YG - 22} h${7 * W} " stroke="#fff" stroke-width="3" opacity="${f1(so)}"/>` + note((gx(8) + gx(2)) / 2, YG - 30, T2('seed (nt 2–8)', 'seed (nt 2–8)'), '#fff', 16, 'middle', so); }
+          if (step === 5 || step === 6) { const so = step === 5 ? 1 : 1 - sub(p, 0, .2); ago += `<path d="M${gx(8) - 15},${YG - 22} h${7 * W} " stroke="#fff" stroke-width="3" opacity="${f1(so)}"/>` + note((gx(8) + gx(2)) / 2, YG - 30, T2('zoekstukje (seed)', 'search piece (seed)'), '#fff', 18, 'middle', so); }
           ago += '</g>';
         }
         $('ri-ago').innerHTML = ago;
@@ -211,7 +215,7 @@ export default {
           tg += `<line x1="${Rx + sep}" y1="${YT + 15}" x2="${f1(Rx + sep + tail)}" y2="${YT + 15}" stroke="${C.cap}" stroke-width="6" stroke-dasharray="3 3"/>`;
           if (tail > 20) tg += note(Rx + sep + tail / 2 + 10, YT + 56, 'poly(A)', C.cap, 16);
           tg += note(Rx + sep + tail + 16, YT + 22, "3′", C.text, 18, 'start') + capG(Lx - 24 - sep, YT + 15, 20) + note(Lx - 50 - sep, YT + 22, "5′", C.text, 18, 'end');
-          tg += note((gx(NB) + gx(1)) / 2, YT + 70, T2("doel-mRNA (3′-UTR)", "target mRNA (3′ UTR)"), C.rna, 17);
+          tg += note((gx(NB) + gx(1)) / 2, YT + 70, T2("doel-mRNA (eindstuk, 3′-UTR)", "target mRNA (end piece, 3′ UTR)"), C.rna, 17);
           for (let i = 1; i <= NB; i++) {
             const b = tb(i), x = xs(gx(i)), pr = i > 1 && RNA_PAIR[GUIDE[i - 1]] === b;   // nt 1 zit vast in het MID-domein en paart niet
             tg += `<rect x="${f1(x - 13)}" y="${YT}" width="26" height="30" rx="5" fill="${BASE[b]}"/><text x="${f1(x)}" y="${YT + 21}" font-size="17" text-anchor="middle" fill="#0a1224" font-family="JetBrains Mono" font-weight="700">${b}</text>`;
@@ -227,11 +231,12 @@ export default {
             dec += prot(gx(NB) + 60, YG - 96, 116, 36, 'GW182', '#b44f7c', g, 20);
             dec += prot(gx(NB) + 60, YG - 150, 146, 36, 'CCR4–NOT', '#8a5a3a', ease(sub(p, .2, .4)), 20);
             dec += `<path d="M${gx(NB) + 120},${YG - 146} C${gx(3)},${YG - 230} ${Rx + 60},${YG - 140} ${Rx + 60},${YT - 10}" stroke="#e0b089" stroke-width="3" fill="none" stroke-dasharray="8 6" opacity="${f1(sub(p, .25, .4))}"/>`;
-            dec += note(Rx + 70, YT - 70, T2('deadenylatie', 'deadenylation'), '#e0b089', 17, 'start', sub(p, .3, .45));
+            dec += note(Rx + 70, YT - 70, T2('staart korter', 'tail shorter'), '#e0b089', 18, 'start', sub(p, .3, .45));
           }
           if (si) {
-            tg += snip(cx, YT + 15, sub(p, .45, .55) * (1 - sub(p, .65, .75)));
-            tg += note(cx, YT + 110, T2('AGO2 knipt (tegenover nt 10–11)', 'AGO2 slices (opposite nt 10–11)'), '#ffd36b', 18, 'middle', sub(p, .5, .65));
+            const kk = sub(p, .45, .55) * (1 - sub(p, .7, .8));
+            tg += `<g transform="translate(${f1(cx)} ${YT + 15}) scale(1.6) translate(${f1(-cx)} ${-(YT + 15)})">${snip(cx, YT + 15, kk, '#ffd36b')}</g>`;
+            tg += note(cx, YT + 110, T2('het zoekeiwit knipt het mRNA door', 'the search protein cuts the mRNA'), '#ffd36b', 20, 'middle', sub(p, .5, .65));
           }
         }
         $('ri-tgt').innerHTML = tg; $('ri-rib').innerHTML = rib; $('ri-dec').innerHTML = dec;
