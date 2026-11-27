@@ -71,14 +71,23 @@ export default {
     const CCA = [-15, -204], LL = Math.hypot(...CCA);
     const TS = Math.hypot(812 + 6 - 580, 432 + 30 - 760) / LL;
     const placeRot = (x, y, tip) => (Math.atan2(tip[1] - y, tip[0] - x) - Math.atan2(CCA[1], CCA[0])) * 180 / Math.PI;
-    let showEnds = true;   // 3′/5′ naast het anticodon alleen waar het anticodon goed in beeld is
+    let showEnds = true;   // 3′/5′ bij de acceptorstam (waar het aminozuur hangt), niet bij het anticodon
     function trna(ox, oy, tip, charge, op = 1, hiId = 0, bodyTip = tip) {
       if (op <= .01) return '';
       const x = 580 + ox, y = 760 + oy;
       const rot = placeRot(x, y, bodyTip), d = Math.hypot(tip[0] - x, tip[1] - y) - TS * LL;
       const far = Math.hypot(tip[0] - bodyTip[0], tip[1] - bodyTip[1]) > 8 || Math.abs(d) > 8;
-      let s = `<g opacity="${f1(op)}">` + trna2d(x, y, { s: TS, rot, anticodon: 'UAG', nt: 34 / TS, tile: [.88, .88], tip: far ? tip : null, acHi: hiId, ends: showEnds });
+      let s = `<g opacity="${f1(op)}">` + trna2d(x, y, { s: TS, rot, anticodon: 'UAG', nt: 34 / TS, tile: [.88, .88], tip: far ? tip : null, acHi: hiId });
       s += `<circle cx="${f1(tip[0])}" cy="${f1(tip[1])}" r="9" fill="${BASE.A}" stroke="#0a1224" stroke-width="2"/>`;
+      if (showEnds) {
+        /* 5′ en 3′ liggen allebei aan de acceptorstam: 3′ = het CCA-uiteinde waar het aminozuur hangt, 5′ = nt 1 ernaast
+           (nt 1 in de lokale tekening van trna2d: (28.2, −183.9), gespiegeld zoals CCA) */
+        const r = rot * Math.PI / 180, lx = 28.2 * TS, ly = -183.9 * TS;
+        const p5 = [x + lx * Math.cos(r) - ly * Math.sin(r), y + lx * Math.sin(r) + ly * Math.cos(r)];
+        const ex = [Math.cos(r), Math.sin(r)];   // lokale x-as: van het CCA-uiteinde naar de 5′-kant
+        const end = (px, py, l) => `<text x="${f1(px)}" y="${f1(py + 9)}" font-size="26" text-anchor="middle" fill="#fff" stroke="#0b1224" stroke-width="5" paint-order="stroke" font-family="Inter" font-weight="800">${l}</text>`;
+        s += end(tip[0] - 32 * ex[0], tip[1] - 32 * ex[1], '3′') + end(p5[0] + 30 * ex[0], p5[1] + 30 * ex[1], '5′');
+      }
       if (charge) s += aa(tip[0] + charge.dx, tip[1] + charge.dy, charge.a, 24);
       $('rs-tA').setAttribute('cx', f1(x - 60)); $('rs-tA').setAttribute('cy', f1(y - 120));
       return s + '</g>';
@@ -90,7 +99,7 @@ export default {
       update(t, s) {
         placeHud(svg, 'rs-hud', .015, .105, STEPS[s.step]?.cam);
         const { step: i, p } = s;
-        showEnds = [0, 2, 4, 7].includes(i);
+        showEnds = i !== 1;
         let tr = '', mol = '', amino = '', ov = '', eef = '';
         const dockOff = i < 2 ? [-620, 0] : i === 2 ? E2([-620, 0], [0, 0], ease(sub(p, .05, .5))) : [0, 0];
         const tipSyn = [SYN[0] + 6, SYN[1] + 30], tipOut = [520 + dockOff[0] + 250, 330 + dockOff[1] + 60];
@@ -100,7 +109,7 @@ export default {
         const gl = (k, sv) => lv(k) > .01 ? `<g opacity="${f1(lv(k))}">${sv}</g>` : '';
         $('rs-enz').setAttribute('opacity', i === 4 ? '1' : i === 7 ? f1(1 - .5 * sub(p, .2, .6)) : '1');
         $('rs-lab').innerHTML = gl('syn', txt(SYN[0] - 66, SYN[1] + 24, T2('laadplaats', 'loading site'), '#d6ccff', 24, 'end', 700)) +
-          gl('edit', txt(EDIT[0] + 78, EDIT[1] + 50, T2('naleesplaats', 'checking site'), '#ff9a9a', 26, 'start', 800) + txt(EDIT[0] + 78, EDIT[1] + 74, T2('(editeerplaats, CP1)', '(editing site, CP1)'), C.muted, 16, 'start', 600)) +
+          gl('edit', `<path d="M${EDIT[0] + 40},${EDIT[1] - 200} L${EDIT[0] + 14},${EDIT[1] - 42}" stroke="#ff9a9a" stroke-width="2.5"/>` + txt(EDIT[0] + 60, EDIT[1] - 236, T2('naleesplaats', 'checking site'), '#ff9a9a', 26, 'middle', 800) + txt(EDIT[0] + 60, EDIT[1] - 212, T2('(editeerplaats, CP1)', '(editing site, CP1)'), '#c9d2e6', 16, 'middle', 600)) +
           gl('acd', txt(ACD[0] + 110, ACD[1] + 70, T2('anticodonbindend domein', 'anticodon-binding domain'), '#d6ccff', 22, 'start', 700)) +
           gl('name', txt(1060, 640, 'IleRS', C.prot, 34, 'middle', 800));
         
@@ -117,9 +126,9 @@ export default {
           amino += aa(ile[0], ile[1], 'I', 26);
           mol += atp(a[0] + 10 * react, a[1], react > .5 ? 1 : 3);
           if (react > 0) mol += `<circle cx="${SYN[0] + 20}" cy="${SYN[1] + 14}" r="${f1(30 + 40 * react)}" fill="none" stroke="#fff" stroke-width="3" opacity="${f1(1 - react)}"/>`;
-          mol += ppi(lerp(SYN[0] + 90, 1380, leave), lerp(SYN[1] + 40, 700, leave), sub(p, .6, .7));
+          mol += ppi(lerp(SYN[0] + 90, 1290, leave), lerp(SYN[1] + 40, 340, leave), sub(p, .6, .7));
           ov += `<g opacity="${f1(sub(p, .1, .3))}">` + txt(900, 225, T2('ATP geeft energie aan het aminozuur', 'ATP gives energy to the amino acid'), '#fff', 30, 'middle', 800) + '</g>';
-          if (react > .5) ov += txt(SYN[0] + 14, SYN[1] + 90, T2('aminozuur klaar', 'amino acid ready'), '#fff', 24, 'middle', 800) + txt(SYN[0] + 14, SYN[1] + 112, '(Ile-AMP)', C.muted, 16, 'middle', 600);
+          if (react > .5) ov += txt(SYN[0] + 14, SYN[1] - 70, T2('aminozuur klaar', 'amino acid ready'), '#fff', 24, 'middle', 800) + txt(SYN[0] + 14, SYN[1] - 48, '(Ile-AMP)', '#c9d2e6', 16, 'middle', 600);
           tr = '';
         }
         if (i >= 2 && i <= 3) {
