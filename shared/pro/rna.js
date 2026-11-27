@@ -594,15 +594,17 @@ export default {
     },
   },
   meta: {
-    lokalisatie: { simplified: {
+    /* scènetitels (o.a. knop 'Volgend'): vaktaal i.p.v. de beschrijvende basistitel */
+    lncrna: { title: { nl: 'Lange niet-coderende RNA’s (lncRNA)', en: 'Long non-coding RNAs (lncRNAs)' } },
+    lokalisatie: { title: { nl: 'mRNA-lokalisatie en lokale translatie', en: 'mRNA localisation and local translation' }, simplified: {
       nl: 'Het voorbeeld (β-actine-mRNA dat naar de leading edge gaat) is vooral onderzocht in cellen van kippenembryo’s en van muizen; bij de mens neemt men hetzelfde aan, maar het is minder direct onderzocht. mRNA en mRNP zijn sterk vergroot; in werkelijkheid zitten vaak meerdere mRNA’s en eiwitten samen in één granule. Er is één type cytoskelet getekend; sommige mRNA’s worden ook langs actinefilamenten vervoerd, door andere motoren (myosine). Het neuron is schematisch.',
       en: 'The example (β-actin mRNA travelling to the leading edge) has mainly been studied in cells from chicken embryos and mice; the same is assumed for humans, but it has been studied less directly. mRNA and mRNP are greatly enlarged; in reality several mRNAs and proteins often share one granule. One type of cytoskeleton is drawn; some mRNAs are also carried along actin filaments, by other motors (myosin). The neuron is schematic.',
     } },
-    korrels: { simplified: {
+    korrels: { title: { nl: 'Stressgranules en P-bodies', en: 'Stress granules and P-bodies' }, simplified: {
       nl: 'Schematisch en niet op schaal: een echte granule bevat honderden soorten eiwitten en duizenden mRNA’s, en een cel kan tientallen granules hebben. Dat ze door fasescheiding ontstaan (zoals olie in water) is het huidige model; de details worden nog onderzocht. Ribosomen komen niet allemaal tegelijk los, en een deel van de mRNA’s blijft buiten de granules. Gezuiverde P-bodies bevatten vooral onderdrukte, niet afgebroken mRNA’s; hoeveel afbraak er zelf gebeurt, wordt nog onderzocht. De aggregaten bij ALS zijn vereenvoudigd tot één vorm.',
       en: 'Schematic and not to scale: a real granule contains hundreds of protein species and thousands of mRNAs, and a cell can have dozens of granules. That they form by phase separation (like oil in water) is the current model; the details are still being studied. Ribosomes do not all dissociate at once, and some mRNAs remain outside the granules. Purified P-bodies mainly contain repressed, not degraded mRNAs; how much decay occurs inside them is still being studied. The aggregates in ALS are simplified to a single shape.',
     } },
-    riboswitch: { simplified: {
+    riboswitch: { title: { nl: 'Riboswitches', en: 'Riboswitches' }, simplified: {
       nl: 'De 2D-tekening is een schema: alleen het aptameer telt al 71 nt, de volledige riboswitch is nog langer, en het omvouwen verloopt via intermediaire conformaties; bij deze riboswitch helpt ook een ribosomaal eiwit (S1) het RNA te ontvouwen. De 3D-structuur toont alleen het aptameer met adenine, zonder expressieplatform en zonder Shine-Dalgarno-sequentie; het RNA werd in vitro gesynthetiseerd. Dat er bij de mens geen riboswitches bekend zijn, betekent niet dat ze zeker ontbreken: er kunnen er nog ontdekt worden.',
       en: 'The 2D drawing is a diagram: the aptamer alone has 71 nt, the full riboswitch is longer still, and refolding proceeds through intermediate conformations; for this riboswitch a ribosomal protein (S1) also helps to unfold the RNA. The 3D structure shows only the aptamer with adenine, without the expression platform and without the Shine–Dalgarno sequence; the RNA was synthesised in vitro. That no riboswitches are known in humans does not mean they are surely absent: more may still be discovered.',
     } },

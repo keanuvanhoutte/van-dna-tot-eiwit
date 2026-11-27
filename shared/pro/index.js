@@ -18,10 +18,16 @@ import prot from './prot.js';
 import bact from './bact.js';
 import signal from './signal.js';
 import misc from './misc.js';
+import polish from './polish.js';   // woordvervangingen in technische zijpaneelvelden (eerst; de takken gaan voor)
 const parts = [entry, repl, txn, genome, rna, tl, prot, bact, signal, misc];
 export const PRO_LABELS = { nl: Object.assign({}, ...parts.map(p => p.labels?.nl)), en: Object.assign({}, ...parts.map(p => p.labels?.en)) };
 export const PRO_STEPS = Object.assign({}, ...parts.map(p => p.steps));
-export const PRO_DETAILS = Object.assign({}, ...parts.map(p => p.details));
+/* zijpaneel: per knoop en per taal veld voor veld samenvoegen (polish eerst, zodat een tak die een veld volledig herschrijft voorgaat) */
+export const PRO_DETAILS = {};
+for (const p of [polish, ...parts]) for (const [id, d] of Object.entries(p.details ?? {})) {
+  const t = PRO_DETAILS[id] ??= {};
+  for (const [lg, f] of Object.entries(d)) t[lg] = { ...(t[lg] ?? {}), ...f };
+}
 export const PRO_GLOSS = Object.assign({}, ...parts.map(p => p.gloss));
 export const PRO_META = Object.assign({}, ...parts.map(p => p.meta ?? {}));
 /* overgangszinnen tussen hoofdstukken (app/story.js): sleutel = originele Nederlandse zin */

@@ -1,6 +1,24 @@
 /* Vaktaal-laag voor niveau hoger onderwijs — tak 'repl'. Zie shared/pro/index.js voor het formaat. */
 const S = (tnl, ten, xnl, xen) => ({ title: { nl: tnl, en: ten }, text: { nl: xnl, en: xen } });
 
+const TAGS = {
+  replicatie: [['semiconservatief', 'semi-conservative'], ['licentie', 'licensing'], ['initiatie', 'initiation'], ['bidirectioneel', 'bidirectional'], ['meerdere origins', 'multiple origins'], ['terminatie', 'termination'], ['zusterchromatiden', 'sister chromatids']],
+  origins: [['origin', 'origin'], ['MCM2-7', 'MCM2-7'], ['dubbelhexameer', 'double hexamer'], ['dsDNA in MCM', 'dsDNA in MCM'], null, ['CMG-activatie', 'CMG activation'], ['twee vorken', 'two forks'], null],
+  replisoom: [['ontwinding', 'unwinding'], ['supercoiling', 'supercoiling'], ['RPA', 'RPA'], ['primer', 'primer'], ['PCNA', 'PCNA'], ['Pol ε', 'Pol ε'], ['Okazaki', 'Okazaki'], ['rijping', 'maturation'], ['proeflezen', 'proofreading'], null, ['cryo-EM', 'cryo-EM'], ['CMG-kanaal', 'CMG channel']],
+  ssdna: [null, null, ['DBD-A', 'DBD-A'], ['DBD-B', 'DBD-B'], ['aromatische stapeling', 'aromatic stacking'], ['signaalplatform', 'signalling platform']],
+  telomeren: [['telomeer', 'telomere'], ['eindreplicatie', 'end replication'], ['verkorting', 'shortening'], null, ['TERT', 'TERT'], ['translocatie', 'translocation'], ['cryo-EM', 'cryo-EM'], ['RNA-matrijs', 'RNA template'], ['C-streng', 'C strand'], ['shelterin', 'shelterin'], ['T-lus', 'T-loop']],
+  herstel: [null, ['MMR', 'MMR'], ['BER', 'BER'], ['NER', 'NER'], ['NHEJ · HR', 'NHEJ · HR'], ['hersteldefect', 'repair defect']],
+  mmr: [['proeflezen', 'proofreading'], ['MutSα', 'MutSα'], ['DNA-knik', 'DNA kink'], ['G·T-mismatch', 'G·T mismatch'], ['Phe432', 'Phe432'], ['excisie', 'excision'], ['hersynthese', 'resynthesis']],
+  ber: [['deaminatie', 'deamination'], ['UDG', 'UDG'], ['base flipping', 'base flipping'], ['uracilpocket', 'uracil pocket'], ['APE1 · Pol β', 'APE1 · Pol β'], ['korte patch', 'short patch']],
+  ner: [['pyrimidinedimeer', 'pyrimidine dimer'], ['XPC', 'XPC'], ['TFIIH', 'TFIIH'], ['cryo-EM', 'cryo-EM'], ['strengscheiding', 'strand separation'], ['dubbele incisie', 'dual incision'], ['excisie', 'excision'], ['hersynthese', 'resynthesis'], null],
+  dsb: [['DSB', 'DSB'], ['Ku', 'Ku'], ['Ku-structuur', 'Ku structure'], ['eindverwerking', 'end processing'], ['ligatie', 'ligation'], ['zusterchromatide', 'sister chromatid'], ['resectie', 'resection'], ['RAD51-filament', 'RAD51 filament'], ['DNA-synthese', 'DNA synthesis'], ['SDSA', 'SDSA'], ['NHEJ vs HR', 'NHEJ vs HR']],
+  p53: [['p53', 'p53'], ['stabilisatie', 'stabilisation'], ['responselement', 'response element'], ['p21-arrest', 'p21 arrest'], ['apoptose', 'apoptosis'], ['Zn²⁺', 'Zn²⁺'], null],
+  mutaties: [null, ['transitie/transversie', 'transition/transversion'], null, ['missense', 'missense'], ['nonsense', 'nonsense'], ['NMD', 'NMD'], ['frameshift', 'frameshift'], null],
+};
+/* tijdlijn-tags (korte namen op de tijdlijn) voor bestaande stappen: TAGS[id][i] = ['nl', 'en'] of null (= tag uit shared/steptags.js) */
+const withTags = steps => Object.fromEntries(Object.entries(steps).map(([id, arr]) =>
+  [id, arr.map((s, i) => (TAGS[id]?.[i] ? { ...(s ?? {}), tag: TAGS[id][i] } : s))]));
+
 export default {
   labels: {
     nl: {
@@ -200,7 +218,7 @@ export default {
     },
   },
 
-  steps: {
+  steps: withTags({
     replicatie: [
       S('Semi-conservatieve replicatie', 'Semi-conservative replication',
         'Elke dochtermolecule bevat één ouderstreng en één nieuwe streng, zoals Meselson en Stahl in 1958 aantoonden.',
@@ -519,7 +537,7 @@ export default {
         'Replicatiefouten die aan proeflezen en MMR ontsnappen, en DNA-schade die niet (correct) hersteld wordt.',
         'Replication errors that escape proofreading and MMR, and DNA damage that is not repaired (correctly).'),
     ],
-  },
+  }),
 
   details: {
     replicatie: {
@@ -577,6 +595,70 @@ export default {
     mutaties: {
       nl: { kort: 'Een [[mutatie|mutatie]] is een blijvende verandering in de DNA-sequentie. Een puntmutatie kan stil zijn, één [[aminozuur|aminozuur]] vervangen (missense) of een vroegtijdig stopcodon geven (nonsense); indels kunnen het leeskader verschuiven. Eén basesubstitutie in HBB veroorzaakt sikkelcelanemie.' },
       en: { kort: 'A [[mutation|mutatie]] is a permanent change in the DNA sequence. A point mutation can be silent, replace one [[amino acid|aminozuur]] (missense) or create a premature stop codon (nonsense); indels can shift the reading frame. A single base substitution in HBB causes sickle-cell anaemia.' },
+    },
+  },
+  /* scènetitels (o.a. knop 'Volgend') en 'Wat is vereenvoudigd?' in vaktaal */
+  meta: {
+    origins: {
+      title: { nl: 'Origin-licentie: één keer per celcyclus', en: 'Origin licensing: once per cell cycle' },
+      simplified: {
+        nl: 'Alleen de hoofdketen is getekend (één bol per residu of nucleotide). De structuur toont het geladen, nog inactieve dubbelhexameer; de activatie tot twee CMG-helicasen (met Cdc45 en GINS) en hun uiteengaan zijn niet in deze structuur te zien en worden alleen beschreven. Het DNA is een kort synthetisch fragment (49 bp); in de cel ligt de ring op chromatine.',
+        en: 'Only the backbone is drawn (one bead per residue or nucleotide). The structure shows the loaded, still inactive double hexamer; activation into two CMG helicases (with Cdc45 and GINS) and their separation are not visible in this structure and are only described. The DNA is a short synthetic fragment (49 bp); in the cell the ring sits on chromatin.',
+      },
+    },
+    replisoom: {
+      simplified: {
+        nl: '2D-schema, niet op schaal. Een Okazaki-fragment is ~200 nt, de RNA-primer ~10 nt en Pol α voegt ~20 nt DNA toe; primer en flap zijn hier groter getekend. In werkelijkheid verdringt Pol δ telkens slechts enkele nucleotiden en klieft FEN1 herhaaldelijk korte flaps (nick-translatie). De matrijs van de volgende streng vormt in de cel waarschijnlijk een lus, zodat het replisoom samenhangt; Ctf4/AND-1, Mcm10, Tipin–Timeless en de histonchaperones zijn weggelaten. De 3D-stappen tonen PDB 7PFO (humaan kernreplisoom, cryo-EM; Jones et al., EMBO J 2021) met één bol per residu of nucleotide; in dat model ontbreken Pol α, Pol δ, PCNA en het polymerasedeel van Pol ε, en het DNA is een kort synthetisch fragment. Andere structuren: PDB 6XTX (humaan CMG), 1AXC (humaan PCNA).',
+        en: '2D scheme, not to scale. An Okazaki fragment is ~200 nt, the RNA primer ~10 nt and Pol α adds ~20 nt of DNA; primer and flap are drawn larger here. In reality Pol δ displaces only a few nucleotides at a time and FEN1 repeatedly cleaves short flaps (nick translation). In the cell the lagging-strand template probably forms a loop so that the replisome stays together; Ctf4/AND-1, Mcm10, Tipin–Timeless and the histone chaperones are omitted. The 3D steps show PDB 7PFO (human core replisome, cryo-EM; Jones et al., EMBO J 2021) with one bead per residue or nucleotide; Pol α, Pol δ, PCNA and the polymerase part of Pol ε are missing from that model, and the DNA is a short synthetic fragment. Other structures: PDB 6XTX (human CMG), 1AXC (human PCNA).',
+      },
+    },
+    telomeren: {
+      simplified: {
+        nl: 'Humane telomeren zijn duizenden basenparen lang; hier zijn maar enkele herhalingen getekend. Het eindreplicatieprobleem is vereenvoudigd tot het verlies van de laatste primer; ook nucleasen die het uiteinde verwerken dragen bij. Telomerase en shelterin zijn in de 2D-stappen schematisch. De 3D-stappen tonen PDB 7QXA (het kerndeel van humaan telomerase met telomeer-DNA en TPP1, cryo-EM; Sekne et al., Science 2022) met één bol per residu of nucleotide; daarin is ongeveer de helft van het RNA zichtbaar en ontbreekt het tweede deel van het enzym (met dyskerine). Ook PDB 7BG9 toont humaan telomerase; hTR (451 nt) heeft nog vele andere domeinen, en tot het holo-enzym behoren o.a. dyskerine en TCAB1. Of G-quadruplexen (gestapelde G-kwartetten, gestabiliseerd door K⁺) in cellen aan telomeren een rol spelen, wordt nog onderzocht. De T-lus is veel kleiner getekend dan in werkelijkheid.',
+        en: 'Human telomeres are thousands of base pairs long; only a few repeats are drawn here. The end-replication problem is simplified to the loss of the last primer; nucleases processing the end also contribute. Telomerase and shelterin are schematic in the 2D steps. The 3D steps show PDB 7QXA (the core of human telomerase with telomeric DNA and TPP1, cryo-EM; Sekne et al., Science 2022) with one bead per residue or nucleotide; about half of the RNA is visible and the second part of the enzyme (with dyskerin) is missing. PDB 7BG9 also shows human telomerase; hTR (451 nt) has many other domains, and the holoenzyme includes dyskerin and TCAB1, among others. Whether G-quadruplexes (stacked G-quartets stabilised by K⁺) play a role at telomeres in cells is still being investigated. The t-loop is drawn much smaller than it really is.',
+      },
+    },
+    herstel: {
+      title: { nl: 'DNA-herstelroutes', en: 'DNA repair pathways' },
+      simplified: {
+        nl: 'Een overzicht in vier rijen; elke route heeft een eigen scène met de afzonderlijke stappen. De DNA-fragmenten zijn schematisch (geen helix, niet op schaal). Andere routes worden hier niet getoond, zoals de directe reversie van sommige alkyleringsschade (MGMT) en translesiesynthese, waarbij de schade tijdens de replicatie gepasseerd wordt.',
+        en: 'An overview in four rows; each pathway has its own scene with the individual steps. The DNA fragments are schematic (no helix, not to scale). Other pathways are not shown here, such as direct reversal of some alkylation damage (MGMT) and translesion synthesis, in which the damage is bypassed during replication.',
+      },
+    },
+    mmr: {
+      title: { nl: 'Mismatchherstel (MMR)', en: 'Mismatch repair (MMR)' },
+      simplified: {
+        nl: 'De structuur toont alleen de herkenning. Het proeflezen door de polymerase en de latere stappen (incisie door MutLα, excisie door EXO1, hersynthese door Pol δ en ligatie) zijn niet in deze structuur te zien en worden alleen beschreven. In het kristal is geen streng "nieuw"; de streng met de T wordt hier als de nieuwe streng beschouwd. Een deel van MSH6 (de N-terminale staart) ontbreekt in het kristal.',
+        en: 'The structure shows recognition only. Proofreading by the polymerase and the later steps (incision by MutLα, excision by EXO1, resynthesis by Pol δ and ligation) are not visible in this structure and are only described. In the crystal no strand is "new"; the strand with the T is treated as the new strand here. Part of MSH6 (the N-terminal tail) is missing in the crystal.',
+      },
+    },
+    ber: {
+      title: { nl: 'Base-excisieherstel (BER)', en: 'Base excision repair (BER)' },
+      simplified: {
+        nl: 'Om het enzym vóór de klieving te kunnen vangen, gebruikten de onderzoekers een uracilanaloog (pseudo-uridine) dat niet gekliefd kan worden. In het kristal staat de U tegenover een A (zoals na inbouw van dUTP); na deaminatie van C staat ze tegenover een G. De volgende stappen (APE1, Pol β, ligase) zijn niet in deze structuur te zien en worden alleen beschreven. Getoond is het katalytische domein van UNG; de nucleaire en de mitochondriale isovorm verschillen alleen in hun N-terminus.',
+        en: 'To trap the enzyme before cleavage, the researchers used a uracil analogue (pseudouridine) that cannot be cleaved. In the crystal the U lies opposite an A (as after dUTP incorporation); after deamination of C it lies opposite a G. The next steps (APE1, Pol β, ligase) are not visible in this structure and are only described. The catalytic domain of UNG is shown; the nuclear and mitochondrial isoforms differ only at their N-terminus.',
+      },
+    },
+    ner: {
+      title: { nl: 'Nucleotide-excisieherstel (NER)', en: 'Nucleotide excision repair (NER)' },
+      simplified: {
+        nl: 'Schematisch en niet op schaal: DNA als ladder zonder helixdraaiing, eiwitten als ovalen. Het geëxcideerde oligonucleotide is in werkelijkheid 24–32 nt en is hier ingekort tot 14 getekend. Getoond is de globale route (GG-NER); bij transcriptiegekoppelde NER (TC-NER) herkent een vastgelopen RNA-polymerase II het letsel. Echte NER-complexen bevatten meer eiwitten (o.a. XPA, dat alleen in de 3D-stappen te zien is). De 3D-stappen tonen PDB 6RO4 (de kern van TFIIH met XPA op DNA, cryo-EM; Kokic et al., Nat Commun 2019) met één bol per residu of nucleotide; het DNA daarin is een synthetisch fragment zonder letsel, en van het geopende deel is maar één streng zichtbaar.',
+        en: 'Schematic and not to scale: DNA as a ladder without helical twist, proteins as ovals. The excised oligonucleotide is really 24–32 nt and is drawn shortened to 14 here. The global pathway (GG-NER) is shown; in transcription-coupled NER (TC-NER) a stalled RNA polymerase II detects the lesion. Real NER complexes contain more proteins (e.g. XPA, which is only visible in the 3D steps). The 3D steps show PDB 6RO4 (the core of TFIIH with XPA on DNA, cryo-EM; Kokic et al., Nat Commun 2019) with one bead per residue or nucleotide; its DNA is a synthetic fragment without a lesion, and only one strand of the opened region is visible.',
+      },
+    },
+    dsb: {
+      title: { nl: 'Dubbelstrengbreuken: NHEJ en homologe recombinatie', en: 'Double-strand breaks: NHEJ and homologous recombination' },
+      simplified: {
+        nl: 'Schematisch en niet op schaal: DNA als ladder zonder helixdraaiing, eiwitten als ovalen en ringen. Bij NHEJ zijn DNA-PKcs, Artemis en XLF niet apart getekend; hoeveel nucleotiden verloren gaan, verschilt per breuk (hier 2). HR is getoond als SDSA (synthese-afhankelijke strenghybridisatie); andere HR-varianten vormen Holliday-juncties. Het geresecteerde stuk is in werkelijkheid veel langer, en RPA bedekt de enkelstrengs staarten eerst; RAD51 verdringt RPA daarna. De 3D-stappen tonen PDB 1JEY (Ku70–Ku80 op een DNA-uiteinde, röntgenkristallografie; Walker et al., Nature 2001) en PDB 8BQ2 (een segment van het RAD51-filament op ssDNA, cryo-EM; Appleby et al., iScience 2023, één bol per residu of nucleotide); het filament is in de cel veel langer.',
+        en: 'Schematic and not to scale: DNA as a ladder without helical twist, proteins as ovals and rings. In NHEJ, DNA-PKcs, Artemis and XLF are not drawn separately; how many nucleotides are lost differs per break (here 2). HR is shown as SDSA (synthesis-dependent strand annealing); other HR variants form Holliday junctions. The resected stretch is really much longer, and RPA coats the single-stranded tails first; RAD51 then displaces RPA. The 3D steps show PDB 1JEY (Ku70–Ku80 on a DNA end, X-ray crystallography; Walker et al., Nature 2001) and PDB 8BQ2 (a segment of the RAD51 filament on ssDNA, cryo-EM; Appleby et al., iScience 2023, one bead per residue or nucleotide); in the cell the filament is much longer.',
+      },
+    },
+    p53: {
+      title: { nl: 'p53: celcyclusarrest, herstel of apoptose', en: 'p53: cell-cycle arrest, repair or apoptosis' },
+      simplified: {
+        nl: 'Alleen het DNA-bindend kerndomein van p53 is te zien (ongeveer residu 94–289); de rest van het eiwit (transactivatiedomein, tetramerisatiedomein, C-terminale staart) ontbreekt. In de cel bindt p53 als tetrameer; in dit kristal zitten drie kerndomeinen, waarvan één specifiek aan de herkenningsplaats gebonden is. De signaalroute (ATM/ATR, MDM2, p21, apoptose) is niet in de structuur te zien en wordt alleen beschreven.',
+        en: 'Only the DNA-binding core domain of p53 is shown (about residues 94–289); the rest of the protein (transactivation domain, tetramerisation domain, C-terminal tail) is missing. In the cell p53 binds as a tetramer; this crystal contains three core domains, one of which is specifically bound to the recognition site. The signalling pathway (ATM/ATR, MDM2, p21, apoptosis) is not visible in the structure and is only described.',
+      },
     },
   },
   gloss: {},

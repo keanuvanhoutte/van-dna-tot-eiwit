@@ -1,6 +1,24 @@
 /* Vaktaal-laag voor niveau hoger onderwijs — tak 'entry'. Zie shared/pro/index.js voor het formaat. */
 const S = (tnl, ten, xnl, xen) => ({ title: { nl: tnl, en: ten }, text: { nl: xnl, en: xen } });
 
+const TAGS = {
+  virus: [['capside', 'capsid'], ['receptorbinding', 'receptor binding'], ['endocytose', 'endocytosis'], ['membraanfusie', 'membrane fusion'], ['uncoating', 'uncoating'], ['genoomtype', 'genome type'], ['assemblage', 'assembly']],
+  adeno: [['capside', 'capsid'], ['dsDNA-genoom', 'dsDNA genome'], ['CAR-binding', 'CAR binding'], ['integrines', 'integrins'], ['klathrine', 'clathrin'], ['dynamine', 'dynamin'], ['endosomale ontsnapping', 'endosomal escape'], null],
+  lnp: [['LNP', 'LNP'], ['gemodificeerd mRNA', 'modified mRNA'], ['endocytose', 'endocytosis'], ['verzuring', 'acidification'], ['ontsnapping', 'escape'], ['translatie', 'translation'], ['geen integratie', 'no integration']],
+  endocytose: [['cargo', 'cargo'], ['klathrine', 'clathrin'], ['dynamine', 'dynamin'], ['vroeg endosoom', 'early endosome'], ['laat endosoom', 'late endosome'], ['proteïne VI', 'protein VI'], ['ioniseerbare lipiden', 'ionisable lipids'], ['lysosoom', 'lysosome'], ['twee routes', 'two routes']],
+  rt: [['RNA-genoom', 'RNA genome'], ['tRNA-primer', 'tRNA primer'], ['RNase H', 'RNase H'], ['strengoverdracht 1', 'strand transfer 1'], ['(−)-streng', '(−) strand'], ['(+)-streng', '(+) strand'], ['strengoverdracht 2', 'strand transfer 2'], ['dsDNA + LTR’s', 'dsDNA + LTRs']],
+  integratie: [['kernimport', 'nuclear entry'], ['intasoom', 'intasome'], ['3′-processing', '3′ processing'], ['strengoverdracht', 'strand transfer'], ['gap-herstel', 'gap repair'], null, ['transcriptie', 'transcription']],
+  kernimport: [['capside', 'capsid'], ['NPC', 'NPC'], ['FG-barrière', 'FG barrier'], ['NLS', 'NLS'], ['translocatie', 'translocation'], ['Ran-gradiënt', 'Ran gradient'], null, ['kinesine-1', 'kinesin-1'], ['viraal DNA', 'viral DNA']],
+  sleutel: [['RBD–ACE2', 'RBD–ACE2'], ['ACE2', 'ACE2'], ['RBD', 'RBD'], ['grensvlak', 'interface'], ['homotrimeer', 'homotrimer'], ['fusie', 'fusion']],
+  viruskopie: [['genoom = mRNA', 'genome = mRNA'], ['polyproteïne', 'polyprotein'], ['klieving', 'cleavage'], ['RTC', 'RTC'], ['replicatie', 'replication'], ['nsp3-porie', 'nsp3 pore']],
+  schaar: [['Mpro', 'Mpro'], ['dimeer', 'dimer'], ['katalytische dyade', 'catalytic dyad'], ['nirmatrelvir', 'nirmatrelvir'], ['twee actieve centra', 'two active sites'], ['geen RTC', 'no RTC']],
+  assemblage: [['structurele eiwitten', 'structural proteins'], ['N-eiwit', 'N protein'], ['ERGIC', 'ERGIC'], ['exocytose', 'exocytosis'], ['lysosomale uitgang', 'lysosomal exit'], ['nieuwe virionen', 'new virions']],
+  dubbellaag: [['plasmamembraan', 'plasma membrane'], ['dubbellaag', 'bilayer'], ['fosfolipide', 'phospholipid'], ['cis-binding', 'cis bond'], null, ['membraaneiwitten', 'membrane proteins'], ['asymmetrie', 'asymmetry'], ['vloeibaar mozaïek', 'fluid mosaic']],
+};
+/* tijdlijn-tags (korte namen op de tijdlijn) voor bestaande stappen: TAGS[id][i] = ['nl', 'en'] of null (= tag uit shared/steptags.js) */
+const withTags = steps => Object.fromEntries(Object.entries(steps).map(([id, arr]) =>
+  [id, arr.map((s, i) => (TAGS[id]?.[i] ? { ...(s ?? {}), tag: TAGS[id][i] } : s))]));
+
 export default {
   labels: {
     nl: {
@@ -236,29 +254,12 @@ export default {
     },
   },
 
-  steps: {
+  steps: withTags({
+    // overzichtsscène: de engine toont één stap met de titel en tekst van def.overview
     cel: [
-      S('Een menselijke cel', 'A human cell',
-        'Een menselijke epitheelcel van ongeveer 20 µm. Speel af met ▶ of klik op een compartiment om in te zoomen.',
-        'A human epithelial cell of about 20 µm. Play with ▶ or click a compartment to zoom in.'),
-      S('Compartimenten van de cel', 'Cellular compartments',
-        'Het plasmamembraan omsluit het cytosol. Daarin liggen membraanomsloten organellen, waaronder de celkern.',
-        'The plasma membrane encloses the cytosol, which contains membrane-bound organelles, including the nucleus.'),
-      S('Opname van genetische informatie', 'Uptake of genetic information',
-        'Een virus levert DNA aan (boven), een mRNA-vaccin levert mRNA (onder). Beide worden via endocytose opgenomen.',
-        'A virus delivers DNA (top), an mRNA vaccine delivers mRNA (bottom). Both are taken up by endocytosis.'),
-      S('Route 1: DNA naar de kern', 'Route 1: DNA to the nucleus',
-        'Het virus ontsnapt uit het endosoom en wordt over microtubuli naar de kern getransporteerd. Daar wordt zijn DNA getranscribeerd.',
-        'The virus escapes the endosome and is transported along microtubules to the nucleus, where its DNA is transcribed.'),
-      S('Route 2: mRNA rechtstreeks naar de ribosomen', 'Route 2: mRNA directly to the ribosomes',
-        'Vaccin-mRNA hoeft niet naar de kern: het wordt in het cytosol meteen door ribosomen getransleerd.',
-        'Vaccine mRNA does not need the nucleus: it is translated by ribosomes directly in the cytosol.'),
-      S('Transcriptie in de kern', 'Transcription in the nucleus',
-        'In de kern schrijft RNA-polymerase II een gen over naar pre-mRNA. Klik op de kern om in te zoomen.',
-        'In the nucleus, RNA polymerase II transcribes a gene into pre-mRNA. Click the nucleus to zoom in.'),
-      S('Translatie aan ribosomen', 'Translation at ribosomes',
-        'Het rijpe mRNA wordt via kernporiën geëxporteerd. Ribosomen transleren het tot een polypeptide.',
-        'The mature mRNA is exported through nuclear pores. Ribosomes translate it into a polypeptide.'),
+      { title: { nl: 'De humane cel', en: 'The human cell' },
+        text: { nl: 'Kies een route: virale infectie, een mRNA-vaccin of signaaltransductie naar genexpressie. Klik op een compartiment om in te zoomen.',
+                en: 'Choose a route: viral infection, an mRNA vaccine or signal transduction to gene expression. Click a compartment to zoom in.' } },
     ],
     virus: [
       S('Virussen zijn obligaat intracellulair', 'Viruses are obligate intracellular parasites',
@@ -571,7 +572,7 @@ export default {
         'Lipiden en eiwitten diffunderen voortdurend lateraal in het membraan: het vloeibaar-mozaïekmodel.',
         'Lipids and proteins continuously diffuse laterally in the membrane: the fluid mosaic model.'),
     ],
-  },
+  }),
 
   details: {
     cel: {
@@ -687,6 +688,38 @@ export default {
       nl: { kort: 'Het plasmamembraan is een vloeibare dubbellaag van amfipathische fosfolipiden: de polaire kopgroepen aan de buiten- en binnenkant, de hydrofobe vetzuurketens in het midden. Er zitten cholesterol en membraaneiwitten in, en aan de buitenkant dragen eiwitten en lipiden suikerketens.' },
       en: { kort: 'The plasma membrane is a fluid bilayer of amphipathic phospholipids: the polar head groups on the outer and inner faces, the hydrophobic fatty acid chains in the middle. It contains cholesterol and membrane proteins, and on the outside proteins and lipids carry glycans.' },
     },
+  },
+  /* scènetitels (o.a. knop 'Volgend') en 'Wat is vereenvoudigd?' in vaktaal */
+  meta: {
+    sleutel: {
+      title: { nl: 'Receptorbinding: spike-RBD en ACE2', en: 'Receptor binding: spike RBD and ACE2' },
+      simplified: {
+        nl: 'Alleen het receptorbindend domein (RBD) van één spike-eiwit en het extracellulaire deel van ACE2 zijn getekend (één bol per residu). Een volledige spike is een homotrimeer dat met een stengel uit de virale envelop steekt; ACE2 is zelf in het plasmamembraan verankerd. Voor binding moet het RBD eerst in de "up"-conformatie staan. Na binding moet een gastheerprotease de spike nog klieven (aan het celoppervlak TMPRSS2, in een endosoom cathepsine L) voordat de membranen fuseren.',
+        en: 'Only the receptor-binding domain (RBD) of one spike protein and the extracellular part of ACE2 are drawn (one bead per residue). A complete spike is a homotrimer that protrudes from the viral envelope on a stalk; ACE2 itself is anchored in the plasma membrane. To bind, the RBD must first adopt the "up" conformation. After binding, a host protease still has to cleave the spike (TMPRSS2 at the cell surface, cathepsin L in an endosome) before the membranes fuse.',
+      },
+    },
+    viruskopie: {
+      title: { nl: 'Replicatie van het coronavirusgenoom', en: 'Coronavirus genome replication' },
+      simplified: {
+        nl: 'Schematisch en niet op schaal. Het genoom codeert twee polyproteïnen: een kortere en, via een −1-ribosomale frameshift, een langere; samen leveren ze 16 niet-structurele eiwitten (nsp1–16). Daaronder zijn twee virale proteasen (PLpro en Mpro), die zichzelf en de andere nsp’s vrijmaken. Replicatie verloopt via een complementair (−)-RNA-intermediair; de structurele eiwitten worden van kortere, subgenomische mRNA’s getransleerd. De porie in de wand van het dubbelmembraanblaasje is met elektronenmicroscopie in beeld gebracht; dat het RNA daarlangs naar buiten gaat, is het model van de onderzoekers. Er zijn veel meer blaasjes dan getekend.',
+        en: 'Schematic and not to scale. The genome encodes two polyproteins: a shorter one and, via a −1 ribosomal frameshift, a longer one; together they yield 16 non-structural proteins (nsp1–16). Among them are two viral proteases (PLpro and Mpro), which release themselves and the other nsps. Replication proceeds via a complementary (−)RNA intermediate; the structural proteins are translated from shorter, subgenomic mRNAs. The pore in the wall of the double-membrane vesicle has been imaged by electron microscopy; that the RNA exits through it is the researchers’ model. There are many more vesicles than drawn.',
+      },
+    },
+    schaar: {
+      title: { nl: 'Mpro: de hoofdprotease en nirmatrelvir', en: 'Mpro: the main protease and nirmatrelvir' },
+      simplified: {
+        nl: 'Van het eiwit is alleen de hoofdketen getekend (één bol per residu); de actieve plaats toont de twee katalytische residuen. Het virus heeft nog een tweede, kleinere protease (PLpro), die de eerste nsp’s van het polyproteïne vrijmaakt. De klieving zelf gebeurt niet in deze momentopname en wordt alleen beschreven. Nirmatrelvir wordt samen met ritonavir toegediend, dat de afbraak ervan in het lichaam vertraagt.',
+        en: 'Only the backbone of the protein is drawn (one bead per residue); the active site shows the two catalytic residues. The virus also has a second, smaller protease (PLpro) that releases the first nsps from the polyprotein. Cleavage itself does not occur in this snapshot and is only described. Nirmatrelvir is given together with ritonavir, which slows its breakdown in the body.',
+      },
+    },
+    assemblage: {
+      title: { nl: 'Assemblage en vrijgave van virionen', en: 'Virion assembly and release' },
+      simplified: {
+        nl: 'Schematisch: de virale envelop bevat naast het spike-eiwit (S) nog twee membraaneiwitten (M en E), die de knopvorming sturen. Het ERGIC is het intermediaire compartiment tussen ER en Golgi. Dat coronavirussen de cel vooral via lysosomen verlaten, is aangetoond in gekweekte cellen (Ghosh et al. 2020) en nog niet in alle details bevestigd. Een cel produceert veel meer virionen dan getekend.',
+        en: 'Schematic: besides the spike protein (S), the viral envelope contains two more membrane proteins (M and E), which drive budding. The ERGIC is the intermediate compartment between the ER and the Golgi. That coronaviruses leave the cell mainly via lysosomes has been shown in cultured cells (Ghosh et al. 2020) and is not yet confirmed in every detail. A cell produces many more virions than drawn.',
+      },
+    },
+    dubbellaag: { title: { nl: 'Het plasmamembraan: een fosfolipidedubbellaag', en: 'The plasma membrane: a phospholipid bilayer' } },
   },
   gloss: {},
 };

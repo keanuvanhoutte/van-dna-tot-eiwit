@@ -788,15 +788,18 @@ export default {
     },
   },
   meta: {
-    remodeler: { simplified: {
+    /* scènetitels (o.a. knop 'Volgend'): vaktaal i.p.v. de beschrijvende basistitel */
+    lussen: { title: { nl: 'Lusextrusie door cohesine', en: 'Loop extrusion by cohesin' } },
+    xinact: { title: { nl: 'X-inactivatie', en: 'X inactivation' } },
+    remodeler: { title: { nl: 'Chromatineremodelering', en: 'Chromatin remodelling' }, simplified: {
       nl: 'Schematisch en niet op schaal: een nucleosoom is ≈ 11 nm breed en remodelers zijn grote complexen van meerdere subeenheden. Getoond zijn twee uitkomsten (verschuiven en uitstoten); remodelers kunnen ook histonen omwisselen of nucleosomen op regelmatige afstanden zetten. Het getal "1 op 5" is een gemiddelde over veel tumortypes.',
       en: 'Schematic and not to scale: a nucleosome is ≈ 11 nm wide and remodellers are large multi-subunit complexes. Two outcomes are shown (sliding and eviction); remodellers can also exchange histones or space nucleosomes regularly. The figure "1 in 5" is an average over many tumour types.',
     } },
-    enhancer: { simplified: {
+    enhancer: { title: { nl: 'Enhancer–promotercontact via een chromatinelus', en: 'Enhancer–promoter contact via a chromatin loop' }, simplified: {
       nl: 'Schematisch: de lus is veel korter getekend dan in werkelijkheid, en er zijn maar één activator en één enhancer getoond. Een gen heeft vaak meerdere enhancers, en één enhancer kan meer dan één gen aansturen. Hoe vaak en hoe lang enhancer en promoter contact maken, wordt nog onderzocht.',
       en: 'Schematic: the loop is drawn much shorter than in reality, and only one activator and one enhancer are shown. A gene often has several enhancers, and one enhancer can control more than one gene. How often and for how long enhancer and promoter are in contact is still being studied.',
     } },
-    imprinting: { simplified: {
+    imprinting: { title: { nl: 'Genomische imprinting', en: 'Genomic imprinting' }, simplified: {
       nl: 'Schematisch: de genen staan niet op hun echte positie en zijn veel te groot getekend. IGF2 en H19 liggen op chromosoom 11; het getal "ongeveer honderd" komt uit een overzicht van 2011 en later zijn er meer kandidaten gevonden. De syndromen op chromosoom 15 kunnen ook andere oorzaken hebben dan een deletie. Eicel en zaadcel zijn niet op schaal: een eicel (≈ 0,1 mm) is zo’n twintig keer breder dan de kop van een zaadcel (≈ 5 µm).',
       en: 'Schematic: the genes are not at their real positions and are drawn far too large. IGF2 and H19 lie on chromosome 11; the figure "about a hundred" comes from a 2011 overview and more candidates have been found since. The syndromes on chromosome 15 can also have causes other than a deletion. Egg and sperm are not to scale: an egg (≈ 0.1 mm) is about twenty times wider than a sperm head (≈ 5 µm).',
     } },
