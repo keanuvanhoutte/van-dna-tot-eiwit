@@ -19,8 +19,8 @@ export default {
   scale: { nl: 'membraan ≈ 4 nm dik; niet op schaal', en: 'membrane ≈ 4 nm thick; not to scale' },
   time: { nl: 'cAMP stijgt binnen seconden; CREB-genen na minuten', en: 'cAMP rises within seconds; CREB genes after minutes' },
   org: { nl: 'mens (bv. luchtweg-epitheel, gladde spiercel)', en: 'human (e.g. airway epithelium, smooth muscle cell)' },
-  legend: [[ADRC, 'adrenaline'], [C.prot, { nl: 'β2-adrenerge receptor · PKA-C', en: 'β2-adrenergic receptor · PKA-C' }], [GAC, 'Gαs'], [GBC, 'Gβγ'], [GTPC, 'GTP · GDP · ATP · cAMP'],
-    [ACC, { nl: 'adenylylcyclase', en: 'adenylyl cyclase' }], [RC, { nl: 'PKA-R (regulatorisch)', en: 'PKA-R (regulatory)' }], [CREBC, 'CREB'], [CBPC, 'CBP/p300'], ['#ff6b6b', { nl: 'fosfaat (P)', en: 'phosphate (P)' }], [C.dna, 'DNA'], [C.rna, 'mRNA']],
+  legend: [[ADRC, 'adrenaline'], [C.prot, { nl: 'β2-adrenerge receptor · PKA: actief deel (C)', en: 'β2-adrenergic receptor · PKA: active part (C)' }], [GAC, 'Gαs'], [GBC, 'Gβγ'], [GTPC, 'GTP · GDP · ATP · cAMP'],
+    [ACC, { nl: 'adenylylcyclase', en: 'adenylyl cyclase' }], [RC, { nl: 'PKA: rem (R)', en: 'PKA: brake (R)' }], [CREBC, 'CREB'], [CBPC, 'CBP/p300'], ['#ff6b6b', { nl: 'fosfaat (P)', en: 'phosphate (P)' }], [C.dna, 'DNA'], [C.rna, 'mRNA']],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">3D: β2-adrenerge receptor met Gs, PDB <a href="https://www.rcsb.org/structure/3SN6" target="_blank" rel="noopener">3SN6</a>.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">3D: β2-adrenergic receptor with Gs, PDB <a href="https://www.rcsb.org/structure/3SN6" target="_blank" rel="noopener">3SN6</a>.</p>' },
@@ -34,7 +34,7 @@ export default {
     ST(7500, cam(420, 300, 900), 'De receptor verandert van vorm', 'The receptor changes shape',
       'De receptor kronkelt 7 keer door het membraan. Als adrenaline bindt, verandert de binnenkant van vorm.',
       'The receptor winds through the membrane 7 times. When adrenaline binds, its inner side changes shape.'),
-    ST(8000, cam(470, 400, 900), 'Het G-eiwit gaat aan', 'The G protein switches on',
+    ST(8000, cam(470, 350, 900), 'Het G-eiwit gaat aan', 'The G protein switches on',
       'De receptor laat het G-eiwit GDP lossen en GTP binden. Met GTP erop staat de schakelaar aan.',
       'The receptor makes the G protein release GDP and bind GTP. With GTP on board, the switch is on.'),
     ST(7500, cam(612, 400, 1000), 'Een deel schuift naar een enzym', 'One part moves to an enzyme',
@@ -160,10 +160,10 @@ export default {
         let P = '';
         const rel = K(g, 5.4, 5.85);
         P += eiwit(PKX - 15, PKY, 17, 44, RC, { seed: 44, bumps: .16 }) + eiwit(PKX + 15, PKY, 17, 44, RC, { seed: 47, bumps: .16 });
-        P += `<text x="${PKX}" y="${PKY + 66}" font-size="18" text-anchor="middle" fill="${RC}" font-family="Inter" font-weight="700">R R</text>`;
+        P += `<text x="${PKX}" y="${PKY + 70}" font-size="20" text-anchor="middle" fill="${RC}" font-family="Inter" font-weight="700">${T2('rem', 'brake')}</text>`;
         const c1 = track(g, [[5.4, PKX - 58, PKY], [5.85, PORE + 10, 600], [6.05, PORE + 10, 600], [6.25, PORE, NY], [6.5, CRX - 45, DY - 82]]);
         const c2 = track(g, [[5.4, PKX + 58, PKY], [5.85, PKX + 130, 590]]);
-        for (const [x, y] of [c1, c2]) P += eiwit(x, y, 29, 26, C.prot, { seed: 46 }) + `<text x="${f1(x)}" y="${f1(y + 7)}" font-size="19" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="800">C</text>`;
+        for (const [x, y] of [c1, c2]) P += eiwit(x, y, 31, 26, C.prot, { seed: 46 }) + `<text x="${f1(x)}" y="${f1(y + 6)}" font-size="16" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="800">${T2('actief', 'active')}</text>`;
         if (rel > .02 && rel < .98) P += `<circle cx="${PKX}" cy="${PKY}" r="${f1(40 + 50 * rel)}" fill="none" stroke="${GTPC}" stroke-width="3" opacity="${f1(1 - rel)}"/>`;
         $('gp-pka').innerHTML = P;
 
@@ -196,8 +196,7 @@ export default {
         if (k > .01) L += T(RX - 95, 250, T2('7 TM-helices', '7 TM helices'), { size: 22, col: C.prot, op: k, anchor: 'end' }) +
           T(RX + 150, 470, T2('helix 6 zwaait uit', 'helix 6 swings out'), { size: 22, col: C.text, op: k * K(g, 1.7, 1.9), anchor: 'start' });
         k = on(2.2, 2.5, 3.02, 3.2);
-        if (k > .01) L += T(210, 470, T2('receptor = GEF', 'receptor = GEF'), { size: 22, col: C.prot, op: k }) +
-          T(300, 570, T2('GDP eruit, GTP erin', 'GDP out, GTP in'), { size: 22, col: GTPC, op: k * K(g, 2.6, 2.9) });
+        if (k > .01) L += T(300, 570, T2('GDP eruit, GTP erin', 'GDP out, GTP in'), { size: 22, col: GTPC, op: k * K(g, 2.6, 2.9) });
         k = on(3.2, 3.55, 4.02, 4.2);
         if (k > .01) L += T(705, 478, 'Gαs·GTP', { size: 22, col: GAC, op: k * K(g, 3.5, 3.65) }) + T(505, 470, 'Gβγ', { size: 22, col: GBC, op: k }) +
           T(ACX, 196, T2('adenylylcyclase', 'adenylyl cyclase'), { size: 22, col: ACC, op: k });
@@ -205,21 +204,21 @@ export default {
         if (k > .01) L += T(700, 560, 'ATP → cAMP', { size: 22, col: GTPC, op: k }) +
           T(990, 598, T2('cAMP: tweede boodschapper', 'cAMP: second messenger'), { size: 22, col: C.text, op: k * K(g, 4.6, 4.9) });
         k = on(5.1, 5.4, 6.0, 6.04);
-        if (k > .01) L += T(PKX, 440, T2('PKA: 2 R + 2 C', 'PKA: 2 R + 2 C'), { size: 22, col: C.text, op: k }) +
-          T(PKX + 130, 640, T2('actieve C', 'active C'), { size: 22, col: C.prot, op: k * K(g, 5.7, 5.85) }) +
-          T(PKX - 110, 380, T2('4 cAMP op R', '4 cAMP on R'), { size: 22, col: GTPC, op: k * K(g, 5.2, 5.35) });
+        if (k > .01) L += T(PKX, 440, T2('kinase (PKA)', 'kinase (PKA)'), { size: 22, col: C.text, op: k }) +
+          T(PKX + 130, 640, T2('actief deel komt los', 'active part comes free'), { size: 22, col: C.prot, op: k * K(g, 5.7, 5.85) }) +
+          T(PKX - 110, 380, T2('cAMP bindt op de rem', 'cAMP binds the brake'), { size: 22, col: GTPC, op: k * K(g, 5.2, 5.35) });
         k = on(6.2, 6.5, 7.02, 7.2);
         if (k > .01) L += T(PORE - 70, NY - 22, T2('kernporie', 'nuclear pore'), { size: 22, col: C.prot, op: k, anchor: 'end' }) +
-          T(CRX + 60, DY - 70, 'CREB', { size: 22, col: CREBC, op: k, anchor: 'start' }) +
-          T(CRX - 95, DY - 52, 'Ser133', { size: 22, col: '#ff8f8f', op: k * K(g, 6.6, 6.75), anchor: 'end' }) +
-          T(CRX, DY + 80, 'CRE', { size: 22, col: '#cfe0ff', op: k });
+          T(CRX + 60, DY - 70, T2('gen-schakelaar (CREB)', 'gene switch (CREB)'), { size: 22, col: CREBC, op: k, anchor: 'start' }) +
+          T(CRX - 95, DY - 52, T2('fosfaat', 'phosphate'), { size: 22, col: '#ff8f8f', op: k * K(g, 6.6, 6.75), anchor: 'end' }) +
+          T(CRX, DY + 80, T2('bindplaats (CRE)', 'binding site (CRE)'), { size: 22, col: '#cfe0ff', op: k });
         k = on(7.2, 7.5, 8.02, 8.2);
-        if (k > .01) L += T(CRX + 80, DY - 128, 'CBP/p300', { size: 22, col: CBPC, op: k, anchor: 'start' }) +
+        if (k > .01) L += T(CRX + 80, DY - 128, T2('helper (CBP)', 'helper (CBP)'), { size: 22, col: CBPC, op: k, anchor: 'start' }) +
           T(1480, DY + 58, T2('doelgen', 'target gene'), { size: 22, col: C.text, op: k * K(g, 7.4, 7.6) }) +
           T(1522, DY - 62, 'mRNA', { size: 22, col: C.rna, op: k * K(g, 7.7, 7.95) });
         k = on(8.1, 8.35, 9.5, 9.6);
-        if (k > .01) L += T(600, 560, T2('GTPase: GTP → GDP', 'GTPase: GTP → GDP'), { size: 25, col: GAC, op: k }) +
-          T(940, 452, T2('fosfodiësterase: cAMP → AMP', 'phosphodiesterase: cAMP → AMP'), { size: 25, col: '#ff9d5c', op: k * K(g, 8.2, 8.45) });
+        if (k > .01) L += T(560, 560, T2('G-eiwit zet zichzelf uit (GTP → GDP)', 'G protein switches itself off (GTP → GDP)'), { size: 25, col: GAC, op: k }) +
+          T(940, 452, T2('afbraakenzym breekt cAMP af', 'breakdown enzyme destroys cAMP'), { size: 25, col: '#ff9d5c', op: k * K(g, 8.2, 8.45) });
         $('gp-lab').innerHTML = L;
         $('gp-hot').setAttribute('opacity', f1(K(g, 6.0, 6.3)));
       },
