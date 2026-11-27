@@ -439,7 +439,7 @@ export default {
       steps: {
         0: { tag: ['kanaal', 'channel'], title: { nl: 'Een kanaal in het ER-membraan', en: 'A channel in the ER membrane' }, text: { nl: 'Dit is het menselijke kanaal waardoor nieuwe eiwitten het ER in gaan. Het bestaat uit drie eiwitten.', en: 'This is the human channel through which new proteins enter the ER. It consists of three proteins.' } },
         2: { tag: ['doorschuiven', 'sliding through'], title: { nl: 'De keten schuift door het kanaal', en: 'The chain slides through the channel' }, text: { nl: 'Het ribosoom zit op het kanaal. De groeiende keten glijdt erdoor naar de binnenkant van het ER.', en: 'The ribosome sits on the channel. The growing chain slides through it into the inside of the ER.' } },
-        3: { tag: ['transmembraan', 'transmembrane'], title: { nl: 'Een transmembraansegment blijft steken', en: 'A transmembrane segment gets stuck' }, text: { nl: 'Een hydrofoob transmembraansegment stopt in het kanaal en glipt via de laterale poort de lipidelaag in.', en: 'A hydrophobic transmembrane segment stops in the channel and slips through the lateral gate into the lipid layer.' } },
+        3: { tag: ['transmembraan', 'transmembrane'], title: { nl: 'Een vettig stuk blijft steken', en: 'A greasy stretch gets stuck' }, text: { nl: 'Een vettig (hydrofoob) stuk van de keten stopt in het kanaal en glipt zijdelings het membraan in. Zo’n stuk heet een transmembraansegment.', en: 'A greasy (hydrophobic) stretch of the chain stops in the channel and slips sideways into the membrane. Such a stretch is called a transmembrane segment.' } },
       },
     },
   },
