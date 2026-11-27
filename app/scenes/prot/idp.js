@@ -29,8 +29,8 @@ export default {
     nl: '<p style="font-size:13px;color:#93a0bb">3D: pKID van CREB (rat) gebonden aan het KIX-domein van CBP (muis), PDB <a href="https://www.rcsb.org/structure/1KDX" target="_blank" rel="noopener">1KDX</a> (NMR); p53-transactivatiedomein op MDM2, PDB <a href="https://www.rcsb.org/structure/1YCR" target="_blank" rel="noopener">1YCR</a>.</p><p style="font-size:13px;color:#93a0bb">Waarom matige affiniteit? Bij het binden verandert de entropie sterk (de keten verliest vrijheid), en IDP\'s binden vaak met hoge specificiteit maar matige affiniteit: het complex valt snel weer uiteen. Het p53-TAD is vrij nauwelijks helix, bindt MDM2 als helix en bindt ook andere partners zoals CBP. ~1/3 van de eukaryote eiwitten heeft een ongeordende regio van > 30 aa, bij bacteriën ~4 %.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">3D: pKID of CREB (rat) bound to the KIX domain of CBP (mouse), PDB <a href="https://www.rcsb.org/structure/1KDX" target="_blank" rel="noopener">1KDX</a> (NMR); p53 transactivation domain on MDM2, PDB <a href="https://www.rcsb.org/structure/1YCR" target="_blank" rel="noopener">1YCR</a>.</p><p style="font-size:13px;color:#93a0bb">Why moderate affinity? Binding changes the entropy strongly (the chain loses freedom), and IDPs often bind with high specificity but modest affinity: the complex quickly falls apart again. The p53 TAD has very little helix when free, binds MDM2 as a helix and also binds other partners such as CBP. ~1/3 of eukaryotic proteins has a disordered region of > 30 aa, in bacteria ~4 %.</p>' },
   simplified: {
-    nl: 'De getoonde sequenties zijn illustratief, niet de echte CREB-sequentie. Het ensemble is een 2D-animatie; in werkelijkheid is een IDR een snel wisselende 3D-wolk van conformaties. KIX is als een bol getekend, pKID vormt in werkelijkheid twee helices (αA en αB) die rond KIX wikkelen. In de ladings-hydropathieplot zijn de punten schematisch; de grenslijn volgt Uversky et al. (2000).',
-    en: 'The sequences shown are illustrative, not the real CREB sequence. The ensemble is a 2D animation; in reality an IDR is a rapidly changing 3D cloud of conformations. KIX is drawn as a sphere; in reality pKID forms two helices (αA and αB) that wrap around KIX. In the charge–hydropathy plot the points are schematic; the boundary follows Uversky et al. (2000).' },
+    nl: 'De getoonde sequenties zijn illustratief, niet de echte CREB-sequentie. Het ensemble is een 2D-animatie; in werkelijkheid is een IDR een snel wisselende 3D-wolk van conformaties. KIX is als een bol getekend, pKID vormt in werkelijkheid twee helices (αA en αB) die rond KIX wikkelen. In de ladings-hydropathieplot zijn de naamloze punten schematisch; prothymosine α en lysozym (kippenei-wit) staan op hun berekende plaats (gemiddelde Kyte-Doolittle-hydropathie, genormaliseerd 0–1, zonder venster; netto lading / lengte). De grenslijn volgt Uversky et al. (2000): ⟨H⟩ = (⟨R⟩ + 1,151) / 2,785.',
+    en: 'The sequences shown are illustrative, not the real CREB sequence. The ensemble is a 2D animation; in reality an IDR is a rapidly changing 3D cloud of conformations. KIX is drawn as a sphere; in reality pKID forms two helices (αA and αB) that wrap around KIX. In the charge–hydropathy plot the unnamed points are schematic; prothymosin α and (hen egg-white) lysozyme are at their computed positions (mean Kyte–Doolittle hydropathy normalised to 0–1, no window; net charge / length). The boundary follows Uversky et al. (2000): ⟨H⟩ = (⟨R⟩ + 1.151) / 2.785.' },
   steps: [
     ST(8000, cam(800, 450, 1600), 'Niet elk eiwit heeft één vaste vorm', 'Not every protein has one fixed shape',
       'Veel eiwitten hebben stukken zonder vaste vorm: ongeordende stukken. Soms is het hele eiwit zo.',
@@ -67,17 +67,27 @@ export default {
     /* paneel B-onder: ladings-hydropathieplot (Uversky 2000) */
     const PX = 2060, PY = 820, PW = 620, PH = 330;             // <H> 0..1 (x), <R> 0..0.5 (y)
     const px = h => PX + (h - .2) / .4 * PW, py = r => PY - r / .5 * PH; // x-bereik 0,2–0,6
+    // assen in gewone taal
     let plot = `<line x1="${PX}" y1="${PY}" x2="${PX + PW + 20}" y2="${PY}" stroke="${C.muted}" stroke-width="3" marker-end="url(#id-m)"/><line x1="${PX}" y1="${PY}" x2="${PX}" y2="${PY - PH - 20}" stroke="${C.muted}" stroke-width="3" marker-end="url(#id-m)"/>`;
-    plot += T(PX + PW / 2, PY + 44, T2('gemiddelde hydropathie ⟨H⟩', 'mean hydropathy ⟨H⟩'), { size: 20, col: C.muted });
-    plot += `<text x="${PX - 26}" y="${PY - PH / 2}" transform="rotate(-90 ${PX - 26} ${PY - PH / 2})" font-size="20" fill="${C.muted}" text-anchor="middle" font-family="Inter" font-weight="600">${T2('gemiddelde netto lading ⟨R⟩', 'mean net charge ⟨R⟩')}</text>`;
-    // grens: <H> = (<R> + 1.151) / 2.785  →  R = 2.785 H − 1.151
-    const hA = .42, hB = .5864; plot += `<line x1="${f1(px(hA))}" y1="${f1(py(2.785 * hA - 1.151 < 0 ? 0 : 2.785 * hA - 1.151))}" x2="${f1(px(hB))}" y2="${f1(py(2.785 * hB - 1.151))}" stroke="#fff" stroke-width="3" stroke-dasharray="10 6"/>`;
-    plot += T(px(.585) + 8, py(.5) + 30, T2('grens', 'boundary'), { size: 18, anchor: 'start' });
-    const P = [[.3, .28], [.33, .18], [.36, .35], [.28, .12], [.39, .22], [.31, .4]], Q = [[.47, .05], [.5, .1], [.46, .02], [.52, .07], [.49, .15], [.54, .04]];
-    P.forEach(([h, r]) => plot += `<circle cx="${f1(px(h))}" cy="${f1(py(r))}" r="10" fill="${IDC}"/>`);
-    Q.forEach(([h, r]) => plot += `<circle cx="${f1(px(h))}" cy="${f1(py(r))}" r="10" fill="${C.prot}"/>`);
-    plot += T(px(.3), py(.46), T2('ongeordend', 'disordered'), { size: 22, col: IDC, w: 700 }) + T(px(.53), py(.25), T2('gevouwen', 'folded'), { size: 22, col: C.prot, w: 700 });
-    plot += T(PX + PW + 40, PY - 250, T2('Uversky et al. 2000', 'Uversky et al. 2000'), { size: 17, col: C.muted, anchor: 'start' }) + T(PX + PW + 40, PY - 222, T2('⟨H⟩ₘₐₓ = (⟨R⟩ + 1,151) / 2,785', '⟨H⟩ₘₐₓ = (⟨R⟩ + 1.151) / 2.785'), { size: 17, col: C.muted, anchor: 'start', font: 'JetBrains Mono' });
+    plot += T(PX + PW + 30, PY + 44, T2('meer waterschuw →', 'more water-avoiding →'), { size: 22, col: '#c9d2e4', anchor: 'end' });
+    plot += T(PX + 14, PY - PH - 30, T2('↑ meer lading', '↑ more charge'), { size: 22, col: '#c9d2e4', anchor: 'start' });
+    // grenslijn (Uversky 2000: ⟨H⟩ = (⟨R⟩ + 1,151) / 2,785 → R = 2,785 H − 1,151), met de twee kanten ingekleurd
+    const hA = 1.151 / 2.785, hT = (.5 + 1.151) / 2.785;
+    let zones = `<path d="M${PX},${PY} L${f1(px(hA))},${PY} L${f1(px(hT))},${f1(py(.5))} L${PX},${f1(py(.5))}Z" fill="${IDC}" fill-opacity=".08"/>` +
+      `<path d="M${f1(px(hA))},${PY} L${PX + PW},${PY} L${PX + PW},${f1(py(.5))} L${f1(px(hT))},${f1(py(.5))}Z" fill="${C.prot}" fill-opacity=".1"/>` +
+      `<line x1="${f1(px(hA))}" y1="${PY}" x2="${f1(px(hT))}" y2="${f1(py(.5))}" stroke="#fff" stroke-width="3" stroke-dasharray="10 6"/>` +
+      T(px(.29), py(.47), T2('ongeordend', 'disordered'), { size: 24, col: IDC, w: 800 }) + T(px(.53), py(.25), T2('gevouwen', 'folded'), { size: 24, col: C.prot, w: 800 });
+    // eerst één punt (= één eiwit), dan de rest
+    const P = [[.33, .18], [.38, .34], [.28, .12], [.39, .22], [.25, .2]], Q = [[.47, .05], [.5, .1], [.46, .02], [.52, .07], [.49, .15], [.54, .04]];
+    const one = `<circle cx="${f1(px(.24))}" cy="${f1(py(.30))}" r="11" fill="${IDC}" stroke="#fff" stroke-width="2"/>` +
+      T(px(.24) + 20, py(.30) + 8, T2('← één eiwit', '← one protein'), { size: 22, anchor: 'start', col: '#fff', w: 700 });
+    let rest = '';
+    P.forEach(([h, r]) => rest += `<circle cx="${f1(px(h))}" cy="${f1(py(r))}" r="10" fill="${IDC}"/>`);
+    Q.forEach(([h, r]) => rest += `<circle cx="${f1(px(h))}" cy="${f1(py(r))}" r="10" fill="${C.prot}"/>`);
+    // twee bekende eiwitten (posities berekend uit hun sequentie: Kyte-Doolittle, genormaliseerd; |netto lading| / lengte)
+    const named = `<circle cx="${f1(px(.281))}" cy="${f1(py(.396))}" r="12" fill="${IDC}" stroke="#fff" stroke-width="3"/>` + T(px(.281) + 20, py(.396) + 7, T2('prothymosine α', 'prothymosin α'), { size: 21, anchor: 'start', w: 700 }) +
+      `<circle cx="${f1(px(.448))}" cy="${f1(py(.062))}" r="12" fill="${C.prot}" stroke="#fff" stroke-width="3"/><path d="M${f1(px(.448) + 12)},${f1(py(.062) - 6)} L${f1(px(.58))},${f1(py(.16))}" stroke="#fff" stroke-width="2"/>` + T(px(.58) + 6, py(.16) - 4, T2('lysozym', 'lysozyme'), { size: 21, anchor: 'start', w: 700 });
+    plot = `<g id="id-zones">${zones}</g>` + plot + `<g id="id-one">${one}</g><g id="id-rest">${rest}</g><g id="id-named">${named}</g>`;
 
     /* paneel D: kaarten (rij 1 = stap 6, rij 2 verschijnt in stap 7) */
     const card = (x0, y0, title, line, col, node, lbl) => {
@@ -131,9 +141,10 @@ export default {
           a += T(1100, 250, T2('ongeordende regio (IDR)', 'disordered region (IDR)'), { size: 22, col: IDC });
           if (step === 1) {
             const k = sub(p, .4, .6);
-            a += panel(1060, 600, 480, 170, { op: k }) + T(1300, 645, T2('experimenteel/voorspeld:', 'experimental/predicted:'), { size: 19, col: C.muted, op: k }) +
-              T(1300, 685, T2('geen elektronendichtheid (X-ray)', 'no electron density (X-ray)'), { size: 20, op: k }) + T(1300, 720, T2('AlphaFold: pLDDT < 50', 'AlphaFold: pLDDT < 50'), { size: 20, op: k, font: 'JetBrains Mono' }) +
-              T(1300, 752, T2('NMR: scherpe, weinig verspreide pieken', 'NMR: sharp, poorly dispersed peaks'), { size: 18, op: k, col: '#c9d2e4' });
+            a += T(1080, 690, T2('vage lijnen: dezelfde keten,', 'faint lines: the same chain,'), { size: 22, col: '#c9d2e4', op: sub(p, .15, .3), anchor: 'start' }) +
+              T(1080, 720, T2('telkens een tel later', 'a moment later each time'), { size: 22, col: '#c9d2e4', op: sub(p, .15, .3), anchor: 'start' });
+            a += panel(1060, 100, 480, 110, { op: k }) + T(1300, 145, T2('in een 3D-model:', 'in a 3D model:'), { size: 20, col: C.muted, op: k }) +
+              T(1300, 185, T2('hier geen vaste vorm', 'no fixed shape here'), { size: 24, op: k, w: 700 });
           }
         }
         $('id-tail').innerHTML = tl; $('id-a').innerHTML = a;
@@ -142,10 +153,16 @@ export default {
         let sq = '';
         if (step === 2) {
           const k = sub(p, .35, .6);
-          sq += T(2690, 410, T2('boven: 14 van 25 hydrofoob · onder: 0 hydrofoob, 11 geladen', 'top: 14 of 25 hydrophobic · bottom: 0 hydrophobic, 11 charged'), { size: 22, op: k });
+          sq += T(2690, 410, T2('boven: 14 van 25 waterschuw · onder: 0 waterschuw, 11 geladen', 'top: 14 of 25 water-avoiding · bottom: 0 water-avoiding, 11 charged'), { size: 22, op: k });
         }
         $('id-seq').innerHTML = sq;
-        $('id-plot').setAttribute('opacity', step === 2 ? '0' : step === 3 ? f1(sub(p, 0, .25)) : '1');   // grafiek pas in stap 4 (niet half afgesneden onder de reeksen)
+        $('id-plot').setAttribute('opacity', step === 2 ? '0' : step === 3 ? f1(sub(p, 0, .15)) : '1');   // grafiek pas in stap 4 (niet half afgesneden onder de reeksen)
+        // opbouw: assen → één punt (= één eiwit) → de andere punten → grenslijn met de twee kanten → twee bekende eiwitten
+        const pk = (a, b) => step === 3 ? f1(ease(sub(p, a, b))) : '1';
+        $('id-one').setAttribute('opacity', pk(.08, .2));
+        $('id-rest').setAttribute('opacity', pk(.3, .45));
+        $('id-zones').setAttribute('opacity', pk(.5, .65));
+        $('id-named').setAttribute('opacity', pk(.72, .86));
         $('id-seqB').setAttribute('opacity', step <= 2 ? '1' : step === 3 ? f1(1 - sub(p, 0, .06)) : '0');
 
         /* ---------- paneel C: CREB-KID + KIX ---------- */
