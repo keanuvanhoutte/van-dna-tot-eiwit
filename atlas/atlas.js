@@ -43,7 +43,18 @@ function forgetRecent(code) {
 }
 /* eenvoudige titel/ondertitel (simple.js), met de vaknaam als terugval */
 const nameOf = e => L(SIMPLE[e.id]?.title ?? e.name);
-const listName = e => e.custom ? `PDB ${e.pdb}` : nameOf(e);
+/* 'Los DNA-ringetje (plasmide)' → vakterm vooraan als titel, de uitleg kleiner tussen haakjes: 'Plasmide (los DNA-ringetje)' */
+const termFirst = n => {
+  const m = /^(.*\S)\s*\(([^()]+)\)$/.exec(n); if (!m) return [n, ''];
+  // gewoon woord krijgt een hoofdletter (nucleosoom → Nucleosoom); termen met hoofdletters of 'x-' blijven (mRNA, miRNA, i-motief)
+  const up = (w, on) => on ? w[0].toUpperCase() + w.slice(1) : w;
+  const term = up(m[2], !/[A-Z]/.test(m[2].split(' ')[0]) && !/^.-/.test(m[2]));
+  // uitleg: eerste letter klein, behalve als het woord een afkorting is (DNA, RNA, G–U)
+  const rest = /^.[a-zà-ÿ]/.test(m[1]) ? m[1][0].toLowerCase() + m[1].slice(1) : m[1];
+  return [term, rest];
+};
+const nameHTML = e => { if (e.custom) return `PDB ${e.pdb}`; const [a, b] = termFirst(nameOf(e)); return b ? `${a} <small class="alt">(${b})</small>` : a; };
+const listName = nameHTML;
 const listSub = e => e.custom ? L(e.name) : subOf(e);
 const subOf = e => L(SIMPLE[e.id]?.sub ?? e.sub);
 const q = new URLSearchParams(location.search);
@@ -573,7 +584,7 @@ async function loadSlot(s, e) {
   hidePop(s, false);
   s.entry = e; s.atoms = null; s.an = null; s.focus = null; s.el.querySelector('.chint').hidden = true;
   const el = s.el;
-  el.querySelector('h3').textContent = e.custom ? `PDB ${e.pdb}` : nameOf(e);
+  el.querySelector('h3').innerHTML = nameHTML(e);
   const hand = el.querySelector('.hand'); hand.hidden = true;
   const pl = el.querySelector('.pdbl');
   el.querySelector('.x').hidden = !state.cmp || state.set.length < 2;
@@ -1234,7 +1245,7 @@ function info(e) {
   const simp = simplified(e);
   const sp = SIMPLE[e.id] ?? (e.custom ? { kort: e.kort, look: e.look } : null);
   const s = [];
-  s.push(e.custom ? `<h2>PDB ${e.pdb}</h2><div class="isub">${L(e.name)}</div>` : `<h2>${nameOf(e)}</h2><div class="isub">${subOf(e)}</div>`);
+  s.push(e.custom ? `<h2>PDB ${e.pdb}</h2><div class="isub">${L(e.name)}</div>` : `<h2>${nameHTML(e)}</h2><div class="isub">${subOf(e)}</div>`);
   if (e.custom) s.push(`<div class="minebox">${t('mineNote')}</div>`);
   if (e.plant) s.push(`<div class="plantbox">${t('plant')}</div>`);
   if (sp) {
@@ -1384,7 +1395,7 @@ function mendPolymer(atoms) {
 /* ---------- alles bijwerken ---------- */
 function update() {
   const e = BY[state.id];
-  $('eName').textContent = e.custom ? `PDB ${e.pdb}` : nameOf(e);
+  $('eName').innerHTML = nameHTML(e);
   const badges = [e.custom ? `<span class="badge mine">${t('mineBadge')}</span>` : `<span class="badge ours">${t('atlasBadge')}</span>`];
   if (e.pdb) badges.push(`<a class="badge pdbb" href="https://www.rcsb.org/structure/${e.pdb}" target="_blank" rel="noopener">PDB ${e.pdb} ↗</a>`);
   else badges.push(`<span class="badge">${t('schema')}</span>`);
