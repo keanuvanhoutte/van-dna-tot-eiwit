@@ -349,7 +349,7 @@ export default {
       ],
       steps: {
         0: { tag: ['haarspeld', 'hairpin'], title: { nl: 'Een gen voor een microRNA', en: 'A gene for a microRNA' }, text: { nl: 'Een gen voor een microRNA wordt afgeschreven. Het RNA is nog lang en vouwt tot een haarspeld.', en: 'A microRNA gene is transcribed. The RNA is still long and folds into a hairpin.' } },
-        4: { tag: ['Argonaute', 'Argonaute'], title: { nl: 'In Argonaute', en: 'Into Argonaute' }, text: { nl: 'Het korte stukje gaat in Argonaute. Eén streng blijft als gids, de andere wordt verwijderd.', en: 'The short piece goes into Argonaute. One strand stays as a guide, the other is removed.' } },
+        4: { tag: ['Argonaute', 'Argonaute'], title: { nl: 'In Argonaute', en: 'Into Argonaute' }, text: { nl: 'Een enzym knipt de haarspeld tot een kort dubbel stukje RNA. Dat gaat in het zoekeiwit Argonaute (AGO2). Eén streng blijft als gids, de andere wordt verwijderd.', en: 'An enzyme cuts the hairpin into a short double piece of RNA. It goes into the search protein Argonaute (AGO2). One strand stays as a guide, the other is removed.' } },
         5: { tag: ['basenparing', 'base pairing'], title: { nl: 'De gids zoekt een mRNA', en: 'The guide looks for an mRNA' }, text: { nl: 'Een klein stukje van de gids paart met het eindstuk van een mRNA, achter het stopcodon. De rest past meestal maar deels.', en: 'A small part of the guide pairs with the end piece of an mRNA, after the stop codon. The rest usually fits only partly.' } },
         6: { tag: ['minder eiwit', 'less protein'], title: { nl: 'Minder translatie, dan afbraak', en: 'Less translation, then decay' }, text: { nl: 'Argonaute laat de poly(A)-staart van het mRNA inkorten. Het mRNA wordt minder vertaald en daarna afgebroken.', en: 'Argonaute has the poly(A) tail of the mRNA shortened. The mRNA is translated less and then degraded.' } },
       },
@@ -375,7 +375,7 @@ export default {
       steps: {
         0: { tag: ['lus', 'loop'], title: { nl: 'Een mRNA in gebruik', en: 'An mRNA in use' }, text: { nl: 'Eiwitten verbinden de cap en de poly(A)-staart tot een lus. Zo zijn beide uiteinden beschermd.', en: 'Proteins link the cap and the poly(A) tail into a loop. That protects both ends.' } },
         2: { tag: ['staart korter', 'tail shortens'], title: { nl: 'De poly(A)-staart wordt korter', en: 'The poly(A) tail gets shorter' }, text: { nl: 'Enzymen korten de poly(A)-staart in en de lus valt open. Meestal bepaalt deze stap hoe snel het mRNA verdwijnt.', en: 'Enzymes shorten the poly(A) tail and the loop falls open. This step usually decides how fast the mRNA disappears.' } },
-        4: { tag: ['afbraak', 'decay'], title: { nl: 'Afbraak vanaf het begin', en: 'Decay from the start' }, text: { nl: 'Zonder cap is het begin onbeschermd. Een enzym breekt het mRNA van daaruit af, bouwsteen per bouwsteen.', en: 'Without the cap the start is unprotected. An enzyme degrades the mRNA from there, building block by building block.' } },
+        4: { tag: ['afbraak', 'decay'], title: { nl: 'Afbraak vanaf het begin', en: 'Decay from the start' }, text: { nl: 'Daarna wordt de cap eraf gehaald. Zonder cap is het begin onbeschermd: een enzym breekt het mRNA van daaruit af, bouwsteen per bouwsteen.', en: 'Next the cap is removed. Without the cap the start is unprotected: an enzyme degrades the mRNA from there, building block by building block.' } },
       },
     },
   },
@@ -489,7 +489,7 @@ export default {
       kort: { nl: 'Niet elk RNA wordt een eiwit. Sommige lange RNA’s doen zelf werk: ze houden eiwitten bij elkaar, brengen ze naar een plek op het DNA of vangen ze weg. Van de meeste weten we nog niet wat ze doen.', en: 'Not every RNA becomes a protein. Some long RNAs do work themselves: they hold proteins together, bring them to a spot on the DNA or catch them away. For most of them we do not yet know what they do.' },
       steps: {
         0: { tag: ['geen eiwit', 'no protein'], title: { nl: 'Niet elk RNA wordt een eiwit', en: 'Not every RNA becomes a protein' }, text: { nl: 'Sommige genen maken een lang RNA waar geen eiwit van komt, en dan doet het RNA zelf het werk.', en: 'Some genes make a long RNA that no protein is made from, and then the RNA itself does the work.' } },
-        2: { tag: ['steiger', 'scaffold'], title: { nl: 'Werk 1: een steiger', en: 'Job 1: a scaffold' }, text: { nl: 'Een lang RNA kan werken als een steiger die verschillende eiwitten bij elkaar houdt.', en: 'A long RNA can work like a scaffold that holds different proteins together.' } },
+        2: { tag: ['steiger', 'scaffold'], title: { nl: 'Een voorbeeld: een steiger', en: 'One example: a scaffold' }, text: { nl: 'Een lang RNA kan werken als een steiger die verschillende eiwitten bij elkaar houdt.', en: 'A long RNA can work like a scaffold that holds different proteins together.' } },
         5: { tag: ['XIST', 'XIST'], title: { nl: 'Een bekend voorbeeld: XIST', en: 'A famous example: XIST' }, text: { nl: 'XIST is zo’n lang RNA dat bij vrouwen één X-chromosoom, een groot pak DNA, bedekt en stillegt.', en: 'XIST is such a long RNA: in women it covers one X chromosome, a big bundle of DNA, and silences it.' } },
       },
     },
@@ -502,7 +502,7 @@ export default {
       ],
       steps: {
         0: { tag: ['lncRNA', 'lncRNA'], title: { nl: 'Niet elk RNA wordt een eiwit', en: 'Not every RNA becomes a protein' }, text: { nl: 'Sommige genen maken een lang RNA dat niet vertaald wordt: een lncRNA. Het RNA zelf doet het werk.', en: 'Some genes make a long RNA that is not translated: a lncRNA. The RNA itself does the work.' } },
-        2: { tag: ['steiger', 'scaffold'], title: { nl: 'Werk 1: een steiger', en: 'Job 1: a scaffold' }, text: { nl: 'Een lncRNA kan als steiger werken. Het houdt verschillende eiwitten bij elkaar.', en: 'A lncRNA can act as a scaffold. It holds different proteins together.' } },
+        2: { tag: ['steiger', 'scaffold'], title: { nl: 'Een voorbeeld: een steiger', en: 'One example: a scaffold' }, text: { nl: 'Een lncRNA kan als steiger werken. Het houdt verschillende eiwitten bij elkaar.', en: 'A lncRNA can act as a scaffold. It holds different proteins together.' } },
         5: { tag: ['XIST', 'XIST'], title: { nl: 'Een bekend voorbeeld: XIST', en: 'A famous example: XIST' }, text: { nl: 'XIST is een lncRNA. Het bedekt één X-chromosoom bij vrouwen en legt het stil.', en: 'XIST is a lncRNA. It covers one X chromosome in women and silences it.' } },
       },
     },
@@ -526,7 +526,7 @@ export default {
       ],
       steps: {
         0: { tag: ['riboswitch', 'riboswitch'], title: { nl: 'Een schakelaar in het mRNA zelf', en: 'A switch in the mRNA itself' }, text: { nl: 'Het begin van een bacterieel mRNA kan adenine binden. Zonder adenine verstopt het de landingsplaats van het ribosoom.', en: 'The start of a bacterial mRNA can bind adenine. Without adenine it hides the landing site of the ribosome.' } },
-        1: { tag: ['aptameer', 'aptamer'], title: { nl: 'Adenine zet het gen aan', en: 'Adenine switches the gene on' }, text: { nl: 'Bindt adenine op de aptameer, dan klapt het RNA om. De landingsplaats komt vrij en het ribosoom kan de translatie starten.', en: 'When adenine binds the aptamer, the RNA flips over. The landing site is freed and the ribosome can start translation.' } },
+        1: { tag: ['aptameer', 'aptamer'], title: { nl: 'Adenine zet het gen aan', en: 'Adenine switches the gene on' }, text: { nl: 'Bindt adenine op het vanggedeelte (de aptameer), dan klapt het RNA om. De landingsplaats komt vrij en het ribosoom kan de translatie starten.', en: 'When adenine binds the catching part (the aptamer), the RNA flips over. The landing site is freed and the ribosome can start translation.' } },
         5: { tag: ['bacteriën', 'bacteria'], title: { nl: 'Vooral bij bacteriën', en: 'Mostly in bacteria' }, text: { nl: 'Riboswitches komen vooral bij bacteriën voor; planten en schimmels hebben er één soort. Bij de mens is er nog geen gevonden.', en: 'Riboswitches are found mostly in bacteria; plants and fungi have one kind. None has been found in humans yet.' } },
       },
     },
