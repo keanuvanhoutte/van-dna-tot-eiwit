@@ -228,27 +228,49 @@ const shownIndex = i => { let k = 0; current.steps.forEach((s, j) => { if ((s._i
 const hasScene = id => !!SCENES[id];
 
 /* hobbyist: teksten IN de figuur (SVG-tekst, 3D-labels) vervangen door eenvoudige woorden (shared/simple/labels-*.js; '' = verbergen).
- * Scènes schrijven hun tekst vaak opnieuw in update(): een MutationObserver vervangt elke nieuwe of gewijzigde tekst meteen. */
+ * Eerst een vervanging voor deze animatie ('id|tekst', labels-fix.js), anders de algemene. Scènes schrijven hun tekst vaak opnieuw in
+ * update(): een MutationObserver vervangt elke nieuwe of gewijzigde tekst meteen. Daarna: een langer woord in een pil wordt kleiner gezet
+ * tot het past, en een pil waarvan alle tekst verborgen is verdwijnt mee (geen lege vakjes). */
 const LMAP = level === 'hobby' ? LABELS[lang] ?? null : null;
-const easyLabel = s => { if (!LMAP || !s) return s; const k = s.replace(/\s+/g, ' ').trim(); return k in LMAP ? LMAP[k] : s; };
-function easyText(n, map = LMAP) {
+const pickLabel = (k, map, id) => { const sk = id + '|' + k; return sk in map ? map[sk] : k in map ? map[k] : undefined; };
+const easyLabel = s => { if (!LMAP || !s) return s; const v = pickLabel(s.replace(/\s+/g, ' ').trim(), LMAP, current?.id ?? ''); return v === undefined ? s : v; };
+const fitQ = new Set(); let fitH = 0;
+function easyText(n, map = LMAP, id = current?.id ?? '') {
   if (n.__lab === n.nodeValue) return;                      // al vervangen (of niets te doen)
-  const v = n.nodeValue, k = v.replace(/\s+/g, ' ').trim();
-  if (k && k in map) n.nodeValue = v.replace(k === v.trim() ? v.trim() : v, map[k]);
+  const v = n.nodeValue, k = v.replace(/\s+/g, ' ').trim(), r = k ? pickLabel(k, map, id) : undefined;
+  if (r !== undefined) {
+    n.nodeValue = v.replace(k === v.trim() ? v.trim() : v, r);
+    const t = n.parentNode?.closest?.('text'); if (t) { fitQ.add(t); fitH ||= requestAnimationFrame(fitAll); }
+  }
   n.__lab = n.nodeValue;
 }
-function easyTree(root) {
-  if (root.nodeType === 3) { if (!root.parentNode?.closest?.('style,script')) easyText(root); return; }
+function fitAll() { fitH = 0; for (const t of fitQ) { try { fitPill(t); } catch {} } fitQ.clear(); }
+function fitPill(t) {
+  const g = t.parentNode;
+  if (!t.isConnected || g?.tagName !== 'g' || g.children.length > 4) return;
+  const kids = [...g.children], box = kids.find(e => e.tagName === 'rect' || e.tagName === 'ellipse');
+  if (!box) return;
+  const empty = kids.filter(e => e.tagName === 'text').every(e => !e.textContent.trim());
+  g.style.display = empty ? 'none' : '';                    // pil zonder tekst: weg
+  if (empty) return;
+  const bw = box.tagName === 'rect' ? +box.getAttribute('width') : 2 * +box.getAttribute('rx'), w = t.getComputedTextLength();
+  if (!(bw > 0) || w <= bw - 6) return;
+  const fs = parseFloat(t.getAttribute('font-size')) || 12;
+  t.setAttribute('font-size', (fs * Math.max(.55, (bw - 8) / w)).toFixed(1));
+}
+function easyTree(root, id) {
+  if (root.nodeType === 3) { if (!root.parentNode?.closest?.('style,script')) easyText(root, LMAP, id); return; }
   if (root.nodeType !== 1 || root.closest?.('style,script')) return;
   const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-  for (let n; (n = w.nextNode());) if (!n.parentNode.closest('style,script')) easyText(n);
-  if (root.dataset?.label) root.dataset.label = easyLabel(root.dataset.label);
-  root.querySelectorAll?.('[data-label]').forEach(e => { e.dataset.label = easyLabel(e.dataset.label); });
+  for (let n; (n = w.nextNode());) if (!n.parentNode.closest('style,script')) easyText(n, LMAP, id);
+  const lab = e => { const v = pickLabel(e.dataset.label.replace(/\s+/g, ' ').trim(), LMAP, id); if (v !== undefined) e.dataset.label = v; };
+  if (root.dataset?.label) lab(root);
+  root.querySelectorAll?.('[data-label]').forEach(lab);
 }
-function easyWatch(layer) {
+function easyWatch(layer, id) {
   if (!LMAP) return;
-  easyTree(layer);
-  new MutationObserver(ms => { for (const m of ms) { if (m.type === 'characterData') easyText(m.target); else m.addedNodes.forEach(easyTree); } })
+  easyTree(layer, id);
+  new MutationObserver(ms => { for (const m of ms) { if (m.type === 'characterData') easyText(m.target, LMAP, id); else m.addedNodes.forEach(n => easyTree(n, id)); } })
     .observe(layer, { subtree: true, childList: true, characterData: true });
 }
 /* hobbyist: ook de legende in het zijpaneel in eenvoudige woorden */
@@ -260,7 +282,7 @@ function build(id) {
   const layer = document.createElement('div'); layer.className = 'layer';
   const is3d = r.base.kind === '3d';
   layer.innerHTML = is3d ? r.base.html() : r.base.svg();
-  easyWatch(layer);
+  easyWatch(layer, id);
   stage.insertBefore(layer, labelsEl);
   const svg = is3d ? null : layer.querySelector('svg');
   const root = is3d ? layer : svg;
