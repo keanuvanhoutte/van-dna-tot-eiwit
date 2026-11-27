@@ -178,9 +178,14 @@ function ctdLokaal(rx, ry, ctd, stap = null, hoek = 90) {
 export const polCTD = (cx, cy, rx, ry, ctd, { dir = 1, ctdStap = null, ctdHoek = 90 } = {}) => ctdLokaal(rx, ry, ctd, ctdStap, ctdHoek).slice(1).map(([x, y]) => [cx + (dir < 0 ? -x : x), cy + y]);
 
 /* ---------- tRNA: één 2D-symbool voor de hele app ----------
- * Vereenvoudigd klaverblad, dezelfde armen als in de tRNA-scène (tl/trna.js): acceptorstam naar boven met het CCA-uiteinde
- * en het aminozuur, D-arm en TΨC-arm als zijlussen, de kleine variabele lus naast de anticodonstam, en onderaan de
- * anticodonlus met de 3 basen van het anticodon (tegels in de basekleuren, zoals overal).
+ * Vereenvoudigde L-vorm: zo is een tRNA echt gevouwen, ook los in de cel en in het ribosoom (Kim et al. 1974 Science 185:435;
+ * Robertus et al. 1974 Nature 250:546; in het ribosoom: Yusupov et al. 2001 Science 292:883). Het klaverblad is enkel de
+ * 2D-kaart van de basenparen; dat (en het vouwen tot een L) toont de tRNA-scène (tl/trna.js).
+ * Twee armen haaks op elkaar: de anticodonarm (anticodonstam + D-stam) loopt van de anticodonlus naar de elleboog, de
+ * acceptorarm (TΨC-stam + acceptorstam) van de elleboog naar het CCA-uiteinde met het aminozuur. In de elleboog raken de
+ * D-lus en de TΨC-lus elkaar. Verhouding van de armen zoals in 1EHZ (anticodonarm iets langer). Onderaan de anticodonlus
+ * met de 3 basen van het anticodon (tegels in de basekleuren, zoals overal). Het anticodon en het CCA-uiteinde liggen
+ * ~7 nm uit elkaar: in het ribosoom zit het anticodon op het codon (kleine eenheid) en het CCA-uiteinde in het PTC.
  * Richting: in de app loopt het mRNA altijd 5′→3′ van links naar rechts. Het anticodon paart antiparallel, dus staat het
  * van links naar rechts als 3′→5′ (bv. codon AUG ↔ tegels U A C = anticodon 5′-CAU-3′). Bij een plat klaverblad
  * loopt de anticodonlus van 5′ naar 3′ in dezelfde richting als de acceptorstam van 5′ naar 3′; om beide kloppend te
@@ -193,7 +198,8 @@ export const polCTD = (cx, cy, rx, ry, ctd, { dir = 1, ctdStap = null, ctdHoek =
  * mini (eenvoudig vol silhouet zonder tekst, voor kleine ribosomen), ends (3′/5′ naast het anticodon), acLabel
  * (woord achter het rechterlabel), tip ([x, y] absoluut: het CCA-uiteinde buigt daarheen, aminozuur tekent de oproeper),
  * acHi (0..1: tegels wit omrand), acTop (extra ruimte boven de tegels in de lus), tile ([b, h] als deel van nt), aaR (straal bolletje). */
-const TG = { W: 16, J: -94, ACC: -176, ACS: -16, ARM: 33, LR: 14, VAR: [12, -64, 6], TAIL: [[4, -176], [5, -195], [15, -204]], AA: [22, -222], AAR: 19 };
+const TG = { W: 16, J: -94, ACC: -176, ACS: -16, ARM: 33, LR: 14, VAR: [12, -64, 6], TAIL: [[4, -176], [5, -195], [15, -204]], AA: [22, -222], AAR: 19,
+  EL: [79, -108], ER: 15 };   // L-vorm: elleboog (x naar de kant tegenover het CCA-uiteinde) en straal van de elleboog
 export const hexMix = (a, b, t) => { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b); return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, '0')).join(''); };
 const tLocal = (x, y, s, rot, lx, ly) => { const r = rot * Math.PI / 180, c = Math.cos(r), si = Math.sin(r); return [x + s * (lx * c - ly * si), y + s * (lx * si + ly * c)]; };
 /* anticodon zoals getekend (links→rechts = 3′→5′) bij een codon 5′→3′ */
@@ -206,13 +212,17 @@ export function trnaPunt(x, y, { s = 1, rot = 0, std = false, naar = 'aa' } = {}
 export function trna2d(x, y, { s = 1, rot = 0, op = 1, col = C.trna, anticodon = null, aa = null, aaCol = null, letters = true, nt = 40, mini = false,
   ends = false, acLabel = '', std = false, tip = null, acHi = 0, acTop = 0, tile = [.8, .7], aaR = TG.AAR } = {}) {
   if (op <= .01 || !(s > 0)) return '';
-  const m = std ? 1 : -1, W = mini ? 22 : TG.W, rim = mini ? Math.max(3, 1.2 / s) : 3;
-  const tw = nt * tile[0], th = nt * tile[1], bw = nt * 1.4 + 2, b0 = TG.ACS - acTop, b1 = th + 2, brx = Math.min((b1 - b0) / 2, 22);
+  const m = std ? 1 : -1, W = mini ? Math.max(22, 11 / s) : TG.W, rim = mini ? Math.max(3, 1.6 / s) : 3;   // mini: dik genoeg om als L te lezen, ook in uitgezoomde scènes
+  // mini zonder lettertegels: compacte anticodonlus (anders leest de L als een Z); met tegels: breed genoeg voor 3 letters
+  const tw = nt * tile[0], th = nt * tile[1], bw = mini && !anticodon ? 20 : nt * 1.4 + 2, b0 = TG.ACS - acTop, b1 = th + 2, brx = Math.min((b1 - b0) / 2, 22);
   const up = (px, py) => rot ? ` transform="rotate(${f1(-rot)} ${f1(px)} ${f1(py)})"` : '';   // tekst rechtop houden
-  // skelet: anticodonstam + acceptorstam (één lijn), D- en TΨC-arm (dwars), lussen als cirkels
-  const skel = `M0,${f1(b0 + 2)} V${TG.ACC} M${f1(-TG.ARM)},${TG.J} H${f1(TG.ARM)}`;
-  const loops = [[-TG.ARM, TG.J, TG.LR], [TG.ARM, TG.J, TG.LR], [m * TG.VAR[0], TG.VAR[1], TG.VAR[2]]];
-  const shape = (fill, d) => `<path d="${skel}" stroke="${fill}" stroke-width="${f1(W + 2 * d)}" fill="none" stroke-linecap="round"/>` +
+  // L-vorm: anticodonarm (anticodonlus → elleboog) en acceptorarm (elleboog → CCA), haaks; elleboog en variabele lus als bolletjes
+  const E = [-m * TG.EL[0], TG.EL[1]], A0 = [0, b0 + 2], CC = [m * 4, TG.ACC];
+  const skel = `M${f1(A0[0])},${f1(A0[1])} L${f1(E[0])},${f1(E[1])} L${f1(CC[0])},${f1(CC[1])}`;
+  const vp = [A0[0] + (E[0] - A0[0]) * .62, A0[1] + (E[1] - A0[1]) * .62], vn = [-(E[1] - A0[1]), E[0] - A0[0]], vl = Math.hypot(...vn);
+  const vs = Math.sign(vn[0] * -m || 1);   // variabele lus aan de buitenkant van de L
+  const loops = [[E[0], E[1], Math.max(TG.ER, W * .72)], [vp[0] + vs * vn[0] / vl * (W / 2 + 3), vp[1] + vs * vn[1] / vl * (W / 2 + 3), TG.VAR[2]]];
+  const shape = (fill, d) => `<path d="${skel}" stroke="${fill}" stroke-width="${f1(W + 2 * d)}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` +
     loops.map(([cx, cy, r]) => `<circle cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(r + d)}" fill="${fill}"/>`).join('') +
     `<rect x="${f1(-bw - d)}" y="${f1(b0 - d)}" width="${f1(2 * (bw + d))}" height="${f1(b1 - b0 + 2 * d)}" rx="${f1(brx + d)}" fill="${fill}"/>`;
   let g = `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)})${rot ? ` rotate(${f1(rot)})` : ''}${s !== 1 ? ` scale(${s.toFixed(4)})` : ''}">`;
@@ -223,16 +233,20 @@ export function trna2d(x, y, { s = 1, rot = 0, op = 1, col = C.trna, anticodon =
     tail = `M${f1(m * 4)},${TG.ACC} Q${f1(m * 4 + (lx - m * 4) * .2)},${f1(TG.ACC - 40)} ${f1(lx)},${f1(ly)}`;
   } else tail = `M${f1(m * TG.TAIL[0][0])},${TG.TAIL[0][1]} Q${f1(m * TG.TAIL[1][0])},${TG.TAIL[1][1]} ${f1(m * TG.TAIL[2][0])},${TG.TAIL[2][1]}`;
   if (mini) {
-    g += `<path d="${tail}" stroke="#0b1224" stroke-width="${f1(7 + 2 * rim)}" fill="none" stroke-linecap="round"/>` + shape('#0b1224', rim) +
-      shape(col, 0) + `<path d="${tail}" stroke="${col}" stroke-width="7" fill="none" stroke-linecap="round"/>`;
+    // klein symbool: zonder CCA-haakje (op deze schaal leest L + haakje als een zigzag); de acceptorarm eindigt zelf op het doel
+    const tl = tip ? tail : '';
+    g += (tl ? `<path d="${tl}" stroke="#0b1224" stroke-width="${f1(7 + 2 * rim)}" fill="none" stroke-linecap="round"/>` : '') + shape('#0b1224', rim) +
+      shape(col, 0) + (tl ? `<path d="${tl}" stroke="${col}" stroke-width="7" fill="none" stroke-linecap="round"/>` : '');
   } else {
     const inner = hexMix(col, '#0b1224', .74);
     g += `<path d="${tail}" stroke="${col}" stroke-width="6" fill="none" stroke-linecap="round"/>` + shape(col, rim) + shape(inner, 0);
-    // basenparen in de stammen (korte streepjes dwars op elke stam): zo lees je 'gepaarde stam' en 'lus'
+    // basenparen in beide armen (korte streepjes dwars op de arm): zo lees je 'gepaarde stam' en 'lus'
     let r = '';
-    for (let yy = TG.J - 14; yy >= TG.ACC + 4; yy -= 12) r += `M${-W / 2 + 3},${yy} H${W / 2 - 3}`;
-    for (let yy = b0 - 8; yy >= TG.J + 14; yy -= 11) r += `M${-W / 2 + 3},${f1(yy)} H${W / 2 - 3}`;
-    for (const d of [-1, 1]) for (let xx = 13; xx <= TG.ARM - TG.LR + 1; xx += 8) r += `M${d * xx},${TG.J - W / 2 + 3} V${TG.J + W / 2 - 3}`;
+    const ticks = (P, Q, from, to, step) => {
+      const dx = Q[0] - P[0], dy = Q[1] - P[1], L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, h = W / 2 - 3;
+      for (let t = from; t <= L - to; t += step) { const cx = P[0] + ux * t, cy = P[1] + uy * t; r += `M${f1(cx - uy * h)},${f1(cy + ux * h)} L${f1(cx + uy * h)},${f1(cy - ux * h)}`; }
+    };
+    ticks(A0, E, 10, TG.ER + 4, 11); ticks(E, CC, TG.ER + 6, 4, 12);
     g += `<path d="${r}" stroke="${col}" stroke-opacity=".6" stroke-width="2" fill="none"/>`;
   }
   // anticodontegels
@@ -260,7 +274,7 @@ export function trna2d(x, y, { s = 1, rot = 0, op = 1, col = C.trna, anticodon =
 }
 /* tRNA tussen twee punten: anticodonpunt a en aminozuur (of, zonder aminozuur, het CCA-uiteinde) op b; s en rot volgen daaruit */
 export function trna2dSpan(a, b, o = {}) {
-  const m = o.std ? 1 : -1, P = (o.aa || o.aaCol) ? TG.AA : TG.TAIL[2];
+  const m = o.std ? 1 : -1, P = (o.aa || o.aaCol) ? TG.AA : o.mini ? [4, TG.ACC] : TG.TAIL[2];   // mini: geen haakje, dus het einde van de acceptorarm
   const lx = m * P[0], ly = P[1], dx = b[0] - a[0], dy = b[1] - a[1];
   const s = Math.hypot(dx, dy) / Math.hypot(lx, ly), rot = (Math.atan2(dy, dx) - Math.atan2(ly, lx)) * 180 / Math.PI;
   return trna2d(a[0], a[1], { ...o, s, rot });

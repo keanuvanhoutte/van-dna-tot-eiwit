@@ -17,7 +17,7 @@ const strand = (a, b, y, col, op = 1, w = 6) =>
 const gone = (a, b, y, col) => `<line x1="${f1(a)}" y1="${f1(y)}" x2="${f1(b)}" y2="${f1(y)}" stroke="${col}" stroke-width="6" stroke-dasharray="4 12" opacity=".35" stroke-linecap="round"/>`;
 /* tRNA-Lys3 = het gedeelde tRNA-symbool (bio.js, klein): het 3′-uiteinde (CCA-kant) zit op (x, y), vast aan het PBS;
  * de rest van het tRNA (met de anticodonlus) steekt schuin naar boven */
-const trna = (x, y, op = 1, d = 1) => `<g opacity="${f1(op)}">${trna2dSpan([x + 36 * d, y - 60], [x, y], { col: TRC, mini: true })}${txt(x + 36 * d, y - 76, 'tRNA-Lys3', TRC, 18)}</g>`;   /* d = 1: naar rechts, niet over de letters van het PBS-vak; d = -1 aan de rechterrand */
+const trna = (x, y, op = 1, d = 1) => `<g opacity="${f1(op)}">${trna2dSpan([x + 62 * d, y - 104], [x, y], { col: TRC, mini: true })}${txt(x + 62 * d + 30 * d, y - 128, 'tRNA-Lys3', TRC, 18)}</g>`;   /* groot genoeg om de L te herkennen */   /* d = 1: naar rechts, niet over de letters van het PBS-vak; d = -1 aan de rechterrand */
 const enz = (x, y, lab, col) => `<g transform="translate(${f1(x)} ${f1(y)})"><path d="${eiwitPad(0, 0, Math.max(34, lab.length * 6.5), 24, 23, .1)}" fill="rgba(155,123,255,.22)" stroke="${col}" stroke-width="2.5"/>${txt(0, 6, lab, col, 18)}</g>`;
 /* RT met zijn RNase H-domein: één enzym, twee lobben (het RNase H-domein zit aan het C-uiteinde van RT; Hu & Hughes 2012) */
 const rtH = (x, y, col) => `<g transform="translate(${f1(x)} ${f1(y)})"><path d="${eiwitPad(-30, 0, 40, 25, 23, .1)}" fill="rgba(155,123,255,.22)" stroke="${col}" stroke-width="2.5"/>` +
@@ -31,6 +31,7 @@ const end = (x, y, lab, col) => txt(x, y + 6, lab, col, 17);
  * dat aan de linkerkant (het 3′-OH) overloopt in het nieuwe DNA; rechts gaat het over in het tRNA (gedeeld symbool uit bio.js) */
 const trnaPBS = (yR, yD) => `<line x1="${SEG.PBS[0]}" y1="${yD}" x2="${SEG.PBS[1]}" y2="${yD}" stroke="${TRC}" stroke-width="7" stroke-linecap="round"/>` +
   Array.from({ length: 6 }, (_, i) => { const x = SEG.PBS[0] + 8 + i * 11; return `<line x1="${x}" y1="${yR + 15}" x2="${x}" y2="${yD - 4}" stroke="${TRC}" stroke-width="2" opacity=".6"/>`; }).join('');
+/* tRNA-Lys3 blijft met zijn 3′-uiteinde vast aan het 5′-uiteinde van het (−)-DNA: het aanhechtpunt (x, y) = het einde van de DNA-streng */
 const trnaHot = (x, y) => `<g data-node="trna" data-href="../atlas/index.html?id=trna" data-color="${TRC}" data-nolabel>${trna(x, y, 1, -1)}</g>`;
 
 export default {
@@ -106,7 +107,7 @@ export default {
     /* 3 — eerste strengoverdracht */
     lanes.push(`${T(3, L({ nl: '1ᵉ strengoverdracht', en: '1st strand transfer' }))}
       ${strand(SEG.PBS[0], SEG.R3[1], laneY(3), RNAC, .8, 6)}${box(...SEG.R3, laneY(3), 'R', RNAC)}
-      ${strand(SEG.U3[1], SEG.R3[1], laneY(3) + 30, DNAC, 1, 7)}${trnaHot(SEG.R3[1] + 72, laneY(3) + 30)}
+      ${strand(SEG.U3[1], SEG.R3[1], laneY(3) + 30, DNAC, 1, 7)}${trnaHot(SEG.R3[1] + 2, laneY(3) + 30)}
       <path d="M${SEG.R5[0] + 30},${laneY(3) + 46} C600,${laneY(3) + 92} 1100,${laneY(3) + 92} ${SEG.U3[1] + 20},${laneY(3) + 46}" stroke="${DNAC}" stroke-width="3" fill="none" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
       ${txt(880, laneY(3) + 112, L({ nl: 'het DNA springt naar de andere R', en: 'the DNA jumps to the other R' }), DNAC, 17)}
       ${end(SEG.PBS[0] - 24, laneY(3), P5, RNAC)}${end(SEG.U3[1] - 24, laneY(3) + 30, P3, DNAC)}`);
@@ -115,14 +116,14 @@ export default {
     lanes.push(`${T(4, L({ nl: '(−)-streng compleet', en: '(−) strand complete' }))}
       ${gone(SEG.PBS[0], SEG.PPT[0], laneY(4), RNAC)}${gone(SEG.PPT[1], SEG.R3[1], laneY(4), RNAC)}
       ${box(...SEG.PPT, laneY(4), 'PPT', '#ffb27a')}
-      ${strand(SEG.PBS[0], SEG.R3[1], laneY(4) + 30, DNAC, 1, 7)}${trnaHot(SEG.R3[1] + 72, laneY(4) + 30)}
+      ${strand(SEG.PBS[0], SEG.R3[1], laneY(4) + 30, DNAC, 1, 7)}${trnaHot(SEG.R3[1] + 2, laneY(4) + 30)}
       ${txt(760, laneY(4) + 56, L({ nl: '(−)-DNA-streng', en: '(−) DNA strand' }), DNAC, 18)}
       ${enz(SEG.PBS[0] - 70, laneY(4) + 14, 'RT', VENZ)}
       ${end(SEG.PBS[0] - 20, laneY(4) + 52, P3, DNAC)}`);
 
     /* 5 — (+)-streng vanaf de PPT */
     lanes.push(`${T(5, L({ nl: '(+)-streng start', en: '(+) strand starts' }))}
-      ${strand(SEG.PBS[0], SEG.R3[1], laneY(5) + 16, DNAC, 1, 7)}${trnaHot(SEG.R3[1] + 72, laneY(5) + 16)}
+      ${strand(SEG.PBS[0], SEG.R3[1], laneY(5) + 16, DNAC, 1, 7)}${trnaHot(SEG.R3[1] + 2, laneY(5) + 16)}
       ${box(...SEG.PPT, laneY(5) - 16, 'PPT', '#ffb27a')}
       ${strand(SEG.PPT[1], SEG.R3[1] + 60, laneY(5) - 16, DNA2, 1, 7)}
       ${txt(1170, laneY(5) - 52, L({ nl: '(+)-DNA: U3-R-U5-PBS', en: '(+) DNA: U3-R-U5-PBS' }), DNA2, 18)}

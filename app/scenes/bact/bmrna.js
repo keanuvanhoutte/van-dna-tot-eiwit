@@ -111,7 +111,8 @@ export default {
             cl += `<g opacity="${f1(e)}">` + txt(bx(11), NY - 330, T2('70S-ribosoom', '70S ribosome'), K.ribo, 34, 'middle', 800) +
               [['E', 12], ['P', 15], ['A', 18]].map(([l, i]) => `<rect x="${bx(i - 1) - 24}" y="${NY - 140}" width="${3 * NW - 4}" height="34" rx="8" fill="#0b1224" stroke="${C.muted}"/>`).join('') + '</g>';
             // letters E/P/A pas na het tRNA tekenen (zie onder), zodat de P zichtbaar blijft boven de stam
-            epa = `<g opacity="${f1(e)}">` + [['E', 12], ['P', 15], ['A', 18]].map(([l, i]) => txt(i === 15 ? bx(i) + 52 : bx(i), NY - 116, l, C.text, 22, 'middle', 800)).join('') + '</g>';
+            // de P links van de schuine anticodonarm van de L (de arm loopt op deze hoogte rechts van het midden); donkere rand = altijd leesbaar
+            epa = `<g opacity="${f1(e)}">` + [['E', 12], ['P', 15], ['A', 18]].map(([l, i]) => txt(i === 15 ? bx(i) - 30 : bx(i), NY - 116, l, C.text, 22, 'middle', 800).replace(/<text/g, '<text paint-order="stroke" stroke="#0b1224" stroke-width="5" stroke-linejoin="round"')).join('') + '</g>';
           }
           // mRNA
           cl += txt(bx(0) - 50, NY + 30, "5′", C.rna, 24, 'middle', 700) + txt(bx(SEQ.length - 1) + 50, NY + 30, "3′", C.rna, 24, 'middle', 700);

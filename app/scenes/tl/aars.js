@@ -6,7 +6,9 @@ import { C, BASE, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, f1, aa 
 import { hud, placeHud, textBox } from './_tlkit.js';
 import { eiwit, trna2d } from '../../bio.js';
 
-const SYN = [812, 432], EDIT = [1040, 292], ACD = [612, 770];      // synthese-plaats, editeerplaats (CP1), anticodonbindend domein
+/* editeerplaats: ongeveer even ver van het anticodon als de synthese-plaats en ~3 nm ernaast (in IleRS verschuift enkel het
+   CCA-uiteinde van de ene holte naar de andere; het anticodon blijft vast) */
+const SYN = [812, 432], EDIT = [930, 520], ACD = [612, 770];      // synthese-plaats, editeerplaats (CP1), anticodonbindend domein
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 const E2 = (a, b, k) => [lerp(a[0], b[0], k), lerp(a[1], b[1], k)];
 
@@ -63,12 +65,19 @@ export default {
     /* tRNA-Ile = het gedeelde symbool (bio.js trna2d), schuin in het enzym: anticodon in het anticodonbindende domein,
        acceptorstam naar de synthese-plaats; het enkelstrengige CCA-uiteinde buigt naar tip (= A76).
        Anticodon 5′-GAU-3′ (leest AUC/AUU), getekend zoals overal van links naar rechts 3′→5′: U A G. */
-    const TS = 1.7, TROT = 38;
+    /* L-vorm met echte verhoudingen: het hele tRNA (vaste grootte) wordt zo gedraaid dat de acceptorarm naar het doel wijst;
+       enkel het korte CCA-uiteinde mag nog wat buigen (bv. van de synthese-plaats naar de editeerplaats: in werkelijkheid
+       verschuift ook enkel dat uiteinde). Grootte: anticodonbindend domein → synthese-plaats, zoals in het enzym. */
+    const CCA = [-15, -204], LL = Math.hypot(...CCA);
+    const TS = Math.hypot(812 + 6 - 580, 432 + 30 - 760) / LL;
+    const placeRot = (x, y, tip) => (Math.atan2(tip[1] - y, tip[0] - x) - Math.atan2(CCA[1], CCA[0])) * 180 / Math.PI;
     let showEnds = true;   // 3′/5′ naast het anticodon alleen waar het anticodon goed in beeld is
-    function trna(ox, oy, tip, charge, op = 1, hiId = 0) {
+    function trna(ox, oy, tip, charge, op = 1, hiId = 0, bodyTip = tip) {
       if (op <= .01) return '';
       const x = 580 + ox, y = 760 + oy;
-      let s = `<g opacity="${f1(op)}">` + trna2d(x, y, { s: TS, rot: TROT, anticodon: 'UAG', nt: 34 / TS, tile: [.88, .88], tip, acHi: hiId, ends: showEnds });
+      const rot = placeRot(x, y, bodyTip), d = Math.hypot(tip[0] - x - (bodyTip[0] - tip[0]) * 0, tip[1] - y) - TS * LL;
+      const far = Math.hypot(tip[0] - bodyTip[0], tip[1] - bodyTip[1]) > 8 || Math.abs(d) > 8;
+      let s = `<g opacity="${f1(op)}">` + trna2d(x, y, { s: TS, rot, anticodon: 'UAG', nt: 34 / TS, tile: [.88, .88], tip: far ? tip : null, acHi: hiId, ends: showEnds });
       s += `<circle cx="${f1(tip[0])}" cy="${f1(tip[1])}" r="9" fill="${BASE.A}" stroke="#0a1224" stroke-width="2"/>`;
       if (charge) s += aa(tip[0] + charge.dx, tip[1] + charge.dy, charge.a, 24);
       $('rs-tA').setAttribute('cx', f1(x - 60)); $('rs-tA').setAttribute('cy', f1(y - 120));
@@ -86,12 +95,12 @@ export default {
         const dockOff = i < 2 ? [-620, 0] : i === 2 ? E2([-620, 0], [0, 0], ease(sub(p, .05, .5))) : [0, 0];
         const tipSyn = [SYN[0] + 6, SYN[1] + 30], tipOut = [520 + dockOff[0] + 250, 330 + dockOff[1] + 60];
         // enzymlabels alleen in de stap waar ze ertoe doen (vloeiend in/uit aan het begin van de stap)
-        const VIS = { syn: [0, 1, 1, 1, 0, 1, 0, 0], edit: [0, 0, 0, 0, 0, 0, 1, 0], acd: [0, 0, 1, 0, 0, 0, 0, 0], name: [1, 1, 1, 1, 1, 1, 1, 1] };
+        const VIS = { syn: [0, 1, 1, 1, 0, 1, 0, 0], edit: [0, 0, 0, 0, 0, 0, 1, 0], acd: [0, 0, 1, 0, 0, 0, 0, 0], name: [1, 1, 1, 1, 1, 1, 1, 0] };   // bij het vertrek schuift het tRNA over het enzymlabel
         const lv = k => { const a = VIS[k], c = a[i] ?? 0, pr = i > 0 ? a[i - 1] : c; return lerp(pr, c, sub(p, 0, .2)); };
         const gl = (k, sv) => lv(k) > .01 ? `<g opacity="${f1(lv(k))}">${sv}</g>` : '';
         $('rs-enz').setAttribute('opacity', i === 4 ? '1' : i === 7 ? f1(1 - .5 * sub(p, .2, .6)) : '1');
         $('rs-lab').innerHTML = gl('syn', txt(SYN[0] - 66, SYN[1] + 24, T2('synthese-plaats', 'synthetic site'), '#d6ccff', 22, 'end', 700)) +
-          gl('edit', txt(EDIT[0] + 132, EDIT[1] + 8, T2('editeerplaats (CP1)', 'editing site (CP1)'), '#ff9a9a', 22, 'start', 700)) +
+          gl('edit', txt(EDIT[0] + 78, EDIT[1] + 50, T2('editeerplaats (CP1)', 'editing site (CP1)'), '#ff9a9a', 22, 'start', 700)) +
           gl('acd', txt(ACD[0] + 110, ACD[1] + 70, T2('anticodonbindend domein', 'anticodon-binding domain'), '#d6ccff', 22, 'start', 700)) +
           gl('name', txt(1060, 640, 'IleRS', C.prot, 34, 'middle', 800));
         
@@ -156,11 +165,12 @@ export default {
         if (i === 6) {
           const sw = ease(sub(p, .08, .4)), hyd = sub(p, .45, .6), out = ease(sub(p, .6, .95));
           const tip = E2(tipSyn, [EDIT[0] - 10, EDIT[1] + 16], sw);
+          // het acceptoruiteinde zwaait naar de editeerplaats (anticodon blijft vast)
           tr = trna(0, 0, tip, hyd < .5 ? { a: 'V', dx: 30 * (1 - sw) + 16 * sw, dy: -26 * (1 - sw) - 10 * sw } : null, 1);
           if (hyd >= .5) amino += aa(lerp(EDIT[0] + 10, 1400, out), lerp(EDIT[1] - 20, 180, out), 'V', 24);
           if (hyd > 0 && hyd < 1) mol += `<circle cx="${EDIT[0]}" cy="${EDIT[1]}" r="${f1(30 + 40 * hyd)}" fill="none" stroke="#ff6b6b" stroke-width="3" opacity="${f1(1 - hyd)}"/>`;
-          mol += `<g opacity="${f1(sub(p, .4, .5) * (1 - sub(p, .6, .7)))}">${pill(EDIT[0] + 105, EDIT[1] + 34, 60, 28, 'H₂O', '#4fb0ff', 1, 15)}</g>`;
-          ov += `<g opacity="${f1(sub(p, .1, .3))}">` + textBox(1180, 470, 360, [T2('Val: past → gehydrolyseerd', 'Val: fits → hydrolysed'), T2('Ile: te groot → blijft', 'Ile: too big → stays')], { title: T2('2e zeef: editeerplaats', '2nd sieve: editing site'), col: '#ff6b6b', fs: 20 }) + '</g>';
+          mol += `<g opacity="${f1(sub(p, .4, .5) * (1 - sub(p, .6, .7)))}">${pill(EDIT[0] + 92, EDIT[1] - 6, 60, 28, 'H₂O', '#4fb0ff', 1, 15)}</g>`;
+          ov += `<g opacity="${f1(sub(p, .1, .3))}">` + textBox(1225, 380, 340, [T2('Val: past → gehydrolyseerd', 'Val: fits → hydrolysed'), T2('Ile: te groot → blijft', 'Ile: too big → stays')], { title: T2('2e zeef: editeerplaats', '2nd sieve: editing site'), col: '#ff6b6b', fs: 20 }) + '</g>';
           ov += `<g opacity="${f1(sub(p, .7, .85))}">` + txt(900, 860, T2('Resultaat: foutkans veel lager dan één zeef alleen toelaat', 'Result: error rate far lower than one sieve alone allows'), '#fff', 24, 'middle', 700) + '</g>';
         }
         if (i === 7) {
