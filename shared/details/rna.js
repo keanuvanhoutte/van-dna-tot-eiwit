@@ -39,7 +39,9 @@ export default {
       { t: 'Kumar et al. (2019) Mechanistic insights into mRNA 3′-end processing. Curr Opin Struct Biol (PMC)', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6900580/' }, { t: 'RCSB PDB 5YZG – human spliceosome C complex', url: 'https://www.rcsb.org/structure/5YZG' },
       { t: 'Chen et al. (2024) Nuclear mRNA export. Acta Biochim Biophys Sin (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC11802349/' },
       { t: 'Mills, Hepburn & Cowling (2025) RNMT-dependent RNA cap methylation in health and disease. Biochem J (PMC)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC12599247/' },
-      { t: 'West, Gromak & Proudfoot (2004) Human 5′→3′ exonuclease Xrn2 promotes transcription termination. Nature (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/15565158/' }],
+      { t: 'West, Gromak & Proudfoot (2004) Human 5′→3′ exonuclease Xrn2 promotes transcription termination. Nature (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/15565158/' },
+      { t: 'Berget, Moore & Sharp (1977) Spliced segments at the 5′ terminus of adenovirus 2 late mRNA. PNAS (PMC) — ontdekking van splicing, bij adenovirus', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC431482/' },
+      { t: 'Chow, Gelinas, Broker & Roberts (1977) An amazing sequence arrangement at the 5′ ends of adenovirus 2 messenger RNA. Cell (PubMed)', url: 'https://pubmed.ncbi.nlm.nih.gov/902310/' }],
   },
 
   capping: {

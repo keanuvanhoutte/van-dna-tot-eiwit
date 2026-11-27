@@ -418,7 +418,19 @@ function onStep(i) {
   $('railList').querySelectorAll('.rst').forEach((b, k) => { b.classList.toggle('cur', k === i); b.classList.toggle('done', k < i); });
   syncPlayBtn();
   // zwevend uitlegvenster: kort na het begin van de stap de rustigste hoek kiezen (en bij de grootte van de nieuwe tekst)
+  renderBridge(i);
   capPlace(); clearTimeout(onStep.h); onStep.h = setTimeout(() => capAuto(), 900);
+}
+/* Rode draad van het verhaal, zichtbaar in het uitlegvenster:
+ * - eerste stap van een hoofdstuk: de openingszin (`intro` in story.js, per verhaallijn) die zegt waar we in het verhaal zijn;
+ * - eindbeeld van de laatste stap: de overgangszin (`bridge`) naar het volgende hoofdstuk. */
+function renderBridge(i) {
+  const el = $('capBridge'), ci = current ? STORY_IDS.indexOf(current.id) : -1, ch = ci >= 0 ? STORY[ci] : null;
+  let h = '';
+  if (ch && i === 0 && ch.intro && !(done && current.steps.length === 1)) h = `<b>${L({ nl: 'In het verhaal', en: 'In the story' })}</b>${colourWords(esc(L(ch.intro)))}`;
+  else if (ch && done && i === current.steps.length - 1 && ci < STORY.length - 1 && ch.bridge) h = `<b>${L({ nl: 'Zo gaat het verder', en: 'What happens next' })}</b>${colourWords(esc(L(ch.bridge)))}`;
+  if (el.innerHTML === h) return;
+  el.innerHTML = h; el.hidden = !h; capPlace();
 }
 function setPlaying(v) {
   playing = v; syncPlayBtn();
@@ -459,6 +471,7 @@ function setAuto(v) {
 function hold() {
   held = true; holdT = 0; done = true; syncPlayBtn();
   if (isLast() && !endedOnce) { endedOnce = true; renderNext(); }
+  if (isLast()) renderBridge(stepInfo(t).step);
 }
 /* speel stap i vanaf tijdstip 'from' (optioneel eerst zichtbaar spoelen) tot het einde van die stap */
 function playStep(i, from = null) {
@@ -985,6 +998,10 @@ function renderRail() {
   if (key !== railKey) { railKey = key; railOpenPh = new Set([groups.findIndex(g => here >= g.from && here <= g.to)]); }
   $('railTitle').innerHTML = `${V('story')}<span>${here + 1}/${STORY.length}</span>`;   // zoals in het ontwerp: VERHAAL 11/21 (welk verhaal: kruimelpad bovenaan en tooltip)
   $('railTitle').title = L(ln.title);
+  /* waar zijn we nu in de cel? (uit story.js) — de rode draad van het verhaal, ook zichtbaar als de balk ingeklapt is */
+  const waarNu = ci >= 0 ? STORY[ci].waar : null;
+  $('railWaar').textContent = waarNu ? L(waarNu) : '';
+  $('railWaar').hidden = !waarNu;
   /* ingeklapt: streepjes */
   $('railStripes').innerHTML = groups.map(g => STORY.slice(g.from, g.to + 1).map((c, k) => {
     const i = g.from + k, cls = ['rs', k === 0 ? 'ps' : '', i === ci ? 'cur' : ci < 0 && i === lastChapter ? 'from' : i > here ? 'fut' : ''].join(' ');
@@ -1007,6 +1024,9 @@ function renderRail() {
     if (!open) return;
     for (let i = g.from; i <= g.to; i++) {
       const cls = i === ci ? 'cur' : ci < 0 && i === lastChapter ? 'from' : '';
+      // waar in de cel: als kopje boven het eerste hoofdstuk dat daar speelt (zo lees je de route door de cel af)
+      const w = STORY[i].waar, wPrev = i > 0 ? STORY[i - 1].waar : null;
+      if (w && w !== wPrev) h += `<div class="rplace">${esc(L(w))}</div>`;
       h += `<button class="rch ${cls}" style="--c:${phaseCol(g.stage)}" data-ci="${i}"${i === ci ? ' aria-current="step"' : ''}><i>${i + 1}</i>${esc(nm(i))}</button>`;
       if (i === ci) h += steps();
       if (ci < 0 && i === lastChapter) h += jumps();

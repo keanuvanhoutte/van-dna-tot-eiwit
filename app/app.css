@@ -66,6 +66,10 @@ html, body { height: 100%; overflow: hidden; }
 .rail.open #railBtn, .rail.open .rstripes { display: none; }
 .rail.open .rtitle { display: block; flex: 1; min-width: 0; font: 600 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rail.open .rtitle span { color: #5d6b8a; letter-spacing: 0; font-weight: 500; margin-left: 6px; }
+/* waar zijn we nu in de cel (rode draad van het verhaal); enkel zichtbaar als de verhaalbalk open staat */
+.rwaar { display: none; }
+.rplace { margin: 8px 8px 2px; font: 600 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #6c7c9c; }
+.rail.open .rwaar:not([hidden]) { display: block; margin: 0 10px 6px; padding: 5px 9px; border-radius: 7px; background: rgba(124,196,255,.10); border-left: 3px solid var(--accent); color: #d6e3f7; font-size: 12.5px; }
 .rail.open .rclose { display: inline-grid; width: 26px; height: 26px; border: 0; }
 .rail.open .rmap { order: 3; flex-basis: 100%; width: auto; height: 28px; padding: 0 9px; gap: 6px; display: inline-flex; justify-content: flex-start; font-size: 12.5px; margin-top: 2px; }
 .rail.open .rmap em { display: inline; }
@@ -112,6 +116,10 @@ html, body { height: 100%; overflow: hidden; }
 .caption .cmeta { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
 .caption .ct { font-weight: 600; font-size: 17px; color: var(--text); margin-top: 2px; }
 .caption .cx { font-size: 15px; color: #c3cde2; margin-top: 3px; line-height: 1.45; }
+/* rode draad: openingszin bij de eerste stap en de overgangszin aan het einde van een hoofdstuk */
+.caption .cbridge { margin: 8px auto 0; padding: 6px 12px; border-radius: 8px; background: rgba(255,209,102,.10); border-left: 3px solid #ffd166; color: #f3e6c4; font-size: 15px; line-height: 1.45; text-align: left; max-width: 720px; }
+.caption .cbridge b { color: #ffd166; font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; margin-right: 8px; }
+.caption.folded:not(.float) .cbridge { display: none; }
 .capbtn { all: unset; cursor: pointer; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 7px; font-size: 13px; color: var(--muted); }
 .capbtn:hover { background: rgba(124,196,255,.15); color: var(--text); }
 .capbtn:focus-visible { outline: 2px solid var(--accent); }
