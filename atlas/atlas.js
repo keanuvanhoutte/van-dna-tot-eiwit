@@ -84,7 +84,6 @@ const T = {
     chain: { nl: 'elke streng of keten een eigen kleur: zo zie je uit hoeveel stukken het bestaat', en: 'each strand or chain its own colour: shows how many pieces it is made of' },
     base: { nl: 'elke letter (A, T/U, G, C) een eigen kleur; de ruggengraat grijs', en: 'each letter (A, T/U, G, C) its own colour; the backbone grey' },
     elem: { nl: 'koolstof grijs, stikstof blauw, zuurstof rood, fosfor oranje', en: 'carbon grey, nitrogen blue, oxygen red, phosphorus orange' } },
-  cartoonProt: { nl: 'eiwit als lint met spiralen (helix) en pijlen (gestrekt stuk)', en: 'protein as a ribbon with spirals (helix) and arrows (stretched piece)' },
   schemaBtn: { nl: '📄 Schema', en: '📄 Diagram' }, schema3d: { nl: '🧬 Terug naar 3D', en: '🧬 Back to 3D' },
   schemaTip: { nl: 'Schema van het hele molecule (in 3D zie je een gemeten stuk ervan)', en: 'Diagram of the whole molecule (in 3D you see a measured piece of it)' },
   inSchema: { nl: 'In het schema', en: 'In the diagram' },
@@ -1317,7 +1316,7 @@ function seg(id, key) {
     box.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
     if (key === 'color') { state.colorWant = b.dataset.v; syncColor(); } else { state[key] = b.dataset.v; syncColor(); }
     SLOTS.forEach(s => { s.focus = null; });
-    showHint(); renderAll(); legend();
+    renderAll(); legend();
   };
 }
 seg('style', 'style'); seg('color', 'color'); seg('bases', 'bases');
@@ -1350,22 +1349,9 @@ function syncColor() {
   const auto = av.has('part') ? 'part' : av.has('chain') && !prot ? 'chain' : 'type';
   const eff = state.colorWant !== 'auto' && av.has(state.colorWant) ? state.colorWant : auto;
   $('color').querySelectorAll('button').forEach(b => { b.hidden = !av.has(b.dataset.v); b.setAttribute('aria-pressed', String(b.dataset.v === eff)); });
-  const changed = eff !== state.color; state.color = eff; showHint();
+  const changed = eff !== state.color; state.color = eff;
   return changed;
 }
-function showHint() {
-  const sb = $('style').querySelector(`[data-v="${state.style}"]`), cb = $('color').querySelector(`[data-v="${state.color}"]`);
-  // cartoon: eiwit wordt anders getekend dan DNA/RNA — zeg het erbij als er eiwit in beeld is
-  const shown = SLOTS.filter(s => !s.el.hidden && s.an), prot = shown.some(s => s.an.prot), na = !shown.length || shown.some(s => s.an.nts);
-  const cN = state.bases === 'rungs' || shown.every(s => s.entry.heavy) ? t('rungsTip') : L(T.hintStyle.cartoon);
-  const st = state.style === 'cartoon' ? [na ? cN : '', prot ? t('cartoonProt') : ''].filter(Boolean).join('; ') : L(T.hintStyle[state.style]);
-  // per soort: enkel de soorten die in beeld zijn, met dezelfde kleuren als de figuur (bv. histonen grijs in plaats van paars)
-  const has = ty => shown.some(s => Object.values(s.an.chainType ?? {}).includes(ty)), W = T.hintColor.typeW;
-  const ty = shown.length ? [has('dna') && L(W.dna), has('rna') && L(W.rna), has('prot') && L(shown.some(s => s.entry.histone) ? W.histone : W.prot)].filter(Boolean).join(', ') : '';
-  const ct = state.color === 'type' && ty ? ty : L(T.hintColor[state.color]);
-  $('tHint').innerHTML = `<span><b>${sb.textContent}</b> ${st}</span><span><b>${cb.textContent}</b> ${ct}</span>`;
-}
-
 /* Aangepaste bouwstenen (bv. de 14 chemisch aangepaste letters in tRNA, of selenomethionine in eiwitten) staan als HETATM in
  * het PDB-bestand. 3Dmol tekent het lint enkel voor standaardnamen, zodat het lint op elke aangepaste letter brak. Voor het
  * tekenen krijgen ze daarom de naam van hun gewone bouwsteen (de echte naam blijft in resn0) en worden ze met hun buren verbonden. */
@@ -1410,7 +1396,7 @@ function update() {
   $('cmpBtn').setAttribute('aria-pressed', state.cmp);
   $('presets').hidden = !state.cmp; $('cmpHint').hidden = !state.cmp; $('linkTog').hidden = !state.cmp;
   const only2d = state.set.every(id => !BY[id].pdb);
-  $('toolbar').hidden = only2d; $('legend').hidden = only2d; $('tHint').hidden = only2d;
+  $('toolbar').hidden = only2d; $('legend').hidden = only2d;
   const n = state.set.length;
   $('slots').className = 'slots' + (n > 1 ? ' n' + n : '');
   SLOTS.forEach((s, i) => {

@@ -400,9 +400,6 @@ button { font-family: inherit; }
 }
 
 /* ---------- uitleg bij de keuzes (weergave + kleur) ---------- */
-.thint { display: flex; flex-wrap: wrap; gap: 2px 18px; margin: -2px 2px 6px; font-size: 12px; color: var(--muted); line-height: 1.4; }
-.thint b { color: var(--text); font-weight: 600; margin-right: 4px; }
-.thint b::after { content: ":"; }
 
 /* ---------- tabel: breedte verslepen ---------- */
 .sbody { position: relative; grid-template-columns: minmax(0, 1fr) var(--tblw, 370px); }
