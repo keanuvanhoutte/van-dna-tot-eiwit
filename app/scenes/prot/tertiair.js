@@ -139,18 +139,18 @@ export default molScene({
       zoom: { chain: 'B', byres: true, within: { distance: 12, sel: { chain: 'B', resn: 'HEM' } } }, zoomFactor: 2.2, spin: .018,
       panel: () => phead(T2('Liganden stabiliseren de vouw', 'Ligands stabilise the fold')) + plines(222, [
         [T2('Heem = protoporfyrine IX + Fe²⁺', 'Haem = protoporphyrin IX + Fe²⁺'), C.text, 23, 700], '',
+        [T2('groen = helix E · blauwgroen = helix F', 'green = helix E · teal = helix F'), C.muted, 21],
         T2('• His92 (F8) bindt het Fe²⁺', '• His92 (F8) binds the Fe²⁺'), T2('• O₂ bindt aan de andere kant', '• O₂ binds on the other side'), T2('• His63 (E7) ligt aan de O₂-kant', '• His63 (E7) sits on the O₂ side')]),
     }),
     ST(8500, 'Bruggen houden de vouw vast', 'Bonds hold the fold in place', 'Plus- en mingeladen zijketens trekken elkaar aan, en andere vormen waterstofbruggen. Zo blijft de vouw vast.', 'Plus and minus charged side chains attract each other, and others form hydrogen bonds. This holds the fold.', {
       show(c) {
-        c.style(B, cartoon('#5a6585'));
-        c.style({ chain: 'B', resn: 'HEM' }, hemeStyle);
+        c.style(B, cartoon('#5a6585'));   // heem hier niet getoond (aandacht op de zoutbruggen)
         (c.data.sb ?? []).forEach(({ p, n }, i) => {
           c.style({ chain: 'B', resi: [p.resi, n.resi], not: { atom: ['N', 'C', 'O'] } }, { stick: { radius: .38, colorscheme: 'whiteCarbon' } });
           c.cyl(p, n, '#ffc247', .3, true);   // de zoutbrug zelf (N⁺ ··· O⁻)
           c.addStyle({ chain: 'B', resi: p.resi, atom: p.atom }, { sphere: { color: CLASSCOL['+'], radius: 1.05 } });
           c.addStyle({ chain: 'B', resi: n.resi, atom: n.atom }, { sphere: { color: CLASSCOL['-'], radius: 1.05 } });
-          c.label(`${p.resn[0]}${p.resn.slice(1).toLowerCase()}${p.resi}–${n.resn[0]}${n.resn.slice(1).toLowerCase()}${n.resi}`, { x: (p.x + n.x) / 2, y: (p.y + n.y) / 2, z: (p.z + n.z) / 2 }, { size: 16, border: '#ffc247', offset: 26 });
+          c.label(`${p.resn[0]}${p.resn.slice(1).toLowerCase()}${p.resi}–${n.resn[0]}${n.resn.slice(1).toLowerCase()}${n.resi}`, { x: (p.x + n.x) / 2, y: (p.y + n.y) / 2, z: (p.z + n.z) / 2 }, { size: 16, border: '#ffc247', offset: 26, dx: [-70, 70, 0, -70, 70][i % 5] });
         });
       },
       zoom: B, spin: .02,
@@ -160,9 +160,9 @@ export default molScene({
         T2('zoutbrug = ionpaar (+ en −)', 'salt bridge = ion pair (+ and −)'), T2('H-brug = gedeeld H tussen N/O', 'H-bond = shared H between N/O')]),
       panelKey: (t, s, c) => c.data.sb?.length ?? 0,
     }),
-    ST(8000, 'Zwavelbruggen? Hier niet', 'Disulfide bonds? Not here', 'Twee cysteïnes kunnen een sterke zwavelbrug maken. Hier niet: in de celvloeistof lukt dat meestal niet.', 'Two cysteines can form a strong disulfide bond. Not here: in the cell fluid that usually does not work.', {
+    ST(8000, 'Zwavelbruggen? Hier niet', 'Disulfide bonds? Not here', 'Twee cysteïnes kunnen een sterke zwavelbrug maken. Hier niet: in de celvloeistof lukt dat meestal niet.', 'Two cysteines can form a strong disulfide bond. Not here: in the cell fluid (cytosol) they usually do not form.', {
       show(c) {
-        c.style(B, cartoon('#5a6585'));
+        c.style(B, cartoon('#5a6585'));   // Cys112 ligt in de kern: het label wijst hem aan met een lijntje
         c.style({ chain: 'B', resn: 'CYS', not: { atom: ['N', 'C', 'O'] } }, { stick: { radius: .38, colorscheme: 'yellowCarbon' } });
         c.addStyle({ chain: 'B', resn: 'CYS', atom: 'SG' }, { sphere: { color: '#ffd84a', radius: 1.3 } });   // het zwavelatoom (S–H)
         for (const r of [93, 112]) { const a = c.sel({ chain: 'B', resi: r, atom: 'SG' }); if (a.length) c.label(`Cys${r} – SH`, a[0], { border: '#ffc247', size: 16, offset: 30 }); }

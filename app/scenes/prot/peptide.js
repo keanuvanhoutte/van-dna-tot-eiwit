@@ -200,6 +200,7 @@ export default {
       return { s, info };
     }
     const dial = (x, y, val, col, name, axisName) => {
+      val = ((val + 180) % 360 + 360) % 360 - 180;   // torsiehoek altijd tussen −180° en +180°
       const a = rad(val) - Math.PI / 2, r = 56;
       return `<circle cx="${x}" cy="${y}" r="${r}" fill="#0f1830" stroke="#2a3550" stroke-width="3"/>` +
         `<line x1="${x}" y1="${y}" x2="${f1(x + r * Math.cos(a))}" y2="${f1(y + r * Math.sin(a))}" stroke="${col}" stroke-width="6" stroke-linecap="round"/>` +

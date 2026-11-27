@@ -174,7 +174,7 @@ export default {
           })() : head(T2('Drie soorten lussen', 'Three kinds of loops')) +
             T(225, T2('haarspeld: korte bocht (hier 7–10)', 'hairpin: short turn (here 7–10)')) +
             T(275, T2('omega-lus: Ω-vormig en compact', 'omega loop: Ω-shaped and compact')) +
-            T(325, T2('lange lus: onregelmatig ("random coil")', 'long loop: irregular ("random coil")')) +
+            T(325, T2('lange lus: onregelmatig, maar vast', 'long loop: irregular, but fixed')) +
             T(400, T2('Ubiquitine: enkel korte lussen', 'Ubiquitin: only short loops'), C.muted, 22));
         } else if (step >= 1 && step <= 3) {
           const endOn = step === 3 ? ease(sub(p, .1, .6)) * Math.PI / 2 : 0;
@@ -195,7 +195,7 @@ export default {
             if (step === 2) {
               /* één label naast de uitgelichte (witte) brug: C=O van i ··· H–N van i+4 */
               const o = A3(cur, 'O'), h = A3(cur + 4, 'H') ?? A3(cur + 4, 'N'), mid = mul3(add3(o, h), .5);
-              lb.push({ text: { nl: `C=O ${cur} ··· H–N ${cur + 4}`, en: `C=O ${cur} ··· H–N ${cur + 4}` }, pos: radial(mid, hc, ax, 3), color: '#fff' });
+              lb.push({ text: { nl: `C=O ${cur} ··· H–N ${cur + 4}`, en: `C=O ${cur} ··· H–N ${cur + 4}` }, pos: radial(mid, hc, ax, 4.5), color: '#fff' });
             }
             spec = { key: 'h' + step + ':' + cur, ids, M, hb, cb: step === 3, labels: lb, zoom: step === 3 ? 1.35 : step === 2 ? 1.25 : 1.1, cart: step === 1 ? [[HELIX[0], HELIX[1], C.prot, false]] : null,
               cap: step === 3 && p > .5 ? { nl: 'Cβ (groen) wijst naar buiten', en: 'Cβ (green) points outwards' } : null, capColor: C.chain };
@@ -304,7 +304,7 @@ export default {
             const lb = [], B = C.trna;
             /* β1 vóór zijn begin (N-kant); β2/β5 naast het midden van de streng, weg van het blad (niet bij de haarspeld of β1) */
             const strandLab = (a, b, name, mid) => lb.push({ text: name, color: B,
-              pos: mid ? away(A3(Math.round((a + b) / 2), 'CA'), V.sheet.c, 4.5) : ahead(a, a + 1, 3.5) });
+              pos: mid ? away(A3(Math.round((a + b) / 2), 'CA'), V.sheet.c, 2.5) : add3(A3(Math.round((a + b) / 2), 'CA'), mul3(M[1], -3)) });   // β1 onder het midden van zijn streng
             if (step !== 8) {
               strandLab(1, 7, 'β1', false);
               if (step !== 7) strandLab(10, 17, 'β2', true); else strandLab(64, 72, 'β5', true);

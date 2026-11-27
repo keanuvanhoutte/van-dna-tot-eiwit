@@ -126,7 +126,7 @@ export default molScene({
           const m = { x: (p.x + n.x) / 2, y: (p.y + n.y) / 2, z: (p.z + n.z) / 2 };
           const same = q => q.p.resn + q.p.resi === p.resn + p.resi && q.q.resn + q.q.resi === n.resn + n.resi;
           const g = placed.find(q => same(q) && Math.hypot(q.x - m.x, q.y - m.y, q.z - m.z) < 10);   // dezelfde brug in de twee αβ-paren, vlak bij elkaar: één label
-          if (g) { g.n++; g.text = `${CH[g.p.chain][0][0]} ${g.p.resn[0]}${g.p.resn.slice(1).toLowerCase()}${g.p.resi} – ${CH[g.q.chain][0][0]} ${g.q.resn[0]}${g.q.resn.slice(1).toLowerCase()}${g.q.resi} (${g.n}×)`; }
+          if (g) { g.n++; g.text = `${g.text} (+ ${CH[p.chain][0]}–${CH[n.chain][0]})`; }
           else placed.push({ ...m, p, q: n, n: 1, text: `${nm(p)} – ${nm(n)}` });
           c.addStyle({ chain: p.chain, resi: p.resi, atom: p.atom }, { sphere: { color: CLASSCOL['+'], radius: .8 } });
           c.addStyle({ chain: n.chain, resi: n.resi, atom: n.atom }, { sphere: { color: CLASSCOL['-'], radius: .8 } });
@@ -146,7 +146,7 @@ export default molScene({
         c.style({ resn: 'HEM' }, { stick: { colorscheme: 'orangeCarbon', radius: .4 } });
         c.style({ resn: 'HEM', atom: 'FE' }, { sphere: { color: '#ff8a3d', radius: 1.3 } });
         c.style({ resn: 'CMO' }, { sphere: { radius: .6 } });
-        for (const k of Object.keys(CH)) { const fe = c.sel({ chain: k, resn: 'HEM', atom: 'FE' }); if (fe.length) c.label(`Fe (${CH[k][0]})`, fe[0], { size: 16, border: '#ff8a3d' }); }
+        for (const k of Object.keys(CH)) { const fe = c.sel({ chain: k, resn: 'HEM', atom: 'FE' }); if (fe.length) c.label(`${L({ nl: 'heem', en: 'haem' })} (${CH[k][0]})`, fe[0], { size: 16, border: '#ff8a3d', offset: 22 }); }
       },
       zoom: {}, spin: .02,
       panel: () => phead(T2('Structuur → functie', 'Structure → function')) + plines(222, [

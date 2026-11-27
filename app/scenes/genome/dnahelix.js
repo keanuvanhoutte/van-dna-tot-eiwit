@@ -4,13 +4,13 @@ import { loadPDB, drawPDB } from './_b_pdb.js';
 import { inset3d, withInset, warm3d } from '../../kit3d.js';
 
 /* stap 7 'het echte molecuul': 1BNA echt in 3D (3Dmol), atomen als bollen op ware grootte (van-der-Waals), in de kleuren
- * van de rest van de scène: fosfor oranje, suiker-fosfaatruggengraat per streng, basen in hun basekleur. Helixas verticaal. */
+ * van de rest van de scène (legende): fosfaatgroep oranje, suiker bruin, basen in hun basekleur. Helixas verticaal. */
 const BBAT = ['P', 'OP1', 'OP2', 'O1P', 'O2P', "O5'", "C5'", "C4'", "O4'", "C3'", "O3'", "C2'", "C1'"];
 const SPH = color => ({ sphere: { color } });
 const DNA3 = [
   ...[['DA', BASE.A], ['DT', BASE.T], ['DG', BASE.G], ['DC', BASE.C]].map(([resn, col]) => ({ sel: { resn }, style: SPH(col) })),
-  { sel: { chain: 'A', atom: BBAT }, style: SPH('#7d8db3') }, { sel: { chain: 'B', atom: BBAT }, style: SPH('#b9c3da') },   // ruggengraat grijsblauw / lichtgrijs: los van de basekleuren (C is ook blauw)
-  { sel: { atom: 'P' }, style: SPH('#ff9f43') },
+  { sel: { atom: BBAT }, style: SPH('#c9a574') },                                   // suiker (deoxyribose) bruin, zoals de legende
+  { sel: { atom: ['P', 'OP1', 'OP2', 'O1P', 'O2P'] }, style: SPH('#ff9f43') },   // fosfaatgroep oranje
 ];
 
 /* 24 bp; begint met de Dickerson-sequentie CGCGAATTCGCG (PDB 1BNA) */
@@ -71,8 +71,8 @@ export default {
     <g id="dh-hs-gr" data-node="genregulatie" data-color="${C.prot}" data-label="${T2('Grote groef: hier lezen transcriptiefactoren → genregulatie', 'Major groove: read by transcription factors → gene regulation')}"><circle id="dh-a-gr" data-anchor="genregulatie" r="30" fill="transparent"/></g>
     <g id="dh-hs-forms" data-node="dnavormen" data-color="${C.dna2}" data-label="${T2('B-vorm · ook A- en Z-DNA', 'B form · also A- and Z-DNA')}"><circle id="dh-a-forms" data-anchor="dnavormen" r="30" fill="transparent"/></g>
     <g id="dh-hs-atlas" data-node="dnavormen" data-href="../atlas/index.html?id=bdna" data-nolabel>
-      <rect x="1080" y="150" width="330" height="50" rx="25" fill="#0d1426" stroke="#7cc4ff" stroke-width="2.5"/>
-      ${txt(1245, 183, T2('B-DNA in 3D ↗', 'B-DNA in 3D ↗'), '#7cc4ff', 23)}
+      <rect x="990" y="104" width="330" height="50" rx="25" fill="#0d1426" stroke="#7cc4ff" stroke-width="2.5"/>
+      ${txt(1155, 137, T2('B-DNA in 3D ↗', 'B-DNA in 3D ↗'), '#7cc4ff', 23)}
     </g>
     <g id="dh-menu">
       ${menu(420, 150, 'nucleotide', 'Nucleotide', 'Nucleotide', '#c9a574')}
@@ -202,7 +202,7 @@ export default {
             pdb = `<g opacity="${f1(k)}">${api?.node ? '' : drawPDB(mol, vv)}
               <rect x="${CX - 390}" y="${CY + 175}" width="780" height="92" rx="14" fill="#0d1426" stroke="rgba(124,196,255,.4)"/>
               ${txt(CX, CY + 208, T2(`Gemeten in 1BNA (${m.nbp} bp): stijging ${dec(m.rise)} Å/bp · twist ${dec(m.twist)}°/bp`, `Measured in 1BNA (${m.nbp} bp): rise ${dec(m.rise)} Å/bp · twist ${dec(m.twist)}°/bp`), '#fff', 20)}
-              ${txt(CX, CY + 242, T2(`→ ${dec(360 / m.twist)} bp/winding · C1′–C1′ ${dec(m.c1c1)} Å · P–P-diameter ${dec(m.pp)} Å`, `→ ${dec(360 / m.twist)} bp/turn · C1′–C1′ ${dec(m.c1c1)} Å · P–P diameter ${dec(m.pp)} Å`), C.muted, 19)}</g>`;
+              ${txt(CX, CY + 242, T2(`→ ${dec(360 / m.twist)} bp/winding (kristal; in oplossing ≈ 10,5) · C1′–C1′ ${dec(m.c1c1)} Å · P–P-diameter ${dec(m.pp)} Å`, `→ ${dec(360 / m.twist)} bp/turn (crystal; in solution ≈ 10.5) · C1′–C1′ ${dec(m.c1c1)} Å · P–P diameter ${dec(m.pp)} Å`), C.muted, 19)}</g>`;
           } else pdb = txt(CX, CY, err ? `PDB 1BNA: ${err}` : T2('Structuur 1BNA laden uit de Protein Data Bank…', 'Loading structure 1BNA from the Protein Data Bank…'), C.muted, 22);
         }
         $('dh-pdb').innerHTML = pdb;
