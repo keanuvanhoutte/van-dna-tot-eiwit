@@ -185,7 +185,7 @@ export default {
         k = on(4.2, 4.45, 4.85, 5.0);
         if (k > .01) L += T(PORE + 110, 470, T2('importine α/β', 'importin α/β'), { size: 22, col: '#b9a6ff', op: k, anchor: 'start' }) +
           T(PORE + 90, NY + 55, T2('kernporie', 'nuclear pore'), { size: 22, col: C.prot, op: k, anchor: 'start' });
-        k = on(5.3, 5.6, 6.02, 6.2);
+        k = on(5.6, 5.75, 6.02, 6.2);   // pas tonen als beide receptoren op het DNA zitten (niet over een bewegende receptor)
         if (k > .01) L += T(1165, 680, T2('twee receptoren samen', 'two receptors together'), { size: 24, col: C.prot, op: k, anchor: 'start' }) +
           T(1165, 704, T2('(GR-dimeer)', '(GR dimer)'), { size: 17, col: C.muted, op: k, anchor: 'start' }) +
           T(1000, DY + 92, T2('vaste plek in het DNA', 'specific spot in the DNA'), { size: 24, col: '#cfe0ff', op: k }) +
