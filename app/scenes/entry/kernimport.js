@@ -156,6 +156,18 @@ export default {
             cg += R(impGlyph(x + 100 * k, y - 30 * k, sc, 1), x + 100 * k, y - 30 * k);
             cg += `<circle cx="${f1(x + 100 * k + 40)}" cy="${f1(y - 30 * k - 70 * sc)}" r="15" fill="#5fd3e6" opacity="${f1(k)}"/>${txt(x + 100 * k + 40, y - 30 * k - 70 * sc + 5, 'Ran', '#062', 14)}`;
           } else cg += R(cargoGlyph(x, y, sc, imp), x, y);
+          if (step === 3) {
+            /* in gewone taal benoemen wat elk stuk is; afkorting klein eronder */
+            const kn = ease(sub(p, .05, .25)), ki = imp;
+            cg += `<g opacity="${f1(kn)}">${txt(x + 10, y + 82, T2('adreslabel', 'address label'), '#7fdc6a', 22)}${txt(x + 10, y + 102, '(NLS)', C.muted, 16)}
+              <line x1="${f1(x + 10)}" y1="${f1(y + 62)}" x2="${f1(x + 10)}" y2="${f1(y + 15)}" stroke="#7fdc6a" stroke-width="2"/></g>`;
+            cg += `<g opacity="${f1(ki)}">${txt(x - 60, y - 96, T2('transporteiwit', 'transport protein'), C.prot2, 22)}${txt(x - 60, y - 76, T2('(importine α/β)', '(importin α/β)'), C.muted, 16)}
+              <line x1="${f1(x - 60)}" y1="${f1(y - 70)}" x2="${f1(x - 60)}" y2="${f1(y - 44)}" stroke="${C.prot2}" stroke-width="2"/></g>`;
+          }
+          if (step === 5 && p > .55) {
+            const k = ease(sub(p, .6, .9));
+            cg += `<g opacity="${f1(k)}">${txt(x - 160, y + 85, T2('vracht los', 'cargo released'), C.text, 22, 'end')}</g>`;
+          }
         }
         $('ki-cargo').innerHTML = cg;
 
@@ -167,14 +179,15 @@ export default {
           for (let i = 0; i < 14; i++) {
             const x = 180 + ((i * 137) % 1280), y = 620 + ((i * 83) % 230);
             if (Math.abs(x - 1000) < 210 && Math.abs(y - 792) < 34) continue;   // vrije plek voor het label
-            ran += `<circle cx="${x}" cy="${y}" r="13" fill="#5fd3e6" opacity=".85"/>${txt(x, y + 5, 'Ran', '#062', 11)}`;
+            ran += `<circle cx="${x}" cy="${y}" r="13" fill="#5fd3e6" opacity=".9"/>${txt(x, y + 5, 'Ran', '#062', 11)}`;
           }
-          ran += `${txt(1000, 798, T2('RCC1 op chromatine → Ran·GTP (hoog)', 'RCC1 on chromatin → Ran·GTP (high)'), '#5fd3e6', 20)}`;
+          /* in de kern: Ran 'aan' (helder cyaan, Ran·GTP); buiten: Ran 'uit' (dof grijs, Ran·GDP) */
+          ran += `${txt(1000, 798, T2('Ran aan (in de kern)', 'Ran on (in the nucleus)'), '#5fd3e6', 24)}${txt(1000, 822, 'Ran·GTP', C.muted, 17)}`;
           for (let i = 0; i < 4; i++) {
-            const x = 380 + i * 300, y = 420;
-            ran += `<circle cx="${x}" cy="${y}" r="11" fill="#5fd3e6" opacity=".3"/>`;
+            const x = 380 + i * 300, y = 430;
+            ran += `<circle cx="${x}" cy="${y}" r="13" fill="#4a5470" stroke="#8a93aa" stroke-width="2"/>${txt(x, y + 5, 'Ran', '#c3cad8', 11)}`;
           }
-          ran += `${txt(520, 385, T2('RanGAP → Ran·GDP (laag)', 'RanGAP → Ran·GDP (low)'), '#5fd3e6', 20, 'middle', 600)}</g>`;
+          ran += `${txt(1130, 372, T2('Ran uit (buiten de kern)', 'Ran off (outside the nucleus)'), '#a7b0c4', 24)}${txt(1130, 396, 'Ran·GDP', C.muted, 17)}</g>`;
         }
         $('ki-ran').innerHTML = ran;
 
@@ -212,14 +225,15 @@ export default {
         }
         if (step === 2) {
           const k = ease(sub(p, .15, .5));
-          no += `<g opacity="${f1(k)}">${txt(PX - 220, PY - 130, T2('FG-herhalingen', 'FG repeats'), '#b9a6ff', 20)}
-            ${txt(PX + 230, PY + 80, T2('passief: < ~40 kDa', 'passive: < ~40 kDa'), '#7fdc6a', 18)}
-            ${txt(PX + 230, PY + 104, '(~5 nm)', '#7fdc6a', 16)}
-            ${txt(PX + 230, PY + 140, T2('groter: carrier nodig', 'larger: needs a carrier'), '#ff9d5c', 18)}
+          const bob = Math.sin(tt * 3) * 6;   // groot molecuul botst boven op de zeef en raakt er niet door
+          no += `<g opacity="${f1(k)}">${txt(PX - 225, PY - 150, T2('eiwitslierten = zeef', 'protein strands = sieve'), '#b9a6ff', 22)}
+            ${txt(PX - 225, PY - 128, T2('(FG-herhalingen)', '(FG repeats)'), C.muted, 16)}
+            <circle cx="${PX + 230}" cy="${f1(PY - 140 + bob)}" r="30" fill="#ff9d5c" fill-opacity=".85" stroke="#ff9d5c" stroke-width="2"/>
+            ${txt(PX + 230, PY - 82, T2('groot:', 'large:'), '#ff9d5c', 21)}${txt(PX + 230, PY - 58, T2('heeft hulp nodig', 'needs help'), '#ff9d5c', 21)}
+            ${txt(PX + 245, PY + 90, T2('klein:', 'small:'), '#7fdc6a', 21)}${txt(PX + 245, PY + 114, T2('glipt erdoor', 'slips through'), '#7fdc6a', 21)}
             <circle cx="${f1(PX + Math.sin(tt * 2) * 34)}" cy="${f1(PY - 40 + ((tt * 90) % 160))}" r="9" fill="#7fdc6a"/></g>`;
         }
-        if (step === 3) no += `<g opacity="${f1(ease(sub(p, .4, .8)))}">${txt(640, 240, T2('NLS = basische aminozuren (bv. PKKKRKV)', 'NLS = basic amino acids (e.g. PKKKRKV)'), '#7fdc6a', 19)}</g>`;
-        if (step === 6) no += `<g opacity="${f1(ease(sub(p, .3, .7)))}">${txt(PX + 340, 300, 'Nup214', C.prot, 24)}
+            if (step === 6) no += `<g opacity="${f1(ease(sub(p, .3, .7)))}">${txt(PX + 340, 300, 'Nup214', C.prot, 24)}
           <line x1="${PX + 290}" y1="306" x2="${PX + 120}" y2="372" stroke="${C.prot}" stroke-width="2"/>
           ${txt(PX - 330, 250, T2('capside ≈ 90 nm', 'capsid ≈ 90 nm'), C.muted, 21)}${txt(PX - 330, 280, T2('kanaal ~40 nm', 'channel ~40 nm'), C.muted, 21)}</g>`;
         if (step === 6 || step === 7 || step === 8) {
