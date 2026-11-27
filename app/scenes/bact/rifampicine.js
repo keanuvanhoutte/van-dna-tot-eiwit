@@ -19,8 +19,9 @@ const base = [
   { sel: { chain: 'E', hetflag: false }, style: { cartoon: { color: COL.w, opacity: .9 } } }, { sel: { chain: 'F', hetflag: false }, style: { cartoon: { color: COL.s, opacity: .9 } } },
   { sel: { resn: 'RFP' }, style: { stick: { color: COL.rif, radius: .35 }, sphere: { color: COL.rif, radius: .7 } } },
 ];
-const RIF = (label) => ({ sel: { resn: 'RFP' }, style: { stick: { color: COL.rif, radius: .4 }, sphere: { color: COL.rif, radius: .9 } }, label });
-const MG = (label) => ({ sel: { resn: 'MG' }, style: { sphere: { color: COL.mg, radius: 1.6 } }, label });
+const RIF = (label, r = .9, labelOff) => ({ sel: { resn: 'RFP' }, style: { stick: { color: COL.rif, radius: .45 }, sphere: { color: COL.rif, radius: r } }, label, labelColor: COL.rif, labelOff });
+const MG = (label, r = 1.6, labelOff) => ({ sel: { resn: 'MG' }, style: { sphere: { color: COL.mg, radius: r } }, label, labelColor: COL.mg, labelOff });
+const RES = (resi, label, labelOff) => ({ sel: { chain: 'C', resi, atom: 'CA' }, style: { sphere: { color: COL.mut, radius: 2.2 } }, label, labelColor: COL.mut, labelOff, node: 'resistentie' });
 
 export default structure3d({
   id: 'rifampicine', pdb: '5UAC',
@@ -38,22 +39,21 @@ export default structure3d({
   base,
   hide: { resn: ['HOH', 'WAT', 'ZN'] },
   steps: [
-    { dur: 8000, title: L3('Een antibioticum in het RNA-polymerase', 'An antibiotic inside RNA polymerase'), focus: null, zoom: {}, tags: [TAG({ chain: ['A', 'B', 'C', 'D', 'E', 'F'], hetflag: false }, 'RNA-polymerase', 'RNA polymerase'), TAG({ resn: 'RFP' }, 'antibioticum (rifampicine)', 'antibiotic (rifampicin)')], tags: [TAG({ chain: ['A', 'B', 'C', 'D', 'E', 'F'], hetflag: false }, 'RNA-polymerase', 'RNA polymerase'), TAG({ resn: 'RFP' }, 'antibioticum (rifampicine)', 'antibiotic (rifampicin)')], spin: .012,
+    { dur: 8000, title: L3('Een antibioticum in het RNA-polymerase', 'An antibiotic inside RNA polymerase'), focus: null, zoom: {}, tags: [TAG({ chain: ['A', 'B', 'C', 'D', 'E', 'F'], hetflag: false }, 'RNA-polymerase', 'RNA polymerase'), TAG({ resn: 'RFP' }, 'antibioticum (rifampicine)', 'antibiotic (rifampicin)')], spin: .012,
       text: L3('Dit is het RNA-polymerase van E. coli, met het antibioticum rifampicine erin (rood).', 'This is the RNA polymerase of E. coli, with the antibiotic rifampicin inside (red).') },
     { dur: 8500, title: L3('Het zit in de β-eenheid', 'It sits in the β subunit'), zoom: { chain: 'C' }, spin: .01,
       focus: [{ sel: { chain: 'C', hetflag: false }, style: { cartoon: { color: COL.b } }, label: 'β' }, RIF(L3('rifampicine', 'rifampicin'))],
       text: L3('Rifampicine zit in een holte van β, diep in het kanaal waar het DNA en het nieuwe RNA lopen.', 'Rifampicin sits in a pocket of β, deep in the channel where the DNA and the new RNA run.') },
     { dur: 9000, title: L3('Niet op de plek waar RNA gemaakt wordt', 'Not where RNA is made'), zoom: { resn: ['RFP', 'MG'] }, spin: .006,
-      focus: [{ sel: { chain: ['C', 'D'], hetflag: false }, style: { cartoon: { color: '#5d6a88', opacity: .55 } } }, RIF(L3('rifampicine', 'rifampicin')), MG(L3('actieve plek', 'active site'))],
+      focus: [{ sel: { chain: ['C', 'D'], hetflag: false }, style: { cartoon: { color: '#5d6a88', opacity: .55 } } }, RIF(L3('rifampicine', 'rifampicin'), 1.5, [-120, 60]), MG(L3('actieve plek (Mg²⁺)', 'active site (Mg²⁺)'), 3.2, [140, -10])],
       text: L3('De actieve plek, waar letters aan het RNA worden gekoppeld, ligt ruim 1 nanometer verder.', 'The active site, where letters are added to the RNA, lies more than 1 nanometre away.') },
     { dur: 9000, title: L3('Het nieuwe RNA botst ertegen', 'The new RNA bumps into it'), zoom: { resn: ['RFP', 'MG'] }, spin: .006,
-      focus: [{ sel: { chain: ['C', 'D'], hetflag: false }, style: { cartoon: { color: '#5d6a88', opacity: .55 } } }, RIF(L3('rifampicine', 'rifampicin')), MG(L3('hier groeit het RNA', 'RNA grows here'))],
+      focus: [{ sel: { chain: ['C', 'D'], hetflag: false }, style: { cartoon: { color: '#5d6a88', opacity: .55 } } }, RIF(L3('rifampicine', 'rifampicin'), 1.5, [-120, 60]), MG(L3('hier zou het RNA groeien (niet in deze structuur)', 'RNA would grow here (not in this structure)'), 3.2, [240, 20])],
       text: L3('Is het nieuwe RNA 2 à 3 letters lang, dan stoot het op rifampicine. Verder groeien lukt niet.', 'Once the new RNA is 2 to 3 letters long, it runs into rifampicin. It cannot grow any further.') },
     { dur: 9000, title: L3('Eén bouwsteen anders: resistent', 'One building block changed: resistant'), zoom: { chain: 'C', resi: POCKET }, spin: .006,
       focus: [{ sel: { chain: 'C', hetflag: false }, style: { cartoon: { color: COL.b, opacity: .6 } } }, RIF(),
-        { sel: { chain: 'C', resi: MUT }, style: { stick: { color: COL.mut, radius: .35 } } },
-        { sel: { chain: 'C', resi: 531, atom: 'CA' }, style: { stick: { color: COL.mut, radius: .35 } }, label: 'S531', node: 'resistentie' }, { sel: { chain: 'C', resi: 526, atom: 'CA' }, style: { stick: { color: COL.mut, radius: .35 } }, label: 'H526', node: 'resistentie' },
-        { sel: { chain: 'C', resi: 516, atom: 'CA' }, style: { stick: { color: COL.mut, radius: .35 } }, label: 'D516', node: 'resistentie' }],
+        { sel: { chain: 'C', resi: MUT }, style: { stick: { color: COL.mut, radius: .4 } } },
+        RES(531, 'S531', [130, 50]), RES(526, 'H526', [-130, 50]), RES(516, 'D516', [-60, -100])],
       text: L3('Bij resistente bacteriën is vaak één van deze drie bouwstenen veranderd. Dan past rifampicine slecht of niet.', 'In resistant bacteria one of these three building blocks has often changed. Then rifampicin fits poorly or not at all.') },
     { dur: 8500, title: L3('Waarom ons enzym niet geraakt wordt', 'Why our enzyme is not hit'), focus: null, zoom: {}, spin: .012,
       text: L3('Deze holte is bij bacteriën sterk bewaard, maar bij ons RNA-polymerase is ze anders gebouwd.', 'This pocket is well conserved in bacteria, but in our RNA polymerase it is built differently.') },
