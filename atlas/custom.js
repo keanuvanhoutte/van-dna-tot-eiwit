@@ -4,7 +4,9 @@
  *  - fetchCoords(code, big): .pdb-bestand; bestaat dat niet (zeer grote structuren) of is de structuur groot → .cif.gz, in de browser uitgepakt
  *  - customEntry(code, meta): maakt een atlas-item met automatisch opgebouwde, eenvoudige tekst en feiten (NL/EN)
  */
+import { rank } from '../shared/level.js';
 import { fetchText } from './fetchprog.js';
+const HI = rank >= 3;   // hoger onderwijs: vaktaal
 export const CODE_RE = /^[0-9][A-Z0-9]{3}$/;
 
 const GQL = 'https://data.rcsb.org/graphql';
@@ -85,7 +87,7 @@ export function customEntry(code, m) {
   const orgs = l => [...new Set(ents.map(e => e.org?.[l]).filter(Boolean))];
   const year = (m.rcsb_accession_info?.initial_release_date ?? '').slice(0, 4);
   const MAXM = 6;
-  const molRow = l => ents.slice(0, ents.length > MAXM + 1 ? MAXM : MAXM + 1).map(e => `${seqLike(e.desc) ? ({ dna: 'DNA', rna: 'RNA', hybrid: 'DNA/RNA' }[e.kind] ?? sentence(e.desc)) : cut(molName(e.desc), 48)} <span class="ref">${{ prot: { nl: 'eiwit', en: 'protein' }, dna: { nl: 'DNA', en: 'DNA' }, rna: { nl: 'RNA', en: 'RNA' }, hybrid: { nl: 'DNA/RNA', en: 'DNA/RNA' }, other: { nl: 'ander', en: 'other' } }[e.kind][l]}${e.chains.length > 1 ? ` × ${e.chains.length}` : ''}${e.len ? ` · ${e.len} ${e.kind === 'prot' ? (l === 'nl' ? 'aminozuren' : 'amino acids') : (l === 'nl' ? 'letters' : 'letters')}` : ''}</span>`).join('<br>')
+  const molRow = l => ents.slice(0, ents.length > MAXM + 1 ? MAXM : MAXM + 1).map(e => `${seqLike(e.desc) ? ({ dna: 'DNA', rna: 'RNA', hybrid: 'DNA/RNA' }[e.kind] ?? sentence(e.desc)) : cut(molName(e.desc), 48)} <span class="ref">${{ prot: { nl: 'eiwit', en: 'protein' }, dna: { nl: 'DNA', en: 'DNA' }, rna: { nl: 'RNA', en: 'RNA' }, hybrid: { nl: 'DNA/RNA', en: 'DNA/RNA' }, other: { nl: 'ander', en: 'other' } }[e.kind][l]}${e.chains.length > 1 ? ` × ${e.chains.length}` : ''}${e.len ? ` · ${e.len} ${e.kind === 'prot' ? (HI ? (l === 'nl' ? 'residuen' : 'residues') : (l === 'nl' ? 'aminozuren' : 'amino acids')) : (HI ? (l === 'nl' ? 'nucleotiden' : 'nucleotides') : 'letters')}` : ''}</span>`).join('<br>')
     + (ents.length > MAXM + 1 ? `<br><span class="ref">${l === 'nl' ? `+ ${ents.length - MAXM} andere soorten moleculen` : `+ ${ents.length - MAXM} other kinds of molecules`}</span>` : '')
     + (l === 'nl' && ents.some(e => !seqLike(e.desc)) ? `<br><span class="ref">(namen in het Engels, zoals in de databank)</span>` : '');
   const facts = [
@@ -94,7 +96,8 @@ export function customEntry(code, m) {
   ];
   if (smalls.length) facts.push([both('Kleine moleculen', 'Small molecules'), both(smalls.slice(0, 6).map(c => sentence(c.name)).join(', ') + (smalls.length > 6 ? ' …' : ''), smalls.slice(0, 6).map(c => sentence(c.name)).join(', ') + (smalls.length > 6 ? ' …' : ''))]);
   if (orgs('nl').length) facts.push([both('Afkomstig van', 'Comes from'), both(orgs('nl').slice(0, 4).join(', '), orgs('en').slice(0, 4).join(', '))]);
-  if (info.molecular_weight) facts.push([both('Gewicht', 'Weight'), both(`${Math.round(info.molecular_weight)} kDa <span class="ref">ter vergelijking: water = 0,018 kDa</span>`, `${Math.round(info.molecular_weight)} kDa <span class="ref">for comparison: water = 0.018 kDa</span>`)]);
+  if (info.molecular_weight) facts.push(HI ? [both('Molecuulmassa', 'Molecular mass'), both(`${Math.round(info.molecular_weight)} kDa`, `${Math.round(info.molecular_weight)} kDa`)]
+    : [both('Gewicht', 'Weight'), both(`${Math.round(info.molecular_weight)} kDa <span class="ref">ter vergelijking: water = 0,018 kDa</span>`, `${Math.round(info.molecular_weight)} kDa <span class="ref">for comparison: water = 0.018 kDa</span>`)]);
   if (m.struct_keywords?.pdbx_keywords) facts.push([both('Trefwoord in de PDB', 'PDB keyword'), both(`${sentence(m.struct_keywords.pdbx_keywords)} <span class="ref">(Engels)</span>`, sentence(m.struct_keywords.pdbx_keywords))]);
   if (year) facts.push([both('Gepubliceerd', 'Released'), both(year, year)]);
   return {
@@ -102,10 +105,14 @@ export function customEntry(code, m) {
     type: kinds.filter(k => k !== 'other'), cls: [], ctx: [], scenes: [], src: [], facts,
     name: both(cut(title, 70) || code, cut(title, 70) || code), sub: both(`zelf opgezocht · ${join(partsL('nl'), 'nl')}`, `looked up yourself · ${join(partsL('en'), 'en')}`),
     what: both('', ''), feat: both([], []), cell: both('', ''),
-    kort: both(
+    kort: HI ? both(
+      `Zelf opgehaalde PDB-entry. Het model bevat ${join(partsL('nl'), 'nl') || 'één molecule'}${smalls.length ? `, met ${smalls.length} ${smalls.length === 1 ? 'soort ligand' : 'soorten liganden'}` : ''}. Geen gecureerde annotatie: de feitentabel is automatisch opgebouwd uit de RCSB-metadata.`,
+      `Self-retrieved PDB entry. The model contains ${join(partsL('en'), 'en') || 'one molecule'}${smalls.length ? `, with ${smalls.length} ligand type${smalls.length === 1 ? '' : 's'}` : ''}. No curated annotation: the facts table is built automatically from the RCSB metadata.`) : both(
       `Deze structuur heb je zelf opgezocht in de PDB, de wereldwijde databank van 3D-modellen van moleculen. Het model bevat ${join(partsL('nl'), 'nl') || 'één molecule'}${smalls.length ? `, met ${smalls.length} ${smalls.length === 1 ? 'klein molecule' : 'kleine moleculen'}` : ''}. Voor zelf opgezochte structuren is er geen uitleg op maat: de tabel naast de figuur is automatisch opgebouwd.`,
       `You looked up this structure yourself in the PDB, the worldwide database of 3D models of molecules. The model contains ${join(partsL('en'), 'en') || 'one molecule'}${smalls.length ? `, with ${smalls.length} small molecule${smalls.length === 1 ? '' : 's'}` : ''}. There is no tailored explanation for structures you look up yourself: the table next to the figure is built automatically.`),
-    look: both(
+    look: HI ? both(
+      `${count.prot > 1 ? 'Kleur → Per streng: elke keten (chain-ID) een eigen kleur, zo zie je de subeenheden. ' : ''}${count.dna || count.rna ? 'Tonen: DNA/RNA verbergen. ' : ''}${smalls.length ? 'Liganden: koolstofatomen groen. ' : ''}Klik op een atoom voor residu, keten en element.${models > 1 ? ' NMR-ensemble: enkel model 1 wordt getoond.' : ''}`,
+      `${count.prot > 1 ? 'Colour → By strand: each chain (chain ID) its own colour, showing the subunits. ' : ''}${count.dna || count.rna ? 'Show: hide DNA/RNA. ' : ''}${smalls.length ? 'Ligands: carbon atoms green. ' : ''}Click an atom for residue, chain and element.${models > 1 ? ' NMR ensemble: only model 1 is shown.' : ''}`) : both(
       `${count.prot > 1 ? 'Met Kleur → Per streng krijgt elke keten een eigen kleur: zo zie je uit hoeveel delen het eiwit bestaat. ' : ''}${count.dna || count.rna ? 'Via Tonen kan je het DNA/RNA verbergen. ' : ''}${smalls.length ? 'Kleine moleculen hebben groene koolstofatomen. ' : ''}Draai de figuur met de muis, zoom met het scrolwiel en klik op een atoom om te zien wat het is.${models > 1 ? ' Dit is een NMR-structuur: je ziet enkel het eerste model.' : ''}`,
       `${count.prot > 1 ? 'With Colour → By strand every chain gets its own colour: so you see how many parts the protein has. ' : ''}${count.dna || count.rna ? 'Use Show to hide the DNA/RNA. ' : ''}${smalls.length ? 'Small molecules have green carbon atoms. ' : ''}Rotate the figure with the mouse, zoom with the scroll wheel and click an atom to see what it is.${models > 1 ? ' This is an NMR structure: only the first model is shown.' : ''}`),
     atoms, ligNames: Object.fromEntries(smalls.map(c => [c.id, sentence(c.name)])),

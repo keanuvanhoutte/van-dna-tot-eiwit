@@ -14,6 +14,7 @@ import { ENTRIES, FILTERS, PRESETS } from './entries.js';
 import { preparePdb, analyse, orient, parentBase, LIGNAME, IONLABEL } from './analyse.js';
 import { DIAGRAMS, diagramLegend } from './diagrams.js';
 import { SIMPLE, EXTRA_GLOSS } from './simple.js';
+import { PRO } from './pro.js';
 import { GLOSSARY } from '../shared/glossary.js';
 import { colourWords } from '../shared/colourwords.js';
 import { CODE_RE, fetchMeta, fetchCoords, coordUrl, customEntry, searchPDB } from './custom.js';
@@ -240,7 +241,22 @@ const T = {
   inShort: { nl: 'In het kort', en: 'In short' }, look: { nl: 'Wat zie je in de figuur?', en: 'What do you see in the figure?' },
   why: { nl: 'Waarom is dit belangrijk?', en: 'Why does it matter?' }, more: { nl: 'Verdieping', en: 'In depth' },
 };
-const t = k => { const v = T[k]; return typeof v === 'function' ? v : L(v); };
+/* hoger onderwijs: vaktermen in de tabellen en labels */
+const T_HI = {
+  secRoles: { nl: 'Ketens en subeenheden', en: 'Chains and subunits' }, ligRole: { nl: 'gebonden ligand (koolstof groen)', en: 'bound ligand (carbon green)' },
+  rolesTip: { nl: 'Tip: Kleur → Per streng kleurt elke keten apart.', en: 'Tip: Colour → By strand colours each chain separately.' },
+  eSS: { nl: 'Secundaire structuur', en: 'Secondary structure' }, eHelix: { nl: 'helix', en: 'helix' }, eSheet: { nl: 'β-streng', en: 'β-strand' },
+  normal: { nl: 'B-DNA', en: 'B-DNA' }, eBuild: { nl: 'Samenstelling', en: 'Composition' }, eLetters: { nl: 'nucleotiden', en: 'nucleotides' }, eAA: { nl: 'residuen', en: 'residues' },
+  eHand: { nl: 'Handigheid van de helix', en: 'Helix handedness' }, eRight: { nl: 'rechtshandig ↻', en: 'right-handed ↻' }, eLeft: { nl: 'linkshandig ↺', en: 'left-handed ↺' },
+  eBpTurn: { nl: 'Basenparen per winding', en: 'Base pairs per turn' }, eRise: { nl: 'Stijging per basenpaar (rise)', en: 'Rise per base pair' },
+  eWidth: { nl: 'Helixdiameter<br><small>buitendiameter, atoom tot atoom</small>', en: 'Helix diameter<br><small>outer diameter, atom to atom</small>' },
+  eNbp: { nl: 'Basenparen in het model', en: 'Base pairs in the model' }, eQuart: { nl: 'G-kwartetten', en: 'G-quartets' }, eCC: { nl: 'C·C⁺-paren', en: 'C·C⁺ pairs' },
+  eLig: { nl: 'Ligand', en: 'Ligand' }, eMods: { nl: 'Gemodificeerde residuen', en: 'Modified residues' },
+  eMethod: { nl: 'Methode', en: 'Method' }, eSharp: { nl: 'Resolutie', en: 'Resolution' }, eSharpHint: { nl: 'kleiner = hogere resolutie', en: 'smaller = higher resolution' },
+  rVery: { nl: 'zeer hoog', en: 'very high' }, rSharp: { nl: 'hoog', en: 'high' }, rGood: { nl: 'gemiddeld', en: 'medium' }, rRough: { nl: 'laag', en: 'low' },
+  mXray: { nl: 'röntgenkristallografie', en: 'X-ray crystallography' }, mNmr: { nl: 'NMR-spectroscopie (in oplossing)', en: 'NMR spectroscopy (in solution)' }, mEm: { nl: 'elektronenmicroscopie', en: 'electron microscopy' },
+};
+const t = k => { const v = (HI && T_HI[k]) || T[k]; return typeof v === 'function' ? v : L(v); };
 
 /* ---------- kleuren ---------- */
 const CSS = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -699,7 +715,7 @@ function methodText(m) {
 }
 const sharp = r => r <= 1.5 ? t('rVery') : r <= 2.5 ? t('rSharp') : r <= 3.5 ? t('rGood') : t('rRough');
 function factsTable(e) {
-  const f = SIMPLE[e.id]?.facts ?? e.facts; if (!f?.length) return '';
+  const f = (HI && PRO[e.id]?.facts) || SIMPLE[e.id]?.facts || e.facts; if (!f?.length) return '';
   return `<table class="calc easy facts"><tr class="sec"><td colspan="2">${t('secFacts')}</td></tr>${f.map(([k, v]) => `<tr><td>${L(k)}</td><td>${L(v)}</td></tr>`).join('')}</table>`;
 }
 function measuredTable(e, an, method, res) {
@@ -999,13 +1015,38 @@ const AAWHAT = {
   LYS: { nl: 'positief geladen: trekt het negatief geladen DNA aan', en: 'positively charged: attracts the negatively charged DNA' }, ARG: { nl: 'positief geladen: trekt het negatief geladen DNA aan', en: 'positively charged: attracts the negatively charged DNA' },
   HIS: { nl: 'kan een lading opnemen en afgeven; vaak in het werkende deel van enzymen', en: 'can take up and release a charge; often in the working part of enzymes' },
 };
+const CLASS_HI = { hyd: { nl: 'apolair, alifatisch (hydrofoob)', en: 'nonpolar, aliphatic (hydrophobic)' }, aro: { nl: 'aromatisch', en: 'aromatic' },
+  pol: { nl: 'polair, ongeladen', en: 'polar, uncharged' }, neg: { nl: 'zuur (negatief geladen)', en: 'acidic (negatively charged)' }, pos: { nl: 'basisch', en: 'basic' },
+  sul: { nl: 'zwavelhoudend', en: 'sulphur-containing' }, spe: { nl: 'bijzonder (Gly, Pro)', en: 'special (Gly, Pro)' } };
+const AAWHAT_HI = {
+  ALA: { nl: 'apolair; methylzijketen', en: 'nonpolar; methyl side chain' },
+  VAL: { nl: 'apolair, vertakt alifatisch; meestal in de hydrofobe kern', en: 'nonpolar, branched aliphatic; usually in the hydrophobic core' },
+  LEU: { nl: 'apolair, vertakt alifatisch; meestal in de hydrofobe kern', en: 'nonpolar, branched aliphatic; usually in the hydrophobic core' },
+  ILE: { nl: 'apolair, vertakt alifatisch; meestal in de hydrofobe kern', en: 'nonpolar, branched aliphatic; usually in the hydrophobic core' },
+  PHE: { nl: 'apolair, aromatisch (benzylgroep)', en: 'nonpolar, aromatic (benzyl group)' },
+  TRP: { nl: 'aromatisch (indolring); grootste zijketen', en: 'aromatic (indole ring); largest side chain' },
+  TYR: { nl: 'aromatisch met fenolische OH; fosforyleerbaar door tyrosinekinasen', en: 'aromatic with a phenolic OH; phosphorylatable by tyrosine kinases' },
+  MET: { nl: 'thioëther; initiator-aminozuur van de translatie (vaak later verwijderd)', en: 'thioether; initiator amino acid of translation (often removed later)' },
+  CYS: { nl: 'thiol (–SH); kan disulfidebruggen vormen', en: 'thiol (–SH); can form disulfide bonds' },
+  GLY: { nl: 'H als zijketen; conformationeel het meest flexibel', en: 'H as side chain; conformationally the most flexible' },
+  PRO: { nl: 'cyclische zijketen gebonden aan de hoofdketen-N; beperkt φ, vaak in bochten, breekt α-helices', en: 'cyclic side chain bonded to the main-chain N; restricts φ, common in turns, breaks α-helices' },
+  SER: { nl: 'polair, hydroxyl; fosforyleerbaar (Ser/Thr-kinasen)', en: 'polar, hydroxyl; phosphorylatable (Ser/Thr kinases)' },
+  THR: { nl: 'polair, hydroxyl; fosforyleerbaar (Ser/Thr-kinasen)', en: 'polar, hydroxyl; phosphorylatable (Ser/Thr kinases)' },
+  ASN: { nl: 'polair, ongeladen amide; waterstofbrugdonor en -acceptor', en: 'polar, uncharged amide; hydrogen-bond donor and acceptor' },
+  GLN: { nl: 'polair, ongeladen amide; waterstofbrugdonor en -acceptor', en: 'polar, uncharged amide; hydrogen-bond donor and acceptor' },
+  ASP: { nl: 'zuur: carboxylaat, negatief bij pH 7', en: 'acidic: carboxylate, negative at pH 7' },
+  GLU: { nl: 'zuur: carboxylaat, negatief bij pH 7', en: 'acidic: carboxylate, negative at pH 7' },
+  LYS: { nl: 'basisch: ε-aminogroep, positief bij pH 7; interageert vaak met de fosfaten van DNA/RNA', en: 'basic: ε-amino group, positive at pH 7; often interacts with the phosphates of DNA/RNA' },
+  ARG: { nl: 'basisch: guanidiniumgroep, positief bij pH 7; interageert vaak met fosfaten en basen', en: 'basic: guanidinium group, positive at pH 7; often interacts with phosphates and bases' },
+  HIS: { nl: 'imidazool, pKa ≈ 6: wisselt bij fysiologische pH tussen geladen en neutraal; vaak in actieve centra', en: 'imidazole, pKa ≈ 6: switches between charged and neutral at physiological pH; common in active sites' },
+};
 /* structuurformule zoals in een schoolboek:
  * - aminozuur: eigen tekening (atlas/aa2d.js), zijketen gekleurd volgens soort
  * - letter van DNA/RNA of klein molecule: de 2D-formule die de PDB zelf aanbiedt (cdn.rcsb.org); lukt dat niet, dan geen tekening */
 function aaFig(r) {
   const svg = aaSVG(r); if (!svg) return '';
   const c = CLASSES[AACLASS[r]];
-  return `<figure class="pdraw aa">${svg}<figcaption><i style="--c:${c.col}"></i>${pt('sideChain')}: <b style="color:${c.col}">${L(c)}</b><br>${pt('sameRest')}</figcaption></figure>`;
+  return `<figure class="pdraw aa">${svg}<figcaption><i style="--c:${c.col}"></i>${pt('sideChain')}: <b style="color:${c.col}">${L((HI && CLASS_HI[AACLASS[r]]) || c)}</b><br>${pt('sameRest')}</figcaption></figure>`;
 }
 /* letter van DNA/RNA: de base zoals in een schoolboek, of — bij een klik op de ruggengraat — de suiker in Haworth-vorm */
 function naFig(b, rna, bb) {
@@ -1040,7 +1081,21 @@ function fillCCD(fig) {
 const focusBtn = (s, a) => s.focus === 'c:' + a.chain
   ? `<button class="pfocus on" data-chain="">${pt('focusOff')}</button>`
   : `<button class="pfocus" data-chain="${esc(a.chain)}" title="${pt('focusTip')}">${pt(a.kind === 'prot' ? 'focusProt' : 'focusStrand', a.chain)}</button>`;
-const pt = (k, ...a) => { const v = L(PT[k]); return typeof v === 'function' ? v(...a) : v; };
+/* hoger onderwijs: klikinfo in vaktaal (bron: Alberts et al. 2002, zie de bronnenlijst van elk item) */
+const PT_HI = {
+  letter: { nl: (n, ty, c) => `nucleotide ${n} · ${ty}-keten ${c}`, en: (n, ty, c) => `nucleotide ${n} · ${ty} chain ${c}` },
+  aa: { nl: (n, c) => `residu ${n} · keten ${c}`, en: (n, c) => `residue ${n} · chain ${c}` },
+  inBase: { nl: 'in de nucleobase', en: 'in the nucleobase' }, inBb: { nl: 'in de suiker-fosfaatruggengraat', en: 'in the sugar–phosphate backbone' },
+  mod: { nl: 'gemodificeerd nucleotide', en: 'modified nucleotide' },
+  aaIs: { nl: 'aminozuurresidu', en: 'amino acid residue' },
+  ligIs: { nl: 'ligand (HETATM): cofactor, substraat(analoog), geneesmiddel of kristallisatie-additief', en: 'ligand (HETATM): cofactor, substrate (analogue), drug or crystallisation additive' },
+  purine: { nl: 'purine (A, G): bicyclisch; N9 vormt de N-glycosidische binding met C1′', en: 'purine (A, G): bicyclic; N9 forms the N-glycosidic bond with C1′' },
+  pyrimidine: { nl: 'pyrimidine (C, T, U): monocyclisch; N1 vormt de N-glycosidische binding met C1′', en: 'pyrimidine (C, T, U): monocyclic; N1 forms the N-glycosidic bond with C1′' },
+  sugarD: { nl: '2′-deoxyribose: H op C2′; 3′,5′-fosfodiësterbindingen met de naburige nucleotiden', en: '2′-deoxyribose: H on C2′; 3′,5′-phosphodiester bonds to the neighbouring nucleotides' },
+  sugarR: { nl: 'ribose: 2′-OH (onderscheidt RNA van DNA); 3′,5′-fosfodiësterbindingen met de naburige nucleotiden', en: 'ribose: 2′-OH (distinguishes RNA from DNA); 3′,5′-phosphodiester bonds to the neighbouring nucleotides' },
+  sameRest: { nl: 'hoofdketen (grijs): amino-, Cα- en carboxylgroep, bij elk residu gelijk', en: 'main chain (grey): amino, Cα and carboxyl group, identical in every residue' },
+};
+const pt = (k, ...a) => { const v = L((HI && PT_HI[k]) || PT[k]); return typeof v === 'function' ? v(...a) : v; };
 function popHTML(s, a) {
   const el = ELNAME[a.elem?.toUpperCase()] ? `${L(ELNAME[a.elem.toUpperCase()])} (${a.atom})` : a.atom;
   if (a.kind === 'na') {
@@ -1053,7 +1108,7 @@ function popHTML(s, a) {
       naFig(b, ty === 'RNA', BB.test(a.atom)), `${pt('atom')}: ${el} · ${BB.test(a.atom) ? pt('inBb') : pt('inBase')}`];
   }
   if (a.kind === 'prot') {
-    const r = a.resn0 ?? a.resn, nm = AANAME[r], what = AAWHAT[r];
+    const r = a.resn0 ?? a.resn, nm = AANAME[r], what = (HI && AAWHAT_HI[r]) || AAWHAT[r];
     return [`<b>${nm ? (lang === 'nl' ? nm[0] : nm[1] ?? nm[0]) : r}</b> <small>${r}</small>`, `<span class="pw">${pt('aaIs')}</span>`,
       what ? `<span class="pk">${L(what)}</span>` : '', pt('aa', a.resi, a.chain), roleOf(s, a.chain) ? `${pt('part')}: <i style="--c:#7cc4ff">${L(roleOf(s, a.chain).short)}</i>` : '', focusBtn(s, a), aaFig(r), `${pt('atom')}: ${el}`];
   }
@@ -1152,7 +1207,7 @@ function rolesTable(s) {
   const rows = roles.filter(r => r.chains.some(c => shownCh.has(c))).map(r => {
     const cs = r.chains.filter(c => shownCh.has(c)), cols = [...new Set(cs.map(colOf))];
     const chips = cols.slice(0, 6).map(c => `<i style="background:${c}"></i>`).join('') + (cols.length > 6 ? '<i class="more">…</i>' : '');
-    return `<tr><td><span class="rchips">${chips}</span><b>${L(r.short)}</b><span class="rch">${cs.length > 4 ? cs[0] + '–' + cs.at(-1) : cs.join(', ')}</span></td><td>${L(r)}</td></tr>`;
+    return `<tr><td><span class="rchips">${chips}</span><b>${L(r.short)}</b><span class="rch">${cs.length > 4 ? cs[0] + '–' + cs.at(-1) : cs.join(', ')}</span></td><td>${L((HI && PRO[s.entry.id]?.roles?.[roles.indexOf(r)]) || r)}</td></tr>`;
   });
   for (const [k] of Object.entries(s.an.ligs ?? {})) rows.push(`<tr><td><span class="rchips"><i style="background:#33ff33"></i></span><b>${LIGNAME[k] ? L(LIGNAME[k]).replace(/ \(.*\)$/, '') : s.entry.ligNames?.[k] ?? k}</b><span class="rch">${k}</span></td><td>${t('ligRole')}</td></tr>`);
   const tip = state.color !== 'chain' && roles.length > 1 && colorAvail()?.has('chain') ? `<tr class="tipr"><td colspan="2">${t('rolesTip')}</td></tr>` : '';
@@ -1271,14 +1326,14 @@ function info(e) {
   s.push(e.custom ? `<h2>PDB ${e.pdb}</h2><div class="isub">${L(e.name)}</div>` : `<h2>${nameHTML(e)}</h2><div class="isub">${subOf(e)}</div>`);
   if (e.custom) s.push(`<div class="minebox">${t('mineNote')}</div>`);
   if (e.plant) s.push(`<div class="plantbox">${t('plant')}</div>`);
-  const hi = HI && !e.custom;
+  const hi = HI && !e.custom, pro = PRO[e.id];
   if (hi) {   // vakinhoud bovenaan, open
     s.push(`<div class="kort"><b>${t('what')}</b><p>${L(e.what)}</p></div>`);
     s.push(`<div class="card feat"><h3><i>≡</i>${t('feat')}</h3><ul>${L(e.feat).map(x => `<li>${x}</li>`).join('')}</ul></div>`);
   }
   if (sp) {
     if (!hi) s.push(`<div class="kort"><b>${t('inShort')}</b><p>${termsHTML(L(sp.kort))}</p></div>`);
-    if (sp.look) s.push(`<div class="card look"><h3><i>👁</i>${t('look')}</h3>${e.pdb ? '<div class="vguide" id="vguide"></div>' : ''}<p>${termsHTML(colourWords(L(sp.look)))}</p>${sp.lookSchema && e.pdb ? `<div class="lschema"><button class="lsbtn" type="button">${t('schemaBtn')}</button> <b>${t('inSchema')}:</b> ${termsHTML(L(sp.lookSchema))}</div>` : ''}</div>`);
+    if (sp.look) s.push(`<div class="card look"><h3><i>👁</i>${t('look')}</h3>${e.pdb ? '<div class="vguide" id="vguide"></div>' : ''}<p>${termsHTML(colourWords(L((hi && pro?.look) || sp.look)))}</p>${sp.lookSchema && e.pdb ? `<div class="lschema"><button class="lsbtn" type="button">${t('schemaBtn')}</button> <b>${t('inSchema')}:</b> ${termsHTML(L((hi && pro?.lookSchema) || sp.lookSchema))}</div>` : ''}</div>`);
     if (hi) s.push(`<div class="card why"><h3><i>★</i>${e.ctx.includes('cell') ? t('cell') : t('cellOther')}</h3><p>${L(e.cell)}</p></div>`);
     else if (sp.why) s.push(`<div class="card why"><h3><i>★</i>${t('why')}</h3><p>${termsHTML(L(sp.why))}</p></div>`);
   }
