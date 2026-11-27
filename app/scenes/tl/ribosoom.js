@@ -134,6 +134,11 @@ function glRenderer(svg, hitBox, cats = CATS, { radA = 9 } = {}) {
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
   } catch (e) { console.warn('[ribosoom] WebGL:', e.message); return null; }
   svg.parentNode.insertBefore(cv, svg);
+  /* De engine zet de camera (viewBox) ná update(); staat het beeld stil terwijl de camera nog beweegt, dan wordt update() niet
+     opnieuw opgeroepen. Daarom tekent deze laag zichzelf opnieuw met de laatste gegevens zodra de viewBox verandert. */
+  let last = null;
+  const mo = new MutationObserver(() => { if (last) api.draw(...last); });
+  mo.observe(svg, { attributes: true, attributeFilter: ['viewBox'] });
   const U = n => gl.getUniformLocation(prog, n);
   const u = { map: U('uMap'), res: U('uRes'), rad: U('uRad'), pad: U('uPad'), push: U('uPush'), col: U('uCol'), alpha: U('uAlpha'), bg: U('uBg'), mode: U('uMode'), radA: U('uRadA') };
   let N = 0; for (const c of CATS) N += RIBO[c].length / 3;
@@ -145,8 +150,9 @@ function glRenderer(svg, hitBox, cats = CATS, { radA = 9 } = {}) {
   gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 4, gl.FLOAT, false, 16, 0);
   gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL);
   gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-  return {
+  const api = {
     draw(P, proj, sep, col, alpha, R, op) {
+      last = [P, proj, sep, col, alpha, R, op];
       const W = cv.clientWidth, H = cv.clientHeight, dpr = Math.min(2, window.devicePixelRatio || 1);
       if (!W || !H) return;
       if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
@@ -203,8 +209,9 @@ function glRenderer(svg, hitBox, cats = CATS, { radA = 9 } = {}) {
       cv.style.opacity = f1(op);
       hitBox(x0, y0, x1, y1, R);
     },
-    destroy() { try { gl.getExtension('WEBGL_lose_context')?.loseContext(); } catch {} cv.remove(); },
+    destroy() { mo.disconnect(); try { gl.getExtension('WEBGL_lose_context')?.loseContext(); } catch {} cv.remove(); },
   };
+  return api;
 }
 
 export default {
@@ -256,6 +263,17 @@ export default {
     const trGL = api?.node ? glRenderer(svg, () => {}, ['tA', 'tP'], { radA: TR_R }) : null;   // tRNA-laag boven het ribosoom
     const TCOL = { tA: hex2rgb(TRNA_SITE.A), tP: hex2rgb(TRNA_SITE.P) };
     const $ = id => svg.getElementById(id);
+    /* Bovenlaag: de WebGL-lagen liggen (absoluut gepositioneerd) boven de SVG. Wat bovenop het ribosoom en de tRNA's moet
+       liggen (aminozuren in de koppelplaats, de tunnel met de keten), komt in een eigen doorzichtige SVG boven die lagen,
+       met dezelfde camera. De gewone groepen blijven (onzichtbaar) als klikzone. */
+    let top = null, topMo = null;
+    if (api?.node && svg.parentNode) {
+      top = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      top.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none';
+      const sync = () => { const vb = svg.getAttribute('viewBox'); if (vb) top.setAttribute('viewBox', vb); };
+      sync(); svg.parentNode.insertBefore(top, svg.nextSibling);
+      topMo = new MutationObserver(sync); topMo.observe(svg, { attributes: true, attributeFilter: ['viewBox'] });
+    }
     const P = {}; for (const k in RIBO) { const a = RIBO[k], out = []; for (let i = 0; i < a.length; i += 3) out.push([a[i], a[i + 1], a[i + 2]]); P[k] = out; }
     const cols = s => { const cur = PAL[K.pal[s.step]], prev = PAL[K.pal[Math.max(0, s.step - 1)]], k = ease(sub(s.p, 0, .3)); const o = {}; for (const c of CATS) o[c] = mix(hex2rgb(prev[c]), hex2rgb(cur[c]), k); return o; };
 
@@ -340,20 +358,46 @@ export default {
           }
           if (i === 5) o += txt(proj(LM.acA)[0] + 150, proj(LM.acA)[1] + 120, "mRNA 5′→3′", C.rna, 22, 'start').replace('<text', `<text opacity="${f1(fade)}"`);
         }
+        // groeiende keten = rij groene bolletjes (aminozuren)
+        const bead = (x, y, r = 9, extra = '') => `<circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${C.chain}" stroke="#0a1224" stroke-width="2" ${extra}/>`;
+        const lab = (x, y, t1, col, fs, an = 'start', w = 800) => txt(x, y, t1, col, fs, an, w).replace('<text', '<text stroke="#0b1224" stroke-width="6" paint-order="stroke"');
         if (i === 6) {
-          const pc = proj(LM.ptc);
-          ptcS += `<circle cx="${f1(pc[0])}" cy="${f1(pc[1])}" r="${f1(30 + 8 * Math.sin(t / 260))}" fill="rgba(255,255,255,.12)" stroke="#fff" stroke-width="3" opacity="${f1(fade)}"/>` +
-            `<g opacity="${f1(fade)}">` + txt(pc[0] + 60, pc[1] - 70, T2('PTC: peptidebinding', 'PTC: peptide bond'), '#fff', 26, 'start', 700) + txt(pc[0] + 60, pc[1] - 40, T2('actief centrum = rRNA (28S)', 'active site = rRNA (28S)'), C.rrna, 22, 'start') + '</g>';
+          // twee aminozuren aan de uiteinden van de tRNA's komen samen in de koppelplaats; het rRNA maakt de binding
+          const pc = proj(LM.ptc), ex = proj(LM.exit), eA = proj(P.tA[75]), eP = proj(P.tP[75]);
+          const dl = Math.hypot(ex[0] - pc[0], ex[1] - pc[1]), ux = (ex[0] - pc[0]) / dl, uy = (ex[1] - pc[1]) / dl;
+          const bond = sub(s.p, .4, .6), move = ease(sub(s.p, .6, .85));
+          const aaA = [eA[0] + 10, eA[1] - 16];                      // nieuw aminozuur op het tRNA in de A-plaats
+          const base = [lerp(eP[0] - 8, aaA[0] + ux * 24, move), lerp(eP[1] - 16, aaA[1] + uy * 24, move)];   // keten: eerst aan P, daarna aan A
+          ptcS += `<circle cx="${f1(pc[0])}" cy="${f1(pc[1])}" r="${f1(46 + 6 * Math.sin(t / 260))}" fill="rgba(35,168,143,.16)" stroke="${C.rrna}" stroke-width="3" stroke-dasharray="8 6" opacity="${f1(fade)}"/>`;
+          let ch = '';
+          for (let j = 3; j >= 0; j--) ch += bead(base[0] + ux * 23 * j, base[1] + uy * 23 * j, 11);
+          if (bond > 0) ch += `<line x1="${f1(base[0])}" y1="${f1(base[1])}" x2="${f1(aaA[0])}" y2="${f1(aaA[1])}" stroke="#fff" stroke-width="${f1(3 + 3 * (1 - bond))}" opacity="${f1(Math.min(1, bond * 2))}"/>` +
+            (bond < 1 ? `<circle cx="${f1((base[0] + aaA[0]) / 2)}" cy="${f1((base[1] + aaA[1]) / 2)}" r="${f1(8 + 26 * bond)}" fill="none" stroke="#fff" stroke-width="3" opacity="${f1(1 - bond)}"/>` : '');
+          ch += bead(aaA[0], aaA[1], 13);
+          ptcS += `<g opacity="${f1(sub(s.p, .1, .3))}">${ch}</g>`;
+          ptcS += `<g opacity="${f1(fade)}">` + lab(pc[0] + 70, pc[1] - 78, T2('koppelplaats (PTC)', 'linking site (PTC)'), '#fff', 26) + lab(pc[0] + 70, pc[1] - 50, T2('gemaakt van RNA, geen eiwit', 'made of RNA, not protein'), C.rrna, 21, 'start', 700) + '</g>' +
+            `<g opacity="${f1(sub(s.p, .2, .35) * (1 - sub(s.p, .45, .55)))}">` + lab(aaA[0] + 30, aaA[1] + 34, T2('nieuw aminozuur (A)', 'new amino acid (A)'), C.chain, 22, 'start', 700) + lab(eP[0] - 60, eP[1] - 44, T2('keten (P)', 'chain (P)'), C.chain, 22, 'end', 700) + '</g>' +
+            `<g opacity="${f1(sub(s.p, .5, .62))}">` + lab(aaA[0] + 30, aaA[1] + 34, T2('nieuwe binding: keten 1 langer', 'new bond: chain 1 longer'), '#fff', 24) + '</g>';
         }
         if (i === 7) {
-          const pc = proj(LM.ptc), ex = proj(LM.exit), k = sub(s.p, .2, .7);
-          const mx = lerp(pc[0], ex[0], k), my = lerp(pc[1], ex[1], k);
-          tunS += `<path d="M${f1(pc[0])},${f1(pc[1])} L${f1(mx)},${f1(my)}" stroke="${C.chain}" stroke-width="16" stroke-linecap="round" opacity=".45"/>` +
-            `<path d="M${f1(pc[0])},${f1(pc[1])} L${f1(mx)},${f1(my)}" stroke="#fff" stroke-width="3" stroke-dasharray="8 7"/>` +
-            `<circle cx="${f1(pc[0])}" cy="${f1(pc[1])}" r="12" fill="#fff"/>` + txt(pc[0] + 24, pc[1] + 40, 'PTC', '#fff', 24, 'start', 700);
-          tunS += `<g opacity="${f1(sub(s.p, .6, .8))}"><circle cx="${f1(ex[0])}" cy="${f1(ex[1])}" r="16" fill="none" stroke="${C.chain}" stroke-width="4"/>` +
-            txt(ex[0] - 26, ex[1] - 26, T2('tunneluitgang', 'tunnel exit'), C.chain, 24, 'end', 700) +
-            txt((pc[0] + ex[0]) / 2 + 150, (pc[1] + ex[1]) / 2 - 20, T2('≈ 90 Å in dit model', '≈ 90 Å in this model'), '#fff', 22, 'start') + '</g>';
+          // de tunnel als doorschijnende buis dwars door de grote helft; de keten schuift erdoor naar buiten
+          const pc = proj(LM.ptc), ex = proj(LM.exit);
+          const dx = ex[0] - pc[0], dy = ex[1] - pc[1], dl = Math.hypot(dx, dy), ux = dx / dl, uy = dy / dl;
+          const tube = `M${f1(pc[0])},${f1(pc[1])} L${f1(ex[0])},${f1(ex[1])}`;
+          tunS += `<g opacity="${f1(sub(s.p, .05, .25))}"><path d="${tube}" stroke="#d8fff4" stroke-width="46" stroke-linecap="round" opacity=".28"/>` +
+            `<path d="${tube}" stroke="#0b1224" stroke-width="36" stroke-linecap="round" opacity=".6"/></g>`;
+          const head = 1.45 * ease(sub(s.p, .2, .85)), n = Math.floor(head * dl / 19);
+          for (let j = 0; j <= n; j++) {
+            const d = j * 19, out = Math.max(0, d - dl);
+            const x = pc[0] + ux * Math.min(d, dl) + ux * out - uy * 14 * Math.sin(out / 22), y = pc[1] + uy * Math.min(d, dl) + uy * out + ux * 14 * Math.sin(out / 22);
+            tunS += bead(x, y, 9);
+          }
+          tunS += `<circle cx="${f1(pc[0])}" cy="${f1(pc[1])}" r="12" fill="#fff"/>`;
+          tunS += `<g opacity="${f1(sub(s.p, .1, .3))}">` + lab(pc[0] + 26, pc[1] + 42, T2('koppelplaats (PTC)', 'linking site (PTC)'), '#fff', 22, 'start', 700) +
+            lab((pc[0] + ex[0]) / 2 + 40, (pc[1] + ex[1]) / 2 - 44, T2('tunnel door de grote helft', 'tunnel through the large half'), '#d8fff4', 26) +
+            lab((pc[0] + ex[0]) / 2 + 40, (pc[1] + ex[1]) / 2 - 18, T2('≈ 9 nm lang', '≈ 9 nm long'), C.muted, 20, 'start', 600) + '</g>';
+          const tip = [ex[0] + ux * dl * .45, ex[1] + uy * dl * .45];
+          tunS += `<g opacity="${f1(sub(s.p, .7, .85))}">` + lab(tip[0] - 10, tip[1] - 34, T2('de keten komt eruit', 'the chain comes out'), C.chain, 24, 'middle') + '</g>';
         }
         if (i === 8) {
           const f = fade, X = 680, Y = 190;
@@ -367,8 +411,9 @@ export default {
             row(Y + 300, T2('   eiwitten', '   proteins'), '≈ 33', '47') + '</g>';
         }
         $('rb-ov').innerHTML = o; $('rb-dc').innerHTML = dcS; $('rb-ptc').innerHTML = ptcS; $('rb-tun').innerHTML = tunS;
+        if (top) { top.innerHTML = ptcS + tunS; $('rb-ptc').setAttribute('opacity', '0'); $('rb-tun').setAttribute('opacity', '0'); }
       },
-      destroy() { body.destroy(); trGL?.destroy(); },
+      destroy() { body.destroy(); trGL?.destroy(); topMo?.disconnect(); top?.remove(); },
     };
   },
 };
