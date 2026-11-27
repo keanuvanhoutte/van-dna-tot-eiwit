@@ -90,7 +90,7 @@ export default {
     const $ = id => svg.getElementById(id);
     const v3 = inset3d(svg, { pdb: '1UBQ', format: 'pdb', box: 'se-box', base: SS3, steps: S3, dimOpacity: false, off: !api?.node });
     /* stap 1–8: dezelfde 1UBQ-atomen echt in 3D (bolletjes en staafjes, H-bruggen, labels op de atomen) */
-    const a3 = atoms3d(svg, { box: 'se-box', steps: { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1 }, off: !api?.node });
+    const a3 = atoms3d(svg, { box: 'se-box', steps: { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1 }, off: !api?.node, easy: api?.easy });
     let R = null, HB = [], seq = '', err = null;
     fetchPDB('1UBQ').then(t => {
       R = byResi(residues(parsePDB(t)), 'A'); addH(R);

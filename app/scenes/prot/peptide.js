@@ -123,7 +123,7 @@ export default {
   init(svg, api) {
     const $ = id => svg.getElementById(id);
     /* stap 5–7: de tripeptide echt in 3D (3Dmol), met bewegende φ/ψ; de SVG-tekening blijft enkel voor de testhulpmiddelen */
-    const a3 = atoms3d(svg, { box: 'pe-box', steps: { 5: 1, 6: 1, 7: 1 }, dynamic: true, off: !api?.node, cbColor: CB3 });
+    const a3 = atoms3d(svg, { box: 'pe-box', steps: { 5: 1, 6: 1, 7: 1 }, dynamic: true, off: !api?.node, cbColor: CB3, easy: api?.easy });
 
     /* ---- 2D: Gly + Ala → Gly-Ala + H₂O ---- */
     function dipeptide(p1, step) {

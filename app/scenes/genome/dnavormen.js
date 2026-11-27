@@ -45,11 +45,13 @@ export default {
       <g id="vf-atlas">${btn(330, 790, 'adna', 'A-DNA in 3D ↗', 'A-DNA in 3D ↗', '#ffb27a')}${btn(800, 790, 'bdna', 'B-DNA in 3D ↗', 'B-DNA in 3D ↗', C.dna)}${btn(1270, 790, 'zdna', 'Z-DNA in 3D ↗', 'Z-DNA in 3D ↗', '#f06bc0')}</g>
       </svg>`;
   },
-  init(svg) {
+  init(svg, api) {
+    const hob = api?.level === 'hobby';   // hobbyist: enkel de eerste twee (eenvoudige) regels in de kaders
     const $ = id => svg.getElementById(id);
     const vis = (id, op) => { const e = $(id); e.setAttribute('opacity', f1(op)); e.style.pointerEvents = op < .1 ? 'none' : ''; };
     const panel = (x, y, title, col, lines, op = 1, w = 380) => {
       if (op <= .01) return '';
+      if (hob) lines = lines.slice(0, 2);
       let s = `<g opacity="${f1(op)}"><rect x="${x}" y="${y}" width="${w}" height="${66 + lines.length * 40}" rx="14" fill="#0d1426" stroke="${col}" stroke-width="2" opacity=".95"/>` + txt(x + 20, y + 40, title, col, 28, 'start', 800);
       lines.forEach((l, i) => { s += txt(x + 20, y + 86 + i * 40, dec(l), '#e8edf7', 24, 'start', 500); });
       return s + '</g>';
@@ -73,7 +75,7 @@ export default {
         const heads = { A: ['A-DNA', T2('rechtshandig', 'right-handed')], B: ['B-DNA', T2('rechtshandig', 'right-handed')], Z: ['Z-DNA', T2('linkshandig', 'left-handed')] };
         if (step !== 5 && step !== 6) for (const [k, h] of Object.entries(HX)) {
           const op = focus && focus !== k ? .3 : 1, top = CY - h.H.L / 2 * S - 60;
-          ann += `<g opacity="${f1(op)}">${txt(h.x, step >= 1 && step <= 3 ? Math.max(Math.min(top, 190), 230) : Math.min(top, 190), heads[k][0], h.col, 34, 'middle', 800)}</g>`;   // bij inzoomen niet tegen de bovenrand
+          ann += `<g opacity="${f1(op)}">${txt(h.x, step >= 1 && step <= 3 ? Math.max(Math.min(top, 190), 140) : Math.min(top, 190), heads[k][0], h.col, 34, 'middle', 800)}</g>`;   // boven de helix, maar bij inzoomen niet tegen de bovenrand
         } else if (step === 5) for (const [k, h] of Object.entries(HX)) ann += txt(h.x, 200, heads[k][0], h.col, 34, 'middle', 800);
         // lengte-aanduiding (zelfde 16 bp)
         if (step === 0) {

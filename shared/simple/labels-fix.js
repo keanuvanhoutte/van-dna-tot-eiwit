@@ -2,6 +2,10 @@
  * Uit de beeldcontroles (overlap, afgesneden, lege pillen, vaktermen) en voor woorden die per figuur iets anders betekenen. */
 export default {
   nl: {
+    "secundair|β1": "stuk 1",
+    "secundair|β2": "stuk 2",
+    "secundair|β5": "stuk 5",
+    "secundair|hairpin (Gly10)": "haarspeld",
     "aars|ester op 2′-OH van A76": "vastgemaakt",
     "adeno|Pol II": "",
     "adeno|kinesine-1 trekt de jas open": "een motortje trekt het jasje open",
@@ -217,6 +221,9 @@ export default {
     "viruskopie|S · E · M · N: later, via kortere kopieën": "andere eiwitten: later",
   },
   en: {
+    "secundair|β1": "piece 1",
+    "secundair|β2": "piece 2",
+    "secundair|β5": "piece 5",
     "aars|ester on 2′-OH of A76": "attached",
     "adeno|Pol II": "",
     "aminozuren|Cα": "C",

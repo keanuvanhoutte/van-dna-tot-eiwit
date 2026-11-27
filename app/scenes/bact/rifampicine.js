@@ -46,7 +46,7 @@ export default structure3d({
       focus: [{ sel: { chain: ['C', 'D'], hetflag: false }, style: { cartoon: { color: '#5d6a88', opacity: .55 } } }, RIF(L3('rifampicine', 'rifampicin')), MG(L3('actieve plek', 'active site'))],
       text: L3('De actieve plek, waar letters aan het RNA worden gekoppeld, ligt ruim 1 nanometer verder.', 'The active site, where letters are added to the RNA, lies more than 1 nanometre away.') },
     { dur: 9000, title: L3('Het nieuwe RNA botst ertegen', 'The new RNA bumps into it'), zoom: { resn: ['RFP', 'MG'] }, spin: .006,
-      focus: [{ sel: { chain: ['C', 'D'], hetflag: false }, style: { cartoon: { color: '#5d6a88', opacity: .55 } } }, RIF(), MG()],
+      focus: [{ sel: { chain: ['C', 'D'], hetflag: false }, style: { cartoon: { color: '#5d6a88', opacity: .55 } } }, RIF(L3('rifampicine', 'rifampicin')), MG(L3('hier groeit het RNA', 'RNA grows here'))],
       text: L3('Is het nieuwe RNA 2 à 3 letters lang, dan stoot het op rifampicine. Verder groeien lukt niet.', 'Once the new RNA is 2 to 3 letters long, it runs into rifampicin. It cannot grow any further.') },
     { dur: 9000, title: L3('Eén bouwsteen anders: resistent', 'One building block changed: resistant'), zoom: { chain: 'C', resi: POCKET }, spin: .006,
       focus: [{ sel: { chain: 'C', hetflag: false }, style: { cartoon: { color: COL.b, opacity: .6 } } }, RIF(),

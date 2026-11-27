@@ -234,6 +234,8 @@ const hasScene = id => !!SCENES[id];
 const LMAP = level === 'hobby' ? LABELS[lang] ?? null : null;
 const pickLabel = (k, map, id) => { const sk = id + '|' + k; return sk in map ? map[sk] : k in map ? map[k] : undefined; };
 const easyLabel = s => { if (!LMAP || !s) return s; const v = pickLabel(s.replace(/\s+/g, ' ').trim(), LMAP, current?.id ?? ''); return v === undefined ? s : v; };
+/* voor 3D-labels die in het beeld zelf getekend worden (geen tekst in de pagina): de scène vraagt de eenvoudige tekst op */
+const easyFor = (s, id) => { if (!LMAP || typeof s !== 'string' || !s) return s; const v = pickLabel(s.replace(/\s+/g, ' ').trim(), LMAP, id); return v === undefined ? s : v; };
 const fitQ = new Set(); let fitH = 0;
 function easyText(n, map = LMAP, id = current?.id ?? '') {
   if (n.__lab === n.nodeValue) return;                      // al vervangen (of niets te doen)
@@ -296,7 +298,7 @@ function build(id) {
     el.addEventListener('mouseleave', () => hoverNode(el.dataset.node, false));
   });
   let api = null;
-  try { api = r.base.init?.(is3d ? layer : svg, { lang, L, node: id }) ?? null; } catch (e) { console.error(e); }
+  try { api = r.base.init?.(is3d ? layer : svg, { lang, L, node: id, level, easy: s => easyFor(s, id) }) ?? null; } catch (e) { console.error(e); }
   const total = r.steps.reduce((s, x) => s + x.dur, 0);
   return { id, ...r, total, layer, svg, root, is3d, api };
 }

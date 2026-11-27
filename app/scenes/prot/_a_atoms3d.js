@@ -93,7 +93,8 @@ export function atoms3d(svg, o) {
       shapes.push(viewer.addCylinder({ start: { x: A[0], y: A[1], z: A[2] }, end: { x: B[0], y: B[1], z: B[2] }, radius: (w ?? 3) * .028, color: c ?? '#ffc247', dashed: true, dashLength: .25, gapLength: .2, fromCap: 1, toCap: 1 }));
     }
     for (const lb of spec.labels ?? []) {
-      labels.push(viewer.addLabel(L(lb.text), { position: { x: lb.pos[0], y: lb.pos[1], z: lb.pos[2] }, fontSize: lb.size ?? 19, fontColor: lb.color ?? '#fff',
+      const tx = o.easy ? o.easy(L(lb.text)) : L(lb.text); if (!tx) continue;   // hobbyist: eenvoudige tekst, '' = geen label
+      labels.push(viewer.addLabel(tx, { position: { x: lb.pos[0], y: lb.pos[1], z: lb.pos[2] }, fontSize: lb.size ?? 19, fontColor: lb.color ?? '#fff',
         backgroundColor: BG, backgroundOpacity: .85, borderThickness: 1.5, borderColor: lb.color ?? '#7cc4ff', inFront: true, alignment: 'center' }));
     }
     /* camera: midden en afstand van het geheel (los van de draaiing, die zet update() elk beeld); bij bewegende atomen
@@ -120,7 +121,7 @@ export function atoms3d(svg, o) {
       const hb = host.getBoundingClientRect(), bb = box.getBoundingClientRect();
       el.style.left = `${(bb.left - hb.left).toFixed(1)}px`; el.style.top = `${(bb.top - hb.top).toFixed(1)}px`;
       el.style.width = `${bb.width.toFixed(1)}px`; el.style.height = `${bb.height.toFixed(1)}px`;
-      cap.textContent = spec?.cap ? L(spec.cap) : ''; cap.style.opacity = spec?.cap ? 1 : 0;
+      cap.textContent = spec?.cap ? (o.easy ? o.easy(L(spec.cap)) : L(spec.cap)) : ''; cap.style.opacity = spec?.cap ? 1 : 0;
       if (spec?.capColor) cap.style.color = spec.capColor;
       if (!viewer || !spec) return op;
       const size = `${Math.round(bb.width)}x${Math.round(bb.height)}`;
