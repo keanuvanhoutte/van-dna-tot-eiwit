@@ -241,6 +241,7 @@ function easyText(n, map = LMAP, id = current?.id ?? '') {
   if (r !== undefined) {
     n.nodeValue = v.replace(k === v.trim() ? v.trim() : v, r);
     const t = n.parentNode?.closest?.('text'); if (t) { fitQ.add(t); fitH ||= requestAnimationFrame(fitAll); }
+    const p = n.parentNode; if (r === '' && p?.tagName === 'DIV' && p.parentNode?.closest?.('.lab3d')) p.style.display = 'none';   // leeg 3D-naamkaartje: weg
   }
   n.__lab = n.nodeValue;
 }
