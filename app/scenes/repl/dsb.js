@@ -99,6 +99,17 @@ const scene = {
           d += piece(0, B) + piece(B, N);
           // rode flits op de letters die weggeknipt worden
           if (step === 2 && kTrim < .5) for (const i of [B - 1, B]) fx += `<rect x="${f1(xi(i) + off(i) - BP / 2 + 3)}" y="${Y1 - GAP / 2 - 44}" width="${BP - 6}" height="${GAP + 92}" rx="10" fill="${C.danger}" fill-opacity="${f1(.25 * sub(p, .05, .2))}" stroke="${C.danger}" stroke-width="3" opacity="${f1(sub(p, .05, .2))}"/>`;
+          // de weggeknipte letterparen vallen zichtbaar weg (rode stukjes) en blijven in deze stap als schim liggen
+          if (step === 2 && kTrim > .5) {
+            const kk = ease(sub(p, .38, .75));
+            for (const i of [B - 1, B]) {
+              const x = xi(i) + off(i) + (i < B ? 1 : -1) * 40 * kk, y = 26 * kk, b = SEQ[i], m = COMP[b];
+              fx += `<g opacity="${f1(1 - .45 * kk)}" transform="translate(0 ${f1(y)})">` + seg(x, Y1 - GAP / 2, x, Y1 + GAP / 2, C.danger, 7) +
+                seg(x - BP / 2 + 6, Y1 - GAP / 2, x + BP / 2 - 6, Y1 - GAP / 2, C.danger, 6) + seg(x - BP / 2 + 6, Y1 + GAP / 2, x + BP / 2 - 6, Y1 + GAP / 2, C.danger, 6) +
+                txt(x, Y1 - GAP / 2 - 16, b, C.danger, 26, 'middle', 700, 'JetBrains Mono') + txt(x, Y1 + GAP / 2 + 38, m, C.danger, 26, 'middle', 700, 'JetBrains Mono') + '</g>';
+            }
+            fx += `<g opacity="${f1(sub(p, .55, .75))}">` + txt(xi(B) - BP / 2, Y1 - GAP / 2 - 64, T2('✂ weggeknipt', '✂ trimmed off'), C.danger, 28, 'middle', 800) + '</g>';
+          }
           // ringen
           const kuOp = kKu * (1 - ph(3, .55, .8));
           if (kuOp > .01) {
@@ -110,7 +121,7 @@ const scene = {
           const xj = xi(B - 1) - gap / 2 + BP / 2 - (kTrim > .5 ? BP : 0);
           fx += prot(xj, Y1 - GAP / 2 - 72, 90, 34, LIG, T2('lijm', 'glue'), 24, kLig);
           if (kMark > .01) fx += `<g opacity="${f1(kMark)}"><line x1="${f1(xj)}" y1="${Y1 - GAP / 2 - 36}" x2="${f1(xj)}" y2="${Y1 + GAP / 2 + 46}" stroke="${C.danger}" stroke-width="4" stroke-dasharray="8 7"/>${txt(xj + 110, Y1 + GAP / 2 + 96, T2('2 letterparen kwijt', '2 letter pairs lost'), C.danger, 26, 'middle', 700)}</g>`;
-          if (kBreak > .01 && kJoin < .5) fx += `<g opacity="${f1(kBreak * (1 - 2 * kJoin))}">${txt(xi(B) - BP / 2, Y1 + GAP / 2 + 124, T2('breuk', 'break'), C.danger, 26, 'middle', 700)}</g>`;
+          if (kBreak > .01 && kJoin < .5) fx += `<g opacity="${f1(kBreak * (1 - 2 * kJoin) * (step === 2 ? 1 - sub(p, .4, .55) : step === 3 ? 0 : 1))}">${txt(xi(B) - BP / 2, Y1 + GAP / 2 + 124, T2('breuk', 'break'), C.danger, 26, 'middle', 700)}</g>`;
           const L5 = X0 - 26 - gap / 2, R3 = X0 + N * BP + 26 + gap / 2 + (kTrim > .5 ? shiftR : 0);
           d += endl(L5, Y1 - GAP / 2 + 8, "5′", C.dna, 22) + endl(R3, Y1 - GAP / 2 + 8, "3′", C.dna, 22) + endl(L5, Y1 + GAP / 2 + 8, "3′", C.dna2, 22) + endl(R3, Y1 + GAP / 2 + 8, "5′", C.dna2, 22);
           $('ds-nt').innerHTML = txt(X0, 112, T2('1 · Snel lijmen (NHEJ)', '1 · Glue fast (NHEJ)'), '#ff8a3d', 30, 'start', 800);
