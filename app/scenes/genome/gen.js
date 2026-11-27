@@ -158,7 +158,7 @@ export default {
         $('gn-dnaL').setAttribute('x2', f1(ENH[0] + dx));
         const lp = `M${f1(eR)},${Y} C${f1(eR - 70 * k)},${f1(Y - h * 1.25)} ${f1(PROM[0] + 60 * k)},${f1(Y - h * 1.25)} ${PROM[0] - 6},${Y}`;
         let g = `<path d="${lp}" stroke="${C.dna}" stroke-width="6" fill="none"/>`;
-        if (k > .05 && step >= 1 && step <= 2) g += txt((eR + PROM[0]) / 2, Y - h * .95, T2('… tot honderden kb …', '… up to hundreds of kb …'), C.muted, 16);
+        if (k > .05 && step === 1) g += txt((eR + PROM[0]) / 2, Y - h * .95, T2('… tot honderden kb …', '… up to hundreds of kb …'), C.muted, 16);
         if (k < .05) g += `<g stroke="${C.muted}" stroke-width="3"><line x1="246" y1="${Y - 14}" x2="238" y2="${Y + 14}"/><line x1="258" y1="${Y - 14}" x2="250" y2="${Y + 14}"/></g>`;
         if (k > .05) {
           g += `<ellipse cx="${f1((eR + PROM[0]) / 2)}" cy="${Y - 34}" rx="${f1(10 + (PROM[0] - eR) / 2 + 8)}" ry="11" fill="none" stroke="#ffc247" stroke-width="5" opacity="${f1(k)}"/>`;
@@ -187,9 +187,9 @@ export default {
         $('gn-enhA').setAttribute('cy', step === 2 ? Y + 150 : Y - 52); $('gn-enhA').setAttribute('cx', step === 2 ? 180 : (ENH[0] + ENH[1]) / 2);
         $('gn-promA').setAttribute('cy', step === 2 ? Y + 150 : Y + 84); $('gn-promA').setAttribute('cx', step === 2 ? 420 : (PROM[0] + PROM[1]) / 2);
         $('gn-dnalab').setAttribute('opacity', step === 1 || step === 2 || step === 5 ? 0 : step === 6 ? f1(1 - ease(sub(p, 0, .1))) : 1);   // stap 7: DNA vervaagt, label valt bovenaan buiten beeld
-        const m = step === 6 ? ease(sub(p, .35, .8)) : step === 0 || step === 7 ? .9 : step === 2 ? 0 : .15;
+        const m = step === 6 ? ease(sub(p, .35, .8)) : step === 0 || step === 7 ? .9 : 0;   // ingezoomde stappen: onderste rijen weg (liepen achter de ondertitel)
         $('gn-mat').setAttribute('opacity', f1(m));
-        $('gn-arrow').setAttribute('opacity', step === 6 ? f1(sub(p, .2, .4)) : step === 0 || step === 7 ? .8 : step === 2 ? 0 : .15);
+        $('gn-arrow').setAttribute('opacity', step === 6 ? f1(sub(p, .2, .4)) : step === 0 || step === 7 ? .8 : 0);
       },
     };
   },

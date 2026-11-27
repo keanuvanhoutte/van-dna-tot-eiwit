@@ -162,6 +162,8 @@ export default {
         $('bal-head').setAttribute('opacity', f1(step === 0 ? 1 : step === 1 ? 1 - e : 0));
         /* hotspot-labels alleen in het overzicht en bij de eigen klasse (anders overlappen ze de details van een buurrij) */
         for (const [id, row, ov] of [['bal-a0', 0, 1], ['bal-a2', 2, 0], ['bal-a5', 5, 1], ['bal-a5b', 5, 1]]) $(id)?.setAttribute('opacity', (step === 0 && ov) || step - 1 === row ? 1 : 0);
+        // klasse VI in beeld (kader rond de rij): kaartjes buiten het kader, boven en onder; in het overzicht vlak bij de rij
+        $('bal-a5').setAttribute('cy', rowY(5) + (step === 6 ? -62 : -28)); $('bal-a5b').setAttribute('cy', rowY(5) + (step === 6 ? 62 : 26));
         const cur = step - 1;
         if (cur < 0) { $('bal-hl').innerHTML = ''; return; }
         const y = cur === 0 ? rowY(0) : lerp(rowY(cur - 1), rowY(cur), e);

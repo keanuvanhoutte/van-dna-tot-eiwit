@@ -136,9 +136,11 @@ export default {
     <g transform="rotate(-90 1582 650)">${T(1582, 650, T2('buiten de cel', 'outside the cell'), { size: 22, col: C.muted })}</g>
     ${T(1020, 790, 'cytosol', { size: 24, col: C.muted, italic: true })}
     <g id="ly-in"></g><g id="ly-fx"></g>
+    <g id="ly-nav">
     ${btn('sortering', 40, 330, T2('↑ overzicht adreslabels', '↑ address labels overview'), C.ok)}
     ${btn('golgi', 400, 300, T2('← het Golgi', '← the Golgi'), C.mem)}
     ${btn('kernimport', 1150, 410, T2('volgende: naar de kern →', 'next: into the nucleus →'), C.dna)}
+    </g>
     </svg>`;
   },
   init(svg) {
@@ -146,6 +148,9 @@ export default {
     return {
       update(t, s) {
         const { step, p } = s;
+        // navigatieknoppen staan bovenaan de volledige figuur: tijdens ingezoomde stappen verbergen (vielen half buiten de bovenrand)
+        { const Z = [1, 2, 3, 4], nz = i => Z.includes(i) ? 0 : 1, navOp = lerp(step > 0 ? nz(step - 1) : nz(step), nz(step), ease(sub(p, 0, .25)));
+          svg.getElementById('ly-nav').setAttribute('opacity', f1(navOp)); }
         const ph = (i, a, b) => step > i ? 1 : step < i ? 0 : ease(sub(p, a, b));
         const kIntro = step === 0 ? ease(sub(p, .3, .6)) : 1;
         const kTag = ph(1, .2, .6), kWork = ph(4, .55, .95);

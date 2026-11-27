@@ -52,7 +52,7 @@ export default {
     return svgOpen() + `
     <line x1="800" y1="170" x2="800" y2="760" stroke="#1d2946" stroke-width="3" stroke-dasharray="8 8"/>
     ${note(420, 200, T2('A → I (ADAR)', 'A → I (ADAR)'), '#e7e7e7', 26)}${note(1200, 200, T2('C → U (APOBEC1)', 'C → U (APOBEC1)'), BASE.U, 26)}
-    <g data-node="rnastructuur" data-color="${C.rna}" data-nolabel><g id="ed-ds"></g></g><g id="ed-adar"></g><g data-node="codon" data-color="${C.trna}" data-nolabel><g id="ed-code"></g></g><g data-node="editing" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-nolabel><g id="ed-apo"></g></g><g id="ed-apob"></g>
+    <g id="ed-link"></g><g data-node="rnastructuur" data-color="${C.rna}" data-nolabel><g id="ed-ds"></g></g><g id="ed-adar"></g><g data-node="codon" data-color="${C.trna}" data-nolabel><g id="ed-code"></g></g><g data-node="editing" data-href="../atlas/index.html?id=mrna" data-color="${C.rna}" data-nolabel><g id="ed-apo"></g></g><g id="ed-apob"></g>
     ${hot('rnastructuur', T2('dsRNA-substraat in 3D', 'dsRNA substrate in 3D'), C.rna, 'ed-hD', '../atlas/index.html?id=dsrna', true)}
     ${hot('codon', T2('Genetische code', 'Genetic code'), C.trna, 'ed-cA')}
     ${hot('editing', T2('apoB-mRNA in 3D', 'apoB mRNA in 3D'), C.rna, 'ed-hM', '../atlas/index.html?id=mrna', true)}
@@ -89,21 +89,21 @@ export default {
         setHot(svg, 'ed-hD', step <= 1 ? [tx(2), YB + 110, 30, 10] : null);   // onder de duplex, niet aan het 3'-uiteinde
 
         // ADAR2
-        let ad = '';
+        let ad = '', link = '';
         const adOp = step === 1 ? ease(sub(p, .2, .6)) : step === 2 ? 1 : step === 3 ? 1 - sub(p, 0, .3) : 0;
         if (adOp > 0) {
           ad += `<g opacity="${f1(adOp)}"><path d="${eiwitPad(tx(4), YT - 70, (tx(6) - tx(2)) / 2 + 30, 64, 12, .06)}" fill="rgba(155,123,255,.25)" stroke="${C.prot}" stroke-width="3"/>` +
-            `<text x="${tx(4) - 70}" y="${YT - 92}" font-size="18" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">${T2('deaminase', 'deaminase')}</text>` +
+            `<text x="${tx(4)}" y="${YT - 84}" font-size="18" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="700">${T2('deaminase', 'deaminase')}</text>` +
             `<text x="${tx(4)}" y="${YT - 148}" font-size="20" text-anchor="middle" fill="#c9b8ff" font-family="Inter" font-weight="800">ADAR2</text></g>`;
           // het deaminasedomein ligt óp de dubbele streng (de A klapt erin); een flexibele linker verbindt het met de dsRBD's (Matthews et al. 2016)
-          ad += `<path d="M${tx(6) + 18},${YT - 40} C${tx(7) + 40},${YT - 20} ${tx(6) + 10},${YB + 30} ${tx(7) - 22},${YB + 48}" stroke="${C.prot}" stroke-width="4" fill="none" stroke-linecap="round" opacity="${f1(adOp * .9)}"/>`;
+          link = `<path d="M${tx(6) + 18},${YT - 40} C${tx(7) + 40},${YT - 20} ${tx(6) + 10},${YB + 30} ${tx(7) - 22},${YB + 48}" stroke="${C.prot}" stroke-width="4" fill="none" stroke-linecap="round" opacity="${f1(adOp * .9)}"/>`;   // linker achter de basen (eigen laag onder de dubbele streng)
           ad += prot(tx(7) + 20, YB + 48, 84, 30, 'dsRBD1', '#5a4bb8', adOp, 15) + prot(tx(9) + 30, YB + 48, 84, 30, 'dsRBD2', '#5a4bb8', adOp, 15);   // tegen het dubbele RNA, binnen beeld
         }
         if (step === 2) {
           ad += note(tx(4) + 175, YT - 92, edited ? T2('inosine (=O)', 'inosine (=O)') : T2('adenosine (–NH₂)', 'adenosine (–NH₂)'), edited ? '#fff' : BASE.A, 18, 'start', sub(p, .1, .25));
           ad += note(tx(4) + 175, YT - 62, 'H₂O → NH₃', '#ffd36b', 17, 'start', sub(p, .45, .6));
         }
-        $('ed-adar').innerHTML = ad;
+        $('ed-adar').innerHTML = ad; $('ed-link').innerHTML = link;
 
         // stap 3: de code
         let cd = '';

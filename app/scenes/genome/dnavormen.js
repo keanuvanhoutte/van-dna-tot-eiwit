@@ -154,6 +154,11 @@ export default {
         vis('vf-atlas', step === 0 ? ease(sub(p, .7, .85)) : step === 8 ? ease(sub(p, .1, .3)) : 0);
         vis('vf-hs-rna', step === 2 || step === 7 ? 1 : 0);
         vis('vf-hs-sc', step === 3 || step === 7 ? 1 : 0);
+        // stap 7: de kaartjes onder de kaders, niet dwars over de A- en Z-helix
+        for (const [id, x7, y7, x0] of [['vf-hs-rna', 330, 150, 150], ['vf-hs-sc', 1270, 71, 1440]]) {   // boven de naam van de helix
+          const a = svg.querySelector('#' + id + ' circle');
+          a.setAttribute('cx', step === 7 ? x7 : x0); a.setAttribute('cy', step === 7 ? y7 : 420);
+        }
         vis('vf-hs-nt', step === 6 ? 1 : 0);
       },
     };

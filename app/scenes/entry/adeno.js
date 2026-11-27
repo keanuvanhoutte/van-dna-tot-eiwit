@@ -147,8 +147,8 @@ export default {
             const k = ease(sub(p, .15, .55));
             lab += `<g opacity="${f1(k)}">
               ${txt(AX + AR + 80, AY - AR - 12, T2('vezel + knop', 'fibre + knob'), FIBRE, 21)}
-              ${txt(AX - AR - 105, AY - 96, T2('pentonbasis', 'penton base'), PINK, 21)}
-              <line x1="${AX - AR - 60}" y1="${AY - 88}" x2="${AX - AR * .84}" y2="${AY - AR * .46}" stroke="${PINK}" stroke-width="2"/>
+              ${txt(AX - AR - 105, AY - 40, T2('pentonbasis', 'penton base'), PINK, 21)}
+              <line x1="${AX - AR - 32}" y1="${AY - 48}" x2="${AX - AR * .84}" y2="${AY - AR * .46}" stroke="${PINK}" stroke-width="2"/>
               ${txt(AX - AR - 50, AY + 8, T2('hexon (vlak)', 'hexon (face)'), '#e7a9d6', 21, 'end')}
               <line x1="${AX - AR - 42}" y1="${AY + 1}" x2="${AX - AR * .5}" y2="${AY + 2}" stroke="#e7a9d6" stroke-width="2"/>
               ${txt(AX - 90, AY - AR - 84, '≈ 90 nm', C.text, 24)}

@@ -65,7 +65,7 @@ const SCENE = {
     ST(7000, cam(800, 450, 1600), 'Van het membraan naar de kern', 'From the membrane to the nucleus',
       'Drie kinasen (enzymen die fosfaat op eiwitten zetten) wachten. Ze gaan het signaal naar de kern brengen.',
       'Three kinases (enzymes that put phosphate on proteins) are waiting. They will carry the signal to the nucleus.'),
-    ST(8500, cam(560, 300, 1000), 'SOS zet Ras aan', 'SOS switches Ras on',
+    ST(8500, cam(520, 300, 1000), 'SOS zet Ras aan', 'SOS switches Ras on',
       'Ras staat uit met GDP en aan met GTP. SOS wrikt het GDP los, Ras pakt GTP en gaat aan.',
       'Ras is off with GDP and on with GTP. SOS prises the GDP loose, Ras picks up GTP and switches on.'),
     ST(8000, cam(700, 330, 1000), 'Ras haalt Raf naar het membraan', 'Ras pulls Raf to the membrane',
@@ -263,7 +263,7 @@ const SCENE = {
         }
         if (step === 0) {
           L(RAS[0] + 48, RAS[1] + 58, 'Ras', { anchor: 'start', col: K.ras, w: 800 });
-          L(1570, 700, T2('kernenvelop', 'nuclear envelope'), { anchor: 'end', col: '#9cc0ff', size: 22 });
+          L(1590, 672, T2('kernenvelop', 'nuclear envelope'), { anchor: 'end', col: '#9cc0ff', size: 22 });
           L(930, 655, T2('nog inactief', 'still inactive'), { col: C.muted });
           L(250, 520, 'Grb2', { col: K.grb });
         }

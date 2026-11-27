@@ -200,8 +200,8 @@ export default {
         const kin = step >= 4 && step <= 6 ? 1 : 0;
         $('cs-kin').innerHTML = kin ? `<path d="M${BX - 70},${BC} L${BX - 230},${BC - 40} M${BX - 70},${BC} L${BX - 230},${BC} M${BX - 70},${BC} L${BX - 230},${BC + 40} M${BX + 70},${BC} L${BX + 230},${BC - 40} M${BX + 70},${BC} L${BX + 230},${BC} M${BX + 70},${BC} L${BX + 230},${BC + 40}" stroke="#7fdc6a" stroke-width="4"/>` +
           `<path d="${eiwitPad(BX - 63, BC, 10, 17, 113, .08)}" fill="${C.prot}"/><path d="${eiwitPad(BX + 63, BC, 10, 17, 114, .08)}" fill="${C.prot}"/>` : '';
-        $('cs-cen').setAttribute('opacity', step === 4 ? 1 : step === 0 || step === 1 ? 0 : .2);
-        $('cs-tel').setAttribute('opacity', step === 5 ? 1 : step === 0 || step === 1 ? 0 : .2);
+        $('cs-cen').setAttribute('opacity', step === 4 ? 1 : step === 0 || step === 1 ? 0 : f1(.2 * (1 - inter)));
+        $('cs-tel').setAttribute('opacity', step === 5 ? 1 : step === 0 || step === 1 ? 0 : f1(.2 * (1 - inter)));
         $('cs-shel').setAttribute('opacity', step === 5 ? ease(sub(p, .3, .6)) : 1);
         $('cs-loops').setAttribute('opacity', step === 6 ? ease(sub(p, .1, .5)) : 0);
         // interfase: chromatine "ontvouwt" tot een territorium

@@ -166,15 +166,15 @@ export default {
         $('ex-pa').innerHTML = pa;
         // stap 9: label naast de staart, niet op de lus-lijn
         const pA = step === 8 ? (q => [q[0] + 120, q[1] + 10])(P.at(sOf(LEN))) : side(sOf(684), step >= 6 ? -90 : -80); $('ex-pA').setAttribute('cx', f1(pA[0])); $('ex-pA').setAttribute('cy', f1(pA[1]));
-        const lA = step === 8 && p > .5 ? side(sOf(520), 120) : [-9999, -9999]; $('ex-lA').setAttribute('cx', f1(lA[0])); $('ex-lA').setAttribute('cy', f1(lA[1]));   // zijpad RNA-lot
+        const lA = step === 8 && p > .5 ? side(sOf(430), 120) : [-9999, -9999]; $('ex-lA').setAttribute('cx', f1(lA[0])); $('ex-lA').setAttribute('cy', f1(lA[1]));   // zijpad RNA-lot
         svg.querySelector('[data-node="mrnaafbraak"]').setAttribute('opacity', step === 8 ? f1(sub(p, .5, .7)) : '0');
 
         // cap + CBC / eIF4E
         let pr = '';
         const capP = side(head + 16, 0);
         pr += capG(capP[0], capP[1], 22);
-        const cbcP = side(head + 14, 36);
-        pr += prot(cbcP[0], cbcP[1], 60, 30, 'CBC', '#6a5bb0', 1 - exch, 15);
+        const cbcP = side(head + 14, 36), cbc0 = side(head + 58, 44);   // CBC iets verder langs het mRNA: de cap blijft zichtbaar; schuift bij de wissel naar de plek van eIF4E
+        pr += prot(lerp(cbc0[0], cbcP[0], exch), lerp(cbc0[1], cbcP[1], exch), 60, 30, 'CBC', '#6a5bb0', 1 - exch, 15);
         pr += prot(cbcP[0], cbcP[1], 70, 30, 'eIF4E', '#6a5bb0', exch, 15);
         $('ex-cap').innerHTML = pr; pr = '';
         // TREX: stap 1 bindt, stap 2 wordt NXF1 geladen, UAP56/THO gaan weg, ALYREF blijft tot aan de porie

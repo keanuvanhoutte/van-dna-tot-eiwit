@@ -86,7 +86,7 @@ export default {
         <g data-node="srf" data-color="${C.dna}" data-label="${T2('Vergelijk: EGF-route (SRE)', 'Compare: EGF route (SRE)')}">
           <rect x="700" y="${DY - 30}" width="330" height="70" fill="transparent"/>${anchor('srf', 960, DY - 82)}</g>
         <g data-node="genregulatie" data-color="${CBPC}" data-label="${T2('Genregulatie', 'Gene regulation')}">
-          <rect x="1120" y="${NY + 20}" width="260" height="${DY - NY}" fill="transparent"/>${anchor('genregulatie', CRX + 8, NY + 34)}</g>
+          <rect x="1120" y="${NY + 20}" width="260" height="${DY - NY}" fill="transparent"/>${anchor('genregulatie', CRX + 8, DY + 76, 'below')}</g>
       </g>
     </svg>`;
   },
@@ -161,7 +161,7 @@ export default {
         const rel = K(g, 5.4, 5.85);
         P += eiwit(PKX - 15, PKY, 17, 44, RC, { seed: 44, bumps: .16 }) + eiwit(PKX + 15, PKY, 17, 44, RC, { seed: 47, bumps: .16 });
         P += `<text x="${PKX}" y="${PKY + 70}" font-size="20" text-anchor="middle" fill="${RC}" font-family="Inter" font-weight="700">${T2('rem', 'brake')}</text>`;
-        const c1 = track(g, [[5.4, PKX - 58, PKY], [5.85, PORE + 10, 600], [6.05, PORE + 10, 600], [6.25, PORE, NY], [6.5, CRX - 45, DY - 82]]);
+        const c1 = track(g, [[5.4, PKX - 58, PKY], [5.85, PORE + 10, 600], [6.05, PORE + 10, 600], [6.25, PORE, NY], [6.5, CRX - 82, DY - 72]]);   // links naast CREB: niet onder de helper (CBP)
         const c2 = track(g, [[5.4, PKX + 58, PKY], [5.85, PKX + 130, 590]]);
         for (const [x, y] of [c1, c2]) P += eiwit(x, y, 31, 26, C.prot, { seed: 46 }) + `<text x="${f1(x)}" y="${f1(y + 6)}" font-size="16" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="800">${T2('actief', 'active')}</text>`;
         if (rel > .02 && rel < .98) P += `<circle cx="${PKX}" cy="${PKY}" r="${f1(40 + 50 * rel)}" fill="none" stroke="${GTPC}" stroke-width="3" opacity="${f1(1 - rel)}"/>`;
@@ -190,7 +190,7 @@ export default {
         const on = (a, b, c, d) => K(g, a, b) * (1 - K(g, c, d));
         let k = on(.2, .6, 1.05, 1.25);
         if (k > .01) L += T(420, 160, 'adrenaline', { size: 24, col: ADRC, op: k, anchor: 'start' }) +
-          T(RX - 90, 214, T2('β2-adrenerge receptor', 'β2-adrenergic receptor'), { size: 24, col: C.prot, op: k, anchor: 'end' }) +
+          T(RX - 86, 214, T2('β2-adrenerge receptor', 'β2-adrenergic receptor'), { size: 22, col: C.prot, op: k, anchor: 'end' }) +
           T(600, 470, 'Gs (αβγ)', { size: 24, col: GAC, op: k });
         k = on(1.25, 1.55, 2.02, 2.2);
         if (k > .01) L += T(RX - 95, 250, T2('7 TM-helices', '7 TM helices'), { size: 22, col: C.prot, op: k, anchor: 'end' }) +
@@ -202,7 +202,7 @@ export default {
           T(ACX, 196, T2('adenylylcyclase', 'adenylyl cyclase'), { size: 22, col: ACC, op: k });
         k = on(4.2, 4.5, 5.02, 5.2);
         if (k > .01) L += T(700, 560, 'ATP → cAMP', { size: 22, col: GTPC, op: k }) +
-          T(990, 598, T2('cAMP: tweede boodschapper', 'cAMP: second messenger'), { size: 22, col: C.text, op: k * K(g, 4.6, 4.9) });
+          T(990, 620, T2('cAMP: tweede boodschapper', 'cAMP: second messenger'), { size: 22, col: C.text, op: k * K(g, 4.6, 4.9) });
         k = on(5.1, 5.4, 6.0, 6.04);
         if (k > .01) L += T(PKX, 440, T2('kinase (PKA)', 'kinase (PKA)'), { size: 22, col: C.text, op: k }) +
           T(PKX + 130, 640, T2('actief deel komt los', 'active part comes free'), { size: 22, col: C.prot, op: k * K(g, 5.7, 5.85) }) +

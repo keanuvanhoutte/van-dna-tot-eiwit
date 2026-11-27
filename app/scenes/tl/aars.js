@@ -185,10 +185,11 @@ export default {
         if (i === 7) {
           const go = ease(sub(p, .15, .8));
           tr = trna(lerp(0, 380, go), lerp(0, -60, go), [lerp(tipSyn[0], tipSyn[0] + 380, go), lerp(tipSyn[1], tipSyn[1] - 60, go)], { a: 'I', dx: 30, dy: -26 }, 1);
-          const ex = tipSyn[0] + 330, ey = tipSyn[1] - 245;
+          // eEF1A pakt het geladen uiteinde vast (tegen het aminozuur aan) en neemt het tRNA mee
+          const ex = tipSyn[0] + 380 + 150, ey = tipSyn[1] - 60 - 30;
           eef = `<g opacity="${f1(sub(p, .55, .75))}">${eiwit(ex, ey, 98, 30, C.prot2, { seed: 15, label: 'eEF1A·GTP', fs: 21 })}</g>` +
-            `<g opacity="${f1(sub(p, .75, .9))}"><path d="M${ex + 90},${ey} h160" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>${txt(ex + 170, ey + 40, T2('naar de A-plaats', 'to the A site'), C.rrna, 22, 'middle', 700)}</g>`;
-          $('rs-eA').setAttribute('cx', f1(ex)); $('rs-eA').setAttribute('cy', f1(ey - 24));
+            `<g opacity="${f1(sub(p, .75, .9))}"><path d="M${ex - 20},${ey - 42} h110" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>${txt(ex + 20, ey + 62, T2('naar de A-plaats', 'to the A site'), C.rrna, 22, 'middle', 700)}</g>`;
+          $('rs-eA').setAttribute('cx', f1(ex)); $('rs-eA').setAttribute('cy', f1(ey - 58));
         } else { $('rs-eA').setAttribute('cx', '-9999'); }
         $('rs-trna').innerHTML = tr; $('rs-aa').innerHTML = amino; $('rs-mol').innerHTML = mol; $('rs-ov').innerHTML = ov; $('rs-eef').innerHTML = eef;
       },

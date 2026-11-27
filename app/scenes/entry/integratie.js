@@ -69,7 +69,7 @@ export default {
       <g id="in-repair-body"></g>
     </g>
     <g data-node="transcriptie" data-color="${C.rna}" data-label="${T2('Transcriptie van het provirus', 'Transcription of the provirus')}" id="in-txn" opacity="0">
-      <circle data-anchor="transcriptie" cx="790" cy="${HOST - 100}" r="1" fill="none"/>
+      <circle data-anchor="transcriptie" cx="420" cy="${HOST - 100}" r="1" fill="none"/>
       <g data-node="rnapol" data-color="${C.prot}" data-nolabel><g id="in-pol"></g></g>
       <g id="in-txn-body"></g>
     </g>

@@ -114,8 +114,10 @@ export default {
   ],
   svg() {
     return svgOpen() + `<g id="lo-v"></g>
+    <g id="lo-nav">
     ${btn('export', 40, 320, T2('↑ mRNA uit de kern', '↑ mRNA out of the nucleus'), C.rna)}
     ${btn('korrels', 1130, 430, T2('volgende: druppels bij stress →', 'next: droplets under stress →'), '#5fd3e6')}
+    </g>
     </svg>`;
   },
   init(svg) {
@@ -123,6 +125,9 @@ export default {
     return {
       update(t, s) {
         const { step, p } = s;
+        // navigatieknoppen staan bovenaan de volledige figuur: tijdens ingezoomde stappen verbergen (vielen half buiten de bovenrand)
+        { const Z = [4, 5], nz = i => Z.includes(i) ? 0 : 1, navOp = lerp(step > 0 ? nz(step - 1) : nz(step), nz(step), ease(sub(p, 0, .25)));
+          svg.getElementById('lo-nav').setAttribute('opacity', f1(navOp)); }
         const ph = (i, a, b) => step > i ? 1 : step < i ? 0 : ease(sub(p, a, b));
         let o = '';
         /* ── A: de cel ── */

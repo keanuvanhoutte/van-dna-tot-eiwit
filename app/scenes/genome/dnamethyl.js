@@ -163,7 +163,7 @@ export default {
         if (step >= 3 && step <= 4) d += txt(bx(N - 1) + 64, 395, T2('dochter 1', 'daughter 1'), C.muted, 16, 'start') + txt(bx(N - 1) + 64, 615, T2('dochter 2', 'daughter 2'), C.muted, 16, 'start');
         if (step === 3) d += txt(560, 505, T2('hemigemethyleerd: alleen de oude streng draagt CH₃', 'hemimethylated: only the old strand carries CH₃'), C.trna, 18) ;
         $('dm-dna').innerHTML = d;
-        $('dm-dna').setAttribute('opacity', f1(step === 5 ? 1 - .94 * ease(sub(p, 0, .3)) : step === 6 ? .06 : 1));
+        $('dm-dna').setAttribute('opacity', f1(step === 1 ? 1 - ease(sub(p, 0, .3)) : step === 2 ? ease(sub(p, 0, .3)) : step === 5 ? 1 - ease(sub(p, 0, .3)) : step === 6 ? 0 : 1));   // bij inzoomen (stap 1) en bij de promotor (stap 5) de DNA-rijen volledig weg
         // CpG-kaders (stap 0)
         $('dm-cpg').innerHTML = step === 0 ? CPG.map(i => `<rect x="${bx(i) - 21}" y="${330 - 16}" width="${P + 42 - 4}" height="${420 + BH - 330 + 32}" rx="10" fill="none" stroke="${C.trna}" stroke-width="3" opacity="${f1(ease(sub(p, .2, .5)))}"/>`).join('') +
           txt(560, 530, T2(`${CPG.length} CpG-plaatsen in dit stukje`, `${CPG.length} CpG sites in this stretch`), C.trna, 20, 'middle', 700) : '';

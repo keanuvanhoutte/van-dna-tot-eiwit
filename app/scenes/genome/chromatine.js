@@ -188,7 +188,7 @@ export default {
         <path d="M${f1(big.b[0])},${f1(big.b[1])} Q1470,${f1(big.b[1] + 50)} 1560,${f1(big.b[1] + 40)}" stroke="${C.dna}" stroke-width="13" fill="none" stroke-linecap="round"/>
         <circle data-anchor="dnahelix" cx="1520" cy="${f1(big.b[1] + 30)}" r="1" fill="none"/>
       </g>
-      <g data-node="nucleosoom" data-color="${HC.H3}" data-label="${T2('Nucleosoom (3D) →', 'Nucleosome (3D) →')}">${big.svg}<circle data-anchor="nucleosoom" cx="1425" cy="690" r="1" fill="none"/></g>
+      <g data-node="nucleosoom" data-color="${HC.H3}" data-label="${T2('Nucleosoom (3D) →', 'Nucleosome (3D) →')}">${big.svg}<circle data-anchor="nucleosoom" data-pos="below" cx="1480" cy="645" r="1" fill="none"/></g>
 
       ${txt(1572, 656, T2('~147 bp · ~1,7 windingen · histonoctameer', '~147 bp · ~1.7 turns · histone octamer'), C.muted, 12, 'end')}
     </g>

@@ -92,7 +92,7 @@ export default {
           const len = Math.min(1, inj * 1.6);
           f += `<path d="M${AX},${TIP} L${AX},${f1(TIP + 50 * len)}" stroke="${PHDNA}" stroke-width="6" opacity="${f1((1 - ph(2, 0, .3)) * (1 - burst))}"/>`;
           f += ring(AX, 418, 30 * ease(sub(inj, .5, 1)), 1 - burst);   // los in het cytoplasma, boven het chromosoom
-          if (step === 1) fx += T(AX + 60, 426, T2('faag-DNA', 'phage DNA'), { size: 26, col: PHDNA, w: 700, anchor: 'start', op: ease(sub(p, .6, .8)) });
+          if (step === 1) fx += T(AX + 46, 440, T2('faag-DNA', 'phage DNA'), { size: 26, col: PHDNA, w: 700, anchor: 'start', op: ease(sub(p, .6, .8)) });
         }
         /* nieuwe fagen in A (stap 2) en vrij na het openbarsten (stap 3) */
         MINI.forEach(([x, y], i) => {

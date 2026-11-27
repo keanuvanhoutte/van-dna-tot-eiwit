@@ -90,7 +90,7 @@ export default {
     <g id="hm-nuc" data-node="nucleosoom" data-color="${HC.H3}" data-nolabel>
       ${tl}${nu.svg}
       <path id="hm-h3link" stroke="${HC.H3}" stroke-width="7" fill="none" stroke-linecap="round"/>
-      <g id="hm-nuclab">${txt(NX[0], NX[1] + NR + 66, T2('nucleosoom met 8 N-staarten', 'nucleosome with 8 N-tails'), '#c9d2e4', 20).replace('<text', '<text stroke="#0a1224" stroke-width="6" paint-order="stroke"')}</g>
+      <g id="hm-nuclab">${txt(NX[0], NX[1] + NR + 116, T2('nucleosoom met 8 N-staarten', 'nucleosome with 8 N-tails'), '#c9d2e4', 20).replace('<text', '<text stroke="#0a1224" stroke-width="6" paint-order="stroke"')}</g>
     </g>
     <g data-node="nucleosoom" data-color="${HC.H3}" data-label="${T2('← Nucleosoom', '← Nucleosome')}" data-nolabel><circle cx="${NX[0]}" cy="${NX[1]}" r="${NR * .8}" fill="transparent"/></g>
     <g id="hm-dna" data-node="dnahelix" data-color="${C.dna}" data-nolabel>${dna}</g>
@@ -194,7 +194,10 @@ export default {
         $('hm-tabsum').setAttribute('opacity', f1(fade));
         $('hm-dnalab').setAttribute('opacity', f1(1 - fade));
         $('hm-nuclab').setAttribute('opacity', f1(step === 0 ? 1 : step === 7 ? 0 : .5));
-        $('hm-dna').setAttribute('opacity', step === 0 ? .4 : 1);
+        // stap 0 (ingezoomd op het nucleosoom): staart-inzoom en DNA-strook rechtsboven nog niet tonen (staken half buiten beeld); in stap 1 vloeiend erbij
+        const zoomIn = step === 0 ? 0 : step === 1 ? ease(sub(p, 0, .3)) : 1;
+        $('hm-dna').setAttribute('opacity', f1(zoomIn));
+        $('hm-tail').setAttribute('opacity', f1(zoomIn));
         $('hm-chrom').setAttribute('opacity', step === 7 ? ease(sub(p, .1, .4)) : 0);
       },
     };

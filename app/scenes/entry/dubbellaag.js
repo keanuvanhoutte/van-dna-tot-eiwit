@@ -164,8 +164,8 @@ export default {
           pr += `<g opacity="${f1(o5)}"><rect x="${bx}" y="${TOP}" width="${bw}" height="${H}" fill="#ffd166" fill-opacity=".14" stroke="#ffd166" stroke-width="3" stroke-dasharray="8 6"/>` +
             `<rect x="${lx - 242}" y="${Y - 21}" width="252" height="38" rx="10" fill="#0b1224" opacity=".85"/></g>`;
           pr += T(lx, Y + 7, T2('waterafstotend deel', 'water-repelling part'), { size: 22, col: '#ffd166', anchor: 'end', op: o5 });
-          pr += T(lx, TOP - 28, T2('waterminnende lus', 'water-loving loop'), { size: 22, col: C.dna2, anchor: 'end', op: o5 });
-          pr += T(lx, BOT + 40, T2('waterminnende lus', 'water-loving loop'), { size: 22, col: C.dna2, anchor: 'end', op: o5 });
+          pr += T(lx - 70, TOP - 40, T2('waterminnende lus', 'water-loving loop'), { size: 22, col: C.dna2, anchor: 'end', op: o5 });
+          pr += T(lx - 70, BOT + 40, T2('waterminnende lus', 'water-loving loop'), { size: 22, col: C.dna2, anchor: 'end', op: o5 });
         }
         const kSug = Math.max(at(6), fade0, step === 7 ? 1 : 0);
         if (kSug > .01) {
