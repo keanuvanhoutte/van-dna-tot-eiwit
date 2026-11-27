@@ -138,11 +138,11 @@ html, body { height: 100%; overflow: hidden; }
 @keyframes ring { 0% { box-shadow: 0 0 0 0 rgba(124,196,255,.55); } 100% { box-shadow: 0 0 0 10px rgba(124,196,255,0); } }
 @media (prefers-reduced-motion: reduce) { .tbtn.pulse { animation: none; } }
 /* stappen als bolletjes: gedaan = blauw, huidig = breder (vult zich terwijl de stap speelt; lichter = leespauze), nog te komen = donker */
-.track { flex: 0 1 auto; min-width: 0; display: flex; gap: 4px; align-items: center; margin-left: 6px; }
-.seg { all: unset; cursor: pointer; flex: 0 0 8px; height: 20px; position: relative; }
-.seg i { position: absolute; left: 0; right: 0; top: 6px; height: 8px; border-radius: 4px; background: #2a3550; overflow: hidden; display: block; }
+.track { flex: 0 1 auto; min-width: 0; display: flex; gap: 6px; align-items: center; margin-left: 8px; }
+.seg { all: unset; cursor: pointer; flex: 0 0 14px; height: 22px; position: relative; }
+.seg i { position: absolute; left: 0; right: 0; top: 6px; height: 10px; border-radius: 5px; background: #2a3550; overflow: hidden; display: block; }
 .seg.done i { background: #3f6db8; }
-.seg.cur { flex: 0 0 22px; }
+.seg.cur { flex: 0 0 40px; }
 .seg:hover i { filter: brightness(1.5); }
 .seg i em, .seg i s { position: absolute; left: 0; top: 0; bottom: 0; width: 0; text-decoration: none; }
 .seg i s { background: rgba(124,196,255,.45); }                /* leespauze */
@@ -200,16 +200,18 @@ html, body { height: 100%; overflow: hidden; }
 .status.ok { background: rgba(127,220,106,.13); color: #7fdc6a; }
 
 
-/* terugknop links naast de figuur */
-.backfig { all: unset; box-sizing: border-box; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); z-index: 6; cursor: pointer;
-  display: grid; grid-template-columns: auto auto; grid-template-rows: auto auto; column-gap: 8px; align-items: center; max-width: 190px;
-  padding: 10px 14px 10px 10px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line); color: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.35); }
+/* terugknop: klein en stil linksboven in de figuur, wordt duidelijk bij aanwijzen */
+.backfig { all: unset; box-sizing: border-box; position: absolute; left: 12px; top: 12px; z-index: 6; cursor: pointer;
+  display: flex; align-items: center; gap: 6px; max-width: 220px;
+  padding: 4px 10px 4px 8px; border-radius: 999px; background: rgba(10,16,34,.45); border: 1px solid rgba(255,255,255,.08); color: rgba(230,238,255,.75);
+  opacity: .7; transition: opacity .2s, background .2s, border-color .2s; }
 .backfig[hidden] { display: none; }
-.backfig span { grid-row: 1 / 3; font-size: 26px; line-height: 1; color: var(--accent); }
-.backfig b { font-size: 15px; font-weight: 600; }
-.backfig small { font-size: 12px; color: rgba(220,230,250,.7); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.backfig span { font-size: 16px; line-height: 1; color: var(--accent); }
+.backfig b { font-size: 12px; font-weight: 600; }
+.backfig small { font-size: 11px; color: rgba(220,230,250,.6); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.backfig small::before { content: '· '; }
 .backfig small:empty { display: none; }
-.backfig:hover { border-color: var(--accent); }
+.backfig:hover, .backfig:focus-visible { opacity: 1; background: var(--panel); border-color: var(--accent); color: #fff; }
 .backfig:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 /* inhoud van het uitlegpaneel */
