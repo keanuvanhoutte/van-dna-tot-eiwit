@@ -194,7 +194,7 @@ export default {
             <path d="M${RX - 70},640 q30,-26 66,0 t66,0" stroke="${C.rna}" stroke-width="6" fill="none"/>
             ${txt(RX, 690, T2('viraal RNA', 'viral RNA'), C.rna, 22)}</g>`;
         }
-        if (step === 4) no += `<g opacity="${f1(ease(sub(p, .1, .5)))}">${txt(800, 420, T2('uncoating', 'uncoating'), C.text, 24)}</g>`;
+        if (step === 4) no += `<g opacity="${f1(ease(sub(p, .1, .5)))}">${txt(800, 420, T2('uitpakken (uncoating)', 'uncoating'), C.text, 24)}</g>`;
         if (step === 5) {
           const k = ease(sub(p, .15, .6));
           no += `<g opacity="${f1(k)}">${txt(RX, 778, T2('vaak cytosol · retrovirus: eerst DNA', 'often cytosol · retrovirus: DNA first'), C.rna, 22)}</g>`;
