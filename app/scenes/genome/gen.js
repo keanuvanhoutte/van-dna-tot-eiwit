@@ -45,10 +45,10 @@ export default {
     ST(8000, cam(320, 350, 660), 'Hier begint het gen', 'This is where the gene starts',
       'Aan het begin (de promoter) gaat het enzym dat RNA maakt klaarstaan. Het RNA begint op positie +1.',
       'At the start (the promoter) the enzyme that makes RNA gets ready. The RNA begins at position +1.'),
-    ST(8500, cam(712, 330, 832), 'Stukken die blijven en gaan', 'Parts that stay and go',
+    ST(8500, cam(880, 330, 1200), 'Stukken die blijven en gaan', 'Parts that stay and go',
       'Exonen blijven in het mRNA; de stukken ertussen (intronen) worden er later uitgeknipt.',
       'Exons stay in the mRNA; the pieces in between (introns) are cut out later.'),
-    ST(8500, cam(850, 330, 1150), 'Waar het eiwit in staat', 'Where the protein is written',
+    ST(8500, cam(880, 330, 1200), 'Waar het eiwit in staat', 'Where the protein is written',
       'De eiwitcode loopt van het startsein ATG tot een stopsein. De stukken ervoor en erna worden geen eiwit.',
       'The protein code runs from the start signal ATG to a stop signal. The parts before and after do not become protein.'),
     ST(8000, cam(1270, 330, 600), 'Het einde van het gen', 'The end of the gene',
@@ -111,14 +111,14 @@ export default {
       <g id="gn-loop"></g>
       <g data-node="genregulatie" data-color="${col.enh}" data-label="${T2('Enhancer → genregulatie', 'Enhancer → gene regulation')}">
         <g id="gn-enh">${`<rect x="${ENH[0]}" y="${Y - 20}" width="${ENH[1] - ENH[0]}" height="40" rx="10" fill="#4a3d1c" stroke="${col.enh}" stroke-width="3"/>`}${txt((ENH[0] + ENH[1]) / 2, Y + 7, 'enhancer', '#fff', 21, 'middle', 700)}
-        <circle data-anchor="genregulatie" cx="${(ENH[0] + ENH[1]) / 2 + 60}" cy="${Y + 62}" r="1" fill="none" data-pos="below"/></g>
+        <circle id="gn-enhA" data-anchor="genregulatie" cx="${(ENH[0] + ENH[1]) / 2 + 60}" cy="${Y + 62}" r="1" fill="none" data-pos="below"/></g>
       </g>
       <g data-node="promoter" data-color="${col.prom}" data-label="${T2('Promoter', 'Promoter')}">
         <rect x="${PROM[0]}" y="${Y - 22}" width="${PROM[1] - PROM[0]}" height="44" rx="10" fill="#2e2556" stroke="${col.prom}" stroke-width="3"/>
         <g id="gn-tata">${mono(365, Y + 6, 'TATAAA', '#e2d6ff', 17)}</g>
-        <circle data-anchor="promoter" cx="${(PROM[0] + PROM[1]) / 2}" cy="${Y + 84}" r="1" fill="none" data-pos="below"/>
+        <circle id="gn-promA" data-anchor="promoter" cx="${(PROM[0] + PROM[1]) / 2}" cy="${Y + 84}" r="1" fill="none" data-pos="below"/>
       </g>
-      <g id="gn-promlab">${txt(365, Y + 48, T2('TATA-box ≈ −25', 'TATA box ≈ −25'), '#c9b8ff', 17)}${txt(365, Y + 74, T2('(of CpG-eiland)', '(or CpG island)'), C.muted, 17)}</g>
+      <g id="gn-promlab">${txt(365, Y + 52, T2('hier haakt het startcomplex aan', 'the start complex hooks on here'), '#c9b8ff', 18, 'middle', 700)}${txt(365, Y + 76, T2('(TATA-box ≈ −25)', '(TATA box ≈ −25)'), C.muted, 15)}</g>
       <g data-node="splicing" data-color="${col.intron}" data-label="${T2('Intronen → splicing', 'Introns → splicing')}">${intr}<circle data-anchor="splicing" cx="${(EX[0][1] + EX[1][0]) / 2}" cy="${Y - 60}" r="1" fill="none"/></g>
       ${exons}
       <g id="gn-codons">
@@ -183,6 +183,10 @@ export default {
         svg.querySelectorAll('.gn-det').forEach(el => el.setAttribute('opacity', detOp));
         $('gn-dna').setAttribute('opacity', f1(step === 6 ? 1 - .8 * ease(sub(p, 0, .05)) : step === 7 ? .2 + .8 * ease(sub(p, 0, .3)) : 1));
         $('gn-pre').setAttribute('opacity', step === 6 ? 1 : step === 0 || step === 7 ? .9 : .15);
+        // in stap 3 (promoter) schuiven de knoppen 'Enhancer' en 'Promoter' onder de uitleg van de TATA-box; DNA-label enkel waar het in beeld valt
+        $('gn-enhA').setAttribute('cy', step === 2 ? Y + 150 : Y + 62); $('gn-enhA').setAttribute('cx', step === 2 ? 180 : (ENH[0] + ENH[1]) / 2 + 60);
+        $('gn-promA').setAttribute('cy', step === 2 ? Y + 150 : Y + 84); $('gn-promA').setAttribute('cx', step === 2 ? 420 : (PROM[0] + PROM[1]) / 2);
+        $('gn-dnalab').setAttribute('opacity', step === 1 || step === 2 || step === 5 ? 0 : 1);
         const m = step === 6 ? ease(sub(p, .35, .8)) : step === 0 || step === 7 ? .9 : .15;
         $('gn-mat').setAttribute('opacity', f1(m));
         $('gn-arrow').setAttribute('opacity', step === 6 ? f1(sub(p, .2, .4)) : step === 0 || step === 7 ? .8 : .15);
