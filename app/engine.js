@@ -255,6 +255,8 @@ function fitPill(t) {
   if (empty) return;
   const bw = box.tagName === 'rect' ? +box.getAttribute('width') : 2 * +box.getAttribute('rx'), w = t.getComputedTextLength();
   if (!(bw > 0) || w <= bw - 6) return;
+  const tb = t.getBBox(), bb = box.getBBox();               // enkel echte pillen: de tekst staat midden in het vak (niet ernaast)
+  if (bb.height > 60 || Math.abs(tb.y + tb.height / 2 - (bb.y + bb.height / 2)) > bb.height / 2) return;
   const fs = parseFloat(t.getAttribute('font-size')) || 12;
   t.setAttribute('font-size', (fs * Math.max(.55, (bw - 8) / w)).toFixed(1));
 }
