@@ -28,6 +28,10 @@ function bentCenter(theta) {
     return [e[0] - d * Math.cos(theta), e[1] + d * Math.sin(theta)];
   };
 }
+const GRIJS = '#8a94ab';   // 'andere herkenningsstukjes': grijs, zodat TATA-box en startpunt (Inr, +1) eruit springen
+const MAIN = id => id === 'TATA' || id === 'Inr';
+/* eiwit met een rolnaam in gewone taal; de afkorting klein eronder */
+const rp = (x, y, w, role, abbr, col, op, fs = 17) => op <= .01 ? '' : ePill(x, y, w, 34, role, col, op, fs) + `<g opacity="${f1(op)}">${txt(x, y + 36, abbr, '#c9b8ff', 15, 'middle', 700)}</g>`;
 const G = { d: '#8e6cf0', a: '#6f5bd6', b: '#6f5bd6', f: '#5a4bb8', e: '#5a4bb8', h: '#8e6cf0', pol: '#9b7bff', med: '#6f5bd6', nelf: '#d65a8a', dsif: '#5fa8d6', ptefb: '#7fdc6a' };
 
 export default {
@@ -123,21 +127,23 @@ export default {
           const c0 = ctr(bx(e.a) - 8), c1 = ctr(bx(e.b) + 8), cm = ctr((bx(e.a) + bx(e.b)) / 2);
           const rot = Math.atan2(c1[1] - c0[1], c1[0] - c0[0]) * 180 / Math.PI;
           const w = Math.hypot(c1[0] - c0[0], c1[1] - c0[1]);
-          el += `<g opacity="${f1(appear)}"><rect x="${f1(cm[0] - w / 2)}" y="${f1(cm[1] - 30)}" width="${f1(w)}" height="60" rx="8" fill="${e.col}" fill-opacity=".13" stroke="${e.col}" stroke-width="2" transform="rotate(${f1(rot)} ${f1(cm[0])} ${f1(cm[1])})"/>`;
+          const main = MAIN(e.id), ec = main ? e.col : GRIJS;
+          el += `<g opacity="${f1(appear)}"><rect x="${f1(cm[0] - w / 2)}" y="${f1(cm[1] - 30)}" width="${f1(w)}" height="60" rx="8" fill="${ec}" fill-opacity="${main ? .16 : .07}" stroke="${ec}" stroke-width="${main ? 3 : 1.5}" stroke-opacity="${main ? 1 : .6}" transform="rotate(${f1(rot)} ${f1(cm[0])} ${f1(cm[1])})"/>`;
           const bent = theta > .05 && e.b < -24;
           const isT = theta > .05 && e.id === 'TATA';
           const lx = isT ? cm[0] - 105 : bent ? cm[0] - 70 : cm[0], ly = isT ? cm[1] + 36 : bent ? cm[1] + 10 : Y0 + 52;
-          elLab += `<g opacity="${f1(appear)}">` + txt(lx, ly + 4, e.id, e.col, 22, 'middle', 800);
-          if (e.seq && step === 0) elLab += txt(lx, ly + 28, e.seq, C.muted, 19, 'middle', 600, 'JetBrains Mono');
+          const nm = e.id === 'TATA' ? T2('TATA-box', 'TATA box') : e.id;
+          elLab += `<g opacity="${f1(appear)}">` + txt(lx, ly + 4, nm, ec, main ? 24 : 17, 'middle', main ? 800 : 600);
           elLab += '</g>';
           el += '</g>';
         });
-        if (step === 0) el += txt(bx(1) + 30, Y0 - 62, T2('startplaats +1', 'start site +1'), C.text, 20, 'start');
-        $('pr-elem').innerHTML = el; $('pr-elemlab').innerHTML = elLab + (step === 5 ? txt(aX + 10, Y0 - 44, T2('eerste nt', 'first nt'), C.rna, 18, 'start') : '');
+        if (step === 0) el += txt(bx(1) + 30, Y0 - 62, T2('startpunt +1', 'start site +1'), C.text, 24, 'start', 800) +
+          `<g opacity="${f1(sub(p, .6, .75))}">${txt(bx(8), Y0 + 176, T2('grijs: andere herkenningsstukjes (niet bij elk gen)', 'grey: other recognition stretches (not in every gene)'), GRIJS, 19, 'middle', 600)}</g>`;
+        $('pr-elem').innerHTML = el; $('pr-elemlab').innerHTML = elLab + (step === 5 ? txt(aX + 10, Y0 - 44, T2('eerste RNA', 'first RNA'), C.rna, 19, 'start') : '');
 
         // noot over CpG-eilanden (stap 0) + zijpad-knop Pol I/III
         const nOp = step === 0 ? sub(p, .7, .85) : 0;
-        $('pr-note').innerHTML = nOp > .01 ? `<g opacity="${f1(nOp)}">` + txt(560, 250, T2('Meestal géén TATA-box!', 'Usually no TATA box!'), C.trna, 26) + '</g>' : '';
+        $('pr-note').innerHTML = nOp > .01 ? `<g opacity="${f1(nOp)}">` + txt(bx(-40), Y0 - 84, T2('Bij de meeste menselijke genen ontbreekt de TATA-box', 'Most human genes lack a TATA box'), C.trna, 21, 'start', 700) + '</g>' : '';
         $('pr-polbtn').innerHTML = step === 0 ? `<rect x="1060" y="222" width="400" height="48" rx="24" fill="rgba(155,123,255,.12)" stroke="${C.prot}" stroke-width="2"/>` + txt(1260, 254, T2('Pol I- en Pol III-promoters ↗', 'Pol I and Pol III promoters ↗'), '#c9b8ff', 20) : '';
 
         // algemene transcriptiefactoren
@@ -150,36 +156,36 @@ export default {
           const dy = -160 * (1 - dOp);
           g += `<g opacity="${f1(dOp)}"><path d="M${f1(T[0] - 90)},${f1(T[1] - 20 + dy)} C${f1(T[0] - 110)},${f1(T[1] - 190 + dy)} ${f1(bx(34))},${f1(Y0 - 250 + dy)} ${f1(bx(33))},${f1(Y0 - 40 + dy)}" stroke="${G.d}" stroke-width="34" stroke-opacity=".22" fill="none" stroke-linecap="round"/>` +
             `<path d="M${f1(T[0] - 58)},${f1(T[1] - 18 + dy)} Q${f1(T[0])},${f1(T[1] - 70 + dy)} ${f1(T[0] + 58)},${f1(T[1] - 18 + dy)}" stroke="${G.d}" stroke-width="20" fill="none" stroke-linecap="round"/>` +
-            txt(T[0] + 4, T[1] - 60 + dy, 'TBP', '#fff', 20) + (step < 5 ? txt(bx(30), Y0 - 226 + dy, 'TFIID', '#c9b8ff', 22) : '');
+            txt(T[0] + 4, T[1] - 60 + dy, 'TBP', '#fff', 20) + (step < 5 ? txt(bx(24), Y0 - 236 + dy, T2('herkent de promoter', 'recognises the promoter'), '#c9b8ff', 21, 'middle', 700) + txt(bx(24), Y0 - 214 + dy, 'TFIID', '#c9b8ff', 15, 'middle', 700) : '');
           if (step >= 1 && step <= 2) g += `<line x1="${bx(2)}" y1="${Y0 - 150}" x2="${bx(2)}" y2="${Y0 - 32}" stroke="${G.d}" stroke-width="2" stroke-dasharray="4 4"/><line x1="${bx(30)}" y1="${Y0 - 150}" x2="${bx(30)}" y2="${Y0 - 32}" stroke="${G.d}" stroke-width="2" stroke-dasharray="4 4"/>` +
-            txt(bx(16), Y0 - 120, T2('TAF\'s ↔ Inr, DPE', 'TAFs ↔ Inr, DPE'), '#c9b8ff', 20);
+            txt(bx(16), Y0 - 124, T2('grijpt ook het startpunt vast', 'also grips the start site'), '#c9b8ff', 19, 'middle', 700) + txt(bx(16), Y0 - 102, T2('(TAF\'s)', '(TAFs)'), '#c9b8ff', 15, 'middle', 600);
           g += '</g>';
         }
         if (step >= 1 && step <= 2 && theta > .1) g += txt(T[0] + 110, Y0 + 190, `≈ ${Math.round(theta * 180 / Math.PI)}°`, C.trna, 22);
-        g += ePill(T[0] - 128, T[1] - 14, 88, 32, 'TFIIA', G.a, fin(2, .05, .35), 18);
+        g += rp(T[0] - 150, T[1] - 56, 140, T2('houdt TBP vast', 'holds TBP'), 'TFIIA', G.a, fin(2, .05, .35));
         const B = ctr(bx(-20));
         const tb = fin(3, .05, .45);   // zodra Pol II komt, schuift TFIIB mee tegen de achterkant van Pol II (TFIIB overbrugt TBP en Pol II)
-        g += ePill(bx(-17) + 56 * tb, Y0 - 54 + 4 * tb, 88, 32, 'TFIIB', G.b, fin(2, .35, .7) * (1 - leave), 18);
+        g += rp(bx(-14) + 40 * tb, Y0 - 70 + 4 * tb, 170, T2('brug naar het enzym', 'bridge to the enzyme'), 'TFIIB', G.b, fin(2, .35, .7) * (1 - leave), 16);
         const polOp = fin(3, .05, .45);
         const px = aX - 30, py = Y0 - 88;
-        g += ePill(px + 128, py - 100, 88, 32, 'TFIIF', G.f,   // TFIIF, TFIIE en TFIIH raken Pol II; TFIIH ligt op het DNA stroomafwaarts (He et al. 2016)
-           fin(3, .2, .5) * (1 - leave), 18);
-        g += ePill(px + 176, py - 46, 88, 32, 'TFIIE', G.e, fin(4, .05, .35) * (1 - leave), 18);
+        g += rp(px + 138, py - 108, 120, T2('begeleider', 'escort'), 'TFIIF', G.f,   // TFIIF, TFIIE en TFIIH raken Pol II; TFIIH ligt op het DNA stroomafwaarts (He et al. 2016)
+           fin(3, .2, .5) * (1 - leave));
+        g += rp(px + 196, py - 46, 120, T2('haalt TFIIH', 'brings TFIIH'), 'TFIIE', G.e, fin(4, .05, .35) * (1 - leave), 16);
         const hOp = fin(4, .35, .7);
         const hx = px + 204, hy = py + 46;
-        g += `<g opacity="${f1(hOp * (1 - leave))}">` + prot(hx, hy, 66, 36, G.h, 1, 71, 'TFIIH', 18) +
-          (step >= 5 && step <= 6 ? txt(hx, hy - 52, step === 5 ? 'XPB · ATP' : 'CDK7 → Ser5', '#c9b8ff', 18) : '') + '</g>';
-        if (step === 5) g += txt(800, Y0 + 180, T2('open complex: transcriptiebel', 'open complex: transcription bubble'), C.text, 20);
+        g += `<g opacity="${f1(hOp * (1 - leave))}">` + prot(hx, hy, 66, 36, G.h, 1, 71) + txt(hx, hy + 2, T2('opener', 'opener'), '#fff', 19, 'middle', 700) + txt(hx, hy + 22, 'TFIIH', '#c9b8ff', 14, 'middle', 700) +
+          (step >= 5 && step <= 6 ? txt(hx + 76, hy + 6, step === 5 ? T2('opent het DNA (ATP)', 'opens the DNA (ATP)') : T2('zet P op de staart', 'puts P on the tail'), '#c9b8ff', 19, 'start', 700) : '') + '</g>';
+        if (step === 5) g += txt(960, Y0 + 180, T2('het DNA is open: de transcriptiebel', 'the DNA is open: the transcription bubble'), C.text, 21);
         // NELF / DSIF / P-TEFb
         const nelfOp = step === 7 ? sub(p, .45, .7) : step === 8 ? 1 - ease(sub(p, .45, .75)) : 0;
         const dsifOp = step === 7 ? sub(p, .35, .6) : step === 8 ? 1 : 0;
         const pausePx = step === 8 ? aX - 30 : px;
-        g += ePill(pausePx + 108, py - 94 - (step === 8 ? 120 * ease(sub(p, .45, .75)) : 0), 86, 32, 'NELF', G.nelf, nelfOp, 18);
-        g += ePill(pausePx - 60, py - 130, 86, 32, 'DSIF', G.dsif, dsifOp, 18);   // DSIF (op de klem) en NELF tegen de Pol II-omtrek: beide binden Pol II rechtstreeks; vrij van RNA en CTD
+        g += rp(pausePx + 90, py - 150 - (step === 8 ? 120 * ease(sub(p, .45, .75)) : 0), 130, T2('pauze-eiwit', 'pause protein'), 'NELF', G.nelf, nelfOp, 16);
+        g += rp(pausePx - 80, py - 150, 130, T2('pauze-eiwit', 'pause protein'), 'DSIF', G.dsif, dsifOp, 16);   // DSIF (op de klem) en NELF tegen de Pol II-omtrek: beide binden Pol II rechtstreeks; vrij van RNA en CTD
         if (step === 8) {
           const pt = ease(sub(p, 0, .3));
-          g += ePill(pausePx - 20, py - 178, 190, 34, 'P-TEFb (CDK9)', '#4a9a3a', pt, 18);
-          if (pt > .3) g += `<g opacity="${f1(pt * nelfOp)}">${txt(pausePx + 164, py - 104 - 120 * ease(sub(p, .45, .75)), 'P', C.ok, 20)}</g><g opacity="${f1(pt)}">${txt(pausePx - 114, py - 136, 'P', C.ok, 20)}</g>`;
+          g += rp(pausePx + 5, py - 226, 200, T2('geeft het startsein', 'gives the go signal'), 'P-TEFb (CDK9)', '#4a9a3a', pt, 16);
+          if (pt > .3) g += `<g opacity="${f1(pt * nelfOp)}">${txt(pausePx + 166, py - 156 - 120 * ease(sub(p, .45, .75)), 'P', C.ok, 22)}</g><g opacity="${f1(pt)}">${txt(pausePx - 156, py - 156, 'P', C.ok, 22)}</g>`;
         }
         $('pr-gtf').innerHTML = g;
 
@@ -195,14 +201,14 @@ export default {
         if (polOp > .01) {
           const dy = -200 * (1 - polOp);
           pol += `<g opacity="${f1(polOp)}" transform="translate(${f1(px)} ${f1(py + dy)})">` +
-            polII(0, 88, 160, 92, { col: G.pol, gul: 46, hoog: 2.27, vul: .2, seed: 77, label: 'Pol II', fs: 24, labelY: -150, ...CTDO }) +   // app-vorm (bio.js): het DNA (y = Y0) loopt door de geul
+            polII(0, 88, 160, 92, { col: G.pol, gul: 46, hoog: 2.27, vul: .2, seed: 77, label: T2('RNA-enzym (Pol II)', 'RNA enzyme (Pol II)'), fs: 22, labelY: -150, ...CTDO }) +   // app-vorm (bio.js): het DNA (y = Y0) loopt door de geul
             `<circle cx="30" cy="88" r="7" fill="#fff" opacity=".9" filter="url(#glow)"/>` +
             '';
           const s5 = step < 6 ? 0 : step === 6 ? sub(p, .05, .35) : 1, s2 = step < 8 ? 0 : sub(p, .2, .5);
           // CTD onderaan achteraan via de ctd-optie van bio.polymerase (zelfde plaats als in transcriptie en genregulatie)
           const bd = polCTD(0, 88, 160, 92, CTDO.ctd, CTDO), bead = i => bd[2 + (i >> 1)];   // merktekens pas onder de liniaal: per kraaltje S5P rechts, S2P links
-          pol += [0, 2, 4].map(i => pill(bead(i)[0] + 30, bead(i)[1], 46, 21, 'S5P', '#ffc247', s5, 14)).join('') + [1, 3, 5].map(i => pill(bead(i)[0] - 30, bead(i)[1], 46, 21, 'S2P', '#5ad17a', s2, 14)).join('');
-          if (step >= 6) pol += txt(bead(0)[0] - 66, bead(0)[1] + 6, 'CTD (YSPTSPS)×52', C.muted, 18, 'end');
+          pol += [0, 2, 4].map(i => pill(bead(i)[0] + 24, bead(i)[1], 26, 21, 'P', '#ffc247', s5, 15)).join('') + [1, 3, 5].map(i => pill(bead(i)[0] - 24, bead(i)[1], 26, 21, 'P', '#5ad17a', s2, 15)).join('');
+          if (step >= 6) pol += txt(bead(0)[0] - 56, bead(0)[1] + 6, T2('staart (CTD)', 'tail (CTD)'), C.muted, 19, 'end');
           pol += '</g>';
         }
         $('pr-pol').innerHTML = pol;
@@ -219,7 +225,7 @@ export default {
             pts.push([x, y]);
           }
           rna = `<path d="${pts.map((q, i) => `${i ? 'L' : 'M'}${f1(q[0])},${f1(q[1])}`).join('')}" stroke="${C.rna}" stroke-width="6" fill="none" stroke-linecap="round"/>`;
-          if (step >= 7) rna += txt(pts[pts.length - 1][0] - 14, pts[pts.length - 1][1] - 8, `${nt} nt`, C.rna, 20, 'end');
+          if (step >= 7) rna += txt(pts[pts.length - 1][0] - 14, pts[pts.length - 1][1] - 8, T2(`RNA: ${nt} bouwstenen`, `RNA: ${nt} building blocks`), C.rna, 20, 'end');
           // 'eerste nt' staat in de bovenste labellaag (pr-elemlab)
         }
         $('pr-rna').innerHTML = rna;
@@ -227,7 +233,7 @@ export default {
 
         // vervolg
         const goOp = step === 8 ? sub(p, .6, .8) : 0;
-        $('pr-go').innerHTML = goOp > .01 ? `<g opacity="${f1(goOp)}">` + arrow(1250, 170, 1480, 170, C.rna, 4) + txt(1365, 148, T2('productieve elongatie', 'productive elongation'), C.rna, 20) + '</g>' : '';
+        $('pr-go').innerHTML = goOp > .01 ? `<g opacity="${f1(goOp)}">` + arrow(1250, 170, 1480, 170, C.rna, 4) + txt(1365, 148, T2('verder RNA maken', 'keep making RNA'), C.rna, 21) + '</g>' : '';
         setA('pr-goA', 1365, 118, goOp > .5);
       },
     };
