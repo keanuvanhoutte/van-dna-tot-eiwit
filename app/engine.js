@@ -964,7 +964,7 @@ function render() {
     ${n ? `<div class="en">${sub(n)}</div>${kortOf(current.id) ? `<div class="kort"><b>${V('inShort')}</b>${kortOf(current.id)}</div>` : `<p>${summary(n)}</p>`}` : ''}
     ${termsCard(current.id)}${detailsHTML(current.id)}
     <details class="sec" open><summary>${V('stepsHere')}</summary><ol class="stepsList">${current.steps.map((s, i) => { const tg = stepTag(s, i); return `<li data-i="${i}">${tg ? `<span class="stag">${esc(tg)}</span>` : ''}${esc(stepTitle(s))}</li>`; }).join('')}</ol></details>
-    ${L(def.extra ?? base.extra) ?? ''}
+    ${level === 'hobby' ? '' : L(def.extra ?? base.extra) ?? ''}
     ${(def.legend ?? base.legend) ? `<div class="card c-leg"><div class="ch"><i>🎨</i>${V('legend')}</div><div class="legend">${(def.legend ?? base.legend).slice(0, level === 'hobby' ? 4 : level === 'secundair' ? 6 : 99).map(([c, x]) => `<span style="--c:${c}"><i></i>${L(x)}</span>`).join('')}</div></div>` : ''}
     ${ups.length ? `<div class="card c-up"><div class="ch"><i>↑</i>${V('up')}</div>${chipsOf(ups, 'up')}</div>` : ''}
     ${n?.in.length ? `<div class="card c-in"><div class="ch"><i>🔍</i>${V('zoomIn')}</div>${chipsOf(n.in, '')}</div>` : ''}
