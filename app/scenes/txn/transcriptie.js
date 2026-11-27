@@ -37,7 +37,7 @@ export default {
       text: { nl: 'Elke nieuwe base past bij de matrijs: A met U, G met C. Alleen de laatste ~8 basen blijven aan het DNA vast.', en: 'Each new base matches the template: A with U, G with C. Only the last ~8 bases stay attached to the DNA.' } },
     { dur: 8000, cam: cam(633, 410, 1066), title: { nl: 'Het RNA krijgt een kapje', en: 'The RNA gets a cap' },
       text: { nl: 'Als het RNA ~20–30 basen lang is, krijgt het begin van het RNA een beschermend kapje (cap).', en: 'When the RNA is ~20–30 bases long, the start of the RNA gets a protective cap.' } },
-    { dur: 8000, cam: cam(960, 520, 1200), title: { nl: 'Spanning in het DNA', en: 'Tension in the DNA' },
+    { dur: 8000, cam: cam(925, 470, 1340), title: { nl: 'Spanning in het DNA', en: 'Tension in the DNA' },
       text: { nl: 'Het DNA draait strakker op voor het enzym, zoals een telefoonsnoer. Speciale enzymen knippen het even door en zetten het weer losser.', en: 'The DNA twists up tighter ahead of the enzyme, like a phone cord. Special enzymes briefly cut it and loosen it again.' } },
     { dur: 8000, cam: cam(930, 440, 1300), title: { nl: 'Tot het einde van het gen', en: 'To the end of the gene' },
       text: { nl: 'Het enzym leest door tot voorbij het einde van het gen. Intussen wordt het RNA al bijgewerkt → volgend hoofdstuk.', en: 'The enzyme keeps reading past the end of the gene. Meanwhile the RNA is already being processed → next chapter.' } },
@@ -179,12 +179,13 @@ export default {
         $('tx-gtf').innerHTML = g.join('');
 
         // supercoils
-        const sc = step >= 4 ? 1 : 0;
-        { const a = $('tx-scA'); a.setAttribute('cx', f1(polX + (step === 7 ? -230 : 230))); a.setAttribute('cy', 612); a.setAttribute('opacity', sc); }   // knop boven de +-supercoils, niet over de CTD
-        $('tx-sc').innerHTML = sc ? `
-          <g transform="translate(${f1(polX + 230)} 640)"><circle r="17" fill="none" stroke="${C.dna2}" stroke-width="2"/><text y="6" text-anchor="middle" fill="${C.dna2}" font-size="18" font-family="Inter">+</text></g>
-          <g transform="translate(${f1(polX - 230)} 640)"><circle r="17" fill="none" stroke="${C.dna2}" stroke-width="2"/><text y="6" text-anchor="middle" fill="${C.dna2}" font-size="20" font-family="Inter">−</text></g>
-          ${txt(polX + 230, 684, T2('strakker opgedraaid (+)', 'wound tighter (+)'), C.muted, step === 7 ? 22 : 18, 'middle', step === 7 ? 700 : 400)}${txt(polX - 230, 684, T2('losser (−)', 'looser (−)'), C.muted, step === 7 ? 22 : 18, 'middle', step === 7 ? 700 : 400)}` : '';
+        const sc = step >= 4 ? (step === 6 ? 1 - sub(p, 0, .2) : 1) : 0;   // stap 7 (kapje, ingezoomd): de supercoil-labels vielen rechts buiten beeld en horen er niet bij
+        const SD = step === 7 ? 275 : 230;   // stap 8: labels iets verder uit elkaar, vrij van de CTD-staart
+        { const a = $('tx-scA'); a.setAttribute('cx', f1(polX + (step === 7 ? -SD : SD))); a.setAttribute('cy', 612); a.setAttribute('opacity', f1(sc)); }   // knop boven de +-supercoils, niet over de CTD
+        $('tx-sc').innerHTML = sc > .01 ? `<g opacity="${f1(sc)}">
+          <g transform="translate(${f1(polX + SD)} 640)"><circle r="17" fill="none" stroke="${C.dna2}" stroke-width="2"/><text y="6" text-anchor="middle" fill="${C.dna2}" font-size="18" font-family="Inter">+</text></g>
+          <g transform="translate(${f1(polX - SD)} 640)"><circle r="17" fill="none" stroke="${C.dna2}" stroke-width="2"/><text y="6" text-anchor="middle" fill="${C.dna2}" font-size="20" font-family="Inter">−</text></g>
+          ${txt(polX + SD, 684, T2('strakker opgedraaid (+)', 'wound tighter (+)'), C.muted, step === 7 ? 22 : 18, 'middle', step === 7 ? 700 : 400)}${txt(polX - SD, 684, T2('losser (−)', 'looser (−)'), C.muted, step === 7 ? 22 : 18, 'middle', step === 7 ? 700 : 400)}</g>` : '';
         if (step === 7) {
           // het knip-enzym (topo-isomerase) gaat op het strakke DNA vóór het enzym zitten, knipt het even door en laat het losser draaien
           const tx = polX + 330, kIn = ease(sub(p, .15, .35)), cut = sub(p, .45, .6), spin = ease(sub(p, .7, .85));
