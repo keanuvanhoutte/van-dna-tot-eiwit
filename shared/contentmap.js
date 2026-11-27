@@ -1,17 +1,17 @@
 /*
  * Inhoudskaart — één gedeeld onderdeel voor de app ("Waar ben ik?") en de pagina "Over de app".
- * Drie manieren om dezelfde inhoud te bekijken:
- *   1. Verhalen   — elk verhaal en zijpad als een lijn met genummerde haltes (zoals een metrokaart)
- *   2. Onderwerpen — alle onderwerpen per thema, van groot naar klein
- *   3. Zoomniveau  — alle onderwerpen per grootte: van de hele cel tot de atomen
- * Klik een onderwerp → rechts een kaartje in gewone taal (wat is het, in welk verhaal, wat hangt ermee samen)
- * met één grote knop om de animatie te openen. Zoeken licht de treffers op in elke weergave.
+ * Opbouw (zo eenvoudig mogelijk):
+ *   - bovenaan "Hier ben je": onderwerp, verhaal, halte x van y en een voortgangsbalk
+ *   - Verhalen:     links de lijst met verhalen, rechts het gekozen verhaal als één verticale route
+ *   - Onderwerpen:  alle onderwerpen per thema (groot → klein)
+ *   - zoeken:       één lijst met treffers
+ * Klik op een onderwerp → de uitleg en de knop om de animatie te openen klappen eronder open.
  *
  * mountMap(host, {
  *   NODES, STAGES, SCALES, SCALES_EN, LINES, MAIN_KEYS, SIDE_KEYS, DETAILS, S_EN, lang, L,
  *   here?: knoop-id waar de gebruiker nu is,  line?: huidige verhaallijn,
  *   engine?: () => Promise<zoekmotor met query()>   (shared/search.js, optioneel: slimmer zoeken),
- *   onOpen(id, lineKey)  — animatie openen,  view?: 'lines' | 'topics' | 'scale'
+ *   onOpen(id, lineKey)  — animatie openen,  view?: 'lines' | 'topics'
  * })
  */
 
@@ -24,23 +24,22 @@ const plain = s => String(s ?? '').replace(/\[\[([^|\]]+)\|[^\]]+\]\]/g, '$1').r
 
 const T = {
   lines: { nl: 'Verhalen', en: 'Stories' },
-  topics: { nl: 'Onderwerpen', en: 'Topics' },
-  scale: { nl: 'Van groot naar klein', en: 'From large to small' },
-  hLines: { nl: 'Elk verhaal is een lijn met genummerde haltes. Een zijpad takt af van een hoofdverhaal en gaat dieper op één thema in.', en: 'Each story is a line with numbered stops. A side path branches off a main story and goes deeper into one theme.' },
-  hTopics: { nl: 'Alle onderwerpen per thema. Binnen elk thema staan de grote dingen bovenaan en de kleine onderaan.', en: 'All topics by theme. Within each theme, large things are at the top and small ones at the bottom.' },
-  hScale: { nl: 'Alle onderwerpen per grootte: van een hele cel tot enkele atomen. De kleur toont het thema.', en: 'All topics by size: from a whole cell down to a few atoms. The colour shows the theme.' },
-  search: { nl: 'Zoek een onderwerp (bv. ribosoom, splicing, virus)…', en: 'Search a topic (e.g. ribosome, splicing, virus)…' },
-  hits: { nl: 'treffers', en: 'matches' }, none: { nl: 'Geen treffers. Probeer een ander woord.', en: 'No matches. Try another word.' },
-  all: { nl: 'onderwerpen', en: 'topics' },
+  topics: { nl: 'Alle onderwerpen', en: 'All topics' },
+  hLines: { nl: 'Kies links een verhaal. Klik op een halte voor uitleg.', en: 'Pick a story on the left. Click a stop for an explanation.' },
+  hTopics: { nl: 'Per thema, van groot (een cel) naar klein (moleculen). Klik op een onderwerp voor uitleg.', en: 'By theme, from large (a cell) to small (molecules). Click a topic for an explanation.' },
+  search: { nl: 'Zoek een onderwerp (bv. ribosoom, splicing, virus)', en: 'Search a topic (e.g. ribosome, splicing, virus)' },
+  hits: { nl: 'treffers voor', en: 'matches for' }, hit1: { nl: 'treffer voor', en: 'match for' },
+  none: { nl: 'Geen treffers. Probeer een ander woord.', en: 'No matches. Try another word.' },
+  clear: { nl: 'Wis zoeken', en: 'Clear search' },
   main: { nl: 'Hoofdverhalen', en: 'Main stories' }, sides: { nl: 'Zijpaden', en: 'Side paths' },
-  stops: { nl: 'haltes', en: 'stops' }, branch: { nl: 'takt af bij', en: 'branches off at' },
-  pick: { nl: 'Klik op een onderwerp om te zien wat het is, in welk verhaal het zit en waarmee het samenhangt.', en: 'Click a topic to see what it is, which story it is in and what it connects to.' },
+  stops: { nl: 'haltes', en: 'stops' }, stop: { nl: 'halte', en: 'stop' }, of: { nl: 'van', en: 'of' },
+  youHere: { nl: 'Hier ben je', en: 'You are here' }, hereTag: { nl: 'hier ben je', en: 'you are here' },
+  loose: { nl: 'los onderwerp, niet in een verhaal', en: 'separate topic, not in a story' },
+  branchOff: { nl: 'Takt af van', en: 'Branches off' }, at: { nl: 'bij', en: 'at' },
+  side: { nl: 'zijpad', en: 'side path' },
   open: { nl: '▶ Open de animatie', en: '▶ Open the animation' },
-  inStory: { nl: 'Zit in', en: 'Part of' }, chap: { nl: 'halte', en: 'stop' },
-  deeper: { nl: 'Inzoomen: meer detail', en: 'Zoom in: more detail' }, after: { nl: 'Daarna', en: 'Next' }, rel: { nl: 'Hangt samen met', en: 'Connected to' },
-  here: { nl: 'hier ben je', en: 'you are here' }, only: { nl: 'enkel via klikken in een animatie', en: 'only by clicking inside an animation' },
-  real3d: { nl: 'echte 3D-structuur', en: 'real 3D structure' }, bact: { nl: 'bacterie', en: 'bacterium' }, human: { nl: 'mens', en: 'human' },
-  zoom: { nl: 'grootte', en: 'size' },
+  back: { nl: '▶ Terug naar deze animatie', en: '▶ Back to this animation' },
+  also: { nl: 'Zit ook in', en: 'Also in' }, inStory: { nl: 'Zit in', en: 'Part of' },
 };
 
 let styled = false;
@@ -48,207 +47,236 @@ function addStyle() {
   if (styled) return; styled = true;
   const s = document.createElement('style');
   s.textContent = `
-.cmap { --cm-line: rgba(160,180,220,.16); color: var(--text, #e8edf7); }
-.cmap .cm-top { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 8px; }
-.cmap .cm-tabs { display: inline-flex; border: 1px solid var(--cm-line); border-radius: 12px; padding: 3px; gap: 3px; background: rgba(255,255,255,.02); }
-.cmap .cm-tabs button { all: unset; cursor: pointer; font-size: 14px; font-weight: 600; padding: 8px 14px; border-radius: 9px; color: var(--muted, #93a0bb); }
+.cmap { --cm-line: rgba(160,180,220,.16); --cm-mut: var(--muted, #93a0bb); --cm-acc: #7cc4ff; --cm-here: #ffc247; color: var(--text, #e8edf7); }
+.cmap button { font: inherit; color: inherit; }
+.cmap button:focus-visible, .cmap input:focus-visible { outline: 2px solid var(--cm-acc); outline-offset: 2px; }
+
+/* hier ben je */
+.cmap .cm-you { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 12px 16px; margin-bottom: 14px; border-radius: 12px;
+  background: rgba(255,194,71,.08); border: 1px solid rgba(255,194,71,.35); }
+.cmap .cm-you .pin { width: 12px; height: 12px; border-radius: 50%; background: var(--cm-here); box-shadow: 0 0 0 4px rgba(255,194,71,.25); flex: none; }
+.cmap .cm-you .txt { font-size: 15px; line-height: 1.4; }
+.cmap .cm-you .txt small { display: block; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--cm-here); font-weight: 700; }
+.cmap .cm-you .txt b { font-size: 17px; }
+.cmap .cm-you .where { color: var(--cm-mut); }
+.cmap .cm-you .prog { flex: 1 1 160px; max-width: 260px; margin-left: auto; }
+.cmap .cm-you .prog span { display: block; font-size: 12.5px; color: var(--cm-mut); margin-bottom: 4px; text-align: right; }
+.cmap .cm-you .prog div { height: 8px; border-radius: 4px; background: rgba(255,255,255,.1); overflow: hidden; }
+.cmap .cm-you .prog i { display: block; height: 100%; background: var(--lc); border-radius: 4px; }
+
+/* bovenbalk */
+.cmap .cm-top { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 6px; }
+.cmap .cm-tabs { display: inline-flex; border: 1px solid var(--cm-line); border-radius: 12px; padding: 3px; gap: 3px; }
+.cmap .cm-tabs button { all: unset; cursor: pointer; font-size: 14.5px; font-weight: 600; padding: 8px 16px; border-radius: 9px; color: var(--cm-mut); }
 .cmap .cm-tabs button[aria-selected="true"] { background: rgba(124,196,255,.16); color: var(--text, #e8edf7); }
-.cmap .cm-tabs button:focus-visible, .cmap button:focus-visible { outline: 2px solid #7cc4ff; outline-offset: 1px; }
-.cmap .cm-q { flex: 1 1 260px; max-width: 420px; background: #0d1426; border: 1px solid var(--cm-line); color: inherit; border-radius: 10px; padding: 9px 12px; font: inherit; font-size: 14px; }
-.cmap .cm-q:focus { outline: none; border-color: #7cc4ff; }
-.cmap .cm-count { font-size: 13px; color: var(--muted, #93a0bb); }
-.cmap .cm-help { margin: 4px 0 14px; font-size: 14px; color: var(--muted, #93a0bb); }
-.cmap .cm-body { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 16px; align-items: start; }
-@media (max-width: 960px) { .cmap .cm-body { grid-template-columns: 1fr; } }
-.cmap .cm-view { min-width: 0; }
-.cmap .cm-grp { font: 700 12px var(--mono, monospace); letter-spacing: .08em; text-transform: uppercase; color: #7cc4ff; margin: 6px 0 8px; }
-.cmap .cm-grp.sep { margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--cm-line); }
-.cmap .cm-line { margin: 0 0 16px; }
-.cmap .cm-lh { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; font-size: 14.5px; font-weight: 600; margin-bottom: 7px; }
-.cmap .cm-lh i { width: 12px; height: 12px; border-radius: 50%; background: var(--lc); align-self: center; flex: none; }
-.cmap .cm-lh small { font-weight: 400; font-size: 12.5px; color: var(--muted, #93a0bb); }
-.cmap .cm-lh small b { color: var(--text, #e8edf7); font-weight: 500; }
-.cmap .cm-stops { display: flex; flex-wrap: wrap; row-gap: 8px; padding-left: 4px; }
-.cmap .cm-stop { all: unset; cursor: pointer; position: relative; display: inline-flex; align-items: center; gap: 7px; font-size: 13px; line-height: 1.2;
-  padding: 5px 10px 5px 5px; margin-right: 16px; border-radius: 999px; border: 1px solid var(--cm-line); background: rgba(255,255,255,.03); }
-.cmap .cm-stop:not(:last-child)::after { content: ""; position: absolute; right: -17px; top: 50%; width: 16px; height: 3px; margin-top: -1.5px; background: var(--lc); opacity: .7; }
-.cmap .cm-stop b { display: inline-grid; place-items: center; min-width: 22px; height: 22px; border-radius: 50%; background: var(--lc); color: #0a0f1d; font: 700 11.5px var(--mono, monospace); }
-.cmap .cm-stop:hover { border-color: var(--lc); background: rgba(255,255,255,.08); }
-.cmap .cm-topics { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
-.cmap .cm-tc { border: 1px solid var(--cm-line); border-radius: 12px; background: rgba(255,255,255,.02); overflow: hidden; }
-.cmap .cm-tc h4 { margin: 0; padding: 10px 12px; font-size: 14px; border-bottom: 1px solid var(--cm-line); border-top: 3px solid var(--sc); display: flex; justify-content: space-between; gap: 8px; }
-.cmap .cm-tc h4 small { font-weight: 400; color: var(--muted, #93a0bb); font-size: 12px; }
-.cmap .cm-tc ul { list-style: none; margin: 0; padding: 6px; display: grid; gap: 2px; }
-.cmap .cm-it { all: unset; cursor: pointer; display: flex; align-items: center; gap: 8px; width: 100%; box-sizing: border-box; font-size: 13px; padding: 5px 7px; border-radius: 7px; }
-.cmap .cm-it:hover { background: rgba(255,255,255,.07); }
-.cmap .cm-it .sz { display: inline-flex; gap: 2px; flex: none; }
-.cmap .cm-it .sz i { width: 4px; height: 10px; border-radius: 2px; background: rgba(255,255,255,.14); }
-.cmap .cm-it .sz i.on { background: var(--sc); }
-.cmap .cm-it .tg { margin-left: auto; font: 600 10px var(--mono, monospace); color: #7cc4ff; }
-.cmap .cm-rows { display: grid; gap: 10px; }
-.cmap .cm-row { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 12px; border: 1px solid var(--cm-line); border-radius: 12px; padding: 10px 12px; background: rgba(255,255,255,.02); }
-@media (max-width: 700px) { .cmap .cm-row { grid-template-columns: 1fr; } }
-.cmap .cm-row .rl b { display: block; font-size: 14px; }
-.cmap .cm-row .rl small { font: 400 12px var(--mono, monospace); color: var(--muted, #93a0bb); }
-.cmap .cm-row .rl .bar { display: flex; gap: 3px; margin-top: 6px; }
-.cmap .cm-row .rl .bar i { width: 18px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.12); }
-.cmap .cm-row .rl .bar i.on { background: #7cc4ff; }
-.cmap .cm-chips { display: flex; flex-wrap: wrap; gap: 5px; align-content: flex-start; }
-.cmap .cm-chip { all: unset; cursor: pointer; font-size: 12.5px; padding: 4px 9px 4px 8px; border-radius: 7px; background: rgba(255,255,255,.04); border-left: 3px solid var(--sc); }
-.cmap .cm-chip:hover { background: rgba(255,255,255,.1); }
-.cmap .is-sel { outline: 2px solid #7cc4ff !important; background: rgba(124,196,255,.16) !important; }
-.cmap .is-here { box-shadow: 0 0 0 2px #ffc247 inset; }
-.cmap.filtering [data-id]:not(.hit) { opacity: .2; }
-.cmap.filtering .cm-line:not(.has), .cmap.filtering .cm-tc:not(.has), .cmap.filtering .cm-row:not(.has) { opacity: .55; }
-.cmap .cm-card { position: sticky; top: 12px; border: 1px solid var(--cm-line); border-radius: 14px; background: #0d1426; padding: 16px; font-size: 14px; line-height: 1.5; }
-.cmap .cm-card .empty { color: var(--muted, #93a0bb); margin: 0; }
-.cmap .cm-card h3 { margin: 6px 0 0; font-size: 19px; line-height: 1.25; }
-.cmap .cm-card .alt { color: var(--muted, #93a0bb); font-size: 13px; font-style: italic; }
-.cmap .cm-card p { margin: 10px 0; }
-.cmap .cm-badges { display: flex; flex-wrap: wrap; gap: 5px; }
-.cmap .cm-badges span { font: 500 11px var(--mono, monospace); padding: 3px 7px; border-radius: 5px; background: rgba(255,255,255,.06); color: var(--muted, #93a0bb); }
-.cmap .cm-badges span.st { color: #0a0f1d; background: var(--sc); font-weight: 700; }
-.cmap .cm-badges span.here { background: rgba(255,194,71,.18); color: #ffc247; }
-.cmap .cm-go { all: unset; cursor: pointer; display: block; text-align: center; margin: 12px 0 4px; padding: 11px 14px; border-radius: 11px; font-weight: 700; font-size: 15px; background: #7cc4ff; color: #07101f; }
+.cmap .cm-q { flex: 1 1 260px; max-width: 440px; margin-left: auto; background: #0d1426; border: 1px solid var(--cm-line); color: inherit; border-radius: 10px; padding: 9px 12px; font: inherit; font-size: 14px; }
+.cmap .cm-q:focus { outline: none; border-color: var(--cm-acc); }
+.cmap .cm-help { margin: 2px 0 14px; font-size: 14px; color: var(--cm-mut); }
+
+/* verhalen: lijst links, route rechts */
+.cmap .cm-split { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 22px; align-items: start; }
+@media (max-width: 760px) { .cmap .cm-split { grid-template-columns: 1fr; } }
+.cmap .cm-split > * { max-height: var(--cm-h, 56vh); overflow: auto; position: relative; scrollbar-width: thin; }
+.cmap .cm-list { display: grid; gap: 4px; align-content: start; padding-right: 4px; }
+.cmap .cm-grp { font: 700 11.5px var(--mono, monospace); letter-spacing: .08em; text-transform: uppercase; color: var(--cm-mut); margin: 4px 0 4px 4px; }
+.cmap .cm-grp.sep { margin-top: 14px; }
+.cmap .cm-ln { all: unset; cursor: pointer; display: grid; grid-template-columns: 12px 1fr auto; gap: 4px 10px; align-items: center; padding: 8px 10px; border-radius: 10px; border: 1px solid transparent; }
+.cmap .cm-ln i { width: 12px; height: 12px; border-radius: 50%; background: var(--lc); }
+.cmap .cm-ln span { font-size: 14px; line-height: 1.3; }
+.cmap .cm-ln small { font-size: 12px; color: var(--cm-mut); }
+.cmap .cm-ln .yh { grid-column: 2 / 4; font-size: 11.5px; font-weight: 700; color: var(--cm-here); }
+.cmap .cm-ln:hover { background: rgba(255,255,255,.05); }
+.cmap .cm-ln[aria-current="true"] { background: rgba(255,255,255,.07); border-color: var(--lc); }
+
+.cmap .cm-route header { margin-bottom: 12px; position: sticky; top: 0; z-index: 2; background: var(--bg-2, #0d1426); padding-bottom: 8px; }
+.cmap .cm-route header small { display: block; font: 700 12px var(--mono, monospace); letter-spacing: .07em; text-transform: uppercase; color: var(--lc); }
+.cmap .cm-route header h3 { margin: 2px 0 4px; font-size: 21px; line-height: 1.25; }
+.cmap .cm-route header p { margin: 0; font-size: 13.5px; color: var(--cm-mut); }
+.cmap .cm-route header p button { all: unset; cursor: pointer; color: var(--text, #e8edf7); text-decoration: underline; text-underline-offset: 3px; }
+.cmap ol.cm-stops { list-style: none; margin: 0; padding: 0; max-width: 640px; }
+.cmap .cm-st { position: relative; padding: 3px 0 3px 46px; }
+.cmap .cm-st::before { content: ""; position: absolute; left: 15px; top: 0; bottom: 0; width: 4px; background: var(--lc); }
+.cmap .cm-st:first-child::before { top: 20px; }
+.cmap .cm-st:last-child::before { bottom: auto; height: 20px; }
+.cmap .cm-st.later::before { opacity: .28; }
+.cmap .cm-st > b { position: absolute; left: 3px; top: 7px; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; z-index: 1;
+  background: var(--lc); color: #0a0f1d; font: 700 12.5px var(--mono, monospace); }
+.cmap .cm-st.later > b { background: #1a2338; color: var(--lc); box-shadow: inset 0 0 0 2px var(--lc); }
+.cmap .cm-st.here > b { box-shadow: 0 0 0 3px var(--bg-2, #0b1120), 0 0 0 6px var(--cm-here); }
+.cmap .cm-it { all: unset; cursor: pointer; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 10px; font-size: 15px; line-height: 1.3; }
+.cmap .cm-it:hover { background: rgba(255,255,255,.06); }
+.cmap .cm-it[aria-expanded="true"] { background: rgba(255,255,255,.07); }
+.cmap .cm-tag { font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: rgba(255,194,71,.18); color: var(--cm-here); }
+.cmap .cm-br { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; margin: 0 0 4px 12px; font-size: 12.5px; color: var(--cm-mut); }
+.cmap .cm-br i { width: 9px; height: 9px; border-radius: 50%; background: var(--bc); }
+.cmap .cm-br:hover { color: var(--text, #e8edf7); text-decoration: underline; }
+
+/* uitleg die openklapt */
+.cmap .cm-more { margin: 4px 0 10px 12px; padding: 12px 14px; border-radius: 10px; background: #0d1426; border: 1px solid var(--cm-line); font-size: 14px; line-height: 1.55; max-width: 600px; }
+.cmap .cm-more p { margin: 0 0 10px; }
+.cmap .cm-go { all: unset; cursor: pointer; display: inline-block; padding: 8px 14px; border-radius: 9px; font-weight: 700; font-size: 14px; background: var(--cm-acc); color: #07101f !important; }
 .cmap .cm-go:hover { filter: brightness(1.1); }
-.cmap .cm-sec { margin-top: 12px; }
-.cmap .cm-sec > span { display: block; font: 600 11px var(--mono, monospace); letter-spacing: .07em; text-transform: uppercase; color: var(--muted, #93a0bb); margin-bottom: 5px; }
-.cmap .cm-sec .cm-chip { margin: 0 3px 4px 0; display: inline-block; }
-.cmap .cm-in { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--lc); margin: 0 4px 5px 0; }
+.cmap .cm-also { margin-top: 10px; font-size: 12.5px; color: var(--cm-mut); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.cmap .cm-in { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--lc); color: var(--text, #e8edf7); }
+.cmap .cm-in i { width: 8px; height: 8px; border-radius: 50%; background: var(--lc); }
 .cmap .cm-in:hover { background: rgba(255,255,255,.07); }
-.cmap .cm-in i { width: 9px; height: 9px; border-radius: 50%; background: var(--lc); }
+
+/* alle onderwerpen */
+.cmap .cm-topics { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; align-items: start; }
+.cmap .cm-tc { border: 1px solid var(--cm-line); border-top: 3px solid var(--sc); border-radius: 12px; padding: 8px 6px 6px; }
+.cmap .cm-tc h4 { margin: 2px 8px 6px; font-size: 15px; display: flex; justify-content: space-between; gap: 8px; }
+.cmap .cm-tc h4 small { font-weight: 400; color: var(--cm-mut); font-size: 12.5px; }
+.cmap .cm-tc ul, .cmap .cm-res { list-style: none; margin: 0; padding: 0; }
+.cmap .cm-tc .cm-it { font-size: 14px; padding: 6px 8px; }
+.cmap .cm-tc .cm-more { margin: 2px 4px 8px; }
+
+/* zoekresultaten */
+.cmap .cm-rhead { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 14px; color: var(--cm-mut); }
+.cmap .cm-rhead button { all: unset; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; color: var(--text, #e8edf7); }
+.cmap .cm-res { max-width: 720px; display: grid; gap: 4px; }
+.cmap .cm-res li { border-left: 3px solid var(--sc); padding-left: 4px; }
+.cmap .cm-res .cm-it small { color: var(--cm-mut); font-size: 12.5px; }
 `;
   document.head.append(s);
 }
 
 export function mountMap(host, o) {
   addStyle();
-  const { NODES, STAGES, SCALES, LINES, MAIN_KEYS, SIDE_KEYS, DETAILS = {}, S_EN = {}, SCALES_EN = {}, lang, L } = o;
+  const { NODES, STAGES, LINES, MAIN_KEYS, SIDE_KEYS, DETAILS = {}, S_EN = {}, lang, L } = o;
   const en = lang === 'en';
   const tt = n => (en ? n.en : n.t);
-  const alt = n => (en ? n.t : n.en);
   const stageT = s => (en ? s.en : s.t);
-  const scaleT = s => (en ? SCALES_EN[s.id] ?? s.t : s.t);
   const kort = id => plain(DETAILS[id]?.[lang]?.kort ?? (en ? S_EN[id] ?? NODES[id]?.s : NODES[id]?.s));
   const ids = Object.keys(NODES).filter(id => STAGES.some(s => s.id === NODES[id].stage));
-  const inLines = id => Object.keys(LINES).flatMap(k => { const i = LINES[k].chapters.findIndex(c => c.id === id); return i < 0 ? [] : [[k, i + 1]]; });
-  const linesSorted = [...MAIN_KEYS, ...SIDE_KEYS];
-  const sizeBars = (n, c) => `<span class="sz" title="${esc(L(T.zoom))}: ${esc(scaleT(SCALES.find(s => s.id === n.scale)))}" style="--sc:${c}">${SCALES.map(s => `<i class="${s.id <= n.scale ? 'on' : ''}"></i>`).join('')}</span>`;
+  const allKeys = [...MAIN_KEYS, ...SIDE_KEYS].filter(k => LINES[k]);
+  const stopsOf = k => LINES[k].chapters.filter(c => NODES[c.id]).map(c => c.id);
+  const inLines = id => allKeys.flatMap(k => { const i = stopsOf(k).indexOf(id); return i < 0 ? [] : [[k, i + 1]]; });
+  /* "Verhaal 1 · Een virus brengt DNA binnen" → label "Verhaal 1", naam "Een virus brengt DNA binnen" */
+  const parts = k => { const t = L(LINES[k].title), i = t.indexOf(' · '); return i < 0 ? ['', t] : [t.slice(0, i), t.slice(i + 3)]; };
+  const shortName = k => L(LINES[k].short ?? LINES[k].title);
+  const branchesAt = id => SIDE_KEYS.filter(k => LINES[k]?.from === id);
 
-  let view = o.view ?? 'lines', sel = null, hits = null;
-  host.innerHTML = `<div class="cmap">
-    <div class="cm-top"><div class="cm-tabs" role="tablist">${['lines', 'topics', 'scale'].map(v => `<button role="tab" data-v="${v}">${esc(L(T[v]))}</button>`).join('')}</div>
-      <input class="cm-q" type="search" placeholder="${esc(L(T.search))}" aria-label="${esc(L(T.search))}"><span class="cm-count"></span></div>
-    <p class="cm-help"></p>
-    <div class="cm-body"><div class="cm-view"></div><aside class="cm-card" aria-live="polite"></aside></div></div>`;
-  const root = host.firstElementChild, $v = root.querySelector('.cm-view'), $c = root.querySelector('.cm-card'), $q = root.querySelector('.cm-q'), $n = root.querySelector('.cm-count');
+  const here = o.here && NODES[o.here] ? o.here : null;
+  const hereLines = here ? inLines(here) : [];
+  const hereLine = (hereLines.find(([k]) => k === o.line) ?? hereLines[0])?.[0] ?? null;
+  const hereIdx = hereLine ? stopsOf(hereLine).indexOf(here) : -1;
+
+  let view = o.view === 'topics' ? 'topics' : 'lines';
+  let story = hereLine ?? o.line ?? allKeys[0];
+  let openId = here;            /* welk onderwerp staat opengeklapt */
+  let hits = null, qText = '';
+
+  host.innerHTML = `<div class="cmap">${youHTML()}
+    <div class="cm-top"><div class="cm-tabs" role="tablist">${['lines', 'topics'].map(v => `<button role="tab" data-v="${v}">${esc(L(T[v]))}</button>`).join('')}</div>
+      <input class="cm-q" type="search" placeholder="${esc(L(T.search))}" aria-label="${esc(L(T.search))}"></div>
+    <p class="cm-help"></p><div class="cm-view"></div></div>`;
+  const root = host.firstElementChild, $v = root.querySelector('.cm-view'), $q = root.querySelector('.cm-q'), $h = root.querySelector('.cm-help');
+
+  function youHTML() {
+    if (!here) return '';
+    const n = stopsOf(hereLine ?? allKeys[0]).length;
+    const where = hereLine ? `${esc(shortName(hereLine))} · ${esc(L(T.stop))} ${hereIdx + 1} ${esc(L(T.of))} ${n}` : esc(L(T.loose));
+    const prog = hereLine ? `<div class="prog" style="--lc:${lineCol(hereLine)}"><span>${hereIdx + 1} / ${n}</span><div><i style="width:${Math.round((hereIdx + 1) / n * 100)}%"></i></div></div>` : '';
+    return `<div class="cm-you"><span class="pin"></span><div class="txt"><small>${esc(L(T.youHere))}</small><b>${esc(tt(NODES[here]))}</b> <span class="where">· ${where}</span></div>${prog}</div>`;
+  }
+
+  /* uitleg onder een onderwerp: korte tekst, knop, en in welke (andere) verhalen het zit */
+  function moreHTML(id, k) {
+    const others = inLines(id).filter(([x]) => x !== k);
+    const label = k ? T.also : T.inStory;
+    return `<div class="cm-more"><p>${esc(kort(id))}</p>
+      <button class="cm-go" data-open="${id}" data-line="${k ?? inLines(id)[0]?.[0] ?? ''}">${esc(L(id === here ? T.back : T.open))}</button>
+      ${others.length ? `<div class="cm-also">${esc(L(label))}:${others.map(([x, i]) => `<button class="cm-in" data-story="${x}" data-pick="${id}" style="--lc:${lineCol(x)}"><i></i>${esc(shortName(x))} · ${esc(L(T.stop))} ${i}</button>`).join('')}</div>` : ''}</div>`;
+  }
+  const itemHTML = (id, k, extra = '') => `<button class="cm-it" data-id="${id}" aria-expanded="${openId === id}">${extra}<span>${esc(tt(NODES[id]))}</span>${id === here ? `<span class="cm-tag">${esc(L(T.hereTag))}</span>` : ''}</button>${openId === id ? moreHTML(id, k) : ''}`;
 
   function drawLines() {
-    const line = k => {
-      const ln = LINES[k], ch = ln.chapters.filter(c => NODES[c.id]);
-      const from = ln.from && NODES[ln.from] ? ` · ${esc(L(T.branch))} <b>${esc(tt(NODES[ln.from]))}</b>` : '';
-      return `<div class="cm-line" style="--lc:${lineCol(k)}"><div class="cm-lh"><i></i>${esc(L(ln.title))}<small>${ch.length} ${esc(L(T.stops))}${from}</small></div>
-        <div class="cm-stops">${ch.map((c, i) => `<button class="cm-stop" data-id="${c.id}" data-line="${k}"><b>${i + 1}</b>${esc(tt(NODES[c.id]))}</button>`).join('')}</div></div>`;
+    const lnBtn = k => {
+      const [lbl, name] = parts(k);
+      return `<button class="cm-ln" data-story="${k}" aria-current="${k === story}" style="--lc:${lineCol(k)}"><i></i><span>${esc(LINES[k].side ? name : `${lbl}: ${name}`)}</span><small>${stopsOf(k).length}</small>${k === hereLine ? `<span class="yh">● ${esc(L(T.hereTag))}</span>` : ''}</button>`;
     };
-    const used = new Set(Object.values(LINES).flatMap(l => l.chapters.map(c => c.id)));
-    const rest = ids.filter(id => !used.has(id));
-    return `<div class="cm-grp">${esc(L(T.main))}</div>` + MAIN_KEYS.map(line).join('') +
-      (SIDE_KEYS.length ? `<div class="cm-grp sep">${esc(L(T.sides))}</div>` + SIDE_KEYS.map(line).join('') : '') +
-      (rest.length ? `<div class="cm-grp sep">${esc(L({ nl: 'Losse onderwerpen', en: 'Other topics' }))}</div><p class="cm-help" style="margin-top:0">${esc(L({ nl: 'Niet in een verhaal, wel te openen: via een klik in een animatie of hieronder.', en: 'Not in a story, but you can open them: by clicking inside an animation or below.' }))}</p>
-        <div class="cm-line" style="--lc:#7cc4ff"><div class="cm-chips">${rest.map(id => `<button class="cm-chip" data-id="${id}" style="--sc:${STAGECOL[NODES[id].stage]}">${esc(tt(NODES[id]))}</button>`).join('')}</div></div>` : '');
+    const list = `<nav class="cm-list"><div class="cm-grp">${esc(L(T.main))}</div>${MAIN_KEYS.filter(k => LINES[k]).map(lnBtn).join('')}
+      ${SIDE_KEYS.length ? `<div class="cm-grp sep">${esc(L(T.sides))}</div>${SIDE_KEYS.filter(k => LINES[k]).map(lnBtn).join('')}` : ''}</nav>`;
+
+    const ln = LINES[story], stops = stopsOf(story), [lbl, name] = parts(story);
+    const cut = story === hereLine ? hereIdx : Infinity;   /* haltes na "hier ben je" zijn nog te gaan */
+    let from = '';
+    if (ln.from && NODES[ln.from]) {
+      const parent = MAIN_KEYS.find(k => LINES[k] && stopsOf(k).includes(ln.from));
+      from = `<p>${esc(L(T.branchOff))} ${parent ? `${esc(shortName(parent))} ` : ''}${esc(L(T.at))} <button data-story="${parent ?? ''}" data-pick="${ln.from}">${esc(tt(NODES[ln.from]))}</button></p>`;
+    }
+    const route = `<section class="cm-route" style="--lc:${lineCol(story)}"><header><small>${esc(lbl || L(T.side))} · ${stops.length} ${esc(L(T.stops))}</small><h3>${esc(name)}</h3>${from}</header>
+      <ol class="cm-stops">${stops.map((id, i) => `<li class="cm-st${i > cut ? ' later' : ''}${id === here && story === hereLine ? ' here' : ''}"><b>${i + 1}</b>${itemHTML(id, story)}
+        ${ln.side ? '' : branchesAt(id).map(k => `<button class="cm-br" data-story="${k}" style="--bc:${lineCol(k)}"><i></i>↳ ${esc(L(T.side))}: ${esc(parts(k)[1])}</button>`).join('')}</li>`).join('')}</ol></section>`;
+    return `<div class="cm-split">${list}${route}</div>`;
   }
+
   function drawTopics() {
     return `<div class="cm-topics">${STAGES.map(st => {
       const list = ids.filter(id => NODES[id].stage === st.id).sort((a, b) => NODES[a].scale - NODES[b].scale);
-      const c = STAGECOL[st.id];
-      return `<div class="cm-tc" style="--sc:${c}"><h4>${esc(stageT(st))}<small>${list.length}</small></h4><ul>${list.map(id => {
-        const n = NODES[id];
-        return `<li><button class="cm-it" data-id="${id}">${sizeBars(n, c)}<span>${esc(tt(n))}</span>${n.pdb?.length ? `<span class="tg" title="${esc(L(T.real3d))}">3D</span>` : ''}</button></li>`;
-      }).join('')}</ul></div>`;
-    }).join('')}</div>`;
-  }
-  function drawScale() {
-    return `<div class="cm-rows">${SCALES.map(sc => {
-      const list = ids.filter(id => NODES[id].scale === sc.id).sort((a, b) => STAGES.findIndex(s => s.id === NODES[a].stage) - STAGES.findIndex(s => s.id === NODES[b].stage));
-      return `<div class="cm-row"><div class="rl"><b>${esc(scaleT(sc))}</b><small>${esc(sc.range)}</small><div class="bar">${SCALES.map(s => `<i class="${s.id <= sc.id ? 'on' : ''}"></i>`).join('')}</div></div>
-        <div class="cm-chips">${list.map(id => `<button class="cm-chip" data-id="${id}" style="--sc:${STAGECOL[NODES[id].stage]}">${esc(tt(NODES[id]))}</button>`).join('')}</div></div>`;
+      if (!list.length) return '';
+      return `<div class="cm-tc" style="--sc:${STAGECOL[st.id]}"><h4>${esc(stageT(st))}<small>${list.length}</small></h4><ul>${list.map(id => `<li>${itemHTML(id, null)}</li>`).join('')}</ul></div>`;
     }).join('')}</div>`;
   }
 
-  function card(id) {
-    const n = NODES[id];
-    if (!n) { $c.innerHTML = `<p class="empty">${esc(L(T.pick))}</p>`; return; }
-    const st = STAGES.find(s => s.id === n.stage), sc = SCALES.find(s => s.id === n.scale), c = STAGECOL[n.stage];
-    const chip = x => NODES[x] ? `<button class="cm-chip" data-pick="${x}" style="--sc:${STAGECOL[NODES[x].stage]}">${esc(tt(NODES[x]))}</button>` : '';
-    const sec = (lbl, arr) => { const h = [...new Set(arr)].map(chip).join(''); return h ? `<div class="cm-sec"><span>${esc(L(lbl))}</span>${h}</div>` : ''; };
-    const lns = inLines(id).sort((a, b) => linesSorted.indexOf(a[0]) - linesSorted.indexOf(b[0]));
-    const prefer = lns.find(([k]) => k === o.line) ?? lns[0];
-    $c.innerHTML = `<div class="cm-badges"><span class="st" style="--sc:${c}">${esc(stageT(st))}</span><span>${esc(L(T.zoom))}: ${esc(scaleT(sc))}</span>
-        ${n.pdb?.length ? `<span>${esc(L(T.real3d))}</span>` : ''}${id === o.here ? `<span class="here">${esc(L(T.here))}</span>` : ''}</div>
-      <h3>${esc(tt(n))}</h3>${alt(n) && alt(n) !== tt(n) ? `<div class="alt">${esc(alt(n))}</div>` : ''}
-      <p>${esc(kort(id))}</p>
-      <button class="cm-go" data-open="${id}" data-line="${prefer?.[0] ?? ''}">${esc(L(T.open))}</button>
-      ${lns.length ? `<div class="cm-sec"><span>${esc(L(T.inStory))}</span>${lns.map(([k, i]) => `<button class="cm-in" data-open="${id}" data-line="${k}" style="--lc:${lineCol(k)}"><i></i>${esc(L(LINES[k].short ?? LINES[k].title))} · ${esc(L(T.chap))} ${i}</button>`).join('')}</div>`
-        : `<div class="cm-sec"><span>${esc(L(T.inStory))}</span><span style="text-transform:none;letter-spacing:0;font:13px var(--font, sans-serif)">${esc(L(T.only))}</span></div>`}
-      ${sec(T.deeper, n.in ?? [])}${sec(T.after, n.next ?? [])}${sec(T.rel, n.rel ?? [])}`;
-    $c.querySelectorAll('[data-open]').forEach(b => b.onclick = () => o.onOpen(b.dataset.open, b.dataset.line || null));
-    $c.querySelectorAll('[data-pick]').forEach(b => b.onclick = () => select(b.dataset.pick, true));
+  function drawHits() {
+    if (!hits.length) return `<div class="cm-rhead">${esc(L(T.none))} <button data-clear>${esc(L(T.clear))}</button></div>`;
+    return `<div class="cm-rhead">${hits.length} ${esc(L(hits.length === 1 ? T.hit1 : T.hits))} “${esc(qText)}” <button data-clear>${esc(L(T.clear))}</button></div>
+      <ul class="cm-res">${hits.map(id => { const st = STAGES.find(s => s.id === NODES[id].stage);
+        return `<li style="--sc:${STAGECOL[NODES[id].stage]}">${itemHTML(id, null, '')}</li>`.replace('</span>', `</span><small>${esc(stageT(st))}</small>`); }).join('')}</ul>`;
   }
 
-  function select(id, scroll) {
-    sel = id;
-    root.querySelectorAll('.is-sel').forEach(e => e.classList.remove('is-sel'));
-    const els = [...$v.querySelectorAll(`[data-id="${id}"]`)];
-    els.forEach(e => e.classList.add('is-sel'));
-    if (scroll && els[0]) els[0].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-    card(id);
-  }
-
-  function draw() {
-    root.querySelectorAll('.cm-tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.v === view)));
-    root.querySelector('.cm-help').textContent = L({ lines: T.hLines, topics: T.hTopics, scale: T.hScale }[view]);
-    $v.innerHTML = view === 'lines' ? drawLines() : view === 'topics' ? drawTopics() : drawScale();
-    $v.querySelectorAll('[data-id]').forEach(b => {
-      if (b.dataset.id === o.here) b.classList.add('is-here');
-      b.onclick = () => select(b.dataset.id);
-      b.ondblclick = () => o.onOpen(b.dataset.id, b.dataset.line || null);
-      b.title = kort(b.dataset.id).slice(0, 180);
+  function draw(scrollTo) {
+    root.querySelectorAll('.cm-tabs button').forEach(b => b.setAttribute('aria-selected', String(!hits && b.dataset.v === view)));
+    $h.textContent = hits ? '' : L(view === 'lines' ? T.hLines : T.hTopics);
+    $h.hidden = !!hits;
+    $v.innerHTML = hits ? drawHits() : view === 'lines' ? drawLines() : drawTopics();
+    $v.querySelectorAll('.cm-it').forEach(b => b.onclick = () => {
+      const y = $v.querySelector('.cm-route')?.scrollTop;     /* openklappen: route blijft op dezelfde plek staan */
+      openId = openId === b.dataset.id ? null : b.dataset.id; draw();
+      const r = $v.querySelector('.cm-route'); if (r && y != null) r.scrollTop = y;
     });
-    paint();
-    if (sel) select(sel); else card(null);
+    $v.querySelectorAll('[data-open]').forEach(b => b.onclick = () => o.onOpen(b.dataset.open, b.dataset.line || null));
+    $v.querySelectorAll('[data-story]').forEach(b => b.onclick = () => {
+      if (b.dataset.story) story = b.dataset.story;
+      if (b.dataset.pick) openId = b.dataset.pick;
+      hits = null; $q.value = ''; view = 'lines'; draw(b.dataset.pick ?? 'top');
+    });
+    $v.querySelectorAll('[data-clear]').forEach(b => b.onclick = () => { hits = null; $q.value = ''; draw(); $q.focus(); });
+    if (scrollTo) reveal(scrollTo === 'top' ? null : scrollTo);
   }
-
-  function paint() {
-    root.classList.toggle('filtering', !!hits);
-    $v.querySelectorAll('[data-id]').forEach(b => b.classList.toggle('hit', !!hits?.has(b.dataset.id)));
-    $v.querySelectorAll('.cm-line, .cm-tc, .cm-row').forEach(g => g.classList.toggle('has', !!g.querySelector('.hit')));
-    $n.textContent = hits ? (hits.size ? `${hits.size} ${L(T.hits)}` : L(T.none)) : `${ids.length} ${L(T.all)}`;
+  /* scroll binnen de route (niet het hele venster), zodat "Hier ben je" en de tabs zichtbaar blijven */
+  function reveal(id) {
+    const el = id && $v.querySelector(`.cm-it[data-id="${id}"]`);
+    const box = $v.querySelector('.cm-route');
+    if (!box) { el?.scrollIntoView({ block: 'nearest' }); return; }
+    box.scrollTop = el ? Math.max(0, box.scrollTop + el.getBoundingClientRect().top - box.getBoundingClientRect().top - box.clientHeight / 3) : 0;
   }
 
   let eng = null, qTimer = 0;
   async function filter() {
     const q = $q.value.trim();
-    if (q.length < 2) { hits = null; paint(); return; }
+    if (q.length < 2) { if (hits) { hits = null; draw(); } return; }
     const words = norm(q).split(/\s+/).filter(Boolean);
     /* volgorde: eerst de beste treffers van de zoekmotor, dan titels, dan onderwerpen waar het woord in de uitleg staat */
     const best = [];
-    if (o.engine) { try { eng ??= await o.engine(); for (const r of eng.query(q, { limit: 8 })) if (NODES[r.id]) best.push(r.id); } catch {} }
+    if (o.engine) { try { eng ??= await o.engine(); for (const r of eng.query(q, { limit: 8 })) if (NODES[r.id] && ids.includes(r.id)) best.push(r.id); } catch {} }
     const inTitle = ids.filter(id => { const n = NODES[id], h = norm(n.t + ' ' + n.en); return words.every(w => h.includes(w)); });
     const inText = ids.filter(id => {
       const n = NODES[id], hay = norm([n.t, n.en, n.s, S_EN[id], DETAILS[id]?.nl?.kort, DETAILS[id]?.en?.kort].join(' '));
       return words.every(w => hay.includes(w));
     });
-    const set = new Set([...best, ...inTitle, ...inText]);
     if ($q.value.trim() !== q) return;
-    hits = set; paint();
-    if (set.size) select([...set][0], true);
+    hits = [...new Set([...best, ...inTitle, ...inText])]; qText = q;
+    openId = hits.length === 1 ? hits[0] : null;
+    draw();
   }
   $q.oninput = () => { clearTimeout(qTimer); qTimer = setTimeout(filter, 160); };
-  $q.onkeydown = e => { if (e.key === 'Enter' && sel) o.onOpen(sel, inLines(sel)[0]?.[0] ?? null); };
-  root.querySelectorAll('.cm-tabs button').forEach(b => b.onclick = () => { view = b.dataset.v; draw(); });
+  $q.onkeydown = e => { if (e.key === 'Enter' && hits?.length) o.onOpen(hits[0], inLines(hits[0])[0]?.[0] ?? null); };
+  root.querySelectorAll('.cm-tabs button').forEach(b => b.onclick = () => { view = b.dataset.v; hits = null; $q.value = ''; draw(view === 'lines' ? openId : null); });
 
-  if (o.here && NODES[o.here]) sel = o.here;
   draw();
-  if (o.here) setTimeout(() => $v.querySelector('.is-here')?.scrollIntoView({ block: 'center' }), 0);
+  if (here) setTimeout(() => reveal(here), 0);
+  const select = id => { if (!NODES[id]) return; openId = id; const l = inLines(id)[0]; if (l) story = l[0]; view = l ? 'lines' : 'topics'; hits = null; draw(id); };
   return { focus: () => $q.focus(), select };
 }
