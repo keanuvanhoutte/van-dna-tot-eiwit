@@ -141,7 +141,7 @@ export default {
     <path d="M440,410 L560,110 M440,490 L560,480" stroke="#fff" stroke-width="1.5" stroke-dasharray="6 5" opacity=".45"/>
     <!-- paneel B -->
     <g id="cr-pB">
-      ${panel(560, 110, 560, 370, T2('② Lussen & TADs', '② Loops & TADs'), '#2a3a60', 21)}
+      ${panel(560, 110, 560, 370, T2('② Lussen & buurten (TADs)', '② Loops & neighbourhoods (TADs)'), '#2a3a60', 21)}
       <g data-node="lussen" data-color="#ff8a3d" data-label="${T2('Lussen en buurten', 'Loops and neighbourhoods')}" data-nolabel>
         <g id="cr-fibre"></g>
       </g>
@@ -150,12 +150,12 @@ export default {
     <!-- paneel C -->
     <g id="cr-pC">
       ${panel(560, 520, 560, 290, T2('③ Eu- en heterochromatine', '③ Eu- and heterochromatin'), '#2a3a60', 21)}
-      <g data-node="histonmod" data-color="${C.acetyl}" data-label="${T2('Histonmodificaties', 'Histone modifications')}">${eu}<circle data-anchor="histonmod" cx="640" cy="600" r="1" fill="none"/></g>
+      <g data-node="histonmod" data-color="${C.acetyl}" data-label="${T2('Histonmodificaties', 'Histone modifications')}">${eu}<circle id="cr-a-hm" data-anchor="histonmod" cx="640" cy="600" r="1" fill="none"/></g>
       <g data-node="rnapol" data-color="${C.prot}" data-label="${T2('RNA-polymerase II', 'RNA polymerase II')}" data-nolabel>
         <g transform="rotate(-59 804 728)">${polII(804, 728, 28, 13, { gul: 5, hoog: 1.5, vul: .35, achter: .4, seed: 22 })}</g><!-- app-vorm (bio.js), gedraaid langs de vezel; leest omhoog, RNA links eruit -->
         <text x="805" y="726" font-size="10" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">Pol II</text>
       </g>
-      <g data-node="dnamethyl" data-color="${C.methyl}" data-label="${T2('DNA-methylatie', 'DNA methylation')}">${hetc}${hp1}${me}<circle data-anchor="dnamethyl" cx="1000" cy="590" r="1" fill="none"/></g>
+      <g data-node="dnamethyl" data-color="${C.methyl}" data-label="${T2('DNA-methylatie', 'DNA methylation')}">${hetc}${hp1}${me}<circle id="cr-a-dm" data-anchor="dnamethyl" cx="1000" cy="590" r="1" fill="none"/></g>
       ${txt(700, 790, T2('euchromatine: open, actief', 'euchromatin: open, active'), C.chain, 14)}
       ${txt(975, 790, T2('heterochromatine: compact, stil', 'heterochromatin: compact, silent'), '#f3a6d3', 14)}
       <line x1="840" y1="560" x2="840" y2="770" stroke="#2a3a60" stroke-width="2" stroke-dasharray="4 4"/>
@@ -200,7 +200,7 @@ export default {
     const focus = [null, 0, 1, 1, 2, 3, 4, 5];
     // paneeltitels: 21 px in het overzicht, maar kleiner in de ingezoomde stappen (≈ 18 px op het scherm = fs × 1000 / cambreedte)
     const CAMW = [1600, 820, 680, 730, 600, 480, 480, 470];
-    const tfs = k => Math.min(21, 18 * CAMW[k] / 1000);
+    const tfs = k => k === 0 ? 28 : Math.min(21, 18 * CAMW[k] / 1000);   // overzicht: grotere koppen (leesbaar op volle breedte)
     const pAframe = $('cr-pA').querySelector('rect');
     const titles = [...svg.querySelectorAll('.ptitle')].map(el => ({ el, y0: +el.getAttribute('y') - 31 }));
 
@@ -233,20 +233,31 @@ export default {
       }
       return s;
     }
-    function hic(op) {
+    function hic(op, k = 1) {
       if (op < .01) return '';
-      // lineaire genoomas + driehoekige contactkaart (schets): hoge intensiteit binnen de domeinen
+      // lineaire genoomas + driehoekige contactkaart (schets): hoge intensiteit binnen de domeinen.
+      // k (0..1) bouwt de kaart op: eerst één uitgelicht vakje (= stuk A + stuk B), dan vullen de vakjes zich vanaf de diagonaal,
+      // tot de buurten als heldere driehoeken zichtbaar worden.
       const y0 = 340, x0 = 590, x1 = 1090, n = 20, cw = (x1 - x0) / n;
       const pos = i => x0 + (i + .5) * cw;
       const inTad = (i, j) => TADS.some(([a, b]) => pos(i) > a - 12 && pos(j) < b + 12);
-      let s = `<g opacity="${f1(op)}"><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="${C.muted}" stroke-width="3"/>`;
+      const kA = ease(sub(k, 0, .2)), D = 9 * ease(sub(k, .25, .7)), kT = ease(sub(k, .7, .85));
+      let s = `<g opacity="${f1(op)}"><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="${C.muted}" stroke-width="3"/>` +
+        txt(x1 - 2, y0 - 12, T2('contactkaart (Hi-C, schets)', 'contact map (Hi-C, sketch)'), C.muted, 14, 'end');
       for (let i = 0; i < n; i++) for (let j = i; j < Math.min(n, i + 9); j++) {
-        const d = j - i, v = inTad(i, j) ? .95 - d * .05 : Math.max(.05, .45 - d * .12);
-        const cx = x0 + (i + j + 1) * cw / 2, cy = y0 + 6 + d * cw / 2 + cw / 2 * .0, h = cw / 2;
-        s += `<path d="M${f1(cx)},${f1(cy)} L${f1(cx + h)},${f1(cy + h)} L${f1(cx)},${f1(cy + 2 * h)} L${f1(cx - h)},${f1(cy + h)} Z" fill="#ff4d4d" fill-opacity="${f1(clamp(v, 0, 1))}"/>`;
+        const d = j - i, v = inTad(i, j) ? .95 - d * .05 : Math.max(.05, .45 - d * .12), vis = clamp(D - d);
+        if (vis <= 0) continue;
+        const cx = x0 + (i + j + 1) * cw / 2, cy = y0 + 6 + d * cw / 2, h = cw / 2;
+        s += `<path d="M${f1(cx)},${f1(cy)} L${f1(cx + h)},${f1(cy + h)} L${f1(cx)},${f1(cy + 2 * h)} L${f1(cx - h)},${f1(cy + h)} Z" fill="#ff4d4d" fill-opacity="${f1(clamp(v, 0, 1) * vis)}"/>`;
       }
-      for (const [a, b] of TADS) s += `<path d="M${a},${y0 + 6} L${(a + b) / 2},${y0 + 6 + (b - a) / 2} L${b},${y0 + 6}" stroke="#fff" stroke-width="2" fill="none" stroke-dasharray="5 4"/>` + txt((a + b) / 2, y0 + 60, 'TAD', '#fff', 16);
-      s += txt(1100, 505, T2('Hi-C-contactkaart (schets)', 'Hi-C contact map (sketch)'), C.muted, 15, 'end');
+      // het uitgelichte vakje: stuk A (i = 2) en stuk B (j = 8) van de rij; de schuine lijnen tonen welk paar het is
+      const iA = 2, jB = 8, ax = pos(iA), bx = pos(jB), ccx = x0 + (iA + jB + 1) * cw / 2, ccy = y0 + 6 + (jB - iA) * cw / 2, h = cw / 2;
+      s += `<g opacity="${f1(kA)}"><path d="M${f1(ax)},${y0} L${f1(ccx)},${f1(ccy + h)} L${f1(bx)},${y0}" stroke="#fff" stroke-width="1.8" fill="none" stroke-dasharray="4 4" opacity="${f1(1 - .75 * kT)}"/>` +
+        `<path d="M${f1(ccx)},${f1(ccy)} L${f1(ccx + h)},${f1(ccy + h)} L${f1(ccx)},${f1(ccy + 2 * h)} L${f1(ccx - h)},${f1(ccy + h)} Z" fill="#ff4d4d" stroke="#fff" stroke-width="2.5"/>` +
+        `<circle cx="${f1(ax)}" cy="${y0}" r="6" fill="#fff"/><circle cx="${f1(bx)}" cy="${y0}" r="6" fill="#fff"/>` +
+        txt(ax, y0 - 12, 'A', '#fff', 15, 'middle', 800) + txt(bx, y0 - 12, 'B', '#fff', 15, 'middle', 800) +
+        txt(840, 503, T2('elk vakje = twee stukken DNA (A en B) · hoe roder, hoe vaker ze elkaar raken', 'each square = two pieces of DNA (A and B) · the redder, the more often they touch'), '#fff', 15) + '</g>';
+      for (const [a, b] of TADS) s += `<g opacity="${f1(kT)}"><path d="M${a},${y0 + 6} L${(a + b) / 2},${y0 + 6 + (b - a) / 2} L${b},${y0 + 6}" stroke="#fff" stroke-width="2" fill="none" stroke-dasharray="5 4"/>` + txt((a + b) / 2, y0 + 34, T2('buurt', 'neighbourhood'), '#fff', 16, 'middle', 800) + txt((a + b) / 2, y0 + 53, '(TAD)', '#fff', 13) + '</g>';
       return s + '</g>';
     }
     return {
@@ -256,6 +267,8 @@ export default {
         panels.forEach((id, k) => $(id).setAttribute('opacity', focus[step] === null || focus[step] === k ? 1 : .2));
         // ingezoomd op paneel ① (hoger dan het beeld): kader weg, de kern zelf staat volledig in beeld
         pAframe.setAttribute('opacity', step === 1 ? 0 : 1);
+        // overzicht: geen label-pillen over de kop van paneel ③ (de engine verbergt een label als zijn anker onzichtbaar is)
+        ['cr-a-hm', 'cr-a-dm'].forEach(id => $(id).setAttribute('opacity', step === 0 ? 0 : 1));
         const fsT = step === 0 ? tfs(0) : lerp(tfs(step - 1), tfs(step), ease(sub(p, 0, .2)));
         titles.forEach(({ el, y0 }) => { el.setAttribute('font-size', f1(fsT)); el.setAttribute('y', f1(y0 + fsT + 10)); });
         // detaillabels alleen in de stap waarin hun paneel centraal staat (paneeltitels blijven)
@@ -264,7 +277,7 @@ export default {
         const u2 = step < 2 ? 0 : step === 2 ? .92 * ease(sub(p, .35, .9)) : .92;
         $('cr-fibre').innerHTML = fibre(u1, u2) +
           (step === 2 ? txt(845, 365, T2('cohesine (ring) → lus tot aan CTCF ▶ ◀', 'cohesin (ring) → loop up to CTCF ▶ ◀'), '#ffc247', 16) : '');
-        $('cr-hic').innerHTML = hic(step < 3 ? 0 : step === 3 ? ease(sub(p, 0, .35)) : 1);
+        $('cr-hic').innerHTML = hic(step < 3 ? 0 : step === 3 ? ease(sub(p, 0, .1)) : 1, step === 3 ? sub(p, .05, .95) : 1);
         panels.forEach((id, k) => {
           const o = cur === k && prev === k ? 1 : cur === k ? fin : prev === k ? 1 - fin : 0;
           $(id).querySelectorAll('text:not(.ptitle)').forEach(el => el.setAttribute('opacity', f1(o)));
