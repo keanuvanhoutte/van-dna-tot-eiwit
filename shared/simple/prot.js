@@ -86,7 +86,7 @@ export default {
       },
     },
     secundair: {
-      kort: { nl: 'De tertiaire structuur is de volledige 3D-vouw van één polypeptideketen: helices, strengen en lussen samen. Hydrofobe zijketens zitten binnenin, hydrofiele buiten. Zo ontstaan bindingsplaatsen, zoals het zakje voor het heem in hemoglobine.', en: 'Tertiary structure is the complete 3D fold of one polypeptide chain: helices, strands and loops together. Hydrophobic side chains sit inside, hydrophilic ones outside. This creates binding sites, such as the pocket for the heme in haemoglobin.' },
+      kort: { nl: 'De tertiaire structuur is de volledige 3D-vouw van één polypeptideketen: helices, strengen en lussen samen. Hydrofobe zijketens zitten binnenin, hydrofiele buiten. Zo ontstaan bindingsplaatsen, zoals het zakje voor het heem in hemoglobine.', en: 'Tertiary structure is the complete 3D fold of one polypeptide chain: helices, strands and loops together. Hydrophobic side chains sit inside, hydrophilic ones outside. This creates binding sites, such as the pocket for the haem in haemoglobin.' },
       terms: [
         [{ nl: 'tertiaire structuur', en: 'tertiary structure' }, { nl: 'De volledige 3D-vouw van één keten.', en: 'The complete 3D fold of one chain.' }],
         [{ nl: 'hydrofobe kern', en: 'hydrophobic core' }, { nl: 'Het binnenste van het eiwit, waar waterschuwe zijketens samen zitten.', en: 'The inside of the protein, where water-avoiding side chains gather.' }],
@@ -96,7 +96,7 @@ export default {
       steps: {
         0: { tag: ['tertiaire vouw', 'tertiary fold'], title: { nl: 'Eén keten, één vouw', en: 'One chain, one fold' }, text: { nl: 'De β-globineketen vouwt tot een compact bolletje. Kleur: van begin (blauw) tot einde (rood).', en: 'The β-globin chain folds into a compact ball. Colour: from start (blue) to end (red).' } },
         2: { tag: ['hydrofobe kern', 'hydrophobic core'], title: { nl: 'Een hydrofobe kern', en: 'A hydrophobic core' }, text: { nl: 'Binnenin zitten bijna alleen hydrofobe zijketens (groen). Hun samenklonteren drijft de vouwing aan.', en: 'Inside sit almost only hydrophobic side chains (green). Their clumping together drives the folding.' } },
-        4: { tag: ['heem', 'heme'], title: { nl: 'Een zakje voor het heem', en: 'A pocket for the heme' }, text: { nl: 'Het heem, een ring met een ijzeratoom, ligt in een hydrofoob zakje. Daar bindt zuurstof (in dit model CO).', en: 'The heme, a ring with an iron atom, lies in a hydrophobic pocket. Oxygen binds there (CO in this model).' } },
+        4: { tag: ['heem', 'heme'], title: { nl: 'Een zakje voor het heem', en: 'A pocket for the haem' }, text: { nl: 'Het heem, een ring met een ijzeratoom, ligt in een hydrofoob zakje. Daar bindt zuurstof (in dit model CO).', en: 'The haem, a ring with an iron atom, lies in a hydrophobic pocket. Oxygen binds there (CO in this model).' } },
         9: { tag: ['quaternair', 'quaternary'], title: { nl: 'Nog niet het hele eiwit', en: 'Not yet the whole protein' }, text: { nl: 'Hemoglobine bestaat uit vier zulke ketens. Hoe ze samen passen, heet de quaternaire structuur.', en: 'Haemoglobin is made of four such chains. How they fit together is called the quaternary structure.' } },
       },
     },
@@ -119,7 +119,7 @@ export default {
         [{ nl: 'heteromeer', en: 'heteromer' }, { nl: 'Een complex uit verschillende ketens; uit identieke ketens heet het een homomeer.', en: 'A complex of different chains; one of identical chains is a homomer.' }],
       ],
       steps: {
-        0: { tag: ['subeenheden', 'subunits'], title: { nl: 'Vier subeenheden samen', en: 'Four subunits together' }, text: { nl: 'Hemoglobine heeft vier subeenheden: twee α- en twee β-ketens. Elke keten heeft een heem dat zuurstof bindt.', en: 'Haemoglobin has four subunits: two α and two β chains. Each chain has a heme that binds oxygen.' } },
+        0: { tag: ['subeenheden', 'subunits'], title: { nl: 'Vier subeenheden samen', en: 'Four subunits together' }, text: { nl: 'Hemoglobine heeft vier subeenheden: twee α- en twee β-ketens. Elke keten heeft een heem dat zuurstof bindt.', en: 'Haemoglobin has four subunits: two α and two β chains. Each chain has a haem that binds oxygen.' } },
         6: { tag: ['coöperativiteit', 'cooperativity'], title: { nl: 'Coöperatieve binding', en: 'Cooperative binding' }, text: { nl: 'Elke keten bindt één zuurstofmolecuul. Het eerste bindt moeilijk, de volgende makkelijker: coöperativiteit. (Dit model bindt CO.)', en: 'Each chain binds one oxygen molecule. The first binds with difficulty, the next ones more easily: cooperativity. (This model binds CO.)' } },
         7: { tag: ['sikkelcel', 'sickle cell'], title: { nl: 'Eén fout: sikkelcelhemoglobine', en: 'One mistake: sickle cell haemoglobin' }, text: { nl: 'In de β-keten staat valine in plaats van glutamaat. Zonder zuurstof plakt die hydrofobe plek hemoglobines aaneen tot vezels.', en: 'The β chain has valine instead of glutamate. Without oxygen, that hydrophobic spot sticks haemoglobins together into fibres.' } },
       },
