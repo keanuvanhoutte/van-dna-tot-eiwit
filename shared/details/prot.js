@@ -182,7 +182,7 @@ export default {
   },
   secundair: {
     nl: {
-      kort: 'Secundaire structuur zijn eenvoudige vormen die korte stukken van de keten aannemen: de spiraalvormige [[α-helix|helix]] en het platte [[β-blad|betablad]]. Zwakke [[waterstofbruggen|waterstofbrug]] houden ze op hun plaats. Het zijn de eerste bouwblokken van de 3D-vorm.',
+      kort: 'Secundaire structuur zijn eenvoudige vormen die korte stukken van de keten aannemen: de spiraalvormige [[α-helix|helix]] en het [[β-blad|betablad]] uit gestrekte strengen naast elkaar. Zwakke [[waterstofbruggen|waterstofbrug]] houden ze op hun plaats. Het zijn de eerste bouwblokken van de 3D-vorm.',
       what: 'Secundaire structuur is de lokale, regelmatige vorm van de backbone, gestabiliseerd door waterstofbruggen tussen C=O en N–H van de backbone. De belangrijkste vormen zijn de α-helix en de β-streng/het β-blad; lussen verbinden ze.',
       how: [
         'α-helix: rechtshandig, 3,6 residuen per winding, H-brug C=O(i) ··· H–N(i+4); zijketens naar buiten.',
@@ -196,7 +196,7 @@ export default {
       why: 'Helices en bladen zijn de bouwstenen van elke vouw. Hun H-bruggen neutraliseren de polaire backbone, zodat die in de hydrofobe kern kan liggen.',
     },
     en: {
-      kort: 'Secondary structure is the simple shapes that short stretches of the chain adopt: the spiral [[α-helix|helix]] and the flat [[β-sheet|betablad]]. Weak [[hydrogen bonds|waterstofbrug]] hold them in place. They are the first building blocks of the 3D shape.',
+      kort: 'Secondary structure is the simple shapes that short stretches of the chain adopt: the spiral [[α-helix|helix]] and the [[β-sheet|betablad]] of stretched strands side by side. Weak [[hydrogen bonds|waterstofbrug]] hold them in place. They are the first building blocks of the 3D shape.',
       what: 'Secondary structure is the local, regular shape of the backbone, stabilised by hydrogen bonds between backbone C=O and N–H groups. The main forms are the α-helix and the β-strand/β-sheet; loops connect them.',
       how: [
         'α-helix: right-handed, 3.6 residues per turn, H-bond C=O(i) ··· H–N(i+4); side chains point outwards.',

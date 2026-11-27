@@ -1,13 +1,38 @@
 import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, clamp, lerp, f1, AACLASS, CLASSCOL, SPIN } from '../../kit.js';
 import { fetchPDB, parsePDB, residues, P, sub3, norm3, dot3, mul3, centroid, mainAxis, frameAlong, rotX, rotY, mm, projector, dist } from './_a_geo.js';
 import { byResi, addH, ballStick, caTrace, EL } from './_a_draw.js';
+import { inset3d, withInset, warm3d } from '../../kit3d.js';
 
 /* Ubiquitine (mens), PDB 1UBQ: HELIX/SHEET-records uit het bestand */
 const HELIX = [23, 34], H310 = [56, 59];
 const STR = { b1: [1, 7], b2: [10, 17], b3: [40, 45], b4: [48, 50], b5: [64, 72] };
 const rng = (a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i);
 const ssOf = i => (i >= HELIX[0] && i <= HELIX[1]) ? 'H' : (i >= H310[0] && i <= H310[1]) ? 'G' : Object.values(STR).some(([a, b]) => i >= a && i <= b) ? 'E' : '-';
-const SSCOL = { H: C.prot, G: '#e07bff', E: C.trna, '-': '#6b7590' };
+const SSCOL = { H: C.prot, G: '#e07bff', E: C.trna, '-': '#8a93ad' };
+/* overzicht (stap 0 en 9): echt 3D-cartoonmodel van 1UBQ (3Dmol, zoals tertiair/quaternair), gekleurd per vormtype.
+ * De helix/strengen komen uit de HELIX/SHEET-records van het bestand zelf; 3Dmol tekent strengen als pijlen (N → C). */
+const COIL = SSCOL['-'];
+const CART = (col, o = {}) => ({ cartoon: { color: col, ...o } });
+const FADE = { opacity: .6 };
+const STRAND = CART(C.trna, { arrows: true });   // strengen als pijl N → C
+const SS3 = [{ sel: {}, style: CART(COIL) }, { sel: { resi: rng(...HELIX) }, style: CART(C.prot) }, { sel: { resi: rng(...H310) }, style: CART('#e07bff') },
+  ...Object.values(STR).map(([a, b]) => ({ sel: { resi: rng(a, b) }, style: STRAND }))];
+const S3 = {
+  0: { spin: .008, pad: 1.45, focus: [
+    { sel: { resi: rng(...HELIX) }, style: CART(C.prot), label: { nl: 'α-helix', en: 'α-helix' }, labelColor: C.prot },
+    { sel: { resi: rng(...STR.b1) }, style: STRAND, label: { nl: 'β-blad', en: 'β-sheet' }, labelColor: C.trna, labelSel: { resi: [...rng(...STR.b1), ...rng(...STR.b2), ...rng(...STR.b5)] } },
+    { sel: { resi: rng(...H310) }, style: CART('#e07bff'), label: { nl: '3₁₀-helix', en: '3₁₀ helix' }, labelColor: '#e07bff' },
+    { sel: { resi: 1 }, style: STRAND, label: { nl: 'N', en: 'N' }, labelColor: '#fff' },
+    { sel: { resi: 76 }, style: CART(COIL), label: { nl: 'C', en: 'C' }, labelColor: '#fff' }] },
+  9: { spin: .008, pad: 1.45, focus: [
+    { sel: { resi: rng(...HELIX) }, style: CART(C.prot, FADE) }, { sel: { resi: rng(...H310) }, style: CART('#e07bff', FADE) },
+    ...Object.values(STR).map(([a, b]) => ({ sel: { resi: rng(a, b) }, style: CART(C.trna, { arrows: true, ...FADE }) })),
+    { sel: { resi: rng(8, 9) }, style: CART('#f2f5ff'), label: { nl: 'haarspeld 7–10', en: 'hairpin 7–10' }, labelColor: '#f2f5ff' },   // 7 en 10 horen bij β1/β2 (pijlpunt blijft)
+    { sel: { resi: rng(18, 22) }, style: CART('#7fe3ff'), label: { nl: 'lus 18–22', en: 'loop 18–22' }, labelColor: '#7fe3ff', labelOff: [-80, 30] },
+    { sel: { resi: rng(51, 55) }, style: CART('#ffb37a'), label: { nl: 'lus 51–55', en: 'loop 51–55' }, labelColor: '#ffb37a', labelOff: [80, -30] },
+    { sel: { resi: [35, 36, 37, 38, 39, 46, 47, 60, 61, 62, 63, 73, 74, 75, 76] }, style: CART('#c9d0e4') }] },
+};
+const BOX = { x: 40, y: 112, w: 900, h: 606 };
 const ONE = { ALA: 'A', ARG: 'R', ASN: 'N', ASP: 'D', CYS: 'C', GLN: 'Q', GLU: 'E', GLY: 'G', HIS: 'H', ILE: 'I', LEU: 'L', LYS: 'K', MET: 'M', PHE: 'F', PRO: 'P', SER: 'S', THR: 'T', TRP: 'W', TYR: 'Y', VAL: 'V' };
 
 const PX = 990, PW = 570;                      // paneel rechts
@@ -17,9 +42,10 @@ const ST = (dur, nl, en, tnl, ten, camv = FULL) => ({ dur, cam: camv, title: { n
 export default {
   id: 'secundair',
   title: { nl: 'Secundaire structuur', en: 'Secondary structure' },
+  warm() { warm3d('1UBQ', 'pdb'); },   // 3D-overzicht: bestand al ophalen en parsen
   scale: '≈ 1–3 nm', time: { nl: 'geen tijdsas (stilstaande structuur)', en: 'no time axis (static structure)' },
   org: { nl: 'mens (ubiquitine, PDB 1UBQ)', en: 'human (ubiquitin, PDB 1UBQ)' },
-  legend: [[C.prot, 'α-helix'], ['#e07bff', { nl: '3₁₀-helix', en: '3₁₀ helix' }], [C.trna, { nl: 'β-streng', en: 'β-strand' }], ['#6b7590', { nl: 'lus / coil', en: 'loop / coil' }], [EL.N, 'N'], [EL.O, 'O'], [EL.C, 'C, Cα'], [EL.H, { nl: 'H (berekend)', en: 'H (computed)' }], [EL.CB, { nl: 'Cβ (begin zijketen)', en: 'Cβ (start of side chain)' }], ['#ffc247', { nl: 'H-brug (gestreept)', en: 'H-bond (dashed)' }]],
+  legend: [[C.prot, 'α-helix'], ['#e07bff', { nl: '3₁₀-helix', en: '3₁₀ helix' }], [C.trna, { nl: 'β-streng', en: 'β-strand' }], ['#8a93ad', { nl: 'lus / coil', en: 'loop / coil' }], [EL.N, 'N'], [EL.O, 'O'], [EL.C, 'C, Cα'], [EL.H, { nl: 'H (berekend)', en: 'H (computed)' }], [EL.CB, { nl: 'Cβ (begin zijketen)', en: 'Cβ (start of side chain)' }], ['#ffc247', { nl: 'H-brug (gestreept)', en: 'H-bond (dashed)' }]],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">Alle atomen komen uit PDB 1UBQ (menselijk ubiquitine, 1,8 Å). Kristalstructuren bevatten meestal geen waterstofatomen: de amide-H is hier berekend op de bissectrice van C(i−1)–N–Cα. Een H-brug wordt getoond als O en N minder dan 3,5 Å uit elkaar liggen. Hemoglobine (ons voorbeeld in de andere hoofdstukken) bevat geen β-bladen; daarom gebruikt dit hoofdstuk ubiquitine, dat helices én een gemengd β-blad heeft.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">All atoms come from PDB 1UBQ (human ubiquitin, 1.8 Å). Crystal structures usually contain no hydrogen atoms: the amide H is computed here on the bisector of C(i−1)–N–Cα. An H-bond is drawn when O and N are less than 3.5 Å apart. Haemoglobin (our example in the other chapters) contains no β-sheets; that is why this chapter uses ubiquitin, which has helices and a mixed β-sheet.</p>' },
@@ -27,7 +53,7 @@ export default {
     nl: 'Enkel de backbone (N, Cα, C, O, H) en Cβ worden getoond; de rest van de zijketens is weggelaten. De H-bruggen zijn geselecteerd op afstand alleen (geen hoekcriterium zoals DSSP). De 2D-schema\'s rechts zijn geïdealiseerd.',
     en: 'Only the backbone (N, Cα, C, O, H) and Cβ are shown; the rest of the side chains is omitted. H-bonds are selected on distance only (no angle criterion as in DSSP). The 2D schemes on the right are idealised.' },
   steps: [
-    ST(8000, 'Plaatselijke vormen', 'Local shapes', 'Stukjes van de keten krijgen een vaste vorm: spiraal (helix), plat blad of lus. Ubiquitine heeft ze alle drie.', 'Short stretches of the chain take a set shape: spiral (helix), flat sheet or loop. Ubiquitin has all three.'),
+    ST(8000, 'Plaatselijke vormen', 'Local shapes', 'Stukjes van de keten krijgen een vaste vorm: een spiraal (helix) of een gestrekte streng; strengen naast elkaar vormen een blad. Lussen verbinden ze.', 'Short stretches of the chain take a set shape: a spiral (helix) or a stretched strand; strands side by side form a sheet. Loops link them.'),
     ST(8000, 'De α-helix: een spiraal', 'The α-helix: a spiral', 'De keten draait als een schroef met rechtse draad: 3,6 aminozuren per winding.', 'The chain twists like a right-handed screw: 3.6 amino acids per turn.'),
     ST(9500, 'Bruggen houden de spiraal vast', 'Bonds hold the spiral together', 'Elk aminozuur maakt een zwakke binding (waterstofbrug) met het aminozuur vier plaatsen verder.', 'Each amino acid forms a weak bond (hydrogen bond) with the amino acid four places further on.'),
     ST(8500, 'Zijketens wijzen naar buiten', 'Side chains point outwards', 'Kijk langs de as: de zijketens (groen) steken naar buiten. Elk aminozuur draait 100° verder.', 'Look down the axis: the side chains (green) stick out. Each amino acid turns another 100°.'),
@@ -42,7 +68,7 @@ export default {
     return svgOpen() + `
     <g id="se-under"></g>
     <g id="se-mol"></g>
-    <g data-node="ubiquitine" data-color="#ffd166" data-nolabel><g id="se-ub"></g></g>
+    <g id="se-ubw" data-node="ubiquitine" data-color="#ffd166" data-nolabel><rect id="se-box" x="${BOX.x}" y="${BOX.y}" width="${BOX.w}" height="${BOX.h}" rx="16" fill="#0b1224"/><g id="se-ub"></g></g>
     <g id="se-lab"></g>
     <rect x="${PX}" y="110" width="${PW}" height="610" rx="18" fill="#0d1426" stroke="#2a3550" stroke-width="2"/>
     <g id="se-panel"></g>
@@ -59,8 +85,9 @@ export default {
     <text id="se-load" x="${CX}" y="${CY}" font-size="25" text-anchor="middle" fill="${C.muted}" font-family="Inter">${T2('1UBQ laden uit de PDB…', 'Loading 1UBQ from the PDB…')}</text>
     </svg>`;
   },
-  init(svg) {
+  init(svg, api) {
     const $ = id => svg.getElementById(id);
+    const v3 = inset3d(svg, { pdb: '1UBQ', format: 'pdb', box: 'se-box', base: SS3, steps: S3, dimOpacity: false, off: !api?.node });
     let R = null, HB = [], seq = '', err = null;
     fetchPDB('1UBQ').then(t => {
       R = byResi(residues(parsePDB(t)), 'A'); addH(R);
@@ -90,9 +117,13 @@ export default {
     const T = (y, s, col = C.text, size = 23, w = 600) => txt(PX + 30, y, s, col, size, 'start', w);
     const head = s => T(162, s, C.text, 27, 700);
 
-    return {
+    return withInset({
+      destroy() { v3.destroy(); },
       update(t, s) {
         const { step, p } = s;
+        const op3 = v3.update(s);
+        $('se-box').setAttribute('opacity', f1(op3));
+        $('se-ubw').style.pointerEvents = op3 > .5 ? 'auto' : 'none';
         $('se-load').setAttribute('opacity', R ? 0 : 1);
         if (err) $('se-load').textContent = 'PDB 1UBQ: ' + err;
         $('se-hs-rama').setAttribute('opacity', step === 1 || step === 5 ? 1 : 0);
@@ -109,9 +140,9 @@ export default {
           const M = mm(rotY(t * 0.00022 * SPIN), rotX(-0.35));
           const pr = projector(M, V.all.c, V.all.sc, CX, CY);
           const loopDim = step === 9 ? (i => ssOf(i) !== '-') : null;
-          mol = caTrace(R, rng(1, 76), pr, i => SSCOL[ssOf(i)], 13, loopDim);
+          mol = api?.node ? '' : caTrace(R, rng(1, 76), pr, i => SSCOL[ssOf(i)], 13, loopDim);
           const at = i => pr(P(R[i].at.CA));
-          if (step === 0) {
+          if (api?.node) { /* live: 3Dmol tekent het model en de labels; de SVG-lijnen zijn enkel plaatsvervanger in de testhulpmiddelen */ } else if (step === 0) {
             const a = at(29), b = at(4), c = at(66), g = at(57);
             lab += tag(a[0], a[1] - 40, 'α-helix', C.prot, 25) + tag(b[0], b[1] - 36, T2('β-blad', 'β-sheet'), C.trna, 25) + tag(g[0] + 30, g[1] + 40, '3₁₀', '#e07bff', 23, 'start');
             lab += tag(at(1)[0] - 18, at(1)[1] + 8, 'N', '#fff', 22, 'end') + tag(at(76)[0] + 18, at(76)[1] + 8, 'C', '#fff', 22, 'start');
@@ -126,7 +157,7 @@ export default {
               const x = PX + 40 + k * 19.5, y = 215 + r * 62, ss = ssOf(i);
               s += `<rect x="${f1(x - 9)}" y="${y + 8}" width="18" height="8" rx="2" fill="${SSCOL[ss]}"/>` + `<text x="${f1(x)}" y="${y}" font-size="20" text-anchor="middle" fill="${C.text}" font-family="JetBrains Mono" font-weight="700">${seq[i - 1]}</text>`;
             }
-            [[C.prot, 'α-helix 23–34'], ['#e07bff', T2('3₁₀-helix 56–59', '3₁₀ helix 56–59')], [C.trna, T2('5 β-strengen → één blad', '5 β-strands → one sheet')], ['#6b7590', T2('lussen', 'loops')]].forEach(([col, lb], k) => {
+            [[C.prot, 'α-helix 23–34'], ['#e07bff', T2('3₁₀-helix 56–59', '3₁₀ helix 56–59')], [C.trna, T2('5 β-strengen → één blad', '5 β-strands → one sheet')], ['#8a93ad', T2('lussen', 'loops')]].forEach(([col, lb], k) => {
               s += `<rect x="${PX + 30}" y="${426 + k * 40}" width="26" height="12" fill="${col}"/>` + txt(PX + 70, 441 + k * 40, lb, C.text, 23, 'start');
             });
             return s;
@@ -295,6 +326,6 @@ export default {
         $('se-mol').innerHTML = whole ? '' : mol; $('se-ub').innerHTML = whole ? mol : ''; $('se-lab').innerHTML = lab; $('se-under').innerHTML = under; $('se-under').setAttribute('opacity', f1(fade));
         $('se-mol').setAttribute('opacity', f1(fade)); $('se-lab').setAttribute('opacity', f1(fade));
       },
-    };
+    }, v3);
   },
 };
