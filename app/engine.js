@@ -5,7 +5,7 @@
  *  - verhaallijn (STORY), overzichtskaart "Waar ben ik?", uitzoomen naar het bovenliggende niveau, start
  *  - zijpaneel met uitgebreide uitleg (shared/details) en bronnen
  */
-import { NODES, STAGES, SCALES, title, sub, summary, stageTitle, scaleTitle } from '../shared/content.js';
+import { NODES, STAGES, SCALES, title, sub, summary, stageTitle } from '../shared/content.js';
 import { L, U, statusText, langSwitch, lang } from '../shared/i18n.js';
 import { DETAILS } from '../shared/details/index.js';
 import { GLOSSARY } from '../shared/glossary.js';
@@ -1095,11 +1095,6 @@ function detailsHTML(id, open = true) {
 function render() {
   const def = current.def, base = current.base, n = NODES[current.id];
   renderCrumbs();
-  const lvl = n?.scale ?? 3;
-  const sc = L(def.scale ?? base.scale), tm = L(def.time ?? base.time);
-  $('scalebox').innerHTML = `<span class="zoomlvl" title="${L({ nl: 'Zoomniveau: van cel (links) tot atomen (rechts)', en: 'Zoom level: from cell (left) to atoms (right)' })}">${SCALES.map(s => `<i class="${s.id <= lvl ? 'on' : ''}" title="${scaleTitle(s)}"></i>`).join('')}</span>` +
-    (sc ? `<span title="${L({ nl: 'Hoe groot dit in werkelijkheid is', en: 'How big this is in reality' })}: ${sc.replace(/"/g, '&quot;')}">📏 <span class="k">${L({ nl: 'Echte grootte', en: 'Real size' })}:</span> <b>${sc}</b></span>` : '') +
-    (tm ? `<span title="${L({ nl: 'Hoe lang dit proces in de cel echt duurt. De animatie is vertraagd of versneld om het te kunnen volgen.', en: 'How long this process really takes in the cell. The animation is slowed down or sped up so you can follow it.' })} (${tm.replace(/"/g, '&quot;')})">⏱ <span class="k">${L({ nl: 'Echte duur', en: 'Real duration' })}:</span> <b>${tm}</b></span>` : '');
   const ups = n ? [...new Set([...n.parents, ...n.prev])] : [];
   /* uitlegpaneel rechts: kop + tabbladen (In het kort · Wat · Zo werkt het · Kerncijfers · Waarom belangrijk · Meer).
    * Een tabblad zonder inhoud (voor dit onderwerp of dit niveau) wordt niet getoond. */

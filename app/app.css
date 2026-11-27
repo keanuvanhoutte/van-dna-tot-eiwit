@@ -163,18 +163,6 @@ html, body { height: 100%; overflow: hidden; }
 .gearbox { position: absolute; right: 0; bottom: calc(100% + 10px); background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); white-space: nowrap; box-shadow: 0 10px 30px rgba(0,0,0,.4); z-index: 20; }
 .gearbox .gstate { font-size: 12.5px; color: var(--muted); }
 #speed { background: #0d1426; color: var(--text); border: 1px solid var(--line); border-radius: 7px; font: 500 12px var(--mono); padding: 3px 4px; }
-/* echte grootte en duur (en het zoomniveau), klein in de speler */
-.scalebox { flex: 0 1000 auto; display: flex; gap: 12px; align-items: center; font-size: 12px; color: var(--muted); min-width: 0; overflow: hidden; white-space: nowrap; margin-left: 6px; }
-.scalebox b { color: var(--text); font-weight: 600; }
-.scalebox > span { cursor: help; min-width: 0; display: inline-flex; align-items: baseline; gap: 4px; white-space: nowrap; flex: 0 1 auto; overflow: hidden; }
-.scalebox > span > .k { display: none; }
-.scalebox > span > b { min-width: 4em; overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto; }
-.scalebox > span.zoomlvl { flex: 0 0 auto; }
-.scalebox > span.zoomlvl + span { flex-shrink: 0; }   /* echte grootte: korte waarde, altijd volledig; de duur mag afgekort worden (volledig in de tooltip) */
-.zoomlvl { display: inline-flex; gap: 3px; align-items: center; }
-.zoomlvl i { width: 12px; height: 4px; border-radius: 2px; background: #243049; }
-.zoomlvl i.on { background: var(--accent); }
-@media (max-width: 1700px) { .scalebox .zoomlvl { display: none; } }
 /* volgend hoofdstuk (of terug naar het verhaal na een zijsprong) */
 .nextch { display: none; flex: 0 1 auto; min-width: 0; }
 .nextch.show { display: block; }
