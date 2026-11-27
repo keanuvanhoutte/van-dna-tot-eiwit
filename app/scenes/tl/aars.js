@@ -99,8 +99,8 @@ export default {
         const lv = k => { const a = VIS[k], c = a[i] ?? 0, pr = i > 0 ? a[i - 1] : c; return lerp(pr, c, sub(p, 0, .2)); };
         const gl = (k, sv) => lv(k) > .01 ? `<g opacity="${f1(lv(k))}">${sv}</g>` : '';
         $('rs-enz').setAttribute('opacity', i === 4 ? '1' : i === 7 ? f1(1 - .5 * sub(p, .2, .6)) : '1');
-        $('rs-lab').innerHTML = gl('syn', txt(SYN[0] - 66, SYN[1] + 24, T2('synthese-plaats', 'synthetic site'), '#d6ccff', 22, 'end', 700)) +
-          gl('edit', txt(EDIT[0] + 78, EDIT[1] + 50, T2('editeerplaats (CP1)', 'editing site (CP1)'), '#ff9a9a', 22, 'start', 700)) +
+        $('rs-lab').innerHTML = gl('syn', txt(SYN[0] - 66, SYN[1] + 24, T2('laadplaats', 'loading site'), '#d6ccff', 24, 'end', 700)) +
+          gl('edit', txt(EDIT[0] + 78, EDIT[1] + 50, T2('naleesplaats', 'checking site'), '#ff9a9a', 26, 'start', 800) + txt(EDIT[0] + 78, EDIT[1] + 74, T2('(editeerplaats, CP1)', '(editing site, CP1)'), C.muted, 16, 'start', 600)) +
           gl('acd', txt(ACD[0] + 110, ACD[1] + 70, T2('anticodonbindend domein', 'anticodon-binding domain'), '#d6ccff', 22, 'start', 700)) +
           gl('name', txt(1060, 640, 'IleRS', C.prot, 34, 'middle', 800));
         
@@ -118,8 +118,8 @@ export default {
           mol += atp(a[0] + 10 * react, a[1], react > .5 ? 1 : 3);
           if (react > 0) mol += `<circle cx="${SYN[0] + 20}" cy="${SYN[1] + 14}" r="${f1(30 + 40 * react)}" fill="none" stroke="#fff" stroke-width="3" opacity="${f1(1 - react)}"/>`;
           mol += ppi(lerp(SYN[0] + 90, 1380, leave), lerp(SYN[1] + 40, 700, leave), sub(p, .6, .7));
-          ov += `<g opacity="${f1(sub(p, .1, .3))}">` + txt(900, 225, T2('Ile + ATP  →  Ile-AMP + PPi', 'Ile + ATP  →  Ile-AMP + PPi'), '#fff', 30, 'middle', 800) + '</g>';
-          if (react > .5) ov += txt(SYN[0] + 14, SYN[1] + 88, 'Ile-AMP', '#fff', 22, 'middle', 700);
+          ov += `<g opacity="${f1(sub(p, .1, .3))}">` + txt(900, 225, T2('ATP geeft energie aan het aminozuur', 'ATP gives energy to the amino acid'), '#fff', 30, 'middle', 800) + '</g>';
+          if (react > .5) ov += txt(SYN[0] + 14, SYN[1] + 90, T2('aminozuur klaar', 'amino acid ready'), '#fff', 24, 'middle', 800) + txt(SYN[0] + 14, SYN[1] + 112, '(Ile-AMP)', C.muted, 16, 'middle', 600);
           tr = '';
         }
         if (i >= 2 && i <= 3) {
@@ -133,19 +133,19 @@ export default {
           const ampL = i === 3 ? ease(sub(p, .6, 1)) : 0;
           mol += atp(lerp(SYN[0] + 58, 1380, ampL), lerp(SYN[1] + 20, 640, ampL), 1);
           if (i === 2) {
-            ov += `<g opacity="${f1(sub(p, .5, .65))}">` + txt(ACD[0] - 140, ACD[1] - 80, T2('anticodon 5′-GAU-3′', 'anticodon 5′-GAU-3′'), '#fff', 24, 'end', 800) +
-              txt(ACD[0] - 140, ACD[1] - 50, T2('= identiteitselement', '= identity element'), C.muted, 20, 'end') + '</g>' +
-              `<g opacity="${f1(sub(p, .65, .8))}">` + txt(tipSyn[0] - 110, tipSyn[1] - 150, T2('acceptorstam + base 73', 'acceptor stem + base 73'), '#fff', 20, 'middle', 700) + '</g>';
+            ov += `<g opacity="${f1(sub(p, .5, .65))}">` + txt(ACD[0] - 140, ACD[1] - 80, T2('anticodon', 'anticodon'), '#fff', 26, 'end', 800) +
+              txt(ACD[0] - 140, ACD[1] - 50, T2('= herkenningsteken', '= recognition mark'), C.muted, 20, 'end') + '</g>' +
+              `<g opacity="${f1(sub(p, .65, .8))}">` + txt(tipSyn[0] - 110, tipSyn[1] - 150, T2('ook de stam wordt herkend', 'the stem is recognised too'), '#fff', 20, 'middle', 700) + '</g>';
           } else {
-            ov += `<g opacity="${f1(sub(p, .05, .2))}">` + txt(860, 215, T2('Ile-AMP + tRNA  →  Ile-tRNA + AMP', 'Ile-AMP + tRNA  →  Ile-tRNA + AMP'), '#fff', 28, 'middle', 800) + '</g>' +
-              `<g opacity="${f1(sub(p, .65, .8))}">` + txt(tipSyn[0] + 40, tipSyn[1] + 90, T2("ester op 2′-OH van A76", "ester on 2′-OH of A76"), C.chain, 20, 'start', 700) + '</g>';
+            ov += `<g opacity="${f1(sub(p, .05, .2))}">` + txt(860, 215, T2('het aminozuur springt op het tRNA', 'the amino acid jumps onto the tRNA'), '#fff', 28, 'middle', 800) + '</g>' +
+              `<g opacity="${f1(sub(p, .65, .8))}">` + `<path d="M1000,306 Q905,520 ${tipSyn[0] + 11},${tipSyn[1] + 3}" stroke="${C.chain}" stroke-width="2.5" fill="none"/>` + txt(1000, 296, T2('vast aan de laatste A', 'attached to the last A'), C.chain, 24, 'start', 800) + '</g>';
           }
         }
         if (i === 4) {
           tr = trna(0, 0, tipSyn, { a: 'I', dx: 30, dy: -26 }, 1);     // IleRS + Ile-tRNA blijven in beeld als voorbeeld van klasse I
           const f = 1;
-          ov += `<g opacity="${f1(f)}">` + textBox(1185, 90, 395, [T2('Rossmann-vouwing', 'Rossmann fold'), T2('motieven HIGH, KMSKS', 'motifs HIGH, KMSKS'), T2("meestal 2′-OH van A76", "usually 2′-OH of A76"), T2('bv. IleRS, MetRS, ValRS', 'e.g. IleRS, MetRS, ValRS')], { title: T2('Klasse I', 'Class I'), col: '#9b7bff', fs: 26 }) + '</g>';
-          ov += `<g opacity="${f1(sub(p, .15, .3))}">` + textBox(1185, 355, 395, [T2('antiparallel β-blad', 'antiparallel β-sheet'), T2('motieven 1, 2, 3', 'motifs 1, 2, 3'), T2("meestal 3′-OH van A76", "usually 3′-OH of A76"), T2('bv. SerRS, AlaRS, ThrRS', 'e.g. SerRS, AlaRS, ThrRS')], { title: T2('Klasse II', 'Class II'), col: '#5fd3e6', fs: 26 }) + '</g>';
+          ov += `<g opacity="${f1(f)}">` + textBox(1185, 120, 395, [T2('grijpt het tRNA langs één kant', 'grips the tRNA from one side'), T2('bv. dit enzym (voor Ile)', 'e.g. this enzyme (for Ile)')], { title: T2('Familie 1 (klasse I)', 'Family 1 (class I)'), col: '#9b7bff', fs: 22 }) + '</g>';
+          ov += `<g opacity="${f1(sub(p, .15, .3))}">` + textBox(1185, 330, 395, [T2('andere bouw', 'a different build'), T2('grijpt langs de andere kant', 'grips from the other side'), T2('bv. voor Ser, Ala, Thr', 'e.g. for Ser, Ala, Thr')], { title: T2('Familie 2 (klasse II)', 'Family 2 (class II)'), col: '#5fd3e6', fs: 22 }) + '</g>';
         }
         if (i === 5) {
           // Leu en Phe botsen af; Val past
@@ -159,8 +159,8 @@ export default {
           const val = E2([1400, 620], [tipSyn[0] + 30, tipSyn[1] - 26], kv);
           tr = trna(0, 0, tipSyn, kv > .98 ? { a: 'V', dx: 30, dy: -26 } : null, 1);
           if (kv <= .98) amino += aa(val[0], val[1], 'V', 24);
-          ov += `<g opacity="${f1(sub(p, .75, .9))}">` + txt(tipSyn[0] + 40, tipSyn[1] + 100, T2('Val-tRNA-Ile: fout!', 'Val-tRNA-Ile: wrong!'), C.danger, 24, 'start', 800) + '</g>';
-          ov += `<g opacity="${f1(sub(p, .05, .2))}">` + textBox(1180, 540, 360, [T2('Ile  C₆: past', 'Ile  C₆: fits'), T2('Val  C₅: past ook', 'Val  C₅: also fits'), T2('Met, Phe: passen niet', 'Met, Phe: do not fit')], { title: T2('1e zeef: synthese-plaats', '1st sieve: synthetic site'), col: C.prot, fs: 20 }) + '</g>';
+          ov += `<g opacity="${f1(sub(p, .75, .9))}">` + txt(1180, 520, T2('valine op dit tRNA: fout!', 'valine on this tRNA: wrong!'), C.danger, 26, 'start', 800) + '</g>';
+          ov += `<g opacity="${f1(sub(p, .05, .2))}">` + textBox(1180, 545, 380, [T2('te groot → past niet', 'too big → does not fit'), T2('isoleucine → past', 'isoleucine → fits'), T2('valine (iets kleiner) → past ook!', 'valine (a bit smaller) → fits too!')], { title: T2('1e zeef: de laadplaats', '1st sieve: the loading site'), col: C.prot, fs: 20 }) + '</g>';
         }
         if (i === 6) {
           const sw = ease(sub(p, .08, .4)), hyd = sub(p, .45, .6), out = ease(sub(p, .6, .95));
@@ -170,8 +170,8 @@ export default {
           if (hyd >= .5) amino += aa(lerp(EDIT[0] + 10, 1400, out), lerp(EDIT[1] - 20, 180, out), 'V', 24);
           if (hyd > 0 && hyd < 1) mol += `<circle cx="${EDIT[0]}" cy="${EDIT[1]}" r="${f1(30 + 40 * hyd)}" fill="none" stroke="#ff6b6b" stroke-width="3" opacity="${f1(1 - hyd)}"/>`;
           mol += `<g opacity="${f1(sub(p, .4, .5) * (1 - sub(p, .6, .7)))}">${pill(EDIT[0] + 92, EDIT[1] - 6, 60, 28, 'H₂O', '#4fb0ff', 1, 15)}</g>`;
-          ov += `<g opacity="${f1(sub(p, .1, .3))}">` + textBox(1225, 380, 340, [T2('Val: past → gehydrolyseerd', 'Val: fits → hydrolysed'), T2('Ile: te groot → blijft', 'Ile: too big → stays')], { title: T2('2e zeef: editeerplaats', '2nd sieve: editing site'), col: '#ff6b6b', fs: 20 }) + '</g>';
-          ov += `<g opacity="${f1(sub(p, .7, .85))}">` + txt(900, 860, T2('Resultaat: foutkans veel lager dan één zeef alleen toelaat', 'Result: error rate far lower than one sieve alone allows'), '#fff', 24, 'middle', 700) + '</g>';
+          ov += `<g opacity="${f1(sub(p, .1, .3))}">` + textBox(1180, 360, 400, [T2('bijna-goed (valine) past hier', 'almost-right (valine) fits here'), T2('→ wordt eraf geknipt', '→ is cut off'), T2('isoleucine is te groot → blijft', 'isoleucine is too big → stays')], { title: T2('2e zeef: nalezen', '2nd sieve: checking'), col: '#ff6b6b', fs: 20 }) + '</g>';
+          ov += `<g opacity="${f1(sub(p, .7, .85))}">` + txt(1380, 300, T2('twee zeven → bijna geen fouten', 'two sieves → hardly any mistakes'), '#fff', 24, 'middle', 800) + '</g>';
         }
         if (i === 7) {
           const go = ease(sub(p, .15, .8));
