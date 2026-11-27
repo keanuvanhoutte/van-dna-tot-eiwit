@@ -20,76 +20,73 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
     background: radial-gradient(1100px 600px at 75% 10%, rgba(79,143,247,.18), transparent 60%),
                 radial-gradient(800px 500px at 0% 100%, rgba(155,123,255,.12), transparent 60%),
                 radial-gradient(700px 400px at 100% 100%, rgba(255,138,61,.08), transparent 60%), var(--bg); }
-  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+  .wrap { max-width: 1440px; margin: 0 auto; padding: 0 56px; box-sizing: border-box; }
   a { color: inherit; }
 
   /* ---- bovenbalk ---- */
-  nav.top { display: flex; align-items: center; gap: 18px; padding: 18px 0; }
+  nav.top { display: flex; align-items: center; gap: 22px; padding: 20px 0; }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; text-decoration: none; }
-  .brand svg { width: 26px; height: 26px; }
+  .brand img { width: 28px; height: 28px; display: block; }
   nav.top .sp { flex: 1; }
-  nav.top a.nl { font-size: 13.5px; color: var(--muted); text-decoration: none; }
+  nav.top a.nl { font-size: 14px; color: var(--muted); text-decoration: none; }
   nav.top a.nl:hover { color: var(--text); }
-  .lvlbtn { display: flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--muted); white-space: nowrap; }
-  .lvlbtn select { background: #0d1426; color: var(--text); border: 1px solid var(--line); border-radius: 999px; font: 500 13px Inter, system-ui, sans-serif; padding: 5px 10px; cursor: pointer; }
+  .lvlbtn { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--muted); white-space: nowrap; }
+  .lvlbtn select { background: rgba(13,20,38,.9); color: var(--text); border: 1px solid rgba(160,180,220,.22); border-radius: 12px; font: 600 14px Inter, system-ui, sans-serif; padding: 8px 12px; cursor: pointer; }
   .lvlbtn select:hover, .lvlbtn select:focus-visible { border-color: var(--accent); outline: none; }
-  .btn { all: unset; cursor: pointer; font-size: 12.5px; padding: 6px 11px; border-radius: 8px; border: 1px solid var(--line); color: var(--muted); }
+  .btn { all: unset; cursor: pointer; font-size: 12.5px; padding: 7px 11px; border-radius: 8px; border: 1px solid var(--line); color: var(--muted); }
   .btn[aria-pressed=true] { color: var(--text); border-color: rgba(124,196,255,.5); background: rgba(124,196,255,.1); }
   .btn:focus-visible { outline: 2px solid var(--accent); }
 
-  /* ---- hero ---- */
-  .hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 30px; align-items: center; min-height: min(640px, calc(100vh - 80px)); }
-  .eyebrow { font: 500 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); display: inline-flex; align-items: center; gap: 8px; }
-  .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #7fdc6a; box-shadow: 0 0 10px #7fdc6a; }
-  h1 { font-size: clamp(42px, 5.6vw, 72px); line-height: 1.02; margin: 16px 0 18px; letter-spacing: -.035em; font-weight: 800; }
+  /* ---- startscherm: links uitleg, rechts drie ingangen ---- */
+  .hero { display: grid; grid-template-columns: 420px minmax(0, 1fr); gap: 40px; padding: 16px 0 28px; height: calc(100vh - 78px); min-height: 620px; max-height: 860px; box-sizing: border-box; }
+  .intro { display: flex; flex-direction: column; gap: 22px; padding-top: 24px; min-width: 0; }
+  h1 { margin: 0; font-size: 58px; line-height: 1; letter-spacing: -.04em; font-weight: 800; }
   h1 .grad { background: linear-gradient(90deg, #7cc4ff, #9b7bff 45%, #ff8a3d); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .lead { color: var(--muted); font-size: 18px; line-height: 1.6; max-width: 560px; margin: 0 0 28px; }
-  .why { color: var(--muted); font-size: 13.5px; line-height: 1.5; max-width: 560px; margin: -14px 0 24px; padding-left: 12px; border-left: 2px solid rgba(155,123,255,.5); }
-  .brand img { width: 28px; height: 28px; display: block; }
-  .ctas { display: flex; flex-wrap: wrap; gap: 10px; }
-  .cta { text-decoration: none; font-weight: 600; font-size: 15px; padding: 13px 20px; border-radius: 12px; border: 1px solid var(--line); background: rgba(13,20,38,.7); transition: .2s; display: inline-flex; align-items: center; gap: 8px; }
-  .cta:hover { border-color: rgba(124,196,255,.6); transform: translateY(-1px); }
-  .cta.main { background: linear-gradient(135deg, #4f8ff7, #9b7bff); border-color: transparent; color: #fff; box-shadow: 0 10px 30px rgba(79,143,247,.35); }
-  .cta.main:hover { filter: brightness(1.08); }
-  .stats { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 34px; }
-  .stat b { display: block; font-size: 28px; font-weight: 800; letter-spacing: -.02em; }
-  .stat span { font-size: 13px; color: var(--muted); }
-  .helix { position: relative; height: min(600px, calc(100vh - 120px)); min-height: 420px; }
-  .helix canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .helix .tagl { position: absolute; font: 500 12px var(--mono); color: var(--muted); background: rgba(13,20,38,.75); border: 1px solid var(--line); padding: 5px 9px; border-radius: 8px; pointer-events: none; }
-  .helix .tagl i { font-style: normal; color: var(--text); }
+  .lead { margin: 0; font-size: 18px; line-height: 1.55; color: #c9d2e4; text-wrap: pretty; }
+  .aud { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); padding-top: 18px; margin-top: 4px; }
+  .aud > div { display: flex; flex-direction: column; gap: 8px; }
+  .aud > div:first-child { padding-right: 20px; border-right: 1px solid var(--line); }
+  .aud > div:last-child { padding-left: 20px; }
+  .aud b { font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+  .aud span { font-size: 16px; line-height: 1.45; color: var(--text); }
+  .hsearch { margin-top: auto; }
+  .hsearch .sbx input { font-size: 14px; padding: 13px 16px 13px 40px; border-radius: 14px; }
+  .hsearch .sbx .mg { left: 15px; }
+  /* de zoekbalk staat onderaan het scherm: resultaten openen naar boven */
+  .hsearch .sbx .dd { top: auto; bottom: calc(100% + 6px); width: min(620px, calc(100vw - 112px)); max-height: min(70vh, 620px); }
+
+  .doors { display: grid; grid-template-columns: 1.3fr 1fr; grid-template-rows: 1fr 1fr; gap: 16px; min-height: 0; }
+  .door { display: flex; flex-direction: column; border-radius: 24px; overflow: hidden; border: 1px solid var(--line); background: linear-gradient(rgba(20,30,56,.9), rgba(13,20,38,.9)); text-decoration: none; color: var(--text); min-height: 0; transition: .2s; }
+  a.door:hover { border-color: var(--c); transform: translateY(-2px); }
+  .door.human { grid-row: 1 / 3; border-color: #ff8a3d; box-shadow: 0 24px 60px rgba(255,138,61,.12); }
+  .door .pic { flex: 1; display: grid; place-items: center; min-height: 0; position: relative; }
+  .door.human .pic { background: radial-gradient(360px 220px at 50% 55%, rgba(255,138,61,.18), transparent 70%); }
+  .door.human .pic svg { width: 82%; height: min(240px, 100%); }
+  .door .pic svg.sm { width: 70%; height: min(120px, 100%); }
+  .door .pic canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .door .lbl { padding: 0 22px 20px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; position: relative; }
+  .door .lbl small { font: 500 11px var(--mono); color: var(--c); letter-spacing: .1em; text-transform: uppercase; }
+  .door h2 { margin: 4px 0 0; font-size: 24px; letter-spacing: -.02em; }
+  .door .arr { flex: none; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--c); color: var(--c); display: grid; place-items: center; }
+  .door.human .bd { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 14px; }
+  .door.human h2 { margin: 0; font-size: 32px; }
+  a.story { display: flex; align-items: center; gap: 14px; text-decoration: none; padding: 14px 16px; border-radius: 14px; transition: .2s; }
+  a.story > b { font-size: 18px; }
+  a.story span b { display: block; font-size: 15px; }
+  a.story span span { font-size: 13px; }
+  a.story.s1 { background: #ff8a3d; color: #070b16; }
+  a.story.s1:hover { filter: brightness(1.08); }
+  a.story.s2 { background: rgba(155,123,255,.14); border: 1px solid rgba(155,123,255,.4); color: var(--text); }
+  a.story.s2 > b { color: #9b7bff; }
+  a.story.s2 span span { color: var(--muted); }
+  a.story.s2:hover { background: rgba(155,123,255,.22); }
+  a.story:focus-visible, a.door:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   /* ---- secties ---- */
   section.blk { padding: 46px 0 10px; }
   .sh { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 18px; }
   .sh h2 { margin: 0; font-size: 26px; letter-spacing: -.02em; }
   .sh p { margin: 0; color: var(--muted); font-size: 15px; }
-
-  .starts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-  .start { position: relative; display: flex; flex-direction: column; text-decoration: none; background: linear-gradient(180deg, rgba(20,30,56,.9), rgba(13,20,38,.9)); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; transition: .25s; }
-  .start:hover { border-color: var(--c); transform: translateY(-3px); box-shadow: 0 18px 40px rgba(0,0,0,.35), 0 0 0 1px var(--c) inset; }
-  .start .art { height: 150px; display: grid; place-items: center; background: radial-gradient(260px 140px at 50% 60%, color-mix(in srgb, var(--c) 22%, transparent), transparent 70%); border-bottom: 1px solid var(--line); }
-  .start .art svg { width: 70%; height: 120px; }
-  .start .body { padding: 18px 20px 20px; display: flex; flex-direction: column; flex: 1; }
-  .tag { font: 500 11px var(--mono); color: var(--c); letter-spacing: .1em; text-transform: uppercase; }
-  .start h3 { font-size: 21px; margin: 8px 0 8px; letter-spacing: -.01em; }
-  .start p { color: var(--muted); font-size: 14.5px; line-height: 1.55; margin: 0 0 12px; }
-  .start .route { font-size: 13px; line-height: 1.5; color: #c9d2e4; margin: 0 0 14px; padding: 9px 11px; border-radius: 10px; background: rgba(255,255,255,.035); border: 1px solid var(--line); }
-  .start .route b { display: block; font: 600 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
-  .start .pick { font-size: 13px; color: var(--muted); margin: 0 0 14px; flex: 1; line-height: 1.5; }
-  .start .pick em { font-style: normal; color: var(--text); }
-  .start .meta { display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); }
-  a.go { display: flex; justify-content: space-between; align-items: center; gap: 10px; text-decoration: none; font-weight: 600; font-size: 14px; padding: 10px 13px; border-radius: 11px; color: var(--c); background: color-mix(in srgb, var(--c) 12%, transparent); border: 1px solid color-mix(in srgb, var(--c) 35%, transparent); transition: .2s; }
-  a.go span { color: var(--muted); font-weight: 500; font-size: 12.5px; white-space: nowrap; }
-  a.go:hover { background: color-mix(in srgb, var(--c) 22%, transparent); transform: translateX(3px); }
-  .legend3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 18px; }
-  .legend3 > div { display: flex; gap: 11px; align-items: flex-start; padding: 12px 14px; border-radius: 14px; background: rgba(13,20,38,.6); border: 1px solid var(--line); font-size: 13.5px; line-height: 1.5; color: var(--muted); }
-  .legend3 i { font-style: normal; font-size: 18px; line-height: 1.2; }
-  .legend3 b { color: var(--text); display: block; font-size: 14.5px; margin-bottom: 2px; }
-  .hsearch { margin-top: 26px; max-width: 560px; }
-  .hsearch label { display: block; font: 500 12px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-  .hsearch .sbx input { font-size: 15.5px; padding: 14px 16px 14px 42px; border-radius: 14px; }
-  .hsearch .sbx .mg { left: 15px; width: 18px; height: 18px; }
 
   .sides { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
   a.side { display: flex; flex-direction: column; gap: 8px; text-decoration: none; background: rgba(13,20,38,.85); border: 1px solid var(--line); border-radius: 16px; padding: 16px; transition: .2s; position: relative; overflow: hidden; }
@@ -115,14 +112,22 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
   footer a { color: var(--muted); }
   footer a:hover { color: var(--text); }
 
-  @media (max-width: 1100px) { .sides { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 1100px) { .wrap { padding: 0 28px; } .hero { grid-template-columns: 360px minmax(0, 1fr); gap: 28px; } h1 { font-size: 50px; } }
   @media (max-width: 900px) {
-    .hero { grid-template-columns: 1fr; min-height: 0; padding-top: 10px; }
-    .helix { height: 360px; min-height: 0; order: -1; }
-    .starts, .how, .legend3 { grid-template-columns: 1fr; }
+    .wrap { padding: 0 16px; }
+    nav.top { flex-wrap: wrap; gap: 12px 18px; }
+    .hero { grid-template-columns: 1fr; height: auto; min-height: 0; max-height: none; padding-top: 6px; }
+    .intro { padding-top: 8px; }
+    .hsearch { margin-top: 0; }
+    .hsearch .sbx .dd { top: calc(100% + 6px); bottom: auto; width: auto; }
+    .doors { grid-template-columns: 1fr; grid-template-rows: none; }
+    .door.human { grid-row: auto; }
+    .door .pic { min-height: 150px; }
+    .how { grid-template-columns: 1fr; }
     .sides { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
-  @media (prefers-reduced-motion: reduce) { .start, a.side, .cta, a.go { transition: none; } }
+  @media (max-width: 560px) { .sides, .aud { grid-template-columns: 1fr; } .aud > div:first-child { border-right: 0; padding: 0 0 14px; } .aud > div:last-child { padding: 0; } h1 { font-size: 42px; } }
+  @media (prefers-reduced-motion: reduce) { a.side, a.door, a.story { transition: none; } }
 </style>
 </head>
 <body>
@@ -137,65 +142,34 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
   </nav>
 
   <header class="hero">
-    <div>
-      <div class="eyebrow" id="eyebrow"></div>
-      <h1><span id="h1a"></span><br><span class="grad" id="h1b"></span></h1>
+    <div class="intro">
+      <h1><span id="h1a"></span> <span class="grad" id="h1b"></span></h1>
       <p class="lead" id="lead"></p>
-      <p class="why" id="why"></p>
-      <div class="ctas">
-        <a class="cta main" href="app/index.html?scene=cel" id="ctaHuman"></a>
-        <a class="cta" href="app/index.html?scene=bcel&amp;story=bacterie" id="ctaBact"></a>
-        <a class="cta" href="atlas/index.html" id="ctaAtlas"></a>
+      <div class="aud">
+        <div><b style="color:#ffc247" id="au1t"></b><span id="au1p"></span></div>
+        <div><b style="color:#7cc4ff" id="au2t"></b><span id="au2p"></span></div>
       </div>
-      <div class="hsearch"><label id="hsLbl"></label><div id="homeSearch"></div></div>
-      <div class="stats">
-        <div class="stat"><b id="nScenes">–</b><span id="lScenes"></span></div>
-        <div class="stat"><b id="nPdb">–</b><span id="lPdb"></span></div>
-        <div class="stat"><b id="nLines">–</b><span id="lLines"></span></div>
-        <div class="stat"><b>NL · EN</b><span id="lLang"></span></div>
-      </div>
+      <div class="hsearch"><div id="homeSearch"></div></div>
     </div>
-    <div class="helix" aria-hidden="true"><canvas id="helix"></canvas>
-      <div class="tagl" id="tag1" style="left:6%;top:18%"></div>
-      <div class="tagl" id="tag2" style="right:0;top:30%"></div>
-      <div class="tagl" id="tag3" style="left:12%;bottom:12%"></div>
+    <div class="doors">
+      <div class="door human" style="--c:#ff8a3d">
+        <a class="pic" href="app/index.html?scene=cel&amp;story=virus" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 200 120"><ellipse cx="100" cy="60" rx="88" ry="52" fill="rgba(201,165,116,.08)" stroke="#c9a574" stroke-width="2"/><circle cx="92" cy="58" r="26" fill="rgba(79,143,247,.12)" stroke="#4f8ff7" stroke-width="2"/><circle cx="98" cy="54" r="7" fill="#9b7bff" opacity=".7"/><path d="M84 66c6-6 10 4 16-2" stroke="#9cc0ff" stroke-width="1.6" fill="none"/><ellipse cx="148" cy="44" rx="16" ry="8" fill="none" stroke="#2cc6a8" stroke-width="1.6"/><ellipse cx="146" cy="82" rx="12" ry="7" fill="none" stroke="#ff8a3d" stroke-width="1.6"/><circle cx="46" cy="78" r="4" fill="#2cc6a8"/><circle cx="130" cy="96" r="3" fill="#2cc6a8"/></svg></a>
+        <div class="bd">
+          <h2 id="humT"></h2>
+          <a class="story s1" href="app/index.html?scene=cel&amp;story=virus"><b>▶</b><span><b id="st1t"></b><span id="st1p"></span></span></a>
+          <a class="story s2" href="app/index.html?scene=cel&amp;story=signaal"><b>▶</b><span><b id="st2t"></b><span id="st2p"></span></span></a>
+        </div>
+      </div>
+      <a class="door" href="app/index.html?scene=bcel&amp;story=bacterie" style="--c:#ff8f8f">
+        <div class="pic"><svg class="sm" viewBox="0 0 200 120"><rect x="22" y="30" width="156" height="60" rx="30" fill="rgba(214,90,90,.08)" stroke="#d65a5a" stroke-width="2"/><path d="M60 60c10-18 26 18 40 0s28-18 40 0" stroke="#4f8ff7" stroke-width="2" fill="none"/><circle cx="148" cy="48" r="8" fill="none" stroke="#f06bc0" stroke-width="1.6"/></svg></div>
+        <div class="lbl"><div><small id="bacTag"></small><h2 id="bacT"></h2></div><span class="arr">→</span></div>
+      </a>
+      <a class="door" href="atlas/index.html" style="--c:#7cc4ff">
+        <div class="pic"><canvas id="helix" aria-hidden="true"></canvas></div>
+        <div class="lbl"><div><small id="atlTag"></small><h2 id="atlT"></h2></div><span class="arr">→</span></div>
+      </a>
     </div>
   </header>
-
-  <section class="blk">
-    <div class="sh"><h2 id="startH"></h2><p id="startSub"></p></div>
-    <div class="legend3">
-      <div><i>📖</i><span><b id="lg1t"></b><span id="lg1p"></span></span></div>
-      <div><i>↗</i><span><b id="lg2t"></b><span id="lg2p"></span></span></div>
-      <div><i>🧬</i><span><b id="lg3t"></b><span id="lg3p"></span></span></div>
-    </div>
-    <div class="starts">
-      <div class="start" style="--c:#ff8a3d">
-        <div class="art"><svg viewBox="0 0 200 120"><ellipse cx="100" cy="60" rx="88" ry="52" fill="rgba(201,165,116,.08)" stroke="#c9a574" stroke-width="2.5"/><circle cx="92" cy="58" r="26" fill="rgba(79,143,247,.12)" stroke="#4f8ff7" stroke-width="2.5"/><circle cx="98" cy="54" r="7" fill="#9b7bff" opacity=".7"/><path d="M84 66c6-6 10 4 16-2" stroke="#9cc0ff" stroke-width="2" fill="none"/><ellipse cx="148" cy="44" rx="16" ry="8" fill="none" stroke="#2cc6a8" stroke-width="2"/><ellipse cx="146" cy="82" rx="12" ry="7" fill="none" stroke="#ff8a3d" stroke-width="2"/><circle cx="46" cy="78" r="4" fill="#2cc6a8"/><circle cx="56" cy="40" r="3" fill="#2cc6a8"/><circle cx="130" cy="96" r="3" fill="#2cc6a8"/></svg></div>
-        <div class="body"><span class="tag" id="c0tag"></span><h3 id="c0t"></h3><p id="c0p"></p>
-          <div class="route"><b id="rtLbl0"></b><span id="c0r"></span></div>
-          <div class="pick" id="c0k"></div>
-          <div class="meta">
-            <a class="go" href="app/index.html?scene=cel&amp;story=virus" id="go1"></a>
-            <a class="go" href="app/index.html?scene=cel&amp;story=signaal" id="go2"></a>
-          </div></div>
-      </div>
-      <div class="start" style="--c:#ff8f8f">
-        <div class="art"><svg viewBox="0 0 200 120"><rect x="22" y="30" width="156" height="60" rx="30" fill="rgba(214,90,90,.08)" stroke="#d65a5a" stroke-width="2.5"/><path d="M60 60c10-18 26 18 40 0s28-18 40 0" stroke="#4f8ff7" stroke-width="2.4" fill="none"/><circle cx="148" cy="48" r="8" fill="none" stroke="#f06bc0" stroke-width="2"/><path d="M178 60c10 0 12 10 4 14" stroke="#d65a5a" stroke-width="1.6" fill="none"/><circle cx="52" cy="76" r="3" fill="#2cc6a8"/><circle cx="120" cy="78" r="3" fill="#2cc6a8"/></svg></div>
-        <div class="body"><span class="tag" id="c1tag"></span><h3 id="c1t"></h3><p id="c1p"></p>
-          <div class="route"><b id="rtLbl1"></b><span id="c1r"></span></div>
-          <div class="pick" id="c1k"></div>
-          <div class="meta"><a class="go" href="app/index.html?scene=bcel&amp;story=bacterie" id="go3"></a></div></div>
-      </div>
-      <div class="start" style="--c:#7cc4ff">
-        <div class="art"><svg viewBox="0 0 200 120"><g fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M40 14c0 26 30 30 30 46s-30 20-30 46" stroke="#4f8ff7"/><path d="M70 14c0 26-30 30-30 46s30 20 30 46" stroke="#9cc0ff"/><path d="M100 20c14 8 14 20 0 28s-14 20 0 28 14 20 0 28" stroke="#ff8a3d"/><rect x="128" y="24" width="22" height="22" rx="5" stroke="#ffc247"/><rect x="156" y="24" width="22" height="22" rx="5" stroke="#ffc247"/><rect x="128" y="52" width="22" height="22" rx="5" stroke="#ffc247"/><rect x="156" y="52" width="22" height="22" rx="5" stroke="#ffc247"/><path d="M132 92h42" stroke="#9b7bff"/></g></svg></div>
-        <div class="body"><span class="tag" id="c2tag"></span><h3 id="c2t"></h3><p id="c2p"></p>
-          <div class="route"><b id="rtLbl2"></b><span id="c2r"></span></div>
-          <div class="pick" id="c2k"></div>
-          <div class="meta"><a class="go" href="atlas/index.html" id="go4"></a></div></div>
-      </div>
-    </div>
-  </section>
 
   <section class="blk">
     <div class="sh"><h2 id="sideH"></h2><p id="sideSub"></p></div>
@@ -238,56 +212,25 @@ import { levelSelect } from './shared/level.js';
 
 const T = {
   brand: { nl: 'Dogma', en: 'Dogma' },
-  why: { nl: 'Waarom Dogma? Naar het centrale dogma van de biologie: de volgorde-informatie gaat van DNA naar RNA naar eiwit, en nooit van een eiwit terug.', en: 'Why Dogma? After the central dogma of biology: sequence information flows from DNA to RNA to protein, and never back out of a protein.' },
   navAtlas: { nl: '3D-bibliotheek', en: '3D library' },
   navBlue: { nl: 'Over de app', en: 'About the app' },
-  eyebrow: { nl: 'Interactief · echte 3D-structuren', en: 'Interactive · real 3D structures' },
   h1a: { nl: 'Van DNA', en: 'From DNA' },
   h1b: { nl: 'tot eiwit', en: 'to protein' },
-  lead: { nl: 'Zoom van een hele cel tot op de atomen. Volg hoe een gen wordt afgelezen, hoe een eiwit ontstaat, plooit en weer verdwijnt — in korte animaties met eenvoudige uitleg.',
-          en: 'Zoom from a whole cell down to the atoms. Follow how a gene is read, how a protein is made, folds and is removed again — in short animations with simple explanations.' },
-  ctaHuman: { nl: '▶ Start in de menselijke cel', en: '▶ Start in the human cell' },
-  ctaBact: { nl: 'Bacteriecel', en: 'Bacterial cell' },
-  ctaAtlas: { nl: 'DNA-bib in 3D', en: 'DNA library in 3D' },
-  lScenes: { nl: 'animaties met uitleg', en: 'explained animations' },
-  lPdb: { nl: 'echte 3D-structuren', en: 'real 3D structures' },
-  lLines: { nl: 'verhalen en zijpaden', en: 'stories & side paths' },
-  lLang: { nl: 'volledig tweetalig', en: 'fully bilingual' },
-  tag1: { nl: '<i>A</i>–<i>T</i> · twee waterstofbruggen', en: '<i>A</i>–<i>T</i> · two hydrogen bonds' },
-  tag2: { nl: '<i>G</i>–<i>C</i> · drie waterstofbruggen', en: '<i>G</i>–<i>C</i> · three hydrogen bonds' },
-  tag3: { nl: 'één draai ≈ <i>10,5</i> basenparen', en: 'one turn ≈ <i>10.5</i> base pairs' },
-  startH: { nl: 'Kies waar je begint', en: 'Choose where to start' },
-  startSub: { nl: 'Er zijn drie soorten ingangen. Twijfel je? Begin met Verhaal 1.', en: 'There are three kinds of entrance. Not sure? Start with Story 1.' },
-  lg1t: { nl: 'Hoofdverhaal', en: 'Main story' },
-  lg1p: { nl: 'Volgt de hele weg van DNA tot eiwit, hoofdstuk na hoofdstuk. Het speelt vanzelf af; je kan altijd pauzeren of zelf klikken.', en: 'Follows the whole way from DNA to protein, chapter by chapter. It plays by itself; you can always pause or click yourself.' },
-  lg2t: { nl: 'Zijpad', en: 'Side path' },
-  lg2p: { nl: 'Een korte uitstap rond één onderwerp. Je kan het los volgen, of als verdieping op de plek waar het op een hoofdverhaal aansluit.', en: 'A short detour around one topic. Follow it on its own, or as a deep dive where it joins a main story.' },
-  lg3t: { nl: 'DNA-bib (atlas)', en: 'DNA library (atlas)' },
-  lg3p: { nl: 'Geen verhaal: een bibliotheek met echte 3D-vormen die je zelf draait, bekijkt en vergelijkt.', en: 'No story: a library of real 3D shapes that you turn, view and compare yourself.' },
-  rtLbl: { nl: 'Wat je ziet', en: 'What you see' },
-  hsLbl: { nl: 'Of zoek meteen wat je wil zien', en: 'Or search straight for what you want to see' },
-  c0tag: { nl: 'Mens · 2 hoofdverhalen', en: 'Human · 2 main stories' },
-  c0t: { nl: 'Menselijke cel', en: 'Human cell' },
-  c0p: { nl: 'Twee hoofdverhalen over hoe een menselijke cel een gen omzet in een eiwit. Ze beginnen anders en lopen daarna samen.',
-         en: 'Two main stories about how a human cell turns a gene into a protein. They start differently and then run together.' },
-  c0r: { nl: 'cel → kern → DNA → het gen wordt afgelezen (RNA) → ribosoom → eiwit → plooien → afbraak', en: 'cell → nucleus → DNA → the gene is read (RNA) → ribosome → protein → folding → breakdown' },
-  c0k: { nl: '<em>Kies dit als</em> je voor het eerst komt of de hele weg in één keer wil zien.', en: '<em>Choose this</em> if you are new or want to see the whole way in one go.' },
-  go1: { nl: 'Verhaal 1 · een virus brengt DNA binnen', en: 'Story 1 · a virus brings in DNA' },
-  go2: { nl: 'Verhaal 2 · een signaal zet een gen aan', en: 'Story 2 · a signal switches on a gene' },
-  c1tag: { nl: 'Bacterie · hoofdverhaal', en: 'Bacterium · main story' },
-  c1t: { nl: 'Bacteriecel (E. coli)', en: 'Bacterial cell (E. coli)' },
-  c1p: { nl: 'Hetzelfde verhaal, maar in een bacterie: geen kern, dus het DNA ligt los en RNA maken en eiwit maken gebeuren tegelijk.',
-         en: 'The same story, but in a bacterium: no nucleus, so the DNA lies free and making RNA and making protein happen at the same time.' },
-  c1r: { nl: 'mens en bacterie naast elkaar → DNA zonder kern → plasmide → gen aan/uit (operon) → RNA en eiwit tegelijk → afbraak', en: 'human and bacterium side by side → DNA without a nucleus → plasmid → gene on/off (operon) → RNA and protein at once → breakdown' },
-  c1k: { nl: '<em>Kies dit als</em> je de verschillen met de mens wil zien, of na een hoofdverhaal van de mens.', en: '<em>Choose this</em> to see the differences with humans, or after a human main story.' },
-  go3: { nl: 'Start het bacterieverhaal', en: 'Start the bacterial story' },
-  c2tag: { nl: 'Atlas · zelf rondkijken', en: 'Atlas · explore yourself' },
-  c2t: { nl: 'DNA-bib', en: 'DNA library' },
-  c2p: { nl: 'Geen verhaal maar een bibliotheek: veel vormen van DNA en RNA als echte 3D-modellen, met eenvoudige uitleg erbij.',
-         en: 'Not a story but a library: many shapes of DNA and RNA as real 3D models, with a simple explanation.' },
-  c2r: { nl: 'gewone dubbele helix · drie en vier strengen · gevouwen RNA · DNA met medicijn · zelf een eiwit of gen opzoeken in de PDB (bv. TP53, insuline)', en: 'ordinary double helix · three and four strands · folded RNA · DNA with a drug · look up a protein or gene in the PDB yourself (e.g. TP53, insulin)' },
-  c2k: { nl: '<em>Kies dit als</em> je zelf wil rondkijken, vormen wil vergelijken of een bepaald eiwit zoekt.', en: '<em>Choose this</em> to look around yourself, compare shapes or find a particular protein.' },
-  go4: { nl: 'Open de DNA-bib', en: 'Open the DNA library' },
+  lead: { nl: 'Korte 3D-animaties die tonen hoe een cel een gen omzet in een eiwit, van het DNA tot op de atomen.',
+          en: 'Short 3D animations that show how a cell turns a gene into a protein, from the DNA down to the atoms.' },
+  au1t: { nl: 'Lesgevers', en: 'Teachers' },
+  au1p: { nl: 'Toon een proces in de klas en pauzeer waar je wil.', en: 'Show a process in class and pause wherever you like.' },
+  au2t: { nl: 'Studenten', en: 'Students' },
+  au2p: { nl: 'Herbekijk de leerstof, stap voor stap.', en: 'Review the course material, step by step.' },
+  humT: { nl: 'Menselijke cel', en: 'Human cell' },
+  st1t: { nl: 'Verhaal 1', en: 'Story 1' },
+  st1p: { nl: 'Een virus brengt DNA binnen', en: 'A virus brings in DNA' },
+  st2t: { nl: 'Verhaal 2', en: 'Story 2' },
+  st2p: { nl: 'Een signaal zet een gen aan', en: 'A signal switches on a gene' },
+  bacTag: { nl: 'Zonder kern', en: 'No nucleus' },
+  bacT: { nl: 'Bacteriecel', en: 'Bacterial cell' },
+  atlTag: { nl: 'Zelf rondkijken', en: 'Explore yourself' },
+  atlT: { nl: '3D-bibliotheek', en: '3D library' },
   sideH: { nl: 'Zijpaden', en: 'Side paths' },
   sideSub: { nl: 'Korte uitstappen rond één onderwerp. Elk zijpad staat op zichzelf; onderaan zie je waar het op het hoofdverhaal aansluit.', en: 'Short detours around one topic. Each side path stands on its own; at the bottom you see where it joins the main story.' },
   s1t: { nl: 'DNA kopiëren en herstellen', en: 'Copying and repairing DNA' },
@@ -313,23 +256,15 @@ const T = {
   c3l: { nl: 'Over de app · bronnen en wetenschappelijke borging', en: 'About the app · sources and scientific quality' },
   foot: { nl: 'De inhoud is in controlerondes nagekeken tegen wetenschappelijke bronnen; die staan bij elke uitleg.', en: 'The content was checked against scientific sources in verification rounds; they are listed with every explanation.' },
 };
-const HTML = new Set(['tag1', 'tag2', 'tag3', 'c0k', 'c1k', 'c2k']);
-for (const [id, v] of Object.entries(T)) { const el = document.getElementById(id); if (el) el[HTML.has(id) ? 'innerHTML' : 'textContent'] = L(v); }
+for (const [id, v] of Object.entries(T)) { const el = document.getElementById(id); if (el) el.textContent = L(v); }
 document.title = L({ nl: 'Dogma · van DNA tot eiwit', en: 'Dogma · from DNA to protein' });
-for (const k of [0, 1, 2]) document.getElementById('rtLbl' + k).textContent = L(T.rtLbl);
 
-// cijfers rechtstreeks uit de inhoud (blijven juist als er scènes bijkomen)
-const nodes = Object.values(NODES);
-const pdb = new Set([...nodes.flatMap(n => n.pdb ?? []), ...ENTRIES.map(e => e.pdb).filter(Boolean)].map(s => String(s).toUpperCase()));
-const count = (id, n) => { document.getElementById(id).textContent = n; };
-count('nScenes', nodes.length);
-count('nPdb', pdb.size);
-count('nLines', Object.keys(LINES).length);
 const ch = { nl: 'hoofdstukken', en: 'chapters' };
 const nt = id => NODES[id] ? (lang === 'en' ? NODES[id].en : NODES[id].t) : id;
-const goTxt = (id, n, unit) => { const a = document.getElementById(id); a.innerHTML = `<b></b> <span>${n} ${L(unit)} →</span>`; a.querySelector('b').textContent = L(T[id]); };
-goTxt('go1', LINES.virus.chapters.length, ch); goTxt('go2', LINES.signaal.chapters.length, ch); goTxt('go3', LINES.bacterie.chapters.length, ch);
-goTxt('go4', ENTRIES.length, { nl: 'vormen', en: 'shapes' });
+/* aantal hoofdstukken/vormen als tooltip op de ingangen (rechtstreeks uit de inhoud) */
+const tip = (sel, n, unit) => { document.querySelector(sel).title = `${n} ${L(unit)}`; };
+tip('a.story.s1', LINES.virus.chapters.length, ch); tip('a.story.s2', LINES.signaal.chapters.length, ch);
+tip('a.door[href*="bacterie"]', LINES.bacterie.chapters.length, ch); tip('a.door[href^="atlas"]', ENTRIES.length, { nl: 'vormen', en: 'shapes' });
 /* zijpaden: begin → midden → einde, en waar het aansluit op verhaal 1 */
 for (const a of document.querySelectorAll('a.side[data-line]')) {
   const l = LINES[a.dataset.line]; if (!l) continue;
@@ -348,6 +283,7 @@ mountSearch(document.getElementById('homeSearch'), {
   onPick: r => { location.href = `app/index.html?scene=${encodeURIComponent(r.id)}&story=${r.loc.line}${r.step !== null && r.step !== undefined ? `&step=${r.step}` : ''}`; },
   atlasHref: qv => `atlas/index.html?find=${encodeURIComponent(qv)}`,
 });
+document.querySelector('#homeSearch input')?.setAttribute('placeholder', L({ nl: 'Zoek bv. ribosoom, kanker, splicing', en: 'Search e.g. ribosome, cancer, splicing' }));
 document.getElementById('langBox').append(langSwitch('btn'));
 document.getElementById('home').hidden = false;
 
@@ -367,8 +303,8 @@ new ResizeObserver(() => { size(); if (still) draw(0); }).observe(cv);
 size();
 function draw(t) {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-  ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(-0.38);
-  const n = SEQ.length, len = Math.hypot(W, H) * 0.78, step = len / n, R = Math.min(W, H) * 0.16;
+  ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(1.2);
+  const n = SEQ.length, len = Math.hypot(W, H) * 0.95, step = len / n, R = Math.min(W, H) * 0.2;
   const items = [];
   for (let i = 0; i < n; i++) {
     const y = -len / 2 + i * step, a = i * 0.6 + t * 0.00045;
