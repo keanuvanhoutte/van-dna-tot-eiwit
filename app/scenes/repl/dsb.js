@@ -128,7 +128,7 @@ const scene = {
           $('ds-nd').innerHTML = d; $('ds-nfx').innerHTML = fx;
           // link naar telomeren in de lijmstap
           const te = $('ds-tea'), tr = $('ds-ter');
-          if (step === 3) { te.setAttribute('cx', 1000); te.setAttribute('cy', 420); tr.setAttribute('x', 910); tr.setAttribute('y', 400); tr.setAttribute('width', 180); tr.setAttribute('height', 40); }
+          if (step === 3) { te.setAttribute('cx', 910); te.setAttribute('cy', 420); tr.setAttribute('x', 820); /* ruim binnen beeld (niet tegen de rechterrand) */ tr.setAttribute('y', 400); tr.setAttribute('width', 180); tr.setAttribute('height', 40); }
           else { te.setAttribute('cx', -99); te.setAttribute('cy', -99); tr.setAttribute('x', -99); tr.setAttribute('y', -99); tr.setAttribute('width', 1); tr.setAttribute('height', 1); }
         }
 
