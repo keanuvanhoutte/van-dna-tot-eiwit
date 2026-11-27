@@ -1,0 +1,46 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>label-dump</title>
+<body style="background:#0a1224;color:#ddd"><pre id="out">running…</pre><div id="stage" style="position:absolute;left:-99999px;width:1600px;height:900px"></div>
+<script type="module">
+/* Alle teksten die IN de figuren staan (SVG-tekst, 3D-labels, hotspotlabels), per animatie en over alle stappen,
+ * in de taal van ?lang=nl|en. Voor de eenvoudige labels van het niveau hobbyist (shared/simple/labels.js).
+ * Gebruik: headless Chrome --dump-dom "tools/label-dump.html?lang=nl[&ids=a,b]" */
+const out = document.getElementById('out'), stage = document.getElementById('stage');
+const only = new URLSearchParams(location.search).get('ids')?.split(',');
+const { SCENES } = await import('../app/scenes/index.js');
+const { L, lang } = await import('../shared/i18n.js');
+const found = new Map();   // tekst → Set(scène-id's)
+const add = (s, id) => { s = s.replace(/\s+/g, ' ').trim(); if (!s) return; if (!found.has(s)) found.set(s, new Set()); found.get(s).add(id); };
+function collect(root, id) {
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  for (let n; (n = w.nextNode());) { if (n.parentNode.closest('style,script,defs')) continue; add(n.nodeValue, id); }
+  root.querySelectorAll('[data-label]').forEach(e => add(e.dataset.label, id));
+}
+let errs = 0;
+for (const [id, def] of Object.entries(SCENES)) {
+  if (only && !only.includes(id)) continue;
+  if (def.alias) continue;                                  // zelfde figuur als de basis
+  const layer = document.createElement('div'); stage.append(layer);
+  try {
+    const is3d = def.kind === '3d';
+    layer.innerHTML = is3d ? def.html() : def.svg();
+    const root = is3d ? layer : layer.querySelector('svg');
+    let api = null; try { api = def.init?.(root, { lang, L, node: id }) ?? null; } catch (e) { errs++; }
+    collect(layer, id);
+    let acc = 0; const total = def.steps.reduce((a, s) => a + s.dur, 0);
+    for (let k = 0; k < def.steps.length; k++) {
+      for (const p of [.02, .35, .7, .999]) {
+        const t = acc + def.steps[k].dur * p;
+        try { api?.update?.(t, { step: k, p, t, total }); } catch (e) { errs++; }
+        collect(layer, id);
+      }
+      acc += def.steps[k].dur;
+    }
+    try { api?.destroy?.(); } catch {}
+  } catch (e) { errs++; }
+  layer.remove();
+}
+const rows = [...found].map(([t, ids]) => [t, [...ids]]).sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+out.textContent = `LABELS ${rows.length} · errors ${errs}\nJSON ${JSON.stringify(rows)}`;
+</script>

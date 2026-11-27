@@ -21,6 +21,7 @@ import { mountMap } from '../shared/contentmap.js';
 import { LINKS } from '../shared/links.js';
 import { level, rank, levelSelect } from '../shared/level.js';
 import { SIMPLE } from '../shared/simple/index.js';
+import { LABELS, LEGEND } from '../shared/simple/labels.js';
 import { STEP_LEVEL } from '../shared/levels.js';
 
 /* ---------- verhaallijnen ---------- */
@@ -200,11 +201,40 @@ function stepText(st) {
 const shownIndex = i => { let k = 0; current.steps.forEach((s, j) => { if ((s._i ?? j) <= i) k = j; }); return k; };
 const hasScene = id => !!SCENES[id];
 
+/* hobbyist: teksten IN de figuur (SVG-tekst, 3D-labels) vervangen door eenvoudige woorden (shared/simple/labels-*.js; '' = verbergen).
+ * Scènes schrijven hun tekst vaak opnieuw in update(): een MutationObserver vervangt elke nieuwe of gewijzigde tekst meteen. */
+const LMAP = level === 'hobby' ? LABELS[lang] ?? null : null;
+const easyLabel = s => { if (!LMAP || !s) return s; const k = s.replace(/\s+/g, ' ').trim(); return k in LMAP ? LMAP[k] : s; };
+function easyText(n, map = LMAP) {
+  if (n.__lab === n.nodeValue) return;                      // al vervangen (of niets te doen)
+  const v = n.nodeValue, k = v.replace(/\s+/g, ' ').trim();
+  if (k && k in map) n.nodeValue = v.replace(k === v.trim() ? v.trim() : v, map[k]);
+  n.__lab = n.nodeValue;
+}
+function easyTree(root) {
+  if (root.nodeType === 3) { if (!root.parentNode?.closest?.('style,script')) easyText(root); return; }
+  if (root.nodeType !== 1 || root.closest?.('style,script')) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  for (let n; (n = w.nextNode());) if (!n.parentNode.closest('style,script')) easyText(n);
+  if (root.dataset?.label) root.dataset.label = easyLabel(root.dataset.label);
+  root.querySelectorAll?.('[data-label]').forEach(e => { e.dataset.label = easyLabel(e.dataset.label); });
+}
+function easyWatch(layer) {
+  if (!LMAP) return;
+  easyTree(layer);
+  new MutationObserver(ms => { for (const m of ms) { if (m.type === 'characterData') easyText(m.target); else m.addedNodes.forEach(easyTree); } })
+    .observe(layer, { subtree: true, childList: true, characterData: true });
+}
+/* hobbyist: ook de legende in het zijpaneel in eenvoudige woorden */
+if (LMAP) new MutationObserver(() => side.querySelectorAll('.legend span').forEach(sp => sp.childNodes.forEach(n => { if (n.nodeType === 3) easyText(n, LEGEND[lang] ?? LMAP); })))
+  .observe(side, { subtree: true, childList: true });
+
 function build(id) {
   const r = resolve(id);
   const layer = document.createElement('div'); layer.className = 'layer';
   const is3d = r.base.kind === '3d';
   layer.innerHTML = is3d ? r.base.html() : r.base.svg();
+  easyWatch(layer);
   stage.insertBefore(layer, labelsEl);
   const svg = is3d ? null : layer.querySelector('svg');
   const root = is3d ? layer : svg;
@@ -511,7 +541,8 @@ function placeLabels() {
     const kind = target(el);
     lb.className = 'lbl' + (kind.type === 'card' ? ' leaf' : '') + (kind.type === 'url' ? ' ext' : '');
     lb.style.setProperty('--dot', el.dataset.color ?? '#7cc4ff');
-    lb.textContent = el.dataset.label ?? (NODES[node] ? title(NODES[node]) : node);
+    lb.textContent = easyLabel(el.dataset.label ?? (NODES[node] ? title(NODES[node]) : node));
+    if (!lb.textContent) continue;                          // hobbyist: verborgen label
     if (anchor.dataset.pos === 'below') lb.style.transform = 'translate(-50%, 0)';
     lb.onclick = () => activate(el);
     lb.onmouseenter = () => hoverNode(node, true);
