@@ -646,11 +646,11 @@ for (const b of [$('bReal3d'), $('bOrg')]) new MutationObserver(() => appEl.clas
 new ResizeObserver(() => { labelsDirty = true; requestAnimationFrame(() => { placeLabels(); capPlace(); }); }).observe(stage);
 function setLabels(v) {
   showLabels = v; prefs.labels = v; savePrefs();
-  $('bLabels').setAttribute('aria-pressed', v); labelsEl.classList.toggle('hide', !v); stage.classList.toggle('nolab', !v); $('pLabels').checked = v;
+  labelsEl.classList.toggle('hide', !v); stage.classList.toggle('nolab', !v); $('pLabels').checked = v;
   if (v) labelsDirty = true;
 }
-$('bLabels').onclick = () => setLabels(!showLabels);
-$('bLabels').setAttribute('aria-pressed', showLabels); labelsEl.classList.toggle('hide', !showLabels); stage.classList.toggle('nolab', !showLabels);
+// labels aan/uit enkel via de instellingen (⚙ → "Labels in de figuur"); geen aparte knop bovenaan
+labelsEl.classList.toggle('hide', !showLabels); stage.classList.toggle('nolab', !showLabels); $('pLabels').checked = showLabels;
 
 /* ---------- uitleg bij de stap: onder de figuur (standaard) of als zwevend venster (versleepbaar) ----------
  * Zwevend: het venster ligt op de figuur, in de hoek waar op dat moment het minst te zien is (gemeten met
