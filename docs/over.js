@@ -317,18 +317,28 @@ function wireSrc() {
 
 /* ---------- tab 6: kleuren & beeld ---------- */
 function tabLook() {
-  const sw = [['--dna', { nl: 'DNA van de cel', en: 'The cell’s DNA' }], ['--dna-2', { nl: 'tweede DNA-streng', en: 'second DNA strand' }], ['--tdna', { nl: 'vreemd DNA (virus)', en: 'foreign DNA (virus)' }], ['--rna', { nl: 'mRNA', en: 'mRNA' }], ['--trna', { nl: 'tRNA', en: 'tRNA' }],
-    ['--rrna', { nl: 'ribosoom', en: 'ribosome' }], ['--prot', { nl: 'enzymen en eiwitcomplexen', en: 'enzymes and protein complexes' }], ['--chain', { nl: 'nieuwe eiwitketen', en: 'new protein chain' }], ['--histone', { nl: 'histonen', en: 'histones' }], ['--membrane', { nl: 'membranen en celwand', en: 'membranes and cell wall' }], ['--bact', { nl: 'bacterie', en: 'bacterium' }]];
-  const bases = [['A', '#5ad17a'], ['T / U', '#ff6b6b'], ['G', '#ffc247'], ['C', '#4fb0ff']];   // = BASE in app/kit.js
+  const groups = [
+    [{ nl: 'DNA en RNA', en: 'DNA and RNA' }, [['--dna', { nl: 'DNA van de cel', en: 'The cell’s DNA' }], ['--dna-2', { nl: 'tweede DNA-streng', en: 'second DNA strand' }], ['--tdna', { nl: 'vreemd DNA (virus)', en: 'foreign DNA (virus)' }], ['--rna', { nl: 'mRNA', en: 'mRNA' }], ['--trna', { nl: 'tRNA', en: 'tRNA' }]]],
+    [{ nl: 'Eiwitten', en: 'Proteins' }, [['--rrna', { nl: 'ribosoom', en: 'ribosome' }], ['--prot', { nl: 'enzymen en eiwitcomplexen', en: 'enzymes and protein complexes' }], ['--chain', { nl: 'nieuwe eiwitketen', en: 'new protein chain' }], ['--histone', { nl: 'histonen', en: 'histones' }]]],
+    [{ nl: 'Cel', en: 'Cell' }, [['--membrane', { nl: 'membranen en celwand', en: 'membranes and cell wall' }], ['--bact', { nl: 'bacterie', en: 'bacterium' }]]],
+  ];
+  const bases = [['A', '#5ad17a', { nl: 'adenine', en: 'adenine' }], ['T / U', '#ff6b6b', { nl: 'thymine (DNA) / uracil (RNA)', en: 'thymine (DNA) / uracil (RNA)' }], ['G', '#ffc247', { nl: 'guanine', en: 'guanine' }], ['C', '#4fb0ff', { nl: 'cytosine', en: 'cytosine' }]];   // = BASE in app/kit.js
   return `<h2>${esc(L({ nl: 'Kleuren & beeld', en: 'Colours & visuals' }))}</h2>
-  <p class="sub">${esc(L({ nl: 'Elke soort molecule heeft overal in de app dezelfde kleur, in 2D en in 3D. Zo herken je een molecule terug als je in- of uitzoomt. De donkere achtergrond laat de moleculen opvallen, zoals in wetenschappelijke animaties.', en: 'Every kind of molecule has the same colour everywhere in the app, in 2D and in 3D. That way you recognise a molecule when you zoom in or out. The dark background makes the molecules stand out, as in scientific animations.' }))}</p>
-  <div class="sw">${sw.map(([v, t]) => `<div><i style="background:var(${v})"></i>${esc(L(t))}</div>`).join('')}</div>
-  <h3>${esc(L({ nl: 'Andere vaste afspraken', en: 'Other fixed conventions' }))}</h3>
-  <div class="grid">
-    <div class="card"><h4>${esc(L({ nl: 'Richting', en: 'Direction' }))}</h4><p>${esc(L({ nl: 'Strengen worden van 5′ naar 3′ getekend en de twee DNA-strengen lopen antiparallel. Eiwitten worden gelezen van N- naar C-terminus.', en: 'Strands are drawn from 5′ to 3′ and the two DNA strands run antiparallel. Proteins are read from N- to C-terminus.' }))}</p></div>
-    <div class="card"><h4>${esc(L({ nl: 'Schaal en tijd', en: 'Scale and time' }))}</h4><p>${esc(L({ nl: 'Onderaan elke animatie staat de echte grootte, en de echte duur waar die gekend is. Een balkje toont het zoomniveau: van de hele cel tot de atomen.', en: 'At the bottom of every animation you see the real size, and the real duration where it is known. A small bar shows the zoom level: from the whole cell to the atoms.' }))}</p></div>
-    <div class="card"><h4>${esc(L({ nl: 'Wat oplicht, kan je aanklikken', en: 'What lights up can be clicked' }))}</h4><p>${esc(L({ nl: 'Een onderdeel met een gloed of een label is klikbaar en opent het detail.', en: 'A part with a glow or a label is clickable and opens the detail.' }))}</p></div>
-    <div class="card"><h4>${esc(L({ nl: 'Letters van DNA en RNA', en: 'Letters of DNA and RNA' }))}</h4><p>${bases.map(([b, c]) => `<span class="pill" style="background:${c}22;color:${c}">${b}</span>`).join('')}</p></div>
+  ${glance({ nl: 'Elke soort molecule heeft <b>overal dezelfde kleur</b>, in 2D en in 3D.', en: 'Every kind of molecule has <b>the same colour everywhere</b>, in 2D and in 3D.' },
+    { nl: 'Zo herken je een molecule terug als je in- of uitzoomt.', en: 'That way you recognise a molecule when you zoom in or out.' })}
+
+  <h3>${esc(L({ nl: 'Welke kleur is wat?', en: 'Which colour is what?' }))}</h3>
+  <div class="cgroups">${groups.map(([h, items]) => `<div class="cgroup"><b>${esc(L(h))}</b><div>${items.map(([v, t]) => `<span class="cchip"><i style="background:var(${v})"></i>${esc(L(t))}</span>`).join('')}</div></div>`).join('')}</div>
+
+  <h3>${esc(L({ nl: 'Letters van DNA en RNA', en: 'Letters of DNA and RNA' }))}</h3>
+  <div class="bases">${bases.map(([b, c, n]) => `<div style="--c:${c}"><b>${b}</b><span>${esc(L(n))}</span></div>`).join('')}</div>
+
+  <h3>${esc(L({ nl: 'Vaste afspraken', en: 'Fixed conventions' }))}</h3>
+  <div class="facts f4">
+    ${fact('➡️', { nl: 'Richting', en: 'Direction' }, { nl: 'Strengen van 5′ naar 3′; de twee DNA-strengen lopen antiparallel. Eiwitten van N- naar C-terminus.', en: 'Strands from 5′ to 3′; the two DNA strands run antiparallel. Proteins from N- to C-terminus.' })}
+    ${fact('📏', { nl: 'Schaal en tijd', en: 'Scale and time' }, { nl: 'Onderaan elke animatie: de echte grootte, en de echte duur waar die gekend is, en een balkje met het zoomniveau.', en: 'At the bottom of every animation: the real size, the real duration where it is known, and a bar with the zoom level.' })}
+    ${fact('✨', { nl: 'Wat oplicht, is klikbaar', en: 'What lights up is clickable' }, { nl: 'Een gloed of een label opent het detail.', en: 'A glow or a label opens the detail.' })}
+    ${fact('🌑', { nl: 'Donkere achtergrond', en: 'Dark background' }, { nl: 'Laat de moleculen opvallen, zoals in wetenschappelijke animaties.', en: 'Makes the molecules stand out, as in scientific animations.' })}
   </div>`;
 }
 
