@@ -175,8 +175,8 @@ export default {
       let d = '';
       for (let i = 0; i <= Math.min(M, Math.floor(u)); i++) d += `${i ? 'L' : 'M'}${f1(x0 + i / M * w)},${f1(y0 + S[i].E / Emin * h)}`;
       return `<line x1="${x0}" y1="${y0}" x2="${x0 + w}" y2="${y0}" stroke="#2a3550" stroke-width="2"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y0 + h}" stroke="#2a3550" stroke-width="2"/>` +
-        `<path d="${d}" stroke="${C.trna}" stroke-width="3" fill="none"/>` + txt(x0 - 10, y0 + 8, '0', C.muted, 22, 'end') + txt(x0 - 10, y0 + h + 8, '−' + (-Emin), C.muted, 22, 'end') +
-        txt(x0 - 58, y0 + h / 2 + 8, 'E', C.trna, 24) + txt(x0 + w / 2, y0 + h + 40, T2('simulatiestappen →', 'simulation steps →'), C.muted, 22);
+        `<path d="${d}" stroke="${C.trna}" stroke-width="3" fill="none"/>` + txt(x0 - 10, y0 + 8, T2('hoog', 'high'), C.muted, 20, 'end') + txt(x0 - 10, y0 + h + 6, T2('laag', 'low'), C.muted, 20, 'end') +
+        txt(x0 + w / 2, y0 + h + 38, T2('tijd →', 'time →'), C.muted, 22);
     };
     return {
       update(t, s) {
@@ -213,10 +213,18 @@ export default {
           const r = chainSVG(Pp, { jitter, t, contacts: step === 3 && p > .8 });
           ch = r.s; water = waterSVG(r.pts, push);
           const nc = contactsOf(Pp);
-          pan = panel(150, 360, T(200, T2('HP-model (β-globine 1–40)', 'HP model (β-globin 1–40)'), C.text, 24, 700) +
-            T(252, T2('H–H-contacten', 'H–H contacts'), '#c3cde2', 24) + `<text x="${PX + 250}" y="254" font-size="34" fill="${CLASSCOL.h}" font-family="JetBrains Mono" font-weight="700">${nc}</text>` +
-            energyPlot(u, PX + 90, 300, 300, 130));
-          if (step === 3 && p > .8) over += txt(CX, 130, T2('hydrofobe kern (streepjes: H–H-contacten)', 'hydrophobic core (dashes: H–H contacts)'), CLASSCOL.h, 24);
+          // teller: waterschuwe paren die elkaar raken (twee groene bolletjes met streepje), dan één zin, dan de grafiek
+          const pair = `<line x1="${PX + 40}" y1="208" x2="${PX + 76}" y2="208" stroke="${CLASSCOL.h}" stroke-width="4" stroke-dasharray="5 4"/>` +
+            `<circle cx="${PX + 36}" cy="208" r="13" fill="${CLASSCOL.h}" stroke="#0a1224" stroke-width="2"/><circle cx="${PX + 80}" cy="208" r="13" fill="${CLASSCOL.h}" stroke="#0a1224" stroke-width="2"/>`;
+          pan = panel(150, 440, pair + txt(PX + 108, 203, T2('waterschuwe paren', 'water-avoiding pairs'), C.text, 21, 'start') + txt(PX + 108, 229, T2('die elkaar raken', 'that touch'), C.text, 21, 'start') +
+            `<text x="${PX + 396}" y="228" font-size="40" text-anchor="end" fill="${CLASSCOL.h}" font-family="JetBrains Mono" font-weight="700">${nc}</text>` +
+            `<line x1="${PX + 20}" y1="260" x2="${PX + 400}" y2="260" stroke="#2a3550" stroke-width="2"/>` +
+            T(296, T2('Elk nieuw contact verlaagt', 'Each new contact lowers'), '#c3cde2', 21) + T(324, T2('de energie.', 'the energy.'), '#c3cde2', 21) +
+            T(368, T2('energie (lager = stabieler)', 'energy (lower = more stable)'), C.trna, 21, 700) +
+            energyPlot(u, PX + 90, 400, 300, 120));
+          if (step === 3 && p > .8) over += txt(CX, 130, T2('waterschuwe kern (streepjes = contact)', 'water-avoiding core (dashes = contact)'), CLASSCOL.h, 24);
+          // de blauwe stipjes benoemen
+          over += `<circle cx="112" cy="806" r="7" fill="#4f8ff7"/>` + txt(130, 813, T2('= water', '= water'), '#4f8ff7', 24, 'start');
           if (step === 2 && p > .5) over += txt(CX, 130, T2('water wordt weggeduwd', 'water is pushed away'), '#4f8ff7', 24);
         } else if (step === 4) {
           // Anfinsen-experiment met ribonuclease A (124 residuen, 4 disulfidebruggen)
@@ -238,7 +246,7 @@ export default {
           // een kader loopt ze één voor één af ("alles uitproberen"). Rechts: de getallen.
           const k = ease(sub(p, 0, .1)), k2 = ease(sub(p, .4, .65));
           over += `<rect x="200" y="160" width="1200" height="520" rx="20" fill="#0d1426" stroke="#2a3550" stroke-width="2"/>`;
-          over += txt(800, 225, T2('Gedachte-experiment (Levinthal)', 'Thought experiment (Levinthal)'), C.text, 28);
+          over += txt(800, 225, T2('Gedachte-experiment: elke vorm één voor één uitproberen', 'Thought experiment: try every shape one by one'), C.text, 28);
           const cur = Math.min(LEV.length - 1, Math.floor(clamp(p / .85) * LEV.length));
           LEV.forEach((m, i) => {
             const x = 232 + (i % 3) * 204, y = 258 + Math.floor(i / 3) * 134, on = i === cur;
@@ -247,12 +255,15 @@ export default {
               m.P.map((q, j) => `<circle cx="${f1(x + 96 + q[0] * m.sc)}" cy="${f1(y + 61 + q[1] * m.sc)}" r="${f1(m.r)}" fill="${CLASSCOL[AACLASS[SEQ[j]]]}"/>`).join('');
           });
           const RX = 1130;
-          over += txt(RX, 300, T2('100 residuen × 3 standen per residu', '100 residues × 3 states per residue'), '#c3cde2', 23);
-          over += `<g opacity="${f1(k)}">` +
-            `<text x="${RX}" y="378" font-size="50" text-anchor="middle" fill="${C.trna}" font-family="Inter" font-weight="700">3<tspan dy="-20" font-size="30">100</tspan><tspan dy="20"> ≈ 5 · 10</tspan><tspan dy="-20" font-size="30">47</tspan></text>` + txt(RX, 422, T2('mogelijke vormen', 'possible shapes'), '#c3cde2', 24) + '</g>';
-          over += `<g opacity="${f1(k2)}">` + txt(RX, 500, T2('aan 10¹³ vormen/s: ± 10²⁷ jaar', 'at 10¹³ shapes/s: ≈ 10²⁷ years'), C.danger, 27) +
-            txt(RX, 543, T2('heelal: ± 1,4 · 10¹⁰ jaar oud', 'universe: ≈ 1.4 · 10¹⁰ years old'), '#c3cde2', 24) +
-            txt(RX, 620, T2('echte eiwitten: µs tot s', 'real proteins: µs to s'), C.ok, 28) + '</g>';
+          // één getal (hoeveel vormen), dan de kern in woorden, met een klok die blijft draaien
+          over += `<g opacity="${f1(k)}">` + txt(RX, 300, T2('keten van 100 bouwstenen:', 'chain of 100 building blocks:'), '#c3cde2', 24) +
+            `<text x="${RX}" y="364" font-size="46" text-anchor="middle" fill="${C.trna}" font-family="Inter" font-weight="700">± 5 · 10<tspan dy="-20" font-size="28">47</tspan><tspan dy="20" font-size="30"> ${T2('vormen', 'shapes')}</tspan></text>` + '</g>';
+          const ca = t * .02, cxk = 935, cyk = 478;
+          over += `<g opacity="${f1(k2)}"><circle cx="${cxk}" cy="${cyk}" r="38" fill="none" stroke="${C.danger}" stroke-width="5"/>` +
+            `<line x1="${cxk}" y1="${cyk}" x2="${f1(cxk + 28 * Math.sin(ca))}" y2="${f1(cyk - 28 * Math.cos(ca))}" stroke="${C.danger}" stroke-width="4" stroke-linecap="round"/>` +
+            `<line x1="${cxk}" y1="${cyk}" x2="${f1(cxk + 18 * Math.sin(ca / 12))}" y2="${f1(cyk - 18 * Math.cos(ca / 12))}" stroke="${C.danger}" stroke-width="5" stroke-linecap="round"/>` +
+            txt(990, 470, T2('duurt langer dan', 'takes longer than'), C.danger, 30, 'start') + txt(990, 508, T2('het heelal oud is', 'the age of the universe'), C.danger, 30, 'start') +
+            txt(RX, 610, T2('echt eiwit: in seconden of sneller', 'real protein: in seconds or faster'), C.ok, 28) + '</g>';
         } else if (step === 6) {
           // energietrechter (doorsnede) + bal
           const fx = x => 800 + x * 520, top = 190, bot = 640;
@@ -263,11 +274,13 @@ export default {
           bg += `<path d="${d} L${fx(1)},${top} L${fx(-1)},${top}Z" fill="${C.prot}" fill-opacity=".07"/>`;
           const k = ease(p), bx = -.95 + .95 * k, by = curve(bx) - 22;
           bg += `<circle cx="${f1(fx(bx))}" cy="${f1(by)}" r="20" fill="${C.trna}" stroke="#fff" stroke-width="3"/>`;
-          bg += `<path d="M180,${top} V${bot + 20}" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>` + `<text x="145" y="${(top + bot) / 2}" font-size="25" fill="${C.muted}" font-family="Inter" font-weight="600" text-anchor="middle" transform="rotate(-90 145 ${(top + bot) / 2})">${T2('vrije energie', 'free energy')}</text>`;
-          bg += txt(800, top - 32, T2('ongevouwen: zeer veel vormen (hoge entropie)', 'unfolded: very many shapes (high entropy)'), '#c3cde2', 25);
-          bg += txt(fx(.62), curve(.4) + 64, T2('valkuil (lokaal minimum)', 'trap (local minimum)'), C.danger, 24);
-          bg += txt(fx(-.52), curve(-.35) + 76, 'molten globule', '#c3cde2', 24);
-          bg += txt(800, bot + 55, T2('natieve structuur', 'native structure'), C.ok, 28);
+          bg += `<path d="M180,${top} V${bot + 20}" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>` + `<text x="145" y="${(top + bot) / 2}" font-size="25" fill="${C.muted}" font-family="Inter" font-weight="600" text-anchor="middle" transform="rotate(-90 145 ${(top + bot) / 2})">${T2('energie (lager = stabieler)', 'energy (lower = more stable)')}</text>`;
+          // breedte = aantal mogelijke vormen: breed bovenaan, smal onderaan
+          const dbl = (x1, x2, y, col) => `<path d="M${f1(x1)},${y} H${f1(x2)}" stroke="${col}" stroke-width="3"/><path d="M${f1(x1 + 14)},${y - 9} L${f1(x1)},${y} L${f1(x1 + 14)},${y + 9} M${f1(x2 - 14)},${y - 9} L${f1(x2)},${y} L${f1(x2 - 14)},${y + 9}" stroke="${col}" stroke-width="3" fill="none"/>`;
+          bg += dbl(fx(-.97), fx(.97), top - 18, '#c3cde2') + txt(800, top - 36, T2('breed = veel vormen mogelijk', 'wide = many shapes possible'), '#c3cde2', 26);
+          bg += txt(fx(.62), curve(.4) + 64, T2('valkuil (blijft even hangen)', 'trap (gets stuck for a while)'), C.danger, 24);
+          bg += txt(fx(-.52), curve(-.35) + 76, T2('losse tussenvorm', 'loose in-between form'), '#c3cde2', 24);
+          bg += dbl(fx(-.09), fx(.09), bot + 32, C.ok) + txt(800, bot + 72, T2('smal = één eindvorm', 'narrow = one final shape'), C.ok, 28);
         } else if (step === 7) {
           const Pp = at(lerp(iCollapse, iMolten, .5));
           const r = chainSVG(Pp, { cx: 430, cy: 450, sc: 42, r: 16, jitter: 2, t, letters: false });
