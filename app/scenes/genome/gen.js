@@ -54,7 +54,7 @@ export default {
     ST(8000, cam(1270, 330, 600), 'Het einde van het gen', 'The end of the gene',
       'Het signaal AATAAA geeft het einde aan. Iets verder wordt het RNA geknipt en krijgt het een staart van A’s.',
       'The signal AATAAA marks the end. A little further on, the RNA is cut and gets a tail of A’s.'),
-    ST(9000, cam(800, 564, 1300), 'Van ruw RNA naar mRNA', 'From raw RNA to mRNA',
+    ST(9000, cam(800, 530, 1300), 'Van ruw RNA naar mRNA', 'From raw RNA to mRNA',
       'Het RNA kreeg al tijdens het maken een kapje. Nu gaan de intronen eruit en komt er een A-staart aan.',
       'The RNA already got a cap while it was being made. Now the introns are cut out and a poly(A) tail is added.'),
     ST(7000, FULL, 'Klaar om af te lezen', 'Ready to be read',
@@ -182,14 +182,14 @@ export default {
         const detOp = f1(step === 0 ? 0 : step === 7 ? 1 - ease(sub(p, 0, .3)) : 1);
         svg.querySelectorAll('.gn-det').forEach(el => el.setAttribute('opacity', detOp));
         $('gn-dna').setAttribute('opacity', f1(step === 6 ? 1 - .8 * ease(sub(p, 0, .05)) : step === 7 ? .2 + .8 * ease(sub(p, 0, .3)) : 1));
-        $('gn-pre').setAttribute('opacity', step === 6 ? 1 : step === 0 || step === 7 ? .9 : .15);
+        $('gn-pre').setAttribute('opacity', step === 6 ? 1 : step === 0 || step === 7 ? .9 : step === 2 ? 0 : .15);   // stap 3 (ingezoomd op de promoter): vaag pre-mRNA-label liep rechts uit beeld
         // in stap 3 (promoter) schuiven de knoppen 'Enhancer' en 'Promoter' onder de uitleg van de TATA-box; DNA-label enkel waar het in beeld valt
         $('gn-enhA').setAttribute('cy', step === 2 ? Y + 150 : Y - 52); $('gn-enhA').setAttribute('cx', step === 2 ? 180 : (ENH[0] + ENH[1]) / 2);
         $('gn-promA').setAttribute('cy', step === 2 ? Y + 150 : Y + 84); $('gn-promA').setAttribute('cx', step === 2 ? 420 : (PROM[0] + PROM[1]) / 2);
-        $('gn-dnalab').setAttribute('opacity', step === 1 || step === 2 || step === 5 ? 0 : 1);
-        const m = step === 6 ? ease(sub(p, .35, .8)) : step === 0 || step === 7 ? .9 : .15;
+        $('gn-dnalab').setAttribute('opacity', step === 1 || step === 2 || step === 5 ? 0 : step === 6 ? f1(1 - ease(sub(p, 0, .1))) : 1);   // stap 7: DNA vervaagt, label valt bovenaan buiten beeld
+        const m = step === 6 ? ease(sub(p, .35, .8)) : step === 0 || step === 7 ? .9 : step === 2 ? 0 : .15;
         $('gn-mat').setAttribute('opacity', f1(m));
-        $('gn-arrow').setAttribute('opacity', step === 6 ? f1(sub(p, .2, .4)) : step === 0 || step === 7 ? .8 : .15);
+        $('gn-arrow').setAttribute('opacity', step === 6 ? f1(sub(p, .2, .4)) : step === 0 || step === 7 ? .8 : step === 2 ? 0 : .15);
       },
     };
   },
