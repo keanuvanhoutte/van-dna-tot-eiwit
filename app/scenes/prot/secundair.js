@@ -1,7 +1,8 @@
 import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, clamp, lerp, f1, AACLASS, CLASSCOL, SPIN } from '../../kit.js';
-import { fetchPDB, parsePDB, residues, P, sub3, norm3, dot3, mul3, centroid, mainAxis, frameAlong, rotX, rotY, mm, projector, dist } from './_a_geo.js';
+import { fetchPDB, parsePDB, residues, P, sub3, norm3, dot3, mul3, centroid, mainAxis, frameAlong, rotX, rotY, mm, projector, dist, add3, len3 } from './_a_geo.js';
 import { byResi, addH, ballStick, caTrace, EL } from './_a_draw.js';
 import { inset3d, withInset, warm3d } from '../../kit3d.js';
+import { atoms3d } from './_a_atoms3d.js';
 
 /* Ubiquitine (mens), PDB 1UBQ: HELIX/SHEET-records uit het bestand */
 const HELIX = [23, 34], H310 = [56, 59];
@@ -75,7 +76,7 @@ export default {
     <g id="se-hs-rama" data-node="ramachandran" data-color="#ffc247" data-label="${T2('φ/ψ → Ramachandran-plot', 'φ/ψ → Ramachandran plot')}">
       <rect x="${PX + 20}" y="${368}" width="${PW - 40}" height="48" rx="10" fill="rgba(255,194,71,.10)" stroke="#ffc247" stroke-dasharray="5 4"/>
       <text id="se-rama-t" x="${PX + 40}" y="${401}" font-size="23" fill="#ffc247" font-family="Inter" font-weight="600">α-helix: φ ≈ −60°, ψ ≈ −45°</text>
-      <circle data-anchor="ramachandran" cx="${PX + PW - 120}" cy="${370}" r="1" fill="none"/>
+      <circle data-anchor="ramachandran" cx="${PX + PW - 120}" cy="${458}" r="1" fill="none"/>
     </g>
     <g id="se-hs-ter" data-node="tertiair" data-color="${C.prot}" data-label="${T2('Volgende: tertiaire structuur', 'Next: tertiary structure')}">
       <rect x="${PX + 20}" y="640" width="${PW - 40}" height="56" rx="12" fill="rgba(155,123,255,.14)" stroke="${C.prot}"/>
@@ -88,9 +89,12 @@ export default {
   init(svg, api) {
     const $ = id => svg.getElementById(id);
     const v3 = inset3d(svg, { pdb: '1UBQ', format: 'pdb', box: 'se-box', base: SS3, steps: S3, dimOpacity: false, off: !api?.node });
+    /* stap 1–8: dezelfde 1UBQ-atomen echt in 3D (bolletjes en staafjes, H-bruggen, labels op de atomen) */
+    const a3 = atoms3d(svg, { box: 'se-box', steps: { 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1, 7: 1, 8: 1 }, off: !api?.node });
     let R = null, HB = [], seq = '', err = null;
     fetchPDB('1UBQ').then(t => {
       R = byResi(residues(parsePDB(t)), 'A'); addH(R);
+      a3.setAtoms(R, t.split(/\r?\n/).filter(l => /^(HELIX|SHEET)/.test(l)));
       seq = rng(1, 76).map(i => ONE[R[i]?.resn] ?? 'X').join('');
       for (let i = 1; i <= 76; i++) for (let j = 1; j <= 76; j++)
         if (Math.abs(i - j) >= 3 && R[i]?.at.O && R[j]?.at.N && R[j].H && dist(R[i].at.O, R[j].at.N) < 3.5) HB.push([i, j]);
@@ -117,8 +121,13 @@ export default {
     const T = (y, s, col = C.text, size = 23, w = 600) => txt(PX + 30, y, s, col, size, 'start', w);
     const head = s => T(162, s, C.text, 27, 700);
 
+    /* hulpjes voor 3D-labels: atoompositie, en een punt een paar Å buiten de keten (label niet óp het atoom) */
+    const A3 = (i, n) => n === 'H' ? R[i]?.H : R[i]?.at[n] ? P(R[i].at[n]) : null;
+    const away = (p, from, d) => { const v = sub3(p, from), l = len3(v) || 1; return add3(p, mul3(v, d / l)); };
+    const radial = (p, c, ax, d) => { const v = sub3(p, c), r = sub3(v, mul3(ax, dot3(v, ax))), l = len3(r) || 1; return add3(p, mul3(r, d / l)); };
+    const ahead = (a, b, d) => { const A = A3(a, 'CA'), B = A3(b, 'CA'); return add3(A, mul3(norm3(sub3(A, B)), d)); };   // voorbij residu a, weg van b
     return withInset({
-      destroy() { v3.destroy(); },
+      destroy() { v3.destroy(); a3.destroy(); },
       update(t, s) {
         const { step, p } = s;
         const op3 = v3.update(s);
@@ -129,8 +138,9 @@ export default {
         $('se-hs-rama').setAttribute('opacity', step === 1 || step === 5 ? 1 : 0);
         $('se-rama-t').textContent = step === 5 ? T2('β-streng: φ ≈ −120°, ψ ≈ +130°', 'β-strand: φ ≈ −120°, ψ ≈ +130°') : 'α-helix: φ ≈ −60°, ψ ≈ −45°';
         $('se-hs-ter').setAttribute('opacity', step === 0 || step === 9 ? 1 : 0);
-        if (!R) return;
+        if (!R) { a3.update(s, null); return; }
         if (!V.all) views();
+        let spec = null;   // 3D-weergave van stap 1–8 (zie atoms3d)
         // geen eigen infade vanaf 0: de engine vervloeit al met het vorige beeld; de molecule staat er dus meteen (nooit een leeg begin)
         const fade = 1;
         let mol = '', lab = '', under = '';
@@ -175,10 +185,21 @@ export default {
           let hb = [], cur = -1;
           if (step === 2) {
             cur = HELIX[0] + Math.min(7, Math.floor(p * 8));
-            hb = HB.filter(([i, j]) => j - i === 4 && i >= HELIX[0] && j <= HELIX[1]).map(([i, j]) => [i, j, i === cur ? '#fff' : '#ffc247', i === cur ? 5 : 3]);
+            hb = HB.filter(([i, j]) => j - i === 4 && i >= HELIX[0] && j <= HELIX[1]).map(([i, j]) => [i, j, i === cur ? '#fff' : '#ffc247', i === cur ? 7 : 4]);
           }
           const r = ballStick(R, ids, pr, { hb, cb: step === 3, scale: step === 3 ? 1.1 : 1 });
           mol = r.svg;
+          {
+            const ax = V.helix.F[0], hc = V.helix.c, lb = [];
+            if (step === 1) lb.push({ text: { nl: 'N-kant', en: 'N end' }, pos: ahead(HELIX[0], HELIX[0] + 1, 4.5) }, { text: { nl: 'C-kant', en: 'C end' }, pos: ahead(HELIX[1], HELIX[1] - 1, 3) });
+            if (step === 2) {
+              /* één label naast de uitgelichte (witte) brug: C=O van i ··· H–N van i+4 */
+              const o = A3(cur, 'O'), h = A3(cur + 4, 'H') ?? A3(cur + 4, 'N'), mid = mul3(add3(o, h), .5);
+              lb.push({ text: { nl: `C=O ${cur} ··· H–N ${cur + 4}`, en: `C=O ${cur} ··· H–N ${cur + 4}` }, pos: radial(mid, hc, ax, 3), color: '#fff' });
+            }
+            spec = { key: 'h' + step + ':' + cur, ids, M, hb, cb: step === 3, labels: lb, zoom: step === 3 ? 1.35 : step === 2 ? 1.25 : 1.1, cart: step === 1 ? [[HELIX[0], HELIX[1], C.prot, false]] : null,
+              cap: step === 3 && p > .5 ? { nl: 'Cβ (groen) wijst naar buiten', en: 'Cβ (green) points outwards' } : null, capColor: C.chain };
+          }
           if (step === 1) {
             const a = r.pos(23, 'N'), b = r.pos(34, 'C');
             lab += tag(a[0] + 10, a[1] - 44, T2('N-kant', 'N end'), '#fff', 24, 'start') + tag(b[0] + 20, b[1] - 30, T2('C-kant', 'C end'), '#fff', 24, 'start');
@@ -242,7 +263,7 @@ export default {
               s += `<text x="${f1(cx + (rr + 38) * Math.cos(a))}" y="${f1(cy + (rr + 36) * Math.sin(a) + 5)}" font-size="18" text-anchor="middle" fill="${C.muted}" font-family="JetBrains Mono">${i}</text>`;
             }
             s += txt(cx, cy + 9, '100°', C.muted, 25);
-            s += T(645, T2('groen = hydrofoob · blauw/rood = geladen', 'green = hydrophobic · blue/red = charged'), C.muted, 22);
+            s += T(632, T2('groen = hydrofoob · cyaan = polair', 'green = hydrophobic · cyan = polar'), C.muted, 22) + T(664, T2('blauw/rood = geladen', 'blue/red = charged'), C.muted, 22);
             return s;
           });
         } else if (step === 4) {
@@ -251,6 +272,8 @@ export default {
           const hb = HB.filter(([i, j]) => j - i === 3 && i >= 54 && j <= 61).map(([i, j]) => [i, j, '#e07bff', 4]);
           const r = ballStick(R, rng(54, 61), pr, { hb, dim: i => i < H310[0] - 1 || i > H310[1] + 1 });
           mol = r.svg;
+          spec = { key: 'g', ids: rng(54, 61), M, hb, dim: i => i < H310[0] - 1 || i > H310[1] + 1, zoom: 1.45,
+            cap: { nl: '3₁₀-helix: O(i) ··· H–N(i+3)', en: '3₁₀ helix: O(i) ··· H–N(i+3)' }, capColor: '#e07bff' };
           const a = r.pos(55, 'CA'), b = r.pos(60, 'CA');
           lab += tag((a[0] + b[0]) / 2, 190, T2('3₁₀-helix: O(i) ··· H–N(i+3)', '3₁₀ helix: O(i) ··· H–N(i+3)'), '#e07bff', 25);
           panel('g' + L({ nl: 1, en: 2 }), () => {
@@ -267,16 +290,31 @@ export default {
           });
         } else {
           // β-blad
-          const tilt = step === 8 ? ease(sub(p, .1, .7)) * 1.4 : 0.25 * Math.sin(t * 0.0006);
+          const tilt = step === 8 ? 0.35 + ease(sub(p, .1, .7)) * 1.05 : 0.35 + 0.2 * Math.sin(t * 0.0006);   // licht gekanteld: beide strengpijlen zichtbaar
           const M = mm(rotX(-tilt), V.sheet.F);
           const pr = projector(M, V.sheet.c, V.sheet.sc, CX, CY + 10);
           let ids = [...rng(1, 17), ...rng(64, 72)], dim = null, hb = [];
           if (step === 5) { ids = rng(1, 17); }
-          if (step === 6) { ids = rng(1, 17); hb = HB.filter(([i, j]) => i <= 17 && j <= 17 && Math.abs(i - j) > 4).map(([i, j]) => [i, j]); }
-          if (step === 7) { dim = i => i >= 8 && i <= 17; hb = HB.filter(([i, j]) => (i <= 7 && j >= 64) || (j <= 7 && i >= 64)).map(([i, j]) => [i, j]); }
-          if (step === 8) { ids = rng(1, 17); hb = HB.filter(([i, j]) => i <= 17 && j <= 17 && Math.abs(i - j) > 4).map(([i, j]) => [i, j, '#ffc247', 2.5]); }
+          if (step === 6) { ids = rng(1, 17); hb = HB.filter(([i, j]) => i <= 17 && j <= 17 && Math.abs(i - j) > 4).map(([i, j]) => [i, j, '#ffc247', 8]); }
+          if (step === 7) { dim = i => i >= 8 && i <= 17; hb = HB.filter(([i, j]) => (i <= 7 && j >= 64) || (j <= 7 && i >= 64)).map(([i, j]) => [i, j, '#ffc247', 8]); }
+          if (step === 8) { ids = rng(1, 17); hb = HB.filter(([i, j]) => i <= 17 && j <= 17 && Math.abs(i - j) > 4).map(([i, j]) => [i, j, '#ffc247', 4]); }
           const r = ballStick(R, ids, pr, { hb, dim, cb: step === 8, h: true });
           mol = r.svg;
+          {
+            const lb = [], B = C.trna;
+            /* β1 vóór zijn begin (N-kant); β2/β5 naast het midden van de streng, weg van het blad (niet bij de haarspeld of β1) */
+            const strandLab = (a, b, name, mid) => lb.push({ text: name, color: B,
+              pos: mid ? away(A3(Math.round((a + b) / 2), 'CA'), V.sheet.c, 4.5) : ahead(a, a + 1, 3.5) });
+            if (step !== 8) {
+              strandLab(1, 7, 'β1', false);
+              if (step !== 7) strandLab(10, 17, 'β2', true); else strandLab(64, 72, 'β5', true);
+              if (step === 5) lb.push({ text: { nl: 'haarspeld (Gly10)', en: 'hairpin (Gly10)' }, pos: add3(A3(9, 'CA'), add3(mul3(M[1], -6), mul3(M[0], 1.5))), color: '#dfe8ff' });   // onder de bocht (schermassen uit M), binnen het kader
+            }
+            const B2 = '#ffd27a', cart = step === 7 ? [[1, 7, B2], [64, 72, B2]] : [[1, 7, B2], [10, 17, B2]];   // lichter geel: doorschijnend niet modderig
+            spec = { key: 'b' + step, ids, M, hb, dim, cb: step === 8, cart, labels: lb, zoom: step === 7 ? 1.3 : step === 5 ? 1 : 1.2, cartOp: step === 6 || step === 7 ? .35 : .6,
+              zoomSel: step === 7 ? { resi: [...rng(1, 7), ...rng(64, 72)] } : null,
+              cap: step === 8 && p > .6 ? { nl: 'zijaanzicht: Cβ boven / onder', en: 'side view: Cβ above / below' } : null, capColor: C.chain };
+          }
           const arrowLab = (a, b, name, col, yoff = 0) => {
             const A = r.pos(a, 'CA'), B = r.pos(b, 'CA'); if (!A || !B) return '';
             const dx = B[0] - A[0], dy = B[1] - A[1], l = Math.hypot(dx, dy), ux = dx / l, uy = dy / l;
@@ -300,9 +338,12 @@ export default {
             let s = head(par ? T2('Parallel: zelfde richting', 'Parallel: same direction') : T2('Antiparallel: tegengesteld', 'Antiparallel: opposite'));
             const x0 = PX + 70, dx = 70, y1 = 280, y2 = 420;
             const arr = (xa, xb, y) => { const d = Math.sign(xb - xa); return `<line x1="${xa}" y1="${y}" x2="${xb - d * 22}" y2="${y}" stroke="${C.trna}" stroke-width="14"/><path d="M${xb},${y} L${xb - d * 26},${y - 20} L${xb - d * 26},${y + 20}Z" fill="${C.trna}"/>`; };
-            s += arr(x0 - 30, x0 + 6 * dx + 30, y1) + (par ? arr(x0 - 30, x0 + 6 * dx + 30, y2) : arr(x0 + 6 * dx + 30, x0 - 30, y2));
-            s += txt(x0 - 45, y1 + 8, 'N', '#fff', 24, 'end') + txt(x0 + 6 * dx + 50, y1 + 8, 'C', '#fff', 24, 'start');
-            s += par ? txt(x0 - 45, y2 + 8, 'N', '#fff', 24, 'end') + txt(x0 + 6 * dx + 50, y2 + 8, 'C', '#fff', 24, 'start') : txt(x0 - 45, y2 + 8, 'C', '#fff', 24, 'end') + txt(x0 + 6 * dx + 50, y2 + 8, 'N', '#fff', 24, 'start');
+            /* zelfde ligging als in 3D: antiparallel β2 boven (naar links) en β1 onder; parallel β1 boven en β5 onder */
+            const L0 = x0 - 30, R0 = x0 + 6 * dx + 30;
+            const ends = (y, rev) => txt(x0 - 45, y + 8, rev ? 'C' : 'N', '#fff', 24, 'end') + txt(x0 + 6 * dx + 50, y + 8, rev ? 'N' : 'C', '#fff', 24, 'start');
+            s += par ? arr(L0, R0, y1) + ends(y1, false) : arr(R0, L0, y1) + ends(y1, true);
+            s += arr(L0, R0, y2) + ends(y2, false);
+            s += txt(x0 + 3 * dx, y1 - 26, par ? 'β1' : 'β2', C.trna, 23, 'middle', 700) + txt(x0 + 3 * dx, y2 + 48, par ? 'β5' : 'β1', C.trna, 23, 'middle', 700);
             for (let i = 0; i < 7; i++) { s += `<circle cx="${x0 + i * dx}" cy="${y1}" r="11" fill="#c9d2e4"/><circle cx="${x0 + i * dx}" cy="${y2}" r="11" fill="#c9d2e4"/>`; }
             if (!par) for (let i = 0; i < 7; i += 2) s += `<line x1="${x0 + i * dx - 8}" y1="${y1 + 14}" x2="${x0 + i * dx - 8}" y2="${y2 - 14}" stroke="#ffc247" stroke-width="3" stroke-dasharray="6 5"/><line x1="${x0 + i * dx + 8}" y1="${y1 + 14}" x2="${x0 + i * dx + 8}" y2="${y2 - 14}" stroke="#ffc247" stroke-width="3" stroke-dasharray="6 5"/>`;
             else for (let i = 0; i < 6; i += 2) s += `<line x1="${x0 + i * dx}" y1="${y1 + 14}" x2="${x0 + (i + 1) * dx}" y2="${y2 - 14}" stroke="#ffc247" stroke-width="3" stroke-dasharray="6 5"/><line x1="${x0 + (i + 1) * dx}" y1="${y2 - 14}" x2="${x0 + (i + 2) * dx}" y2="${y1 + 14}" stroke="#ffc247" stroke-width="3" stroke-dasharray="6 5"/>`;
@@ -322,10 +363,13 @@ export default {
             return s;
           });
         }
+        const op4 = a3.update(s, spec);
+        $('se-box').setAttribute('opacity', f1(Math.max(op3, op4)));
+        if (api?.node && step >= 1 && step <= 8) { mol = ''; lab = ''; under = ''; }   // live: de 3D-weergave toont molecule en labels
         const whole = step === 0 || step === 9;   // het volledige ubiquitine-molecuul is klikbaar
         $('se-mol').innerHTML = whole ? '' : mol; $('se-ub').innerHTML = whole ? mol : ''; $('se-lab').innerHTML = lab; $('se-under').innerHTML = under; $('se-under').setAttribute('opacity', f1(fade));
         $('se-mol').setAttribute('opacity', f1(fade)); $('se-lab').setAttribute('opacity', f1(fade));
       },
-    }, v3);
+    }, { get live() { return v3.live || a3.live; } });
   },
 };
