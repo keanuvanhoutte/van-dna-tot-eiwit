@@ -75,7 +75,7 @@ export default {
     function trna(ox, oy, tip, charge, op = 1, hiId = 0, bodyTip = tip) {
       if (op <= .01) return '';
       const x = 580 + ox, y = 760 + oy;
-      const rot = placeRot(x, y, bodyTip), d = Math.hypot(tip[0] - x - (bodyTip[0] - tip[0]) * 0, tip[1] - y) - TS * LL;
+      const rot = placeRot(x, y, bodyTip), d = Math.hypot(tip[0] - x, tip[1] - y) - TS * LL;
       const far = Math.hypot(tip[0] - bodyTip[0], tip[1] - bodyTip[1]) > 8 || Math.abs(d) > 8;
       let s = `<g opacity="${f1(op)}">` + trna2d(x, y, { s: TS, rot, anticodon: 'UAG', nt: 34 / TS, tile: [.88, .88], tip: far ? tip : null, acHi: hiId, ends: showEnds });
       s += `<circle cx="${f1(tip[0])}" cy="${f1(tip[1])}" r="9" fill="${BASE.A}" stroke="#0a1224" stroke-width="2"/>`;
@@ -166,7 +166,7 @@ export default {
           const sw = ease(sub(p, .08, .4)), hyd = sub(p, .45, .6), out = ease(sub(p, .6, .95));
           const tip = E2(tipSyn, [EDIT[0] - 10, EDIT[1] + 16], sw);
           // het acceptoruiteinde zwaait naar de editeerplaats (anticodon blijft vast)
-          tr = trna(0, 0, tip, hyd < .5 ? { a: 'V', dx: 30 * (1 - sw) + 16 * sw, dy: -26 * (1 - sw) - 10 * sw } : null, 1);
+          tr = trna(0, 0, tip, hyd < .5 ? { a: 'V', dx: 30 * (1 - sw) + 16 * sw, dy: -26 * (1 - sw) - 10 * sw } : null, 1, 0, tipSyn);   // lichaam blijft staan zoals in de synthese-plaats; enkel het CCA-uiteinde buigt
           if (hyd >= .5) amino += aa(lerp(EDIT[0] + 10, 1400, out), lerp(EDIT[1] - 20, 180, out), 'V', 24);
           if (hyd > 0 && hyd < 1) mol += `<circle cx="${EDIT[0]}" cy="${EDIT[1]}" r="${f1(30 + 40 * hyd)}" fill="none" stroke="#ff6b6b" stroke-width="3" opacity="${f1(1 - hyd)}"/>`;
           mol += `<g opacity="${f1(sub(p, .4, .5) * (1 - sub(p, .6, .7)))}">${pill(EDIT[0] + 92, EDIT[1] - 6, 60, 28, 'H₂O', '#4fb0ff', 1, 15)}</g>`;

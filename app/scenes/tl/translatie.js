@@ -247,7 +247,7 @@ export default {
         $('tl-eefA').setAttribute('cx', '-9999');
         // tRNA-label links naast de arm van het tRNA in de P-plaats (niet op de keten)
         const tAx = phase === 'elong' ? SITE.P - v * COD : SITE.P;
-        $('tl-trnaA').setAttribute('cx', step === 0 || (step === 14 && p > .5) ? '-9999' : f1(tAx - 80)); $('tl-trnaA').setAttribute('cy', f1(YM - 52 - 90));
+        $('tl-trnaA').setAttribute('cx', step === 0 || (step === 14 && p > .3) ? '-9999' : f1(tAx - 80)); $('tl-trnaA').setAttribute('cy', f1(YM - 52 - 90));
         let chain = '';
         const yDock = YM - 52;
         if (phase === 'init') {
