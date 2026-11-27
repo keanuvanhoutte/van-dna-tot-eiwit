@@ -31,7 +31,7 @@ export default {
     ST(8000, cam(960, 470, 1300), 'De brug ontstaat', 'The disulfide bond forms',
       'De twee zwavels koppelen tot een sterke brug (disulfidebrug). Daarvoor moeten 2 elektronen weg.',
       'The two sulfurs link into a strong disulfide bond (S–S). For that, 2 electrons must be removed.'),
-    ST(8500, cam(850, 420, 1050), 'Een helper geeft de brug door', 'A helper hands over the bond',
+    ST(8500, cam(850, 400, 1150), 'Een helper geeft de brug door', 'A helper hands over the bond',
       'Het enzym PDI heeft zelf een zwavelbrug en geeft die door aan het eiwit dat vouwt.',
       'The enzyme PDI has a disulfide bond of its own and passes it on to the folding protein.'),
     ST(8500, cam(1080, 330, 1150), 'De helper wordt opgeladen', 'The helper is recharged',
@@ -66,7 +66,7 @@ export default {
     // paneel B: twee compartimenten
     let cmp = panel(1760, 170, 700, 580, { col: C.mem, fill: 'rgba(201,165,116,.08)' }) + panel(2540, 170, 700, 580, { col: '#5fd3e6', fill: 'rgba(95,211,230,.06)' });
     cmp += T(2110, 225, T2('ER-lumen: oxiderend', 'ER lumen: oxidising'), { size: 28, col: '#8fb3e8', w: 800 }) + T(2890, 225, T2('cytosol: reducerend', 'cytosol: reducing'), { size: 28, col: '#5fd3e6', w: 800 });
-    cmp += T(2110, 275, 'GSH : GSSG ≈ 1:1 – 3:1', { size: 24, font: 'JetBrains Mono', w: 700 }) + T(2890, 275, T2('GSH : GSSG ≈ 30:1 – 100:1 (cel)', 'GSH : GSSG ≈ 30:1 – 100:1 (cell)'), { size: 22, font: 'JetBrains Mono', w: 700 });
+    cmp += T(2110, 275, T2('neemt elektronen weg', 'takes electrons away'), { size: 24, w: 700 }) + T(2890, 275, T2('geeft elektronen terug', 'gives electrons back'), { size: 24, w: 700 });
     cmp += TL(2110, 640, [T2('PDI + Ero1 aanwezig', 'PDI + Ero1 present'), T2('→ disulfidebruggen vormen', '→ disulfide bonds form')], { size: 22, col: C.text });
     cmp += TL(2890, 640, [T2('glutathion en thioredoxine', 'glutathione and thioredoxin'), T2('houden Cys als –SH', 'keep Cys as –SH')], { size: 22, col: C.text });
     return svgOpen(arrowDefs('ds', { m: C.muted, e: '#5fd3e6' })) + `
@@ -91,13 +91,13 @@ export default {
     const pdiAt = (x, y, ox, op = 1, lab = true) => {
       // omgekeerde U: a linksonder, b linksboven, b′ rechtsboven, a′ rechtsonder; actieve plaatsen onderaan a en a′
       let s = `<g opacity="${f1(op)}">`;
-      [[-100, 40, 'a'], [-60, -50, 'b'], [60, -50, 'b′'], [100, 40, 'a′']].forEach(([dx, dy, l]) => s += `${blob(x + dx, y + dy, 56, 46, { fill: C.prot, stroke: C.prot, sw: 3, seed: 104 + dx, extra: ' fill-opacity=".32"' })}` + T(x + dx, y + dy + 7, l, { size: 20, col: '#fff' }));
+      [[-100, 40, 'a'], [-60, -50, 'b'], [60, -50, 'b′'], [100, 40, 'a′']].forEach(([dx, dy, l]) => s += `${blob(x + dx, y + dy, 56, 46, { fill: C.prot, stroke: C.prot, sw: 3, seed: 104 + dx, extra: ' fill-opacity=".32"' })}` + T(x + dx, y + dy + 5, l, { size: 14, col: '#d9ccff', op: .7 }));   // domeinnamen klein: het gaat om de actieve plekken
       for (const dx of [-100, 100]) {
         const ay = y + 92;
         if (ox) s += `<circle cx="${x + dx - 12}" cy="${ay}" r="8" fill="${SS}"/><circle cx="${x + dx + 12}" cy="${ay}" r="8" fill="${SS}"/><line x1="${x + dx - 4}" y1="${ay}" x2="${x + dx + 4}" y2="${ay}" stroke="${SS}" stroke-width="4"/>`;
         else s += `<circle cx="${x + dx - 14}" cy="${ay}" r="8" fill="${SS}"/><circle cx="${x + dx + 14}" cy="${ay}" r="8" fill="${SS}"/>` + T(x + dx, ay + 30, 'SH SH', { size: 14, col: '#fff' });
       }
-      if (lab) s += T(x, y - 110, 'PDI', { size: 26, col: '#c9b8ff', w: 800 }) + T(x - 170, y + 98, 'CGHC', { size: 16, col: '#c9b8ff', font: 'JetBrains Mono', w: 700, anchor: 'end' });
+      if (lab) s += T(x, y - 110, 'PDI', { size: 26, col: '#c9b8ff', w: 800 }) + T(x - 140, y + 92, T2('actieve plek', 'active site'), { size: 18, col: '#c9b8ff', w: 700, anchor: 'end' }) + T(x - 140, y + 112, '(CGHC)', { size: 14, col: '#c9b8ff', font: 'JetBrains Mono', anchor: 'end', op: .75 });
       return s + '</g>';
     };
     const eDot = (x, y, op = 1) => op > .01 ? `<g opacity="${f1(op)}"><circle cx="${f1(x)}" cy="${f1(y)}" r="15" fill="#5fd3e6"/>` + T(x, y + 6, 'e⁻', { size: 15, col: '#071022', halo: false, w: 800 }) + '</g>' : '';
@@ -120,8 +120,8 @@ export default {
         cs += cys(B[0], B[1], step <= 1 || step === 5 ? 'Cys 58' : '', bondAB < .5 ? 'R' : '');
         if (showC) cs += cys(Cc[0], Cc[1], 'Cys 30', bondAC < .5 ? 'R' : '', 1);
         $('ds-chain').innerHTML = cs;
-        // label in de lus onder de brug (niet op PDI)
-        const anc = step >= 2 ? [(A[0] + B[0]) / 2, A[1] + 62] : [pts[10][0] + 40, pts[10][1] - 20];
+        // label-pil links naast de keten (weg van de cysteïnes, de brug en PDI)
+        const anc = [pts[1][0] - 80, pts[1][1] + 50 + 70 * (1 - fk)];
         $('ds-chainA').setAttribute('cx', f1(anc[0])); $('ds-chainA').setAttribute('cy', f1(anc[1]));
         let bd = '';
         if (bondAB > .01) bd += `<line x1="${f1(A[0] + 24)}" y1="${f1(A[1])}" x2="${f1(B[0] - 24)}" y2="${f1(B[1])}" stroke="${SS}" stroke-width="10" opacity="${f1(bondAB)}"/>` + T((A[0] + B[0]) / 2, A[1] - 16, 'S–S', { size: 22, col: SS, w: 800, op: bondAB });
