@@ -8,6 +8,7 @@ import { ROLES } from './roles.js';
 import { baseSVG, sugarSVG } from './base2d.js';
 import { pdbUrl, rcsbEntryUrl } from '../shared/pdb.js';
 import { lang, L, setLang } from '../shared/i18n.js';
+import { rank } from '../shared/level.js';
 import { NODES, title as nodeTitle } from '../shared/content.js';
 import { ENTRIES, FILTERS, PRESETS } from './entries.js';
 import { preparePdb, analyse, orient, parentBase, LIGNAME, IONLABEL } from './analyse.js';
@@ -56,7 +57,9 @@ const termFirst = n => {
 const nameHTML = e => { if (e.custom) return `PDB ${e.pdb}`; const [a, b] = termFirst(nameOf(e)); return b ? `${a} <small class="alt">(${b})</small>` : a; };
 const listName = nameHTML;
 const listSub = e => e.custom ? L(e.name) : subOf(e);
-const subOf = e => L(SIMPLE[e.id]?.sub ?? e.sub);
+/* hoger onderwijs (niveau): de vakondertitel en de vakuitleg (entries.js) zijn de hoofdinhoud; de eenvoudige laag (simple.js) is voor hobbyist en secundair */
+const HI = rank >= 3;
+const subOf = e => L(HI ? e.sub : SIMPLE[e.id]?.sub ?? e.sub);
 const q = new URLSearchParams(location.search);
 const FROM = q.get('from');
 
@@ -1209,7 +1212,27 @@ const G = {
   tipPart: { nl: 'Tip: kies „Per onderdeel” om de belangrijke stukken in kleur te zien.', en: 'Tip: choose “By part” to see the important pieces in colour.' },
   tipChain: { nl: 'Tip: kies „Per streng” om de strengen uit elkaar te houden.', en: 'Tip: choose “By strand” to tell the strands apart.' },
 };
-const g = (k, ...a) => { const v = L(G[k]); return typeof v === 'function' ? v(...a) : v; };
+/* hoger onderwijs: dezelfde uitleg met vaktermen (hobbyist en secundair houden de eenvoudige tekst hierboven) */
+const G_HI = {
+  cartoonNa: { nl: 'Cartoon: het lint volgt de suiker-fosfaatruggengraat (door de fosforatomen); elke nucleobase is getekend als haar ringsysteem: een dubbele ring voor de purines (A, G), een enkele ring voor de pyrimidines (C, T/U).',
+    en: 'Cartoon: the ribbon follows the sugar–phosphate backbone (through the phosphorus atoms); each nucleobase is drawn as its ring system: a double ring for the purines (A, G), a single ring for the pyrimidines (C, T/U).' },
+  cartoonProt: { nl: 'Eiwit: het lint volgt de hoofdketen (Cα-atomen); α-helices als spiralen, β-strengen als pijlen in de richting N → C, lussen als dunne buis.',
+    en: 'Protein: the ribbon follows the main chain (Cα atoms); α-helices as spirals, β-strands as arrows pointing N → C, loops as a thin tube.' },
+  stick: { nl: 'Stokjesmodel: elke covalente binding als staafje, met alle zijketens en basen. Waterstofatomen worden niet getoond (röntgenstructuren lossen ze zelden op).',
+    en: 'Stick model: every covalent bond as a stick, with all side chains and bases. Hydrogen atoms are not shown (X-ray structures rarely resolve them).' },
+  sphere: { nl: 'Ruimtevullend (CPK-model): elk atoom als bol met zijn vanderwaalsstraal. Zo zie je de pakking, het moleculaire oppervlak en hoe breed en diep de grote en kleine groef zijn.',
+    en: 'Space-filling (CPK model): every atom as a sphere with its van der Waals radius. Shows the packing, the molecular surface and how wide and deep the major and minor grooves are.' },
+  traceNa: { nl: 'Vereenvoudigd: per streng een buis door de fosfaten, per nucleotide één sport van de ruggengraat naar de base. Twee sporten die elkaar raken, vormen een basenpaar.',
+    en: 'Simplified: per strand a tube through the phosphates, per nucleotide one rung from the backbone to the base. Two rungs that meet form a base pair.' },
+  colType: { nl: 'Kleur per molecuultype:', en: 'Colour by molecule type:' },
+  colChain: { nl: n => `Kleur per keten (chain-ID in het PDB-bestand) — hier ${n}: zo zie je uit welke subeenheden en strengen het complex bestaat.`, en: n => `Colour by chain (chain ID in the PDB file) — ${n} here: shows which subunits and strands make up the complex.` },
+  colPart: { nl: 'Functionele domeinen en motieven elk in een eigen kleur (zie de legende boven de figuur).', en: 'Functional domains and motifs each in their own colour (see the legend above the figure).' },
+  colBase: { nl: 'Kleur per nucleobase: A groen, T/U rood, G geel, C blauw; de suiker-fosfaatruggengraat grijs.', en: 'Colour by nucleobase: A green, T/U red, G yellow, C blue; the sugar–phosphate backbone grey.' },
+  colElem: { nl: 'Kleur per element: koolstof grijs, stikstof blauw, zuurstof rood, fosfor oranje.', en: 'Colour by element: carbon grey, nitrogen blue, oxygen red, phosphorus orange.' },
+  tipPart: { nl: 'Tip: „Per onderdeel” kleurt de functionele domeinen.', en: 'Tip: “By part” colours the functional domains.' },
+  tipChain: { nl: 'Tip: „Per streng” kleurt elke keten apart.', en: 'Tip: “By strand” colours each chain separately.' },
+};
+const g = (k, ...a) => { const v = L((rank >= 3 && G_HI[k]) || G[k]); return typeof v === 'function' ? v(...a) : v; };
 function guide() {
   const box = document.getElementById('vguide'); if (!box) return;
   const shown = SLOTS.filter(s => !s.el.hidden && s.an); if (!shown.length) { box.innerHTML = ''; return; }
@@ -1248,15 +1271,21 @@ function info(e) {
   s.push(e.custom ? `<h2>PDB ${e.pdb}</h2><div class="isub">${L(e.name)}</div>` : `<h2>${nameHTML(e)}</h2><div class="isub">${subOf(e)}</div>`);
   if (e.custom) s.push(`<div class="minebox">${t('mineNote')}</div>`);
   if (e.plant) s.push(`<div class="plantbox">${t('plant')}</div>`);
+  const hi = HI && !e.custom;
+  if (hi) {   // vakinhoud bovenaan, open
+    s.push(`<div class="kort"><b>${t('what')}</b><p>${L(e.what)}</p></div>`);
+    s.push(`<div class="card feat"><h3><i>≡</i>${t('feat')}</h3><ul>${L(e.feat).map(x => `<li>${x}</li>`).join('')}</ul></div>`);
+  }
   if (sp) {
-    s.push(`<div class="kort"><b>${t('inShort')}</b><p>${termsHTML(L(sp.kort))}</p></div>`);
+    if (!hi) s.push(`<div class="kort"><b>${t('inShort')}</b><p>${termsHTML(L(sp.kort))}</p></div>`);
     if (sp.look) s.push(`<div class="card look"><h3><i>👁</i>${t('look')}</h3>${e.pdb ? '<div class="vguide" id="vguide"></div>' : ''}<p>${termsHTML(colourWords(L(sp.look)))}</p>${sp.lookSchema && e.pdb ? `<div class="lschema"><button class="lsbtn" type="button">${t('schemaBtn')}</button> <b>${t('inSchema')}:</b> ${termsHTML(L(sp.lookSchema))}</div>` : ''}</div>`);
-    if (sp.why) s.push(`<div class="card why"><h3><i>★</i>${t('why')}</h3><p>${termsHTML(L(sp.why))}</p></div>`);
+    if (hi) s.push(`<div class="card why"><h3><i>★</i>${e.ctx.includes('cell') ? t('cell') : t('cellOther')}</h3><p>${L(e.cell)}</p></div>`);
+    else if (sp.why) s.push(`<div class="card why"><h3><i>★</i>${t('why')}</h3><p>${termsHTML(L(sp.why))}</p></div>`);
   }
   if (scenes.length) s.push(`<h3 class="sc">${t('scenes')}</h3><div class="scenes">${scenes.map(id => `<a href="../app/index.html?scene=${id}"><i>▶</i>${nodeTitle(NODES[id])}<span>${t('open')}</span></a>`).join('')}</div>`);
   // de vakinhoud (zoals voorheen) samen in één dichtgeklapte laag
   const m = [];
-  if (!e.custom) {
+  if (!e.custom && !hi) {
     m.push(`<div class="isub">${L(e.name)} · ${L(e.sub)}</div>`);
     m.push(`<h3>${t('what')}</h3><p>${L(e.what)}</p>`);
     m.push(`<h3>${t('feat')}</h3><ul>${L(e.feat).map(x => `<li>${x}</li>`).join('')}</ul>`);
@@ -1267,7 +1296,7 @@ function info(e) {
   m.push(`<div class="simp"><b>${t('simpl')}</b><ul>${simp.map(x => `<li>${x}</li>`).join('')}</ul></div>`);
   const src = [...(e.pdb ? [{ label: `${t('rcsb')} ${e.pdb}`, url: `https://www.rcsb.org/structure/${e.pdb}` }] : []), ...(e.src ?? []), ...(e.pdb ? CLICK_SRC.map(x => ({ label: L(x.label), url: x.url })) : [])];
   m.push(`<h3>${t('srcs')}</h3><ul class="src">${src.map(x => `<li><a href="${x.url}" target="_blank" rel="noopener">${x.label}</a></li>`).join('')}</ul>`);
-  s.push(`<details class="more" ${sp ? '' : 'open'}><summary>${t('more')}</summary><div class="morebody">${m.join('')}</div></details>`);
+  s.push(`<details class="more" ${sp && !hi ? '' : 'open'}><summary>${t('more')}</summary><div class="morebody">${m.join('')}</div></details>`);
   $('info').innerHTML = s.join('');
   $('info').querySelector('.lsbtn')?.addEventListener('click', () => { const sl = SLOTS.find(x => x.entry === e && !x.el.hidden); if (sl) showSchema(sl, true); });
   $('infoCol').scrollTop = 0;
@@ -1333,8 +1362,13 @@ function seg(id, key) {
 seg('style', 'style'); seg('color', 'color'); seg('bases', 'bases');
 $('bases').querySelectorAll('button').forEach(b => { b.setAttribute('aria-pressed', String(b.dataset.v === state.bases)); b.title = t(b.dataset.v + 'Tip'); });
 for (const id of ['style', 'color']) $(id).querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === state[id]));
-$('style').querySelectorAll('button').forEach(b => { b.title = L(T.hintStyle[b.dataset.v]); });
-$('color').querySelectorAll('button').forEach(b => { b.title = L(T.hintColor[b.dataset.v]); });
+const TIP_HI = { cartoon: 'cartoonNa', stick: 'stick', sphere: 'sphere', chain: 'colChain', part: 'colPart', base: 'colBase', elem: 'colElem' };
+const tipOf = (v, simple) => {   // hoger onderwijs: de vaktekst van "In deze weergave" (zonder het aantal ketens)
+  const h = HI && G_HI[TIP_HI[v]]; if (!h) return L(simple);
+  const x = L(h); return typeof x === 'function' ? x('').replace(/ — (hier )? ?(here)?:/, ':') : x;
+};
+$('style').querySelectorAll('button').forEach(b => { b.title = tipOf(b.dataset.v, T.hintStyle[b.dataset.v]); });
+$('color').querySelectorAll('button').forEach(b => { b.title = tipOf(b.dataset.v, T.hintColor[b.dataset.v]); });
 for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'na', 'lbl']) $(k).checked = state[k];
 for (const k of ['hb', 'syn', 'ions', 'ligs', 'water', 'na', 'lbl']) $(k).onchange = e => { state[k] = e.target.checked; if (k === 'lbl') { try { localStorage.setItem('atlas-lbl', e.target.checked ? '1' : '0'); } catch { /* geen opslag */ } } renderAll(); legend(); };
 $('spin').onchange = e => SLOTS.forEach(s => s.viewer.spin(e.target.checked ? 'y' : false, SPIN));
