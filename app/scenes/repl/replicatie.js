@@ -12,7 +12,8 @@ const CY = 470, G = 16, H = 48, X0 = 60, X1 = 1540, RAMP = 34, LAGGAP = 46, PER 
 const O = [330, 800, 1270];
 const FIRE = [3.0, 0.6, 3.8];          // vuurtijdstip per origin (in "τ"), O2 vuurt eerst
 const R = 80;                          // vorksnelheid in px per τ
-const TAU = [[0, 0], [0, 0], [0, 1.3], [1.3, 3], [3, 5], [5, 8], [8, 8]];   // τ-bereik per stap
+const TAU = [[0, 0], [0, 0], [0, 1.3], [1.3, 3], [3, 4.6], [4.6, 8], [8, 8]];   // τ-bereik per stap
+const XM = 1163, TM = 5.1375;          // ontmoetingspunt (x, τ) van de vorken van origin 2 en 3 (zie forks())
 
 function forks(tau) {
   // halve breedte per origin, begrensd door de buren (vorken die elkaar ontmoeten stoppen daar)
@@ -74,7 +75,7 @@ export default {
     S(8000, FULL, 'Veel startplaatsen', 'Many start sites',
       'Een chromosoom heeft veel startplaatsen. Ze starten niet allemaal tegelijk, en sommige worden niet gebruikt.',
       'A chromosome has many start sites. They do not all start at once, and some are not used.'),
-    S(8000, FULL, 'De vorken komen samen', 'The forks meet',
+    S(9000, cam(XM, 482, 720), 'De vorken komen samen', 'The forks meet',
       'Waar twee vorken elkaar raken, stopt het kopiëren. Een enzym (DNA-ligase) plakt de laatste stukjes vast.',
       'Where two forks meet, copying stops. An enzyme (DNA ligase) joins the last pieces together.'),
     S(8000, cam(800, 480, 1560), 'Twee identieke kopieën', 'Two identical copies',
@@ -125,25 +126,34 @@ export default {
                seg(130, yB, 530, yB, NEW, 9, k2) + seg(130, yB + 28, 530, yB + 28, C.dna2, 9) + '</g>';
           m += arrow(330, 240, 330, 300, C.muted, 3, k1);
           m += tag(330, 565, T2('elke dochter: 1 oude + 1 nieuwe streng', 'each daughter: 1 old + 1 new strand'), C.text, 22, 'middle', k2);
-          // dichtheidsgradiënt (CsCl)
-          const tubes = [[820, T2('generatie 0', 'generation 0'), [['H', 1]]], [1000, T2('generatie 1', 'generation 1'), [['M', 1]]], [1180, T2('generatie 2', 'generation 2'), [['M', 1], ['L', 1]]]];
+          // proef: DNA sorteren op gewicht in een buisje (CsCl-dichtheidsgradiënt). Oud DNA = zwaar (¹⁵N), nieuw = licht (¹⁴N).
+          const tubes = [[820, T2('start', 'start'), [['H', 1]]], [1000, T2('na 1 deling', 'after 1 division'), [['M', 1]]], [1180, T2('na 2 delingen', 'after 2 divisions'), [['M', 1], ['L', 1]]]];
           const by = { H: 430, M: 360, L: 290 };
-          m += tag(1000, 150, T2('CsCl-dichtheidsgradiënt', 'CsCl density gradient'), C.muted, 22);
+          m += tag(1000, 140, T2('proef: DNA sorteren op gewicht', 'experiment: sorting DNA by weight'), C.text, 22);
+          m += tag(1000, 170, T2('(buisje met CsCl-oplossing)', '(tube with CsCl solution)'), C.muted, 18);
+          // pijl: zwaar DNA zakt dieper
+          m += arrow(735, 215, 735, 470, C.muted, 3.5) +
+               `<text x="712" y="342" font-size="19" font-weight="600" font-family="Inter" fill="${C.text}" text-anchor="middle" transform="rotate(-90 712 342)">${T2('zwaar DNA zakt dieper', 'heavy DNA sinks lower')}</text>`;
           tubes.forEach(([x, lb, bands], i) => {
             const op = i === 0 ? 1 : i === 1 ? ease(sub(p, .3, .5)) : ease(sub(p, .6, .8));
             m += `<g opacity="${f1(op)}"><rect x="${x - 40}" y="190" width="80" height="300" rx="36" fill="rgba(147,160,187,.08)" stroke="${C.muted}" stroke-width="2"/>`;
             for (const [b] of bands) m += `<rect x="${x - 32}" y="${by[b] - 7}" width="64" height="14" rx="7" fill="${b === 'H' ? C.dna : b === 'M' ? '#8fb0e8' : NEW}"/>`;
             m += txt(x, 528, lb, C.text, 20) + '</g>';
           });
-          m += txt(1240, 297, T2('licht ¹⁴N/¹⁴N', 'light ¹⁴N/¹⁴N'), NEW, 20, 'start') + txt(1240, 367, T2('hybride ¹⁵N/¹⁴N', 'hybrid ¹⁵N/¹⁴N'), '#8fb0e8', 20, 'start') + txt(1240, 437, T2('zwaar ¹⁵N/¹⁵N', 'heavy ¹⁵N/¹⁵N'), C.dna, 20, 'start');
-          m += tag(1030, 610, T2('na 1 deling: alleen hybride DNA', 'after 1 division: only hybrid DNA'), C.text, 22, 'middle', ease(sub(p, .4, .6)));
+          // banden benoemd: wat zit er in elke band (kleuren = strengen links)
+          const band = (y, nm, ds, col, op) => `<g opacity="${f1(op)}">` + txt(1240, y, nm, col, 24, 'start', 700) + txt(1240, y + 24, ds, C.muted, 18, 'start', 500) + '</g>';
+          m += band(294, T2('licht', 'light'), T2('2 nieuwe strengen', '2 new strands'), NEW, ease(sub(p, .6, .8)));
+          m += band(364, T2('half', 'half'), T2('1 oude + 1 nieuwe streng', '1 old + 1 new strand'), '#8fb0e8', ease(sub(p, .3, .5)));
+          m += band(434, T2('zwaar', 'heavy'), T2('2 oude strengen', '2 old strands'), C.dna, 1);
+          m += tag(1030, 610, T2('na 1 deling: alleen de band "half"', 'after 1 division: only the "half" band'), C.text, 22, 'middle', ease(sub(p, .4, .6)));
         }
         $('rp-ms').innerHTML = m;
 
         /* ---------- stappen 1–6: stuk chromosoom ---------- */
         const on = step >= 1;
         const [ta, tb] = TAU[step];
-        const tau = lerp(ta, tb, step === 2 ? sub(p, .4, 1) : step === 5 ? sub(p, 0, .8) : p);
+        const tau = step === 5 ? (p < .4 ? lerp(ta, TM, ease(sub(p, 0, .4))) : lerp(TM, tb, sub(p, .4, 1)))   // eerst ingezoomd tot de twee vorken elkaar raken
+                    : lerp(ta, tb, step === 2 ? sub(p, .4, 1) : p);
         const b = forks(tau);
         let dna = '', fk = '';
         if (on) {
@@ -160,7 +170,7 @@ export default {
           dna += endl(X0 - 26, yl0 + 4, "5′", C.dna, 16) + endl(X1 + 26, yr0 + 4, "3′", C.dna, 16) +
                  endl(X0 - 26, yl1 + 8, "3′", C.dna2, 16) + endl(X1 + 26, yr1 + 8, "5′", C.dna2, 16);
           // nieuwe strengen per bel
-          const ligAll = step >= 6 || (step === 5 && p > .8);
+          const ligAll = step >= 6 || (step === 5 && p > .72);
           const yTopNew = x => ys(sepAt(x, b))[0] + 14, yBotNew = x => ys(sepAt(x, b))[1] - 14;
           const line = (xa, xb, yf, col) => { const pts = []; for (let x = xa; x <= xb; x += 4) pts.push([x, yf(x)]); pts.push([xb, yf(xb)]); return pth(pts, col, 5); };
           for (const q of b) {
@@ -253,13 +263,32 @@ export default {
               const kk = ease(sub(p, 0, .15)) * (1 - sub(p, .42, .55));
               pr += ePill(o - 150, CY - 120, 64, 28, 'DDK', '#e0708f', kk, 15) + ePill(o + 150, CY - 120, 64, 28, 'CDK', '#e0708f', kk, 15);
               pr += arrow(o - 118, CY - 110, o - 40, CY - 50, '#e0708f', 3, kk) + arrow(o + 118, CY - 110, o + 40, CY - 50, '#e0708f', 3, kk);
-              pr += tag(o, CY + 130, T2('CMG = Cdc45 + MCM2-7 + GINS', 'CMG = Cdc45 + MCM2-7 + GINS'), C.text, 17, 'middle', sub(p, .3, .45));
-              pr += tag(o, CY + 156, T2("elke CMG loopt 3′→5′ over zijn streng", "each CMG moves 3′→5′ along its strand"), C.muted, 15, 'middle', sub(p, .65, .8));
+              // de paarse vormen benoemen: ritsmachine (helicase), afkorting klein; pijlen = ze lopen uit elkaar
+              const kl = ease(sub(p, .62, .78)), xL = q.xl + 10, xR = q.xr - 10;
+              pr += tag(xL - 30, CY - 120, T2('ritsmachine (helicase)', 'unzipping machine (helicase)'), C.text, 20, 'middle', kl) +
+                    tag(xL - 30, CY - 100, 'CMG', C.muted, 14, 'middle', kl) + seg(xL - 10, CY - 92, xL, CY - 70, C.muted, 2, kl) +
+                    arrow(xL - 40, CY - 40, xL - 110, CY - 40, C.text, 3.5, kl);
+              pr += tag(xR + 30, CY + 112, T2('ritsmachine (helicase)', 'unzipping machine (helicase)'), C.text, 20, 'middle', kl) +
+                    tag(xR + 30, CY + 132, 'CMG', C.muted, 14, 'middle', kl) + seg(xR + 10, CY + 92, xR, CY + 72, C.muted, 2, kl) +
+                    arrow(xR + 40, CY + 40, xR + 110, CY + 40, C.text, 3.5, kl);
             }
           });
         }
         if (step === 4) pr += tag(800, 330, T2('vroege origin: grote bel · latere: kleinere bellen, die ermee versmelten', 'early origin: large bubble · later: smaller bubbles that merge with it'), C.text, 23, 'middle', sub(p, .1, .3));
-        if (step === 5) pr += tag(800, 330, T2('vorken komen samen → terminatie', 'forks meet → termination'), C.text, 24, 'middle', sub(p, .05, .2));
+        if (step === 5) {
+          // twee vorken lopen naar elkaar toe; waar ze elkaar raken stopt het kopiëren en dicht ligase de laatste naad
+          const ka = ease(sub(p, .02, .12)) * (1 - sub(p, .36, .44));
+          const fL = Math.min(b[1].xr, XM) - 20, fR = Math.max(b[2].xl, XM) + 20;     // de twee vorken die elkaar zullen raken
+          pr += tag(fL - 40, CY - 128, T2('vork', 'fork'), C.text, 20, 'middle', ka) + arrow(fL - 90, CY - 100, fL - 10, CY - 100, C.text, 3.5, ka);
+          pr += tag(fR + 40, CY - 128, T2('vork', 'fork'), C.text, 20, 'middle', ka) + arrow(fR + 90, CY - 100, fR + 10, CY - 100, C.text, 3.5, ka);
+          pr += tag(XM, CY - 150, T2('de vorken raken elkaar: kopiëren stopt', 'the forks meet: copying stops'), C.text, 21, 'middle', ease(sub(p, .4, .5)));
+          const kg = ease(sub(p, .48, .6)) * (1 - .6 * sub(p, .8, .95)), yT = CY - G / 2 - H + 14, yB = CY + G / 2 + H - 14;
+          for (const [y, dy] of [[yT, 1], [yB, -1]]) {
+            pr += prot(XM, y + dy * 21, 46, 16, C.ok, T2('ligase', 'ligase'), 15, kg);
+            pr += `<g opacity="${f1(ease(sub(p, .6, .72)))}"><circle cx="${XM}" cy="${y}" r="9" fill="none" stroke="${C.ok}" stroke-width="3"/></g>`;
+          }
+          pr += tag(XM, CY + 150, T2('lijm-enzym (ligase) dicht de laatste naden', 'glue enzyme (ligase) seals the last nicks'), C.ok, 21, 'middle', kg);
+        }
         $('rp-prot').innerHTML = pr;
         { const a = $('rp-oanchor'), on = step === 1 && p > .9;   // label naar de 3D-scène 'origins' zodra de dubbelhexameer ligt (rechtsboven de ringen, Cdt1 is dan weg)
           a.setAttribute('cx', on ? O[1] + 110 : -99); a.setAttribute('cy', on ? CY - 70 : -99); }
