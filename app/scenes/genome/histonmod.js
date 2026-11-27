@@ -72,17 +72,18 @@ export default {
 
     // lezer-tabel
     const rows = [
-      [T2('bromodomein', 'bromodomain'), 'K-ac', COLS.ac, T2('o.a. in HATs en remodelers', 'e.g. in HATs and remodellers'), 'aan'],
-      [T2('chromodomein', 'chromodomain'), 'K9me3 / K27me3', COLS.rep, T2('HP1 (K9me3), Polycomb-CBX (K27me3)', 'HP1 (K9me3), Polycomb CBX (K27me3)'), 'stil'],
-      [T2('PHD-vinger', 'PHD finger'), 'K4me3', COLS.act, T2('bv. ING-eiwitten', 'e.g. ING proteins'), 'aan'],
+      [T2('acetyl-lezer', 'acetyl reader'), T2('bromodomein', 'bromodomain'), 'ac', COLS.ac, 'aan'],
+      [T2('methyl-lezer', 'methyl reader'), T2('chromodomein', 'chromodomain'), T2('me3 op K9 / K27', 'me3 on K9 / K27'), COLS.rep, 'stil'],
+      [T2('methyl-lezer', 'methyl reader'), T2('PHD-vinger', 'PHD finger'), T2('me3 op K4', 'me3 on K4'), COLS.act, 'aan'],
     ];
     let tab = `<rect x="690" y="560" width="850" height="270" rx="18" fill="rgba(13,20,38,.6)" stroke="#2a3a60" stroke-width="2"/>` +
-      txt(715, 598, T2('Lezerdomeinen', 'Reader domains'), '#c9d2e4', 20, 'start', 700) + txt(1060, 598, T2('leest', 'reads'), C.muted, 15, 'middle', 600) + txt(1190, 598, T2('effect', 'effect'), C.muted, 15, 'middle', 600);
-    rows.forEach(([nm, mark, col, ex, eff], i) => {
-      const y = 650 + i * 62;
+      txt(715, 600, T2('Elke lezer past op één merkteken', 'Each reader fits one mark'), '#c9d2e4', 22, 'start', 700) + txt(1150, 600, T2('leest', 'reads'), C.muted, 17, 'middle', 600) + txt(1390, 600, T2('gevolg', 'result'), C.muted, 17, 'middle', 600);
+    rows.forEach(([nm, vak, mark, col, eff], i) => {
+      const y = 656 + i * 62;
       tab += `<path d="M720,${y - 18} q20,-12 44,0 q16,10 0,26 q-24,12 -44,0 z" fill="rgba(155,123,255,.45)" stroke="${C.prot}" stroke-width="2"/>` +
-        txt(785, y + 1, nm, C.text, 19, 'start', 700) + pill(1060, y - 5, 170, 30, mark, col, 1, 15).replace('fill="#fff"', 'fill="#0a1224"').replace('opacity=".9"/>', `opacity=".9" stroke="${EFF[eff]}" stroke-width="3"/>`) +
-        txt(1190, y + 1, eff === 'aan' ? T2('▲ aan', '▲ on') : T2('▼ stil', '▼ off'), EFF[eff], 16, 'middle', 800) + txt(1245, y + 1, ex, C.muted, 15, 'start', 500);
+        txt(785, y - 2, nm, C.text, 21, 'start', 700) + txt(785, y + 18, vak, C.muted, 14, 'start', 600) +
+        pill(1150, y - 5, 200, 34, mark, col, 1, 18).replace('fill="#fff"', 'fill="#0a1224"').replace('opacity=".9"/>', `opacity=".9" stroke="${EFF[eff]}" stroke-width="3"/>`) +
+        txt(1390, y + 2, eff === 'aan' ? T2('▲ gen aan', '▲ gene on') : T2('▼ gen stil', '▼ gene off'), EFF[eff], 20, 'middle', 800);
     });
 
     return svgOpen() + `
@@ -94,15 +95,15 @@ export default {
     <g data-node="nucleosoom" data-color="${HC.H3}" data-label="${T2('← Nucleosoom', '← Nucleosome')}" data-nolabel><circle cx="${NX[0]}" cy="${NX[1]}" r="${NR * .8}" fill="transparent"/></g>
     <g id="hm-dna" data-node="dnahelix" data-color="${C.dna}" data-nolabel>${dna}</g>
     <g data-node="ptm" data-color="${CLASSCOL['+']}" data-label="${T2('Post-translationele modificaties', 'Post-translational modifications')}">
-      <g id="hm-tail"></g><circle data-anchor="ptm" cx="790" cy="${TY + 60}" r="1" fill="none" data-pos="below"/>
+      <g id="hm-tail"></g><circle data-anchor="ptm" cx="800" cy="${TY + 175}" r="1" fill="none" data-pos="below"/>
     </g>
     <g id="hm-enz"></g>
     <g id="hm-chem"></g>
     <g id="hm-tab" data-node="genregulatie" data-color="${C.prot}" data-label="${T2('Genregulatie →', 'Gene regulation →')}"><g id="hm-rows">${tab}</g><g id="hm-tabsum" opacity="0">${txt(1115, 600, T2('schrijvers · wissers · lezers', 'writers · erasers · readers'), '#fff', 28, 'middle', 700)}${[[860, T2('schrijvers', 'writers'), 'HAT · KMT', COLS.ac], [1115, T2('wissers', 'erasers'), T2('HDAC · demethylase', 'HDAC · demethylase'), C.danger], [1375, T2('lezers', 'readers'), T2('bromo · chromo · PHD', 'bromo · chromo · PHD'), COLS.act]].map(([x, h, v, c]) => txt(x, 660, h, c, 28, 'middle', 700) + txt(x, 700, v, '#fff', 22)).join('')}${txt(1115, 752, T2('bepalen samen welke genen actief zijn', 'together decide which genes are active'), C.muted, 25)}</g><circle data-anchor="genregulatie" cx="1400" cy="570" r="1" fill="none"/></g>
     <g id="hm-sum"></g>
     <g data-node="chromatine" data-color="${C.dna}" data-label="${T2('Chromatine: open ↔ dicht', 'Chromatin: open ↔ closed')}" id="hm-chrom" opacity="0">
-      ${pill(340, 720, 600, 50, T2('H3K4me3 · H3K27ac → open, actief', 'H3K4me3 · H3K27ac → open, active'), '#1f7a5c', 1, 22)}
-      ${pill(340, 790, 600, 50, T2('H3K9me3 · H3K27me3 → compact, stil', 'H3K9me3 · H3K27me3 → compact, silent'), '#8a2e3b', 1, 22)}
+      ${pill(340, 720, 600, 50, T2('me3 op K4 · acetyl → open, gen aan', 'me3 on K4 · acetyl → open, gene on'), '#1f7a5c', 1, 22)}
+      ${pill(340, 790, 600, 50, T2('me3 op K9 / K27 → compact, gen stil', 'me3 on K9 / K27 → compact, gene off'), '#8a2e3b', 1, 22)}
       <circle data-anchor="chromatine" cx="330" cy="672" r="1" fill="none"/>
     </g>
     </svg>`;
@@ -163,31 +164,32 @@ export default {
         const arm = (x, y, op) => op < .9 ? '' : `<path d="M${f1(x + 14)},${f1(y + 50)} Q${f1(x + 16)},${f1(y + 28)} ${f1(x + 9)},${f1(y + 12)}" stroke="${C.prot}" stroke-width="7" stroke-linecap="round" fill="none"/>`;
         // enzym (bobbelig) dat met een arm tegen de staart ligt
         const enz = (x, y, label, op, col = C.prot) => op < .01 ? '' : `<g opacity="${f1(op)}"><path d="${eiwitPad(x, y, 14 + label.length * 5.2, 28, 1093 + label.length, .14)}" fill="rgba(155,123,255,.3)" stroke="${col}" stroke-width="3"/>${txt(x, y + 6, label, '#fff', 17, 'middle', 700)}</g>`;
-        if (step === 2) { const k = ease(sub(p, 0, .3)); e += enz(lerp(1650, rx(14) + 24, k), pts[13][1] + 74, 'HAT', 1 - sub(p, .8, 1)) + arm(rx(14), pts[13][1], k * (1 - sub(p, .8, 1))); }
-        if (step === 3) { const k = ease(sub(p, 0, .3)); e += enz(lerp(1650, rx(18) + 24, k), pts[17][1] + 74, 'HDAC', 1 - sub(p, .8, 1)) + arm(rx(18), pts[17][1], k * (1 - sub(p, .8, 1))); }
-        if (step === 4) e += enz(rx(4) - 30, TY + 100, T2('KMT (bv. SET1)', 'KMT (e.g. SET1)'), sub(p, 0, .2) * (1 - sub(p, .85, 1)));
-        if (step === 5) { e += enz(rx(9), TY + 100, 'SUV39H1', sub(p, 0, .2)); e += enz(rx(27), TY + 100, 'PRC2 (EZH2)', sub(p, .2, .4)); }
+        if (step === 2) { const k = ease(sub(p, 0, .3)); e += enz(lerp(1650, rx(14) + 24, k), pts[13][1] + 74, T2('schrijver (HAT)', 'writer (HAT)'), 1 - sub(p, .8, 1)) + arm(rx(14), pts[13][1], k * (1 - sub(p, .8, 1))); }
+        if (step === 3) { const k = ease(sub(p, 0, .3)); e += enz(lerp(1650, rx(18) + 24, k), pts[17][1] + 74, T2('wisser (HDAC)', 'eraser (HDAC)'), 1 - sub(p, .8, 1)) + arm(rx(18), pts[17][1], k * (1 - sub(p, .8, 1))); }
+        if (step === 4) e += enz(rx(4) - 30, TY + 100, T2('schrijver (KMT)', 'writer (KMT)'), sub(p, 0, .2) * (1 - sub(p, .85, 1)));
+        if (step === 5) { e += enz(rx(9), TY + 100, T2('schrijver (SUV39H1)', 'writer (SUV39H1)'), sub(p, 0, .2)); e += enz(rx(27), TY + 100, T2('schrijver (PRC2)', 'writer (PRC2)'), sub(p, .2, .4)); }
         if (step === 6) {
           // lezers dokken op hun merkteken
           const k = ease(sub(p, .1, .5));
-          const reader = (x, label, col) => { const y0 = TY + 44 + (1 - k) * 60; return `<g opacity="${f1(k)}"><path d="M${f1(x - 34)},${f1(y0 + 30)} q34,30 68,0 l-12,-26 q-22,12 -44,0 z" fill="rgba(155,123,255,.45)" stroke="${col}" stroke-width="3"/>${txt(x, y0 + 82, label, '#fff', 17, 'middle', 700)}</g>`; };
-          e += reader(rx(4), T2('PHD-vinger', 'PHD finger'), COLS.act) + reader(rx(14), T2('bromodomein', 'bromodomain'), COLS.ac);
+          const reader = (x, label, vak, col) => { const y0 = TY + 44 + (1 - k) * 60; return `<g opacity="${f1(k)}"><path d="M${f1(x - 34)},${f1(y0 + 30)} q34,30 68,0 l-12,-26 q-22,12 -44,0 z" fill="rgba(155,123,255,.45)" stroke="${col}" stroke-width="3"/>${txt(x, y0 + 84, label, '#fff', 20, 'middle', 700)}${txt(x, y0 + 104, vak, C.muted, 14, 'middle', 600)}</g>`; };
+          e += reader(rx(4), T2('methyl-lezer', 'methyl reader'), T2('PHD-vinger', 'PHD finger'), COLS.act) + reader(rx(14), T2('acetyl-lezer', 'acetyl reader'), T2('bromodomein', 'bromodomain'), COLS.ac);
         }
         $('hm-enz').innerHTML = e;
 
         // --- chemie-inzet ---
         let ch = '';
-        const box = (op, html) => op < .01 ? '' : `<g opacity="${f1(op)}"><rect x="690" y="470" width="850" height="84" rx="14" fill="rgba(13,20,38,.85)" stroke="#2a3a60" stroke-width="2"/>${html}</g>`;
-        if (step === 2 || step === 3) {
-          ch = box(1, mono(830, 522, 'Lys–NH₃⁺', CLASSCOL['+'], 22) + `<path d="M${step === 2 ? '950,512 L1090,512' : '1090,512 L950,512'}" stroke="#fff" stroke-width="3" marker-end="url(#arrow)"/>` +
-            txt(1020, 498, step === 2 ? T2('HAT + acetyl-CoA', 'HAT + acetyl-CoA') : 'HDAC', '#fff', 15) + mono(1290, 522, 'Lys–NH–CO–CH₃', COLS.ac, 22) + txt(1290, 545, T2('neutraal', 'neutral'), COLS.ac, 14));
-        }
-        if (step === 4) ch = box(1, mono(800, 522, 'NH₃⁺', CLASSCOL['+'], 20) + txt(870, 518, '→', '#fff', 22) + mono(960, 522, 'NH₂⁺CH₃', COLS.act, 20) + txt(1050, 518, '→', '#fff', 22) +
-          mono(1150, 522, 'NH⁺(CH₃)₂', COLS.act, 20) + txt(1250, 518, '→', '#fff', 22) + mono(1350, 522, 'N⁺(CH₃)₃', COLS.act, 20) + txt(1115, 548, T2('me1 · me2 · me3 — blijft positief geladen (methyldonor: SAM)', 'me1 · me2 · me3 — stays positively charged (methyl donor: SAM)'), C.muted, 14));
+        /* pictogram i.p.v. chemie: een lysine-bolletje met of zonder '+' en zijn merkteken, plus één zin */
+        const box = (op, html) => op < .01 ? '' : `<g opacity="${f1(op)}"><rect x="960" y="476" width="580" height="76" rx="14" fill="rgba(13,20,38,.85)" stroke="#2a3a60" stroke-width="2"/>${html}</g>`;
+        const kIco = (x, plus, m, mc) => `<circle cx="${x}" cy="520" r="17" fill="${CLASSCOL['+']}" stroke="#0a1224" stroke-width="2"/>${txt(x, 526, 'K', '#0a1224', 17, 'middle', 800, 'JetBrains Mono')}` +
+          (plus ? txt(x + 15, 504, '+', '#fff', 20, 'middle', 800) : '') + (m ? flag(x, 504, m, mc, 1, 14) : '');
+        const pijl = x => `<path d="M${x},514 L${x + 40},514" stroke="#fff" stroke-width="3" marker-end="url(#arrow)"/>`;
+        if (step === 2) ch = box(1, kIco(1005, true) + pijl(1040) + kIco(1115, false, 'ac', COLS.ac) + txt(1150, 524, T2('+ lading weg → DNA laat los', '+ charge gone → DNA lets go'), '#fff', 21, 'start', 700));
+        if (step === 3) ch = box(1, kIco(1005, false, 'ac', COLS.ac) + pijl(1040) + kIco(1115, true) + txt(1150, 524, T2('+ lading terug → DNA hecht weer', '+ charge back → DNA binds again'), '#fff', 21, 'start', 700));
+        if (step === 4) ch = box(1, kIco(1005, true, 'me3', COLS.act) + txt(1065, 524, T2('1, 2 of 3 methyl: de + lading blijft', '1, 2 or 3 methyl: the + charge stays'), '#fff', 21, 'start', 700));
         $('hm-chem').innerHTML = ch;
 
         // tabel en samenvatting
-        $('hm-tab').setAttribute('opacity', f1(step >= 6 ? 1 : step === 0 ? .2 : .08));
+        $('hm-tab').setAttribute('opacity', f1(step >= 7 ? 1 : step === 6 ? ease(sub(p, .45, .75)) : 0));   // pas in stap 7, eerst dokken de lezers
         [...$('hm-rows').children].slice(1).forEach(el => el.setAttribute('opacity', f1(1 - fade)));   // kader blijft, inhoud wijkt voor de samenvatting
         $('hm-tabsum').setAttribute('opacity', f1(fade));
         $('hm-dnalab').setAttribute('opacity', f1(1 - fade));
