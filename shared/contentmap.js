@@ -47,7 +47,8 @@ function addStyle() {
   if (styled) return; styled = true;
   const s = document.createElement('style');
   s.textContent = `
-.cmap { --cm-line: rgba(160,180,220,.16); --cm-mut: var(--muted, #93a0bb); --cm-acc: #7cc4ff; --cm-here: #ffc247; color: var(--text, #e8edf7); }
+/* --cm-bg = achtergrond waarop de kaart staat (app-venster: --bg-2; een pagina kan het zelf zetten) */
+.cmap { --cm-bg: var(--cmap-bg, var(--bg-2, #0d1426)); --cm-line: rgba(160,180,220,.16); --cm-mut: var(--muted, #93a0bb); --cm-acc: #7cc4ff; --cm-here: #ffc247; color: var(--text, #e8edf7); }
 .cmap button { font: inherit; color: inherit; }
 .cmap button:focus-visible, .cmap input:focus-visible { outline: 2px solid var(--cm-acc); outline-offset: 2px; }
 
@@ -88,7 +89,7 @@ function addStyle() {
 .cmap .cm-ln:hover { background: rgba(255,255,255,.05); }
 .cmap .cm-ln[aria-current="true"] { background: rgba(255,255,255,.07); border-color: var(--lc); }
 
-.cmap .cm-route header { margin-bottom: 12px; position: sticky; top: 0; z-index: 2; background: var(--bg-2, #0d1426); padding-bottom: 8px; }
+.cmap .cm-route header { margin-bottom: 12px; position: sticky; top: 0; z-index: 2; background: var(--cm-bg); padding-bottom: 8px; }
 .cmap .cm-route header small { display: block; font: 700 12px var(--mono, monospace); letter-spacing: .07em; text-transform: uppercase; color: var(--lc); }
 .cmap .cm-route header h3 { margin: 2px 0 4px; font-size: 21px; line-height: 1.25; }
 .cmap .cm-route header p { margin: 0; font-size: 13.5px; color: var(--cm-mut); }
@@ -102,7 +103,7 @@ function addStyle() {
 .cmap .cm-st > b { position: absolute; left: 3px; top: 7px; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; z-index: 1;
   background: var(--lc); color: #0a0f1d; font: 700 12.5px var(--mono, monospace); }
 .cmap .cm-st.later > b { background: #1a2338; color: var(--lc); box-shadow: inset 0 0 0 2px var(--lc); }
-.cmap .cm-st.here > b { box-shadow: 0 0 0 3px var(--bg-2, #0b1120), 0 0 0 6px var(--cm-here); }
+.cmap .cm-st.here > b { box-shadow: 0 0 0 3px var(--cm-bg), 0 0 0 6px var(--cm-here); }
 .cmap .cm-it { all: unset; cursor: pointer; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 10px; font-size: 15px; line-height: 1.3; }
 .cmap .cm-it:hover { background: rgba(255,255,255,.06); }
 .cmap .cm-it[aria-expanded="true"] { background: rgba(255,255,255,.07); }
