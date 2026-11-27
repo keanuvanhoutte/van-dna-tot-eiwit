@@ -176,7 +176,7 @@ export default {
           const k = ease(sub(p, .0, .15)), kR = sub(p, .2, .5), kU = ease(sub(p, .5, .65)), kD = ease(sub(p, .72, .95));
           nm += `<g opacity="${f1(k)}">`;
           nm += `<g opacity="${f1(1 - kD * .85)}">`;
-          nm += seg(x0, Y, e1, Y, C.rna, 12) + seg(e1, Y, e2, Y, '#ffb27a', 12) + seg(e2, Y, x1, Y, C.rna, 12);
+          if (kD < .01) nm += seg(x0, Y, e1, Y, C.rna, 12) + seg(e1, Y, e2, Y, '#ffb27a', 12) + seg(e2, Y, x1, Y, C.rna, 12);
           nm += `<circle cx="${x0 - 22}" cy="${Y}" r="21" fill="${C.cap}"/>` + txt(x0 - 22, Y + 5, 'm⁷G', '#3a1a05', 14, 'middle', 700);
           nm += txt(x1 + 10, Y + 5, 'AAAA…', C.rna, 15, 'start', 700, 'JetBrains Mono');
           nm += txt(e1 - 38, Y + 48, 'exon 1', C.muted, 17) + txt((e1 + e2) / 2, Y + 48, 'exon 2', C.muted, 17) + txt((e2 + x1) / 2, Y + 48, 'exon 3', C.muted, 17);
@@ -192,6 +192,15 @@ export default {
           nm += eiwit(ptc, Y - 97, 44, 20, C.prot2, { seed: 11, label: 'UPF1', fs: 17, op: kU * (1 - kD) });
           nm += `<g opacity="${f1(kU * (1 - kD))}">${seg(ptc + 34, Y - 94, e2 - 60, Y - 50, C.prot2, 3, 1, 'stroke-dasharray="6 5"')}</g>`;
           nm += '</g>';
+          // afbraak: het mRNA valt zichtbaar in stukjes uiteen (blijft goed te zien)
+          if (kD >= .01) {
+            const n = 10, L0 = (x1 - x0) / n;
+            for (let q = 0; q < n; q++) {
+              const a0 = x0 + q * L0, mid = a0 + L0 / 2, half = L0 / 2 * (1 - .55 * kD), dy = ((q * 37) % 5 - 2) * 9 * kD, col = mid > e1 && mid < e2 ? '#ffb27a' : C.rna;
+              nm += seg(mid - half, Y + dy, mid + half, Y + dy, col, 12, 1 - .35 * kD);
+            }
+            nm += `<g opacity="${f1(sub(p, .72, .8))}">` + txt(1160, Y - 60, T2('✂ in stukjes geknipt', '✂ cut into pieces'), C.danger, 24, 'middle', 800) + '</g>';
+          }
           nm += tag(1160, Y - 140, T2('stop in exon 1: ver vóór de laatste exon-exonovergang', 'stop in exon 1: far upstream of the last exon–exon junction'), C.text, 18, 'middle', sub(p, .3, .45));
           nm += tag(1160, Y + 100, T2('→ mRNA wordt afgebroken: weinig of geen afgeknot eiwit', '→ mRNA is degraded: little or no truncated protein'), C.danger, 18, 'middle', kD);
           nm += '</g>';
