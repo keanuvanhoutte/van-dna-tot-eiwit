@@ -7,9 +7,10 @@ import txnrna from './labels-txnrna.js';
 import tl from './labels-tl.js';
 import prot from './labels-prot.js';
 import bact from './labels-bact.js';
+import d3 from './labels-d3.js';           // naamkaartjes op de 3D-modellen
 import fix from './labels-fix.js';         // per animatie ('id|tekst'), uit de beeldcontrole
 import legend from './labels-legend.js';   // legende in het zijpaneel (apart: korte sleutels zoals H/N/O mogen de figuren niet raken)
-const parts = [entry, genome, repl, txnrna, tl, prot, bact, fix];
+const parts = [entry, genome, repl, txnrna, tl, prot, bact, d3, fix];
 export const LABELS = { nl: Object.assign({}, ...parts.map(p => p.nl)), en: Object.assign({}, ...parts.map(p => p.en)) };
 /* legende: eerst de eigen legendewoorden, anders dezelfde vervanging als in de figuur */
 const shown = m => Object.fromEntries(Object.entries(m).filter(([, v]) => v));   // in de figuur verborgen ('') ≠ weg uit de legende
