@@ -7,16 +7,69 @@ const IDC = '#7fdc6a';
 const DOM = [520, 460];
 
 /* deterministische "slierten": ensemble van conformaties */
-function tail(x0, y0, seed, t, n = 14, step = 34) {
+function tail(x0, y0, seed, t, n = 14, step = 34, lo = -1.5, hi = 1.5) {
   const pts = [[x0, y0]]; let a = -.2, x = x0, y = y0;
   for (let i = 1; i <= n; i++) {
     a += .9 * Math.sin(seed * 1.7 + i * 1.3 + t * .0011 * (1 + (i % 3) * .3)) + .25 * Math.sin(t * .0023 + i * seed);
-    a = clamp(a, -1.5, 1.5);
+    a = clamp(a, lo, hi);
     x += Math.cos(a) * step; y += Math.sin(a) * step * .9;
     pts.push([x, y]);
   }
   return pts;
 }
+
+/* gevouwen domein in detail: α-helix (lint met voor/achterkant), antiparallel β-blad (pijlen + H-bruggen),
+   lussen en een waterschuwe kern; keten loopt van N (links) door het domein naar de IDR (rechts) */
+const HELIXC = C.prot, STRANDC = '#ffc247';
+function helixRibbon(x0, y0, x1, y1, turns = 3.5, amp = 26) {
+  const n = Math.round(turns * 24), pts = [];
+  for (let i = 0; i <= n; i++) { const u = i / n, ph = u * turns * 2 * Math.PI; pts.push([x0 + (x1 - x0) * u, y0 + (y1 - y0) * u + Math.sin(ph) * amp, Math.cos(ph)]); }
+  let back = '', front = '';
+  for (let i = 0; i < n; i++) {
+    const [ax, ay, c] = pts[i], [bx, by] = pts[i + 1], seg = `M${f1(ax)},${f1(ay)}L${f1(bx)},${f1(by)}`;
+    if (c >= 0) front += seg; else back += seg;
+  }
+  return `<path d="${back}" stroke="${C.prot3}" stroke-width="9" stroke-linecap="round" fill="none"/>` +
+    `<path d="${front}" stroke="#0a1224" stroke-width="17" stroke-linecap="round" fill="none"/><path d="${front}" stroke="${HELIXC}" stroke-width="13" stroke-linecap="round" fill="none"/>` +
+    `<path d="${front}" stroke="#d8ccff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".7" transform="translate(0,-3)"/>`;
+}
+function strandArrow(x0, x1, y, h = 22) {
+  const d = Math.sign(x1 - x0), xb = x1 - d * 26;
+  return `<path d="M${x0},${y - h / 2} L${xb},${y - h / 2} L${xb},${y - h} L${x1},${y} L${xb},${y + h} L${xb},${y + h / 2} L${x0},${y + h / 2}Z" fill="${STRANDC}" stroke="#0a1224" stroke-width="3" stroke-linejoin="round"/>`;
+}
+function foldedDomain() {
+  const [cx, cy] = DOM, loop = pts => chain(pts, { col: '#b9a8ff', w: 6 });
+  let s = '';
+  // lussen (achter de elementen): N-uiteinde → helix → blad → uitgang naar de IDR
+  s += loop([[cx - 250, cy + 110], [cx - 200, cy + 60], [cx - 160, cy - 20], [cx - 120, cy - 75]]);           // N → begin helix
+  s += loop([[cx + 70, cy - 75], [cx + 125, cy - 45], [cx + 112, cy - 8], [cx + 80, cy + 6]]);                 // helix → streng 1
+  s += loop([[cx - 90, cy + 6], [cx - 125, cy + 25], [cx - 90, cy + 48]]);                                     // haarspeld 1
+  s += loop([[cx + 80, cy + 48], [cx + 112, cy + 68], [cx + 80, cy + 90]]);                                    // haarspeld 2
+  s += loop([[cx - 90, cy + 90], [cx - 50, cy + 122], [cx + 60, cy + 118], [cx + 120, cy + 60], [cx + 150, cy]]); // streng 3 → uitgang
+  // waterschuwe zijketens in de kern (tussen helix en blad)
+  [[-80, -20], [-40, -16], [0, -22], [40, -16], [75, -20]].forEach(([dx, dy]) => {
+    s += `<line x1="${cx + dx}" y1="${cy + dy}" x2="${cx + dx + 4}" y2="${cy + dy - 9}" stroke="${CLASSCOL.h}" stroke-width="3"/><circle cx="${cx + dx + 4}" cy="${cy + dy - 11}" r="6" fill="${CLASSCOL.h}" stroke="#0a1224" stroke-width="1.5" opacity=".9"/>`;
+  });
+  // β-blad: drie antiparallelle strengen met H-bruggen
+  for (let k = 0; k < 2; k++) for (let x = cx - 60; x <= cx + 50; x += 22) s += `<line x1="${x}" y1="${cy + 19 + k * 42}" x2="${x}" y2="${cy + 35 + k * 42}" stroke="#e8edf6" stroke-width="2" stroke-dasharray="3 3" opacity=".75"/>`;
+  // richting N→C volgt de lussen: streng 1 ←, haarspeld links, streng 2 →, haarspeld rechts, streng 3 ←
+  s += strandArrow(cx + 85, cx - 95, cy + 6) + strandArrow(cx - 90, cx + 85, cy + 48) + strandArrow(cx + 85, cx - 95, cy + 90);
+  // α-helix bovenaan
+  s += helixRibbon(cx - 120, cy - 75, cx + 70, cy - 75, 3.5, 22);
+  // uiteinden + korte labels buiten het domein
+  s += T(cx - 262, cy + 136, 'N', { size: 24, w: 800 });
+  s += T(cx - 175, cy - 118, T2('spiraal', 'helix'), { size: 20, col: '#c9b8ff', w: 700, anchor: 'end' }) + `<line x1="${cx - 170}" y1="${cy - 112}" x2="${cx - 120}" y2="${cy - 90}" stroke="#c9b8ff" stroke-width="2"/>`;
+  s += T(cx - 175, cy + 70, T2('strengen', 'strands'), { size: 20, col: STRANDC, w: 700, anchor: 'end' }) + `<line x1="${cx - 170}" y1="${cy + 58}" x2="${cx - 128}" y2="${cy + 50}" stroke="${STRANDC}" stroke-width="2"/>`;
+  return s;
+}
+/* n punten op gelijke afstand langs een polylijn (kralen = residuen) */
+function resample(P, n) {
+  const cum = [0]; for (let i = 1; i < P.length; i++) cum.push(cum[i - 1] + Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]));
+  const L = cum[cum.length - 1], out = []; let j = 0;
+  for (let k = 0; k < n; k++) { const d = L * k / (n - 1); while (j < P.length - 2 && cum[j + 1] < d) j++; const u = (d - cum[j]) / ((cum[j + 1] - cum[j]) || 1); out.push([lerp(P[j][0], P[j + 1][0], u), lerp(P[j][1], P[j + 1][1], u)]); }
+  return out;
+}
+const DIS_SEQ ='SPEKSGESPKQSEEPSKRGSDEQPK';   // zelfde illustratieve IDR-sequentie als in stap 3
 
 export default {
   id: 'idp',
@@ -105,8 +158,8 @@ export default {
 
     return svgOpen(arrowDefs('id', { m: C.muted, w: '#fff' })) + `
     <g data-node="tertiair" data-color="${C.prot}" data-label="${T2('Geordend domein (tertiaire structuur)', 'Ordered domain (tertiary structure)')}">
-      ${blob(DOM[0], DOM[1], 150, 120, { fill: 'rgba(155,123,255,.2)', stroke: C.prot, sw: 4, seed: 108 })}
-      ${[[-70, -30], [0, 30], [70, -20]].map(([dx, dy]) => { let d = ''; for (let k = 0; k <= 30; k++) d += `${k ? 'L' : 'M'}${f1(DOM[0] + dx - 40 + k * 2.7)},${f1(DOM[1] + dy + 12 * Math.sin(k * .75))}`; return `<path d="${d}" stroke="${C.prot}" stroke-width="6" fill="none"/>`; }).join('')}
+      ${blob(DOM[0], DOM[1], 155, 128, { fill: 'rgba(155,123,255,.12)', stroke: C.prot, sw: 3, seed: 108 })}
+      ${foldedDomain()}
       <circle data-anchor="tertiair" cx="${DOM[0]}" cy="${DOM[1] - 125}" r="1" fill="none"/>
     </g>
     <g id="id-tail"></g>
@@ -133,12 +186,18 @@ export default {
         if (step <= 1) {
           const n = step === 1 ? 6 : 1;
           for (let k = 0; k < n; k++) {
-            const pts = tail(DOM[0] + 150, DOM[1], 1 + k * .9, t + k * 700);
-            const op = k === 0 ? 1 : .28;
-            tl += chain(pts, { col: IDC, w: k === 0 ? 8 : 5, op });
+            if (k === 0) continue;
+            tl += chain(tail(DOM[0] + 150, DOM[1], 1 + k * .9, t + k * 700, 14, 34, -.55, 1.2), { col: IDC, w: 5, op: .28 });
           }
-          a += T(DOM[0], DOM[1] + 175, T2('gevouwen domein', 'folded domain'), { size: 22, col: C.prot });
+          // hoofdketen: één kraal per aminozuur (kleur = soort), 25 residuen zoals de sequentie in stap 3
+          const main = resample(tail(DOM[0] + 150, DOM[1], 1, t, 14, 34, -.55, 1.2), 26);
+          tl += chain(main, { col: IDC, w: 6 });
+          main.slice(1).forEach(([x, y], i) => { tl += `<circle cx="${f1(x)}" cy="${f1(y)}" r="9" fill="${CLASSCOL[AACLASS[DIS_SEQ[i]]]}" stroke="#0a1224" stroke-width="2"/>`; });
+          const end = main[main.length - 1];
+          tl += T(end[0] + 26, end[1] + 8, 'C', { size: 24, w: 800, anchor: 'start' });
+          a += T(DOM[0], DOM[1] + 185, T2('gevouwen domein', 'folded domain'), { size: 22, col: C.prot });
           a += T(1100, 250, T2('ongeordende regio (IDR)', 'disordered region (IDR)'), { size: 22, col: IDC });
+          a += T(1100, 280, T2('vooral geladen en polaire aminozuren', 'mostly charged and polar amino acids'), { size: 21, col: '#c9d2e4' });
           if (step === 1) {
             const k = sub(p, .4, .6);
             a += T(1080, 690, T2('vage lijnen: dezelfde keten,', 'faint lines: the same chain,'), { size: 22, col: '#c9d2e4', op: sub(p, .15, .3), anchor: 'start' }) +
