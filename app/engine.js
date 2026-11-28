@@ -436,14 +436,12 @@ function onStep(i) {
   renderBridge(i);
   capPlace(); clearTimeout(onStep.h); onStep.h = setTimeout(() => capAuto(), 900);
 }
-/* Rode draad van het verhaal, zichtbaar in het uitlegvenster:
- * - eerste stap van een hoofdstuk: de openingszin (`intro` in story.js, per verhaallijn) die zegt waar we in het verhaal zijn;
- * - eindbeeld van de laatste stap: de overgangszin (`bridge`) naar het volgende hoofdstuk. */
+/* Rode draad van het verhaal: bij de eerste stap van een hoofdstuk één zin (`intro` in story.js, per verhaallijn)
+ * die zegt waar we in het verhaal zijn. De overgangszin naar het volgende hoofdstuk (`bridge`) komt niet in beeld:
+ * die hoort bij de knop "Volgend: …" rechts in de speler. */
 function renderBridge(i) {
   const el = $('capBridge'), ci = current ? STORY_IDS.indexOf(current.id) : -1, ch = ci >= 0 ? STORY[ci] : null;
-  let h = '';
-  if (ch && i === 0 && ch.intro && !(done && current.steps.length === 1)) h = `<b>${L({ nl: 'In het verhaal', en: 'In the story' })}</b>${colourWords(esc(L(bridgeOf(ch.intro))))}`;
-  else if (ch && done && i === current.steps.length - 1 && ci < STORY.length - 1 && ch.bridge) h = `<b>${L({ nl: 'Zo gaat het verder', en: 'What happens next' })}</b>${colourWords(esc(L(bridgeOf(ch.bridge))))}`;
+  const h = ch && i === 0 && ch.intro ? `<b>${L({ nl: 'In het verhaal', en: 'In the story' })}</b>${colourWords(esc(L(bridgeOf(ch.intro))))}` : '';
   if (el.innerHTML === h) return;
   el.innerHTML = h; el.hidden = !h; capPlace();
 }
@@ -486,7 +484,6 @@ function setAuto(v) {
 function hold() {
   held = true; holdT = 0; done = true; syncPlayBtn();
   if (isLast() && !endedOnce) { endedOnce = true; renderNext(); }
-  if (isLast()) renderBridge(stepInfo(t).step);
 }
 /* speel stap i vanaf tijdstip 'from' (optioneel eerst zichtbaar spoelen) tot het einde van die stap */
 function playStep(i, from = null) {
