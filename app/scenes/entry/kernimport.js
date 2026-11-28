@@ -39,7 +39,7 @@ export default {
     ST(8000, cam(PX, 500, 900), 'De kernporie: een grote poort', 'The nuclear pore: a large gate',
       'Elke porie is een grote poort uit zo’n 30 soorten eiwitten. Een menselijke kern heeft er duizenden.',
       'Each pore is a large gate made of about 30 kinds of proteins. A human nucleus has thousands of them.'),
-    ST(7000, cam(PX, 495, 700), 'De porie werkt als een zeef', 'The pore works like a sieve',
+    ST(7000, cam(PX, 495, 820), 'De porie werkt als een zeef', 'The pore works like a sieve',
       'Eiwitslierten in het kanaal werken als een zeef. Kleine moleculen glippen erdoor, grote hebben hulp nodig.',
       'Protein strands in the channel act as a sieve. Small molecules slip through; large ones need help.'),
     ST(7000, cam(580, 380, 900), 'Een adreslabel voor de kern', 'An address label for the nucleus',
@@ -226,10 +226,10 @@ export default {
         if (step === 2) {
           const k = ease(sub(p, .15, .5));
           const bob = Math.sin(tt * 3) * 6;   // groot molecuul botst boven op de zeef en raakt er niet door
-          no += `<g opacity="${f1(k)}">${txt(PX - 225, PY - 150, T2('eiwitslierten = zeef', 'protein strands = sieve'), '#b9a6ff', 22)}
-            ${txt(PX - 225, PY - 128, T2('(FG-herhalingen)', '(FG repeats)'), C.muted, 16)}
+          no += `<g opacity="${f1(k)}">${txt(PX - 205, PY - 150, T2('eiwitslierten = zeef', 'protein strands = sieve'), '#b9a6ff', 22)}
+            ${txt(PX - 205, PY - 128, T2('(FG-herhalingen)', '(FG repeats)'), C.muted, 16)}
             <circle cx="${PX + 230}" cy="${f1(PY - 140 + bob)}" r="30" fill="#ff9d5c" fill-opacity=".85" stroke="#ff9d5c" stroke-width="2"/>
-            ${txt(PX + 230, PY - 82, T2('groot:', 'large:'), '#ff9d5c', 21)}${txt(PX + 230, PY - 58, T2('heeft hulp nodig', 'needs help'), '#ff9d5c', 21)}
+            ${txt(PX + 252, PY - 82, T2('groot:', 'large:'), '#ff9d5c', 21)}${txt(PX + 252, PY - 58, T2('heeft hulp nodig', 'needs help'), '#ff9d5c', 21)}
             ${txt(PX + 245, PY + 90, T2('klein:', 'small:'), '#7fdc6a', 21)}${txt(PX + 245, PY + 114, T2('glipt erdoor', 'slips through'), '#7fdc6a', 21)}
             <circle cx="${f1(PX + Math.sin(tt * 2) * 34)}" cy="${f1(PY - 40 + ((tt * 90) % 160))}" r="9" fill="#7fdc6a"/></g>`;
         }

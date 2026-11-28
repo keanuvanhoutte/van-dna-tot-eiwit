@@ -90,7 +90,7 @@ const SCENE = {
     <g id="sf-lbl"></g>
     </svg>`;
   },
-  init(svg) {
+  init(svg, api) {
     const $ = id => svg.getElementById(id);
     return {
       update(t, s) {
@@ -237,7 +237,10 @@ const SCENE = {
           L(430, DY + 80, 'SRE', { col: '#fff', size: 28, w: 800 });
         }
         if (step === 8) {
-          L(205, 335, T2('P eraf (fosfatase)', 'P off (phosphatase)'), { col: '#ffb3c7', size: 22, anchor: 'end', op: sub(p, .5, .7) });
+          { // vaktaal ('defosforylering (fosfatase)') is te lang voor links van de fosfaten: over twee regels
+            const s0 = T2('P eraf (fosfatase)', 'P off (phosphatase)'), s1 = (api?.easy ?? (x => x))(s0), k = s1.lastIndexOf(' '), o = { col: '#ffb3c7', size: 22, anchor: 'end', op: sub(p, .5, .7) };
+            if (s1.length > 20 && k > 0) { L(205, 318, s1.slice(0, k), o); L(205, 346, s1.slice(k + 1), o); } else L(205, 335, s0, o);
+          }
           L(1190, 360, T2('kortlevend', 'short-lived'), { col: C.rna, size: 22, anchor: 'start', op: sub(p, .5, .7) });
         }
         $('sf-lbl').innerHTML = lb;

@@ -77,7 +77,7 @@ export default {
       [T2('methyl-lezer', 'methyl reader'), T2('PHD-vinger', 'PHD finger'), T2('me3 op K4', 'me3 on K4'), COLS.act, 'aan'],
     ];
     let tab = `<rect x="690" y="560" width="850" height="270" rx="18" fill="rgba(13,20,38,.6)" stroke="#2a3a60" stroke-width="2"/>` +
-      txt(715, 600, T2('Elke lezer past op één merkteken', 'Each reader fits one mark'), '#c9d2e4', 22, 'start', 700) + txt(1150, 600, T2('leest', 'reads'), C.muted, 17, 'middle', 600) + txt(1390, 600, T2('gevolg', 'result'), C.muted, 17, 'middle', 600);
+      txt(715, 600, T2('Elke lezer past op één merkteken', 'Each reader fits one mark'), '#c9d2e4', 20, 'start', 700) + txt(1150, 624, T2('leest', 'reads'), C.muted, 17, 'middle', 600) + txt(1390, 624, T2('gevolg', 'result'), C.muted, 17, 'middle', 600);
     rows.forEach(([nm, vak, mark, col, eff], i) => {
       const y = 656 + i * 62;
       tab += `<path d="M720,${y - 18} q20,-12 44,0 q16,10 0,26 q-24,12 -44,0 z" fill="rgba(155,123,255,.45)" stroke="${C.prot}" stroke-width="2"/>` +
@@ -108,7 +108,7 @@ export default {
     </g>
     </svg>`;
   },
-  init(svg) {
+  init(svg, api) {
     const $ = id => svg.getElementById(id);
     return {
       update(t, s) {
@@ -183,8 +183,10 @@ export default {
         const kIco = (x, plus, m, mc) => `<circle cx="${x}" cy="520" r="17" fill="${CLASSCOL['+']}" stroke="#0a1224" stroke-width="2"/>${txt(x, 526, 'K', '#0a1224', 17, 'middle', 800, 'JetBrains Mono')}` +
           (plus ? txt(x + 15, 504, '+', '#fff', 20, 'middle', 800) : '') + (m ? flag(x, 504, m, mc, 1, 14) : '');
         const pijl = x => `<path d="M${x},514 L${x + 40},514" stroke="#fff" stroke-width="3" marker-end="url(#arrow)"/>`;
-        if (step === 2) ch = box(1, kIco(1005, true) + pijl(1040) + kIco(1115, false, 'ac', COLS.ac) + txt(1150, 524, T2('+ lading weg → DNA laat los', '+ charge gone → DNA lets go'), '#fff', 21, 'start', 700));
-        if (step === 3) ch = box(1, kIco(1005, false, 'ac', COLS.ac) + pijl(1040) + kIco(1115, true) + txt(1150, 524, T2('+ lading terug → DNA hecht weer', '+ charge back → DNA binds again'), '#fff', 21, 'start', 700));
+        /* lange zin (vaktaal) past niet op één regel in het kader: splitsen vóór de pijl '→' */
+        const zin = s0 => { const s = api?.easy ? api.easy(s0) : s0; return s.length > 30 && s.includes(' → ') ? txt(1150, 510, s.slice(0, s.indexOf(' → ')), '#fff', 21, 'start', 700) + txt(1150, 538, s.slice(s.indexOf(' → ') + 1), '#fff', 21, 'start', 700) : txt(1150, 524, s, '#fff', 21, 'start', 700); };
+        if (step === 2) ch = box(1, kIco(1005, true) + pijl(1040) + kIco(1115, false, 'ac', COLS.ac) + zin(T2('+ lading weg → DNA laat los', '+ charge gone → DNA lets go')));
+        if (step === 3) ch = box(1, kIco(1005, false, 'ac', COLS.ac) + pijl(1040) + kIco(1115, true) + zin(T2('+ lading terug → DNA hecht weer', '+ charge back → DNA binds again')));
         if (step === 4) ch = box(1, kIco(1005, true, 'me3', COLS.act) + txt(1065, 524, T2('1, 2 of 3 methyl: de + lading blijft', '1, 2 or 3 methyl: the + charge stays'), '#fff', 21, 'start', 700));
         $('hm-chem').innerHTML = ch;
 

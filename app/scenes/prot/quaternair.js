@@ -30,7 +30,7 @@ export default molScene({
       <text x="1290" y="599" font-size="22" text-anchor="middle" fill="${C.chain}" font-family="Inter" font-weight="600">${T2('Eén letter in de primaire structuur', 'One letter in the primary structure')}</text>
       <circle data-anchor="primair" cx="1290" cy="568" r="1" fill="none"/>
     </g>
-    <g class="q-hs2" data-node="ptm" data-color="${C.prot}" data-label="${T2('Volgende: post-translationele modificaties', 'Next: post-translational modifications')}">
+    <g class="q-hs2" data-node="ptm" data-color="${C.prot}" data-nolabel data-label="${T2('Volgende: post-translationele modificaties', 'Next: post-translational modifications')}">
       <rect x="1030" y="662" width="520" height="48" rx="12" fill="rgba(155,123,255,.16)" stroke="${C.prot}"/>
       <text x="1290" y="694" font-size="22" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="600">${T2('Verder: modificaties na de translatie', 'Next: modifications after translation')}</text>
       <circle data-anchor="ptm" cx="1290" cy="662" r="1" fill="none"/>
@@ -102,7 +102,7 @@ export default molScene({
         }
         c.label('α1', c.center(c.sel({ chain: 'A', atom: 'CA' })), { size: 20, border: CH.A[1] }); c.label('β1', c.center(c.sel({ chain: 'B', atom: 'CA' })), { size: 20, border: CH.B[1] });
       },
-      zoom: { chain: ['A', 'B'] }, spin: .02,
+      zoom: {}, spin: .02,   // hele tetrameer in beeld (zoals de andere stappen): ingezoomd op α1β1 werd het tetrameer rechts afgekapt door de rand van het 3D-venster (vóór de infokaart)
       panel: c => phead(T2('Grensvlak α1β1', 'Interface α1β1')) + plines(222, [
         [T2(`${c.data.ab?.A.length ?? '…'} residuen van α1 + ${c.data.ab?.B.length ?? '…'} van β1`, `${c.data.ab?.A.length ?? '…'} residues of α1 + ${c.data.ab?.B.length ?? '…'} of β1`), '#ffc247', 23, 700],
         [T2('(binnen 4 Å van de andere keten)', '(within 4 Å of the other chain)'), C.muted, 21]]),

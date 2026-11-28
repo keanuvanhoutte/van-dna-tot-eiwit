@@ -151,7 +151,7 @@ export default {
         o += `<g opacity="${f1(ovL)}">` + br(x0, cs, C.muted) + br(cs, ce, C.rna) + br(ce, ue, C.muted) + br(aS, aE, C.rna) +
           txt((x0 + cs) / 2, YM - 110, "5′-UTR", C.text, 100, 'middle', 700) + txt((cs + ce) / 2, YM - 110, T2('wordt vertaald', 'is translated'), C.rna, 110, 'middle', 800) +
           txt((ce + ue) / 2, YM - 110, "3′-UTR", C.text, 100, 'middle', 700) + txt((aS + aE) / 2, YM - 110, 'poly(A)', C.rna, 100, 'middle', 700) +
-          txt(capX, YM + 230, T2("kapje", "cap"), C.cap, 100, 'middle', 700) +
+          txt(capX - 100, YM + 230, T2("kapje", "cap"), C.cap, 100, 'start', 700) +
           tick(cs, C.text) + tick(ce, C.danger) +
           txt(cs, YM + 230, 'start (AUG)', C.text, 100, 'middle', 800) + txt(ce, YM + 230, 'stop (UAA)', C.danger, 100, 'middle', 800) + '</g>';
       }
@@ -191,7 +191,7 @@ export default {
       let g = pts.length > 1 ? `<path d="${pts.map((p, i) => `${i ? 'L' : 'M'}${f1(p[0])},${f1(p[1])}`).join('')}" stroke="${C.chain}" stroke-width="4" fill="none"/>` : '';
       g += pts.map(([x, y, a]) => bead(x, y, a, 21)).join('');
       const tip = pts[Math.min(3, pts.length - 1)] ?? anchor;
-      const nt = pts[pts.length - 1] ?? anchor, ca = released > .5 ? [FOLD[0] + 200, FOLD[1] + 10] : n <= 4 ? [TUNNEL[0], TUNNEL[1] - 20] : [TUNNEL[0] + 130, TUNNEL[1] - 70];   // korte keten: label boven de tunneluitgang (niet op het PTC-label)
+      const nt = pts[pts.length - 1] ?? anchor, ca = released > .5 ? [FOLD[0] + 250, FOLD[1] + 10] : n <= 4 ? [TUNNEL[0], TUNNEL[1] - 20] : [TUNNEL[0] + 130, TUNNEL[1] - 70];   // korte keten: label boven de tunneluitgang (niet op het PTC-label)
       $('tl-chainA').setAttribute('cx', f1(ca[0])); $('tl-chainA').setAttribute('cy', f1(ca[1]));
       return g;
     }
@@ -240,7 +240,7 @@ export default {
              C.prot2, step === 3 ? o1 * (1 - sub(p, .5, .9)) : step === 4 ? 0 : o1, 23);
           eif += factor(SITE.P - 190, 705, 100, 44, 'eIF1', C.prot3, step === 3 ? o1 * (1 - sub(p, .5, .9)) : step === 4 ? 0 : o1, 23);
           if (step === 1) eif += `<g opacity="${f1(sub(p, .45, .7))}">` + txt(515, 716, T2('hulpeiwitten (eIF)', 'helper proteins (eIF)'), C.prot, 24, 'end', 800) + '</g>';
-          if (step === 4) eif += factor(SITE.A + 40, 150 - 160 * (1 - ease(sub(p, 0, .6))), 146, 34, 'eIF5B·GTP', C.prot2, 1 - sub(p, .7, 1), 18);
+          if (step === 4) eif += factor(SITE.A + 40, 150 - 160 * (1 - ease(sub(p, 0, .6))), 146, 34, 'eIF5B·GTP', C.prot2, 1 - sub(p, .65, .9), 18);   // weg vóór het eindbeeld van de stap (geen spookpil)
         }
         if (step === 2) eif += `<path d="M${SITE.P - 180},${YM + 150} h360" stroke="${C.muted}" stroke-width="3" marker-end="url(#arrow)"/>` + txt(SITE.P, YM + 196, T2("scannen 5′→3′", "scanning 5′→3′"), C.text, 22);
         $('tl-eif').innerHTML = eif;

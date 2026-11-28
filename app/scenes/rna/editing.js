@@ -44,7 +44,7 @@ export default {
     ST(7500, cam(1210, 440, 830), "Een C wordt een U", "A C becomes a U",
       "Het enzym maakt daar van een C een U. Zo ontstaat halverwege een stopsein: CAA wordt UAA.",
       "The enzyme turns a C into a U there. This creates a stop signal halfway: CAA becomes UAA."),
-    ST(8500, cam(1200, 500, 1000), "Eén gen, twee eiwitten", "One gene, two proteins",
+    ST(8500, cam(1200, 476, 1000), "Eén gen, twee eiwitten", "One gene, two proteins",
       "De lever maakt het volledige eiwit. De darm stopt bij het nieuwe stopsein en maakt ongeveer de voorste helft.",
       "The liver makes the full protein. The gut stops at the new stop signal and makes roughly the front half."),
   ],

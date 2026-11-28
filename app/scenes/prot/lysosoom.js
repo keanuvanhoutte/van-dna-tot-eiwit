@@ -121,7 +121,7 @@ export default {
     return svgOpen(bioDefs) + `
     <g data-node="golgi" data-color="${C.mem}" data-label="${T2('Golgi', 'Golgi')}">${golgi}<circle data-anchor="golgi" cx="380" cy="200" r="1" fill="none"/></g>
     ${T(GX(0), 584, 'cis', { size: 22, col: C.muted })}${T(GX(3), 584, 'trans', { size: 22, col: C.muted })}${arrow(GX(0) + 26, 577, GX(3) - 34, 577, C.muted, 2)}
-    ${T(394, 655, 'Golgi', { size: 28, col: C.mem })}
+    <g id="ly-golab">${T(394, 655, 'Golgi', { size: 28, col: C.mem })}</g>
     <g id="ly-endo"><g data-node="endocytose" data-color="${ENDO}" data-nolabel>${blaasje(EN[0], EN[1], ER0, { lumen: 'rgba(201,165,116,.13)', rand: ENDO, w: 12 })}</g>
     ${T(EN[0], EN[1] + ER0 + 25, T2('endosoom', 'endosome'), { size: 24, col: ENDO })}
     <g id="ly-epump"></g></g>
@@ -168,6 +168,7 @@ export default {
         $('ly-epump').innerHTML = [2.3, 2.85].map(a => vATPase(EN[0] + Math.cos(a) * ER0, EN[1] + Math.sin(a) * ER0, a, { s: .8, k: kIntro })).join('');
         // het endosoom valt weg in de ingezoomde Golgi-stappen (half in beeld, onder de ondertitel)
         $('ly-endo').setAttribute('opacity', f1(step === 1 ? 1 - ease(sub(p, 0, .15)) : step === 2 ? 0 : step === 3 ? ease(sub(p, 0, .12)) : 1));
+        $('ly-golab').setAttribute('opacity', $('ly-endo').getAttribute('opacity'));   // ook het onderschrift 'Golgi' viel daar achter de ondertitel (het Golgi-label bovenaan blijft)
         let g = '', kn = '', fx = '';
         // enzymen in het lysosoom (verdwijnen bij I-cel; bij Pompe blijven ze, op één na)
         LENZ.forEach(([x, y], i) => {

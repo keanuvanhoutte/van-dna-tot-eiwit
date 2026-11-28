@@ -157,7 +157,8 @@ export default {
         // stap 7: de kaartjes onder de kaders, niet dwars over de A- en Z-helix
         for (const [id, x7, y7, x0] of [['vf-hs-rna', 330, 150, 150], ['vf-hs-sc', 1270, 71, 1440]]) {   // boven de naam van de helix
           const a = svg.querySelector('#' + id + ' circle');
-          a.setAttribute('cx', step === 7 ? x7 : x0); a.setAttribute('cy', step === 7 ? y7 : 420);
+          const boven = step === 7 || (step === 2 && id === 'vf-hs-rna');   // stap 3 (A-DNA ingezoomd): kaartje boven de naam i.p.v. over de helix
+          a.setAttribute('cx', boven ? x7 : x0); a.setAttribute('cy', boven ? y7 : 420);
         }
         vis('vf-hs-nt', step === 6 ? 1 : 0);
       },

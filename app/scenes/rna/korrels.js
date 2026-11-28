@@ -70,7 +70,7 @@ export default {
   ],
   svg() {
     return svgOpen() + `<g id="ko-v"></g>
-    ${btn('idp', 40, 400, T2('↑ eiwitten zonder vaste vorm', '↑ proteins without a fixed shape'), STICK)}
+    <g id="kg-idpbtn">${btn('idp', 40, 400, T2('↑ eiwitten zonder vaste vorm', '↑ proteins without a fixed shape'), STICK)}</g>
     ${btn('mrnaafbraak', 1150, 410, T2('volgende: afbraak van mRNA →', 'next: breakdown of mRNA →'), PB)}
     </svg>`;
   },
@@ -79,6 +79,7 @@ export default {
     return {
       update(t, s) {
         const { step, p } = s;
+        $('kg-idpbtn').style.visibility = step === 6 ? 'hidden' : '';   // stap 7 (ingezoomd): de knop viel half boven het beeld
         const ph = (i, a, b) => step > i ? 1 : step < i ? 0 : ease(sub(p, a, b));
         // toestand van de cel
         const heat = step < 1 ? 0 : step === 1 ? ease(sub(p, 0, .35)) : step < 4 ? 1 : step === 4 ? 1 - ease(sub(p, 0, .35)) : 0;

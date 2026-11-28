@@ -162,6 +162,7 @@ export default {
         $('tx-tata').setAttribute('opacity', step <= 3 ? 1 : 0);
         $('tx-ctdp').setAttribute('opacity', 1);
         $('tx-ctdlab').setAttribute('opacity', step === 2 || step === 7 ? 1 : 0);
+        $('tx-ctdlab').setAttribute('transform', step === 7 ? 'translate(8 -34)' : '');   // stap 8: rechts naast de S5P-pilletjes, vrij van 'positieve supercoils (+)'
         $('tx-strandlab').setAttribute('opacity', step === 0 || step === 8 ? 1 : step === 4 ? f1(sub(p, .85, .95)) : 0);   // pas als Pol II voorbij is
         $('tx-strandlab').setAttribute('transform', step === 4 ? 'translate(-200 0)' : step === 0 ? 'translate(-150 0)' : '');   // stap 1: volledig in beeld; stap 5: links van Pol II   // in stap 5 links van Pol II en het RNA
 

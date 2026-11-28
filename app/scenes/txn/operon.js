@@ -93,7 +93,7 @@ export default {
       text: { nl: 'Zolang er glucose is, start het RNA-enzym maar zelden. In het klassieke model krijgt het helper-eiwit CAP dan geen signaal.', en: 'As long as there is glucose, the RNA enzyme starts only rarely. In the classic model the helper protein CAP then gets no signal.' } },
     { dur: 10000, cam: cam(790, 440, 1420), title: { nl: 'Glucose op: volle kracht', en: 'Glucose gone: full power' },
       text: { nl: 'Zonder glucose stijgt een signaalstof (cAMP). CAP bindt dan bij de startplek en trekt het RNA-enzym aan.', en: 'Without glucose a signal molecule (cAMP) rises. CAP then binds near the start site and attracts the RNA enzyme.' } },
-    { dur: 13000, cam: cam(960, 390, 1180), title: { nl: 'Kopiëren en vertalen tegelijk', en: 'Copying and translating at once' },
+    { dur: 13000, cam: cam(890, 390, 1320), title: { nl: 'Kopiëren en vertalen tegelijk', en: 'Copying and translating at once' },
       text: { nl: 'Bacteriën hebben geen kern: ribosomen lezen het mRNA al terwijl het nog groeit. Eén mRNA levert drie eiwitten.', en: 'Bacteria have no nucleus: ribosomes read the mRNA while it is still growing. One mRNA yields three proteins.' } },
     { dur: 12000, cam: cam(790, 440, 1420), title: { nl: 'Twee signalen, één uitkomst', en: 'Two signals, one outcome' },
       text: { nl: 'De genen staan pas volop aan als er lactose is (rem weg) én geen glucose (CAP gebonden).', en: 'The genes are only fully on when there is lactose (brake gone) and no glucose (CAP bound).' } },

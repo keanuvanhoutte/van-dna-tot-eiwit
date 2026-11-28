@@ -62,7 +62,7 @@ export default {
       text: { nl: 'Een hulpeiwit opent met energie (ATP) het DNA bij het startpunt. Het enzym koppelt de eerste RNA-bouwstenen.', en: 'A helper protein uses energy (ATP) to open the DNA at the start point. The enzyme joins the first RNA building blocks.' } },
     { dur: 8000, cam: cam(900, 450, 1200), title: { nl: 'Een fosfaat op de staart', en: 'A phosphate on the tail' },
       text: { nl: 'Het enzym krijgt fosfaatgroepjes op zijn lange staart. Daarna laat het de meeste hulpeiwitten los en vertrekt.', en: 'The enzyme gets phosphate groups on its long tail. It then lets go of most helper proteins and sets off.' } },
-    { dur: 8000, cam: cam(848, 450, 1290), title: { nl: 'Een korte pauze', en: 'A short pause' },
+    { dur: 8000, cam: cam(790, 450, 1420), title: { nl: 'Een korte pauze', en: 'A short pause' },
       text: { nl: 'Na ~25–50 bouwstenen houden twee eiwitten het enzym even vast. Bij veel menselijke genen is dit een controlepunt.', en: 'After ~25–50 building blocks, two proteins hold the enzyme in place. For many human genes this is a checkpoint.' } },
     { dur: 9000, cam: cam(1200, 450, 1300), title: { nl: 'Het enzym mag verder', en: 'The enzyme may move on' },
       text: { nl: 'Een enzym zet fosfaten op de staart en de pauze-eiwitten. Eén vertrekt, het andere rijdt mee → volgend hoofdstuk.', en: 'An enzyme adds phosphates to the tail and the pause proteins. One leaves, the other rides along → next chapter.' } },

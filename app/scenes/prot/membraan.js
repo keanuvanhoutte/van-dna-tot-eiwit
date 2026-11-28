@@ -187,7 +187,7 @@ export default {
         if (kZoom > .01) {
           const o = kZoom * kLab, rx = HX + 70;
           fx += `<g opacity="${f1(o)}"><line x1="${rx}" y1="${MT}" x2="${rx}" y2="${MB}" stroke="${C.text}" stroke-width="3"/><line x1="${rx - 10}" y1="${MT}" x2="${rx + 10}" y2="${MT}" stroke="${C.text}" stroke-width="3"/><line x1="${rx - 10}" y1="${MB}" x2="${rx + 10}" y2="${MB}" stroke="${C.text}" stroke-width="3"/></g>` +
-            T(rx + 22, MY + 9, T2('≈ 3 nm', '≈ 3 nm'), { size: 26, anchor: 'start', op: o }) + T(rx - 20, MB + 44, T2('≈ 20 bouwstenen', '≈ 20 building blocks'), { size: 22, anchor: 'start', col: HYD, op: o });
+            T(rx, MT - 16, T2('≈ 3 nm', '≈ 3 nm'), { size: 26, anchor: 'middle', op: o }) + T(rx - 20, MB + 44, T2('≈ 20 bouwstenen', '≈ 20 building blocks'), { size: 22, anchor: 'start', col: HYD, op: o });
         }
         // blaasje met het eiwit in de wand (stap 6)
         let ves = '';

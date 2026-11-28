@@ -57,7 +57,7 @@ export default structure3d({
     { dur: 9000, title: L3('Het hart: een magnesiumion', 'The heart: a magnesium ion'), zoom: { chain: 'A', resi: range(493, 499) }, spin: .006, pad: .6,
       focus: [{ sel: { chain: 'A', resi: range(484, 506) }, style: { cartoon: { color: COL.A } } }, { sel: { chain: 'A', resi: [495, 497, 499] }, style: { stick: { color: '#e7dcff', radius: .45 } } },
         { sel: MG, style: { sphere: { color: '#7fdc6a', radius: 2.4 } }, label: L3('Mg²⁺', 'Mg²⁺'), labelColor: '#7fdc6a', labelOff: [110, 70] },
-        { sel: { chain: 'P' }, style: { cartoon: { color: C.rna }, stick: { color: C.rna, radius: .3 } }, label: L3('RNA', 'RNA'), labelColor: C.rna, labelOff: [-130, 30] }],
+        { sel: { chain: 'P' }, style: { cartoon: { color: C.rna }, stick: { color: C.rna, radius: .3 } }, label: L3('RNA', 'RNA'), labelColor: C.rna, labelOff: [-130, 30], labelSel: { chain: 'P', resi: [18, 19, 20] } }],   // anker op het 3′-uiteinde bij Mg²⁺ (in beeld), niet het midden van de hele keten
       text: L3('Rpb1 houdt een magnesiumion (Mg²⁺) vast. Dat ion helpt elke nieuwe bouwsteen aan het RNA te koppelen.', 'Rpb1 holds a magnesium ion (Mg²⁺). This ion helps join each new building block to the RNA.') },
     { dur: 9000, title: L3('Een lusje dat dichtklapt', 'A loop that snaps shut'), zoom: { chain: 'A', resi: range(832, 869).concat(range(1099, 1129), [495]) }, pad: 1, spin: .008,
       focus: [{ sel: { chain: 'A', resi: range(832, 869), atom: 'CA' }, style: { sphere: { color: '#7fdc6a', radius: 2.2 } }, label: L3('brughelix', 'bridge helix'), labelColor: '#7fdc6a' },

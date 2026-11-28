@@ -9,6 +9,7 @@ export default {
       'chromatine|Lussen en buurten': 'Lussen en TAD’s',
       'chromatine|elk vakje = twee stukken DNA (A en B) · hoe roder, hoe vaker ze elkaar raken': 'elk vakje = contactfrequentie van loci A en B · roder = vaker',
       'chromatine|buurt': 'TAD',
+      'chromatine|(TAD)': '',
       /* histonmod */
       'histonmod|Elke lezer past op één merkteken': 'Elk lezerdomein herkent één modificatie',
       'histonmod|+ lading weg → DNA laat los': '+ lading geneutraliseerd → zwakkere DNA-binding',
@@ -132,6 +133,7 @@ export default {
       'chromatine|Loops and neighbourhoods': 'Loops and TADs',
       'chromatine|each square = two pieces of DNA (A and B) · the redder, the more often they touch': 'each square = contact frequency of loci A and B · redder = more frequent',
       'chromatine|neighbourhood': 'TAD',
+      'chromatine|(TAD)': '',
       'histonmod|Each reader fits one mark': 'Each reader domain recognises one mark',
       'histonmod|+ charge gone → DNA lets go': '+ charge neutralised → weaker DNA binding',
       'histonmod|+ charge back → DNA binds again': '+ charge restored → stronger DNA binding',

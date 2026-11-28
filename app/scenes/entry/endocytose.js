@@ -85,7 +85,7 @@ export default {
       <g id="en-ribo-body"></g>
     </g>
     <g id="en-notes"></g>
-    ${btn('viruskopie', 1140, 400, T2('een RNA-virus aan het werk →', 'an RNA virus at work →'), C.rna, 188)}
+    <g id="en-vbtn">${btn('viruskopie', 1140, 400, T2('een RNA-virus aan het werk →', 'an RNA virus at work →'), C.rna, 188)}</g>
     </svg>`;
   },
 
@@ -115,6 +115,7 @@ export default {
       update(t, s) {
         const { step, p } = s;
         const tt = t / 1000;
+        $('en-vbtn').style.visibility = step === 4 ? 'hidden' : '';   // stap 5: de knop viel half buiten beeld (rechtsboven); in de laatste stap staat hij volledig in beeld
         const [cx, cy, cr, pH] = cargo(step, p);
 
         /* membraan */

@@ -63,7 +63,7 @@ export default {
     <g data-node="resistentie" data-nolabel data-color="${C.ok}" data-label="${T2('Hoe bacteriën resistent worden', 'How bacteria become resistant')}"><rect x="1010" y="690" width="550" height="50" rx="12" fill="transparent"/><circle data-anchor="resistentie" cx="1285" cy="715" r="1" fill="none"/></g>
     </svg>`;
   },
-  init(svg) {
+  init(svg, api) {
     const $ = id => svg.getElementById(id);
     return {
       update(t, s) {
@@ -141,7 +141,9 @@ export default {
           sd += `<g opacity="${f1(sub(p, .55, .8))}">` + txt(MX, 585, T2('→ geen of foute eiwitten', '→ no proteins or faulty ones'), C.text, 24, 'middle', 700) + '</g>';
         }
         if (step === 5) {
-          sd += txt(X + 30, 205, T2('Doelwit', 'Target'), C.muted, 21, 'start', 700) + txt(X + 215, 205, T2('Bacterie', 'Bacterium'), C.muted, 21, 'start', 700) + txt(X + 345, 205, T2('Mens', 'Human'), C.muted, 21, 'start', 700);
+          sd += txt(X + 30, 205, T2('Doelwit', 'Target'), C.muted, 19, 'start', 700) + txt(X + 212, 205, T2('Bacterie', 'Bacterium'), C.muted, 19, 'start', 700) + txt(X + 322, 205, T2('Mens', 'Human'), C.muted, 19, 'start', 700);
+          // lange vaktaal-cel (bv. 'geen rifampicinepocket') over twee regels, anders loopt ze rechts uit de tabel
+          const cel = (s0, y) => { const s = (api?.easy ?? (x => x))(s0), k = s.lastIndexOf(' '); return s.length > 17 && k > 0 ? txt(X + 322, y - 12, s.slice(0, k), C.ok, 22, 'start', 700) + txt(X + 322, y + 14, s.slice(k + 1), C.ok, 22, 'start', 700) : txt(X + 322, y, s, C.ok, 22, 'start', 700); };
           const rows = [
             [T2('celwand', 'cell wall'), T2('ja', 'yes'), T2('geen', 'none')],
             ['gyrase', T2('ja', 'yes'), T2('topo II: anders', 'topo II: different')],
@@ -151,7 +153,7 @@ export default {
           rows.forEach((r, i) => {
             const y = 270 + i * 82, o = sub(p, .1 + i * .15, .25 + i * .15);
             sd += `<g opacity="${f1(o)}"><line x1="${X + 24}" y1="${y - 40}" x2="${X + W - 24}" y2="${y - 40}" stroke="#2a3a5f" stroke-width="2"/>` +
-              txt(X + 30, y, r[0], C.text, 23, 'start', 700) + txt(X + 215, y, r[1], DRUG, 23, 'start', 700) + txt(X + 345, y, r[2], C.ok, 22, 'start', 700) + '</g>';
+              txt(X + 30, y, r[0], C.text, 23, 'start', 700) + txt(X + 212, y, r[1], DRUG, 23, 'start', 700) + cel(r[2], y) + '</g>';
           });
           sd += `<g opacity="${f1(sub(p, .75, .95))}">` + txt(MX, 630, T2('rood = doelwit · groen = gespaard', 'red = target · green = spared'), C.muted, 22, 'middle', 500) + '</g>';
         }

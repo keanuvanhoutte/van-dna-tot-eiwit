@@ -53,8 +53,8 @@ export default structure3d({
       title: { nl: 'Eiwitten in een handdruk', en: 'Proteins in a handshake' },
       text: { nl: 'Twee histonen grijpen in elkaar zoals twee handen bij een handdruk, hier H3 en H4.', en: 'Two histones interlock like two hands in a handshake, here H3 and H4.' } },
     { dur: 9000, spin: .012,
-      focus: [{ sel: { chain: ['A', 'E'], resi: '1-37' }, style: { cartoon: { color: HC.H3 }, stick: { radius: .25, color: HC.H3 } }, label: { nl: 'H3-staart', en: 'H3 tail' }, labelColor: HC.H3, labelOff: [-150, 60], node: 'histonmod' },
-        { sel: { chain: ['B', 'F'], resi: '1-24' }, style: { cartoon: { color: HC.H4 }, stick: { radius: .25, color: HC.H4 } }, label: { nl: 'H4-staart', en: 'H4 tail' }, labelColor: HC.H4, labelOff: [150, -60], node: 'histonmod' },
+      focus: [{ sel: { chain: ['A', 'E'], resi: '1-37' }, style: { cartoon: { color: HC.H3 }, stick: { radius: .25, color: HC.H3 } }, label: { nl: 'H3-staart', en: 'H3 tail' }, labelColor: HC.H3, labelOff: [-150, 60], node: 'histonmod', labelSel: { chain: 'A', resi: 9, atom: 'CA' } },   // anker op K9 van één staart (het midden van beide kopieën viel in lege ruimte)
+        { sel: { chain: ['B', 'F'], resi: '1-24' }, style: { cartoon: { color: HC.H4 }, stick: { radius: .25, color: HC.H4 } }, label: { nl: 'H4-staart', en: 'H4 tail' }, labelColor: HC.H4, labelOff: [150, -60], node: 'histonmod', labelSel: { chain: 'B', resi: 16, atom: 'CA' } },   // anker op K16 van één staart
         { sel: { chain: ['A', 'E', 'B', 'F'], resn: 'LYS', resi: '1-37' }, style: { sphere: { radius: 1.8, color: '#ff6b6b' } } }],
       zoom: {}, pad: .9,
       title: { nl: 'Staarten steken naar buiten', en: 'Tails stick out' },

@@ -57,7 +57,7 @@ export default {
     const $ = id => svg.getElementById(id);
     const seg = (x0, x1, col, w = 12) => x1 - x0 < 1 ? '' : `<line x1="${f1(x0)}" y1="${Y}" x2="${f1(x1)}" y2="${Y}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`;
 
-    function mrna({ capOn = 1, tail = X.pa[1], from = X.u5[0], to = 99999, op = 1, pab = 6, labels = 1 }) {
+    function mrna({ capOn = 1, tail = X.pa[1], from = X.u5[0], to = 99999, op = 1, pab = 6, labels = 1, orfLab = 1 }) {
       let m = `<g opacity="${f1(op)}">`;
       const clip = (a, b) => [Math.max(a, from), Math.min(b, to)];
       const [a1, b1] = clip(X.u5[0], X.u5[1]), [a2, b2] = clip(X.orf[0], X.orf[1]), [a3, b3] = clip(X.u3[0], X.u3[1]);
@@ -71,7 +71,7 @@ export default {
       }
       if (X.are > from && X.are < to) m += `<rect x="${X.are - 34}" y="${Y - 10}" width="68" height="20" rx="4" fill="#ffd36b" opacity=".85"/>`;
       if (labels) {
-        if (b2 - a2 > 200) m += note(Math.min((a2 + b2) / 2 + 80, b2 - 120), Y + 76, T2('coderend deel (ORF)', 'coding region (ORF)'), C.rna, 19);
+        if (b2 - a2 > 200 && orfLab) m += note(Math.min((a2 + b2) / 2 + 80, b2 - 120), Y + 76, T2('coderend deel (ORF)', 'coding region (ORF)'), C.rna, 19);
         if (b3 - a3 > 150) m += note(X.u3[0] + 60, Y + 46, "3′-UTR", '#d9854a', 19);
         if (tb - ta > 60) m += note((ta + tb) / 2, Y + 46, 'poly(A)', C.cap, 19);
       }
@@ -98,7 +98,7 @@ export default {
 
         if (step <= 3) {
           const capOn = step < 3 ? 1 : 1 - sub(p, .55, .65);
-          m += mrna({ capOn, tail, pab: npab });
+          m += mrna({ capOn, tail, pab: npab, orfLab: step !== 1 });   // stap 2 (ingezoomd op de ARE): het ORF-label viel links half buiten beeld
           if (step === 3) {
             const fly = sub(p, .6, 1);
             m += `<g opacity="${f1(1 - sub(p, .85, 1))}" transform="translate(${f1(-60 * fly)} ${f1(-120 * fly)})">${capG(X.cap, Y, 22, sub(p, .55, .6))}</g>`;

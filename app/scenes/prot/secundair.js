@@ -76,9 +76,9 @@ export default {
     <g id="se-hs-rama" data-node="ramachandran" data-color="#ffc247" data-label="${T2('φ/ψ → Ramachandran-plot', 'φ/ψ → Ramachandran plot')}">
       <rect x="${PX + 20}" y="${368}" width="${PW - 40}" height="48" rx="10" fill="rgba(255,194,71,.10)" stroke="#ffc247" stroke-dasharray="5 4"/>
       <text id="se-rama-t" x="${PX + 40}" y="${401}" font-size="23" fill="#ffc247" font-family="Inter" font-weight="600">α-helix: φ ≈ −60°, ψ ≈ −45°</text>
-      <circle data-anchor="ramachandran" cx="${PX + PW - 120}" cy="${458}" r="1" fill="none"/>
+      <circle data-anchor="ramachandran" cx="${PX + PW - 170}" cy="${478}" r="1" fill="none"/>
     </g>
-    <g id="se-hs-ter" data-node="tertiair" data-color="${C.prot}" data-label="${T2('Volgende: tertiaire structuur', 'Next: tertiary structure')}">
+    <g id="se-hs-ter" data-node="tertiair" data-color="${C.prot}" data-nolabel data-label="${T2('Volgende: tertiaire structuur', 'Next: tertiary structure')}">
       <rect x="${PX + 20}" y="640" width="${PW - 40}" height="56" rx="12" fill="rgba(155,123,255,.14)" stroke="${C.prot}"/>
       <text x="${PX + PW / 2}" y="676" font-size="23" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="600">${T2('Samen → vouwing (tertiair)', 'Together → fold (tertiary)')}</text>
       <circle data-anchor="tertiair" cx="${PX + PW / 2}" cy="640" r="1" fill="none"/>

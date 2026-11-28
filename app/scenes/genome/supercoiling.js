@@ -158,7 +158,7 @@ export default {
           cnt += box(1090, 130, 330, 160) + txt(1255, 172, T2('hoe strak gedraaid?', 'how tightly wound?'), '#fff', 24) +
             `<rect x="1115" y="200" width="93" height="22" rx="6" fill="#4f8ff7" opacity=".55"/><rect x="1208" y="200" width="94" height="22" fill="${C.ok}" opacity=".55"/><rect x="1302" y="200" width="93" height="22" rx="6" fill="#ff6b6b" opacity=".55"/>` +
             `<path d="M${f1(mx)},226 l-11,-0 l11,-18 l11,18 z" transform="rotate(180 ${f1(mx)} 217)" fill="#fff"/><rect x="${f1(mx - 3)}" y="196" width="6" height="30" rx="2" fill="#fff"/>` +
-            txt(1161, 256, T2('te los', 'too loose'), '#7cb4ff', 20) + txt(1255, 256, T2('normaal', 'normal'), C.ok, 20) + txt(1348, 256, T2('te strak', 'too tight'), '#ff8a8a', 20);
+            txt(1102, 254, T2('te los', 'too loose'), '#7cb4ff', 18, 'start') + txt(1255, 280, T2('normaal', 'normal'), C.ok, 18) + txt(1408, 254, T2('te strak', 'too tight'), '#ff8a8a', 18, 'end');
         }
         // genummerde slagen boven de helix: zo zie je hoeveel keer de strengen rond elkaar gaan
         const turnNums = op => {
