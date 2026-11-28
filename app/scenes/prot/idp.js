@@ -1,5 +1,6 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1, CLASSCOL, AACLASS, THREE } from '../../kit.js';
 import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, panel, phos, lerpPts, blob } from './_b_kit.js';
+import { helixLint } from '../../bio.js';
 
 /* A (0–1600): geordend domein + IDR · B (1700–3300): sequentie + ladings-hydropathieplot · C (3400–5000): pKID–KIX · D (5100–6700): waarom */
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
@@ -225,9 +226,20 @@ export default {
         $('id-seqB').setAttribute('opacity', step <= 2 ? '1' : step === 3 ? f1(1 - sub(p, 0, .06)) : '0');
 
         /* ---------- paneel C: CREB-KID + KIX ---------- */
+    // KIX = bundel van drie α-helices (PDB 1KDX); pKID wikkelt zijn twee helices over het oppervlak bovenaan/rechts
+    // helix als cilinder (gangbare cartoonconventie) met schuine strepen voor de windingen
+    const cyl = (x0, y0, x1, y1) => {
+      const L0 = Math.hypot(x1 - x0, y1 - y0), ux = (x1 - x0) / L0, uy = (y1 - y0) / L0; let st = '';
+      for (let d = 14; d < L0 - 10; d += 16) { const x = x0 + ux * d, y = y0 + uy * d; st += `M${f1(x - uy * 11 - ux * 5)},${f1(y + ux * 11 - uy * 5)}L${f1(x + uy * 11 + ux * 5)},${f1(y - ux * 11 + uy * 5)}`; }
+      return `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="#0a1224" stroke-width="30" stroke-linecap="round"/><line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="#7d66e0" stroke-width="26" stroke-linecap="round"/>` +
+        `<path d="${st}" stroke="#c9b8ff" stroke-width="3" opacity=".8"/><line x1="${f1(x0 - uy * 5)}" y1="${f1(y0 + ux * 5 - 5)}" x2="${f1(x1 - uy * 5)}" y2="${f1(y1 + ux * 5 - 5)}" stroke="#fff" stroke-width="3" opacity=".25" stroke-linecap="round"/>`;
+    };
+    const KIXFOLD = `<path d="M4205,412 Q4165,425 4185,452 M4235,565 Q4268,595 4290,560" stroke="#c9b8ff" stroke-width="5" fill="none" stroke-linecap="round"/>` +
+      cyl(4340, 398, 4205, 412) + cyl(4185, 452, 4235, 565) + cyl(4290, 560, 4395, 440) +
+      T(4272, 391, 'α1', { size: 18, col: '#e2dbff', w: 800 }) + T(4170, 515, 'α2', { size: 18, col: '#e2dbff', w: 800, anchor: 'end' }) + T(4360, 530, 'α3', { size: 18, col: '#e2dbff', w: 800, anchor: 'start' });
         let c = '', pka = '';
         if (step >= 4 && step <= 5) {
-          c += enz(KIX[0], KIX[1] + 20, 150, 125, '', { col: C.prot, fillOp: .25 }) + T(KIX[0], KIX[1] + 60, T2('KIX-domein (CBP)', 'KIX domain (CBP)'), { size: 24, col: '#c9b8ff', w: 700 });
+          c += enz(KIX[0] + 20, KIX[1] - 15, 150, 125, '', { col: C.prot, fillOp: .25 }) + KIXFOLD + T(KIX[0] + 20, KIX[1] + 150, T2('KIX-domein (CBP)', 'KIX domain (CBP)'), { size: 24, col: '#c9b8ff', w: 700 });
           const phK = step === 4 ? sub(p, .45, .7) : 1;
           const bind = step === 5 ? ease(sub(p, .05, .4)) : 0, fold = step === 5 ? ease(sub(p, .45, .85)) : 0;
           // ongebonden sliert
@@ -238,8 +250,8 @@ export default {
           const freeR = Array.from({ length: target }, (_, i) => free[Math.round(i / (target - 1) * (free.length - 1))]);
           const mid = lerpPts(freeR, near, bind), pts = lerpPts(mid, bound, fold);
           c += chain(pts, { col: IDC, w: 8 });
-          // Ser133 op ~1/3 van de keten
-          const si = Math.round(target * .3), sp = pts[si];
+          // Ser133: eerste residu van helix αB
+          const si = 41, sp = pts[si];   // pSer133 aan het begin van helix αB (Radhakrishnan et al. 1997)
           c += `<circle cx="${f1(sp[0])}" cy="${f1(sp[1])}" r="16" fill="${CLASSCOL.p}" stroke="#0a1224" stroke-width="2"/>` + T(sp[0], sp[1] + 5, 'S', { size: 14, col: '#0a1224', halo: false, w: 800 });
           c += phos(sp[0] + 20, sp[1] - 28, 15, phK);
           if (step === 4) {

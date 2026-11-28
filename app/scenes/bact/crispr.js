@@ -1,6 +1,6 @@
 import { C, T2, svgOpen, FULL, sub, ease, lerp, f1 } from '../../kit.js';
 import { rodCell } from './_bkit.js';
-import { eiwitPad } from '../../bio.js';
+import { eiwitPad, helixLint, strengPijl } from '../../bio.js';
 import { T, btn, hbtn, phage, PHDNA, rnaWave } from '../entry/_corona.js';
 
 /*
@@ -19,7 +19,13 @@ const CAS = C.prot, REP = '#93a0bb';
 const spacer = (x, col, op = 1, w = 70) => op <= .01 ? '' : `<rect x="${f1(x - w / 2)}" y="${AY - 15}" width="${w}" height="30" rx="6" fill="${col}" opacity="${f1(op)}"/>`;
 const repeat = (x, op = 1) => op <= .01 ? '' : `<path d="M${f1(x)},${AY - 18} l12,18 l-12,18 l-12,-18 z" fill="${REP}" opacity="${f1(op)}"/>`;
 const dsDNA = (x0, x1, y, col, op = 1) => op <= .01 || x1 <= x0 ? '' : `<g opacity="${f1(op)}"><path d="M${f1(x0)},${f1(y - 7)} L${f1(x1)},${f1(y - 7)} M${f1(x0)},${f1(y + 7)} L${f1(x1)},${f1(y + 7)}" stroke="${col}" stroke-width="6" stroke-linecap="round"/></g>`;
-const casBlob = (x, y, op = 1, lab = '') => op <= .01 ? '' : `<g opacity="${f1(op)}"><path d="${eiwitPad(x, y, 78, 50, 9, .08)}" fill="rgba(155,123,255,.22)" stroke="${CAS}" stroke-width="4"/>${lab}</g>`;
+/* Cas9: twee lobben (REC boven, NUC onder) met het gids-RNA:DNA-kanaal ertussen (Nishimasu et al. 2014) */
+const casBlob = (x, y, op = 1, lab = '') => op <= .01 ? '' : `<g opacity="${f1(op)}"><path d="${eiwitPad(x, y, 78, 50, 9, .08)}" fill="rgba(155,123,255,.10)" stroke="${CAS}" stroke-width="2" stroke-dasharray="5 4"/>` +
+  `<path d="${eiwitPad(x - 6, y - 42, 70, 21, 10, .08)}" fill="rgba(155,123,255,.28)" stroke="${CAS}" stroke-width="3"/>` +
+  `<path d="${eiwitPad(x + 4, y + 18, 74, 27, 11, .08)}" fill="rgba(155,123,255,.28)" stroke="${CAS}" stroke-width="3"/>` +
+  helixLint(x - 50, y - 44, x - 12, y - 46, { turns: 2, amp: 5, w: 4, col: CAS }) + helixLint(x + 4, y - 42, x + 42, y - 46, { turns: 2, amp: 5, w: 4, col: CAS }) +
+  strengPijl(x - 40, y + 18, x - 8, y + 18, { h: 5 }) + strengPijl(x - 8, y + 28, x - 40, y + 28, { h: 5 }) + helixLint(x + 14, y + 26, x + 56, y + 16, { turns: 2, amp: 5, w: 4, col: CAS }) +
+  `${lab}</g>`;
 
 export default {
   id: 'crispr',

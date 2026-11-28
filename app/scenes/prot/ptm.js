@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1, CLASSCOL } from '../../kit.js';
 import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, ub, phos, sugar, panel, spark, lerpPts, ATPC, PHOS } from './_b_kit.js';
-import { membraanLijn, eiwitPad } from '../../bio.js';
+import { membraanLijn, eiwitPad, vouwing } from '../../bio.js';
 
 /* Paneel A (x 0–1600): doeleiwit met activatielus (aan/uit-schakelaar)
  * Paneel B (x 1700–3300): MAP-kinasecascade  ·  Paneel C (x 3380–5000): overzicht PTM's  ·  Paneel D (x 5100–6700): collageen */
@@ -93,13 +93,13 @@ export default {
       return node ? `<g data-node="${node}" data-color="${col}" data-label="${node === 'ptm' ? T2('(dit hoofdstuk)', '(this chapter)') : L({ nl: '→ ' + { histonmod: 'Histonmodificaties', ubiquitine: 'Ubiquitine–proteasoom', glyco: 'N-glycosylatie', disulfide: 'Disulfidebruggen' }[node], en: '→ ' + { histonmod: 'Histone modifications', ubiquitine: 'Ubiquitin–proteasome', glyco: 'N-glycosylation', disulfide: 'Disulfide bonds' }[node] })}"${node === 'ptm' || (k === 'me') ? ' data-nolabel' : ''}>${body}<circle data-anchor="${node}" cx="${cx}" cy="${y0 + 306}" r="1" fill="none"/></g>` : body;
     }).join('');
 
-    const helices = [coil(470, 520, 600, 470, 4, 16), coil(520, 640, 700, 660, 5, 16), coil(700, 520, 840, 600, 4, 16)].map(p => chain(p, { w: 6, op: .55 })).join('');
+    const helices = vouwing(655, 565, 228, 150, { col: C.chain, op: .85 });   // gevouwen binnenkant: helices, β-blad, lussen, kern (bio.js)
     return svgOpen(arrowDefs('pt', { m: C.muted, g: C.chain, p: C.prot, w: '#fff' })) + `
     <!-- paneel A -->
     <g data-node="vouwing" data-color="${C.chain}" data-label="${T2('gevouwen doeleiwit', 'folded target protein')}">
       <path d="${smooth([...BODY, BODY[0], BODY[1]])}" fill="rgba(127,220,106,.14)" stroke="${C.chain}" stroke-width="4"/>
       ${helices}
-      <circle data-anchor="vouwing" cx="440" cy="640" r="1" fill="none" data-pos="below"/>
+      <circle data-anchor="vouwing" cx="420" cy="700" r="1" fill="none" data-pos="below"/>
     </g>
     <g id="pt-glow"></g>
     ${ARGS.map(([x, y]) => `<circle cx="${x}" cy="${y}" r="20" fill="${CLASSCOL['+']}" stroke="#0a1224" stroke-width="2"/>` + T(x, y + 6, 'Arg', { size: 16, col: '#0a1224', halo: false, w: 700 })).join('')}

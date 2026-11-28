@@ -4,7 +4,7 @@
  */
 import { C, BASE, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, f1, aa } from '../../kit.js';
 import { hud, placeHud, textBox } from './_tlkit.js';
-import { eiwit, trna2d } from '../../bio.js';
+import { eiwit, trna2d, helixLint, strengPijl } from '../../bio.js';
 
 /* editeerplaats: ongeveer even ver van het anticodon als de synthese-plaats en ~3 nm ernaast (in IleRS verschuift enkel het
    CCA-uiteinde van de ene holte naar de andere; het anticodon blijft vast) */
@@ -35,11 +35,17 @@ export default {
     ST(8500, cam(820, 470, 1500), 'Naar het ribosoom', 'Off to the ribosome', 'Een hulpeiwit brengt het geladen tRNA naar het ribosoom. Dat controleert alleen het codon, niet het aminozuur.', 'A helper protein brings the loaded tRNA to the ribosome. It checks only the codon, not the amino acid.'),
   ],
   svg() {
+    /* katalytisch domein (klasse I) = Rossmann-vouw: parallel β-blad (alle strengen dezelfde richting) met helices aan weerszijden, boven de laadplaats */
+    const ROSSMANN = `<g opacity=".9"><path d="M712,300 Q730,272 760,378 M864,300 Q895,275 915,300" stroke="#d6ccff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/>` +
+      [760, 786, 812, 838, 864].map(x => strengPijl(x, 378, x, 300, { h: 9 })).join('') +
+      [773, 799, 825, 851].map(x => [318, 338, 358].map(y => `<line x1="${x - 6}" y1="${y}" x2="${x + 6}" y2="${y}" stroke="#e8edf6" stroke-width="1.5" stroke-dasharray="2.5 2.5"/>`).join('')).join('') +
+      helixLint(712, 392, 712, 300, { turns: 2.6, amp: 10, w: 10, col: '#c9b8ff' }) + helixLint(915, 300, 918, 392, { turns: 2.6, amp: 10, w: 10, col: '#c9b8ff' }) + '</g>';
     return svgOpen() + `
     <g data-node="aars" data-nolabel id="rs-enz">
       ${eiwit(960, 640, 190, 150, '#7d66e0', { seed: 12, bumps: .07 })}
       ${eiwit(ACD[0] + 10, ACD[1] - 4, 135, 74, C.prot2, { seed: 14, bumps: .08 })}
       ${eiwit(SYN[0] + 30, SYN[1] - 10, 215, 175, C.prot, { seed: 11, bumps: .06 })}
+      ${ROSSMANN}
       ${eiwit(EDIT[0] + 10, EDIT[1] - 6, 118, 92, '#b49bff', { seed: 13, bumps: .08 })}
       <ellipse cx="${SYN[0] + 14}" cy="${SYN[1] + 16}" rx="70" ry="54" fill="rgba(7,11,22,.75)" stroke="${C.prot}" stroke-dasharray="7 6" stroke-width="2.5"/>
       <ellipse cx="${EDIT[0]}" cy="${EDIT[1]}" rx="52" ry="40" fill="rgba(7,11,22,.75)" stroke="#ff6b6b" stroke-dasharray="7 6" stroke-width="2.5"/>
@@ -59,7 +65,7 @@ export default {
     ])}
     </svg>`;
   },
-  init(svg) {
+  init(svg, api) {
     const STEPS = this?.steps ?? [];
     const $ = id => svg.getElementById(id);
     /* tRNA-Ile = het gedeelde symbool (bio.js trna2d), schuin in het enzym: anticodon in het anticodonbindende domein,
@@ -147,7 +153,7 @@ export default {
               `<g opacity="${f1(sub(p, .65, .8))}">` + txt(tipSyn[0] - 110, tipSyn[1] - 150, T2('ook de stam wordt herkend', 'the stem is recognised too'), '#fff', 20, 'middle', 700) + '</g>';
           } else {
             ov += `<g opacity="${f1(sub(p, .05, .2))}">` + txt(860, 215, T2('het aminozuur springt op het tRNA', 'the amino acid jumps onto the tRNA'), '#fff', 28, 'middle', 800) + '</g>' +
-              `<g opacity="${f1(sub(p, .65, .8))}">` + `<path d="M1000,306 Q905,520 ${tipSyn[0] + 11},${tipSyn[1] + 3}" stroke="${C.chain}" stroke-width="2.5" fill="none"/>` + txt(1000, 296, T2('vast aan de laatste A', 'attached to the last A'), C.chain, 24, 'start', 800) + '</g>';
+              `<g opacity="${f1(sub(p, .65, .8))}">` + `<path d="M1000,306 Q905,520 ${tipSyn[0] + 11},${tipSyn[1] + 3}" stroke="${C.chain}" stroke-width="2.5" fill="none"/>` + txt(1030, 296, T2('vast aan de laatste A', 'attached to the last A'), C.chain, 24, 'middle', 800) + '</g>';
           }
         }
         if (i === 4) {
@@ -180,7 +186,7 @@ export default {
           if (hyd > 0 && hyd < 1) mol += `<circle cx="${EDIT[0]}" cy="${EDIT[1]}" r="${f1(30 + 40 * hyd)}" fill="none" stroke="#ff6b6b" stroke-width="3" opacity="${f1(1 - hyd)}"/>`;
           mol += `<g opacity="${f1(sub(p, .4, .5) * (1 - sub(p, .6, .7)))}">${pill(EDIT[0] + 92, EDIT[1] - 6, 60, 28, 'H₂O', '#4fb0ff', 1, 15)}</g>`;
           ov += `<g opacity="${f1(sub(p, .1, .3))}">` + textBox(1180, 360, 400, [T2('bijna-goed (valine) past hier', 'almost-right (valine) fits here'), T2('→ wordt eraf geknipt', '→ is cut off'), T2('isoleucine is te groot → blijft', 'isoleucine is too big → stays')], { title: T2('2e zeef: nalezen', '2nd sieve: checking'), col: '#ff6b6b', fs: 20 }) + '</g>';
-          ov += `<g opacity="${f1(sub(p, .7, .85))}">` + txt(1380, 300, T2('twee zeven → bijna geen fouten', 'two sieves → hardly any mistakes'), '#fff', 24, 'middle', 800) + '</g>';
+          ov += `<g opacity="${f1(sub(p, .7, .85))}">` + (s => s.length > 26 && s.includes(' → ') ? txt(1380, 284, s.slice(0, s.indexOf(' → ')), '#fff', 24, 'middle', 800) + txt(1380, 314, s.slice(s.indexOf(' → ') + 1), '#fff', 24, 'middle', 800) : txt(1380, 300, s, '#fff', 24, 'middle', 800))((api?.easy ?? (x => x))(T2('twee zeven → bijna geen fouten', 'two sieves → hardly any mistakes'))) + '</g>';   // vaktaal is langer: over twee regels (anders rechts afgesneden)
         }
         if (i === 7) {
           const go = ease(sub(p, .15, .8));

@@ -1,5 +1,5 @@
 import { C, L, T2, svgOpen, txt, cam, FULL, sub, ease, lerp, clamp, f1, rng, AACLASS, CLASSCOL } from '../../kit.js';
-import { ribosoom80S, eiwit, eiwitPad } from '../../bio.js';
+import { ribosoom80S, eiwit, eiwitPad, vouwing } from '../../bio.js';
 
 /* 80S-ribosoom (bio.js) een kwartslag gedraaid: de tunnel van de 60S komt rechts uit bij (565,170), waar de keten verschijnt;
  * 40S links, mRNA verticaal tussen beide eenheden. */
@@ -230,14 +230,20 @@ export default {
           // Anfinsen-experiment met ribonuclease A (124 residuen, 4 disulfidebruggen)
           const cols = [220, 800, 1380], y = 390;
           const k1 = ease(sub(p, .1, .35)), k2 = ease(sub(p, .5, .75));
-          const blobN = (x, op) => `<g opacity="${f1(op)}"><path d="M${x - 110},${y} C${x - 120},${y - 110} ${x + 40},${y - 140} ${x + 100},${y - 60} C${x + 150},${y + 10} ${x + 60},${y + 110} ${x - 20},${y + 100} C${x - 90},${y + 95} ${x - 105},${y + 50} ${x - 110},${y}Z" fill="${C.prot}" fill-opacity=".22" stroke="${C.prot}" stroke-width="4"/>` +
-            [[-50, -40, 20, -70], [30, 20, 70, -20], [-60, 40, -10, 70], [10, -20, -30, 10]].map(([a, b, c, d]) => `<line x1="${x + a}" y1="${y + b}" x2="${x + c}" y2="${y + d}" stroke="#ffd84a" stroke-width="5"/>`).join('') + '</g>';
-          const coil = (x, op) => { let d = `M${x - 200},${y}`; for (let i = 1; i <= 16; i++) d += ` Q${x - 200 + i * 25 - 12},${y + (i % 2 ? -50 : 50)} ${x - 200 + i * 25},${y + Math.sin(i) * 12}`; return `<g opacity="${f1(op)}"><path d="${d}" stroke="${C.prot}" stroke-width="5" fill="none"/>` + [0, 1, 2, 3, 4, 5, 6, 7].map(i => `<circle cx="${x - 180 + i * 52}" cy="${y + (i % 2 ? 26 : -26)}" r="7" fill="#ffd84a"/>`).join('') + '</g>'; };
+          const blobN = (x, op) => `<g opacity="${f1(op)}" transform="translate(${x} ${y}) scale(1.2) translate(${-x} ${-y})"><path d="M${x - 110},${y} C${x - 120},${y - 110} ${x + 40},${y - 140} ${x + 100},${y - 60} C${x + 150},${y + 10} ${x + 60},${y + 110} ${x - 20},${y + 100} C${x - 90},${y + 95} ${x - 105},${y + 50} ${x - 110},${y}Z" fill="${C.prot}" fill-opacity=".22" stroke="${C.prot}" stroke-width="4"/>` +
+            // gevouwen binnenkant (helices, β-blad, lussen) + 4 S–S-bruggen tussen elementen die ver uit elkaar liggen in de keten
+            vouwing(x + 18, y - 2, 122, 104, { col: C.prot, kern: false }) +
+            [[-.45, -.6, -.45, .12], [.5, -.21, .05, .12], [-.38, .6, -.38, .82], [.7, .06, .74, .59]].map(([a, b, c, d]) => {
+              const X = u => x + 18 + u * 122 * .8, Y = v => y - 2 + v * 104 * .8;
+              return `<line x1="${f1(X(a))}" y1="${f1(Y(b))}" x2="${f1(X(c))}" y2="${f1(Y(d))}" stroke="#ffd84a" stroke-width="4" stroke-dasharray="7 4"/><circle cx="${f1(X(a))}" cy="${f1(Y(b))}" r="6" fill="#ffd84a" stroke="#0a1224" stroke-width="1.5"/><circle cx="${f1(X(c))}" cy="${f1(Y(d))}" r="6" fill="#ffd84a" stroke="#0a1224" stroke-width="1.5"/>`;
+            }).join('') + '</g>';
+          const coil = (x, op) => { let d = `M${x - 200},${y}`; for (let i = 1; i <= 16; i++) d += ` Q${x - 200 + i * 25 - 12},${y + (i % 2 ? -50 : 50)} ${x - 200 + i * 25},${y + Math.sin(i) * 12}`; let beads = ''; const R = rng(77); for (let i = 0; i <= 64; i++) { const t2 = i / 64 * 16, k = Math.floor(t2), u = t2 - k, xa = x - 200 + k * 25, ya = k ? y + Math.sin(k) * 12 : y, xb = x - 200 + (k + 1) * 25, yb = y + Math.sin(k + 1) * 12, qx = x - 200 + (k + 1) * 25 - 12, qy = y + ((k + 1) % 2 ? -50 : 50); if (k >= 16) break; const bx = (1 - u) ** 2 * xa + 2 * (1 - u) * u * qx + u * u * xb, by = (1 - u) ** 2 * ya + 2 * (1 - u) * u * qy + u * u * yb; beads += `<circle cx="${f1(bx)}" cy="${f1(by)}" r="4.5" fill="${CLASSCOL[AACLASS['AVLKEDSTGPNQRF'[Math.floor(R() * 14)]]]}" stroke="#0a1224" stroke-width="1"/>`; }
+            return `<g opacity="${f1(op)}"><path d="${d}" stroke="${C.prot}" stroke-width="5" fill="none"/>` + beads + [0, 1, 2, 3, 4, 5, 6, 7].map(i => `<circle cx="${x - 180 + i * 52}" cy="${y + (i % 2 ? 26 : -26)}" r="7" fill="#ffd84a"/>`).join('') + '</g>'; };
           const lab = (x, yy, s2, col = '#fff') => txt(x, yy, s2, col, 23);
           bg += blobN(cols[0], 1) + txt(cols[0], y - 170, T2('natief · actief', 'native · active'), C.ok, 26) + lab(cols[0], y + 170, T2('4 S–S-bruggen', '4 S–S bridges'), '#ffd84a');
-          bg += `<g opacity="${f1(k1)}"><path d="M${cols[0] + 165},${y} H${cols[1] - 225}" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/>` + lab((cols[0] + cols[1]) / 2 - 10, y - 104, T2('+ ureum (8 M)', '+ urea (8 M)')) + lab((cols[0] + cols[1]) / 2 - 10, y - 74, '+ β-mercaptoethanol') +
+          bg += `<g opacity="${f1(k1)}"><path d="M${cols[0] + 190},${y} H${cols[1] - 225}" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/>` + lab((cols[0] + cols[1]) / 2 - 10, y - 104, T2('+ ureum (8 M)', '+ urea (8 M)')) + lab((cols[0] + cols[1]) / 2 - 10, y - 74, '+ β-mercaptoethanol') +
             coil(cols[1], 1) + txt(cols[1], y - 170, T2('ontvouwen · inactief', 'unfolded · inactive'), C.danger, 26) + lab(cols[1], y + 170, T2('S–S verbroken → 8 × SH', 'S–S broken → 8 × SH'), '#ffd84a') + '</g>';
-          bg += `<g opacity="${f1(k2)}"><path d="M${cols[1] + 225},${y} H${cols[2] - 165}" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/>` + lab((cols[1] + cols[2]) / 2 + 10, y - 104, T2('stoffen weg', 'remove them')) + lab((cols[1] + cols[2]) / 2 + 10, y - 74, T2('S–S terug (oxidatie)', 'S–S re-formed (oxidation)')) +
+          bg += `<g opacity="${f1(k2)}"><path d="M${cols[1] + 225},${y} H${cols[2] - 190}" stroke="#fff" stroke-width="4" marker-end="url(#arrow)"/>` + lab((cols[1] + cols[2]) / 2 + 10, y - 104, T2('stoffen weg', 'remove them')) + lab((cols[1] + cols[2]) / 2 + 10, y - 74, T2('S–S terug (oxidatie)', 'S–S re-formed (oxidation)')) +
             blobN(cols[2], 1) + txt(cols[2], y - 170, T2('opnieuw natief · actief', 'native again · active'), C.ok, 26) + lab(cols[2], y + 170, T2('zelfde 4 S–S-bruggen', 'same 4 S–S bridges'), '#ffd84a') + '</g>';
           ssg = bg; bg = '';
           over += txt(800, 140, T2('Ribonuclease A (124 residuen) · Anfinsen', 'Ribonuclease A (124 residues) · Anfinsen'), C.text, 26);

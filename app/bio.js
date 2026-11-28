@@ -116,6 +116,54 @@ export function eiwit(cx, cy, rx, ry, col = C.prot, { seed = 1, op = 1, stroke =
     (label ? `<text x="${f1(cx)}" y="${f1(cy + fs * .35)}" font-size="${fs}" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700">${label}</text>` : '') + '</g>';
 }
 
+/* ---------- gevouwen eiwit: binnenkant als cartoon (detailronde 28-11-2026) ----------
+   I.p.v. 2–3 sinuskrabbels in een klomp: α-helices als opgerold lint (voorkant licht, achterkant donker),
+   een antiparallel β-blad (pijlen, richting volgt de lussen) met H-bruggen, en lussen die alles tot één keten
+   verbinden. Past in de ellips (cx, cy, rx, ry); spiegel = links/rechts omgedraaid (variatie). */
+export const STRENG = '#ffc247';
+export function helixLint(x0, y0, x1, y1, { turns = 3, amp = 10, w = 7, col = C.prot, back = null } = {}) {
+  const n = Math.max(8, Math.round(turns * 20)), dx = x1 - x0, dy = y1 - y0, L0 = Math.hypot(dx, dy) || 1, nx = -dy / L0, ny = dx / L0;
+  const p = j => { const u = j / n, s = Math.sin(u * turns * 6.2832) * amp; return [x0 + dx * u + nx * s, y0 + dy * u + ny * s]; };
+  let bk = '', fr = '';
+  for (let i = 0; i < n; i++) {
+    const [ax, ay] = p(i), [bx, by] = p(i + 1), seg = `M${f1(ax)},${f1(ay)}L${f1(bx)},${f1(by)}`;
+    if (Math.cos((i + .5) / n * turns * 6.2832) >= 0) fr += seg; else bk += seg;
+  }
+  return `<path d="${bk}" stroke="${back ?? hexMix(col, '#0a1224', .45)}" stroke-width="${f1(w * .65)}" stroke-linecap="round" fill="none"/>` +
+    `<path d="${fr}" stroke="#0a1224" stroke-width="${f1(w + 3)}" stroke-linecap="round" fill="none"/><path d="${fr}" stroke="${col}" stroke-width="${f1(w)}" stroke-linecap="round" fill="none"/>`;
+}
+export function strengPijl(x0, y0, x1, y1, { h = 18, col = STRENG } = {}) {
+  const L0 = Math.hypot(x1 - x0, y1 - y0) || 1, ux = (x1 - x0) / L0, uy = (y1 - y0) / L0, hl = h * 1.1, b = h * .5, H = h;
+  const bx = x1 - ux * hl, by = y1 - uy * hl, P = (x, y, s) => `${f1(x - uy * s)},${f1(y + ux * s)}`;
+  return `<path d="M${P(x0, y0, b)} L${P(bx, by, b)} L${P(bx, by, H)} L${f1(x1)},${f1(y1)} L${P(bx, by, -H)} L${P(bx, by, -b)} L${P(x0, y0, -b)}Z" fill="${col}" stroke="#0a1224" stroke-width="2" stroke-linejoin="round"/>`;
+}
+export function vouwing(cx, cy, rx, ry, { col = C.prot, op = 1, spiegel = false, kern = true, lus = null } = {}) {
+  if (op <= .01) return '';
+  const s = Math.min(rx, ry), m = spiegel ? -1 : 1;
+  const X = u => cx + m * u * rx * .8, Y = v => cy + v * ry * .8;
+  const loopCol = lus ?? hexMix(col, '#ffffff', .35), lw = Math.max(2.5, s * .045);
+  const loop = pts => { let d = `M${f1(X(pts[0][0]))},${f1(Y(pts[0][1]))}`; for (let i = 1; i < pts.length - 1; i += 2) d += ` Q${f1(X(pts[i][0]))},${f1(Y(pts[i][1]))} ${f1(X(pts[i + 1][0]))},${f1(Y(pts[i + 1][1]))}`; return `<path d="${d}" stroke="${loopCol}" stroke-width="${f1(lw)}" fill="none" stroke-linecap="round"/>`; };
+  const hw = Math.max(4, s * .09), amp = s * .11, sh = Math.max(7, s * .1);
+  const rows = [.12, .36, .6], uL = -.62, uR = .08;
+  let g = '';
+  // lussen eerst (liggen achter de elementen): helix A → helix B → streng 1 (←) → haarspeld links → streng 2 (→) → haarspeld rechts → streng 3 (←) → uit
+  g += loop([[-.95, -.15], [-.9, -.5], [-.72, -.55]]);
+  g += loop([[.02, -.68], [.22, -.72], [.28, -.5]]);
+  g += loop([[.72, .08], [.55, .2], [uR, rows[0]]]);
+  g += loop([[uL, rows[0]], [uL - .18, (rows[0] + rows[1]) / 2], [uL, rows[1]]]);
+  g += loop([[uR, rows[1]], [uR + .18, (rows[1] + rows[2]) / 2], [uR, rows[2]]]);
+  g += loop([[uL, rows[2]], [-.5, .9], [.1, .88], [.6, .75], [.9, .45]]);
+  // waterschuwe kern tussen helices en blad
+  if (kern) [-.45, -.2, .05, .3].forEach((u, i) => { g += `<circle cx="${f1(X(u))}" cy="${f1(Y(-.2 + (i % 2) * .06))}" r="${f1(Math.max(3, s * .045))}" fill="${CLASSCOL.h}" stroke="#0a1224" stroke-width="1.2" opacity=".85"/>`; });
+  // β-blad met H-bruggen
+  for (let r = 0; r < 2; r++) for (let u = uL + .1; u <= uR - .04; u += .14) g += `<line x1="${f1(X(u))}" y1="${f1(Y(rows[r]) + sh * .55)}" x2="${f1(X(u))}" y2="${f1(Y(rows[r + 1]) - sh * .55)}" stroke="#e8edf6" stroke-width="1.4" stroke-dasharray="2.5 2.5" opacity=".7"/>`;
+  g += strengPijl(X(uR), Y(rows[0]), X(uL), Y(rows[0]), { h: sh }) + strengPijl(X(uL), Y(rows[1]), X(uR), Y(rows[1]), { h: sh }) + strengPijl(X(uR), Y(rows[2]), X(uL), Y(rows[2]), { h: sh });
+  // α-helices
+  g += helixLint(X(-.72), Y(-.55), X(.02), Y(-.68), { turns: 3, amp, w: hw, col });
+  g += helixLint(X(.28), Y(-.5), X(.72), Y(.08), { turns: 2.2, amp, w: hw, col });
+  return `<g opacity="${f1(op)}">${g}</g>`;
+}
+
 /* α-helix door een membraan (zijaanzicht): cilinder met windingen */
 export function tmHelix(x, y0, y1, col = C.prot, op = 1, w = 14) {
   if (op <= .01) return '';

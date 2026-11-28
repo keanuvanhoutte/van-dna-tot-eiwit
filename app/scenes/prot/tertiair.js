@@ -28,7 +28,7 @@ export default molScene({
     nl: 'Getoond is één keten (β) uit het tetrameer; in de cel vouwt β-globine niet los van de α-keten en het heem. 1BBB bevat CO in plaats van O₂ (zelfde bindingsplaats). Waterstoffen en watermoleculen zijn verborgen; de hydrofobe/polaire indeling volgt de cursus (Gly en Pro bij hydrofoob).',
     en: 'One chain (β) of the tetramer is shown; in the cell β-globin does not fold separately from the α chain and the haem. 1BBB contains CO instead of O₂ (same binding site). Hydrogens and water molecules are hidden; the hydrophobic/polar grouping follows the course (Gly and Pro counted as hydrophobic).' },
   overlay: () => `
-    <g class="a-hs" data-node="quaternair" data-color="${C.prot}" data-label="${T2('Volgende: quaternaire structuur', 'Next: quaternary structure')}">
+    <g class="a-hs" data-node="quaternair" data-color="${C.prot}" data-nolabel data-label="${T2('Volgende: quaternaire structuur', 'Next: quaternary structure')}">
       <rect x="1030" y="640" width="520" height="56" rx="12" fill="rgba(155,123,255,.16)" stroke="${C.prot}"/>
       <text x="1290" y="677" font-size="23" text-anchor="middle" fill="${C.text}" font-family="Inter" font-weight="600">${T2('4 ketens samen → quaternair', '4 chains together → quaternary')}</text>
       <circle data-anchor="quaternair" cx="1290" cy="640" r="1" fill="none"/>
@@ -230,13 +230,14 @@ function motifs() {
   const lp = d => `<path d="${d}" fill="none" stroke="#93a0bb" stroke-width="3"/>`;
   const T = 8, Bm = 88;
   const items = [
-    ['helix-turn-helix', (x, y) => hx(x, y + 12, 84, 22) + lp(`M${x + 84},${y + 23} q20,0 20,22`) + hx(x + 93, y + 42, 22, 50), 'α'],
-    [T2('vierhelixbundel', 'four-helix bundle'), (x, y) => [0, 1, 2, 3].map(i => hx(x + 8 + i * 30, y + T, 22, 80)).join(''), 'α'],
-    [T2('β-haarspeld', 'β-hairpin'), (x, y) => st(x + 30, y + Bm, y + T + 6) + lp(`M${x + 30},${y + T + 4} q17,-16 34,0`) + st(x + 64, y + T + 6, y + Bm), 'β'],
+    ['helix-turn-helix', (x, y) => coil(x + 2, y + 24, x + 86, y + 24, 3.5, 9, 7) + lp(`M${x + 86},${y + 24} q18,0 18,20`) + coil(x + 104, y + 44, x + 104, y + 94, 2.2, 9, 7), 'α'],
+    [T2('vierhelixbundel', 'four-helix bundle'), (x, y) => [0, 1, 2, 3].map(i => coil(x + 18 + i * 30, i % 2 ? y + T : y + T + 80, x + 18 + i * 30, i % 2 ? y + T + 80 : y + T, 4, 8, 6)).join('') +
+      lp(`M${x + 18},${y + T} q15,-12 30,0`) + lp(`M${x + 48},${y + T + 80} q15,12 30,0`) + lp(`M${x + 78},${y + T} q15,-12 30,0`), 'α'],
+    [T2('β-haarspeld', 'β-hairpin'), (x, y) => hb(x + 36, x + 58, [y + 26, y + 44, y + 62, y + 80]) + st(x + 30, y + Bm, y + T + 6) + lp(`M${x + 30},${y + T + 4} q17,-16 34,0`) + st(x + 64, y + T + 6, y + Bm), 'β'],
     ['Greek key', (x, y) => st(x + 45, y + Bm, y + T + 10) + st(x + 75, y + T + 10, y + Bm) + st(x + 105, y + Bm, y + T + 10) + st(x + 15, y + T + 10, y + Bm) +
       lp(`M${x + 45},${y + T + 8} q15,-14 30,0`) + lp(`M${x + 75},${y + Bm + 2} q15,14 30,0`) + lp(`M${x + 105},${y + T + 8} C${x + 105},${y - 14} ${x + 15},${y - 14} ${x + 15},${y + T + 8}`), 'β'],
     [T2('β-sandwich', 'β-sandwich'), (x, y) => [0, 1, 2, 3].map(i => st(x + 40 + i * 24, i % 2 ? y + T : y + 62, i % 2 ? y + 62 : y + T, '#9c6f25')).join('') + [0, 1, 2, 3].map(i => st(x + 16 + i * 24, i % 2 ? y + 28 : y + Bm, i % 2 ? y + Bm : y + 28)).join(''), 'β'],
-    [T2('β-barrel', 'β-barrel'), (x, y) => `<ellipse cx="${x + 62}" cy="${y + 48}" rx="50" ry="38" fill="none" stroke="#ffc247" stroke-width="12" stroke-dasharray="16 7"/>`, 'β'],
+    [T2('β-barrel', 'β-barrel'), barrel, 'β'],
     [T2('Rossmann-vouw (βαβαβ)', 'Rossmann fold (βαβαβ)'), (x, y) => st(x + 10, y + Bm, y + T) + hx(x + 26, y + 26, 20, 56) + st(x + 62, y + Bm, y + T) + hx(x + 78, y + 26, 20, 56) + st(x + 114, y + Bm, y + T), 'α/β'],
     [T2('hoefijzer (LRR)', 'horseshoe (LRR)'), (x, y) => `<path d="M${x + 20},${y + Bm} A44,44 0 1,1 ${x + 108},${y + Bm}" fill="none" stroke="#ffc247" stroke-width="11"/><path d="M${x},${y + Bm} A64,64 0 0,1 ${x + 128},${y + Bm}" fill="none" stroke="#9b7bff" stroke-width="9" stroke-dasharray="24 9"/>`, ''],
   ];
@@ -255,3 +256,41 @@ function classes() {
     row(346, 'α/β', T2('α en β afwisselend', 'α and β alternating'), '#7fdc6a') +
     row(388, 'α+β', T2('α en β in aparte gebieden', 'α and β in separate regions'), '#5fd3e6');
 }
+  const r1 = v => (+v).toFixed(1);
+  /* α-helix als opgerold lint: achterkant donker, voorkant licht (rechtshandige winding) */
+  const coil = (x0, y0, x1, y1, turns = 3, amp = 9, w = 7) => {
+    const n = Math.round(turns * 20), dx = x1 - x0, dy = y1 - y0, L0 = Math.hypot(dx, dy), nx = -dy / L0, ny = dx / L0;
+    let back = '', front = '';
+    for (let i = 0; i < n; i++) {
+      const p = j => { const u = j / n, s = Math.sin(u * turns * 2 * Math.PI) * amp; return [x0 + dx * u + nx * s, y0 + dy * u + ny * s]; };
+      const [ax, ay] = p(i), [bx, by] = p(i + 1), seg = `M${r1(ax)},${r1(ay)}L${r1(bx)},${r1(by)}`;
+      if (Math.cos((i + .5) / n * turns * 2 * Math.PI) >= 0) front += seg; else back += seg;
+    }
+    return `<path d="${back}" stroke="#5a4bb8" stroke-width="${w * .65}" stroke-linecap="round" fill="none"/>` +
+      `<path d="${front}" stroke="#0a1224" stroke-width="${w + 3}" stroke-linecap="round" fill="none"/><path d="${front}" stroke="#9b7bff" stroke-width="${w}" stroke-linecap="round" fill="none"/>`;
+  };
+  /* β-streng als pijl langs een (gebogen) lijn */
+  const strandPath = (P, col = '#ffc247', w = 9, op = 1) => {
+    const [ax, ay] = P[P.length - 2], [bx, by] = P[P.length - 1], L0 = Math.hypot(bx - ax, by - ay) || 1, ux = (bx - ax) / L0, uy = (by - ay) / L0, hl = w * 1.3, hw = w * 1.05;
+    const body = P.slice(0, -1).concat([[bx - ux * hl, by - uy * hl]]).map(([x, y], i) => `${i ? 'L' : 'M'}${r1(x)},${r1(y)}`).join('');
+    const bx0 = bx - ux * hl, by0 = by - uy * hl;
+    return `<g opacity="${op}"><path d="${body}" stroke="${col}" stroke-width="${w}" fill="none" stroke-linejoin="round"/>` +
+      `<path d="M${r1(bx0 - uy * hw)},${r1(by0 + ux * hw)} L${r1(bx)},${r1(by)} L${r1(bx0 + uy * hw)},${r1(by0 - ux * hw)}Z" fill="${col}"/></g>`;
+  };
+  const hb = (x1, x2, ys) => ys.map(yy => `<line x1="${x1}" y1="${yy}" x2="${x2}" y2="${yy}" stroke="#e8edf6" stroke-width="1.6" stroke-dasharray="2.5 2.5" opacity=".8"/>`).join('');
+  /* β-barrel: 8 schuine, antiparallelle strengen rond een cilinder; achterkant gedimd, randen als ellips */
+  const barrel = (x, y) => {
+    const cx = x + 62, R = 46, yT = y + 14, yB = y + 84, ry = R * .3, tilt = .42, N = 8;
+    const pt = (th, u) => [cx + R * Math.sin(th), lerpN(yB, yT, u) + ry * Math.cos(th)];
+    let back = '', front = '';
+    const rim = (yy, half) => `<path d="M${cx - R},${yy} A${R},${r1(ry)} 0 0,${half} ${cx + R},${yy}" fill="none" stroke="#c9a24a" stroke-width="1.8" opacity="${half ? .35 : .7}"/>`;
+    for (let i = 0; i < N; i++) {
+      const th0 = i / N * 2 * Math.PI + .2, P = [];
+      for (let k = 0; k <= 8; k++) { const u = .07 + .86 * k / 8; P.push(pt(th0 + tilt * u, u)); }
+      if (i % 2) P.reverse();   // antiparallel: om de andere streng naar beneden
+      const mid = Math.cos(th0 + tilt / 2), s = strandPath(P, mid >= 0 ? '#ffc247' : '#8a6322', 6.5, mid >= 0 ? 1 : .75);
+      if (mid >= 0) front += s; else back += s;
+    }
+    return `<path d="M${cx - R},${yT} L${cx - R},${yB} A${R},${r1(ry)} 0 0,0 ${cx + R},${yB} L${cx + R},${yT} A${R},${r1(ry)} 0 0,0 ${cx - R},${yT}Z" fill="#ffc247" opacity=".07"/>` + rim(yT, 0) + rim(yB, 0) + back + rim(yT, 1) + rim(yB, 1) + front;
+  };
+  const lerpN = (a, b, u) => a + (b - a) * u;

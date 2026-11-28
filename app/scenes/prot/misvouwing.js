@@ -1,6 +1,7 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, panel, phos, ub, blob } from './_b_kit.js';
 import { bilayer, knop } from './_fate.js';
+import { helixLint, strengPijl, vouwing } from '../../bio.js';
 
 /* Panelen naast elkaar: A (0–1600) kwaliteitscontrole & aggregatie · B (1700–3300) kinetiek · C (3400–5000) cross-β
  * D (5100–6700) ziekten · E (6800–8400) prionen · F (8500–10100) UPR */
@@ -9,7 +10,7 @@ const ERY = 422, ERW = 44, AX = 9800, AVR = 74;      // ER-membraan (paneel F) e
 const ST = (dur, camv, nl, en, tnl, ten) => ({ dur, cam: camv, title: { nl, en }, text: { nl: tnl, en: ten } });
 
 const native = (x, y, s = 1, op = 1) => `<g opacity="${f1(op)}">${blob(f1(x), f1(y), f1(62 * s), f1(50 * s), { fill: 'rgba(127,220,106,.2)', stroke: C.chain, sw: 4, seed: 105 })}` +
-  chain([[x - 38 * s, y + 5 * s], [x - 16 * s, y - 28 * s], [x + 4 * s, y + 10 * s], [x + 24 * s, y - 24 * s], [x + 40 * s, y + 12 * s], [x, y + 32 * s]], { w: 5, op: .7 }) + '</g>';
+  vouwing(x, y, 62 * s, 50 * s, { col: C.chain }) + '</g>';   // gevouwen: helices, β-blad, hydrofobe kern binnenin
 const misf = (x, y, s = 1, op = 1, rot = 0) => `<g opacity="${f1(op)}" transform="rotate(${f1(rot)} ${f1(x)} ${f1(y)})">` + chain([[x - 60 * s, y + 20 * s], [x - 30 * s, y - 20 * s], [x, y + 18 * s], [x + 30 * s, y - 24 * s], [x + 62 * s, y + 10 * s]], { w: 7 }) +
   `<path d="${smooth([[x - 30 * s, y - 20 * s], [x, y + 18 * s], [x + 30 * s, y - 24 * s]])}" stroke="${HYD}" stroke-width="12" fill="none" stroke-linecap="round" opacity=".9"/></g>`;
 
@@ -93,7 +94,7 @@ export default {
         let a = '', ch = '', dg = '', nt = '';
         const misX = 820, misY = 460;
         if (step <= 1) {
-          nt += native(420, 460, 1.4) + T(420, 585, T2('natief: hydrofoob binnenin', 'native: hydrophobic inside'), { size: 23, col: C.chain });
+          nt += native(420, 450, 1.8) + T(420, 585, T2('natief: hydrofoob binnenin', 'native: hydrophobic inside'), { size: 23, col: C.chain });
           if (step === 0) {
             a += misf(misX, misY, 1.3) + T(misX, 565, T2('misgevouwen: hydrofoob buiten', 'misfolded: hydrophobic outside'), { size: 23, col: HYD });
             a += arr(620, 460, 720, 460, C.muted, 'mf-m', { w: 4 });
@@ -172,9 +173,15 @@ export default {
         let pr = '';
         if (step >= 4 && step <= 6) {
           const helixProt = (x, y, op = 1) => `<g opacity="${f1(op)}">${blob(x, y, 95, 75, { fill: 'rgba(127,220,106,.16)', stroke: C.chain, sw: 4, seed: 106 })}` +
-            [[-45, -20], [10, 25], [45, -25]].map(([dx, dy]) => { let d = ''; for (let k = 0; k <= 24; k++) d += `${k ? 'L' : 'M'}${f1(x + dx - 30 + k * 2.5)},${f1(y + dy + 10 * Math.sin(k * .8))}`; return `<path d="${d}" stroke="${C.chain}" stroke-width="5" fill="none"/>`; }).join('') + '</g>';
+            // PrPC (NMR-structuur): volgorde β1 – H1 – β2 – H2 – H3; kort β-blad links, H2 en H3 als lange helices naast elkaar
+            `<path d="M${x - 78},${y + 40} Q${x - 75},${y + 10} ${x - 64},${y + 6} M${x - 34},${y + 6} Q${x - 30},${y - 20} ${x - 54},${y - 34} M${x - 8},${y - 34} Q${x - 10},${y + 5} ${x - 32},${y + 24} M${x - 64},${y + 24} Q${x - 10},${y + 72} ${x + 48},${y + 42} M${x + 48},${y - 42} Q${x + 32},${y - 62} ${x + 14},${y - 42}" stroke="#b5ee9f" stroke-width="3" fill="none" stroke-linecap="round"/>` +
+            strengPijl(x - 64, y + 6, x - 34, y + 6, { h: 8 }) + strengPijl(x - 32, y + 24, x - 64, y + 24, { h: 8 }) +
+            helixLint(x - 54, y - 34, x - 8, y - 34, { turns: 2, amp: 9, w: 8, col: C.chain }) +
+            helixLint(x + 48, y + 42, x + 48, y - 42, { turns: 3.2, amp: 9, w: 8, col: C.chain }) + helixLint(x + 14, y - 42, x + 14, y + 38, { turns: 3, amp: 9, w: 8, col: C.chain }) + '</g>';
           const betaProt = (x, y, op = 1) => `<g opacity="${f1(op)}">${blob(x, y, 95, 75, { fill: 'rgba(255,107,107,.16)', stroke: BAD, sw: 4, seed: 107 })}` +
-            [-40, -13, 14, 41].map(dx => `<path d="M${x + dx},${y + 40} v-62" stroke="${BAD}" stroke-width="12"/><path d="M${x + dx - 11},${y - 20} L${x + dx},${y - 40} L${x + dx + 11},${y - 20}Z" fill="${BAD}"/>`).join('') + '</g>';
+            // PrPSc: vooral β-strengen, gestapeld met H-bruggen ertussen
+            [-27, 0, 27].map(dx => [-36, -20, -4, 12, 28].map(dy => `<line x1="${x + dx - 9}" y1="${y + dy}" x2="${x + dx + 9}" y2="${y + dy}" stroke="#ffd0d0" stroke-width="1.6" stroke-dasharray="2.5 2.5"/>`).join('')).join('') +
+            [-40, -13, 14, 41].map(dx => strengPijl(x + dx, y + 42, x + dx, y - 44, { h: 11, col: BAD })).join('') + '</g>';
           const k = step === 5 ? ease(sub(p, .1, .4)) : 0, conv = step === 5 ? ease(sub(p, .4, .7)) : 0, rep2 = step === 5 ? sub(p, .75, .95) : 0;
           const cx = 7600;
           pr += betaProt(cx - 260 + 60 * k, 430);

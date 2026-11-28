@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1, CLASSCOL, AACLASS, THREE } from '../../kit.js';
 import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, sugar, panel, SNFG } from './_b_kit.js';
-import { membraanLijn, ribosoomOpER, eiwit, tmHelix, cisterne, sec61 } from '../../bio.js';
+import { membraanLijn, ribosoomOpER, eiwit, tmHelix, cisterne, sec61, vouwing } from '../../bio.js';
 
 /* ER-membraan horizontaal (cytosol boven, lumen onder); rechts (x 1700–2600) het Golgi */
 const MEM = 380, MEMH = 44;
@@ -130,7 +130,8 @@ export default {
     const $ = id => svg.getElementById(id);
     const bead = (x, y, a, hl = 0, r = 19) => `<circle cx="${f1(x)}" cy="${f1(y)}" r="${r}" fill="${CLASSCOL[AACLASS[a]]}" stroke="${hl ? '#fff' : '#0a1224'}" stroke-width="${hl ? 3 : 2}"/>` + T(x, y + 5, THREE[a], { size: 15, col: '#0a1224', halo: false, w: 800 });
     const foldedProt = (x, y, dashed, op = 1) => `<g opacity="${f1(op)}"><ellipse cx="${f1(x)}" cy="${f1(y)}" rx="95" ry="75" fill="rgba(127,220,106,.16)" stroke="${C.chain}" stroke-width="4" ${dashed ? 'stroke-dasharray="14 8"' : ''}/>` +
-      chain([[x - 60, y + 10], [x - 30, y - 40], [x, y + 10], [x + 30, y - 35], [x + 60, y + 15], [x + 10, y + 45], [x - 40, y + 40]], { w: 5, op: .6 }) + '</g>';
+      (dashed ? chain([[x - 60, y + 10], [x - 30, y - 40], [x, y + 10], [x + 30, y - 35], [x + 60, y + 15], [x + 10, y + 45], [x - 40, y + 40]], { w: 5, op: .6 })   // nog aan het vouwen: losse keten
+        : vouwing(x, y, 95, 75, { col: C.chain })) + '</g>';                                                                                                   // gevouwen: helices + β-blad
 
     return {
       update(t, s) {

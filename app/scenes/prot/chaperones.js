@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1, rng } from '../../kit.js';
 import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, panel, spark, lerpPts, ATPC, blob } from './_b_kit.js';
-import { ribosoom80S } from '../../bio.js';
+import { ribosoom80S, vouwing, strengPijl } from '../../bio.js';
 
 /* Paneel A (x 0–1600): Hsp70-cyclus · Paneel B (x 1700–3300): chaperonine (GroEL–GroES) · Paneel C (x 3400–5000): netwerk */
 const HYD = '#ff9f43';                                   // hydrofoob segment
@@ -127,7 +127,9 @@ export default {
         $('ch-r70').setAttribute('opacity', step === 0 ? 1 : 0);   // enkel in het overzicht (de ingezoomde camera's snijden het af)
         $('ch-chainA').setAttribute('cx', 520); $('ch-chainA').setAttribute('cy', step <= 3 ? 290 : -9999);
         // Hsp70
-        let hs = enz(760, 560, 130, 95, 'NBD', { fs: 24, dy: 20 }) + enz(930, 470, 78, 55, 'SBDβ', { fs: 21, dy: 30 });
+        // NBD: twee lobben (I en II) met de ATP-kloof ertussen; SBDβ: β-sandwich (strengen met H-bruggen) met de groef voor de keten
+        let hs = enz(760, 560, 130, 95, '', {}) + NBDFOLD + T(760, 682, 'NBD', { size: 24, w: 800, col: '#c9b8ff' }) +
+          enz(930, 470, 78, 55, '', {}) + SBDFOLD + T(930, 518, 'SBDβ', { size: 19, w: 800, col: '#c9b8ff' });
         hs += tag(760, 530, nuc || '·', ATPC, { fs: 20, op: nuc ? 1 : 0 });
         if (step === 2) hs += spark(760, 530, sub(p, .25, .5));
         if (step === 3 && p > .3 && p < .55) hs += tag(lerp(760, 600, sub(p, .3, .5)), lerp(530, 700, sub(p, .3, .5)), 'ADP', ATPC, { fs: 18, op: 1 - sub(p, .45, .55) });
@@ -138,9 +140,23 @@ export default {
         // dicht (ADP) = over de keten die in de groef van SBDβ ligt (Mayer & Bukau 2005). Getekend achter de keten.
         const ctl = [lerp(1030, 1062, lid), lerp(505, 338, lid)], end = [lerp(1067, 858, lid), lerp(570, 352, lid)];
         const ld = `M${HINGE[0]},${HINGE[1]} Q${f1(ctl[0])},${f1(ctl[1])} ${f1(end[0])},${f1(end[1])}`;
-        $('ch-lid').innerHTML = `<path d="${ld}" stroke="${C.prot}" stroke-width="34" stroke-linecap="round" fill="none" opacity=".55"/>` +
-          `<path d="${ld}" stroke="${C.prot}" stroke-width="3" fill="none"/>` +
+        // deksel = helixdomein: opgerold lint langs de boog
+        const lidPts = Array.from({ length: 49 }, (_, i) => { const u = i / 48, v = 1 - u; return [v * v * HINGE[0] + 2 * v * u * ctl[0] + u * u * end[0], v * v * HINGE[1] + 2 * v * u * ctl[1] + u * u * end[1]]; });
+        $('ch-lid').innerHTML = `<path d="${ld}" stroke="${C.prot}" stroke-width="34" stroke-linecap="round" fill="none" opacity=".22"/>` +
+          coilAlong(lidPts, 4.5, 12, 11) +
           T(lerp(1105, 940, lid), lerp(560, 318, lid), T2('deksel', 'lid'), { size: 21, col: '#c9b8ff', anchor: lid > .5 ? 'middle' : 'start', op: step === 0 ? 0 : step === 1 ? sub(p, 0, .2) : 1 });
+    /* NBD: twee lobben + ATP-kloof; SBDβ: β-sandwich (statisch, eenmalig berekend) */
+    const NBDFOLD = `<path d="M760,470 Q752,520 760,560" stroke="#0b1224" stroke-width="10" fill="none" opacity=".7"/>` +
+      vouwing(708, 575, 52, 62, { col: C.prot, kern: false }) + vouwing(812, 575, 52, 62, { col: C.prot, kern: false, spiegel: true });
+    const SBDFOLD = `<g opacity=".45">` + [-24, -6, 12, 30].map((dx, i) => strengPijl(930 + dx, i % 2 ? 422 : 484, 930 + dx, i % 2 ? 484 : 422, { h: 7 })).join('') + '</g>' + [-30, -12, 6, 24].map((dx, i) => strengPijl(930 + dx, i % 2 ? 430 : 492, 930 + dx, i % 2 ? 492 : 430, { h: 7 })).join('') +
+      [-21, -3, 15].map(dx => [444, 460, 476].map(yy => `<line x1="${930 + dx - 4}" y1="${yy}" x2="${930 + dx + 4}" y2="${yy}" stroke="#e8edf6" stroke-width="1.4" stroke-dasharray="2 2"/>`).join('')).join('');
+    /* opgerold lint langs een willekeurige lijn (voor het deksel) */
+    const coilAlong = (P, turns, amp, w) => {
+      let bk = '', fr = ''; const n = P.length - 1;
+      const q = j => { const a = P[Math.max(0, j - 1)], b = P[Math.min(n, j + 1)], L0 = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, s = Math.sin(j / n * turns * 6.2832) * amp; return [P[j][0] - (b[1] - a[1]) / L0 * s, P[j][1] + (b[0] - a[0]) / L0 * s]; };
+      for (let j = 0; j < n; j++) { const [ax, ay] = q(j), [bx, by] = q(j + 1), seg = `M${f1(ax)},${f1(ay)}L${f1(bx)},${f1(by)}`; if (Math.cos((j + .5) / n * turns * 6.2832) >= 0) fr += seg; else bk += seg; }
+      return `<path d="${bk}" stroke="#5a4bb8" stroke-width="${w * .65}" stroke-linecap="round" fill="none"/><path d="${fr}" stroke="#0a1224" stroke-width="${w + 3}" stroke-linecap="round" fill="none"/><path d="${fr}" stroke="${C.prot}" stroke-width="${w}" stroke-linecap="round" fill="none"/>`;
+    };
         // co-chaperones
         let co = '';
         if (h40 > .01) co += enz(lerp(700, 850, h40), lerp(300, 380, h40), 70, 36, 'Hsp40', { col: C.prot2, fs: 20, op: h40, fillOp: .5 });

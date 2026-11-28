@@ -42,7 +42,7 @@ const scene = {
     S(9000, cam(720, 660, 1200), 'Het laatste stukje lukt niet', 'The very last bit fails',
       'Het laatste startstukje van RNA valt weg. Dat gat kan niet opgevuld worden: er is geen startpunt meer.',
       'The last RNA starter piece is removed. That gap cannot be filled: there is no starting point left.'),
-    S(8000, cam(720, 700, 1200), 'Elke deling een beetje korter', 'A little shorter every division',
+    S(8000, cam(700, 700, 1290), 'Elke deling een beetje korter', 'A little shorter every division',
       'In de meeste cellen worden telomeren zo bij elke deling korter. Zijn ze te kort, dan stopt de cel met delen.',
       'In most cells telomeres thus get shorter with every division. When they are too short, the cell stops dividing.'),
     S(8000, cam(1125, 440, 830), 'Telomerase grijpt het uiteinde', 'Telomerase grabs the end',
@@ -131,8 +131,15 @@ const scene = {
             const yR = YB + (1 - kIn) * 90;
             // TERT-lichaam (achter de letters: wordt vooraan in m gezet)
             const cx = xOf(jStart + 5), cy = (YT + YB + BH) / 2 + 40 + (1 - kIn) * 90;
-            const tert = `<g opacity="${f1(kIn)}"><path d="${eiwitPad(cx, cy, 250, 140, 33, .06)}" fill="${C.prot}" fill-opacity=".14" stroke="${C.prot}" stroke-width="3"/>` +
-              txt(cx + 190, cy + 26, 'TERT', '#fff', 22, 'middle', 700) + '</g>';   // binnen de rand, rechts naast de RNA-lus
+            // TERT-domeinen als ring rond matrijs en DNA: TEN (bij het DNA), TRBD (bindt hTR), RT-'hand' (vingers–palm, actieve plaats
+            // onder de matrijs), CTE ('duim'); Nguyen et al. 2018 (cryo-EM menselijk telomerase)
+            const dom = (x, y, rx, ry, sd, lab, lx, ly) => `<path d="${eiwitPad(x, y, rx, ry, sd, .08)}" fill="${C.prot}" fill-opacity=".2" stroke="#b39dff" stroke-width="2.5"/>` + txt(lx ?? x, ly ?? y + 6, lab, '#d6ccff', 17, 'middle', 700);
+            const tert = `<g opacity="${f1(kIn)}"><path d="${eiwitPad(cx, cy, 250, 140, 33, .06)}" fill="${C.prot}" fill-opacity=".08" stroke="${C.prot}" stroke-width="3"/>` +
+              // ring TRBD–RT–CTE rond het DNA:RNA-hybride; RT (actieve plaats) recht onder het 3′-uiteinde van het DNA; TEN bij het DNA stroomopwaarts
+              dom(xOf(jStart) - 88, YB + 16, 30, 32, 34, 'TEN') + dom(cx - 165, YB + BH + 46, 52, 26, 35, 'TRBD', cx - 165, YB + BH + 92) +
+              dom(xOf(jStart + 7), YB + BH + 44, 78, 22, 36, T2('RT (hand)', 'RT (hand)'), xOf(jStart + 7), YB + BH + 86) + dom(cx + 172, YB + BH + 40, 40, 30, 37, 'CTE') +
+              `<circle cx="${f1(clamp(xOf(nT), xOf(jStart + 2), xOf(jStart + 10)))}" cy="${f1(YB + BH + 14)}" r="5" fill="#ffd36b"/>`   /* actieve plaats: waar de volgende letter bijkomt */ +
+              txt(cx + 150, cy + 128, 'TERT', '#fff', 22, 'middle', 700) + '</g>';   // binnen de rand, rechts naast de RNA-lus
             tertS = tert;
             // hTR: matrijs + (gestippeld) de rest van het 451-nt RNA
             let r = '';
@@ -141,7 +148,7 @@ const scene = {
             const xl = xOf(jStart) - 12, xr = xOf(jStart + 10) + 12, yb = yR + BH + 8;
             r += `<path d="M${f1(xl)},${f1(yb)} C${f1(xl - 90)},${f1(yb + 20)} ${f1(xl - 70)},${f1(yb + 110)} ${f1(xl + 60)},${f1(yb + 105)} S${f1(xr + 60)},${f1(yb + 120)} ${f1(xr)},${f1(yb)}" stroke="${PRIMER}" stroke-width="5" fill="none" stroke-dasharray="4 7"/>`;
             r += endl(xOf(jStart) - 32, yR + 17, "3′", PRIMER, 16) + endl(xOf(jStart + 10) + 32, yR + 17, "5′", PRIMER, 16);
-            r += txt(xl + 70, yb + 80, T2('hTR (451 nt)', 'hTR (451 nt)'), PRIMER, 18, 'middle', 700);
+            r += txt(xl - 95, yb + 60, T2('hTR (451 nt)', 'hTR (451 nt)'), PRIMER, 18, 'end', 700);
             m += `<g opacity="${f1(kIn)}">${r}</g>`;
             // paringsstreepjes
             const nTop = top.length;

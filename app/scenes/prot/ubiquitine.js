@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1, CLASSCOL } from '../../kit.js';
 import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, ub, panel, spark, ATPC, UB } from './_b_kit.js';
-import { eiwitPad } from '../../bio.js';
+import { eiwitPad, vouwing } from '../../bio.js';
 
 /* posities (scène 1600×900; paneel K48/K63 op x 1700–2700) */
 const E1 = [190, 215], E2DOCK = [415, 585], E3 = [640, 575], S0 = [610, 405], SP = [770, 420];
@@ -101,7 +101,8 @@ export default {
   init(svg) {
     const $ = id => svg.getElementById(id);
     const glob = (x, y, r, op = 1) => r < 2 ? '' : `<g opacity="${f1(op)}"><path d="${eiwitPad(x, y, r * 1.25, r, 27, .08)}" fill="#0b1224" fill-opacity=".4"/><path d="${eiwitPad(x, y, r * 1.25, r, 27, .08)}" fill="rgba(127,220,106,.2)" stroke="${C.chain}" stroke-width="4" stroke-linejoin="round"/>` +
-      `<path d="${smooth([[x - r * .8, y - r * .1], [x - r * .4, y - r * .6], [x, y - r * .1], [x + r * .3, y - r * .6], [x + r * .8, y], [x + r * .2, y + r * .5], [x - r * .5, y + r * .45]])}" stroke="${C.chain}" stroke-width="5" fill="none" opacity=".6"/></g>`;
+      (r >= 40 ? vouwing(x, y, r * 1.25, r, { col: C.chain, op: Math.min(1, (r - 40) / 20) }) : '') +   // gevouwen binnenkant; verdwijnt mee bij het ontvouwen
+      `<path d="${smooth([[x - r * .8, y - r * .1], [x - r * .4, y - r * .6], [x, y - r * .1], [x + r * .3, y - r * .6], [x + r * .8, y], [x + r * .2, y + r * .5], [x - r * .5, y + r * .45]])}" stroke="${C.chain}" stroke-width="5" fill="none" opacity="${f1(.6 * clamp(1 - (r - 40) / 20, 0, 1))}"/></g>`;
 
     /* K48/K63-paneel (statisch) */
     let code = '';

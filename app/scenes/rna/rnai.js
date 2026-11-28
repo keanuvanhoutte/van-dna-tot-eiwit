@@ -161,8 +161,14 @@ export default {
           hp += `<g transform="translate(${DB[0]} ${DB[1]}) rotate(90)">` + hairpin({ loop: 0 }) +
             `<g opacity="${f1(lo)}" transform="translate(${f1(30 * (1 - lo))} ${f1(-60 * (1 - lo))})">` + `<path d="M-12,${-NB * BP} L-12,${-NB * BP - 34} C-12,${-NB * BP - 80} 12,${-NB * BP - 80} 12,${-NB * BP - 34} L12,${-NB * BP}" stroke="${C.rna}" stroke-width="7" fill="none"/></g></g>`;
           const k = ease(sub(p, 0, .3)), ko = k * (1 - sub(p, .85, 1));
-          enz += `<g opacity="${f1(ko)}"><path d="${eiwitPad(DB[0] + 168, DB[1] + 10, 116, 70, 63, .06)}" fill="rgba(155,123,255,.2)" stroke="${C.prot}" stroke-width="3"/></g>`;
-          enz += note(DB[0] + 150, DB[1] - 104, T2('tweede knip-enzym', 'second cutting enzyme'), '#c9b8ff', 20, 'middle', ko) + note(DB[0] + 150, DB[1] - 84, '(Dicer)', C.muted, 15, 'middle', ko) + prot(DB[0] + 150, DB[1] + 110, 70, 30, 'TRBP', '#5a4bb8', ko, 15);
+          // Dicer als L-vorm: PAZ grijpt het open uiteinde (2-nt-overhang), de twee RNase III-domeinen knippen ~22 nt verder
+          // (bij de lus), het helicasedomein zit aan de lus (MacRae et al. 2006; Liu et al. 2018)
+          const dP = (cx, cy, rx, ry, sd, st = C.prot, fl = 'rgba(155,123,255,.22)') => `<path d="${eiwitPad(cx, cy, rx, ry, sd, .07)}" fill="${fl}" stroke="${st}" stroke-width="3"/>`;
+          const sxD = DB[0] + NB * BP + 2;
+          enz += `<g opacity="${f1(ko)}">` + dP(DB[0] + 120, DB[1] + 44, 150, 30, 63) + dP(DB[0] - 6, DB[1] + 12, 30, 34, 64) +
+            dP(DB[0] + 268, DB[1] + 24, 50, 44, 65) + dP(sxD - 16, DB[1] + 44, 18, 20, 66, '#ffd36b', 'rgba(255,211,107,.25)') + dP(sxD + 16, DB[1] + 44, 18, 20, 67, '#ffd36b', 'rgba(255,211,107,.25)') +
+            note(DB[0] - 42, DB[1] + 18, 'PAZ', '#c9b8ff', 15, 'end', 1) + note(sxD, DB[1] + 82, 'RNase III', '#ffd36b', 15, 'middle', 1) + note(DB[0] + 325, DB[1] - 10, T2('helicase', 'helicase'), '#c9b8ff', 15, 'start', 1) + '</g>';
+          enz += note(DB[0] + 150, DB[1] - 104, T2('tweede knip-enzym', 'second cutting enzyme'), '#c9b8ff', 20, 'middle', ko) + note(DB[0] + 150, DB[1] - 84, '(Dicer)', C.muted, 15, 'middle', ko) + prot(DB[0] + 285, DB[1] + 100, 60, 26, 'TRBP', '#5a4bb8', ko, 15);
           const kk = sub(p, .38, .48) * (1 - sub(p, .66, .76)), sx = DB[0] + NB * BP + 2;
           enz += `<g transform="translate(${sx} ${DB[1]}) scale(1.6) translate(${-sx} ${-DB[1]})">${snip(sx, DB[1], kk, '#ffd36b')}</g>` + note(sx + 26, DB[1] - 44, T2('knipt!', 'cuts!'), '#ffd36b', 22, 'start', kk);
           enz += `<g opacity="${f1(sub(p, .6, .8))}"><path d="M${DB[0] - 12},${DB[1] + 44} v10 H${DB[0] + NB * BP} v-10" stroke="#ffd36b" stroke-width="2.5" fill="none"/></g>` + note(DB[0] + NB * BP / 2, DB[1] + 80, T2('≈ 22 nt', '≈ 22 nt'), '#ffd36b', 18, 'middle', sub(p, .6, .8));
