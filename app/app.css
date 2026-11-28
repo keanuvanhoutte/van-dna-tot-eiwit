@@ -476,4 +476,5 @@ details.more .morebody > .sec:first-child { margin-top: 0; }
 .parts li.flash { animation: partflash 1.6s ease-out; }
 @keyframes partflash { 0%, 30% { background: rgba(255,255,255,.12); box-shadow: inset 3px 0 0 var(--c); } 100% { background: transparent; box-shadow: none; } }
 .layer text.partlab { cursor: pointer; text-decoration: underline dotted; }
+.lab3d > div.partlab { cursor: pointer; text-decoration: underline dotted; }
 .layer text.partlab:hover { filter: brightness(1.35) drop-shadow(0 0 4px rgba(255,255,255,.45)); }

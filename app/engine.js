@@ -1132,8 +1132,8 @@ function partsHTML(parts) {
 }
 /* een woord in de figuur dat bij een onderdeel hoort: aanklikbaar → tabblad "Wat zie je?" op dat onderdeel */
 function partAt(target) {
-  const parts = partsOf(), tx = target?.closest?.('text'); if (!parts || !tx || !current.root.contains(tx)) return -1;
-  const s = tx.textContent.replace(/\s+/g, ' ').trim(); if (!s) return -1;
+  const parts = partsOf(), tx = target?.closest?.('text, .lab3d > div'); if (!parts || !tx || !current.root.contains(tx)) return -1;
+  const s = tx.textContent.replace(/\s+/g, ' ').trim(); if (!s || s.endsWith('›')) return -1;   // 3D-kaartje met › = link naar een andere scène
   return parts.findIndex(p => [L(p.t), ...(p.m ?? [])].some(m => m === s || easyLabel(m) === s));
 }
 function showPart(i) {
@@ -1142,7 +1142,7 @@ function showPart(i) {
   li.scrollIntoView({ block: 'center', behavior: 'smooth' });
   li.classList.remove('flash'); void li.offsetWidth; li.classList.add('flash');
 }
-stage.addEventListener('mouseover', e => { if (partAt(e.target) >= 0) e.target.closest('text').classList.add('partlab'); });
+stage.addEventListener('mouseover', e => { if (partAt(e.target) >= 0) e.target.closest('text, .lab3d > div').classList.add('partlab'); });
 stage.addEventListener('click', e => { const i = partAt(e.target); if (i >= 0) { e.stopPropagation(); showPart(i); } });
 function render() {
   const def = current.def, base = current.base, n = NODES[current.id];

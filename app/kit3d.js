@@ -301,7 +301,7 @@ export function makeLabels(host, viewer, onNode, fs) {
       const col = l.color ?? '#7cc4ff';
       el.textContent = l.text;
       el.style.cssText = `position:absolute;left:0;top:0;white-space:nowrap;font:600 ${fs}px/1.25 system-ui,sans-serif;color:#fff;background:rgba(11,18,36,.88);` +
-        `border:${l.color ? 2 : 1}px solid ${col};border-radius:7px;padding:3px 9px;visibility:hidden;` + (l.node ? 'pointer-events:auto;cursor:pointer;' : '');
+        `border:${l.color ? 2 : 1}px solid ${col};border-radius:7px;padding:3px 9px;visibility:hidden;pointer-events:auto;` + (l.node ? 'cursor:pointer;' : '');   // ook zonder link aanklikbaar: engine toont dan de uitleg (Wat zie je?)
       if (l.node) {
         el.title = '→';
         el.insertAdjacentHTML('beforeend', ' <span style="opacity:.75;font-weight:500">›</span>');

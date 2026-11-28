@@ -1,0 +1,53 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>parts-check</title>
+<body style="background:#0a1224;color:#ddd"><pre id="out">running…</pre><div id="stage" style="position:absolute;left:-99999px;width:1600px;height:900px"></div>
+<script type="module">
+/* Dekking van "Wat zie je?" (scène-veld parts): per animatie alle woorden die IN de figuur staan (hele SVG-<text> en 3D-naamkaartjes
+ * zonder link), over alle stappen, en welke ervan bij geen enkel onderdeel horen (naam t of schrijfwijze in m).
+ * Gebruik: headless Chrome --dump-dom "tools/parts-check.html?lang=nl[&ids=a,b][&all=1]"  (all=1: ook de gedekte woorden tonen) */
+const out = document.getElementById('out'), stage = document.getElementById('stage');
+const qs = new URLSearchParams(location.search), only = qs.get('ids')?.split(','), all = qs.has('all');
+const { SCENES } = await import('../app/scenes/index.js');
+const { L, lang } = await import('../shared/i18n.js');
+const norm = s => s.replace(/\s+/g, ' ').trim();
+/* losse tekens/cijfers zonder betekenis op zich (tabeltekens, asgetallen) tellen niet mee */
+const trivial = s => !/[A-Za-zÀ-ÿα-ωΑ-Ω]/.test(s) && !/^[−-]\d+$|^\+1$/.test(s);
+const res = [];
+let errs = 0;
+for (const [id, def] of Object.entries(SCENES)) {
+  if (only && !only.includes(id)) continue;
+  if (def.alias) continue;
+  const layer = document.createElement('div'); stage.append(layer);
+  const found = new Set();
+  const collect = () => {
+    layer.querySelectorAll('svg text').forEach(e => { if (e.closest('defs')) return; const s = norm(e.textContent); if (s) found.add(s); });
+    layer.querySelectorAll('.lab3d > div').forEach(e => { const s = norm(e.textContent); if (s && !s.endsWith('›')) found.add(s); });
+  };
+  try {
+    const is3d = def.kind === '3d';
+    layer.innerHTML = is3d ? def.html() : def.svg();
+    const root = is3d ? layer : layer.querySelector('svg');
+    let api = null; try { api = def.init?.(root, { lang, L, node: id }) ?? null; } catch (e) { errs++; }
+    collect();
+    let acc = 0; const total = def.steps.reduce((a, s) => a + s.dur, 0);
+    for (let k = 0; k < def.steps.length; k++) {
+      for (const p of [.02, .2, .35, .5, .7, .85, .999]) {
+        try { api?.update?.(acc + def.steps[k].dur * p, { step: k, p, t: acc + def.steps[k].dur * p, total }); } catch (e) { errs++; }
+        collect();
+      }
+      acc += def.steps[k].dur;
+    }
+    try { api?.destroy?.(); } catch {}
+  } catch (e) { errs++; }
+  layer.remove();
+  const parts = def.parts ?? [];
+  const keys = new Set(parts.flatMap(p => [L(p.t), ...(p.m ?? [])].map(norm)));
+  const labels = [...found].filter(s => !trivial(s));
+  const unc = labels.filter(s => !keys.has(s));
+  const bad = parts.filter(p => !p.d?.nl || !p.d?.en || !p.p?.nl || !p.p?.en || !p.c).map(p => L(p.t));
+  res.push({ id, parts: parts.length, labels: labels.length, uncovered: unc, ...(bad.length ? { incomplete: bad } : {}), ...(all ? { all: labels } : {}) });
+}
+const missing = res.filter(r => !r.parts).length, open = res.reduce((a, r) => a + r.uncovered.length, 0);
+out.textContent = `SCENES ${res.length} · zonder parts ${missing} · ongedekte woorden ${open} · errors ${errs}\nJSON ${JSON.stringify(res)}`;
+</script>
