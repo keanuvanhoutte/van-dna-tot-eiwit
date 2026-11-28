@@ -859,7 +859,7 @@ async function go(id, box, dir = 'in', push = true, back = false) {
   if (busy || !hasScene(id)) return id && !hasScene(id) ? showCard(id) : null;
   if (current && id === current.id) return showSelf();
   real3d.close();
-  busy = true; hideOverlays(); labelsEl.classList.add('hide'); $('nextCh').classList.remove('show'); $('bBack').hidden = true;
+  busy = true; hideOverlays(); labelsEl.classList.add('hide'); $('nextCh').classList.remove('show'); $('bBack').hidden = true; stage.classList.remove('hasback');
   const old = current;
   let nxt;
   try { nxt = build(id); } catch (e) {
@@ -952,6 +952,7 @@ function saveBack() { backStack = backStack.slice(-30); try { sessionStorage.set
 function renderBack() {
   const b = backStack[backStack.length - 1], el = $('bBack');
   el.hidden = !b || busy;
+  stage.classList.toggle('hasback', !el.hidden);   // 3D-knoppen schuiven onder de Terug-knop (ook zonder :has-ondersteuning)
   if (b) { const nm = NODES[b.id] ? title(NODES[b.id]) : ''; el.querySelector('small').textContent = nm; el.title = `${V('backTip')}${nm ? ` — ${nm}` : ''}`; }
 }
 async function goBack() {
@@ -1132,7 +1133,7 @@ function partsHTML(parts) {
 }
 /* een woord in de figuur dat bij een onderdeel hoort: aanklikbaar → tabblad "Wat zie je?" op dat onderdeel */
 function partAt(target) {
-  const parts = partsOf(), tx = target?.closest?.('text, .lab3d > div'); if (!parts || !tx || !current.root.contains(tx)) return -1;
+  const parts = partsOf(), tx = target?.closest?.('text, .lab3d > div'); if (!parts || !tx || !current.root.contains(tx) || tx.closest('[data-node]')) return -1;   // tekst in een link-groep: klik = naar die scène
   const s = tx.textContent.replace(/\s+/g, ' ').trim(); if (!s || s.endsWith('›')) return -1;   // 3D-kaartje met › = link naar een andere scène
   return parts.findIndex(p => [L(p.t), ...(p.m ?? [])].some(m => m === s || easyLabel(m) === s));
 }

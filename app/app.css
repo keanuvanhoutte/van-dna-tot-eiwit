@@ -278,7 +278,7 @@ html, body { height: 100%; overflow: hidden; }
 
 /* 3D-scènes */
 .h3wrap { position: absolute; left: 12px; top: 12px; display: flex; flex-direction: column; gap: 6px; z-index: 3; max-width: 240px; }
-.stage:has(#bBack:not([hidden])) .h3wrap { top: 50px; }   /* Terug-knop zichtbaar → 3D-knoppen eronder, niet erachter */
+.stage.hasback .h3wrap, .stage:has(#bBack:not([hidden])) .h3wrap { top: 50px; }   /* Terug-knop zichtbaar → 3D-knoppen eronder, niet erachter */
 .h3 { all: unset; cursor: pointer; font-size: 12.5px; padding: 6px 10px 6px 22px; border-radius: 9px; background: rgba(9,14,28,.82); border: 1px solid var(--line); color: var(--text); position: relative; }
 .h3::before { content: ""; position: absolute; left: 9px; top: 50%; width: 7px; height: 7px; margin-top: -3.5px; border-radius: 50%; background: var(--c); }
 .h3:hover { border-color: var(--accent); }
