@@ -116,6 +116,7 @@ export const STEP_TAGS = {
   "rifampicine": [["in het enzym", "inside the enzyme"], ["β-holte", "β pocket"], ["actieve plek", "active site"], ["RNA botst", "RNA bumps"], ["resistentie", "resistance"], ["waarom niet bij ons", "why not in us"]],
   "ribosoomremmers": [["topdoelwit", "top target"], ["tetracycline", "tetracycline"], ["aminoglycosiden", "aminoglycosides"], ["macroliden", "macrolides"], ["kirromycine", "kirromycin"], ["ons ribosoom", "our ribosome"]],
   "gyraseremmers": [["knippen en plakken", "cut and reseal"], ["medicijn grijpt in", "drug strikes"], ["botsing", "collision"], ["in stukken", "in pieces"], ["ons DNA veilig", "our DNA safe"], ["resistentie", "resistance"]],
+  "bsecretie": [["waarheen?", "where to?"], ["adreslabel", "address label"], ["SecB", "SecB"], ["door SecYEG", "through SecYEG"], ["label eraf", "label off"], ["Tat", "Tat"], ["buitenmembraan", "outer membrane"], ["vergelijking", "comparison"]],
   "resistentie": [["twee wegen", "two roads"], ["doelwit anders", "target changes"], ["kapotmaken", "destroying"], ["minder poorten", "fewer pores"], ["pompen", "pumps"], ["plasmiden", "plasmids"]],
   "bafbraak": [["afbraak", "degradation"], ["ClpX-motor", "ClpX motor"], ["afbraaklabel", "degradation tag"], ["ClpP knipt", "ClpP cuts"], ["vergelijking", "comparison"]],
   "breplicatie": [["oriC start", "oriC start"], ["twee vorken", "two forks"], ["kopiëren", "copying"], ["ter-stop", "ter stop"], ["twee ringen", "two rings"]],

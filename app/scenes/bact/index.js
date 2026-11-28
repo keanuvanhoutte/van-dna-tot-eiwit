@@ -23,4 +23,6 @@ import rifampicine from './rifampicine.js';
 import ribosoomremmers from './ribosoomremmers.js';
 import gyraseremmers from './gyraseremmers.js';
 import resistentie from './resistentie.js';
-export default [bcel, bnucleoid, bplasmide, bgen, bpol, bterm, bmrna, bribosoom, bafbraak, breplicatie, btrp, bsplicing, faag, crispr, vergelijk, beftu, antibiotica, rifampicine, ribosoomremmers, gyraseremmers, resistentie];
+/* 28-11-2026: eiwitten de bacterie uit (Sec, Tat, type I en II) */
+import bsecretie from './bsecretie.js';
+export default [bcel, bnucleoid, bplasmide, bgen, bpol, bterm, bmrna, bribosoom, bafbraak, breplicatie, btrp, bsplicing, faag, crispr, vergelijk, beftu, antibiotica, rifampicine, ribosoomremmers, gyraseremmers, resistentie, bsecretie];

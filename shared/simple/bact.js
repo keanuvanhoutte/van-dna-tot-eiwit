@@ -524,4 +524,35 @@ export default {
       },
     },
   },
+
+  'bsecretie': {
+    hobby: {
+      kort: { nl: 'De meeste eiwitten blijven in de bacterie, maar sommige moeten naar buiten. Ze krijgen een adreslabel vooraan. Een poortje in het binnenste vlies laat ze door, en voor echt buiten is er nog een poort in het buitenste vlies.', en: 'Most proteins stay inside the bacterium, but some must go outside. They get an address label at the front. A small gate in the inner membrane lets them through, and to get really outside there is another gate in the outer membrane.' },
+      steps: {
+        0: { tag: ['waarheen?', 'where to?'], title: { nl: 'Waar moet het eiwit heen?', en: 'Where does the protein go?' }, text: { nl: 'Veel eiwitten blijven binnen in de bacterie. Andere horen in een van de twee vliezen, ertussen of buiten.', en: 'Many proteins stay inside the bacterium. Others belong in one of the two membranes, between them or outside.' } },
+        1: { tag: ['adreslabel', 'address label'], title: { nl: 'Een adreslabel vooraan', en: 'An address label at the front' }, text: { nl: 'Een eiwit dat naar buiten moet, krijgt een kort label vooraan. Dat zegt: ik moet naar buiten.', en: 'A protein that has to go out gets a short label at the front. It says: I need to go outside.' } },
+        2: { tag: ['vasthouden', 'holding'], title: { nl: 'Een helper houdt de draad los', en: 'A helper keeps the strand loose' }, text: { nl: 'Het poortje laat alleen een losse draad door. Een helper houdt de draad vast, zodat hij nog niet opvouwt.', en: 'The gate only lets a loose strand through. A helper holds the strand so it does not fold up yet.' } },
+        3: { tag: ['erdoor duwen', 'pushing through'], title: { nl: 'Door het poortje geduwd', en: 'Pushed through the gate' }, text: { nl: 'Een motor gebruikt energie en duwt de draad stukje per stukje door het poortje.', en: 'A motor uses energy and pushes the strand through the gate bit by bit.' } },
+        5: { tag: ['al gevouwen', 'already folded'], title: { nl: 'Een tweede poort voor gevouwen eiwitten', en: 'A second gate for folded proteins' }, text: { nl: 'Sommige eiwitten moeten al binnen hun vorm krijgen. Zij gaan door een andere poort, die kant-en-klare eiwitten doorlaat.', en: 'Some proteins must get their shape while still inside. They use another gate that lets ready-made proteins through.' } },
+        7: { tag: ['vergelijking', 'comparison'], title: { nl: 'Bij ons gaat het net zo', en: 'It works the same for us' }, text: { nl: 'Onze cellen hebben een gelijkaardig poortje, in een vlies binnen de cel. Van daar gaan eiwitten in blaasjes naar buiten.', en: 'Our cells have a similar gate, in a membrane inside the cell. From there, proteins go out in little bubbles.' } },
+      },
+    },
+    secundair: {
+      kort: { nl: 'Eiwitten die de bacterie uit moeten, beginnen met een signaalpeptide. Ontvouwen ketens gaan via SecA door het kanaal SecYEG in het binnenmembraan; al gevouwen eiwitten gaan door Tat. Voor het buitenmembraan zijn er nog secretiesystemen.', en: 'Proteins that must leave the bacterium start with a signal peptide. Unfolded chains go via SecA through the SecYEG channel in the inner membrane; already folded proteins go through Tat. For the outer membrane there are further secretion systems.' },
+      terms: [
+        [{ nl: 'signaalpeptide', en: 'signal peptide' }, { nl: 'Kort adreslabel vooraan een eiwit dat de cel uit moet.', en: 'Short address label at the front of a protein that must leave the cell.' }],
+        [{ nl: 'SecYEG', en: 'SecYEG' }, { nl: 'Kanaal in het binnenmembraan voor ontvouwen eiwitketens.', en: 'Channel in the inner membrane for unfolded protein chains.' }],
+        [{ nl: 'Tat', en: 'Tat' }, { nl: 'Poort voor eiwitten die al gevouwen zijn.', en: 'Gate for proteins that are already folded.' }],
+        [{ nl: 'periplasma', en: 'periplasm' }, { nl: 'De ruimte tussen het binnen- en buitenmembraan.', en: 'The space between the inner and outer membrane.' }],
+      ],
+      steps: {
+        0: { tag: ['bestemming', 'destination'], title: { nl: 'Waar moet het eiwit heen?', en: 'Where does the protein need to go?' }, text: { nl: 'Veel eiwitten blijven in het cytoplasma. Andere horen in een membraan, in het periplasma of buiten de cel.', en: 'Many proteins stay in the cytoplasm. Others belong in a membrane, in the periplasm or outside the cell.' } },
+        1: { tag: ['signaalpeptide', 'signal peptide'], title: { nl: 'Een adreslabel vooraan', en: 'An address label at the front' }, text: { nl: 'Een eiwit dat naar buiten moet, begint met een signaalpeptide: een positief begin, een vettig midden en een knipplek.', en: 'A protein that has to leave starts with a signal peptide: a positive start, an oily middle and a cut site.' } },
+        2: { tag: ['SecB', 'SecB'], title: { nl: 'SecB houdt de keten ontvouwen', en: 'SecB keeps the chain unfolded' }, text: { nl: 'Door het Sec-kanaal past alleen een ontvouwen keten. De chaperonne SecB houdt ze los en brengt ze naar SecA.', en: 'Only an unfolded chain fits through the Sec channel. The chaperone SecB keeps it loose and takes it to SecA.' } },
+        3: { tag: ['SecYEG', 'SecYEG'], title: { nl: 'SecA duwt de keten door SecYEG', en: 'SecA pushes the chain through SecYEG' }, text: { nl: 'SecA verbruikt ATP en duwt de keten door het kanaal SecYEG in het binnenmembraan.', en: 'SecA uses ATP and pushes the chain through the SecYEG channel in the inner membrane.' } },
+        5: { tag: ['Tat', 'Tat'], title: { nl: 'Tat: eiwitten die al gevouwen zijn', en: 'Tat: proteins that are already folded' }, text: { nl: 'Al gevouwen eiwitten met twee arginines (RR) in hun label gaan door de Tat-poort.', en: 'Already folded proteins with two arginines (RR) in their label go through the Tat gate.' } },
+        7: { tag: ['Sec61', 'Sec61'], title: { nl: 'Vergelijk: de mens', en: 'Compare: humans' }, text: { nl: 'Onze cellen gebruiken een verwant kanaal, Sec61, in het ER-membraan. Daarna gaan eiwitten via het Golgi-apparaat naar buiten.', en: 'Our cells use a related channel, Sec61, in the ER membrane. Then proteins go via the Golgi apparatus to the outside.' } },
+      },
+    },
+  },
 };

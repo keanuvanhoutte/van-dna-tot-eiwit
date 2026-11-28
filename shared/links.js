@@ -20,6 +20,7 @@ export const LINKS = {
   bpol: ['bgen', 'operon', 'rnapol'],
   breplicatie: ['bplasmide', 'replicatie'],
   bribosoom: ['beftu', 'bmrna', 'ribosoom'],
+  bsecretie: ['chaperones', 'er', 'golgi', 'resistentie', 'vouwing'],
   bsplicing: ['bgen', 'rnastructuur', 'splicing'],
   bterm: ['bmrna', 'btrp', 'operon'],
   btrp: ['bterm', 'operon'],

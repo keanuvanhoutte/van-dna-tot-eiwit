@@ -14,11 +14,12 @@ import { L } from '../shared/i18n.js';
 const TO_BACT = {
   cel: 'bcel', chromatine: 'bnucleoid', nucleosoom: 'bnucleoid', gen: 'bgen', rnapol: 'bpol', polymerasen: 'bpol',
   transcriptie: 'operon', replicatie: 'breplicatie', splicing: 'bsplicing', translatie: 'bmrna', ribosoom: 'bribosoom',
-  proteasoom: 'bafbraak', ubiquitine: 'bafbraak',
+  proteasoom: 'bafbraak', ubiquitine: 'bafbraak', er: 'bsecretie',
 };
 const TO_HUMAN = {
   bcel: 'cel', bnucleoid: 'chromatine', bgen: 'gen', bpol: 'rnapol', operon: 'transcriptie', breplicatie: 'replicatie',
   bsplicing: 'splicing', bmrna: 'translatie', bribosoom: 'ribosoom', bafbraak: 'proteasoom',
+  bsecretie: 'er',     // SecYEG (binnenmembraan) ↔ Sec61 (ER-membraan): eiwitten door een membraan met een signaalpeptide
   beftu: 'elongatie',   // EF-Tu ↔ eEF1A brengt het tRNA aan (verlenging); omgekeerd blijft elongatie → bmrna niet ingesteld
 };
 export const COUNTERPART = { ...TO_BACT, ...TO_HUMAN };

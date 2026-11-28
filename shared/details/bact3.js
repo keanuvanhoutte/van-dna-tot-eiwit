@@ -1,6 +1,10 @@
 /* Uitleg per knoop: 70S-ribosoom met EF-Tu (bacterieverhaal) en het zijpad antibiotica (14-11-2026).
  * Elke bewering is gedekt door een van de bronnen hieronder; nagekeken in verificatieronde 12 (docs/verificatie-ronde-12-antibiotica.md). */
 const S = {
+  /* 28-11-2026: eiwitten de bacterie uit (bsecretie) */
+  crane: { t: 'Crane & Randall (2017) The Sec system: protein export in Escherichia coli. EcoSal Plus 7:ESP-0002-2017 (PMC5807066)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5807066/' },
+  frain: { t: 'Frain, Robinson & van Dijl (2019) Transport of folded proteins by the Tat system. Protein J 38:377 (PMC6708511)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6708511/' },
+  green: { t: 'Green & Mecsas (2016) Bacterial secretion systems: an overview. Microbiol Spectr 4:VMBF-0012-2015 (PMC4804464)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4804464/' },
   fischer: { t: 'Fischer et al. (2015) Structure of the E. coli ribosome–EF-Tu complex at <3 Å resolution by Cs-corrected cryo-EM. Nature 520:567 (PubMed 25707802)', url: 'https://pubmed.ncbi.nlm.nih.gov/25707802/' },
   schmeing: { t: 'Schmeing et al. (2009) The crystal structure of the ribosome bound to EF-Tu and aminoacyl-tRNA. Science 326:688 (PMC3763470)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC3763470/' },
   parmeggiani: { t: 'Parmeggiani & Nissen (2006) Elongation factor Tu-targeted antibiotics: four different structures, two mechanisms of action. FEBS Lett 580:4576 (PubMed 16876786)', url: 'https://pubmed.ncbi.nlm.nih.gov/16876786/' },
@@ -188,5 +192,40 @@ export default {
       why: 'Resistance explains why antibiotics must be used with care. Because resistance genes jump from bacterium to bacterium on plasmids, resistance can also reach bacteria that never had the mutation themselves; conjugation is a very efficient route for this.',
     },
     sources: [S.munita, S.lin, S.molodtsov, S.hooper, S.oswald],
+  },
+  bsecretie: {
+    nl: {
+      kort: 'Veel eiwitten blijven in het cytoplasma, maar sommige moeten naar de celenvelop of de cel uit. Zo’n eiwit begint met een adreslabel, het signaalpeptide. Ontvouwen ketens gaan door het kanaal SecYEG, al gevouwen eiwitten door Tat. Om helemaal buiten te komen is bij E. coli nog een poort in het buitenmembraan nodig. Vergelijk met het [[ER|er]] bij de mens.',
+      what: 'E. coli is gramnegatief: een eiwit dat naar buiten moet, kruist eerst het binnenmembraan, dan het periplasma en daarna het buitenmembraan. Het binnenmembraan kruist het meestal via de Sec-route (ontvouwen keten) of de Tat-route (gevouwen eiwit). Voor het buitenmembraan zijn er secretiesystemen: sommige nemen een eiwit uit het periplasma mee (type II), andere brengen het in één stap door beide membranen (type I).',
+      how: [
+        'Signaalpeptide: een label van ongeveer 20 aminozuren vooraan de keten, met een positief geladen begin, een hydrofobe kern en een polair einde met de knipplaats.',
+        'SecB: deze chaperonne vangt de meeste precursors op voor ze vouwen, want de Sec-route neemt alleen eiwitten zonder hun eindvorm. SecB geeft ze door aan SecA.',
+        'SecA en SecYEG: SecA verbruikt ATP en duwt de keten door het kanaal SecYEG; in de cel is ook de protonmotorische kracht nodig.',
+        'Signaalpeptidase: knipt het label af aan de periplasmakant van het membraan; daarna vouwt het eiwit in het periplasma.',
+        'Membraaneiwitten: het SRP brengt het ribosoom al tijdens de translatie naar SecYEG; YidC helpt bij het inbouwen.',
+        'Tat: neemt enkel volledig gevouwen eiwitten, vaak met een hulpgroep (cofactor). Het label draagt het motief S-R-R-x-F-L-K; TatB en TatC binden het, TatA vormt waarschijnlijk het kanaal. De energie komt enkel van de protonmotorische kracht.',
+        'Type II: een secretine in het buitenmembraan; een pseudopilus duwt gevouwen eiwitten uit het periplasma naar buiten als een zuiger.',
+        'Type I: een ABC-transporter in het binnenmembraan, een verbindingseiwit en TolC in het buitenmembraan vormen één doorgang, bv. voor het hemolysine HlyA van E. coli die urineweginfecties veroorzaakt.',
+      ],
+      facts: [['Signaalpeptide', '≈ 20 aminozuren, 3 delen'], ['Sec-kanaal', 'SecYEG (binnenmembraan)'], ['Energie Sec', 'ATP (SecA) + protonmotorische kracht'], ['Tat-eiwitten in E. coli', '≈ 30'], ['Energie Tat', 'enkel protonmotorische kracht']],
+      why: 'Wat een bacterie uitscheidt (toxines, enzymen, bouwstenen van de envelop) bepaalt hoe ze leeft en hoe ze ziek maakt. Het Sec-kanaal is oud: SecY en SecE zijn bewaard bij bacteriën, archaea en eukaryoten. Ons Sec61 in het ER-membraan is daarvan de tegenhanger.',
+    },
+    en: {
+      kort: 'Many proteins stay in the cytoplasm, but some must go to the cell envelope or leave the cell. Such a protein starts with an address label, the signal peptide. Unfolded chains go through the SecYEG channel, already folded proteins through Tat. To get fully outside, E. coli needs another gate in the outer membrane. Compare with the human [[ER|er]].',
+      what: 'E. coli is Gram-negative: a protein that has to leave first crosses the inner membrane, then the periplasm and then the outer membrane. It usually crosses the inner membrane via the Sec pathway (unfolded chain) or the Tat pathway (folded protein). For the outer membrane there are secretion systems: some take a protein from the periplasm (type II), others carry it across both membranes in one step (type I).',
+      how: [
+        'Signal peptide: a label of about 20 amino acids at the front of the chain, with a positively charged start, a hydrophobic core and a polar end containing the cut site.',
+        'SecB: this chaperone catches most precursors before they fold, because the Sec pathway only takes proteins without their final shape. SecB hands them to SecA.',
+        'SecA and SecYEG: SecA uses ATP and pushes the chain through the SecYEG channel; in the cell the proton motive force is also needed.',
+        'Signal peptidase: cuts off the label on the periplasmic side of the membrane; after that the protein folds in the periplasm.',
+        'Membrane proteins: SRP brings the ribosome to SecYEG during translation; YidC helps insert them.',
+        'Tat: only takes fully folded proteins, often with a helper group (cofactor). The label carries the motif S-R-R-x-F-L-K; TatB and TatC bind it, TatA probably forms the channel. The energy comes only from the proton motive force.',
+        'Type II: a secretin in the outer membrane; a pseudopilus pushes folded proteins from the periplasm outwards like a piston.',
+        'Type I: an ABC transporter in the inner membrane, a linking protein and TolC in the outer membrane form one passage, e.g. for the haemolysin HlyA of E. coli that causes urinary tract infections.',
+      ],
+      facts: [['Signal peptide', '≈ 20 amino acids, 3 parts'], ['Sec channel', 'SecYEG (inner membrane)'], ['Sec energy', 'ATP (SecA) + proton motive force'], ['Tat proteins in E. coli', '≈ 30'], ['Tat energy', 'proton motive force only']],
+      why: 'What a bacterium secretes (toxins, enzymes, envelope building blocks) shapes how it lives and how it causes disease. The Sec channel is ancient: SecY and SecE are conserved in bacteria, archaea and eukaryotes. Our Sec61 in the ER membrane is its counterpart.',
+    },
+    sources: [S.crane, S.frain, S.green],
   },
 };

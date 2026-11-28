@@ -102,7 +102,8 @@ const BACTERIE = [
   { id: 'beftu', bridge: { nl: 'Het ribosoom leest het mRNA per drie letters: bij E. coli is de genetische code dezelfde als bij ons.', en: 'The ribosome reads the mRNA three letters at a time: in E. coli the genetic code is the same as ours.' } },
   { id: 'codon', bridge: { nl: 'De nieuwe keten moet zijn 3D-vorm vinden; dat gaat bij bacteriën net zo.', en: 'The new chain has to find its 3D shape; this works the same way in bacteria.' } },
   { id: 'vouwing', bridge: { nl: 'Soms is hulp nodig: chaperonnes zoals GroEL–GroES (een bacterieel voorbeeld).', en: 'Sometimes help is needed: chaperones such as GroEL–GroES (a bacterial example).' } },
-  { id: 'chaperones', bridge: { nl: 'Eiwitten die fout of overbodig zijn, worden afgebroken, maar zonder ubiquitine.', en: 'Proteins that are faulty or no longer needed are broken down, but without ubiquitin.' } },
+  { id: 'chaperones', bridge: { nl: 'Veel eiwitten blijven in het cytoplasma, maar sommige moeten de cel uit. Hoe raken ze door twee membranen?', en: 'Many proteins stay in the cytoplasm, but some have to leave the cell. How do they get through two membranes?' } },
+  { id: 'bsecretie', bridge: { nl: 'Eiwitten die fout of overbodig zijn, worden afgebroken, maar zonder ubiquitine.', en: 'Proteins that are faulty or no longer needed are broken down, but without ubiquitin.' } },
   { id: 'bafbraak', bridge: { nl: 'Einde van het bacterieverhaal. Verken de zijpaden (antibiotica, replicatie, trp-operon, introns) via de kaart.', en: 'End of the bacterial story. Explore the side paths (antibiotics, replication, trp operon, introns) via the map.' } },
 ];
 

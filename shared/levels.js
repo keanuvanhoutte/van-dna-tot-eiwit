@@ -124,5 +124,6 @@ export const STEP_LEVEL = {
   "rifampicine": "132121",
   "ribosoomremmers": "112231",
   "gyraseremmers": "112123",
-  "resistentie": "111321"
+  "resistentie": "111321",
+  "bsecretie": "11112131"
 };
