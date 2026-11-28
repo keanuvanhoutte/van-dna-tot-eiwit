@@ -50,7 +50,7 @@ export default {
       how: [
         'B-DNA: rechtshandig, ≈ 10,5 bp/winding in oplossing (klassiek vezelmodel: 10), 3,4 Å/bp, ≈ 20 Å breed, suikers C2′-endo, basen anti.',
         'A-DNA: rechtshandig, ≈ 11 bp/winding, ≈ 2,6 Å/bp, ≈ 23 Å breed, suikers C3′-endo; basenparen ≈ 20° gekanteld en naast de as (holte in het midden).',
-        'C3′-endo brengt opeenvolgende fosfaten dichter bij elkaar (gemeten: ≈ 6,0 Å in 440D i.p.v. ≈ 6,7 Å in 1BNA): de helix wordt korter.',
+        'C3′-endo brengt opeenvolgende fosfaten dichter bij elkaar (typisch ≈ 5,9 Å i.p.v. ≈ 7,0 Å; gemeten ≈ 6,0 Å in 440D en ≈ 6,7 Å in 1BNA): de helix wordt korter.',
         'Z-DNA: linkshandig, 12 bp/winding, ≈ 3,7 Å/bp, ≈ 18 Å breed; herhalende eenheid = dinucleotide met G syn (C3′-endo) en C anti (C2′-endo).',
         'Groeven: B = brede, diepe grote groef; A = smalle, diepe grote en brede, ondiepe kleine groef; Z = vrijwel vlakke "grote groef" en smalle, diepe kleine groef.',
         'Omstandigheden: A bij weinig water en in dsRNA/hybriden; Z bij alternerende (CG)n, hoog zout of negatieve supercoiling.',
@@ -64,7 +64,7 @@ export default {
       how: [
         'B-DNA: right-handed, ≈ 10.5 bp/turn in solution (classic fibre model: 10), 3.4 Å/bp, ≈ 20 Å wide, sugars C2′-endo, bases anti.',
         'A-DNA: right-handed, ≈ 11 bp/turn, ≈ 2.6 Å/bp, ≈ 23 Å wide, sugars C3′-endo; base pairs tilted ≈ 20° and displaced from the axis (hollow core).',
-        'C3′-endo brings successive phosphates closer together (measured: ≈ 6.0 Å in 440D instead of ≈ 6.7 Å in 1BNA): the helix becomes shorter.',
+        'C3′-endo brings successive phosphates closer together (typically ≈ 5.9 Å instead of ≈ 7.0 Å; measured ≈ 6.0 Å in 440D and ≈ 6.7 Å in 1BNA): the helix becomes shorter.',
         'Z-DNA: left-handed, 12 bp/turn, ≈ 3.7 Å/bp, ≈ 18 Å wide; repeating unit = dinucleotide with G syn (C3′-endo) and C anti (C2′-endo).',
         'Grooves: B = wide, deep major groove; A = narrow, deep major and wide, shallow minor groove; Z = almost flat "major groove" and narrow, deep minor groove.',
         'Conditions: A at low water activity and in dsRNA/hybrids; Z in alternating (CG)n, at high salt or under negative supercoiling.',
@@ -72,7 +72,7 @@ export default {
       facts: [['B-DNA', '≈ 10.5 bp/turn, right'], ['A-DNA', '≈ 11 bp/turn, right'], ['Z-DNA', '12 bp/turn, left'], ['Sugar pucker', "B: C2′-endo · A: C3′-endo · Z: alternating"], ['Structures', 'PDB 440D (A), 1BNA (B), 1DCG (Z)']],
       why: 'The forms differ in bp per turn, rise, handedness, grooves and sugar pucker. RNA duplexes are (almost) always A-form, which determines how proteins recognise them; Z-DNA can form transiently behind RNA polymerase (negative supercoiling) and is recognised by Zα domains (e.g. ADAR1).',
     },
-    sources: [ALBERTS_DNA, DREW, MARINI, TANG, WANG79, { t: 'Wang et al. (1979) Molecular structure of a left-handed double helical DNA fragment at atomic resolution. Nature 282:680', url: 'https://pubmed.ncbi.nlm.nih.gov/514347/' }, { t: 'Rich & Zhang (2003) Z-DNA: the long road to biological function. Nat Rev Genet 4:566', url: 'https://pubmed.ncbi.nlm.nih.gov/12838348/' }, { t: 'RCSB PDB — 440D: A-DNA crystal structure of d(AGGGGCCCCT)', url: 'https://www.rcsb.org/structure/440D' }],
+    sources: [ALBERTS_DNA, DREW, MARINI, TANG, WANG79, { t: 'Wang et al. (1979) Molecular structure of a left-handed double helical DNA fragment at atomic resolution. Nature 282:680', url: 'https://pubmed.ncbi.nlm.nih.gov/514347/' }, { t: 'Rich & Zhang (2003) Z-DNA: the long road to biological function. Nat Rev Genet 4:566', url: 'https://pubmed.ncbi.nlm.nih.gov/12838348/' }, { t: 'RCSB PDB — 440D: A-DNA crystal structure of d(AGGGGCCCCT)', url: 'https://www.rcsb.org/structure/440D' }, { t: 'Lescrinier, Froeyen & Herdewijn (2003) Difference in conformational diversity between nucleic acids with a six-membered ‘sugar’ unit and natural ‘furanose’ nucleic acids. Nucleic Acids Res 31:2975 (PMC162241) — P–P-afstand A- en B-DNA', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC162241/' }],
   },
 
   noncanon: {
@@ -189,7 +189,7 @@ export default {
       facts: [['Purines', 'adenine, guanine (2 rings)'], ['Pyrimidines', 'cytosine, thymine, uracil (1 ring)'], ['Nucleoside', 'base + sugar (e.g. deoxyadenosine)'], ['Nucleotide', 'nucleoside + phosphate (e.g. dAMP)'], ['Bond in the chain', "3′→5′ phosphodiester"], ['T vs U', 'T = 5-methyluracil']],
       why: 'The chemistry of the nucleotide determines everything above it: the 5′→3′ direction of synthesis, the charge of DNA, the difference in stability between DNA and RNA and, through pucker and χ, which helix form arises.',
     },
-    sources: [ALBERTS_NT, ALBERTS_DNA, { t: 'PDB-101 Learn: Paper Models — DNA', url: 'https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/dna' }, DREW, { t: 'Heider et al. (2017) Defining the RNaseH2 enzyme-initiated ribonucleotide excision repair pathway in Archaea. J Biol Chem 292:8835–8845 (PMC5448109) — reactieve 2′-OH', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5448109/' }],
+    sources: [ALBERTS_NT, ALBERTS_DNA, { t: 'PDB-101 Learn: Paper Models — DNA', url: 'https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/dna' }, DREW, { t: 'Heider et al. (2017) Defining the RNaseH2 enzyme-initiated ribonucleotide excision repair pathway in Archaea. J Biol Chem 292:8835–8845 (PMC5448109) — reactieve 2′-OH', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC5448109/' }, { t: 'Lescrinier, Froeyen & Herdewijn (2003) Difference in conformational diversity between nucleic acids with a six-membered ‘sugar’ unit and natural ‘furanose’ nucleic acids. Nucleic Acids Res 31:2975 (PMC162241) — P–P-afstand A- en B-DNA', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC162241/' }],
   },
 
   supercoiling: {
