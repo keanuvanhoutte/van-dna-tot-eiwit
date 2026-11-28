@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, txt, mono, nt, cam, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { K, ribo, prot, panel, eenheid } from './_bkit.js';
-import { trna2d } from '../../bio.js';
+import { trna2d, polymerase } from '../../bio.js';
 const TS = .8;
 
 /* Bacterieel mRNA: gekoppelde transcriptie–translatie, Shine-Dalgarno ↔ 16S-rRNA, fMet-tRNA, 30S + 50S = 70S,
@@ -80,7 +80,8 @@ export default {
         const ch = Math.min(110, 8 + d * .09);   // langer naarmate het ribosoom verder is (dichter bij RNAP = eerst begonnen)
         g += `<path d="M${f1(q[0])},${f1(q[1] - 28)} q${f1(ch * .3)},${f1(-ch * .5)} 0,${f1(-ch)}" stroke="${C.chain}" stroke-width="4" fill="none"/>` + ribo(q[0], q[1] - 6, 2, 1);
       }
-      g += prot(x, Y - 30, 60, 40, K.rnap, 1, 31, 'RNAP', 22) + '</g>';
+      g += polymerase(x, Y, 60, 32, { col: K.rnap, dir: 1, gul: 10, hoog: 1.4, vul: .45, seed: 31, label: 'RNAP', fs: 22 })   /* bacteriële RNAP (bio.js): DNA door de geul */
+        + `<path d="M${f1(x - 34)},${f1(Y - 25)} L${f1(x - 30)},${f1(Y - 50)}" stroke="${C.rna}" stroke-width="5" stroke-linecap="round"/>` + '</g>';   // RNA uit de uitgang
       return g;
     }
     return {

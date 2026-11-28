@@ -1,4 +1,5 @@
 import { C, T2, svgOpen, txt, mono, cam, sub, ease, lerp, f1, nt } from '../../kit.js';
+import { polymerase } from '../../bio.js';
 import { K, prot, panel, ribo } from './_bkit.js';
 
 /* trp-operon van E. coli: Trp-repressor (met tryptofaan als corepressor) en attenuatie via het leiderpeptide (twee Trp-codons).
@@ -105,7 +106,7 @@ export default {
           // polymerase aan het 3′-uiteinde
           const goOn = step === 4 ? ease(sub(p, .55, .95)) : 0, stop = step === 3 ? ease(sub(p, .6, .9)) : back;
           const px = lerp(1150, 1400, goOn);
-          l += `<g transform="translate(${f1(stop * 40)} ${f1(stop * -110)})" opacity="${f1(1 - .8 * stop)}">` + prot(px, YL - 4, 54, 36, K.rnap, 1, 31, 'RNAP', 21) + '</g>';
+          l += `<g transform="translate(${f1(stop * 40)} ${f1(stop * -110)})" opacity="${f1(1 - .8 * stop)}">` + polymerase(px, YL, 58, 32, { col: K.rnap, dir: 1, gul: 9, hoog: 1.35, vul: .45, seed: 31, label: 'RNAP', fs: 21 })   /* bacteriële RNAP (bio.js) */ + '</g>';
           if (goOn > .01) l += `<line x1="1130" y1="${YL}" x2="${f1(px - 50)}" y2="${YL}" stroke="${C.rna}" stroke-width="7"/>` + `<g opacity="${f1(sub(p, .75, .95))}">` + txt(1380, YL + 70, T2('→ trpE … trpA', '→ trpE … trpA'), '#b98cff', 24, 'middle', 700) + '</g>';
           // ribosoom (in stap 4 vervaagt het ribosoom van stap 3 en begint een nieuw situatie)
           let rx = 200;

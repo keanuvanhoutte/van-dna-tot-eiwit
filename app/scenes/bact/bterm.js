@@ -9,10 +9,26 @@ const RHO = '#ff8a3d';
 
 /* RNA vanaf de uitgang van het polymerase (x) naar linksboven; s = afstand vanaf de polymerase */
 const rnaPt = (x, s) => [x - 30 - s * .55, Y - 52 - Math.min(s, 420) * .5 - 9 * Math.sin(s / 38)];
-function rnaPath(x, len) {
-  const pts = []; for (let s = 0; s <= len; s += 6) pts.push(rnaPt(x, s));
-  return pts.length > 1 ? `<path d="${pts.map((q, i) => `${i ? 'L' : 'M'}${f1(q[0])},${f1(q[1])}`).join('')}" stroke="${C.rna}" stroke-width="5" fill="none" stroke-linecap="round"/>` : '';
+const HP_W = 26, HP_H = 96;                       // haarspeld: breedte en hoogte van de stam
+/* Het vrije RNA: begint aan de uitgang (rnaPt(x,0)). Met hp > 0 vouwt het eerste stuk RNA een haarspeld die recht omhoog
+ * staat; de rest van het RNA vertrekt dan aan de linkervoet van de stam. Eén doorlopende lijn: de haarspeld ís het RNA. */
+function rnaPath(x, len, hp = 0) {
+  const [ex, ey] = rnaPt(x, 0), w = HP_W * Math.min(1, hp * 3), h = HP_H * hp;
+  let d = `M${f1(ex)},${f1(ey)}`;
+  if (hp > .01) d += ` V${f1(ey - h + w / 2)} a${f1(w / 2)},${f1(w / 2)} 0 0 0 ${f1(-w)},0 V${f1(ey)}`;
+  for (let s = 6; s <= len; s += 6) { const [qx, qy] = rnaPt(x, s); d += ` L${f1(qx - w)},${f1(qy)}`; }
+  return `<path d="${d}" stroke="${C.rna}" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
 }
+/* sporten van de haarspeld: stevige G–C-paren (dik, groen) */
+function hpRungs(x, hp) {
+  if (hp <= .01) return '';
+  const [ex, ey] = rnaPt(x, 0), w = HP_W * Math.min(1, hp * 3), h = HP_H * hp, n = 6;
+  let s = '';
+  for (let i = 0; i < n; i++) { const y = ey - 10 - i * (h - 30) / (n - 1); if (y < ey - h + w / 2 + 4) break; s += `<line x1="${f1(ex - w + 3)}" y1="${f1(y)}" x2="${f1(ex - 3)}" y2="${f1(y)}" stroke="${K.term}" stroke-width="4" stroke-linecap="round"/>`; }
+  return s;
+}
+/* RNA–DNA-hybride in het enzym: van de actieve plaats (rechts) naar achter, dan omhoog naar de uitgang */
+const hybPath = x => { const [ex, ey] = rnaPt(x, 0); return `M${f1(x + 20)},${f1(Y + 3)} L${f1(x - 22)},${f1(Y + 3)} Q${f1(x - 44)},${f1(Y + 3)} ${f1(x - 38)},${f1(Y - 24)} L${f1(ex)},${f1(ey)}`; };
 const rhoRing = (x, y, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}">` + [0, 1, 2, 3, 4, 5].map(i => `<circle cx="${f1(x + 24 * Math.cos(i * Math.PI / 3))}" cy="${f1(y + 24 * Math.sin(i * Math.PI / 3))}" r="13" fill="${RHO}" fill-opacity=".55" stroke="${RHO}" stroke-width="2"/>`).join('') + txt(x, y + 6, 'Rho', '#fff', 17, 'middle', 800) + '</g>';
 
 export default {
@@ -51,7 +67,9 @@ export default {
   },
   init(svg) {
     const $ = id => svg.getElementById(id);
-    const dna = (termOp) => `<line x1="60" y1="${Y - 8}" x2="1540" y2="${Y - 8}" stroke="${C.dna}" stroke-width="5"/><line x1="60" y1="${Y + 8}" x2="1540" y2="${Y + 8}" stroke="${C.dna2}" stroke-width="5"/>` +
+    /* DNA met transcriptiebel op bx (bo = hoe open: 0 = dicht): de codestreng wijkt naar boven, de matrijsstreng naar onder */
+    const dna = (termOp, bx, bo) => `<path d="M60,${Y - 8} L${f1(bx - 52)},${Y - 8} C${f1(bx - 40)},${f1(Y - 8 - 18 * bo)} ${f1(bx + 22)},${f1(Y - 8 - 18 * bo)} ${f1(bx + 34)},${Y - 8} L1540,${Y - 8}" stroke="${C.dna}" stroke-width="5" fill="none"/>` +
+      `<path d="M60,${Y + 8} L${f1(bx - 52)},${Y + 8} C${f1(bx - 40)},${f1(Y + 8 + 14 * bo)} ${f1(bx + 22)},${f1(Y + 8 + 14 * bo)} ${f1(bx + 34)},${Y + 8} L1540,${Y + 8}" stroke="${C.dna2}" stroke-width="5" fill="none"/>` +
       `<g opacity="${f1(termOp)}"><rect x="${TERM[0]}" y="${Y - 22}" width="${TERM[1] - TERM[0]}" height="44" rx="6" fill="${K.term}" fill-opacity=".16" stroke="${K.term}" stroke-width="2.5"/>` + txt((TERM[0] + TERM[1]) / 2, Y + 64, 'terminator', K.term, 24, 'middle', 700) + '</g>' +
       `<rect x="160" y="${Y + 26}" width="740" height="14" rx="7" fill="#b98cff" fill-opacity=".3" stroke="#b98cff"/>` + txt(530, Y + 70, T2('gen', 'gene'), '#b98cff', 22, 'middle', 700);
     return {
@@ -68,20 +86,20 @@ export default {
           else if (step === 4) { x = 1100; len = 900; rhoOp = 1; rhoD = lerp(len * .45, 40, ease(sub(p, 0, .45))); rel = ease(sub(p, .5, .95)); }
           else { x = lerp(300, 1300, ease(sub(p, .05, .95))); len = x - 200; ribos = 1; rhoOp = sub(p, .2, .35); rhoD = len * .92; }
         }
-        $('bt-dna').innerHTML = dna(termOp);
+        $('bt-dna').innerHTML = dna(termOp, x, 1 - rel);
         // RNA (+ loslaten: RNA en polymerase schuiven omhoog weg)
         const dy = -140 * rel, op = 1 - .2 * rel;   // wat loskomt blijft goed zichtbaar
-        let r = `<g transform="translate(${f1(60 * rel)} ${f1(dy)})" opacity="${f1(op)}">` + rnaPath(x, len);
-        if (hp > .01) {
-          const [hx, hy] = rnaPt(x, 34);
-          let st = ''; for (let i = 0; i < 5; i++) st += `<line x1="${f1(hx - 12)}" y1="${f1(hy - 10 - i * 16)}" x2="${f1(hx + 12)}" y2="${f1(hy - 10 - i * 16)}" stroke="${K.term}" stroke-width="2.5"/>`;
-          r += `<g opacity="${f1(hp)}" transform="translate(0 ${f1((1 - hp) * 30)})"><path d="M${f1(hx - 12)},${f1(hy)} V${f1(hy - 86)} a12,12 0 0 1 24,0 V${f1(hy)}" stroke="${C.rna}" stroke-width="4.5" fill="none"/>${st}` + txt(hx - 26, hy - 44, 'G–C', K.term, 20, 'end', 800) + '</g>';
-        }
+        const mv = `transform="translate(${f1(60 * rel)} ${f1(dy)})"`;
+        let r = `<g ${mv} opacity="${f1(op)}">` + rnaPath(x, len, hp) + hpRungs(x, hp);
+        if (hp > .3) { const [ex, ey] = rnaPt(x, 0); r += `<g opacity="${f1(sub(hp, .5, 1))}">` + txt(ex + 14, ey - HP_H * .55, T2('haarspeld', 'hairpin'), K.term, 22, 'start', 800) + txt(ex + 14, ey - HP_H * .55 + 24, T2('G–C: sterk', 'G–C: strong'), K.term, 18, 'start', 700) + '</g>'; }
         if (ribos) for (let d = 120; d < len - 60; d += 150) { const [qx, qy] = rnaPt(x, len - d); r += ribo(qx, qy - 6, 2.2, 1); }
         r += '</g>';
         $('bt-rna').innerHTML = r;
-        // polymerase en Rho
-        let o = `<g transform="translate(${f1(60 * rel)} ${f1(dy)})" opacity="${f1(op * rnapOp)}">` + polymerase(x, Y, 66, 34, { col: K.rnap, dir: 1, gul: 10, hoog: 1.35, vul: .4, op: 1, seed: 31, label: 'RNAP', fs: 23 })   /* bacteriële RNAP (bio.js): DNA door de geul, RNA achter-boven eruit */ + '</g>';
+        // polymerase (doorschijnend) met daarin de RNA–DNA-hybride: het jongste RNA zit gepaard aan de matrijsstreng
+        const pairs = Array.from({ length: 6 }, (_, i) => x + 14 - i * 8);
+        let o = `<g ${mv} opacity="${f1(op * rnapOp)}">` + polymerase(x, Y, 70, 38, { col: K.rnap, dir: 1, gul: 18, hoog: 1.3, vul: .3, op: 1, seed: 31 }) + txt(x + 20, Y - 28, 'RNAP', '#fff', 21, 'middle', 700)   /* label rechts van het midden: links loopt het RNA naar de uitgang */   /* bacteriële RNAP (bio.js): DNA door de geul, RNA achter-boven eruit */
+          + `<g opacity="${f1(1 - rel)}">` + pairs.map(px => `<line x1="${f1(px)}" y1="${Y + 6}" x2="${f1(px)}" y2="${Y + 15}" stroke="${C.rna}" stroke-width="2" stroke-dasharray="2 2" opacity=".8"/>`).join('') + '</g>'
+          + `<path d="${hybPath(x)}" stroke="${C.rna}" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>`;
         if (rhoOp > .01 && rhoD >= 0) {
           const [qx, qy] = rnaPt(x, rhoD);
           o += `<g transform="translate(${f1(60 * rel)} ${f1(dy)})">` + rhoRing(qx, qy, rhoOp * (step === 4 ? 1 - .2 * rel : 1))
@@ -89,8 +107,9 @@ export default {
           if (step === 5) o += `<g opacity="${f1(rhoOp)}"><path d="M${f1(qx - 18)},${f1(qy - 52)} l36,36 m0,-36 l-36,36" stroke="${C.danger}" stroke-width="6"/></g>`;
         }
         // de rij U's zit in het enzym, gepaard met de A's van het DNA: bovenop het enzym getekend zodat ze zichtbaar zijn
-        if (uu > .01) o += `<g transform="translate(${f1(60 * rel)} ${f1(dy)})" opacity="${f1(uu * op)}"><rect x="${f1(x - 74)}" y="${Y - 15}" width="116" height="30" rx="8" fill="#0b1224" fill-opacity=".85" stroke="${C.rna}" stroke-width="2"/>` + mono(x - 16, Y + 7, 'UUUUUU', C.rna, 22)
-          + `<g opacity="${f1(step === 2 ? sub(p, .2, .35) : 0)}">` + txt(x + 74, Y + 8, T2("U's: zwak vast", "U's: weakly held"), C.rna, 22, 'start', 800) + '</g></g>';
+        // (geen kader meer: de U's staan als letters op het RNA zelf, met losse stippellijntjes naar de A's van de matrijs)
+        if (uu > .01) o += `<g ${mv} opacity="${f1(uu * op)}">` + pairs.map(px => `<text x="${f1(px)}" y="${Y - 2}" font-size="13" text-anchor="middle" fill="#ffd2b0" font-family="JetBrains Mono" font-weight="800" stroke="#0b1224" stroke-width="3" paint-order="stroke">U</text>`).join('')
+          + `<g opacity="${f1(step === 2 ? sub(p, .2, .35) : 0)}">` + `<path d="M${f1(x + 62)},${Y + 30} Q${f1(x + 40)},${Y + 30} ${f1(x + 22)},${Y + 14}" stroke="${C.rna}" stroke-width="2.5" fill="none"/>` + txt(x + 68, Y + 37, T2('U–A: zwak vast', 'U–A: weakly held'), C.rna, 22, 'start', 800) + '</g></g>';
         $('bt-obj').innerHTML = o;
         // labels
         let l = '';

@@ -1,6 +1,6 @@
 import { C, T2, svgOpen, txt, cam, FULL, sub, ease, f1 } from '../../kit.js';
 import { K, ribo, rodCell, rodLagen, porine, prot, panel, arrow } from './_bkit.js';
-import { PG, LIPID } from '../../bio.js';
+import { PG, LIPID, polymerase } from '../../bio.js';
 
 /* Overzicht: waar antibiotica een bacterie raken en waarom onze cellen gespaard blijven.
  * Bronnen (shared/details/bact3.js): Kohanski, Dwyer & Collins 2010 (vier doelwitten, werking per klasse), Vollmer et al. 2008
@@ -79,8 +79,8 @@ export default {
         g += `<path d="${DNA}" fill="none" stroke="${C.dna}" stroke-width="7" opacity="${f1(step === 2 || step === 0 || step === 5 || step === 3 ? 1 : .45)}"/>`;
         g += `<g opacity="${f1(op('gyr'))}">` + prot(TG.gyr[0], TG.gyr[1], 44, 36, TG.gyr[2], 1, 5, 'gyrase', 22) + '</g>';   // gyrase zit op het DNA (onderste stuk van de lus loopt hier horizontaal)
         // RNA-polymerase + mRNA naar het ribosoom
-        g += `<g opacity="${f1(op('pol'))}">` + prot(TG.pol[0], TG.pol[1], 52, 38, TG.pol[2], 1, 7, 'RNAP', 22) + '</g>';
-        g += `<path d="M590,368 C650,372 680,${TG.ribo[1] + 42} 730,${TG.ribo[1] + 42} L860,${TG.ribo[1] + 42}" fill="none" stroke="${C.rna}" stroke-width="5" opacity="${f1(Math.max(op('pol'), op('ribo')))}"/>`;   // mRNA loopt onder langs de kleine eenheid (30S)
+        g += `<g opacity="${f1(op('pol'))}">` + `<g transform="rotate(-47 554 373)">` + polymerase(554, 373, 48, 28, { col: TG.pol[2], dir: -1, gul: 8, hoog: 1.35, vul: .45, seed: 7 }) + '</g>' + txt(526, 394, 'RNAP', TG.pol[2], 22, 'end', 800) + '</g>';   // bacteriële RNAP (bio.js) met het DNA door de geul
+        g += `<path d="M559,342 C620,330 680,${TG.ribo[1] + 42} 730,${TG.ribo[1] + 42} L860,${TG.ribo[1] + 42}" fill="none" stroke="${C.rna}" stroke-width="5" opacity="${f1(Math.max(op('pol'), op('ribo')))}"/>`;   // mRNA loopt onder langs de kleine eenheid (30S)
         g += `<g opacity="${f1(op('ribo'))}">` + ribo(TG.ribo[0], TG.ribo[1], 3.6) + '</g>';
         // nummers bij de doelwitten
         const badge = (n, x, y, k) => `<g opacity="${f1(op(k))}"><circle cx="${x}" cy="${y}" r="21" fill="${DRUG}"/>` + txt(x, y + 8, n, '#fff', 22, 'middle', 800) + '</g>';

@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, pill, txt, cam, FULL, sub, ease, lerp, clamp, f1 } from '../../kit.js';
 import { helixAlong, prot, panel, arrow } from './_txn.js';
-import { bacterieWand, ptsStaaf, ribosoomKlein } from '../../bio.js';
+import { bacterieWand, ptsStaaf, ribosoomKlein, polymerase } from '../../bio.js';
 
 /* E. coli lac-operon. Posities in scènecoördinaten (niet op schaal in bp).
  * lac-promoter: −35 TTTACA, −10 TATGTT (lacUV5: −10 TATAAT) — Heider, Pyka & Barnekow, BMC Res Notes 2009;2:125 (PMID 19583865) en
@@ -55,7 +55,7 @@ export default {
       p: { nl: 'Lac-repressor, een tetrameer; gebonden aan de operator blokkeert het de transcriptie. Allolactose (of IPTG) verlaagt zijn affiniteit voor de operator.', en: 'Lac repressor, a tetramer; bound to the operator it blocks transcription. Allolactose (or IPTG) lowers its affinity for the operator.' } },
     { c: K.allo, t: 'allolactose', m: ['(allolactose)'], d: { nl: 'Suiker die de cel uit lactose maakt (groene zeshoekjes). Ze kleeft op het rem-eiwit, dat daarna het DNA loslaat.', en: 'Sugar the cell makes from lactose (green hexagons). It sticks to the brake protein, which then lets go of the DNA.' },
       p: { nl: 'Natuurlijke inductor: isomeer van lactose, gevormd door β-galactosidase; bindt allosterisch aan LacI.', en: 'Natural inducer: isomer of lactose, made by β-galactosidase; binds LacI allosterically.' } },
-    { c: K.rnap, t: 'RNAP', d: { nl: 'RNA-polymerase: het enzym dat het DNA leest en er een RNA-kopie van maakt. De paarse blokken op het DNA zijn polymerasen die aan het kopiëren zijn.', en: 'RNA polymerase: the enzyme that reads the DNA and makes an RNA copy of it. The purple blocks on the DNA are polymerases that are copying.' },
+    { c: K.rnap, t: 'RNAP', d: { nl: 'RNA-polymerase: het enzym dat het DNA leest en er een RNA-kopie van maakt. De paarse enzymen op het DNA (het DNA loopt door hun geul) zijn polymerasen die aan het kopiëren zijn.', en: 'RNA polymerase: the enzyme that reads the DNA and makes an RNA copy of it. The purple enzymes on the DNA (the DNA runs through their cleft) are polymerases that are copying.' },
       p: { nl: 'RNA-polymerase-core (α₂ββ′ω), de enige RNA-polymerase van de bacterie; met σ70 vormt het het holo-enzym.', en: 'RNA polymerase core (α₂ββ′ω), the bacterium’s only RNA polymerase; with σ70 it forms the holoenzyme.' } },
     { c: K.sig, t: 'σ70', d: { nl: 'Gids-eiwit (sigmafactor) dat het RNA-enzym naar de startplek brengt: het herkent er twee korte stukjes DNA.', en: 'Guide protein (sigma factor) that brings the RNA enzyme to the start site: it recognises two short stretches of DNA there.' },
       p: { nl: 'Huishoud-sigmafactor; herkent de −35- en −10-box en helpt het DNA te openen.', en: 'Housekeeping sigma factor; recognises the −35 and −10 boxes and helps open the DNA.' } },
@@ -167,7 +167,7 @@ export default {
       }
       return g;
     }
-    const rnap = (x, op, sigma = 1, blocked = 0) => op <= .01 ? '' : `<g opacity="${f1(op)}">` + prot(x - 20, Y0 - 60, 70, 48, K.rnap, 1, 91, 'RNAP', 19) +
+    const rnap = (x, op, sigma = 1, blocked = 0) => op <= .01 ? '' : `<g opacity="${f1(op)}">` + polymerase(x - 10, Y0, 62, 34, { col: K.rnap, dir: 1, gul: 12, hoog: 1.35, vul: .4, seed: 91, label: 'RNAP', fs: 19 }) +   /* bacteriële RNAP (bio.js): DNA door de geul */
       (sigma > .01 ? `<g opacity="${f1(sigma)}">${prot(x - 74, Y0 - 30, 38, 24, K.sig, 1, 92, 'σ70', 16)}</g>` : '') +
       (blocked > .01 ? `<g opacity="${f1(blocked)}" stroke="${C.danger}" stroke-width="5"><line x1="${x + 84}" y1="${Y0 - 100}" x2="${x + 112}" y2="${Y0 - 72}"/><line x1="${x + 112}" y1="${Y0 - 100}" x2="${x + 84}" y2="${Y0 - 72}"/></g>` : '') + '</g>';
     const laci = (x, y, op, allo = 0) => op <= .01 ? '' : `<g opacity="${f1(op)}">` +
@@ -205,7 +205,7 @@ export default {
         // eiwitten
         let pr = '';
         pr += capP(st.cap, 1);
-        if (st.cap > .5 && step >= 5) pr += `<line x1="330" y1="${Y0 - 60}" x2="380" y2="${Y0 - 70}" stroke="${K.cap}" stroke-width="2.5" stroke-dasharray="4 3"/>` + (step === 5 ? txt(372, Y0 - 108, 'αCTD', K.cap, 19) : '');
+        if (st.cap > .5 && step >= 5) pr += `<line x1="330" y1="${Y0 - 60}" x2="404" y2="${Y0 - 36}" stroke="${K.cap}" stroke-width="2.5" stroke-dasharray="4 3"/>` + (step === 5 ? txt(372, Y0 - 108, 'αCTD', K.cap, 19) : '');
         pr += laci(541, Y0 + 44, st.laci, st.allo ?? (st.lac ? 1 : 0) * (1 - st.laci));
         if (step === 3 && st.laci < .99) pr += laci(541 + 150 * Math.sqrt(1 - st.laci), Y0 + 44 + 106 * (1 - st.laci), 1 - st.laci, 1);   // losgelaten LacI drijft weg naar rechtsonder, niet over het operatorlabel
         if (step === 3) {
@@ -229,7 +229,8 @@ export default {
           if (u > 1) continue;
           const x = lerp(TSS + 40, 1510, u), len = x - TSS - 20;
           mr += mrnaAt(x, len, step >= 5, t);
-          pr += `<g opacity="${f1(clamp((1 - u) * 12))}">` + prot(x, Y0 - 40, 34, 26, K.rnap, 1, 93) + '</g>';
+          pr += `<g opacity="${f1(clamp((1 - u) * 12))}">` + polymerase(x, Y0, 34, 22, { col: K.rnap, dir: 1, gul: 9, hoog: 1.3, vul: .5, seed: 93, sw: 2 })
+            + (len > 4 ? `<path d="M${f1(x - 19)},${f1(Y0 - 16)} Q${f1(x - 14)},${f1(Y0 - 56)} ${f1(x)},${f1(Y0 - 66)}" stroke="${C.rna}" stroke-width="4" fill="none" stroke-linecap="round"/>` : '') + '</g>';   // RNA uit de uitgang (achter-boven) naar het mRNA
         }
         $('op-mrna').innerHTML = mr;
         setA('op-trA', 1390, 330, (step === 5 || step === 6) && n > 0);   // niet aan de rechterrand (anders afgesneden)
