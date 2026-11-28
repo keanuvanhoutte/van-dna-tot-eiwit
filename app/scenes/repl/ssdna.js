@@ -32,6 +32,19 @@ export default structure3d({
     { sel: B, style: { cartoon: { color: COL_B } } },
     { sel: DNA, style: { stick: { color: C.dna, radius: .3 } } },
   ],
+  /* "Wat zie je?" (zijpaneel): elk onderdeel van de figuur in één zin — d = eenvoudig, p = vaktaal (hoger) */
+  parts: [
+    { c: '#8a93a8', t: 'RPA', m: ['RPA: twee grijpdelen', 'RPA: two gripping parts'], d: { nl: 'Een eiwit dat losse DNA-strengen bedekt en beschermt. Hier zie je het middenstuk met twee grijpdelen.', en: 'A protein that covers and protects single DNA strands. Here you see its middle part with two gripping parts.' },
+      p: { nl: 'Replicatieproteïne A, een heterotrimeer (RPA70, RPA32, RPA14); getoond is het ssDNA-bindende middenstuk van RPA70 (res. 181–422).', en: 'Replication protein A, a heterotrimer (RPA70, RPA32, RPA14); shown is the ssDNA-binding core of RPA70 (res. 181–422).' } },
+    { c: COL_A, t: { nl: 'DBD-A (OB-fold)', en: 'DBD-A (OB fold)' }, m: ['DBD-A (OB-fold)'], d: { nl: 'Het eerste grijpdeel (paars), gevouwen als een klein vat. Zijn lussen klemmen het DNA vast.', en: 'The first gripping part (purple), folded like a small barrel. Its loops clamp the DNA.' },
+      p: { nl: 'DNA-bindend domein A, een OB-fold (β-barrel); lussen van de barrel omsluiten het ssDNA.', en: 'DNA-binding domain A, an OB fold (β-barrel); loops of the barrel wrap around the ssDNA.' } },
+    { c: COL_B, t: { nl: 'DBD-B (OB-fold)', en: 'DBD-B (OB fold)' }, m: ['DBD-B (OB-fold)'], d: { nl: 'Het tweede grijpdeel (turquoise), met dezelfde vatvorm. Samen houden de twee delen zo’n 8 basen vast.', en: 'The second gripping part (turquoise), with the same barrel shape. Together the two parts hold about 8 bases.' },
+      p: { nl: 'DNA-bindend domein B, een tweede OB-fold; DBD-A en DBD-B binden samen ≈ 8 nt.', en: 'DNA-binding domain B, a second OB fold; DBD-A and DBD-B together bind ≈ 8 nt.' } },
+    { c: C.dna, t: { nl: 'losse DNA-streng', en: 'single DNA strand' }, m: ['ssDNA: basen liggen bloot', 'ssDNA: bases exposed'], d: { nl: 'Eén DNA-streng zonder partner (8 letters C). De basen liggen bloot en raken zo sneller beschadigd.', en: 'One DNA strand without a partner (8 letters C). The bases are exposed and so get damaged more easily.' },
+      p: { nl: 'Enkelstrengig oligo dC8 in de bindingsgoot; blootgestelde basen zijn gevoelig voor schade en nucleasen.', en: 'Single-stranded oligo dC8 in the binding groove; exposed bases are vulnerable to damage and nucleases.' } },
+    { c: '#ffc247', t: 'Phe238 · Phe269 · Trp361 · Phe386', d: { nl: 'Vier bouwstenen van RPA met een platte ring (geel). Ze stapelen op de basen, zodat RPA elke DNA-volgorde kan vasthouden.', en: 'Four building blocks of RPA with a flat ring (yellow). They stack on the bases, so RPA can hold any DNA sequence.' },
+      p: { nl: 'Aromatische residuen die stapelinteracties met de basen aangaan; de binding is daardoor sequentie-onafhankelijk.', en: 'Aromatic residues making stacking interactions with the bases; binding is therefore sequence-independent.' } },
+  ],
   steps: [
     { dur: 8000, spin: .012, focus: null, tags: [{ sel: { chain: 'A' }, label: { nl: 'RPA: twee grijpdelen', en: 'RPA: two gripping parts' } }, { sel: { chain: 'B' }, label: { nl: 'losse DNA-streng', en: 'single DNA strand' }, labelColor: C.dna }],
       title: { nl: 'RPA houdt een losse DNA-streng vast', en: 'RPA holds a single DNA strand' },

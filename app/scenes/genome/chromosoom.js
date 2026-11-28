@@ -43,6 +43,43 @@ export default {
   simplified: {
     nl: 'Lengtes in het karyogram zijn op schaal (T2T-referentie), maar de centromeerposities zijn benaderd en de banden zijn schematisch (geen echt G-bandpatroon). Cohesine en condensine zijn als ringen getekend; in een echt chromosoom zijn het er duizenden. Het aantal lussen, microtubuli en telomeerherhalingen is sterk verminderd.',
     en: 'Lengths in the karyogram are to scale (T2T reference), but centromere positions are approximate and the bands are schematic (not a real G-banding pattern). Cohesin and condensin are drawn as rings; a real chromosome has thousands. The number of loops, microtubules and telomere repeats is strongly reduced.' },
+  /* "Wat zie je?" (zijpaneel): elk onderdeel van de figuur in één zin — d = eenvoudig, p = vaktaal (hoger) */
+  parts: [
+    { c: C.dna, t: { nl: 'chromosomenparen', en: 'chromosome pairs' }, m: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22'],d: { nl: 'De 22 gewone paren chromosomen, gerangschikt van groot naar klein. Van elk paar komt er één van de moeder en één van de vader.', en: 'The 22 ordinary pairs of chromosomes, arranged from large to small. Of each pair, one comes from the mother and one from the father.' },
+      p: { nl: 'Karyogram van de 22 autosoomparen; lengtes op schaal volgens de T2T-referentie, banden schematisch.', en: 'Karyogram of the 22 autosome pairs; lengths to scale from the T2T reference, bands schematic.' } },
+    { c: '#e08f8f', t: { nl: 'geslachtschromosomen', en: 'sex chromosomes' }, m: ['X', 'Y', '(man: 46,XY)', '(male: 46,XY)'], d: { nl: 'X en Y bepalen mee het geslacht: een vrouw heeft XX, een man XY.', en: 'X and Y help determine sex: a woman has XX, a man XY.' },
+      p: { nl: 'Gonosomen; karyotype 46,XX of 46,XY.', en: 'Sex chromosomes; karyotype 46,XX or 46,XY.' } },
+    { c: C.rrna, t: { nl: 'rDNA-knopjes', en: 'rDNA knobs' }, d: { nl: 'De groene bolletjes bovenaan vijf kleine chromosomen (13, 14, 15, 21, 22): daar liggen de genen voor het meeste ribosoom-RNA.', en: 'The green dots on top of five small chromosomes (13, 14, 15, 21, 22): that is where the genes for most ribosomal RNA lie.' },
+      p: { nl: 'Nucleolusorganisatorgebieden (NOR) met rDNA-herhalingen op de korte armen van de acrocentrische chromosomen.', en: 'Nucleolus organiser regions (NORs) with rDNA repeats on the short arms of the acrocentric chromosomes.' } },
+    { c: '#fff', t: '50 Mb', d: { nl: 'Schaalbalk: zo lang is een stuk van 50 miljoen basenparen.', en: 'Scale bar: this is how long a stretch of 50 million base pairs is.' },
+      p: { nl: 'Schaalbalk van 50 megabasen.', en: 'Scale bar of 50 megabases.' } },
+    { c: C.dna, t: { nl: 'zusterchromatiden', en: 'sister chromatids' }, m: ['p-arm', 'p arm', 'q-arm', 'q arm'], d: { nl: 'Na het kopiëren heeft een chromosoom twee gelijke helften. Elke helft heeft een korte arm (p) en een lange arm (q).', en: 'After copying, a chromosome has two identical halves. Each half has a short arm (p) and a long arm (q).' },
+      p: { nl: 'Twee identieke zusterchromatiden na replicatie; p-arm (kort) en q-arm (lang) aan weerszijden van het centromeer.', en: 'Two identical sister chromatids after replication; p arm (short) and q arm (long) on either side of the centromere.' } },
+    { c: C.muted, t: { nl: 'centromeer', en: 'centromere' }, m: ['Centromeer', 'Centromere'], d: { nl: 'De insnoering waar de twee helften het langst samenhangen en waar de trekdraden aanhaken.', en: 'The narrow point where the two halves stay joined longest and where the pulling fibres attach.' },
+      p: { nl: 'Primaire insnoering; draagt het kinetochoor.', en: 'Primary constriction; carries the kinetochore.' } },
+    { c: '#c78bf0', t: { nl: 'centromeer-DNA', en: 'centromere DNA' }, m: ['α-satelliet-DNA · CENP-A-nucleosomen (paars)', 'α-satellite DNA · CENP-A nucleosomes (purple)'], d: { nl: 'Het DNA van het centromeer: steeds hetzelfde stukje DNA herhaald, rond kralen met een speciaal histon (de paarse kralen).', en: 'The centromere’s DNA: the same piece of DNA repeated over and over, around beads with a special histone (the purple beads).' },
+      p: { nl: 'α-satelliet-DNA (monomeer 171 bp) met nucleosomen die de H3-variant CENP-A bevatten; CENP-A markeert epigenetisch het centromeer.', en: 'α-satellite DNA (171 bp monomer) with nucleosomes containing the H3 variant CENP-A; CENP-A epigenetically marks the centromere.' } },
+    { c: C.prot, t: { nl: 'kinetochoor', en: 'kinetochore' }, d: { nl: 'Een groot eiwitcomplex op het centromeer, waaraan de trekdraden vastgrijpen.', en: 'A large protein complex on the centromere that the pulling fibres grab onto.' },
+      p: { nl: 'Kinetochoor: eiwitcomplex op het centromeer dat de microtubuli van de spoelfiguur bindt.', en: 'Kinetochore: protein complex on the centromere that binds the spindle microtubules.' } },
+    { c: '#7fdc6a', t: { nl: 'microtubuli', en: 'microtubules' }, d: { nl: 'De groene trekdraden die bij de celdeling de twee helften uit elkaar trekken.', en: 'The green pulling fibres that pull the two halves apart during cell division.' },
+      p: { nl: 'Kinetochoormicrotubuli van de mitotische spoel.', en: 'Kinetochore microtubules of the mitotic spindle.' } },
+    { c: '#ffc247', t: { nl: 'cohesine', en: 'cohesin' }, m: ['(blijft bij het centromeer)', '(stays at the centromere)'], d: { nl: 'De gele ringen houden de twee helften samen. Bij de deling verdwijnen ze eerst van de armen; de laatste bij het centromeer worden doorgeknipt.', en: 'The yellow rings hold the two halves together. During division they first leave the arms; the last ones at the centromere are cut.' },
+      p: { nl: 'Cohesinecomplex dat zusterchromatidecohesie verzorgt; in de profase van de armen verwijderd, aan het centromeer door shugoshin beschermd tot separase het in de anafase klieft.', en: 'Cohesin complex mediating sister chromatid cohesion; removed from the arms in prophase, protected at the centromere by shugoshin until separase cleaves it in anaphase.' } },
+    { c: '#dfe6f5', t: { nl: 'telomeer', en: 'telomere' }, m: ['Telomeer', 'Telomere', 'TTAGGG'], d: { nl: 'Het uiteinde van een chromosoom: veel herhalingen van de letters TTAGGG die het einde beschermen.', en: 'The end of a chromosome: many repeats of the letters TTAGGG that protect the end.' },
+      p: { nl: 'Telomeer-DNA: tandemherhalingen 5′-TTAGGG-3′ (typisch ~10–15 kb).', en: 'Telomeric DNA: tandem 5′-TTAGGG-3′ repeats (typically ~10–15 kb).' } },
+    { c: C.dna, t: { nl: '3′-overhang', en: '3′ overhang' }, m: ['5′', '3′'], d: { nl: 'Op het einde steekt één DNA-streng iets verder uit dan de andere.', en: 'At the end one DNA strand sticks out a little further than the other.' },
+      p: { nl: 'Enkelstrengige G-rijke 3′-overhang van de telomeer; 5′ en 3′ geven de richting van elke streng.', en: 'Single-stranded G-rich 3′ overhang of the telomere; 5′ and 3′ give the direction of each strand.' } },
+    { c: C.dna2, t: { nl: 'complementaire streng', en: 'complementary strand' }, m: ['complementaire streng (CCCTAA)ₙ', 'complementary strand (CCCTAA)ₙ'], d: { nl: 'De tweede DNA-streng van het uiteinde, met de passende letters CCCTAA.', en: 'The second DNA strand of the end, with the matching letters CCCTAA.' },
+      p: { nl: 'C-rijke streng (CCCTAA)ₙ, complementair aan de TTAGGG-streng.', en: 'C-rich strand (CCCTAA)ₙ, complementary to the TTAGGG strand.' } },
+    { c: C.prot, t: 'telomerase', d: { nl: 'Een enzym met een eigen stukje RNA als mal. Het kan het uitstekende uiteinde verlengen met nieuwe TTAGGG-stukjes.', en: 'An enzyme with its own piece of RNA as a template. It can extend the protruding end with new TTAGGG pieces.' },
+      p: { nl: 'Ribonucleoproteïne-reverse-transcriptase (TERT + TR-RNA) dat TTAGGG-herhalingen aan de 3′-overhang toevoegt.', en: 'Ribonucleoprotein reverse transcriptase (TERT + TR RNA) that adds TTAGGG repeats to the 3′ overhang.' } },
+    { c: '#c78bf0', t: 'shelterin', d: { nl: 'Eiwitten die op het uiteinde zitten en het afschermen, zodat de cel het niet voor een DNA-breuk aanziet.', en: 'Proteins that sit on the end and shield it, so the cell does not mistake it for a DNA break.' },
+      p: { nl: 'Shelterincomplex (o.a. TRF1, TRF2, POT1) dat telomeren beschermt tegen DNA-schadesignalering.', en: 'Shelterin complex (incl. TRF1, TRF2, POT1) that protects telomeres from DNA damage signalling.' } },
+    { c: '#5fd3e6', t: { nl: 'condensine', en: 'condensin' }, m: ['lussen', 'loops', 'rond een as', 'around an axis'], d: { nl: 'Bij de celdeling vouwt dit eiwit elke helft tot een rij lussen rond een as. Zo wordt het DNA veel korter.', en: 'During cell division this protein folds each half into a row of loops around an axis. This makes the DNA much shorter.' },
+      p: { nl: 'SMC-complex dat mitotische chromatiden compacteert tot een reeks lussen rond een centrale as.', en: 'SMC complex that compacts mitotic chromatids into an array of loops around a central axis.' } },
+    { c: C.dna2, t: { nl: 'chromosoomterritorium', en: 'chromosome territory' }, m: ['chromosoomterritorium (interfase)', 'chromosome territory (interphase)'], d: { nl: 'Na de deling vouwt het chromosoom weer open en neemt het een eigen gebied in de kern in.', en: 'After division the chromosome unfolds again and takes up its own region in the nucleus.' },
+      p: { nl: 'Interfase-chromosoomterritorium: gedecondenseerd chromatine in een eigen kerndomein.', en: 'Interphase chromosome territory: decondensed chromatin in its own nuclear domain.' } },
+  ],
   steps: [
     ST(8000, cam(800, 290, 1560), '46 chromosomen', '46 chromosomes',
       'Een lichaamscel heeft 23 paren chromosomen: 22 gewone paren en XX of XY. Eén set is ruim 3 miljard basenparen.',
@@ -109,9 +146,21 @@ export default {
       cen += nu.svg;
     }
     cen += `</g>`;
-    cen += `<path d="${eiwitPad(1170, 546, 252, 24, 112, .05)}" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="3"/>` + txt(1170, 552, T2('kinetochoor', 'kinetochore'), '#fff', 18);
-    for (let i = 0; i < 7; i++) cen += `<line x1="${960 + i * 70}" y1="526" x2="${1000 + i * 55}" y2="466" stroke="#7fdc6a" stroke-width="7" stroke-linecap="round"/>`;
-    cen += txt(1480, 496, T2('microtubuli', 'microtubules'), '#7fdc6a', 18, 'end');
+    // kinetochoor in twee lagen (detailronde 28-11-2026): binnenste laag (CCAN) op de CENP-A-nucleosomen, buitenste laag (KMN) met
+    // staafvormige Ndc80-complexen die met hun kopjes aan de microtubulus binden; microtubuli als holle buizen met gekrulde
+    // protofilamenten aan het plus-uiteinde (Musacchio & Desai 2017)
+    cen += `<path d="${eiwitPad(1160, 555, 232, 9, 112, .04)}" fill="rgba(155,123,255,.35)" stroke="${C.prot}" stroke-width="2.5"/>` +
+      `<path d="${eiwitPad(1160, 532, 232, 8, 113, .04)}" fill="rgba(155,123,255,.55)" stroke="${C.prot}" stroke-width="2.5"/>` +
+      txt(1404, 561, T2('binnen', 'inner'), '#c9b8ff', 15, 'start') + txt(1404, 537, T2('buiten', 'outer'), '#c9b8ff', 15, 'start');
+    for (let i = 0; i < 7; i++) {
+      const xb = 960 + i * 70, xt = 1000 + i * 55, yb = 502, yt = 432, L0 = Math.hypot(xb - xt, yb - yt), nx = (yb - yt) / L0, ny = -(xb - xt) / L0;
+      cen += `<path d="M${f1(xt + nx * 6)},${yt} L${f1(xb + nx * 6)},${f1(yb + ny * 6)} M${f1(xt - nx * 6)},${yt} L${f1(xb - nx * 6)},${f1(yb - ny * 6)}" stroke="#7fdc6a" stroke-width="3.5"/>` +
+        `<line x1="${xt}" y1="${yt}" x2="${xb}" y2="${yb}" stroke="#7fdc6a" stroke-width="1.5" opacity=".5"/>` +
+        `<path d="M${f1(xb + nx * 6)},${f1(yb + ny * 6)} q${f1(nx * 8)},4 ${f1(nx * 10)},-3 M${f1(xb - nx * 6)},${f1(yb - ny * 6)} q${f1(-nx * 8)},4 ${f1(-nx * 10)},-3" stroke="#7fdc6a" stroke-width="3" fill="none"/>` +
+        [-9, 9].map(d => `<line x1="${xb + d}" y1="526" x2="${f1(xb + d * .7 + (xt - xb) * .12)}" y2="${f1(yb - 8)}" stroke="#d6ccff" stroke-width="2.5"/><circle cx="${f1(xb + d * .7 + (xt - xb) * .12)}" cy="${f1(yb - 9)}" r="3.5" fill="#d6ccff"/>`).join('');
+    }
+    cen += txt(872, 472, T2('kinetochoor', 'kinetochore'), '#fff', 16, 'start') + `<path d="M905,480 Q918,515 935,528" stroke="#fff" stroke-width="1.5" fill="none"/>`;
+    cen += txt(1525, 470, T2('microtubuli', 'microtubules'), '#7fdc6a', 18, 'end');
     cen += txt(1170, 650, T2('α-satelliet-DNA · CENP-A-nucleosomen (paars)', 'α-satellite DNA · CENP-A nucleosomes (purple)'), C.muted, 17);
 
     // ---- inzet telomeer ----

@@ -29,6 +29,14 @@ export default structure3d({
   base,
   rotate: [['x', 65]],   // schuin van opzij: motor (ClpX) en knipkamer (ClpP) zichtbaar op elkaar gestapeld
   zoomPad: .85,                         // overzicht: iets meer ruimte rondom (raakte de bovenrand)
+  parts: [
+    { c: XC[0], t: 'motor (ClpX)', m: ['ClpX-ring', 'ClpX ring'], d: { nl: 'De paarse ring van zes eiwitten bovenaan. Met energie uit ATP trekt hij een eiwit open en duwt de draad naar binnen.', en: 'The purple ring of six proteins on top. Using energy from ATP it pulls a protein open and pushes the strand inside.' },
+      p: { nl: 'Hexamere AAA+-ontvouwase; poriehaarspelden grijpen het substraat en translokeren het ATP-afhankelijk naar ClpP.', en: 'Hexameric AAA+ unfoldase; pore loops grip the substrate and translocate it into ClpP in an ATP-dependent way.' } },
+    { c: PC, t: { nl: 'knipkamer (ClpP)', en: 'cutting chamber (ClpP)' }, m: ['ClpP (ring van 7)', 'ClpP (ring of 7)'], d: { nl: 'De blauwe ring van zeven eiwitten eronder. Binnenin knippen ze de ontvouwen eiwitdraad in kleine stukjes.', en: 'The blue ring of seven proteins below. Inside, they cut the unfolded protein strand into small pieces.' },
+      p: { nl: 'Serineprotease opgebouwd uit twee heptamere ringen (hier één gemodelleerd); de actieve plaatsen liggen in de afgesloten binnenkamer.', en: 'Serine protease built from two heptameric rings (one modelled here); the active sites lie in the enclosed inner chamber.' } },
+    { c: SC, t: { nl: 'ssrA-label (het staartje)', en: 'ssrA tag (the tail)' }, d: { nl: 'Het groene staartje: een kort afbraaklabel aan het eiwit dat weg moet. De motor grijpt het vast in zijn opening.', en: 'The green tail: a short degradation tag on the protein that has to go. The motor grips it in its opening.' },
+      p: { nl: 'C-terminale ssrA-tag (AANDENYALAA), door tmRNA toegevoegd aan eiwitten van vastgelopen ribosomen; herkend in de ClpX-porie.', en: 'C-terminal ssrA tag (AANDENYALAA), added by tmRNA to proteins from stalled ribosomes; recognised in the ClpX pore.' } },
+  ],
   steps: [
     { dur: 8000, title: L3('Ook eiwitten moeten weg', 'Proteins have to go too'), focus: null, zoom: {}, tags: [TAG({ chain: X }, 'motor (ClpX)', 'motor (ClpX)'), TAG({ chain: P }, 'knipkamer (ClpP)', 'cutting chamber (ClpP)')], spin: .012,
       text: L3('E. coli heeft geen ubiquitine en geen proteasoom. Ze gebruikt eigen afbraakmachines, zoals ClpXP.', 'E. coli has no ubiquitin and no proteasome. It uses its own degradation machines, such as ClpXP.') },

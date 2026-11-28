@@ -29,6 +29,29 @@ export default {
   simplified: {
     nl: 'Schematisch: de lus is veel korter getekend dan in het echt, en er is maar één activator en één versterker getoond. Een gen heeft vaak meerdere versterkers, en één versterker kan meer dan één gen aansturen. Hoe vaak en hoe lang versterker en startplaats elkaar raken, wordt nog onderzocht.',
     en: 'Schematic: the loop is drawn much shorter than in reality, and only one activator and one switch are shown. A gene often has several switches, and one switch can control more than one gene. How often and for how long switch and start site touch is still being studied.' },
+  /* "Wat zie je?" (zijpaneel): elk onderdeel van de figuur in één zin — d = eenvoudig, p = vaktaal (hoger) */
+  parts: [
+    { c: C.dna, t: 'DNA', d: { nl: 'De blauwe draad: het DNA. Het stuk tussen versterker en gen kan een lus vormen.', en: 'The blue thread: the DNA. The stretch between the switch and the gene can form a loop.' },
+      p: { nl: 'Chromatinevezel; het tussenliggende segment vormt een lus tussen enhancer en promoter.', en: 'Chromatin fibre; the intervening segment forms a loop between enhancer and promoter.' } },
+    { c: ENH, t: { nl: 'versterker', en: 'switch' }, d: { nl: 'Een stukje DNA (enhancer) dat een gen sterker aanzet. Het kan ver van dat gen liggen.', en: 'A piece of DNA (enhancer) that turns a gene on more strongly. It can lie far from that gene.' },
+      p: { nl: 'Enhancer: cis-regulatorisch element met bindingsplaatsen voor transcriptiefactoren; werkt onafhankelijk van afstand en oriëntatie.', en: 'Enhancer: cis-regulatory element with transcription factor binding sites; acts independently of distance and orientation.' } },
+    { c: C.text, t: { nl: 'afstand', en: 'distance' }, m: ['soms ≈ 1 miljoen letters', 'sometimes ≈ 1 million letters'], d: { nl: 'Een versterker kan wel een miljoen DNA-letters van zijn gen liggen.', en: 'A switch can lie as much as a million DNA letters from its gene.' },
+      p: { nl: 'Enhancer–promoterafstanden tot ≈ 1 Mb (bv. de ZRS-enhancer van SHH).', en: 'Enhancer–promoter distances of up to ≈ 1 Mb (e.g. the ZRS enhancer of SHH).' } },
+    { c: GENE, t: { nl: 'gen', en: 'gene' }, d: { nl: 'Het stuk DNA dat wordt afgelezen.', en: 'The piece of DNA that gets read.' },
+      p: { nl: 'Doelgen van de enhancer.', en: 'Target gene of the enhancer.' } },
+    { c: GENE, t: { nl: 'startplaats', en: 'start site' }, d: { nl: 'Het begin van het gen (promoter): daar kan het afleesapparaat beginnen.', en: 'The beginning of the gene (promoter): that is where the reading machine can start.' },
+      p: { nl: 'Kernpromoter waar het preinitiatiecomplex met RNA-polymerase II assembleert.', en: 'Core promoter where the preinitiation complex with RNA polymerase II assembles.' } },
+    { c: POL, t: 'Pol II', m: ['traag…', 'slow…'], d: { nl: 'Het afleesapparaat dat van het gen een RNA-kopie maakt. Op zichzelf start het maar traag.', en: 'The reading machine that makes an RNA copy of the gene. On its own it starts only slowly.' },
+      p: { nl: 'RNA-polymerase II; zonder activatie is de basale transcriptie laag.', en: 'RNA polymerase II; without activation basal transcription is low.' } },
+    { c: ACT, t: { nl: 'activatoren', en: 'activators' }, d: { nl: 'Eiwitten die op de versterker gaan zitten omdat ze het gen willen aanzetten.', en: 'Proteins that sit on the switch because they want to turn the gene on.' },
+      p: { nl: 'Sequentiespecifieke transcriptiefactoren met een activatiedomein, gebonden aan de enhancer.', en: 'Sequence-specific transcription factors with an activation domain, bound to the enhancer.' } },
+    { c: MED, t: { nl: 'brug', en: 'bridge' }, d: { nl: 'Een groot eiwitcomplex (Mediator) dat de activatoren verbindt met het afleesapparaat.', en: 'A large protein complex (Mediator) that connects the activators with the reading machine.' },
+      p: { nl: 'Mediator-complex; geeft signalen van activatoren door aan het preinitiatiecomplex en Pol II.', en: 'Mediator complex; relays signals from activators to the preinitiation complex and Pol II.' } },
+    { c: C.rna, t: 'RNA', m: ['✓ veel RNA', '✓ lots of RNA'], d: { nl: 'De oranje draden: RNA-kopieën van het gen. Met versterker worden er veel gemaakt.', en: 'The orange strands: RNA copies of the gene. With the switch, many are made.' },
+      p: { nl: 'Transcripten; enhanceractivatie verhoogt de transcriptiefrequentie.', en: 'Transcripts; enhancer activation increases the transcription rate.' } },
+    { c: C.danger, t: { nl: 'extra vinger', en: 'extra finger' }, m: ['extra', 'vinger', 'finger'], d: { nl: 'Een fout in een verre versterker voor de aanleg van vingers kan een extra vinger geven.', en: 'A fault in a distant switch for forming fingers can cause an extra finger.' },
+      p: { nl: 'Puntmutaties in de ZRS-enhancer (≈ 1 Mb van SHH) veroorzaken preaxiale polydactylie (Lettice et al. 2003).', en: 'Point mutations in the ZRS enhancer (≈ 1 Mb from SHH) cause preaxial polydactyly (Lettice et al. 2003).' } },
+  ],
   steps: [
     { dur: 7500, cam: FULL, title: L3('Een gen begint bij een startplaats', 'A gene begins at a start site'),
       text: L3('Aan het begin van een gen ligt de startplaats. Daar kan het afleesapparaat beginnen, maar alleen gaat dat traag.', 'At the beginning of a gene lies the start site. The reading machine can begin there, but on its own that is slow.') },
@@ -89,7 +112,10 @@ export default {
         if (step === 2) fx += T(E[0], Y - 120, T2('activatoren', 'activators'), { size: 26, col: ACT, w: 700, op: ease(sub(p, .5, .8)) });
         if (kM > .01) {
           const mx = (E[0] + P[0]) / 2;
-          fx += blob(mx, Y - 122, 100, 44, MED, T2('brug', 'bridge'), kM, 24);
+          // Mediator in modules: staart (bindt de activatoren), midden, kop (bindt Pol II) (Soutourina 2018)
+          const mod = (x, y, rx, ry, sd, lab) => `<path d="${eiwitPad(x, y, rx, ry, sd, .09)}" fill="#0b1224"/><path d="${eiwitPad(x, y, rx, ry, sd, .09)}" fill="${MED}" fill-opacity=".45" stroke="#a593ff" stroke-width="3"/>` + T(x, y + 6, lab, { size: 16, col: '#e2dbff', w: 700 });
+          fx += `<g opacity="${f1(kM)}">` + mod(mx - 64, Y - 112, 42, 36, 121, T2('staart', 'tail')) + mod(mx + 66, Y - 108, 44, 38, 123, T2('kop', 'head')) + mod(mx, Y - 132, 36, 40, 122, T2('midden', 'middle')) + '</g>' +
+            T(mx, Y - 186, T2('brug', 'bridge'), { size: 24, op: kM, col: '#c9b8ff', w: 700 });
         }
         if (kR > .01) {
           // het RNA komt bovenaan achteraan uit Pol II (RNA-uitgang) en groeit naar achteren/omhoog, weg van het gen waar het enzym nog moet komen;

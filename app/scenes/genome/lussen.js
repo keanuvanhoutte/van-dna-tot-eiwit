@@ -39,7 +39,21 @@ function pos(s, g) {
 const pathOf = pts => pts.map((q, i) => `${i ? 'L' : 'M'}${f1(q[0])},${f1(q[1])}`).join('');
 /* stop-eiwit als pijlpunt; dir = +1 wijst naar rechts */
 const stop = (x, y, dir, op = 1) => op <= .01 ? '' : `<path d="M${f1(x - dir * 26)},${f1(y - 30)} L${f1(x + dir * 26)},${f1(y)} L${f1(x - dir * 26)},${f1(y + 30)} Z" fill="${STOP}" stroke="#0a1224" stroke-width="2" opacity="${f1(op)}"/>`;
-const ring = (x, y, op = 1) => op <= .01 ? '' : `<ellipse cx="${f1(x)}" cy="${f1(y)}" rx="40" ry="26" fill="none" stroke="${RING}" stroke-width="11" opacity="${f1(op)}"/>`;
+/* cohesine-ring (detailronde 28-11-2026): twee SMC-armen (SMC1A links, SMC3 rechts) als coiled coil van twee gewonden
+   helices, die bovenaan in het scharnier samenkomen; onderaan de twee ATPase-koppen (ATP ertussen) die door de kleisine
+   RAD21 overbrugd worden. Het DNA van de lus loopt door de ring (Davidson & Peters 2021). */
+const coiled = (x0, y0, x1, y1) => {
+  let a = '', b = ''; const n = 22;
+  for (let i = 0; i <= n; i++) { const u = i / n, x = x0 + (x1 - x0) * u, y = y0 + (y1 - y0) * u, L0 = Math.hypot(x1 - x0, y1 - y0), nx = -(y1 - y0) / L0, ny = (x1 - x0) / L0, s = 3.2 * Math.sin(u * 7 * Math.PI);
+    a += `${i ? 'L' : 'M'}${f1(x + nx * s)},${f1(y + ny * s)}`; b += `${i ? 'L' : 'M'}${f1(x - nx * s)},${f1(y - ny * s)}`; }
+  return `<path d="${a}" stroke="${RING}" stroke-width="4.5" fill="none"/><path d="${b}" stroke="#d99a1e" stroke-width="4.5" fill="none"/>`;
+};
+const ring = (x, y, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}">` +
+  `<path d="M${f1(x - 34)},${f1(y + 30)} Q${f1(x)},${f1(y + 58)} ${f1(x + 34)},${f1(y + 30)}" stroke="#e07b5a" stroke-width="7" fill="none" stroke-linecap="round"/>` +
+  coiled(x - 32, y + 18, x - 6, y - 56) + coiled(x + 32, y + 18, x + 6, y - 56) +
+  `<ellipse cx="${f1(x)}" cy="${f1(y - 60)}" rx="15" ry="10" fill="${RING}" stroke="#0a1224" stroke-width="2"/>` +
+  `<circle cx="${f1(x - 34)}" cy="${f1(y + 26)}" r="15" fill="${RING}" stroke="#0a1224" stroke-width="2"/><circle cx="${f1(x + 34)}" cy="${f1(y + 26)}" r="15" fill="#d99a1e" stroke="#0a1224" stroke-width="2"/>` +
+  `<circle cx="${f1(x)}" cy="${f1(y + 24)}" r="5" fill="#5fd3e6" stroke="#0a1224" stroke-width="1.5"/></g>`;
 
 /* één lus met ring (stap 0–4) */
 function single(g, op, ringOp) {
@@ -88,6 +102,27 @@ export default {
   simplified: {
     nl: 'Schematisch: echte lussen zijn tienduizenden tot ongeveer twee miljoen basenparen lang en zitten vol nucleosomen. Dit is het huidige model (lusextrusie): het is in de proefbuis rechtstreeks gezien en verklaart veel metingen in cellen, maar hoe het in levende cellen precies verloopt, wordt nog onderzocht (in levende cellen zijn lussen beweeglijk en vaak maar half af). In de 3D-structuur zijn van de lange armen van de ring vooral de koppen te zien.',
     en: 'Schematic: real loops are tens of thousands to about two million base pairs long and full of nucleosomes. This is the current model (loop extrusion): it has been seen directly in the test tube and explains many measurements in cells, but exactly how it works in living cells is still being studied (in living cells loops are dynamic and often only partly formed). In the 3D structure mainly the heads of the ring’s long arms are visible.' },
+  /* "Wat zie je?" (zijpaneel): elk onderdeel van de figuur in één zin — d = eenvoudig, p = vaktaal (hoger) */
+  parts: [
+    { c: C.dna, t: 'DNA', m: ['● DNA', 'lus', 'loop'], d: { nl: 'De blauwe draad: het DNA. Het deel dat door de ring is getrokken, vormt een lus.', en: 'The blue thread: the DNA. The part pulled through the ring forms a loop.' },
+      p: { nl: 'Chromatine-DNA; het geëxtrudeerde segment vormt een lus.', en: 'Chromatin DNA; the extruded segment forms a loop.' } },
+    { c: RING, t: 'ring', m: ['● ring'], d: { nl: 'De gele eiwitring (cohesine) grijpt het DNA en trekt het aan twee kanten door zich heen. Zo groeit de lus.', en: 'The yellow protein ring (cohesin) grabs the DNA and pulls it through itself on both sides. That is how the loop grows.' },
+      p: { nl: 'Cohesine (SMC1A, SMC3, RAD21, STAG): SMC-complex dat ATP-afhankelijk DNA-lussen extrudeert, tot ≈ 2 kb/s in vitro.', en: 'Cohesin (SMC1A, SMC3, RAD21, STAG): SMC complex that extrudes DNA loops in an ATP-dependent way, up to ≈ 2 kb/s in vitro.' } },
+    { c: STOP, t: { nl: 'stop-eiwit', en: 'stop protein' }, m: ['● stop-eiwit', '● stop protein', 'stop →', '← stop', 'stop-eiwit bereikt: de lus groeit niet verder', 'stop protein reached: the loop stops growing'], d: { nl: 'De oranje driehoeken: een eiwit (CTCF) dat vast op het DNA zit. Het houdt de ring tegen, maar alleen als het naar de ring wijst.', en: 'The orange triangles: a protein (CTCF) fixed on the DNA. It holds the ring back, but only when it points towards the ring.' },
+      p: { nl: 'CTCF gebonden aan een georiënteerd motief; convergente CTCF-plaatsen blokkeren lusextrusie en vormen lusankers.', en: 'CTCF bound to an oriented motif; convergent CTCF sites block loop extrusion and form loop anchors.' } },
+    { c: HELP, t: { nl: 'helper', en: 'helper' }, m: ['● helper', '● ring + helper', '(hier grijs)', '(grey here)'], d: { nl: 'Een hulpeiwit dat de ring op het DNA laadt en helpt trekken. In 3D in lichtblauw.', en: 'A helper protein that loads the ring onto the DNA and helps it pull. Light blue in 3D.' },
+      p: { nl: 'NIPBL, cohesinelader die de ATPase-activiteit en lusextrusie stimuleert.', en: 'NIPBL, the cohesin loader that stimulates ATPase activity and loop extrusion.' } },
+    { c: SA, t: { nl: 'grijpplaats', en: 'grip site' }, m: ['● grijpplaats', '● grip site'], d: { nl: 'Het groene deel van de ring waar het stop-eiwit met één uiteinde aan vastgrijpt. Daarom telt de richting.', en: 'The green part of the ring that one end of the stop protein grabs. That is why the direction matters.' },
+      p: { nl: 'STAG1 (SA1)-subeenheid; het N-terminale motief van CTCF bindt STAG1, wat de oriëntatieafhankelijkheid verklaart.', en: 'STAG1 (SA1) subunit; the N-terminal motif of CTCF binds STAG1, which explains the orientation dependence.' } },
+    { c: C.text, t: { nl: 'het echte complex', en: 'the real complex' }, m: ['Het echte complex', 'The real complex', 'mens · PDB 7W1M', 'human · PDB 7W1M', '3D-structuur laden…', 'loading 3D structure…'], d: { nl: 'Een echte gemeten structuur van het menselijke complex. Elk bolletje is één bouwsteen van een eiwit of één DNA-letter.', en: 'A real measured structure of the human complex. Each bead is one building block of a protein or one DNA letter.' },
+      p: { nl: 'Cryo-EM-structuur van cohesine–NIPBL–CTCF–DNA (PDB 7W1M, 6,5 Å; Zhang et al., Mol Cell 2023), weergegeven als Cα/P-bollen.', en: 'Cryo-EM structure of cohesin–NIPBL–CTCF–DNA (PDB 7W1M, 6.5 Å; Zhang et al., Mol Cell 2023), shown as Cα/P spheres.' } },
+    { c: NB1, t: { nl: 'buurt 1', en: 'neighbourhood 1' }, m: ['buurt 2', 'neighbourhood 2'], d: { nl: 'Elke lus vormt een buurt: een stuk DNA waarbinnen de delen elkaar vaak raken.', en: 'Each loop forms a neighbourhood: a stretch of DNA whose parts often touch each other.' },
+      p: { nl: 'Contactdomeinen (TADs), begrensd door CTCF/cohesine-ankers.', en: 'Contact domains (TADs), bounded by CTCF/cohesin anchors.' } },
+    { c: C.ok, t: { nl: '✓ vaak contact', en: '✓ frequent contact' }, m: ['✗ zelden', '✗ rarely'], d: { nl: 'Binnen een buurt raken stukken DNA elkaar vaak; tussen twee buurten zelden.', en: 'Within a neighbourhood, pieces of DNA often touch; between two neighbourhoods, rarely.' },
+      p: { nl: 'Verhoogde intra-domeincontactfrequentie en verlaagde inter-domeincontacten (Hi-C).', en: 'Elevated intra-domain contact frequency and reduced inter-domain contacts (Hi-C).' } },
+    { c: C.trna, t: { nl: 'huidig model', en: 'current model' }, m: ['volgens het huidige model', 'according to the current model', '✓ sterk bewijs in proeven', '✓ strong evidence in experiments', '? in levende cellen: beweeglijk, vaak half af', '? in living cells: dynamic, often partly formed', '?'], d: { nl: 'Zo werkt het volgens het huidige model. Proeven tonen het sterk aan, maar in levende cellen zijn lussen beweeglijk en vaak maar half af.', en: 'This is how it works in the current model. Experiments support it strongly, but in living cells loops are dynamic and often only partly formed.' },
+      p: { nl: 'Lusextrusie is in vitro direct waargenomen; in vivo zijn CTCF/cohesine-lussen dynamisch en vaak slechts gedeeltelijk gevormd.', en: 'Loop extrusion has been observed directly in vitro; in vivo CTCF/cohesin loops are dynamic and often only partially formed.' } },
+  ],
   steps: [
     { dur: 7500, cam: FULL, title: L3('Het DNA ligt in lussen', 'The DNA lies in loops'),
       text: L3('In de kern ligt het DNA niet gestrekt, maar in lussen. Hoe ontstaat zo’n lus?', 'In the nucleus the DNA is not stretched out but lies in loops. How does such a loop form?') },
@@ -145,13 +180,13 @@ export default {
         if (step === 0) fx += T(X0, Y - 120, T2('?', '?'), { size: 60, col: C.trna, w: 800, op: ease(sub(p, .3, .6)) });
         if (step === 1 || step === 2) {
           const o = step === 1 ? ease(sub(p, .3, .5)) : 1;
-          fx += T(X0, Y - 2 * g * .5 - 30, T2('lus', 'loop'), { size: 30, col: C.dna2, w: 700, op: o }) + T(X0, Y + 70, T2('ring', 'ring'), { size: 26, col: RING, w: 700, op: o });
+          fx += T(X0, Y - 2 * g * .5 - 30, T2('lus', 'loop'), { size: 30, col: C.dna2, w: 700, op: o }) + T(X0, Y + 88, T2('ring', 'ring'), { size: 26, col: RING, w: 700, op: o });
         }
         if (step >= 1 && step <= 4) {
           const a = pos(-SITE, g), b = pos(SITE, g), o = step === 1 ? ease(sub(p, .1, .3)) : 1;
           fx += T(a[0] - 40, Y + 70, T2('stop →', 'stop →'), { size: 24, col: STOP, op: o * (step >= 3 ? 0 : 1) }) + T(b[0] + 40, Y + 70, T2('← stop', '← stop'), { size: 24, col: STOP, op: o * (step >= 3 ? 0 : 1) });
         }
-        if (step === 3 || step === 4) fx += T(X0, Y + 80, T2('stop-eiwit bereikt: de lus groeit niet verder', 'stop protein reached: the loop stops growing'), { size: 26, col: STOP, w: 700, op: step === 3 ? ease(sub(p, .7, .9)) : 1 });
+        if (step === 3 || step === 4) fx += T(X0, Y + 118, T2('stop-eiwit bereikt: de lus groeit niet verder', 'stop protein reached: the loop stops growing'), { size: 26, col: STOP, w: 700, op: step === 3 ? ease(sub(p, .7, .9)) : 1 });
         if (step === 6) {
           const o = ease(sub(p, .1, .35));
           fx += `<g opacity="${f1(o)}"><rect x="470" y="120" width="660" height="150" rx="18" fill="rgba(13,20,38,.92)" stroke="${C.trna}" stroke-width="2"/></g>` +

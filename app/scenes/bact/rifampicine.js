@@ -38,6 +38,18 @@ export default structure3d({
     en: 'This structure contains no DNA and no RNA: how the short RNA bumps into rifampicin is only told. The crystal holds two copies of the enzyme; one is shown here. The three yellow positions are the places most often changed in resistant tuberculosis bacteria in the study, in E. coli numbering. In our RNA polymerase this part of the enzyme is not conserved; that is why no human enzyme is shown alongside.' },
   base,
   hide: { resn: ['HOH', 'WAT', 'ZN'] },
+  parts: [
+    { c: COL.b2, t: { nl: 'RNA-polymerase', en: 'RNA polymerase' }, m: ['bacterieel RNA-polymerase', 'bacterial RNA polymerase'], d: { nl: 'Het RNA-enzym van de bacterie, met zijn gids-eiwit (σ70). Het maakt RNA-kopieën van het DNA.', en: 'The bacterium’s RNA enzyme, with its guide protein (σ70). It makes RNA copies of the DNA.' },
+      p: { nl: 'RNA-polymerase-σ70-holo-enzym (α₂ββ′ωσ) van E. coli.', en: 'E. coli RNA polymerase σ70 holoenzyme (α₂ββ′ωσ).' } },
+    { c: COL.b, t: 'β', d: { nl: 'Een van de twee grote eiwitten van het RNA-enzym. Rifampicine zit erin vast.', en: 'One of the two large proteins of the RNA enzyme. Rifampicin is lodged in it.' },
+      p: { nl: 'β-subeenheid (RpoB); de rifampicinepocket ligt in het RNA-kanaal, ≈ 12 Å van het actieve centrum.', en: 'β subunit (RpoB); the rifampicin pocket lies in the RNA channel, ≈ 12 Å from the active centre.' } },
+    { c: COL.rif, t: { nl: 'rifampicine', en: 'rifampicin' }, m: ['antibioticum (rifampicine)', 'antibiotic (rifampicin)'], d: { nl: 'Het rode antibioticum. Het zit in de gang waar het nieuwe RNA naar buiten moet.', en: 'The red antibiotic. It sits in the passage the new RNA has to leave through.' },
+      p: { nl: 'Ansamycine dat in het RNA-uitgangskanaal bindt en het transcript na 2–3 nt sterisch blokkeert.', en: 'Ansamycin that binds in the RNA exit channel and sterically blocks the transcript after 2–3 nt.' } },
+    { c: COL.mg, t: { nl: 'actieve plek (Mg²⁺)', en: 'active site (Mg²⁺)' }, m: ['hier zou het RNA groeien (niet in deze structuur)', 'RNA would grow here (not in this structure)'], d: { nl: 'Het groene bolletje: de plek waar het enzym de RNA-letters aan elkaar zet. Het nieuwe RNA groeit hier en botst op rifampicine.', en: 'The green ball: the spot where the enzyme joins the RNA letters. The new RNA grows here and bumps into rifampicin.' },
+      p: { nl: 'Katalytisch Mg²⁺, gecoördineerd door het NADFDGD-motief van β′ (D460, D462, D464).', en: 'Catalytic Mg²⁺, coordinated by the NADFDGD motif of β′ (D460, D462, D464).' } },
+    { c: COL.mut, t: 'S531', m: ['H526', 'D516'], d: { nl: 'Drie bouwstenen rond de holte. Verandert er één (mutatie), dan past rifampicine niet meer en is de bacterie resistent.', en: 'Three building blocks around the pocket. If one changes (mutation), rifampicin no longer fits and the bacterium is resistant.' },
+      p: { nl: 'Resistentieposities in RpoB (E. coli-nummering); mutaties hier komen het vaakst voor bij rifampicineresistente M. tuberculosis.', en: 'Resistance positions in RpoB (E. coli numbering); mutations here are the most frequent in rifampicin-resistant M. tuberculosis.' } },
+  ],
   steps: [
     { dur: 8000, title: L3('Een antibioticum in het RNA-polymerase', 'An antibiotic inside RNA polymerase'), focus: null, zoom: {}, tags: [TAG({ chain: ['A', 'B', 'C', 'D', 'E', 'F'], hetflag: false }, 'RNA-polymerase', 'RNA polymerase'), TAG({ resn: 'RFP' }, 'antibioticum (rifampicine)', 'antibiotic (rifampicin)')], spin: .012,
       text: L3('Dit is het RNA-polymerase van E. coli, met het antibioticum rifampicine erin (rood).', 'This is the RNA polymerase of E. coli, with the antibiotic rifampicin inside (red).') },

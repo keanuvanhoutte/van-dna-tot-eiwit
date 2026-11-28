@@ -37,6 +37,25 @@ export default {
   simplified: {
     nl: 'Schematisch en niet op schaal: een nucleosoom is ≈ 11 nm breed en de machines zijn grote complexen van meerdere eiwitten. Getoond zijn twee uitkomsten (verschuiven en wegnemen); remodelers kunnen ook histonen omwisselen of juist nucleosomen netjes op een rij zetten. Het getal "1 op 5" is een gemiddelde over veel soorten tumoren.',
     en: 'Schematic and not to scale: a nucleosome is ≈ 11 nm wide and the machines are large complexes of several proteins. Two outcomes are shown (sliding and removing); remodellers can also swap histones or line nucleosomes up neatly. The figure "1 in 5" is an average over many kinds of tumour.' },
+  /* "Wat zie je?" (zijpaneel): elk onderdeel van de figuur in één zin — d = eenvoudig, p = vaktaal (hoger) */
+  parts: [
+    { c: C.dna, t: 'DNA', d: { nl: 'De blauwe draad: het DNA. Waar het rond een kraal gewonden is, is het moeilijk te lezen.', en: 'The blue thread: the DNA. Where it is wound around a bead, it is hard to read.' },
+      p: { nl: 'Chromatine-DNA; nucleosomaal DNA is slecht toegankelijk voor transcriptiefactoren.', en: 'Chromatin DNA; nucleosomal DNA is poorly accessible to transcription factors.' } },
+    { c: C.histone, t: { nl: 'nucleosoom', en: 'nucleosome' }, d: { nl: 'De kralen: DNA gewonden rond een kern van acht eiwitten (histonen).', en: 'The beads: DNA wound around a core of eight proteins (histones).' },
+      p: { nl: 'Nucleosoom: ~147 bp DNA rond een histonoctameer.', en: 'Nucleosome: ~147 bp DNA around a histone octamer.' } },
+    { c: FREE, t: { nl: 'begin van een gen', en: 'start of a gene' }, m: ['vrij', 'free'], d: { nl: 'De groene pijl: hier begint een gen. Eerst ligt er een kraal op; na het verschuiven ligt dit stuk vrij.', en: 'The green arrow: a gene starts here. At first a bead sits on it; after sliding, this stretch is free.' },
+      p: { nl: 'Promotergebied, eerst door een nucleosoom bezet, daarna nucleosoomvrij.', en: 'Promoter region, first occupied by a nucleosome, then nucleosome-free.' } },
+    { c: REM, t: { nl: 'machine', en: 'machine' }, d: { nl: 'Een eiwitmachine (remodeler) die een kraal vastgrijpt en het DNA erdoor trekt. Zo schuift ze kralen opzij of haalt ze ze weg.', en: 'A protein machine (remodeller) that grabs a bead and pulls the DNA through it. This way it slides beads aside or removes them.' },
+      p: { nl: 'ATP-afhankelijke chromatine-remodeler (families SWI/SNF, ISWI, CHD, INO80): DNA-translocase die nucleosomen verschuift, uitstoot of histonen uitwisselt.', en: 'ATP-dependent chromatin remodeller (SWI/SNF, ISWI, CHD, INO80 families): DNA translocase that slides or evicts nucleosomes or exchanges histones.' } },
+    { c: '#5fd3e6', t: 'ATP', m: ['ADP'], d: { nl: 'De energie die de machine gebruikt: ATP gaat erin, ADP komt eruit.', en: 'The energy the machine uses: ATP goes in, ADP comes out.' },
+      p: { nl: 'ATP-hydrolyse door het Snf2-type ATPase-domein drijft de DNA-translocatie aan.', en: 'ATP hydrolysis by the Snf2-type ATPase domain drives DNA translocation.' } },
+    { c: C.histone, t: { nl: 'weggenomen kraal', en: 'removed bead' }, d: { nl: 'Een machine kan een kraal ook helemaal van het DNA tillen; de grijze schijf zweeft weg.', en: 'A machine can also lift a bead off the DNA completely; the grey disc floats away.' },
+      p: { nl: 'Nucleosoomeviction: verwijdering van het histonoctameer van het DNA.', en: 'Nucleosome eviction: removal of the histone octamer from the DNA.' } },
+    { c: READ, t: 'activator', m: ['?', '✓ gen kan aan', '✓ gene can switch on'], d: { nl: 'Een eiwit dat genen aanzet. Het kan pas op het DNA gaan zitten als dat vrij ligt.', en: 'A protein that switches genes on. It can only sit on the DNA once it is free.' },
+      p: { nl: 'Sequentiespecifieke transcriptiefactor die nucleosoomvrij DNA nodig heeft om te binden.', en: 'Sequence-specific transcription factor that needs nucleosome-free DNA to bind.' } },
+    { c: C.danger, t: { nl: 'tumoren', en: 'tumours' }, m: ['≈ 1 op 5 tumoren', '≈ 1 in 5 tumours'], d: { nl: 'In ongeveer één op de vijf tumoren is een onderdeel van zo’n machine veranderd (rode klomp).', en: 'In about one in five tumours a part of such a machine is altered (red lump).' },
+      p: { nl: 'Subeenheden van mSWI/SNF (BAF) zijn gemuteerd in ≈ 20 % van de menselijke tumoren (19,6 %; Kadoch et al. 2013).', en: 'Subunits of mSWI/SNF (BAF) are mutated in ≈ 20% of human tumours (19.6%; Kadoch et al. 2013).' } },
+  ],
   steps: [
     { dur: 7500, cam: FULL, title: L3('Een nucleosoom kan een gen afdekken', 'A nucleosome can cover a gene'),
       text: L3('DNA dat rond een nucleosoom gewonden is, is moeilijk te lezen. Hier ligt er een op het begin van een gen.', 'DNA wound around a nucleosome is hard to read. Here one sits on the start of a gene.') },

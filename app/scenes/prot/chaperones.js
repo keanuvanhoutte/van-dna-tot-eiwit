@@ -24,6 +24,55 @@ export default {
   simplified: {
     nl: 'Hsp70 is getekend als nucleotide-bindend domein (NBD) plus substraatbindend domein met een helixdeksel; de echte vorm is complexer. Het chaperonine is in doorsnede getekend met 2 van de 7 subeenheden per ring. In menselijke cellen vervult TRiC/CCT (8 verschillende subeenheden per ring, ingebouwd deksel) die rol in het cytosol; GroEL–GroES (E. coli) is het best bestudeerde model en wordt hier getoond. Hsp90 wordt enkel in het netwerk vermeld. In bacteriën heten de tegenhangers van het 80S-ribosoom en Hsp70 het 70S-ribosoom en DnaK.',
     en: 'Hsp70 is drawn as a nucleotide-binding domain (NBD) plus a substrate-binding domain with a helical lid; the real shape is more complex. The chaperonin is drawn in cross-section showing 2 of the 7 subunits per ring. In human cells TRiC/CCT (8 different subunits per ring, built-in lid) plays this role in the cytosol; GroEL–GroES (E. coli) is the best-studied model and is shown here. Hsp90 is only mentioned in the network. In bacteria the counterparts of the 80S ribosome and Hsp70 are the 70S ribosome and DnaK.' },
+  /* "Wat zie je?" (zijpaneel): elk onderdeel van de figuur in één zin — d = eenvoudig, p = vaktaal (hoger) */
+  parts: [
+    { c: C.rrna, t: { nl: 'ribosoom', en: 'ribosome' }, m: ['mens 80S · bacterie 70S', 'human 80S · bacteria 70S'], d: { nl: 'De eiwitfabriek. Hier komt de nieuwe keten uit.', en: 'The protein factory. The new chain comes out of it.' },
+      p: { nl: '80S-ribosoom (bacterie: 70S); de naar buiten komende keten wordt al cotranslationeel door chaperones gebonden.', en: '80S ribosome (bacteria: 70S); the emerging chain is already bound co-translationally by chaperones.' } },
+    { c: C.chain, t: { nl: 'nieuwe keten', en: 'new chain' }, m: ['vrij → vouwen of opnieuw binden', 'free → fold or bind again'], d: { nl: 'De groene draad: een pas gemaakte eiwitketen die nog moet vouwen.', en: 'The green strand: a newly made protein chain that still has to fold.' },
+      p: { nl: 'Naar buiten komend polypeptide; na loslaten door Hsp70 vouwt het of wordt het opnieuw gebonden (meerdere cycli).', en: 'Nascent polypeptide; after release by Hsp70 it folds or is bound again (several cycles).' } },
+    { c: HYD, t: { nl: 'hydrofoob segment', en: 'hydrophobic segment' }, m: ['hydrofoob segment blootgesteld', 'hydrophobic segment exposed'], d: { nl: 'Het oranje stuk mijdt water (waterschuw). Ligt het bloot, dan kan het aan andere ketens blijven plakken.', en: 'The orange stretch avoids water. If it is exposed, it can stick to other chains.' },
+      p: { nl: 'Blootgesteld hydrofoob segment; dit is het motief dat Hsp70 herkent en dat zonder bescherming aggregatie veroorzaakt.', en: 'Exposed hydrophobic segment; this is the motif Hsp70 recognises and that causes aggregation if unprotected.' } },
+    { c: C.danger, t: { nl: 'aggregaat', en: 'aggregate' }, m: ['aggregatie', 'aggregation'], d: { nl: 'Ketens die aan elkaar plakken tot een klont. Zo’n klont werkt niet meer en kan de cel schaden.', en: 'Chains that stick together into a clump. Such a clump no longer works and can harm the cell.' },
+      p: { nl: 'Intermoleculaire associatie van blootgestelde hydrofobe segmenten tot niet-functionele aggregaten.', en: 'Intermolecular association of exposed hydrophobic segments into non-functional aggregates.' } },
+    { c: '#8a93a8', t: { nl: 'drukke cel', en: 'crowded cell' }, m: ['zeer vol: overal andere eiwitten en grote moleculen', 'very crowded: other proteins and large molecules everywhere'], d: { nl: 'De grijze bolletjes: de cel zit propvol andere eiwitten. Daardoor botsen ketens vaak tegen elkaar.', en: 'The grey dots: the cell is packed with other proteins. That makes chains bump into each other often.' },
+      p: { nl: 'Macromoleculaire verdringing (crowding) in het cytosol verhoogt de kans op aggregatie.', en: 'Macromolecular crowding in the cytosol increases the risk of aggregation.' } },
+    { c: C.prot, t: 'Hsp70', m: ['bacterie: DnaK', 'bacteria: DnaK', 'Hsp70 + Hsp40'], d: { nl: 'Een vouwhelper (chaperone) die het waterschuwe stuk even vastklemt, zodat het niet klontert. In bacteriën heet hij DnaK.', en: 'A folding helper (chaperone) that briefly clamps the water-avoiding stretch so it does not clump. In bacteria it is called DnaK.' },
+      p: { nl: 'Hsp70-chaperone (bacterie: DnaK); bindt hydrofobe segmenten in een ATP-gereguleerde cyclus van binden en loslaten.', en: 'Hsp70 chaperone (bacteria: DnaK); binds hydrophobic segments in an ATP-regulated cycle of binding and release.' } },
+    { c: C.prot, t: 'NBD', d: { nl: 'Het grote deel van de vouwhelper waar de brandstof ATP in zit.', en: 'The large part of the folding helper that holds the fuel ATP.' },
+      p: { nl: 'Nucleotide-bindend domein van Hsp70; de ATP- of ADP-toestand ervan stuurt allosterisch het substraatbindend domein.', en: 'Nucleotide-binding domain of Hsp70; its ATP or ADP state allosterically controls the substrate-binding domain.' } },
+    { c: C.prot, t: 'SBDβ', d: { nl: 'Het kleinere deel met een groef waarin het waterschuwe stuk van de keten komt te liggen.', en: 'The smaller part with a groove in which the water-avoiding stretch of the chain comes to lie.' },
+      p: { nl: 'β-sandwich-subdomein van het substraatbindend domein; bindt het hydrofobe peptidesegment.', en: 'β-sandwich subdomain of the substrate-binding domain; binds the hydrophobic peptide segment.' } },
+    { c: C.prot, t: { nl: 'deksel', en: 'lid' }, d: { nl: 'Klapt dicht over de keten en houdt die vast. Met ATP staat het open, met ADP is het dicht.', en: 'Snaps shut over the chain and holds it. With ATP it is open, with ADP it is closed.' },
+      p: { nl: 'α-helixdeksel (SBDα); sluit na ATP-hydrolyse over het gebonden substraat.', en: 'α-Helical lid (SBDα); closes over the bound substrate after ATP hydrolysis.' } },
+    { c: ATPC, t: 'ATP', m: ['ADP', '7 ATP', '7 ADP'], d: { nl: 'De brandstof van de cel. Als ATP gesplitst wordt, blijft ADP over; dat verandert de vorm van de helper.', en: 'The cell’s fuel. When ATP is split, ADP remains; this changes the shape of the helper.' },
+      p: { nl: 'Nucleotiden die de conformatie sturen: ATP-hydrolyse en ATP/ADP-uitwisseling drijven de cycli van Hsp70 en GroEL.', en: 'Nucleotides that control the conformation: ATP hydrolysis and ATP/ADP exchange drive the cycles of Hsp70 and GroEL.' } },
+    { c: C.ok, t: { nl: 'hoge affiniteit', en: 'high affinity' }, m: ['lage affiniteit', 'low affinity'], d: { nl: 'Hoe stevig de helper de keten vasthoudt: los met ATP, stevig met ADP.', en: 'How tightly the helper holds the chain: loosely with ATP, tightly with ADP.' },
+      p: { nl: 'ATP-toestand: lage affiniteit en snelle uitwisseling van substraat; ADP-toestand: hoge affiniteit, trage uitwisseling.', en: 'ATP state: low affinity and fast substrate exchange; ADP state: high affinity, slow exchange.' } },
+    { c: C.prot2, t: 'Hsp40', d: { nl: 'Een hulpje dat de keten naar de vouwhelper brengt en hem zijn ATP laat splitsen.', en: 'A helper that brings the chain to the folding helper and makes it split its ATP.' },
+      p: { nl: 'J-domeineiwit (co-chaperone); levert substraat aan en stimuleert de ATPase-activiteit van Hsp70.', en: 'J-domain protein (co-chaperone); delivers substrate and stimulates the ATPase activity of Hsp70.' } },
+    { c: C.prot2, t: 'NEF', d: { nl: 'Een hulpje dat ADP vervangt door nieuw ATP. Daardoor gaat het deksel weer open.', en: 'A helper that replaces ADP with new ATP. This makes the lid open again.' },
+      p: { nl: 'Nucleotide-uitwisselingsfactor; versnelt het vrijkomen van ADP, waarna ATP bindt en het substraat loskomt.', en: 'Nucleotide exchange factor; speeds up ADP release, after which ATP binds and the substrate is released.' } },
+    { c: C.prot, t: 'GroEL', m: ['GroEL: 2 ringen × 7 subeenheden (doorsnede)', 'GroEL: 2 rings × 7 subunits (cross-section)'], d: { nl: 'Een vouwkooi uit bacteriën: twee ringen rug aan rug. Je ziet een doorsnede, dus maar twee van de zeven stukken per ring.', en: 'A folding cage from bacteria: two rings back to back. You see a cross-section, so only two of the seven pieces per ring.' },
+      p: { nl: 'Chaperonine van E. coli: twee heptamere ringen met elk een centrale holte; elke subeenheid heeft een equatoriaal, intermediair en apicaal domein.', en: 'E. coli chaperonin: two heptameric rings, each with a central cavity; every subunit has an equatorial, intermediate and apical domain.' } },
+    { c: HYD, t: { nl: 'hydrofobe plaatsen', en: 'hydrophobic sites' }, d: { nl: 'Waterschuwe plekken aan de rand van de open ring. Daarmee vangt de kooi de ongevouwen keten.', en: 'Water-avoiding spots on the rim of the open ring. With these the cage catches the unfolded chain.' },
+      p: { nl: 'Hydrofobe residuen op de apicale domeinen die niet-natieve substraten binden.', en: 'Hydrophobic residues on the apical domains that bind non-native substrates.' } },
+    { c: C.prot2, t: 'GroES', d: { nl: 'Het deksel van de kooi. Het gaat erop zodra ATP gebonden is.', en: 'The lid of the cage. It goes on as soon as ATP is bound.' },
+      p: { nl: 'Heptamere co-chaperonine; bindt ATP-afhankelijk op de cis-ring en sluit de holte af.', en: 'Heptameric co-chaperonin; binds the cis ring in an ATP-dependent manner and seals the cavity.' } },
+    { c: '#5fd3e6', t: { nl: 'hydrofiele wand', en: 'hydrophilic wall' }, m: ['~10 s alleen in de kooi', '~10 s alone in the cage'], d: { nl: 'Als het deksel erop zit, wordt de binnenwand waterminnend. De keten vouwt dan ongeveer 10 seconden alleen, zonder te klonteren.', en: 'Once the lid is on, the inner wall turns water-loving. The chain then folds alone for about 10 seconds, without clumping.' },
+      p: { nl: 'Bij GroES-binding draaien de apicale domeinen en wordt de holte hydrofiel; het substraat vouwt ~10 s in afzondering (Anfinsen-kooi).', en: 'On GroES binding the apical domains rotate and the cavity becomes hydrophilic; the substrate folds for ~10 s in isolation (Anfinsen cage).' } },
+    { c: C.muted, t: 'cis', m: ['trans'], d: { nl: 'Cis is de ring met het deksel erop; trans is de andere ring eronder.', en: 'Cis is the ring with the lid on; trans is the other ring below.' },
+      p: { nl: 'Cis-ring: GroES- en nucleotidegebonden; ATP-binding aan de trans-ring zet het vrijkomen van GroES, ADP en substraat uit de cis-ring in gang.', en: 'Cis ring: GroES- and nucleotide-bound; ATP binding to the trans ring triggers release of GroES, ADP and substrate from the cis ring.' } },
+    { c: C.ok, t: { nl: 'natief eiwit', en: 'native protein' }, m: ['natief eiwit vrij', 'native protein released'], d: { nl: 'Het goed gevouwen, werkende eiwit.', en: 'The correctly folded, working protein.' },
+      p: { nl: 'Eiwit in zijn natieve, functionele conformatie.', en: 'Protein in its native, functional conformation.' } },
+    { c: C.prot, t: { nl: 'chaperonine', en: 'chaperonin' }, m: ['TRiC/CCT', 'mens: TRiC/CCT (2 × 8 verschillende subeenheden, ingebouwd deksel)', 'human: TRiC/CCT (2 × 8 different subunits, built-in lid)'], d: { nl: 'De menselijke vouwkooi (TRiC). Ze lijkt op die van bacteriën, maar heeft acht verschillende stukken per ring en een ingebouwd deksel.', en: 'The human folding cage (TRiC). It resembles the bacterial one, but has eight different pieces per ring and a built-in lid.' },
+      p: { nl: 'Groep II-chaperonine van het eukaryote cytosol (TRiC/CCT): 2 × 8 paraloge subeenheden met ingebouwd apicaal deksel.', en: 'Group II chaperonin of the eukaryotic cytosol (TRiC/CCT): 2 × 8 paralogous subunits with a built-in apical lid.' } },
+    { c: C.prot2, t: 'Hsp90', d: { nl: 'Een vouwhelper voor de laatste stap: hij brengt bepaalde eiwitten in hun werkende vorm.', en: 'A folding helper for the last step: it brings certain proteins into their working form.' },
+      p: { nl: 'Hsp90 zorgt voor de late rijping van o.a. kinasen en steroïdreceptoren.', en: 'Hsp90 handles the late maturation of e.g. kinases and steroid receptors.' } },
+    { c: '#ffd166', t: { nl: 'afbraak', en: 'degradation' }, d: { nl: 'Wat ondanks alle hulp niet goed vouwt, krijgt een label en wordt afgebroken.', en: 'Whatever fails to fold despite all the help gets a tag and is broken down.' },
+      p: { nl: 'Blijvend misgevouwen substraten worden via een E3-ligase (bv. CHIP) geubiquitineerd en door het proteasoom afgebroken.', en: 'Persistently misfolded substrates are ubiquitinated via an E3 ligase (e.g. CHIP) and degraded by the proteasome.' } },
+    { c: C.text, t: { nl: 'Proteostase', en: 'Proteostasis' }, m: ['Proteostase: vouwen, bewaken of afbreken', 'Proteostasis: fold, guard or degrade'], d: { nl: 'Het hele netwerk dat ervoor zorgt dat eiwitten goed gevouwen worden, bewaakt worden of opgeruimd worden.', en: 'The whole network that makes sure proteins are folded correctly, kept in check or cleared away.' },
+      p: { nl: 'Proteostasenetwerk: geïntegreerd systeem van chaperones en afbraakroutes dat het proteoom in balans houdt.', en: 'Proteostasis network: integrated system of chaperones and degradation pathways that keeps the proteome in balance.' } },
+  ],
   steps: [
     ST(8000, cam(760, 420, 1600), 'Het gevaar: klonteren', 'The danger: clumping',
       'Een nieuwe keten heeft waterschuwe stukken. In de drukke cel kunnen die aan andere ketens blijven plakken.',
@@ -92,6 +141,18 @@ export default {
     </svg>`;
   },
   init(svg) {
+    /* NBD: twee lobben + ATP-kloof; SBDβ: β-sandwich (statisch, eenmalig berekend) */
+    const NBDFOLD = `<path d="M760,470 Q752,520 760,560" stroke="#0b1224" stroke-width="10" fill="none" opacity=".7"/>` +
+      vouwing(708, 575, 52, 62, { col: C.prot, kern: false }) + vouwing(812, 575, 52, 62, { col: C.prot, kern: false, spiegel: true });
+    const SBDFOLD = `<g opacity=".45">` + [-24, -6, 12, 30].map((dx, i) => strengPijl(930 + dx, i % 2 ? 422 : 484, 930 + dx, i % 2 ? 484 : 422, { h: 7 })).join('') + '</g>' + [-30, -12, 6, 24].map((dx, i) => strengPijl(930 + dx, i % 2 ? 430 : 492, 930 + dx, i % 2 ? 492 : 430, { h: 7 })).join('') +
+      [-21, -3, 15].map(dx => [444, 460, 476].map(yy => `<line x1="${930 + dx - 4}" y1="${yy}" x2="${930 + dx + 4}" y2="${yy}" stroke="#e8edf6" stroke-width="1.4" stroke-dasharray="2 2"/>`).join('')).join('');
+    /* opgerold lint langs een willekeurige lijn (voor het deksel) */
+    const coilAlong = (P, turns, amp, w) => {
+      let bk = '', fr = ''; const n = P.length - 1;
+      const q = j => { const a = P[Math.max(0, j - 1)], b = P[Math.min(n, j + 1)], L0 = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, s = Math.sin(j / n * turns * 6.2832) * amp; return [P[j][0] - (b[1] - a[1]) / L0 * s, P[j][1] + (b[0] - a[0]) / L0 * s]; };
+      for (let j = 0; j < n; j++) { const [ax, ay] = q(j), [bx, by] = q(j + 1), seg = `M${f1(ax)},${f1(ay)}L${f1(bx)},${f1(by)}`; if (Math.cos((j + .5) / n * turns * 6.2832) >= 0) fr += seg; else bk += seg; }
+      return `<path d="${bk}" stroke="#5a4bb8" stroke-width="${w * .65}" stroke-linecap="round" fill="none"/><path d="${fr}" stroke="#0a1224" stroke-width="${w + 3}" stroke-linecap="round" fill="none"/><path d="${fr}" stroke="${C.prot}" stroke-width="${w}" stroke-linecap="round" fill="none"/>`;
+    };
     const $ = id => svg.getElementById(id);
     /* ---- chaperonine: één wand (linkerhelft, bovenring); k = 0 open/trans, 1 = GroES-gebonden (cis) ---- */
     function wall(k, hyd) {
@@ -145,18 +206,6 @@ export default {
         $('ch-lid').innerHTML = `<path d="${ld}" stroke="${C.prot}" stroke-width="34" stroke-linecap="round" fill="none" opacity=".22"/>` +
           coilAlong(lidPts, 4.5, 12, 11) +
           T(lerp(1105, 940, lid), lerp(560, 318, lid), T2('deksel', 'lid'), { size: 21, col: '#c9b8ff', anchor: lid > .5 ? 'middle' : 'start', op: step === 0 ? 0 : step === 1 ? sub(p, 0, .2) : 1 });
-    /* NBD: twee lobben + ATP-kloof; SBDβ: β-sandwich (statisch, eenmalig berekend) */
-    const NBDFOLD = `<path d="M760,470 Q752,520 760,560" stroke="#0b1224" stroke-width="10" fill="none" opacity=".7"/>` +
-      vouwing(708, 575, 52, 62, { col: C.prot, kern: false }) + vouwing(812, 575, 52, 62, { col: C.prot, kern: false, spiegel: true });
-    const SBDFOLD = `<g opacity=".45">` + [-24, -6, 12, 30].map((dx, i) => strengPijl(930 + dx, i % 2 ? 422 : 484, 930 + dx, i % 2 ? 484 : 422, { h: 7 })).join('') + '</g>' + [-30, -12, 6, 24].map((dx, i) => strengPijl(930 + dx, i % 2 ? 430 : 492, 930 + dx, i % 2 ? 492 : 430, { h: 7 })).join('') +
-      [-21, -3, 15].map(dx => [444, 460, 476].map(yy => `<line x1="${930 + dx - 4}" y1="${yy}" x2="${930 + dx + 4}" y2="${yy}" stroke="#e8edf6" stroke-width="1.4" stroke-dasharray="2 2"/>`).join('')).join('');
-    /* opgerold lint langs een willekeurige lijn (voor het deksel) */
-    const coilAlong = (P, turns, amp, w) => {
-      let bk = '', fr = ''; const n = P.length - 1;
-      const q = j => { const a = P[Math.max(0, j - 1)], b = P[Math.min(n, j + 1)], L0 = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, s = Math.sin(j / n * turns * 6.2832) * amp; return [P[j][0] - (b[1] - a[1]) / L0 * s, P[j][1] + (b[0] - a[0]) / L0 * s]; };
-      for (let j = 0; j < n; j++) { const [ax, ay] = q(j), [bx, by] = q(j + 1), seg = `M${f1(ax)},${f1(ay)}L${f1(bx)},${f1(by)}`; if (Math.cos((j + .5) / n * turns * 6.2832) >= 0) fr += seg; else bk += seg; }
-      return `<path d="${bk}" stroke="#5a4bb8" stroke-width="${w * .65}" stroke-linecap="round" fill="none"/><path d="${fr}" stroke="#0a1224" stroke-width="${w + 3}" stroke-linecap="round" fill="none"/><path d="${fr}" stroke="${C.prot}" stroke-width="${w}" stroke-linecap="round" fill="none"/>`;
-    };
         // co-chaperones
         let co = '';
         if (h40 > .01) co += enz(lerp(700, 850, h40), lerp(300, 380, h40), 70, 36, 'Hsp40', { col: C.prot2, fs: 20, op: h40, fillOp: .5 });

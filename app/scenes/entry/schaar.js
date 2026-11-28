@@ -29,6 +29,16 @@ export default structure3d({
     en: 'Only the backbone of the protein is drawn (one bead per amino acid); the cutting site shows the two most important building blocks. The virus also has a second, smaller scissors (PLpro) that cuts the first pieces off the chain. The cutting itself does not happen in this snapshot and is only told. The medicine is given together with ritonavir, which slows down its breakdown in the body.' },
   base,
   dimOpacity: false,
+  parts: [
+    { c: PA, t: L3('helft 1', 'half 1'), d: L3('De lichtpaarse helft van de virusschaar. Elk bolletje is één bouwsteen (aminozuur) van het eiwit.', 'The light-purple half of the virus scissors. Each bead is one building block (amino acid) of the protein.'),
+      p: L3('Protomeer A van de hoofdprotease (Mpro, nsp5), weergegeven als Cα-atomen.', 'Protomer A of the main protease (Mpro, nsp5), shown as Cα atoms.') },
+    { c: PB, t: L3('helft 2', 'half 2'), d: L3('De tweede, gelijke helft (donkerder paars). De schaar knipt alleen als de twee helften samen zitten.', 'The second, identical half (darker purple). The scissors only cut when the two halves are together.'),
+      p: L3('Protomeer B; Mpro is enkel als homodimeer katalytisch actief.', 'Protomer B; Mpro is catalytically active only as a homodimer.') },
+    { c: SITE, t: L3('knipplek', 'cutting site'), m: ['actief centrum 1', 'active site 1', 'actief centrum 2', 'active site 2'], d: L3('Twee bouwstenen in een groef (rood) doen het eigenlijke knippen. Elke helft heeft er zo één.', 'Two building blocks in a groove (red) do the actual cutting. Each half has one.'),
+      p: L3('Katalytische dyade His41–Cys145 in het substraatbindende groefje van elk protomeer.', 'Catalytic dyad His41–Cys145 in the substrate-binding cleft of each protomer.') },
+    { c: DRUG, t: L3('medicijn', 'medicine'), d: L3('Het medicijn nirmatrelvir (blauwgroen) past in dezelfde groef en hecht zich vast aan het knipmes. Zo zit de schaar vast.', 'The medicine nirmatrelvir (blue-green) fits into the same groove and attaches to the blade. That locks the scissors.'),
+      p: L3('Nirmatrelvir, een peptidomimetische remmer die covalent (via zijn nitril) aan Cys145 bindt.', 'Nirmatrelvir, a peptidomimetic inhibitor that binds Cys145 covalently (via its nitrile).') },
+  ],
   steps: [
     { dur: 8000, title: L3('Een virusschaar knipt de lange keten', 'The virus’s scissors cut the long chain'), focus: null, zoom: {}, tags: [TAG({ chain: 'A', resi: 250, atom: 'CA' }, 'helft 1', 'half 1', PA), TAG({ chain: 'B', resi: 250, atom: 'CA' }, 'helft 2', 'half 2', PB)], spin: .012,
       text: L3('Dit is de echte schaar van het coronavirus. Ze knipt de lange eiwitketen op minstens elf plaatsen.', 'This is the real scissors of the coronavirus. It cuts the long protein chain in at least eleven places.') },

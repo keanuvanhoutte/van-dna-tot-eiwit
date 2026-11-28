@@ -69,6 +69,38 @@ export default molScene({
     const frac = l => Math.round(100 * l.filter(r => HYD.includes(r.resn)).length / l.length);
     ctx.data.fCore = frac(ctx.data.core); ctx.data.fSurf = frac(ctx.data.surf);
   },
+  /* "Wat zie je?" (zijpaneel): elk onderdeel van de figuur in één zin — d = eenvoudig, p = vaktaal (hoger) */
+  parts: [
+    { c: C.text, t: { nl: 'β-globine (hemoglobine)', en: 'β-globin (haemoglobin)' }, m: ['• één keten: 146 residuen', '• one chain: 146 residues', '• globulair (bolvormig, oplosbaar)', '• globular (spherical, soluble)', '• bindt één heemgroep', '• binds one haem group', 'tertiair = 3D-vorm van één keten', 'tertiary = 3D shape of one chain', 'begin', 'start', 'einde', 'end'],
+      d: { nl: 'Eén keten van hemoglobine (146 bouwstenen), opgevouwen tot een bolletje. De regenboogkleur loopt van het begin (blauw) naar het einde (rood).', en: 'One chain of haemoglobin (146 building blocks), folded into a small ball. The rainbow colour runs from the start (blue) to the end (red).' },
+      p: { nl: 'β-globine (keten B van PDB 1BBB): globulair eiwit van 146 residuen; de tertiaire structuur is de 3D-vouwing van één polypeptide.', en: 'β-Globin (chain B of PDB 1BBB): globular protein of 146 residues; tertiary structure is the 3D fold of a single polypeptide.' } },
+    { c: HCOL[0], t: { nl: 'Helices A–H (residuen)', en: 'Helices A–H (residues)' }, m: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'geen β-strengen:', 'no β-strands:', 'een all-α-eiwit', 'an all-α protein'], d: { nl: 'Acht spiralen, elk in een eigen kleur en met een letter (A tot H). Er zijn geen gestrekte strengen.', en: 'Eight spirals, each in its own colour and with a letter (A to H). There are no stretched strands.' },
+      p: { nl: 'Globineplooi: acht α-helices A–H (grenzen uit 1BBB), zonder β-strengen; een all-α-eiwit.', en: 'Globin fold: eight α-helices A–H (boundaries from 1BBB), without β-strands; an all-α protein.' } },
+    { c: CLASSCOL.h, t: { nl: 'Hydrofoob effect', en: 'Hydrophobic effect' }, m: ['Binnen apolair, buiten polair', 'Non-polar inside, polar outside', '● hydrofoob', '● hydrophobic', '(buren binnen 10 Å, uit 1BBB)', '(neighbours within 10 Å, from 1BBB)'], d: { nl: 'Waterschuwe bouwstenen (groen) kruipen naar binnen, weg van het water; waterminnende blijven buiten. Dat is de belangrijkste reden waarom een keten vouwt.', en: 'Water-avoiding building blocks (green) crawl inside, away from water; water-loving ones stay outside. That is the main reason a chain folds.' },
+      p: { nl: 'Hydrofoob effect: apolaire zijketens worden begraven (hier gemeten als aantal buren binnen 10 Å); belangrijkste drijvende kracht van de vouwing.', en: 'Hydrophobic effect: non-polar side chains are buried (measured here as the number of neighbours within 10 Å); main driving force of folding.' } },
+    { c: CLASSCOL.p, t: { nl: 'polair', en: 'polar' }, m: ['● polair: Ser, Thr, Cys, Asn, Gln, Tyr', '● polar: Ser, Thr, Cys, Asn, Gln, Tyr'], d: { nl: 'Waterminnende bouwstenen zonder lading. Ze zitten vooral aan de buitenkant.', en: 'Water-loving building blocks without charge. They sit mainly on the outside.' },
+      p: { nl: 'Ongeladen polaire residuen, vooral aan het oppervlak.', en: 'Uncharged polar residues, mainly on the surface.' } },
+    { c: CLASSCOL['+'], t: { nl: 'positief', en: 'positive' }, m: ['● positief: Lys, Arg (His)', '● positive: Lys, Arg (His)', '● negatief: Asp, Glu', '● negative: Asp, Glu'], d: { nl: 'Geladen bouwstenen: blauw is plus, rood is min. Ze zitten bijna altijd aan de buitenkant, in het water.', en: 'Charged building blocks: blue is plus, red is minus. They almost always sit on the outside, in the water.' },
+      p: { nl: 'Basische (Lys, Arg, His) en zure (Asp, Glu) residuen, gesolvateerd aan het oppervlak.', en: 'Basic (Lys, Arg, His) and acidic (Asp, Glu) residues, solvated at the surface.' } },
+    { c: '#ff8a3d', t: { nl: 'heem', en: 'haem' }, m: ['Liganden stabiliseren de vouw', 'Ligands stabilise the fold', 'Heem = protoporfyrine IX + Fe²⁺', 'Haem = protoporphyrin IX + Fe²⁺', 'groen = helix E · blauwgroen = helix F', 'green = helix E · teal = helix F'], d: { nl: 'Het oranje ringetje met ijzer, ingeklemd tussen spiraal E en F. Het bindt zuurstof en houdt de vouw mee bij elkaar.', en: 'The orange ring with iron, clamped between spirals E and F. It binds oxygen and helps hold the fold together.' },
+      p: { nl: 'Heem (protoporfyrine IX + Fe²⁺) in de heempocket tussen helix E en F; stabiliseert de globineplooi.', en: 'Haem (protoporphyrin IX + Fe²⁺) in the haem pocket between helices E and F; stabilises the globin fold.' } },
+    { c: HCOL[5], t: 'His92', m: ['• His92 (F8) bindt het Fe²⁺', '• His92 (F8) binds the Fe²⁺', '• O₂ bindt aan de andere kant', '• O₂ binds on the other side', '• His63 (E7) ligt aan de O₂-kant', '• His63 (E7) sits on the O₂ side', 'His63'], d: { nl: 'Twee histidines houden het heem vast: één bindt het ijzer, de andere ligt aan de kant waar zuurstof bindt.', en: 'Two histidines hold the haem: one binds the iron, the other lies on the side where oxygen binds.' },
+      p: { nl: 'Proximale His92 (F8) coördineert Fe²⁺; distale His63 (E7) stabiliseert gebonden O₂ via een waterstofbrug.', en: 'Proximal His92 (F8) coordinates Fe²⁺; distal His63 (E7) stabilises bound O₂ via a hydrogen bond.' } },
+    { c: CLASSCOL['-'], t: { nl: 'Elektrostatische interacties', en: 'Electrostatic interactions' }, m: ['(N⁺ en O⁻ binnen 4 Å)', '(N⁺ and O⁻ within 4 Å)', 'zoutbrug = ionpaar (+ en −)', 'salt bridge = ion pair (+ and −)', 'H-brug = gedeeld H tussen N/O', 'H-bond = shared H between N/O'], d: { nl: 'Plus en min trekken elkaar aan (zoutbrug), en kleine waterstofbruggen houden delen van de keten bij elkaar.', en: 'Plus and minus attract each other (salt bridge), and small hydrogen bonds hold parts of the chain together.' },
+      p: { nl: 'Zoutbruggen (Lys/Arg-N binnen 4 Å van Asp/Glu-O, live berekend) en waterstofbruggen dragen bij aan de stabiliteit.', en: 'Salt bridges (Lys/Arg N within 4 Å of Asp/Glu O, computed live) and hydrogen bonds contribute to stability.' } },
+    { c: '#ffc247', t: { nl: 'Covalent: de disulfidebrug', en: 'Covalent: the disulfide bond' }, m: ['Cys–SH + HS–Cys → Cys–S–S–Cys', '(oxidatie: + 2 H⁺ + 2 e⁻)', '(oxidation: + 2 H⁺ + 2 e⁻)', '• vooral in eiwitten buiten de cel', '• mainly in proteins outside the cell', '• gevormd in het ER (bv. antistoffen)', '• formed in the ER (e.g. antibodies)', '• verbindt ook verre residuen', '• can join residues far apart', 'Cys93 – SH', 'Cys112 – SH', 'S–S-bruggen (in andere eiwitten)', 'S–S bonds (in other proteins)'],
+      d: { nl: 'Een stevige zwavelbrug tussen twee cysteïnes. Hemoglobine zelf heeft er geen (zijn cysteïnes blijven –SH); ze komen vooral voor in eiwitten die de cel verlaten.', en: 'A strong sulfur bridge between two cysteines. Haemoglobin itself has none (its cysteines stay –SH); they occur mainly in proteins that leave the cell.' },
+      p: { nl: 'Covalente disulfide door oxidatie van twee thiolen, gevormd in het ER; β-globine (cytosolisch) bevat vrije Cys93 en Cys112.', en: 'Covalent disulfide formed by oxidation of two thiols in the ER; β-globin (cytosolic) contains free Cys93 and Cys112.' } },
+    { c: '#ffffff', t: { nl: 'Motieven (topologie)', en: 'Motifs (topology)' }, m: ['helix-turn-helix', 'vierhelixbundel', 'four-helix bundle', 'β-haarspeld', 'β-hairpin', 'β-barrel', 'wit in de figuur: de bocht tussen', 'white in the figure: the turn between', 'twee spiralen (G en H)', 'two spirals (G and H)', 'spiraal G', 'spiral G', 'spiraal H', 'spiral H', 'korte bocht', 'short turn'],
+      d: { nl: 'Vaste combinaties van spiralen en strengen die in veel eiwitten terugkomen, zoals twee spiralen met een korte bocht ertussen (wit).', en: 'Fixed combinations of spirals and strands that recur in many proteins, such as two spirals with a short turn in between (white).' },
+      p: { nl: 'Supersecundaire motieven (helix-turn-helix, vierhelixbundel, β-haarspeld, β-barrel); hier de G–H-bocht als voorbeeld.', en: 'Supersecondary motifs (helix-turn-helix, four-helix bundle, β-hairpin, β-barrel); here the G–H turn as an example.' } },
+    { c: C.text, t: { nl: 'Hoe deel je vouwingen in?', en: 'How to classify folds?' }, m: ['Volgens secundaire structuur', 'By secondary structure', 'all-α', 'bijna alleen helices (globines)', 'almost only helices (globins)', 'all-β', 'bijna alleen β-strengen', 'almost only β-strands', 'α/β', 'α en β afwisselend', 'α and β alternating', 'α+β', 'α en β in aparte gebieden', 'α and β in separate regions'],
+      d: { nl: 'Eiwitten worden ingedeeld naar wat ze bevatten: alleen spiralen, alleen strengen, of beide (afwisselend of in aparte delen).', en: 'Proteins are classified by what they contain: only spirals, only strands, or both (alternating or in separate parts).' },
+      p: { nl: 'Klassen in SCOP/CATH: all-α, all-β, α/β (afwisselend) en α+β (gescheiden).', en: 'Classes in SCOP/CATH: all-α, all-β, α/β (alternating) and α+β (segregated).' } },
+    { c: '#ffc247', t: { nl: 'Op naar het tetrameer', en: 'On to the tetramer' }, m: ['deze keten (β)', 'this chain (β)', 'α', 'β', 'Hydrofobe plekken op β-globine', 'Hydrophobic patches on β-globin', 'passen tegen de α-ketens.', 'fit against the α chains.', 'Samen: α₂β₂', 'Together: α₂β₂', 'regenboog = de keten', 'rainbow = the chain', 'uit deze scène', 'from this scene'],
+      d: { nl: 'Deze keten is één van de vier ketens van hemoglobine. Waterschuwe plekken aan de buitenkant passen tegen de andere ketens.', en: 'This chain is one of the four chains of haemoglobin. Water-avoiding spots on the outside fit against the other chains.' },
+      p: { nl: 'Hydrofobe oppervlakteplekken vormen de α1β1- en α1β2-grensvlakken in het α₂β₂-tetrameer.', en: 'Hydrophobic surface patches form the α1β1 and α1β2 interfaces in the α₂β₂ tetramer.' } },
+  ],
   steps: [
     ST(8000, 'Eén keten, één vouw', 'One chain, one fold', 'De keten van 146 aminozuren vouwt tot een compact bolletje. Kleur: van begin (blauw) tot einde (rood).', 'The chain of 146 amino acids folds into a compact ball. Colour: from start (blue) to end (red).', {
       show(c) {
@@ -229,33 +261,6 @@ function motifs() {
   const st = (x, y1, y2, col = '#ffc247') => { const d = Math.sign(y2 - y1), yb = y2 - d * 16; return `<path d="M${x - 6},${y1} L${x - 6},${yb} L${x - 13},${yb} L${x},${y2} L${x + 13},${yb} L${x + 6},${yb} L${x + 6},${y1}Z" fill="${col}"/>`; };
   const lp = d => `<path d="${d}" fill="none" stroke="#93a0bb" stroke-width="3"/>`;
   const T = 8, Bm = 88;
-  const items = [
-    ['helix-turn-helix', (x, y) => coil(x + 2, y + 24, x + 86, y + 24, 3.5, 9, 7) + lp(`M${x + 86},${y + 24} q18,0 18,20`) + coil(x + 104, y + 44, x + 104, y + 94, 2.2, 9, 7), 'α'],
-    [T2('vierhelixbundel', 'four-helix bundle'), (x, y) => [0, 1, 2, 3].map(i => coil(x + 18 + i * 30, i % 2 ? y + T : y + T + 80, x + 18 + i * 30, i % 2 ? y + T + 80 : y + T, 4, 8, 6)).join('') +
-      lp(`M${x + 18},${y + T} q15,-12 30,0`) + lp(`M${x + 48},${y + T + 80} q15,12 30,0`) + lp(`M${x + 78},${y + T} q15,-12 30,0`), 'α'],
-    [T2('β-haarspeld', 'β-hairpin'), (x, y) => hb(x + 36, x + 58, [y + 26, y + 44, y + 62, y + 80]) + st(x + 30, y + Bm, y + T + 6) + lp(`M${x + 30},${y + T + 4} q17,-16 34,0`) + st(x + 64, y + T + 6, y + Bm), 'β'],
-    ['Greek key', (x, y) => st(x + 45, y + Bm, y + T + 10) + st(x + 75, y + T + 10, y + Bm) + st(x + 105, y + Bm, y + T + 10) + st(x + 15, y + T + 10, y + Bm) +
-      lp(`M${x + 45},${y + T + 8} q15,-14 30,0`) + lp(`M${x + 75},${y + Bm + 2} q15,14 30,0`) + lp(`M${x + 105},${y + T + 8} C${x + 105},${y - 14} ${x + 15},${y - 14} ${x + 15},${y + T + 8}`), 'β'],
-    [T2('β-sandwich', 'β-sandwich'), (x, y) => [0, 1, 2, 3].map(i => st(x + 40 + i * 24, i % 2 ? y + T : y + 62, i % 2 ? y + 62 : y + T, '#9c6f25')).join('') + [0, 1, 2, 3].map(i => st(x + 16 + i * 24, i % 2 ? y + 28 : y + Bm, i % 2 ? y + Bm : y + 28)).join(''), 'β'],
-    [T2('β-barrel', 'β-barrel'), barrel, 'β'],
-    [T2('Rossmann-vouw (βαβαβ)', 'Rossmann fold (βαβαβ)'), (x, y) => st(x + 10, y + Bm, y + T) + hx(x + 26, y + 26, 20, 56) + st(x + 62, y + Bm, y + T) + hx(x + 78, y + 26, 20, 56) + st(x + 114, y + Bm, y + T), 'α/β'],
-    [T2('hoefijzer (LRR)', 'horseshoe (LRR)'), (x, y) => `<path d="M${x + 20},${y + Bm} A44,44 0 1,1 ${x + 108},${y + Bm}" fill="none" stroke="#ffc247" stroke-width="11"/><path d="M${x},${y + Bm} A64,64 0 0,1 ${x + 128},${y + Bm}" fill="none" stroke="#9b7bff" stroke-width="9" stroke-dasharray="24 9"/>`, ''],
-  ];
-  /* vier duidelijke voorbeelden (2 × 2, groter getekend); de volledige lijst staat in het uitlegpaneel */
-  return [0, 1, 2, 5].map(k => items[k]).map(([name, draw, cls], i) => {
-    const col = i % 2, row = Math.floor(i / 2), x = PX + col * 262, y = 200 + row * 215;
-    return `<g transform="translate(${x + 10},${y}) scale(1.35) translate(${-x - 10},${-y})">${draw(x + 10, y)}</g>` +
-      ptxt(x + 215, y + 30, cls, cls === 'α' ? '#9b7bff' : '#ffc247', 26, 700) + ptxt(x + 4, y + 168, name, '#e2e8f5', 24, 600);
-  }).join('') + ptxt(PX, 640, T2('wit in de figuur: de bocht tussen', 'white in the figure: the turn between'), C.muted, 22) + ptxt(PX, 670, T2('twee spiralen (G en H)', 'two spirals (G and H)'), C.muted, 22);
-}
-function classes() {
-  const row = (y, name, desc, col) => ptxt(PX, y, name, col, 23, 700) + ptxt(PX + 110, y, desc, '#c3cde2', 22, 500);
-  return ptxt(PX, 215, T2('Volgens secundaire structuur', 'By secondary structure'), C.muted, 22) +
-    row(262, 'all-α', T2('bijna alleen helices (globines)', 'almost only helices (globins)'), '#9b7bff') +
-    row(304, 'all-β', T2('bijna alleen β-strengen', 'almost only β-strands'), '#ffc247') +
-    row(346, 'α/β', T2('α en β afwisselend', 'α and β alternating'), '#7fdc6a') +
-    row(388, 'α+β', T2('α en β in aparte gebieden', 'α and β in separate regions'), '#5fd3e6');
-}
   const r1 = v => (+v).toFixed(1);
   /* α-helix als opgerold lint: achterkant donker, voorkant licht (rechtshandige winding) */
   const coil = (x0, y0, x1, y1, turns = 3, amp = 9, w = 7) => {
@@ -294,3 +299,30 @@ function classes() {
     return `<path d="M${cx - R},${yT} L${cx - R},${yB} A${R},${r1(ry)} 0 0,0 ${cx + R},${yB} L${cx + R},${yT} A${R},${r1(ry)} 0 0,0 ${cx - R},${yT}Z" fill="#ffc247" opacity=".07"/>` + rim(yT, 0) + rim(yB, 0) + back + rim(yT, 1) + rim(yB, 1) + front;
   };
   const lerpN = (a, b, u) => a + (b - a) * u;
+  const items = [
+    ['helix-turn-helix', (x, y) => coil(x + 2, y + 24, x + 86, y + 24, 3.5, 9, 7) + lp(`M${x + 86},${y + 24} q18,0 18,20`) + coil(x + 104, y + 44, x + 104, y + 94, 2.2, 9, 7), 'α'],
+    [T2('vierhelixbundel', 'four-helix bundle'), (x, y) => [0, 1, 2, 3].map(i => coil(x + 18 + i * 30, i % 2 ? y + T : y + T + 80, x + 18 + i * 30, i % 2 ? y + T + 80 : y + T, 4, 8, 6)).join('') +
+      lp(`M${x + 18},${y + T} q15,-12 30,0`) + lp(`M${x + 48},${y + T + 80} q15,12 30,0`) + lp(`M${x + 78},${y + T} q15,-12 30,0`), 'α'],
+    [T2('β-haarspeld', 'β-hairpin'), (x, y) => hb(x + 36, x + 58, [y + 26, y + 44, y + 62, y + 80]) + st(x + 30, y + Bm, y + T + 6) + lp(`M${x + 30},${y + T + 4} q17,-16 34,0`) + st(x + 64, y + T + 6, y + Bm), 'β'],
+    ['Greek key', (x, y) => st(x + 45, y + Bm, y + T + 10) + st(x + 75, y + T + 10, y + Bm) + st(x + 105, y + Bm, y + T + 10) + st(x + 15, y + T + 10, y + Bm) +
+      lp(`M${x + 45},${y + T + 8} q15,-14 30,0`) + lp(`M${x + 75},${y + Bm + 2} q15,14 30,0`) + lp(`M${x + 105},${y + T + 8} C${x + 105},${y - 14} ${x + 15},${y - 14} ${x + 15},${y + T + 8}`), 'β'],
+    [T2('β-sandwich', 'β-sandwich'), (x, y) => [0, 1, 2, 3].map(i => st(x + 40 + i * 24, i % 2 ? y + T : y + 62, i % 2 ? y + 62 : y + T, '#9c6f25')).join('') + [0, 1, 2, 3].map(i => st(x + 16 + i * 24, i % 2 ? y + 28 : y + Bm, i % 2 ? y + Bm : y + 28)).join(''), 'β'],
+    [T2('β-barrel', 'β-barrel'), barrel, 'β'],
+    [T2('Rossmann-vouw (βαβαβ)', 'Rossmann fold (βαβαβ)'), (x, y) => st(x + 10, y + Bm, y + T) + hx(x + 26, y + 26, 20, 56) + st(x + 62, y + Bm, y + T) + hx(x + 78, y + 26, 20, 56) + st(x + 114, y + Bm, y + T), 'α/β'],
+    [T2('hoefijzer (LRR)', 'horseshoe (LRR)'), (x, y) => `<path d="M${x + 20},${y + Bm} A44,44 0 1,1 ${x + 108},${y + Bm}" fill="none" stroke="#ffc247" stroke-width="11"/><path d="M${x},${y + Bm} A64,64 0 0,1 ${x + 128},${y + Bm}" fill="none" stroke="#9b7bff" stroke-width="9" stroke-dasharray="24 9"/>`, ''],
+  ];
+  /* vier duidelijke voorbeelden (2 × 2, groter getekend); de volledige lijst staat in het uitlegpaneel */
+  return [0, 1, 2, 5].map(k => items[k]).map(([name, draw, cls], i) => {
+    const col = i % 2, row = Math.floor(i / 2), x = PX + col * 262, y = 200 + row * 215;
+    return `<g transform="translate(${x + 10},${y}) scale(1.35) translate(${-x - 10},${-y})">${draw(x + 10, y)}</g>` +
+      ptxt(x + 215, y + 30, cls, cls === 'α' ? '#9b7bff' : '#ffc247', 26, 700) + ptxt(x + 4, y + 168, name, '#e2e8f5', 24, 600);
+  }).join('') + ptxt(PX, 640, T2('wit in de figuur: de bocht tussen', 'white in the figure: the turn between'), C.muted, 22) + ptxt(PX, 670, T2('twee spiralen (G en H)', 'two spirals (G and H)'), C.muted, 22);
+}
+function classes() {
+  const row = (y, name, desc, col) => ptxt(PX, y, name, col, 23, 700) + ptxt(PX + 110, y, desc, '#c3cde2', 22, 500);
+  return ptxt(PX, 215, T2('Volgens secundaire structuur', 'By secondary structure'), C.muted, 22) +
+    row(262, 'all-α', T2('bijna alleen helices (globines)', 'almost only helices (globins)'), '#9b7bff') +
+    row(304, 'all-β', T2('bijna alleen β-strengen', 'almost only β-strands'), '#ffc247') +
+    row(346, 'α/β', T2('α en β afwisselend', 'α and β alternating'), '#7fdc6a') +
+    row(388, 'α+β', T2('α en β in aparte gebieden', 'α and β in separate regions'), '#5fd3e6');
+}

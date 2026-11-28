@@ -1,6 +1,6 @@
 import { C, L, T2, svgOpen, cam, sub, ease, lerp, clamp, f1, CLASSCOL } from '../../kit.js';
 import { T, TL, smooth, chain, enz, tag, arrowDefs, arr, ub, phos, sugar, panel, spark, lerpPts, ATPC, PHOS } from './_b_kit.js';
-import { membraanLijn, eiwitPad, vouwing } from '../../bio.js';
+import { membraanLijn, eiwitPad, vouwing, helixLint, strengPijl } from '../../bio.js';
 
 /* Paneel A (x 0–1600): doeleiwit met activatielus (aan/uit-schakelaar)
  * Paneel B (x 1700–3300): MAP-kinasecascade  ·  Paneel C (x 3380–5000): overzicht PTM's  ·  Paneel D (x 5100–6700): collageen */
@@ -36,6 +36,51 @@ export default {
   simplified: {
     nl: 'Het doeleiwit is een schets: een "lus die de actieve plaats afdekt" is één van de manieren waarop fosforylatie een eiwit aan- of uitzet (bv. de activatielus van veel kinasen); bij andere eiwitten zet fosforylatie juist uit of creëert ze een bindingsplaats. De versterkingsfactoren in de cascade (1 → 3 → 6) zijn illustratief. Echte kinasen zijn veel groter dan hier getekend; de collageen-triple helix is ~300 nm lang en hier sterk ingekort.',
     en: 'The target protein is a sketch: a "loop covering the active site" is one of the ways phosphorylation switches a protein on or off (e.g. the activation loop of many kinases); in other proteins phosphorylation switches off or creates a binding site. The amplification factors in the cascade (1 → 3 → 6) are illustrative. Real kinases are much larger than drawn; the collagen triple helix is ~300 nm long and strongly shortened here.' },
+  /* "Wat zie je?" (zijpaneel): elk onderdeel van de figuur in één zin — d = eenvoudig, p = vaktaal (hoger) */
+  parts: [
+    { c: C.chain, t: { nl: 'doeleiwit', en: 'target protein' }, d: { nl: 'Het groene, opgevouwen eiwit dat een extraatje krijgt.', en: 'The green, folded protein that gets an extra.' },
+      p: { nl: 'Gevouwen substraateiwit (schets) dat post-translationeel gemodificeerd wordt.', en: 'Folded substrate protein (sketch) that is modified post-translationally.' } },
+    { c: CLASSCOL.p, t: 'Ser', m: ['Ser in een lus die de actieve plaats afdekt', 'Ser in a loop covering the active site'], d: { nl: 'Een serine (bouwsteen met een OH-groep) in een lusje dat de werkplek van het eiwit afdekt.', en: 'A serine (building block with an OH group) in a small loop that covers the working spot of the protein.' },
+      p: { nl: 'Fosfoacceptor-Ser in een regulatorische lus die de actieve plaats afschermt (zoals een activatielus).', en: 'Phospho-acceptor Ser in a regulatory loop shielding the active site (like an activation loop).' } },
+    { c: CLASSCOL['+'], t: 'Arg', m: ['P (2−) ↔ Arg (+)'], d: { nl: 'Twee bouwstenen met een pluslading. Ze trekken het negatieve fosfaat aan, waardoor de lus wegklapt.', en: 'Two building blocks with a plus charge. They attract the negative phosphate, so the loop flips away.' },
+      p: { nl: 'Basische Arg-residuen die het dianionische fosfaat elektrostatisch binden en zo de conformatieverandering stabiliseren.', en: 'Basic Arg residues that bind the dianionic phosphate electrostatically, stabilising the conformational change.' } },
+    { c: CLASSCOL['+'], t: 'Lys', m: ['Lys (aan het oppervlak)'], d: { nl: 'Een lysine aan de buitenkant van het eiwit. Daar kan het afbraaklabel aan vastgemaakt worden.', en: 'A lysine on the outside of the protein. The breakdown tag can be attached to it.' },
+      p: { nl: 'Oppervlakte-Lys; de ε-aminogroep is de acceptor voor ubiquitine (isopeptidebinding).', en: 'Surface Lys; its ε-amino group is the acceptor for ubiquitin (isopeptide bond).' } },
+    { c: C.prot, t: { nl: 'eiwitkinase', en: 'protein kinase' }, m: ['mens: ~500 eiwitkinasen', 'human: ~500 protein kinases'], d: { nl: 'Een enzym dat een fosfaatgroep op een eiwit zet. De mens heeft er ongeveer 500 soorten van.', en: 'An enzyme that puts a phosphate group onto a protein. Humans have about 500 kinds of them.' },
+      p: { nl: 'Eiwitkinase: draagt het γ-fosfaat van ATP over op Ser, Thr of Tyr; het menselijke kinoom telt ~500 kinasen.', en: 'Protein kinase: transfers the γ-phosphate of ATP to Ser, Thr or Tyr; the human kinome has ~500 kinases.' } },
+    { c: ATPC, t: 'ATP', m: ['ADP'], d: { nl: 'De brandstof die het fosfaat levert. Na het afgeven blijft ADP over.', en: 'The fuel that supplies the phosphate. After giving it up, ADP remains.' },
+      p: { nl: 'ATP als fosfaatdonor; ADP is het nevenproduct.', en: 'ATP as phosphate donor; ADP is the by-product.' } },
+    { c: PHOS, t: 'P', m: ['De reactie', 'The reaction', 'Ser–CH₂–OH', '+ ATP', '↓ kinase', 'Ser–CH₂–O–PO₃²⁻', '+ ADP', 'ook op Thr (OH) en Tyr (fenol-OH)', 'also on Thr (OH) and Tyr (phenol OH)'], d: { nl: 'De oranje fosfaatgroep. Ze komt op de OH-groep van de serine en maakt die plek negatief geladen.', en: 'The orange phosphate group. It goes onto the OH group of the serine and makes that spot negatively charged.' },
+      p: { nl: 'Fosfoesterbinding op de hydroxylgroep (Ser, Thr, Tyr); voegt twee negatieve ladingen toe.', en: 'Phosphoester bond on the hydroxyl group (Ser, Thr, Tyr); adds two negative charges.' } },
+    { c: C.ok, t: 'AAN', m: ['ON', 'UIT', 'OFF', 'actieve plaats vrij', 'active site exposed'], d: { nl: 'De schakelaar: met fosfaat klapt de lus weg en staat het eiwit aan; zonder fosfaat sluit de lus en staat het uit.', en: 'The switch: with phosphate the loop flips away and the protein is on; without phosphate the loop closes and it is off.' },
+      p: { nl: 'Fosforylatie als reversibele conformationele schakelaar die de actieve plaats vrijmaakt of afsluit.', en: 'Phosphorylation as a reversible conformational switch that exposes or occludes the active site.' } },
+    { c: C.prot3, t: { nl: 'eiwitfosfatase', en: 'protein phosphatase' }, m: ['H₂O', 'Pᵢ'], d: { nl: 'Een enzym dat het fosfaat er met water weer afknipt. Het fosfaat komt los vrij.', en: 'An enzyme that cuts the phosphate off again using water. The phosphate is released loose.' },
+      p: { nl: 'Eiwitfosfatase: hydrolyseert de fosfoesterbinding en geeft anorganisch fosfaat (Pᵢ) vrij.', en: 'Protein phosphatase: hydrolyses the phosphoester bond and releases inorganic phosphate (Pᵢ).' } },
+    { c: C.prot, t: 'MAPKKK', m: ['Raf', 'MAPKK', 'MEK', 'MAPK', 'ERK', 'doelen', 'targets', 'groeifactorsignaal (via Ras)', 'growth-factor signal (via Ras)', 'MEK fosforyleert ERK op Thr én Tyr: 1 Raf → vele ERK → nog meer doelen', 'MEK phosphorylates ERK on Thr and Tyr: 1 Raf → many ERK → even more targets'],
+      d: { nl: 'Een rij kinasen die elkaar aanzetten (Raf → MEK → ERK). Elk actief enzym zet er vele aan, zo wordt het signaal sterker.', en: 'A row of kinases that switch each other on (Raf → MEK → ERK). Each active enzyme switches on many, so the signal grows stronger.' },
+      p: { nl: 'MAP-kinasecascade: Raf (MAPKKK) fosforyleert MEK (MAPKK), dat ERK (MAPK) dubbel fosforyleert op Thr en Tyr; elke trap versterkt het signaal.', en: 'MAP kinase cascade: Raf (MAPKKK) phosphorylates MEK (MAPKK), which dually phosphorylates ERK (MAPK) on Thr and Tyr; each tier amplifies the signal.' } },
+    { c: C.prot, t: { nl: 'Fosforylatie', en: 'Phosphorylation' }, m: ['Ser · Thr · Tyr'], d: { nl: 'Een fosfaatgroep op serine, threonine of tyrosine: de meest gebruikte aan/uit-schakelaar.', en: 'A phosphate group on serine, threonine or tyrosine: the most widely used on/off switch.' },
+      p: { nl: 'Reversibele fosforylering door kinasen en fosfatasen; voegt 2 negatieve ladingen toe.', en: 'Reversible phosphorylation by kinases and phosphatases; adds 2 negative charges.' } },
+    { c: C.acetyl, t: { nl: 'Acetylatie', en: 'Acetylation' }, m: ['Lys (–NH₃⁺)', 'Ac'], d: { nl: 'Een acetylgroepje (Ac) op lysine. Daardoor verdwijnt de pluslading; bij histonen gaat het DNA wat meer open.', en: 'An acetyl group (Ac) on lysine. This removes the plus charge; in histones the DNA opens up a bit more.' },
+      p: { nl: 'Nε-acetylering van Lys neutraliseert de positieve lading; op histonen geassocieerd met open chromatine.', en: 'Nε-acetylation of Lys neutralises the positive charge; on histones associated with open chromatin.' } },
+    { c: C.methyl, t: { nl: 'Methylatie', en: 'Methylation' }, m: ['Lys · Arg', 'CH₃'], d: { nl: 'Eén tot drie methylgroepjes (CH₃) op lysine of arginine. De lading blijft.', en: 'One to three methyl groups (CH₃) on lysine or arginine. The charge stays.' },
+      p: { nl: 'Mono-, di- of trimethylering van Lys (Arg: mono/di) met SAM als donor; behoudt de lading.', en: 'Mono-, di- or trimethylation of Lys (Arg: mono/di) with SAM as donor; keeps the charge.' } },
+    { c: '#ffd166', t: { nl: 'Ubiquitinering', en: 'Ubiquitination' }, m: ['Ub', 'E3-ligase', 'E3 ligase', 'K48-polyubiquitine', 'K48 polyubiquitin', '= “breek mij af”', '= “degrade me”'], d: { nl: 'Een ketting van kleine eiwitjes (ubiquitine) op een lysine. Een bepaald soort ketting betekent: breek mij af.', en: 'A chain of small proteins (ubiquitin) on a lysine. A certain kind of chain means: break me down.' },
+      p: { nl: 'Een E3-ligase koppelt ubiquitine (76 aa) aan Lys; een K48-gekoppelde polyubiquitineketen richt het eiwit naar het proteasoom.', en: 'An E3 ligase attaches ubiquitin (76 aa) to Lys; a K48-linked polyubiquitin chain targets the protein to the proteasome.' } },
+    { c: '#00A651', t: { nl: 'Glycosylatie', en: 'Glycosylation' }, m: ['Asn (N-) · Ser/Thr (O-)', 'Asn'], d: { nl: 'Suikerketens op asparagine of op serine/threonine, aangebracht in het ER en het Golgi.', en: 'Sugar chains on asparagine or on serine/threonine, added in the ER and the Golgi.' },
+      p: { nl: 'N-glycosylering op Asn en O-glycosylering op Ser/Thr in ER en Golgi; belangrijk voor vouwing en herkenning.', en: 'N-glycosylation on Asn and O-glycosylation on Ser/Thr in the ER and Golgi; important for folding and recognition.' } },
+    { c: C.mem, t: { nl: 'Lipidering', en: 'Lipidation' }, m: ['Gly (N-term) · Cys'], d: { nl: 'Een vetstaartje op het eiwit, dat het als een anker aan een membraan vastzet.', en: 'A fatty tail on the protein that fixes it to a membrane like an anchor.' },
+      p: { nl: 'Myristoylering (N-terminale Gly), palmitoylering en prenylering (Cys) verankeren eiwitten aan membranen.', en: 'Myristoylation (N-terminal Gly), palmitoylation and prenylation (Cys) anchor proteins to membranes.' } },
+    { c: '#ffc247', t: { nl: 'Disulfidebrug', en: 'Disulfide bond' }, m: ['Cys', 'S–S'], d: { nl: 'Een zwavelbrug tussen twee cysteïnes. Ze verstevigt het gevouwen eiwit.', en: 'A sulfur bridge between two cysteines. It strengthens the folded protein.' },
+      p: { nl: 'Covalente Cys–Cys-binding, gevormd in het ER (PDI); stabiliseert de tertiaire structuur.', en: 'Covalent Cys–Cys bond, formed in the ER (PDI); stabilises the tertiary structure.' } },
+    { c: '#b7f0a8', t: { nl: 'Hydroxylering', en: 'Hydroxylation' }, m: ['Pro → Hyp · Lys → Hyl', 'Pro', 'Hyp', 'OH'], d: { nl: 'Een OH-groepje op proline (wordt Hyp) of lysine. Dat gebeurt vooral in collageen.', en: 'An OH group on proline (becomes Hyp) or lysine. This happens mainly in collagen.' },
+      p: { nl: 'Hydroxylering van Pro tot 4-hydroxyproline en van Lys tot hydroxylysine, vooral in collageen.', en: 'Hydroxylation of Pro to 4-hydroxyproline and of Lys to hydroxylysine, mainly in collagen.' } },
+    { c: '#b7f0a8', t: 'P4H', m: ['Prolyl-4-hydroxylase (ER-lumen)', 'Prolyl 4-hydroxylase (ER lumen)', 'cofactoren: Fe²⁺ en vitamine C', 'cofactors: Fe²⁺ and vitamin C', 'tekort aan vitamine C → scheurbuik', 'vitamin C deficiency → scurvy'], d: { nl: 'Het enzym dat proline in collageen aanpast. Het heeft ijzer en vitamine C nodig; zonder vitamine C krijg je scheurbuik.', en: 'The enzyme that modifies proline in collagen. It needs iron and vitamin C; without vitamin C you get scurvy.' },
+      p: { nl: 'Prolyl-4-hydroxylase in het ER-lumen; Fe²⁺-afhankelijke dioxygenase, ascorbaat houdt het ijzer gereduceerd. Tekort geeft instabiel collageen (scorbuut).', en: 'Prolyl 4-hydroxylase in the ER lumen; Fe²⁺-dependent dioxygenase, ascorbate keeps the iron reduced. Deficiency gives unstable collagen (scurvy).' } },
+    { c: C.chain, t: { nl: 'collageen-triple helix', en: 'collagen triple helix' }, m: ['3 ketens: collageen-triple helix', '3 chains: collagen triple helix', 'Gly', 'Gly – X – Y', 'elke 3e positie Gly: past als enige in het midden', 'every 3rd position Gly: the only one that fits in the centre', 'N', 'C'],
+      d: { nl: 'Drie ketens die om elkaar heen gedraaid zijn. Elke derde bouwsteen is glycine, de enige die klein genoeg is voor het midden.', en: 'Three chains twisted around each other. Every third building block is glycine, the only one small enough for the centre.' },
+      p: { nl: 'Collageen: drie linksdraaiende polyproline II-achtige ketens in een rechtsdraaiende superhelix met herhaling Gly-X-Y (X, Y vaak Pro/Hyp).', en: 'Collagen: three left-handed polyproline II-like chains in a right-handed superhelix with the repeat Gly-X-Y (X, Y often Pro/Hyp).' } },
+  ],
   steps: [
     ST(7000, cam(680, 470, 1250), 'Na de vouwing: extra’s', 'After folding: extras',
       'Enzymen hangen nog chemische groepjes aan het eiwit of knippen de keten. Zo krijgt het nieuwe eigenschappen.',
@@ -131,6 +176,16 @@ export default {
     const $ = id => svg.getElementById(id);
     const kinPos = k => [lerp(KIN[0] - 380, KIN[0], k), lerp(KIN[1] - 180, KIN[1], k)];
     const atpAt = ([x, y]) => [x + 150, y + 62];
+    /* eiwitkinase als twee lobben (detailronde 28-11-2026): N-lob met een β-blad en de αC-helix, C-lob vooral helices;
+       ATP bindt in de kloof ertussen, die naar het substraat open ligt (Taylor & Kornev 2011) */
+    const kinase = (x, y, op) => op <= .01 ? '' : `<g opacity="${f1(op)}">` +
+      `<path d="${eiwitPad(x - 15, y - 34, 132, 52, 41, .07)}" fill="#0b1224"/><path d="${eiwitPad(x - 15, y - 34, 132, 52, 41, .07)}" fill="${C.prot}" fill-opacity=".3" stroke="${C.prot}" stroke-width="3"/>` +
+      `<path d="${eiwitPad(x + 5, y + 46, 150, 54, 42, .07)}" fill="#0b1224"/><path d="${eiwitPad(x + 5, y + 46, 150, 54, 42, .07)}" fill="${C.prot}" fill-opacity=".3" stroke="${C.prot}" stroke-width="3"/>` +
+      `<path d="M${x - 125},${y + 6} Q${x + 40},${y + 2} ${x + 160},${y + 44}" stroke="#0b1224" stroke-width="9" fill="none" stroke-linecap="round" opacity=".8"/>` +
+      strengPijl(x - 20, y - 62, x - 115, y - 62, { h: 9 }) + strengPijl(x - 115, y - 40, x - 20, y - 40, { h: 9 }) + strengPijl(x - 20, y - 18, x - 115, y - 18, { h: 9 }) +
+      helixLint(x + 10, y - 50, x + 95, y - 26, { turns: 2.5, amp: 11, w: 10 }) +
+      helixLint(x - 125, y + 40, x - 35, y + 34, { turns: 2.5, amp: 11, w: 10 }) + helixLint(x - 15, y + 52, x + 95, y + 58, { turns: 3, amp: 11, w: 10 }) + helixLint(x - 100, y + 74, x - 20, y + 82, { turns: 2.2, amp: 10, w: 9 }) +
+      T(x - 15, y - 100, T2('eiwitkinase', 'protein kinase'), { size: 24, w: 700, col: '#d6ccff' }) + '</g>';
 
     /* collageen (statisch deel eenmaal tekenen) */
     const sc = [C.chain, '#b7f0a8', '#4fae3f'];
@@ -173,13 +228,14 @@ export default {
         if (kinK > .01) {
           const kp = step === 3 ? [lerp(KIN[0], KIN[0] - 380, 1 - kinK), lerp(KIN[1], KIN[1] - 160, 1 - kinK)] : kinPos(kinK);
           const op = step === 3 ? kinK : 1;
-          ks += enz(kp[0], kp[1], 170, 78, T2('eiwitkinase', 'protein kinase'), { op, fs: 24, dy: -14 });
+          ks += kinase(kp[0], kp[1], op);
           const a = atpAt(kp);
           ks += tag(a[0], a[1] - 14, atpLbl, ATPC, { fs: 20, op });
           if (step === 2) ks += spark(a[0], a[1], sub(p, .15, .5));
         }
         $('pt-kin').innerHTML = ks;
-        $('pt-pp').innerHTML = ppK > .01 ? enz(lerp(1300, 1030, ppK), lerp(120, 240, ppK), 160, 72, T2('eiwitfosfatase', 'protein phosphatase'), { col: C.prot3, op: ppK, fs: 24, fillOp: .4 }) +
+        $('pt-pp').innerHTML = ppK > .01 ? (enz(lerp(1300, 1030, ppK), lerp(120, 240, ppK), 160, 72, '', { col: C.prot3, op: ppK, fillOp: .4 }) + vouwing(lerp(1300, 1030, ppK), lerp(120, 240, ppK), 150, 66, { col: '#a593ff', op: ppK * .9, kern: false }) +
+          T(lerp(1300, 1030, ppK), lerp(120, 240, ppK) - 86, T2('eiwitfosfatase', 'protein phosphatase'), { size: 24, w: 700, col: '#d6ccff', op: ppK })) +
           (step === 4 ? tag(lerp(1300, 1030, ppK), lerp(120, 240, ppK) + 90, 'H₂O', '#9cc0ff', { fs: 18, op: ppK * (1 - sub(p, .4, .6)) }) : '') : '';
         // chemie-paneel
         let ch = '';

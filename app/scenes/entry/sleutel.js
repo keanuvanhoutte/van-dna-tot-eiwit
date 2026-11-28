@@ -31,6 +31,14 @@ export default structure3d({
     en: 'Only the binding tip of one spike and the outer part of ACE2 are drawn (one bead per amino acid). A complete spike consists of three identical chains (a trimer) and sticks out of the virus membrane on a stalk; ACE2 itself is anchored in our cell membrane. To bind, the tip must first flip “up”. After binding, a protein of the cell still has to cut the spike (at the cell surface by TMPRSS2 or in an endosome by cathepsin L) before the membranes fuse.' },
   base,
   dimOpacity: false,
+  parts: [
+    { c: RBD, t: L3('sleutel: top van het virus', 'key: tip of the virus'), m: ['sleutel (top van het uitsteeksel)', 'key (tip of the spike)', '1 van de 3 sleutels (de andere 2 zijn hier niet getekend)', '1 of the 3 keys (the other 2 are not drawn here)', '↑ naar het virus', '↑ towards the virus'], d: L3('Het oranje deel: het topje van een uitsteeksel van het coronavirus. Het past als een sleutel op het slot van onze cel.', 'The orange part: the tip of a spike of the coronavirus. It fits like a key into the lock on our cell.'),
+      p: L3('Receptorbindend domein (RBD, res. 333–526) van het S1-deel van het spike-eiwit; een spike is een trimeer met drie RBD’s.', 'Receptor-binding domain (RBD, res. 333–526) of the S1 subunit of the spike protein; a spike is a trimer with three RBDs.') },
+    { c: ACE, t: L3('slot: eiwit op onze cel', 'lock: protein on our cell'), m: ['slot (eiwit van de cel)', 'lock (protein of the cell)', '↓ naar onze cel (hier versmelten straks de membranen)', '↓ towards our cell (where the membranes will fuse)'], d: L3('Het groene deel: een eiwit op onze cellen, onder meer in neus, longen en darm. Voor het virus is het het slot.', 'The green part: a protein on our cells, for example in the nose, lungs and gut. For the virus it is the lock.'),
+      p: L3('Extracellulair peptidasedomein van humaan ACE2 (res. 19–615), de receptor van SARS-CoV-2.', 'Extracellular peptidase domain of human ACE2 (res. 19–615), the receptor of SARS-CoV-2.') },
+    { c: HOT, t: L3('raakvlak', 'contact surface'), d: L3('De gele bolletjes: de bouwstenen waar sleutel en slot elkaar raken, 17 van de sleutel en 20 van het slot.', 'The yellow beads: the building blocks where key and lock touch, 17 on the key and 20 on the lock.'),
+      p: L3('Bindingsinterface: 17 RBD- en 20 ACE2-residuen binnen 4 Å (Lan et al. 2020).', 'Binding interface: 17 RBD and 20 ACE2 residues within 4 Å (Lan et al. 2020).') },
+  ],
   steps: [
     { dur: 8000, title: L3('De sleutel past op het slot van onze cel', 'The key fits the lock on our cell'), focus: OVER(), zoom: {}, spin: .012, pad: .7,
       text: L3('Dit is een echt stukje coronavirus (oranje) vast op een eiwit van onze cel (groen).', 'This is a real piece of coronavirus (orange) stuck to a protein of our cell (green).') },
