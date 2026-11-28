@@ -258,8 +258,8 @@ const SCENE = {
         if (step === 1) {
           L(E1[0] - 40, E1[1] + 9, 'EGF', { col: K.egf, w: 800, anchor: 'end', op: sub(p, .35, .5) });
           L(E2[0] + 40, E2[1] + 9, 'EGF', { col: K.egf, w: 800, anchor: 'start', op: sub(p, .6, .75) });
-          L(x1 + 72, 204, T2('arm', 'arm'), { anchor: 'start', col: '#e0d6ff', op: sub(p, .6, .8) });
-          L(x2 - 72, 204, T2('arm', 'arm'), { anchor: 'end', col: '#e0d6ff', op: sub(p, .85, 1) });
+          L(x1 + 72, 184, T2('arm', 'arm'), { anchor: 'start', col: '#e0d6ff', op: sub(p, .6, .8) });
+          L(x2 - 72, 244, T2('arm', 'arm'), { anchor: 'end', col: '#e0d6ff', op: sub(p, .85, 1) });
           L(x2 + 40, 60, T2('gesloten', 'closed'), { col: C.muted, op: 1 - sub(p, .5, .7) });
           L(x1 - 40, 60, T2('open', 'open'), { col: '#e0d6ff', op: sub(p, .5, .7) });
         }

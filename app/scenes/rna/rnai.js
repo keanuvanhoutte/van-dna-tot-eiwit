@@ -231,8 +231,8 @@ export default {
             const g = ease(sub(p, 0, .3));
             dec += prot(gx(NB) + 60, YG - 96, 116, 36, 'GW182', '#b44f7c', g, 20);
             dec += prot(gx(NB) + 60, YG - 150, 146, 36, 'CCR4–NOT', '#8a5a3a', ease(sub(p, .2, .4)), 20);
-            dec += `<path d="M${gx(NB) + 120},${YG - 146} C${gx(3)},${YG - 230} ${Rx + 60},${YG - 140} ${Rx + 60},${YT - 10}" stroke="#e0b089" stroke-width="3" fill="none" stroke-dasharray="8 6" opacity="${f1(sub(p, .25, .4))}"/>`;
-            dec += note(Rx + 70, YT - 70, T2('staart korter', 'tail shorter'), '#e0b089', 18, 'start', sub(p, .3, .45));
+            dec += `<path d="M${gx(NB) + 120},${YG - 146} C${gx(3)},${YG - 230} ${Rx + 30},${YG - 140} ${Rx + 30},${YT - 10}" stroke="#e0b089" stroke-width="3" fill="none" stroke-dasharray="8 6" opacity="${f1(sub(p, .25, .4))}"/>`;
+            dec += note(Rx + 42, YT - 70, T2('staart korter', 'tail shorter'), '#e0b089', 18, 'start', sub(p, .3, .45));
           }
           if (si) {
             const kk = sub(p, .45, .55) * (1 - sub(p, .7, .8));

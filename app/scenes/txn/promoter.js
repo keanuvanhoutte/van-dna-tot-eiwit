@@ -185,7 +185,7 @@ export default {
         if (step === 8) {
           const pt = ease(sub(p, 0, .3));
           g += rp(pausePx + 5, py - 226, 200, T2('geeft het startsein', 'gives the go signal'), 'P-TEFb (CDK9)', '#4a9a3a', pt, 16);
-          if (pt > .3) g += `<g opacity="${f1(pt * nelfOp)}">${txt(pausePx + 166, py - 156 - 120 * ease(sub(p, .45, .75)), 'P', C.ok, 22)}</g><g opacity="${f1(pt)}">${txt(pausePx - 156, py - 156, 'P', C.ok, 22)}</g>`;
+          if (pt > .3) g += pill(pausePx + 150, py - 166 - 120 * ease(sub(p, .45, .75)), 26, 21, 'P', C.ok, pt * nelfOp, 15) + pill(pausePx - 140, py - 166, 26, 21, 'P', C.ok, pt, 15);   // fosfaat als bolletje op de rand van elk pauze-eiwit (zoals op de staart)
         }
         $('pr-gtf').innerHTML = g;
 

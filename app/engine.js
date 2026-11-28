@@ -271,6 +271,7 @@ function fitPill(t) {
   if (!(bw > 0) || w <= bw - 6) return;
   const tb = t.getBBox(), bb = box.getBBox();               // enkel echte pillen: de tekst staat midden in het vak (niet ernaast)
   if (bb.height > 60 || Math.abs(tb.y + tb.height / 2 - (bb.y + bb.height / 2)) > bb.height / 2) return;
+  if (tb.x > bb.x + bb.width / 2 || tb.x + tb.width < bb.x + bb.width / 2) return;   // tekst naast een streepje (lijst) is geen pil
   const fs = parseFloat(t.getAttribute('font-size')) || 12;
   t.setAttribute('font-size', (fs * Math.max(.55, (bw - 8) / w)).toFixed(1));
 }
