@@ -62,7 +62,10 @@ const UI2 = {
   factsHint: { nl: 'Getallen en feiten op een rij', en: 'Numbers and facts at a glance' }, whyHint: { nl: 'Waarom dit ertoe doet', en: 'Why this matters' },
   stepsHint: { nl: 'Klik om naar een stap te springen', en: 'Click to jump to a step' }, simpHint: { nl: 'Waar de tekening afwijkt van de werkelijkheid', en: 'Where the drawing differs from reality' },
   srcHint: { nl: 'Waar de uitleg vandaan komt', en: 'Where the explanation comes from' },
-  partsHint: { nl: 'Elk onderdeel van de figuur met één zin uitleg. Klik op een woord in de figuur om het hier terug te vinden.', en: 'Every part of the figure, explained in one sentence. Click a word in the figure to find it here.' },
+  partsHint: { nl: 'Klik op een onderdeel hieronder, of op een woord in de figuur, voor de uitleg.', en: 'Click a part below, or a word in the figure, for its explanation.' },
+  partsHintAll: { nl: 'Elk onderdeel van de figuur met één zin uitleg. Klik op een woord in de figuur om het hier terug te vinden.', en: 'Every part of the figure, explained in one sentence. Click a word in the figure to find it here.' },
+  partsPick: { nl: 'Kies een onderdeel om te zien wat het is.', en: 'Pick a part to see what it is.' },
+  partsMore: { nl: 'Toon alle uitleg onder elkaar', en: 'Show all explanations in a list' }, partsLess: { nl: 'Toon compact', en: 'Show compact' },
   simplified: { nl: 'Wat is hier vereenvoudigd?', en: 'What is simplified here?' },
   struct3d: { nl: '3D-structuren (PDB)', en: '3D structures (PDB)' }, mapTitle: { nl: 'Waar ben ik?', en: 'Where am I?' },
   mapSub: { nl: 'Zie waar je zit in het verhaal en spring naar een ander onderwerp.', en: 'See where you are in the story and jump to another topic.' },
@@ -1135,8 +1138,24 @@ function detailsHTML(id, open = true) {
 /* "Wat zie je?": elk onderdeel van de figuur (kleur + naam zoals in de figuur + één zin uitleg; verborgen label op dit niveau = niet in de lijst).
  * Scène-veld parts: [{ c: kleur, t: naam, m: [andere schrijfwijzen in de figuur, NL en EN], d: {nl,en} eenvoudig, p: {nl,en} vaktaal (hoger) }] */
 const partsOf = () => current?.def.parts ?? current?.base.parts;
+/* Compact (standaard): alle namen als gekleurde knopjes + één uitlegkader voor het gekozen onderdeel.
+ * "Toon alles onder elkaar" (prefs.partsAll) geeft de volledige lijst. */
+const partName = p => easyLabel(L(p.t));
+const partText = p => L((rank >= 3 && p.p) || p.d);
 function partsHTML(parts) {
-  return `<p class="phint">${V('partsHint')}</p><ul class="parts">${parts.map((p, i) => easyLabel(L(p.t)) === '' ? '' : `<li data-p="${i}" style="--c:${p.c}"><i></i><div><b>${esc(easyLabel(L(p.t)))}</b><span>${L((rank >= 3 && p.p) || p.d)}</span></div></li>`).join('')}</ul>`;
+  const vis = parts.map((p, i) => [p, i]).filter(([p]) => partName(p) !== '');
+  const toggle = `<button class="pall" type="button">${V(prefs.partsAll ? 'partsLess' : 'partsMore')}</button>`;
+  if (prefs.partsAll) return `<p class="phint">${V('partsHintAll')}</p>${toggle}<ul class="parts">${vis.map(([p, i]) => `<li data-p="${i}" style="--c:${p.c}"><i></i><div><b>${esc(partName(p))}</b><span>${partText(p)}</span></div></li>`).join('')}</ul>`;
+  return `<p class="phint">${V('partsHint')}</p><div class="pchips">${vis.map(([p, i]) => `<button class="pchip" type="button" data-p="${i}" style="--c:${p.c}"><i></i>${esc(partName(p))}</button>`).join('')}</div>` +
+    `<div class="pbox" aria-live="polite"><span class="pempty">${V('partsPick')}</span></div>${toggle}`;
+}
+function pickPart(i) {
+  const p = partsOf()?.[i], box = $('sideBody').querySelector('.pbox'); if (!p || !box) return false;
+  $('sideBody').querySelectorAll('.pchip').forEach(c => c.classList.toggle('on', +c.dataset.p === i));
+  box.style.setProperty('--c', p.c);
+  box.innerHTML = `<b><i></i>${esc(partName(p))}</b><span>${partText(p)}</span>`;
+  box.classList.remove('flash'); void box.offsetWidth; box.classList.add('flash');
+  return true;
 }
 /* een woord in de figuur dat bij een onderdeel hoort: aanklikbaar → tabblad "Wat zie je?" op dat onderdeel */
 function partAt(target) {
@@ -1149,6 +1168,7 @@ function partAt(target) {
 }
 function showPart(i) {
   setSide(true); selectTab('parts');
+  if (!prefs.partsAll) { if (pickPart(i)) $('sideBody').querySelector('.pbox').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); return; }
   const li = $('sideBody').querySelector(`[data-p="${i}"]`); if (!li) return;
   li.scrollIntoView({ block: 'center', behavior: 'smooth' });
   li.classList.remove('flash'); void li.offsetWidth; li.classList.add('flash');
@@ -1215,6 +1235,8 @@ function selectTab(k) {
   body.querySelectorAll('.chip[data-id]').forEach(c => c.onclick = () => chipGo(c.dataset.id));
   body.querySelectorAll('.stepsList li').forEach(li => { li.onclick = () => gotoStep(+li.dataset.i); });
   body.querySelectorAll('details.fold').forEach(f => f.addEventListener('toggle', () => { prefs.folds = { ...prefs.folds, [f.dataset.f]: f.open }; savePrefs(); }));
+  body.querySelectorAll('.pchip').forEach(c => c.onclick = () => pickPart(+c.dataset.p));
+  body.querySelector('.pall')?.addEventListener('click', () => { prefs.partsAll = !prefs.partsAll; savePrefs(); render(); selectTab('parts'); });
   if (current) { const i = stepInfo(t).step; body.querySelectorAll('.stepsList li').forEach((li, j) => li.classList.toggle('cur', j === i)); }
 }
 function chipGo(id) {
