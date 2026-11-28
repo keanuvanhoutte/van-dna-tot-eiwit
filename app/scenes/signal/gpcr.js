@@ -20,7 +20,7 @@ export default {
   time: { nl: 'cAMP stijgt binnen seconden; CREB-genen na minuten', en: 'cAMP rises within seconds; CREB genes after minutes' },
   org: { nl: 'mens (bv. luchtweg-epitheel, gladde spiercel)', en: 'human (e.g. airway epithelium, smooth muscle cell)' },
   legend: [[ADRC, 'adrenaline'], [C.prot, { nl: 'β2-adrenerge receptor · PKA: actief deel (C)', en: 'β2-adrenergic receptor · PKA: active part (C)' }], [GAC, 'Gαs'], [GBC, 'Gβγ'], [GTPC, 'GTP · GDP · ATP · cAMP'],
-    [ACC, { nl: 'adenylylcyclase', en: 'adenylyl cyclase' }], [RC, { nl: 'PKA: rem (R)', en: 'PKA: brake (R)' }], [CREBC, 'CREB'], [CBPC, 'CBP/p300'], ['#ff6b6b', { nl: 'fosfaat (P)', en: 'phosphate (P)' }], [C.dna, 'DNA'], [C.rna, 'mRNA']],
+    [ACC, { nl: 'adenylylcyclase', en: 'adenylyl cyclase' }], [RC, { nl: 'PKA: rem (R)', en: 'PKA: brake (R)' }], [CREBC, 'CREB'], [CBPC, 'CBP/p300'], ['#ff9f43', { nl: 'fosfaat (P)', en: 'phosphate (P)' }], [C.dna, 'DNA'], [C.rna, 'mRNA']],
   extra: {
     nl: '<p style="font-size:13px;color:#93a0bb">3D: β2-adrenerge receptor met Gs, PDB <a href="https://www.rcsb.org/structure/3SN6" target="_blank" rel="noopener">3SN6</a>.</p>',
     en: '<p style="font-size:13px;color:#93a0bb">3D: β2-adrenergic receptor with Gs, PDB <a href="https://www.rcsb.org/structure/3SN6" target="_blank" rel="noopener">3SN6</a>.</p>' },

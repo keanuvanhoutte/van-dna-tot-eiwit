@@ -119,7 +119,7 @@ export default {
       p: { nl: 'Zuur degradatief organel (pH ≈ 4,5–5) met tientallen hydrolasen.', en: 'Acidic degradative organelle (pH ≈ 4.5–5) with dozens of hydrolases.' } },
     { c: PUMP, t: { nl: 'protonpomp', en: 'proton pump' }, m: ['H⁺ naar binnen', 'H⁺ inward'], d: { nl: 'Een pomp in het membraan die zuur (H⁺) naar binnen pompt. Zo blijft het lysosoom zuur.', en: 'A pump in the membrane that pumps acid (H⁺) inside. This keeps the lysosome acidic.' },
       p: { nl: 'V-ATPase: ATP-gedreven H⁺-pomp die het lumen van endosomen en lysosomen verzuurt.', en: 'V-ATPase: ATP-driven H⁺ pump that acidifies the lumen of endosomes and lysosomes.' } },
-    { c: PH, t: { nl: 'fosfaat eraf', en: 'phosphate removed' }, d: { nl: 'In het lysosoom gaat het label er meteen af; het is niet meer nodig.', en: 'In the lysosome the tag comes off right away; it is no longer needed.' },
+    { c: PH, t: { nl: 'fosfaat eraf', en: 'phosphate removed' }, d: { nl: 'In het lysosoom gaat het label eraf; het is niet meer nodig.', en: 'In the lysosome the tag comes off; it is no longer needed.' },
       p: { nl: 'Lysosomale zure fosfatasen (ACP2/ACP5) verwijderen het fosfaat van M6P.', en: 'Lysosomal acid phosphatases (ACP2/ACP5) remove the phosphate from M6P.' } },
     { c: BB, t: { nl: 'bouwstenen', en: 'building blocks' }, d: { nl: 'De kleine stukjes die overblijven na het knippen. De cel gebruikt ze opnieuw.', en: 'The small pieces left after cutting. The cell reuses them.' },
       p: { nl: 'Afbraakproducten (aminozuren, suikers, nucleotiden, lipiden) die naar het cytosol worden geëxporteerd.', en: 'Breakdown products (amino acids, sugars, nucleotides, lipids) that are exported to the cytosol.' } },

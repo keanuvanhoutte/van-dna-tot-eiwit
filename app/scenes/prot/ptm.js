@@ -181,9 +181,9 @@ export default {
     const kinase = (x, y, op) => op <= .01 ? '' : `<g opacity="${f1(op)}">` +
       `<path d="${eiwitPad(x - 15, y - 34, 132, 52, 41, .07)}" fill="#0b1224"/><path d="${eiwitPad(x - 15, y - 34, 132, 52, 41, .07)}" fill="${C.prot}" fill-opacity=".3" stroke="${C.prot}" stroke-width="3"/>` +
       `<path d="${eiwitPad(x + 5, y + 46, 150, 54, 42, .07)}" fill="#0b1224"/><path d="${eiwitPad(x + 5, y + 46, 150, 54, 42, .07)}" fill="${C.prot}" fill-opacity=".3" stroke="${C.prot}" stroke-width="3"/>` +
-      `<path d="M${x - 125},${y + 6} Q${x + 40},${y + 2} ${x + 160},${y + 44}" stroke="#0b1224" stroke-width="9" fill="none" stroke-linecap="round" opacity=".8"/>` +
+      `<path d="M${x - 125},${y + 6} Q${x + 60},${y + 4} ${x + 150},${y + 60}" stroke="#0b1224" stroke-width="9" fill="none" stroke-linecap="round" opacity=".8"/>` +
       strengPijl(x - 20, y - 62, x - 115, y - 62, { h: 9 }) + strengPijl(x - 115, y - 40, x - 20, y - 40, { h: 9 }) + strengPijl(x - 20, y - 18, x - 115, y - 18, { h: 9 }) +
-      helixLint(x + 10, y - 50, x + 95, y - 26, { turns: 2.5, amp: 11, w: 10 }) +
+      helixLint(x + 10, y - 50, x + 95, y - 26, { turns: 2.5, amp: 11, w: 10, col: '#ff9ec3' }) + T(x + 112, y - 18, 'αC', { size: 18, col: '#ff9ec3', w: 800, anchor: 'start' }) +
       helixLint(x - 125, y + 40, x - 35, y + 34, { turns: 2.5, amp: 11, w: 10 }) + helixLint(x - 15, y + 52, x + 95, y + 58, { turns: 3, amp: 11, w: 10 }) + helixLint(x - 100, y + 74, x - 20, y + 82, { turns: 2.2, amp: 10, w: 9 }) +
       T(x - 15, y - 100, T2('eiwitkinase', 'protein kinase'), { size: 24, w: 700, col: '#d6ccff' }) + '</g>';
 
@@ -234,8 +234,8 @@ export default {
           if (step === 2) ks += spark(a[0], a[1], sub(p, .15, .5));
         }
         $('pt-kin').innerHTML = ks;
-        $('pt-pp').innerHTML = ppK > .01 ? (enz(lerp(1300, 1030, ppK), lerp(120, 240, ppK), 160, 72, '', { col: C.prot3, op: ppK, fillOp: .4 }) + vouwing(lerp(1300, 1030, ppK), lerp(120, 240, ppK), 150, 66, { col: '#a593ff', op: ppK * .9, kern: false }) +
-          T(lerp(1300, 1030, ppK), lerp(120, 240, ppK) - 86, T2('eiwitfosfatase', 'protein phosphatase'), { size: 24, w: 700, col: '#d6ccff', op: ppK })) +
+        $('pt-pp').innerHTML = ppK > .01 ? (enz(lerp(1300, 1030, ppK), lerp(120, 240, ppK), 160, 72, '', { col: C.prot3, op: ppK, fillOp: .4 }) + vouwing(lerp(1300, 1030, ppK), lerp(120, 240, ppK), 150, 66, { col: '#c9b8ff', op: ppK, kern: false }) +
+          T(lerp(1300, 1030, ppK) - 172, lerp(120, 240, ppK) + 8, T2('eiwitfosfatase', 'protein phosphatase'), { size: 24, w: 700, col: '#d6ccff', op: ppK, anchor: 'end' })) +
           (step === 4 ? tag(lerp(1300, 1030, ppK), lerp(120, 240, ppK) + 90, 'H₂O', '#9cc0ff', { fs: 18, op: ppK * (1 - sub(p, .4, .6)) }) : '') : '';
         // chemie-paneel
         let ch = '';

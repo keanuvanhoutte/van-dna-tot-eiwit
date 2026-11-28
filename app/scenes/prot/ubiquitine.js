@@ -49,7 +49,7 @@ export default {
       p: { nl: 'K48-gekoppelde polyubiquitine (≥ 4 Ub) vormt een compacte keten en is het klassieke signaal voor proteasomale afbraak.', en: 'K48-linked polyubiquitin (≥ 4 Ub) forms a compact chain and is the classic signal for proteasomal degradation.' } },
     { c: UB, t: 'K63-keten', m: ['K63 chain', 'K63', 'open, uitgestrekt', 'open, extended', '→ signalering (NF-κB),', '→ signalling (NF-κB),', 'DNA-herstel, endocytose', 'DNA repair, endocytosis'], d: { nl: 'Een ketting gekoppeld via bouwsteen 63. Die is open en betekent iets anders: geen afbraak, maar een signaal.', en: 'A chain linked via building block 63. It is open and means something else: not breakdown, but a signal.' },
       p: { nl: 'K63-gekoppelde polyubiquitine: uitgestrekte keten, niet-degradatief signaal (o.a. NF-κB-signalering, DNA-herstel, endocytose).', en: 'K63-linked polyubiquitin: extended chain, non-degradative signal (e.g. NF-κB signalling, DNA repair, endocytosis).' } },
-    { c: '#2cc6a8', t: { nl: '26S-proteasoom', en: '26S proteasome' }, m: ['19S-deeltje', '19S particle'], d: { nl: 'De afbraakmachine: een buis met aan elk uiteinde een kap (19S) die gelabelde eiwitten binnenlaat.', en: 'The breakdown machine: a tube with a cap (19S) at each end that lets tagged proteins in.' },
+    { c: '#2cc6a8', t: { nl: '26S-proteasoom', en: '26S proteasome' }, m: ['19S-deeltje', '19S particle'], d: { nl: 'De afbraakmachine: een buis met aan één of beide uiteinden een kap (19S) die gelabelde eiwitten binnenlaat.', en: 'The breakdown machine: a tube with a cap (19S) at one or both ends that lets tagged proteins in.' },
       p: { nl: '26S-proteasoom: 20S-kerndeeltje met één of twee 19S-regulatordeeltjes.', en: '26S proteasome: 20S core particle with one or two 19S regulatory particles.' } },
     { c: '#2cc6a8', t: { nl: 'receptoren Rpn1 · Rpn10 · Rpn13', en: 'receptors Rpn1 · Rpn10 · Rpn13' }, d: { nl: 'Ontvangers op de kap die de ubiquitineketting vastpakken.', en: 'Receivers on the cap that grab the ubiquitin chain.' },
       p: { nl: 'Ubiquitinereceptoren van het 19S-deeltje (Rpn1, Rpn10, Rpn13).', en: 'Ubiquitin receptors of the 19S particle (Rpn1, Rpn10, Rpn13).' } },
@@ -221,7 +221,7 @@ export default {
         // en het ubiquitine-achtige UFD-domein dat E2 aantrekt (Schulman & Harper 2009)
         const dm = (x, y, rx, ry, sd, col = C.prot) => `<path d="${eiwitPad(x, y, rx, ry, sd, .08)}" fill="#0b1224"/><path d="${eiwitPad(x, y, rx, ry, sd, .08)}" fill="${col}" fill-opacity=".35" stroke="${col}" stroke-width="3"/>`;
         let e1 = dm(E1[0] - 38, E1[1] + 8, 74, 54, 51) + dm(E1[0] + 62, E1[1] + 24, 54, 40, 52, '#b39dff') + dm(E1[0] + 100, E1[1] - 36, 34, 26, 53, '#7d66e0') +
-          T(E1[0] - 38, E1[1] - 6, 'E1', { size: 30, w: 800 }) + T(E1[0] - 38, E1[1] + 24, T2('adenylering', 'adenylation'), { size: 15, col: '#d6ccff' }) + T(E1[0] + 100, E1[1] - 30, 'UFD', { size: 15, col: '#e2dbff', w: 700 });
+          T(E1[0] - 90, E1[1] - 40, 'E1', { size: 30, w: 800, anchor: 'end' }) + T(E1[0] + 100, E1[1] - 30, 'UFD', { size: 15, col: '#e2dbff', w: 700 });
         e1 += `<circle cx="${E1[0] + 70}" cy="${E1[1] + 40}" r="8" fill="#ffc247"/>` + T(E1[0] + 70, E1[1] + 74, 'Cys', { size: 18, col: '#ffc247' });
         if (step === 1) {
           const a = ease(sub(p, 0, .25)), ad = sub(p, .3, .5), th = ease(sub(p, .55, .85));
@@ -260,9 +260,9 @@ export default {
         if (step < 6) {
           // E3 met RING-domein (bindt E2, twee Zn²⁺) en een substraatbindend domein dat het degron herkent
           e3 += `<path d="${eiwitPad(E3[0] + 30, E3[1] - 6, 100, 52, 54, .08)}" fill="#0b1224"/><path d="${eiwitPad(E3[0] + 30, E3[1] - 6, 100, 52, 54, .08)}" fill="${C.prot3}" fill-opacity=".42" stroke="${C.prot3}" stroke-width="3"/>` +
-            `<path d="${eiwitPad(E3[0] - 88, E3[1] + 8, 44, 38, 55, .08)}" fill="#0b1224"/><path d="${eiwitPad(E3[0] - 88, E3[1] + 8, 44, 38, 55, .08)}" fill="#7d66e0" fill-opacity=".5" stroke="#b39dff" stroke-width="3"/>` +
-            `<circle cx="${E3[0] - 98}" cy="${E3[1] - 6}" r="6" fill="#9aa6bf" stroke="#0a1224" stroke-width="1.5"/><circle cx="${E3[0] - 78}" cy="${E3[1] + 22}" r="6" fill="#9aa6bf" stroke="#0a1224" stroke-width="1.5"/>` +
-            T(E3[0] - 88, E3[1] + 64, 'RING', { size: 17, col: '#d6ccff', w: 700 }) + T(E3[0] + 40, E3[1] + 4, 'E3', { size: 26, w: 800 });
+            `<path d="${eiwitPad(E3[0] - 100, E3[1] + 8, 44, 38, 55, .08)}" fill="#0b1224"/><path d="${eiwitPad(E3[0] - 100, E3[1] + 8, 44, 38, 55, .08)}" fill="#7d66e0" fill-opacity=".5" stroke="#b39dff" stroke-width="3"/>` +
+            `<circle cx="${E3[0] - 110}" cy="${E3[1] - 6}" r="6" fill="#9aa6bf" stroke="#0a1224" stroke-width="1.5"/><circle cx="${E3[0] - 90}" cy="${E3[1] + 22}" r="6" fill="#9aa6bf" stroke="#0a1224" stroke-width="1.5"/>` +
+            T(E3[0] - 100, E3[1] + 66, T2('RING · 2 Zn²⁺', 'RING · 2 Zn²⁺'), { size: 17, col: '#d6ccff', w: 700 }) + T(E3[0] + 40, E3[1] + 4, 'E3', { size: 26, w: 800 });
           e3 += `<rect x="${S0[0] - 20}" y="${S0[1] + 70}" width="40" height="18" rx="6" fill="${C.danger}"/>` + (step === 3 ? T(S0[0] + 120, S0[1] + 90, 'degron', { size: 20, col: C.danger, anchor: 'start' }) : '');
           if (step === 3) e3 += T(610, 250, T2('isopeptidebinding: Gly76 (Ub) – Lys (substraat)', 'isopeptide bond: Gly76 (Ub) – Lys (substrate)'), { size: 19, col: '#c9d2e4', op: sub(p, .55, .7) });
         }

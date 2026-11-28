@@ -121,7 +121,11 @@ const GENES = [[1300, 1030], [1000, 730], [700, 430]];
 function bacterium(p) {
   let s = '';
   const labels = [];
-  s += `<ellipse cx="810" cy="380" rx="610" ry="95" fill="rgba(79,143,247,.08)" stroke="rgba(124,196,255,.35)" stroke-width="3" stroke-dasharray="10 9"/>`;
+  // nucleoïde: geen membraan, wel een wolk van supergewonden DNA-lussen rond het gen (achtergrond, zwak)
+  s += `<defs><radialGradient id="vgN"><stop offset="0" stop-color="#4f8ff7" stop-opacity=".14"/><stop offset=".8" stop-color="#4f8ff7" stop-opacity=".07"/><stop offset="1" stop-color="#4f8ff7" stop-opacity="0"/></radialGradient></defs><ellipse cx="810" cy="380" rx="640" ry="115" fill="url(#vgN)"/>`;
+  for (let i = 0; i < 14; i++) { const x = 260 + i * 80 + (i % 2) * 20, len = 44 + (i % 3) * 10, up = (i % 2 && ![565, 865, 1165].some(g => Math.abs(x - g) < 110)) ? 1 : -1; let a = '', b2 = '';
+    for (let k = 0; k <= 14; k++) { const u = k / 14, w = 6 * (1 - u * .4), sx = Math.sin(u * 4 * Math.PI) * w; a += `${k ? 'L' : 'M'}${n1(x + sx)},${n1(380 - up * (6 + len * u))}`; b2 += `${k ? 'L' : 'M'}${n1(x - sx)},${n1(380 - up * (6 + len * u))}`; }
+    s += `<path d="${a}" stroke="#4f8ff7" stroke-width="3" fill="none" opacity=".3"/><path d="${b2}" stroke="#7cc4ff" stroke-width="3" fill="none" opacity=".3"/>`; }
   labels.push([810, 268, L(TX.nucleoid), 1, { w: 700 }]);
   GENES.forEach(([a, b], g) => { s += `<rect x="${b}" y="364" width="${a - b}" height="32" rx="5" fill="${PROT[g]}" opacity=".45"/>`; labels.push([(a + b) / 2, 350, `${L(TX.gene)} ${g + 1}`, 1, { size: 24, fill: PROT[g] }]); });
   const polX = lerp(1305, 425, clamp((p - .03) / .60)), uT = clamp(1300 - polX, 0, 875);
@@ -262,7 +266,7 @@ export default {
       p: { nl: 'Primair transcript met exonen en intronen, co-transcriptioneel bewerkt.', en: 'Primary transcript with exons and introns, processed co-transcriptionally.' } },
     { c: K.cap, t: { nl: '5′-cap', en: '5′ cap' }, d: { nl: 'Een kapje op het begin van de RNA-kopie. Het beschermt het RNA en helpt het ribosoom het begin te vinden. Bacteriën hebben dat niet.', en: 'A small cap on the start of the RNA copy. It protects the RNA and helps the ribosome find the start. Bacteria lack it.' },
       p: { nl: 'm⁷G-cap via een 5′-5′-trifosfaatbrug; bindt eIF4E voor cap-afhankelijke initiatie.', en: 'm⁷G cap via a 5′-5′ triphosphate bridge; binds eIF4E for cap-dependent initiation.' } },
-    { c: K.cap, t: { nl: 'poly(A)-staart', en: 'poly(A) tail' }, d: { nl: 'Een lange rij A’s aan het einde van de RNA-kopie. Ze maakt het RNA steviger.', en: 'A long row of A’s at the end of the RNA copy. It makes the RNA more stable.' },
+    { c: K.cap, t: { nl: 'poly(A)-staart', en: 'poly(A) tail' }, d: { nl: 'Een lange rij A’s aan het einde van de RNA-kopie. Ze maakt het RNA stabieler, zodat het langer meegaat.', en: 'A long row of A’s at the end of the RNA copy. It makes the RNA more stable, so it lasts longer.' },
       p: { nl: 'Poly(A)-staart (≈ 200 nt bij synthese), toegevoegd na splitsing aan het 3′-einde; bevordert stabiliteit en translatie.', en: 'Poly(A) tail (≈ 200 nt when made), added after 3′-end cleavage; promotes stability and translation.' } },
     { c: K.rib, t: { nl: '80S-ribosoom', en: '80S ribosome' }, d: { nl: 'De eiwitfabriek van de mens, buiten de kern. Ze leest de RNA-boodschap en maakt eiwit.', en: 'The human protein factory, outside the nucleus. It reads the RNA message and makes protein.' },
       p: { nl: 'Eukaryoot 80S-ribosoom (40S + 60S).', en: 'Eukaryotic 80S ribosome (40S + 60S).' } },

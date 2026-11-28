@@ -16,7 +16,15 @@ const AX = 340, BX = 1260, TIP = 338;                      // staartpunt op het 
 const MINI = [[185, 395], [262, 405], [418, 405], [495, 395], [112, 525], [568, 525], [250, 655], [430, 655]];   // vrij in het cytoplasma rond het chromosoom (boven, opzij, onder), niet binnen de lus van het chromosoom
 const UV = '#b388ff';
 /* chromosoom als lus; gap = deel van de bovenkant dat roze (ingebouwd faag-DNA) wordt */
-const chrom = (cx, cy, op = 1) => `<ellipse cx="${cx}" cy="${cy}" rx="180" ry="95" fill="none" stroke="${C.dna}" stroke-width="7" opacity="${f1(op)}"/>`;
+/* circulair chromosoom met supergewonden lussen (plectonemen) die naar binnen steken; de bovenkant blijft vrij voor het faag-DNA */
+const plecto = (x, y, ang, len) => {
+  const ux = Math.cos(ang), uy = Math.sin(ang), nx = -uy, ny = ux; let a = `M${f1(x - nx * 6)},${f1(y - ny * 6)}`, b = `M${f1(x + nx * 6)},${f1(y + ny * 6)}`;
+  for (let i = 1; i <= 20; i++) { const u = i / 20, w = 8 * (1 - u * .4), s = Math.cos(u * 6 * Math.PI) * w * (i === 20 ? 0 : 1);
+    a += `L${f1(x + ux * len * u + nx * s)},${f1(y + uy * len * u + ny * s)}`; b += `L${f1(x + ux * len * u - nx * s)},${f1(y + uy * len * u - ny * s)}`; }
+  return `<path d="${a}" stroke="${C.dna}" stroke-width="5" fill="none"/><path d="${b}" stroke="${C.dna2}" stroke-width="5" fill="none"/>`;
+};
+const chrom = (cx, cy, op = 1) => `<g opacity="${f1(op)}"><ellipse cx="${cx}" cy="${cy}" rx="180" ry="95" fill="none" stroke="${C.dna}" stroke-width="7"/>` +
+  [15, 45, 75, 105, 135, 165, 195, 225, 315, 345].map((d, i) => { const t = d * Math.PI / 180, x = cx + 180 * Math.cos(t), y = cy + 95 * Math.sin(t), ang = Math.atan2(cy - y, cx - x); return plecto(x, y, ang, 42 + (i % 3) * 8); }).join('') + '</g>';
 const ring = (x, y, r, op = 1) => op <= .01 ? '' : `<circle cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}" fill="none" stroke="${PHDNA}" stroke-width="7" opacity="${f1(op)}"/>`;
 const arcTop = (cx, cy, op = 1) => op <= .01 ? '' : `<path d="M${cx - 70},${f1(cy - 95 * Math.sqrt(1 - (70 / 180) ** 2))} A180,95 0 0 1 ${cx + 70},${f1(cy - 95 * Math.sqrt(1 - (70 / 180) ** 2))}" fill="none" stroke="${PHDNA}" stroke-width="9" opacity="${f1(op)}"/>`;
 
@@ -32,7 +40,7 @@ export default {
     en: 'Not to scale, and two phages in one picture: path 1 (lytic) is drawn as for phage T4, path 2 (lysogenic) as for phage lambda; lambda can also take path 1. Real phages first attach to a specific protein on the outside (like a key in a lock). One bacterium yields many more new phages than drawn. Integration happens at one fixed site in the chromosome.' },
   parts: [
     { c: '#c7d2e8', t: { nl: 'faag', en: 'phage' }, d: { nl: 'Een virus dat bacteriën aanvalt: een eiwitkop vol DNA op een staart met pootjes. Het landt op de bacterie.', en: 'A virus that attacks bacteria: a protein head full of DNA on a tail with legs. It lands on the bacterium.' },
-      p: { nl: 'Bacteriofaag met staart (Caudovirales, zoals T4 of λ): icosaëdrische kop met dsDNA en een staart voor adsorptie en injectie.', en: 'Tailed bacteriophage (Caudovirales, such as T4 or λ): icosahedral head with dsDNA and a tail for adsorption and injection.' } },
+      p: { nl: 'Bacteriofaag met staart (klasse Caudoviricetes, zoals T4 of λ): icosaëdrische kop met dsDNA en een staart voor adsorptie en injectie.', en: 'Tailed bacteriophage (class Caudoviricetes, such as T4 or λ): icosahedral head with dsDNA and a tail for adsorption and injection.' } },
     { c: LIPID.head, t: { nl: 'bacterie', en: 'bacterium' }, d: { nl: 'De staafvormige cel met dubbele rand (twee vliezen en een dunne wand): de bacterie E. coli.', en: 'The rod-shaped cell with a double border (two membranes and a thin wall): the bacterium E. coli.' },
       p: { nl: 'Gramnegatieve gastheercel (E. coli) met een celenvelop van binnen- en buitenmembraan en peptidoglycaan.', en: 'Gram-negative host cell (E. coli) with an envelope of inner and outer membrane and peptidoglycan.' } },
     { c: C.dna, t: { nl: 'chromosoom', en: 'chromosome' }, d: { nl: 'De blauwe lus: het eigen DNA van de bacterie.', en: 'The blue loop: the bacterium’s own DNA.' },

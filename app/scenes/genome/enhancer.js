@@ -113,9 +113,9 @@ export default {
         if (kM > .01) {
           const mx = (E[0] + P[0]) / 2;
           // Mediator in modules: staart (bindt de activatoren), midden, kop (bindt Pol II) (Soutourina 2018)
-          const mod = (x, y, rx, ry, sd, lab) => `<path d="${eiwitPad(x, y, rx, ry, sd, .09)}" fill="#0b1224"/><path d="${eiwitPad(x, y, rx, ry, sd, .09)}" fill="${MED}" fill-opacity=".45" stroke="#a593ff" stroke-width="3"/>` + T(x, y + 6, lab, { size: 16, col: '#e2dbff', w: 700 });
-          fx += `<g opacity="${f1(kM)}">` + mod(mx - 64, Y - 112, 42, 36, 121, T2('staart', 'tail')) + mod(mx + 66, Y - 108, 44, 38, 123, T2('kop', 'head')) + mod(mx, Y - 132, 36, 40, 122, T2('midden', 'middle')) + '</g>' +
-            T(mx, Y - 186, T2('brug', 'bridge'), { size: 24, op: kM, col: '#c9b8ff', w: 700 });
+          const mod = (x, y, rx, ry, sd, lab, col, ly) => `<path d="${eiwitPad(x, y, rx, ry, sd, .09)}" fill="#0b1224"/><path d="${eiwitPad(x, y, rx, ry, sd, .09)}" fill="${col}" fill-opacity=".6" stroke="#e2dbff" stroke-width="2.5"/>` + T(x, ly, lab, { size: 21, col: '#e2dbff', w: 700 });
+          fx += `<g opacity="${f1(kM)}">` + mod(mx - 64, Y - 112, 42, 36, 121, T2('staart', 'tail'), '#8f7df0', Y - 158) + mod(mx + 66, Y - 108, 44, 38, 123, T2('kop', 'head'), '#4d3fa8', Y - 158) + mod(mx, Y - 132, 36, 40, 122, T2('midden', 'middle'), MED, Y - 184) + '</g>' +
+            T(mx, Y - 218, T2('brug', 'bridge'), { size: 24, op: kM, col: '#c9b8ff', w: 700 });
         }
         if (kR > .01) {
           // het RNA komt bovenaan achteraan uit Pol II (RNA-uitgang) en groeit naar achteren/omhoog, weg van het gen waar het enzym nog moet komen;

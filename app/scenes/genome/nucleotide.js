@@ -52,7 +52,7 @@ export default {
     en: 'The sugar ring is drawn as a flat pentagon (except in the pucker step); bond angles are schematic and hydrogens on carbon are omitted. Phosphate charges apply at pH ≈ 7. The P–P distances are averages between successive phosphates in the same strand, measured by us in crystal structures: ≈ 6.7 Å in B-DNA (PDB 1BNA, mostly C2′-endo-like) and ≈ 6.0 Å in A-DNA (PDB 440D, C3′-endo).' },
   /* "Wat zie je?" (zijpaneel): elk onderdeel van de figuur in één zin — d = eenvoudig, p = vaktaal (hoger) */
   parts: [
-    { c: BASE.A, t: 'base', m: ['base (adenine)'], d: { nl: 'De ‘letter’ van de bouwsteen: een platte ring van koolstof en stikstof. Hier is dat adenine (A).', en: 'The ‘letter’ of the building block: a flat ring of carbon and nitrogen. Here it is adenine (A).' },
+    { c: BASE.A, t: 'base', m: ['base (adenine)'], d: { nl: 'De ‘letter’ van de bouwsteen: platte ringen van koolstof en stikstof. Hier is dat adenine (A).', en: 'The ‘letter’ of the building block: flat rings of carbon and nitrogen. Here it is adenine (A).' },
       p: { nl: 'Stikstofbase (hier de purine adenine), aan de suiker gebonden via C1′.', en: 'Nitrogenous base (here the purine adenine), attached to the sugar via C1′.' } },
     { c: '#c9a574', t: { nl: 'suiker', en: 'sugar' }, m: ['suiker (2′-deoxyribose)', 'sugar (2′-deoxyribose)'], d: { nl: 'De bruine vijfring in het midden: een suiker met vijf koolstoffen.', en: 'The brown five-membered ring in the middle: a sugar with five carbons.' },
       p: { nl: '2′-Deoxyribose in furanosevorm (vijfring met O4′).', en: '2′-Deoxyribose in its furanose form (five-membered ring with O4′).' } },

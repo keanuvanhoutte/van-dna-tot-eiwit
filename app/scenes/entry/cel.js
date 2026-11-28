@@ -33,7 +33,7 @@ export default {
       p: { nl: 'Golgi-apparaat: glycosylering en sortering van secretoire en membraaneiwitten.', en: 'Golgi apparatus: glycosylation and sorting of secretory and membrane proteins.' } },
     { c: '#78c8a0', t: 'mitochondrion', d: { nl: 'De groene boontjes met plooien binnenin: de energiecentrales van de cel.', en: 'The green beans with folds inside: the power plants of the cell.' },
       p: { nl: 'Mitochondriën met cristae; plaats van oxidatieve fosforylering.', en: 'Mitochondria with cristae; site of oxidative phosphorylation.' } },
-    { c: '#ff6b6b', t: { nl: 'lysosoom', en: 'lysosome' }, d: { nl: 'De rode blaasjes: het afvalverwerkingsblaasje van de cel, zuur en vol knip-enzymen.', en: 'The red vesicles: the cell’s waste-processing vesicle, acidic and full of cutting enzymes.' },
+    { c: '#ff6b6b', t: { nl: 'lysosoom', en: 'lysosome' }, d: { nl: 'De rode blaasjes: de afvalverwerking van de cel, zuur en vol knip-enzymen.', en: 'The red vesicles: the cell’s waste processing, acidic and full of cutting enzymes.' },
       p: { nl: 'Lysosomen: zure organellen met hydrolasen voor afbraak.', en: 'Lysosomes: acidic organelles containing hydrolases for degradation.' } },
     { c: C.rrna, t: { nl: 'ribosomen', en: 'ribosomes' }, d: { nl: 'De kleine bolletjes op een oranje draad (mRNA): ze lezen die boodschap en maken eiwit.', en: 'The small blobs on an orange thread (mRNA): they read that message and make protein.' },
       p: { nl: 'Vrije polysomen: meerdere 80S-ribosomen op één mRNA.', en: 'Free polysomes: several 80S ribosomes on one mRNA.' } },

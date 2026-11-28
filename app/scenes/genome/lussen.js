@@ -48,7 +48,7 @@ const coiled = (x0, y0, x1, y1) => {
     a += `${i ? 'L' : 'M'}${f1(x + nx * s)},${f1(y + ny * s)}`; b += `${i ? 'L' : 'M'}${f1(x - nx * s)},${f1(y - ny * s)}`; }
   return `<path d="${a}" stroke="${RING}" stroke-width="4.5" fill="none"/><path d="${b}" stroke="#d99a1e" stroke-width="4.5" fill="none"/>`;
 };
-const ring = (x, y, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}">` +
+const ring = (x, y, op = 1) => op <= .01 ? '' : `<g opacity="${f1(op)}" transform="translate(${f1(x)} ${f1(y)}) scale(1.5) translate(${f1(-x)} ${f1(-y)})">` +
   `<path d="M${f1(x - 34)},${f1(y + 30)} Q${f1(x)},${f1(y + 58)} ${f1(x + 34)},${f1(y + 30)}" stroke="#e07b5a" stroke-width="7" fill="none" stroke-linecap="round"/>` +
   coiled(x - 32, y + 18, x - 6, y - 56) + coiled(x + 32, y + 18, x + 6, y - 56) +
   `<ellipse cx="${f1(x)}" cy="${f1(y - 60)}" rx="15" ry="10" fill="${RING}" stroke="#0a1224" stroke-width="2"/>` +
@@ -78,7 +78,7 @@ function double(op) {
   d += ` L1660,${Y}`;
   o += `<path d="${d}" stroke="${C.dna}" stroke-width="10" fill="none" stroke-linejoin="round"/>`;
   XS.forEach((x, k) => {
-    o += stop(x - 70, Y, 1) + stop(x + 70, Y, -1) + ring(x, Y - 4);
+    o += stop(x - 95, Y, 1) + stop(x + 95, Y, -1) + ring(x, Y - 4);
     o += T(x, Y - 230, k ? T2('buurt 2', 'neighbourhood 2') : T2('buurt 1', 'neighbourhood 1'), { size: 28, col: k ? NB2 : NB1, w: 700 });
   });
   // binnen een buurt: vaak contact · tussen buurten: zelden
@@ -180,13 +180,13 @@ export default {
         if (step === 0) fx += T(X0, Y - 120, T2('?', '?'), { size: 60, col: C.trna, w: 800, op: ease(sub(p, .3, .6)) });
         if (step === 1 || step === 2) {
           const o = step === 1 ? ease(sub(p, .3, .5)) : 1;
-          fx += T(X0, Y - 2 * g * .5 - 30, T2('lus', 'loop'), { size: 30, col: C.dna2, w: 700, op: o }) + T(X0, Y + 88, T2('ring', 'ring'), { size: 26, col: RING, w: 700, op: o });
+          fx += T(X0, Y - 2 * g * .5 - 30, T2('lus', 'loop'), { size: 30, col: C.dna2, w: 700, op: o }) + T(X0, Y + 112, T2('ring', 'ring'), { size: 26, col: RING, w: 700, op: o });
         }
         if (step >= 1 && step <= 4) {
           const a = pos(-SITE, g), b = pos(SITE, g), o = step === 1 ? ease(sub(p, .1, .3)) : 1;
           fx += T(a[0] - 40, Y + 70, T2('stop →', 'stop →'), { size: 24, col: STOP, op: o * (step >= 3 ? 0 : 1) }) + T(b[0] + 40, Y + 70, T2('← stop', '← stop'), { size: 24, col: STOP, op: o * (step >= 3 ? 0 : 1) });
         }
-        if (step === 3 || step === 4) fx += T(X0, Y + 118, T2('stop-eiwit bereikt: de lus groeit niet verder', 'stop protein reached: the loop stops growing'), { size: 26, col: STOP, w: 700, op: step === 3 ? ease(sub(p, .7, .9)) : 1 });
+        if (step === 3 || step === 4) fx += T(X0, Y + 146, T2('stop-eiwit bereikt: de lus groeit niet verder', 'stop protein reached: the loop stops growing'), { size: 26, col: STOP, w: 700, op: step === 3 ? ease(sub(p, .7, .9)) : 1 });
         if (step === 6) {
           const o = ease(sub(p, .1, .35));
           fx += `<g opacity="${f1(o)}"><rect x="470" y="120" width="660" height="150" rx="18" fill="rgba(13,20,38,.92)" stroke="${C.trna}" stroke-width="2"/></g>` +

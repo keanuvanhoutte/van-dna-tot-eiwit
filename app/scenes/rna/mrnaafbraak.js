@@ -179,7 +179,12 @@ export default {
           }
         } else {
           // P-bodies: een paar niet-vertaalde mRNA's in een druppel
-          fa += `<g><ellipse cx="800" cy="450" rx="${f1(250 + 8 * Math.sin(t / 900))}" ry="170" fill="rgba(224,103,154,.12)" stroke="#e0679a" stroke-width="3" stroke-dasharray="10 7"/>`;
+          // druppel zonder membraan (condensaat): zachte rand, dicht opeengepakt met eiwitten en RNA (Luo et al. 2018)
+          const rxP = 250 + 8 * Math.sin(t / 900);
+          fa += `<g><defs><radialGradient id="pbG"><stop offset="0" stop-color="#e0679a" stop-opacity=".30"/><stop offset=".75" stop-color="#e0679a" stop-opacity=".16"/><stop offset="1" stop-color="#e0679a" stop-opacity="0"/></radialGradient></defs>` +
+            `<ellipse cx="800" cy="450" rx="${f1(rxP + 40)}" ry="210" fill="url(#pbG)"/>`;
+          for (let i = 0; i < 46; i++) { const a = i * 2.39996, r = Math.sqrt((i + .5) / 46), x = 800 + Math.cos(a) * r * (rxP - 18), y = 450 + Math.sin(a) * r * 150;
+            fa += `<path d="${eiwitPad(x, y, 9 + (i % 3) * 2, 7 + (i % 2) * 2, 70 + i, .12)}" fill="${['#b0577f', '#8a5a3a', '#6b4a33', '#9a6bb0'][i % 4]}" opacity=".35"/>`; }
           const cur = (cx, cy, r0) => `<path d="M${cx - 110},${cy} C${cx - 60},${cy - 40 * r0} ${cx},${cy + 40 * r0} ${cx + 100},${cy - 10}" stroke="${C.rna}" stroke-width="8" fill="none" stroke-linecap="round"/>`;
           fa += cur(760, 390, 1) + cur(830, 480, -1) + cur(740, 540, .6);
           const pk = i => ease(sub(p, .04 + i * .07, .14 + i * .07));          // factoren komen er één voor één bij

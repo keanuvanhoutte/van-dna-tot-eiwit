@@ -71,7 +71,7 @@ export default {
       p: { nl: 'Tripartiete RND-effluxpomp (AcrAB–TolC): AcrB neemt substraat op uit het periplasma en de buitenste laag van het binnenmembraan.', en: 'Tripartite RND efflux pump (AcrAB–TolC): AcrB takes up substrate from the periplasm and the outer leaflet of the inner membrane.' } },
     { c: K.plas, t: { nl: 'resistente bacterie', en: 'resistant bacterium' }, d: { nl: 'De bovenste bacterie heeft het plasmide met het resistentiegen al.', en: 'The top bacterium already has the plasmid with the resistance gene.' },
       p: { nl: 'Donor met een conjugatief R-plasmide.', en: 'Donor carrying a conjugative R plasmid.' } },
-    { c: C.text, t: { nl: 'ontvanger', en: 'recipient' }, d: { nl: 'De onderste bacterie krijgt een kopie van het plasmide via het buisje en wordt zo ook resistent.', en: 'The bottom bacterium receives a copy of the plasmid through the tube and so becomes resistant too.' },
+    { c: C.text, t: { nl: 'ontvanger', en: 'recipient' }, d: { nl: 'De onderste bacterie krijgt van de bovenste een kopie van het plasmide en wordt zo ook resistent.', en: 'The bottom bacterium receives a copy of the plasmid from the top one and so becomes resistant too.' },
       p: { nl: 'Recipiënte cel, na overdracht een resistente transconjugant.', en: 'Recipient cell, a resistant transconjugant after transfer.' } },
     { c: K.res, t: 'bla', m: ['bla → ook resistent', 'bla → resistant too'], d: { nl: 'Het resistentiegen op het plasmide: het bevat de code voor β-lactamase.', en: 'The resistance gene on the plasmid: it carries the code for β-lactamase.' },
       p: { nl: 'bla-gen voor een β-lactamase, vaak plasmide- of transposongebonden.', en: 'bla gene for a β-lactamase, often plasmid- or transposon-borne.' } },

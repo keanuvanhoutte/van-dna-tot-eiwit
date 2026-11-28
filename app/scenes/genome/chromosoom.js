@@ -153,7 +153,7 @@ export default {
       `<path d="${eiwitPad(1160, 532, 232, 8, 113, .04)}" fill="rgba(155,123,255,.55)" stroke="${C.prot}" stroke-width="2.5"/>` +
       txt(1404, 561, T2('binnen', 'inner'), '#c9b8ff', 15, 'start') + txt(1404, 537, T2('buiten', 'outer'), '#c9b8ff', 15, 'start');
     for (let i = 0; i < 7; i++) {
-      const xb = 960 + i * 70, xt = 1000 + i * 55, yb = 502, yt = 432, L0 = Math.hypot(xb - xt, yb - yt), nx = (yb - yt) / L0, ny = -(xb - xt) / L0;
+      const xb = 960 + i * 70, xt = 1000 + i * 55, yb = 502, yt = 444, L0 = Math.hypot(xb - xt, yb - yt), nx = (yb - yt) / L0, ny = -(xb - xt) / L0;
       cen += `<path d="M${f1(xt + nx * 6)},${yt} L${f1(xb + nx * 6)},${f1(yb + ny * 6)} M${f1(xt - nx * 6)},${yt} L${f1(xb - nx * 6)},${f1(yb - ny * 6)}" stroke="#7fdc6a" stroke-width="3.5"/>` +
         `<line x1="${xt}" y1="${yt}" x2="${xb}" y2="${yb}" stroke="#7fdc6a" stroke-width="1.5" opacity=".5"/>` +
         `<path d="M${f1(xb + nx * 6)},${f1(yb + ny * 6)} q${f1(nx * 8)},4 ${f1(nx * 10)},-3 M${f1(xb - nx * 6)},${f1(yb - ny * 6)} q${f1(-nx * 8)},4 ${f1(-nx * 10)},-3" stroke="#7fdc6a" stroke-width="3" fill="none"/>` +
