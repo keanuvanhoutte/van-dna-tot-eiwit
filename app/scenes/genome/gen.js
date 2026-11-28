@@ -229,7 +229,7 @@ export default {
         const detOp = f1(step === 0 ? 0 : step === 7 ? 1 - ease(sub(p, 0, .3)) : 1);
         svg.querySelectorAll('.gn-det').forEach(el => el.setAttribute('opacity', detOp));
         $('gn-dna').setAttribute('opacity', f1(step === 6 ? 1 - .8 * ease(sub(p, 0, .05)) : step === 7 ? .2 + .8 * ease(sub(p, 0, .3)) : 1));
-        $('gn-pre').setAttribute('opacity', step === 6 ? 1 : step === 0 || step === 7 ? .9 : step === 2 ? 0 : .15);   // stap 3 (ingezoomd op de promoter): vaag pre-mRNA-label liep rechts uit beeld
+        $('gn-pre').setAttribute('opacity', step === 6 ? 1 : step === 0 || step === 7 ? .9 : step === 1 || step === 2 ? 0 : .15);   // stap 3 (ingezoomd op de promoter): vaag pre-mRNA-label liep rechts uit beeld
         // in stap 3 (promoter) schuiven de knoppen 'Enhancer' en 'Promoter' onder de uitleg van de TATA-box; DNA-label enkel waar het in beeld valt
         $('gn-enhA').setAttribute('cy', step === 2 ? Y + 150 : Y - 52); $('gn-enhA').setAttribute('cx', step === 2 ? 180 : (ENH[0] + ENH[1]) / 2);
         $('gn-promA').setAttribute('cy', step === 2 ? Y + 150 : Y + 84); $('gn-promA').setAttribute('cx', step === 2 ? 420 : (PROM[0] + PROM[1]) / 2);

@@ -201,8 +201,8 @@ export default {
         if (i === 4) {
           tr = trna(0, 0, tipSyn, { a: 'I', dx: 30, dy: -26 }, 1);     // IleRS + Ile-tRNA blijven in beeld als voorbeeld van klasse I
           const f = 1;
-          ov += `<g opacity="${f1(f)}">` + textBox(1185, 120, 395, [T2('grijpt het tRNA langs één kant', 'grips the tRNA from one side'), T2('bv. dit enzym (voor Ile)', 'e.g. this enzyme (for Ile)')], { title: T2('Familie 1 (klasse I)', 'Family 1 (class I)'), col: '#9b7bff', fs: 22 }) + '</g>';
-          ov += `<g opacity="${f1(sub(p, .15, .3))}">` + textBox(1185, 330, 395, [T2('andere bouw', 'a different build'), T2('grijpt langs de andere kant', 'grips from the other side'), T2('bv. voor Ser, Ala, Thr', 'e.g. for Ser, Ala, Thr')], { title: T2('Familie 2 (klasse II)', 'Family 2 (class II)'), col: '#5fd3e6', fs: 22 }) + '</g>';
+          ov += `<g opacity="${f1(f)}">` + textBox(1135, 120, 455, [T2('grijpt het tRNA langs één kant', 'grips the tRNA from one side'), T2('bv. dit enzym (voor Ile)', 'e.g. this enzyme (for Ile)')], { title: T2('Familie 1 (klasse I)', 'Family 1 (class I)'), col: '#9b7bff', fs: 22 }) + '</g>';
+          ov += `<g opacity="${f1(sub(p, .15, .3))}">` + textBox(1135, 330, 455, [T2('andere bouw', 'a different build'), T2('grijpt langs de andere kant', 'grips from the other side'), T2('bv. voor Ser, Ala, Thr', 'e.g. for Ser, Ala, Thr')], { title: T2('Familie 2 (klasse II)', 'Family 2 (class II)'), col: '#5fd3e6', fs: 22 }) + '</g>';
         }
         if (i === 5) {
           // Leu en Phe botsen af; Val past

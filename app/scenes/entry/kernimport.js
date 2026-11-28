@@ -132,8 +132,9 @@ export default {
     </svg>`;
   },
 
-  init(svg) {
+  init(svg, api) {
     const $ = id => svg.getElementById(id);
+    const subRan = (main, s, x, y) => (api?.easy?.(main) ?? main).includes(s) ? '' : txt(x, y, s, C.muted, 17);   // subregel weg als het (vaktaal)label ze al bevat
     const impGlyph = (x, y, sc, op = 1) => op <= .01 ? '' : `<g transform="translate(${f1(x)} ${f1(y)}) scale(${f1(sc)})" opacity="${f1(op)}">
       <path d="M-40,-30 a56,56 0 1,0 0,60 a40,40 0 1,1 0,-60" fill="${C.prot2}"/>${txt(-70, 6, 'β', '#fff', 26)}
       <rect x="-44" y="-26" width="42" height="52" rx="14" fill="${C.prot3}"/>${txt(-23, 8, 'α', '#fff', 22)}</g>`;
@@ -213,15 +214,16 @@ export default {
           for (let i = 0; i < 14; i++) {
             const x = 180 + ((i * 137) % 1280), y = 620 + ((i * 83) % 230);
             if (Math.abs(x - 1000) < 210 && Math.abs(y - 792) < 34) continue;   // vrije plek voor het label
+            if (Math.abs(x - 690) < 60 && Math.abs(y - 760) < 70) continue;     // niet over de vrijgekomen vracht
             ran += `<circle cx="${x}" cy="${y}" r="13" fill="#5fd3e6" opacity=".9"/>${txt(x, y + 5, 'Ran', '#062', 11)}`;
           }
           /* in de kern: Ran 'aan' (helder cyaan, Ran·GTP); buiten: Ran 'uit' (dof grijs, Ran·GDP) */
-          ran += `${txt(1000, 798, T2('Ran aan (in de kern)', 'Ran on (in the nucleus)'), '#5fd3e6', 24)}${txt(1000, 822, 'Ran·GTP', C.muted, 17)}`;
+          ran += `${txt(1000, 798, T2('Ran aan (in de kern)', 'Ran on (in the nucleus)'), '#5fd3e6', 24)}${subRan(T2('Ran aan (in de kern)', 'Ran on (in the nucleus)'), 'Ran·GTP', 1000, 822)}`;
           for (let i = 0; i < 4; i++) {
             const x = 380 + i * 300, y = 430;
             ran += `<circle cx="${x}" cy="${y}" r="13" fill="#4a5470" stroke="#8a93aa" stroke-width="2"/>${txt(x, y + 5, 'Ran', '#c3cad8', 11)}`;
           }
-          ran += `${txt(1130, 372, T2('Ran uit (buiten de kern)', 'Ran off (outside the nucleus)'), '#a7b0c4', 24)}${txt(1130, 396, 'Ran·GDP', C.muted, 17)}</g>`;
+          ran += `${txt(1130, 372, T2('Ran uit (buiten de kern)', 'Ran off (outside the nucleus)'), '#a7b0c4', 24)}${subRan(T2('Ran uit (buiten de kern)', 'Ran off (outside the nucleus)'), 'Ran·GDP', 1130, 396)}</g>`;
         }
         $('ki-ran').innerHTML = ran;
 

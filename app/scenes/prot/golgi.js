@@ -106,7 +106,7 @@ export default {
   ],
   svg() {
     // kern + ER
-    const nuc = `<circle cx="-60" cy="450" r="222" fill="url(#gNuc)" opacity=".9"/>` + kernEnvelop(ptsCirkel(-60, 450, 226, 120), { poriën: [.9, .96, .03, .1], w: 9, gap: 9, poreW: 18 }) + T(42, 460, T2('kern', 'nucleus'), { size: 20, col: C.dna2 });
+    const nuc = `<circle cx="-60" cy="450" r="222" fill="url(#gNuc)" opacity=".9"/>` + kernEnvelop(ptsCirkel(-60, 450, 226, 120), { poriën: [.9, .96, .03, .1], w: 9, gap: 9, poreW: 18 }) + `<g id="go-nuclab">${T(42, 460, T2('kern', 'nucleus'), { size: 20, col: C.dna2 })}</g>`;
     let er = '';
     [0, 1, 2].forEach(i => {                       // ruw ER: platte zakken (één membraan rond het lumen) met ribosomen aan de cytosolkant
       const r = 265 + i * 42, P = Array.from({ length: 41 }, (_, k) => { const a = -1.1 + 2.2 * k / 40; return [-60 + r * Math.cos(a), 450 + r * Math.sin(a)]; });
@@ -143,6 +143,7 @@ export default {
     return {
       update(t, s) {
         const { step, p } = s;
+        $('go-nuclab').style.visibility = step === 1 ? 'hidden' : '';   // stap 2 (ingezoomd): enkel een fragment aan de linkerrand
         /* ---------- Golgi-stapel met cisternale rijping ---------- */
         const shift = step === 3 ? ease(sub(p, .15, .85)) : 0;
         let g = '';

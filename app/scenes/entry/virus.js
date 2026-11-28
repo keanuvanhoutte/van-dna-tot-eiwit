@@ -115,7 +115,7 @@ export default {
       <g id="vi-nuc-body"></g>
     </g>
     <g id="vi-notes"></g>
-    ${btn('sleutel', 610, 380, T2('sleutel en slot in 3D →', 'key and lock in 3D →'), '#ff9d5c', 100)}
+    <g id="vi-sbtn">${btn('sleutel', 610, 380, T2('sleutel en slot in 3D →', 'key and lock in 3D →'), '#ff9d5c', 100)}</g>
     </svg>`;
   },
 
@@ -126,7 +126,8 @@ export default {
         const { step, p } = s;
         const tt = t / 1000;
         // stap 5 (uitpakken): de zone-labels zouden half links buiten beeld vallen
-        for (const id of ['vi-ext', 'vi-cyt']) $(id).setAttribute('opacity', f1(.7 * (step === 4 ? 1 - sub(p, 0, .15) : step === 5 ? sub(p, 0, .15) : 1)));
+        for (const id of ['vi-ext', 'vi-cyt']) $(id).setAttribute('opacity', f1(.7 * (step === 4 ? 1 - sub(p, 0, .15) : step === 5 ? (id === 'vi-ext' ? 0 : sub(p, 0, .15)) : step === 6 && id === 'vi-ext' ? sub(p, 0, .15) : 1)));   // stap 6: 'extracellulair' zou half boven de rand vallen
+        $('vi-sbtn').style.visibility = step === 3 ? 'hidden' : '';   // stap 4 (ingezoomd rechts): de knop viel grotendeels links buiten beeld
 
         /* membraan: knop links (stap 2: de cel slokt het virus op) of uitstulping rechts (stap 3: de envelop versmelt) */
         const BR = 104, lk = step === 2 ? ease(sub(p, .05, .5)) : 0;

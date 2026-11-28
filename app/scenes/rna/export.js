@@ -136,7 +136,7 @@ export default {
     return svgOpen() + `
     <rect x="-600" y="${Y_IN}" width="2800" height="1400" fill="url(#gNuc)" opacity=".55"/>
     ${note(60, 110, T2('cytoplasma', 'cytoplasm'), C.muted, 20, 'start')}
-    ${note(60, 560, T2('kern (nucleoplasma)', 'nucleus (nucleoplasm)'), C.muted, 20, 'start')}
+    <g id="ex-nuclab">${note(60, 560, T2('kern (nucleoplasma)', 'nucleus (nucleoplasm)'), C.muted, 20, 'start')}</g>
     <g data-node="kernimport" data-color="#9db4d8" data-label="${T2('Kernporie (NPC)', 'Nuclear pore complex')}">
       ${env}${npcWand}
       ${fil}${bask}
@@ -175,7 +175,7 @@ export default {
 
     return {
       update(t, st) {
-        const { step, p } = st;
+        const { step, p } = st; $('ex-nuclab').style.visibility = step === 1 ? 'hidden' : '';   // stap 2 (ingezoomd): van «kern (nucleoplasma)» enkel een fragment aan de linkerrand
         const e = ease(p);
         const head = lerp(H[step], H[step + 1], step >= 3 && step <= 6 ? e : 0);
         const sOf = d => head - d;

@@ -170,7 +170,7 @@ html, body { height: 100%; overflow: hidden; }
 /* volgend hoofdstuk (of terug naar het verhaal na een zijsprong) */
 .nextch { display: none; flex: 0 1 auto; min-width: 0; }
 .nextch.show { display: block; }
-.nextch button { all: unset; cursor: pointer; box-sizing: border-box; display: block; background: var(--accent); color: #0a1224; font-weight: 500; font-size: 13px; padding: 8px 15px; border-radius: 999px; white-space: nowrap; max-width: 300px; overflow: hidden; text-overflow: ellipsis; }
+.nextch button { all: unset; cursor: pointer; box-sizing: border-box; display: block; background: var(--accent); color: #0a1224; font-weight: 500; font-size: 13px; padding: 8px 15px; border-radius: 999px; white-space: nowrap; max-width: 440px; overflow: hidden; text-overflow: ellipsis; }
 .nextch button b { font-weight: 700; }
 .nextch button:hover { filter: brightness(1.12); }
 .nextch button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }

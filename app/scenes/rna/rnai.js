@@ -120,7 +120,7 @@ export default {
       ${kernEnvelop(ptsLijn(MEM, -600, MEM, 1500), { closed: false, poriën: [(PORE_Y + 600) / 2100], w: 12, gap: 16, poreW: 64, s: 1.3 })}
       <circle data-anchor="export" cx="${MEM}" cy="${PORE_Y + 130}" r="1" fill="none"/>
     </g>
-    ${note(MEM - 40, 220, T2('kern', 'nucleus'), C.muted, 20, 'end')}${note(MEM + 40, 220, T2('cytoplasma', 'cytoplasm'), C.muted, 20, 'start')}
+    <g id="ri-zone">${note(MEM - 40, 220, T2('kern', 'nucleus'), C.muted, 20, 'end')}${note(MEM + 40, 220, T2('cytoplasma', 'cytoplasm'), C.muted, 20, 'start')}</g>
     <g data-node="dnahelix" data-color="${C.dna}" data-nolabel><g id="ri-dna"></g></g><g data-node="gen" data-color="${C.dna}" data-nolabel><g id="ri-gen"></g></g><g data-node="rnapol" data-color="${C.prot}" data-nolabel><g id="ri-pol"></g></g><g data-node="rnastructuur" data-color="${C.rna}" data-nolabel><g id="ri-hp"></g></g><g id="ri-enz"></g><g id="ri-ago"></g><g data-node="translatie" data-color="${C.rna}" data-nolabel><g id="ri-tgt"></g></g><g data-node="ribosoom" data-color="${C.rrna}" data-nolabel><g id="ri-rib"></g></g><g data-node="mrnaafbraak" data-color="#8a5a3a" data-nolabel><g id="ri-dec"></g></g>
     ${hot('rnapol', T2('RNA-polymerase II', 'RNA polymerase II'), C.prot, 'ri-hP')}
     ${hot('rnastructuur', T2('dsRNA-stam in 3D', 'dsRNA stem in 3D'), C.rna, 'ri-hA', '../atlas/index.html?id=dsrna')}
@@ -155,6 +155,7 @@ export default {
     return {
       update(t, s) {
         const { step, p } = s;
+        $('ri-zone').style.visibility = step === 3 ? 'hidden' : '';   // stap 4 (ingezoomd): enkel fragmenten linksboven
         // ---------- stap 0–1: transcriptie + Microprocessor ----------
         let pol = '', dna = '', gen = '';
         const base0 = [200, 410];   // gen + Pol II ruim in de kern, weg van de envelop

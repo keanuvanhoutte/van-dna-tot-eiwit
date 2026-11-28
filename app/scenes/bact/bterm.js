@@ -133,7 +133,7 @@ export default {
         $('bt-obj').innerHTML = o;
         // labels
         let l = '';
-        if (step === 2) l += `<g opacity="${f1(sub(p, .6, .8))}">` + txt(1230, 330, T2('RNA en enzym los', 'RNA and enzyme released'), C.text, 26, 'middle', 700) + '</g>';
+        if (step === 2) l += `<g opacity="${f1(sub(p, .6, .8))}">` + txt(1175, 330, T2('RNA en enzym los', 'RNA and enzyme released'), C.text, 26, 'middle', 700) + '</g>';
         if (step === 3) l += `<g opacity="${f1(sub(p, .3, .5))}">` + txt(330, 230, T2('geen ribosomen op dit RNA', 'no ribosomes on this RNA'), C.muted, 24, 'middle', 700) + '</g>';
         if (step === 4) l += `<g opacity="${f1(sub(p, .55, .8))}">` + txt(1250, 330, T2('kopiëren gestopt', 'copying stopped'), C.text, 26, 'middle', 700) + '</g>';
         if (step === 5) l += `<g opacity="${f1(sub(p, .35, .55))}">` + txt(330, 230, T2('ribosomen bedekken het mRNA', 'ribosomes cover the mRNA'), K.ribo, 24, 'middle', 700) + '</g>';

@@ -115,7 +115,7 @@ export default {
         const vA = vis([0, 1, 2, 3, 4, 5, 6], step, p);
         if (vA > .01) {
           o += `<g opacity="${f1(vA)}"><rect x="120" y="125" width="1360" height="640" rx="60" fill="rgba(19,33,67,.55)" stroke="#2a3a63" stroke-width="2" stroke-dasharray="10 9"/>`;   // paneel (stippelrand), geen celmembraan
-          o += T(170, 730, 'cytosol', { size: 24, anchor: 'start', col: C.muted });
+          if (step !== 3) o += T(170, 730, 'cytosol', { size: 24, anchor: 'start', col: C.muted });   // stap 4 (ingezoomd): viel half achter de stapbalk
           // druppels bij stress
           D.forEach(([x, y], i) => {
             if (drop > .01) o += `<circle cx="${x}" cy="${y}" r="${f1(Math.max(0, 70 + 55 * drop))}" fill="rgba(95,211,230,.14)" stroke="${SG}" stroke-width="2.5" stroke-dasharray="8 7" stroke-opacity=".7" opacity="${f1(drop)}"/>`;   // vage rand: geen wand

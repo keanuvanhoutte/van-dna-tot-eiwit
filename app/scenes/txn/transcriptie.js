@@ -195,7 +195,7 @@ export default {
         const s5 = step >= 2 ? (step === 2 ? sub(p, .3, .6) : step === 8 ? 1 - .75 * sub(p, 0, .6) : 1) : 0, s2 = step >= 7 ? (step === 7 ? sub(p, .4, .8) : 1) : 0;
         $('tx-ctdp').innerHTML = [0, 2, 4].map(i => pill(CTDB[i][0] + 30, CTDB[i][1], 46, 19, 'S5P', '#ffc247', s5, 14)).join('') + [1, 3, 5].map(i => pill(CTDB[i][0] - 30, CTDB[i][1], 46, 19, 'S2P', '#5ad17a', s2, 14)).join('');
         $('tx-tata').setAttribute('opacity', step <= 3 ? 1 : 0);
-        $('tx-ctdp').setAttribute('opacity', 1);
+        $('tx-ctdp').setAttribute('opacity', step === 5 ? 0 : 1);   // stap 6 (sterk ingezoomd): de pil viel half achter de stapbalk
         $('tx-ctdlab').setAttribute('opacity', step === 2 || step === 7 ? 1 : 0);
         $('tx-ctdlab').setAttribute('transform', step === 7 ? 'translate(8 -34)' : '');   // stap 8: rechts naast de S5P-pilletjes, vrij van 'positieve supercoils (+)'
         $('tx-strandlab').setAttribute('opacity', step === 0 || step === 8 ? 1 : step === 4 ? f1(sub(p, .85, .95)) : 0);   // pas als Pol II voorbij is

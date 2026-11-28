@@ -108,7 +108,7 @@ export default {
       ${frame3d('rw-box', 140, 130, 1060, 610, '', '')}
       <g opacity=".5"><path d="${smooth(APT.slice(0, 16).map(([x, y]) => [x + 370, y - 100]))}" stroke="${RNA}" stroke-width="12" fill="none" stroke-linecap="round"/><circle cx="670" cy="345" r="16" fill="${ADE}"/></g>
       ${T(670, 640, T2('3D-structuur laden…', '3D structure loading…'), { size: 24, col: C.muted, w: 500 })}
-      ${T(1230, 330, T2('Het echte vanggedeelte', 'The real catching part'), { size: 28, anchor: 'start', w: 700 })}
+      <g id="rw-t3">${T(1230, 330, T2('Het echte vanggedeelte', 'The real catching part'), { size: 28, anchor: 'start', w: 700 })}</g>
       ${T(1230, 370, T2('bacterie · PDB 1Y26', 'bacterium · PDB 1Y26'), { size: 24, anchor: 'start', col: C.muted, w: 500 })}
       <g id="rw-leg0">${T(1230, 430, T2('oranje: RNA', 'orange: RNA'), { size: 24, anchor: 'start', col: RNA })}
       ${T(1230, 466, T2('groen: adenine', 'green: adenine'), { size: 24, anchor: 'start', col: ADE })}</g>
@@ -132,6 +132,8 @@ export default {
         const op3 = v3.update(s);
         $('rw-3d').setAttribute('opacity', f1(op3));
         $('rw-2d').setAttribute('opacity', f1(1 - op3));
+        const t3 = $('rw-t3')?.firstElementChild, w3 = op3 > .01 && t3 ? t3.getComputedTextLength() : 0;   // lange titel (vaktaal): kleiner tot ze binnen de rechterrand past
+        if (w3 > 362) t3.setAttribute('font-size', f1(parseFloat(t3.getAttribute('font-size')) * 360 / w3));
         // legende volgt de kleuren van de stap (stap 4: armen, stap 5: adenine + U, anders RNA + adenine)
         $('rw-leg0').setAttribute('opacity', step === 3 || step === 4 ? 0 : 1); $('rw-leg3').setAttribute('opacity', step === 3 ? 1 : 0); $('rw-leg4').setAttribute('opacity', step === 4 ? 1 : 0);
         if (op3 > .995) { $('rw-v').innerHTML = ''; return; }

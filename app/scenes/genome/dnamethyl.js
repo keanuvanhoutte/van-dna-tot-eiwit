@@ -216,7 +216,7 @@ export default {
         let e = '';
         if (step === 2) {
           const k = sub(p, .1, .9), x = lerp(bx(0), bx(N - 1), k);
-          e += eiwit(x, 262, 78, 22, C.prot2, { seed: 31, label: 'DNMT3A/B', fs: 17, op: 1 - sub(p, .9, 1) }) + eiwit(x, 488, 78, 22, C.prot2, { seed: 32, label: 'DNMT3A/B', fs: 17, op: 1 - sub(p, .9, 1) });   // eiwitvorm i.p.v. tekstpil
+          e += eiwit(x, 262, 78, 22, C.prot2, { seed: 31, label: 'DNMT3A/B', fs: 17, op: 1 - sub(p, .9, 1) }) + eiwit(x, 530, 78, 22, C.prot2, { seed: 32, label: 'DNMT3A/B', fs: 17, op: 1 - sub(p, .9, 1) });   // eiwitvorm i.p.v. tekstpil
           e += txt(560, 560, 'SAM → SAH', C.muted, 18);
         }
         if (step === 4) e += eiwit(Math.min(dx + 60, bx(N - 1) - 60), 500, 88, 22, C.prot2, { seed: 33, label: 'DNMT1 + UHRF1', fs: 16 });   // blijft binnen beeld (stopt bij de laatste CpG)

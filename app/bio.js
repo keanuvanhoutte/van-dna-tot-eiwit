@@ -297,7 +297,7 @@ export function trna2d(x, y, { s = 1, rot = 0, op = 1, col = C.trna, anticodon =
     const yy = b0 - 7, xl = -bw + 8;
     g += `<text x="${f1(xl)}" y="${f1(yy)}" font-size="16" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700"${up(xl, yy)}>${std ? '5′' : '3′'}</text>` +
       `<text x="${f1(-xl)}" y="${f1(yy)}" font-size="16" text-anchor="middle" fill="#fff" font-family="Inter" font-weight="700"${up(-xl, yy)}>${std ? '3′' : '5′'}</text>`;
-    if (acLabel) g += `<text x="${f1(-xl + 12)}" y="${f1(yy)}" font-size="15" text-anchor="start" fill="#fff" font-family="Inter" font-weight="600"${up(-xl + 12, yy)}>${acLabel}</text>`;
+    if (acLabel) g += `<text x="${f1(-xl + 20)}" y="${f1(yy)}" font-size="15" text-anchor="start" fill="#fff" font-family="Inter" font-weight="600"${up(-xl + 20, yy)}>${acLabel}</text>`;
   }
   // aminozuur op het 3′-CCA-uiteinde (nooit aan de anticodonkant)
   if (!tip && (aa || aaCol)) {
