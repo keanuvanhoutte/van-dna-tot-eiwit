@@ -9,7 +9,8 @@
  */
 const BUITEN = { nl: 'buiten de cel', en: 'outside the cell' }, CYTO = { nl: 'in het cytosol', en: 'in the cytosol' },
   KERN = { nl: 'in de celkern', en: 'in the nucleus' }, WAND = { nl: 'aan de celwand', en: 'at the cell surface' },
-  PORIE = { nl: 'aan de kernporie', en: 'at the nuclear pore' };
+  PORIE = { nl: 'aan de kernporie', en: 'at the nuclear pore' }, ER = { nl: 'in het ER', en: 'in the ER' },
+  GOLGI = { nl: 'Golgi → celmembraan', en: 'Golgi → cell membrane' };
 const VIRUS = [
   { id: 'cel', waar: BUITEN,
     bridge: { nl: 'Een adenovirus hecht zich aan de cel en brengt zijn DNA binnen.', en: 'An adenovirus attaches to the cell and brings its DNA inside.' } },
@@ -42,6 +43,11 @@ const VIRUS = [
   { id: 'quaternair', waar: CYTO,
     bridge: { nl: 'Na de vouwing kan het eiwit nog gemodificeerd worden.', en: 'After folding, the protein can still be modified.' } },
   { id: 'ptm', waar: CYTO,
+    bridge: { nl: 'Veel eiwitten blijven in het cytosol. Eiwitten die de cel uit moeten, gaan al tijdens hun aanmaak het ER in.', en: 'Many proteins stay in the cytosol. Proteins that must leave the cell already enter the ER while they are being made.' } },
+  /* 28-11-2026: de weg naar buiten (secretie) hoort in het hoofdverhaal, niet enkel in het zijpad eiwitlot */
+  { id: 'er', waar: ER,
+    bridge: { nl: 'Vanuit het ER reizen eiwitten in blaasjes via het Golgi-apparaat naar buiten.', en: 'From the ER, proteins travel in vesicles via the Golgi apparatus to the outside.' } },
+  { id: 'golgi', waar: GOLGI,
     bridge: { nl: 'Bijna elk eiwit wordt uiteindelijk ook weer afgebroken.', en: 'Almost every protein is eventually broken down again.' } },
   { id: 'ubiquitine', waar: CYTO,
     bridge: { nl: 'Einde van het hoofdverhaal. Verken nu de zijtakken via de kaart.', en: 'End of the main story. Explore the side paths via the map.' } },
