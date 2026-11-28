@@ -56,6 +56,12 @@ const UI2 = {
   why: { nl: 'Waarom belangrijk', en: 'Why it matters' }, sources: { nl: 'Bronnen', en: 'Sources' }, stepsHere: { nl: 'Stappen in deze animatie', en: 'Steps in this animation' },
   up: { nl: 'Uitzoomen naar', en: 'Zoom out to' }, zoomIn: { nl: 'Inzoomen', en: 'Zoom in' }, next: { nl: 'Volgende stap →', en: 'Next step →' }, side: { nl: 'Zijsprongen', en: 'Side paths' },
   legend: { nl: 'Legende', en: 'Legend' }, parts: { nl: 'Wat zie je?', en: 'What you see' },
+  tabExplain: { nl: 'Uitleg', en: 'Explanation' }, tabFurther: { nl: 'Verder & bronnen', en: 'Further & sources' },
+  whatQ: { nl: 'Wat is het?', en: 'What is it?' }, whyQ: { nl: 'Waarom belangrijk?', en: 'Why it matters' },
+  whatHint: { nl: 'De volledige beschrijving', en: 'The full description' }, howHint: { nl: 'Stap voor stap, met de vaktermen', en: 'Step by step, with the technical terms' },
+  factsHint: { nl: 'Getallen en feiten op een rij', en: 'Numbers and facts at a glance' }, whyHint: { nl: 'Waarom dit ertoe doet', en: 'Why this matters' },
+  stepsHint: { nl: 'Klik om naar een stap te springen', en: 'Click to jump to a step' }, simpHint: { nl: 'Waar de tekening afwijkt van de werkelijkheid', en: 'Where the drawing differs from reality' },
+  srcHint: { nl: 'Waar de uitleg vandaan komt', en: 'Where the explanation comes from' },
   partsHint: { nl: 'Elk onderdeel van de figuur met één zin uitleg. Klik op een woord in de figuur om het hier terug te vinden.', en: 'Every part of the figure, explained in one sentence. Click a word in the figure to find it here.' },
   simplified: { nl: 'Wat is hier vereenvoudigd?', en: 'What is simplified here?' },
   struct3d: { nl: '3D-structuren (PDB)', en: '3D structures (PDB)' }, mapTitle: { nl: 'Waar ben ik?', en: 'Where am I?' },
@@ -1150,6 +1156,8 @@ function showPart(i) {
 stage.addEventListener('mouseover', e => { if (partAt(e.target) >= 0) e.target.closest('text, .lab3d > div').classList.add('partlab'); });
 stage.addEventListener('click', e => { const i = partAt(e.target); if (i >= 0) { e.stopPropagation(); showPart(i); } }, true);   // capture: vóór de klik van een link-groep
 function render() {
+  // oude voorkeur (los tabblad Wat/Zo werkt het/Kerncijfers/Waarom) → tabblad Uitleg met dat deel open
+  if (['what', 'how', 'facts', 'why'].includes(prefs.tab)) { prefs.folds = { ...prefs.folds, [prefs.tab]: true }; prefs.tab = 'kort'; savePrefs(); }
   const def = current.def, base = current.base, n = NODES[current.id];
   renderCrumbs();
   const ups = n ? [...new Set([...n.parents, ...n.prev])] : [];
@@ -1166,22 +1174,30 @@ function render() {
   const kort = n ? (kortOf(current.id) ? `<div class="kort"><b>${V('inShort')}</b>${kortOf(current.id)}</div>` : `<p>${summary(n)}</p>`) : '';
   const legendH = legend ? `<div class="card c-leg"><div class="ch"><i>🎨</i>${V('legend')}</div><div class="legend">${legend.slice(0, level === 'hobby' ? 4 : level === 'secundair' ? 6 : 99).map(([c, t]) => `<span style="--c:${c}"><i></i>${L(t)}</span>`).join('')}</div></div>` : '';
   const parts = def.parts ?? base.parts;
-  if (kort || legendH) tabs.push(['kort', V('inShort'), kort + termsCard(current.id) + (parts?.length ? '' : legendH)]);
-  if (parts?.length) tabs.push(['parts', V('parts'), partsHTML(parts)]);
-  if (x?.what && !hobby) tabs.push(['what', V('what'), `<p>${x.what}</p>`]);
-  if (x?.how?.length && !hobby) tabs.push(['how', V('how'), `<ol class="how">${x.how.map((s, i) => `<li>${keyBold(s, current.id, lang, i)}</li>`).join('')}</ol>`]);
-  if (x?.facts?.length && !hobby) tabs.push(['facts', V('facts'), `<dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`]);
-  if (x?.why && !hobby) tabs.push(['why', V('why'), `<p class="why">${whyBold(x.why, current.id, lang)}</p>`]);
-  tabs.push(['more', V('tabMore'), `
-    <details class="sec" open><summary>${V('stepsHere')}</summary><ol class="stepsList">${current.steps.map((s, i) => { const tg = stepTag(s, i); return `<li data-i="${i}">${tg ? `<span class="stag">${esc(tg)}</span>` : ''}${esc(stepTitle(s))}</li>`; }).join('')}</ol></details>
+  /* Drie tabbladen, elk over één ding:
+   *   Uitleg            = over het onderwerp: "In het kort" altijd zichtbaar, de rest openklapbaar (Wat is het? · Zo werkt het · Kerncijfers · Waarom belangrijk?)
+   *   Wat zie je?       = over deze figuur: de onderdelen (of de legende), openklapbaar de stappen en wat vereenvoudigd is
+   *   Verder & bronnen  = waar je naartoe kan (uit-/inzoomen, volgende, zijsprongen, 3D-structuren) en de bronnen
+   * Welke delen open staan, onthoudt de app (prefs.folds). */
+  const fold = (k, icon, ttl, hint, body, dflt = false) => body ? `<details class="fold" data-f="${k}" ${(prefs.folds?.[k] ?? dflt) ? 'open' : ''}><summary><i aria-hidden="true">${icon}</i><span><b>${ttl}</b><small>${hint}</small></span></summary><div class="foldbody">${body}</div></details>` : '';
+  const uitleg = kort + termsCard(current.id) + (hobby || !x ? '' :
+    fold('what', '📖', V('whatQ'), V('whatHint'), x.what ? `<p>${x.what}</p>` : '') +
+    fold('how', '⚙️', V('how'), V('howHint'), x.how?.length ? `<ol class="how">${x.how.map((s, i) => `<li>${keyBold(s, current.id, lang, i)}</li>`).join('')}</ol>` : '') +
+    fold('facts', '🔢', V('facts'), V('factsHint'), x.facts?.length ? `<dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>` : '') +
+    fold('why', '💡', V('whyQ'), V('whyHint'), x.why ? `<p class="why">${whyBold(x.why, current.id, lang)}</p>` : ''));
+  if (uitleg) tabs.push(['kort', V('tabExplain'), uitleg]);
+  const simp = L((rank >= 3 && PRO_META[current.id]?.simplified) || def.simplified || base.simplified) ?? '';
+  tabs.push(['parts', V('parts'), (parts?.length ? partsHTML(parts) : legendH) +
+    fold('steps', '🎬', V('stepsHere'), V('stepsHint'), `<ol class="stepsList">${current.steps.map((s, i) => { const tg = stepTag(s, i); return `<li data-i="${i}">${tg ? `<span class="stag">${esc(tg)}</span>` : ''}${esc(stepTitle(s))}</li>`; }).join('')}</ol>`) +
+    fold('simp', '✂️', V('simplified'), V('simpHint'), simp ? `<p>${simp}</p>` : '')]);
+  tabs.push(['more', V('tabFurther'), `
     ${level === 'hobby' ? '' : L(def.extra ?? base.extra) ?? ''}
     ${ups.length ? `<div class="card c-up"><div class="ch"><i>↑</i>${V('up')}</div>${chipsOf(ups, 'up')}</div>` : ''}
     ${n?.in.length ? `<div class="card c-in"><div class="ch"><i>🔍</i>${V('zoomIn')}</div>${chipsOf(n.in, '')}</div>` : ''}
     ${n?.next.length ? `<div class="card c-next"><div class="ch"><i>→</i>${V('next')}</div>${chipsOf(n.next, 'next')}</div>` : ''}
     ${n?.rel.length && rank >= 2 ? `<div class="card c-rel"><div class="ch"><i>↪</i>${V('side')}</div>${chipsOf(n.rel, 'rel')}</div>` : ''}
     ${n?.pdb.length && rank >= 3 ? `<div class="card c-pdb"><div class="ch"><i>◆</i>${V('struct3d')}</div>${n.pdb.map(p => `<a class="chip" href="https://www.rcsb.org/structure/${p}" target="_blank" rel="noopener">PDB ${p} ↗</a>`).join('')}</div>` : ''}
-    <div class="simp"><b>${V('simplified')}</b><br>${L((rank >= 3 && PRO_META[current.id]?.simplified) || def.simplified || base.simplified) ?? ''}</div>
-    ${d?.sources?.length ? `<details class="sec" open><summary>${V('sources')} (${d.sources.length})</summary><ol class="src">${d.sources.map(s => `<li>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${L(s.t)}</a>` : L(s.t)}</li>`).join('')}</ol></details>` : ''}`]);
+    ${d?.sources?.length ? fold('src', '📚', `${V('sources')} (${d.sources.length})`, V('srcHint'), `<ol class="src">${d.sources.map(s => `<li>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${L(s.t)}</a>` : L(s.t)}</li>`).join('')}</ol>`) : ''}`]);
   sideTabs = tabs;
   $('sideTabs').innerHTML = tabs.map(([k, lbl]) => `<button class="tab" role="tab" data-t="${k}" aria-selected="false">${lbl}</button>`).join('');
   $('sideTabs').querySelectorAll('.tab').forEach(b => b.onclick = () => { prefs.tab = b.dataset.t; savePrefs(); selectTab(b.dataset.t); });
@@ -1198,6 +1214,7 @@ function selectTab(k) {
   const body = $('sideBody'); body.innerHTML = tab[2];
   body.querySelectorAll('.chip[data-id]').forEach(c => c.onclick = () => chipGo(c.dataset.id));
   body.querySelectorAll('.stepsList li').forEach(li => { li.onclick = () => gotoStep(+li.dataset.i); });
+  body.querySelectorAll('details.fold').forEach(f => f.addEventListener('toggle', () => { prefs.folds = { ...prefs.folds, [f.dataset.f]: f.open }; savePrefs(); }));
   if (current) { const i = stepInfo(t).step; body.querySelectorAll('.stepsList li').forEach((li, j) => li.classList.toggle('cur', j === i)); }
 }
 function chipGo(id) {
