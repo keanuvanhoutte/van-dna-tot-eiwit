@@ -465,3 +465,15 @@ details.more > summary::after { content: "▾"; margin-left: auto; color: var(--
 details.more:not([open]) > summary::after { transform: rotate(-90deg); }
 details.more .morebody { padding-bottom: 12px; }
 details.more .morebody > .sec:first-child { margin-top: 0; }
+
+/* tabblad "Wat zie je?": onderdelen van de figuur met één zin uitleg; woorden in de figuur zijn aanklikbaar */
+.phint { font-size: 12.5px; color: var(--muted); margin: 0 0 8px; }
+.parts { list-style: none; margin: 0; padding: 0; }
+.parts li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 8px; border-top: 1px solid var(--line); border-radius: 8px; font-size: 13.5px; line-height: 1.45; }
+.parts li i { flex: none; width: 12px; height: 12px; margin-top: 4px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 2px rgba(255,255,255,.08); }
+.parts li b { display: block; color: var(--c); font-size: 14px; }
+.parts li span { color: var(--text); }
+.parts li.flash { animation: partflash 1.6s ease-out; }
+@keyframes partflash { 0%, 30% { background: rgba(255,255,255,.12); box-shadow: inset 3px 0 0 var(--c); } 100% { background: transparent; box-shadow: none; } }
+.layer text.partlab { cursor: pointer; text-decoration: underline dotted; }
+.layer text.partlab:hover { filter: brightness(1.35) drop-shadow(0 0 4px rgba(255,255,255,.45)); }

@@ -54,7 +54,9 @@ const UI2 = {
   what: { nl: 'Wat', en: 'What' }, how: { nl: 'Zo werkt het', en: 'How it works' }, facts: { nl: 'Kerncijfers', en: 'Key numbers' },
   why: { nl: 'Waarom belangrijk', en: 'Why it matters' }, sources: { nl: 'Bronnen', en: 'Sources' }, stepsHere: { nl: 'Stappen in deze animatie', en: 'Steps in this animation' },
   up: { nl: 'Uitzoomen naar', en: 'Zoom out to' }, zoomIn: { nl: 'Inzoomen', en: 'Zoom in' }, next: { nl: 'Volgende stap →', en: 'Next step →' }, side: { nl: 'Zijsprongen', en: 'Side paths' },
-  legend: { nl: 'Legende', en: 'Legend' }, simplified: { nl: 'Wat is hier vereenvoudigd?', en: 'What is simplified here?' },
+  legend: { nl: 'Legende', en: 'Legend' }, parts: { nl: 'Wat zie je?', en: 'What you see' },
+  partsHint: { nl: 'Elk onderdeel van de figuur met één zin uitleg. Klik op een woord in de figuur om het hier terug te vinden.', en: 'Every part of the figure, explained in one sentence. Click a word in the figure to find it here.' },
+  simplified: { nl: 'Wat is hier vereenvoudigd?', en: 'What is simplified here?' },
   struct3d: { nl: '3D-structuren (PDB)', en: '3D structures (PDB)' }, mapTitle: { nl: 'Waar ben ik?', en: 'Where am I?' },
   mapSub: { nl: 'Zie waar je zit in het verhaal en spring naar een ander onderwerp.', en: 'See where you are in the story and jump to another topic.' },
   close: { nl: 'Sluiten', en: 'Close' }, noScene: { nl: 'Voor deze knoop is nog geen animatie gebouwd.', en: 'No animation has been built for this node yet.' },
@@ -1122,6 +1124,26 @@ function detailsHTML(id, open = true) {
   if (hobby) return h;                                              // enkel de (dichtgeklapte) bronnenlijst
   return h ? `<details class="more"><summary>${V('more')}</summary><div class="morebody">${h}</div></details>` : '';
 }
+/* "Wat zie je?": elk onderdeel van de figuur (kleur + naam zoals in de figuur + één zin uitleg; verborgen label op dit niveau = niet in de lijst).
+ * Scène-veld parts: [{ c: kleur, t: naam, m: [andere schrijfwijzen in de figuur, NL en EN], d: {nl,en} eenvoudig, p: {nl,en} vaktaal (hoger) }] */
+const partsOf = () => current?.def.parts ?? current?.base.parts;
+function partsHTML(parts) {
+  return `<p class="phint">${V('partsHint')}</p><ul class="parts">${parts.map((p, i) => easyLabel(L(p.t)) === '' ? '' : `<li data-p="${i}" style="--c:${p.c}"><i></i><div><b>${esc(easyLabel(L(p.t)))}</b><span>${L((rank >= 3 && p.p) || p.d)}</span></div></li>`).join('')}</ul>`;
+}
+/* een woord in de figuur dat bij een onderdeel hoort: aanklikbaar → tabblad "Wat zie je?" op dat onderdeel */
+function partAt(target) {
+  const parts = partsOf(), tx = target?.closest?.('text'); if (!parts || !tx || !current.root.contains(tx)) return -1;
+  const s = tx.textContent.replace(/\s+/g, ' ').trim(); if (!s) return -1;
+  return parts.findIndex(p => [L(p.t), ...(p.m ?? [])].some(m => m === s || easyLabel(m) === s));
+}
+function showPart(i) {
+  setSide(true); selectTab('parts');
+  const li = $('sideBody').querySelector(`[data-p="${i}"]`); if (!li) return;
+  li.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  li.classList.remove('flash'); void li.offsetWidth; li.classList.add('flash');
+}
+stage.addEventListener('mouseover', e => { if (partAt(e.target) >= 0) e.target.closest('text').classList.add('partlab'); });
+stage.addEventListener('click', e => { const i = partAt(e.target); if (i >= 0) { e.stopPropagation(); showPart(i); } });
 function render() {
   const def = current.def, base = current.base, n = NODES[current.id];
   renderCrumbs();
@@ -1138,7 +1160,9 @@ function render() {
   const tabs = [];
   const kort = n ? (kortOf(current.id) ? `<div class="kort"><b>${V('inShort')}</b>${kortOf(current.id)}</div>` : `<p>${summary(n)}</p>`) : '';
   const legendH = legend ? `<div class="card c-leg"><div class="ch"><i>🎨</i>${V('legend')}</div><div class="legend">${legend.slice(0, level === 'hobby' ? 4 : level === 'secundair' ? 6 : 99).map(([c, t]) => `<span style="--c:${c}"><i></i>${L(t)}</span>`).join('')}</div></div>` : '';
-  if (kort || legendH) tabs.push(['kort', V('inShort'), kort + termsCard(current.id) + legendH]);
+  const parts = def.parts ?? base.parts;
+  if (kort || legendH) tabs.push(['kort', V('inShort'), kort + termsCard(current.id) + (parts?.length ? '' : legendH)]);
+  if (parts?.length) tabs.push(['parts', V('parts'), partsHTML(parts)]);
   if (x?.what && !hobby) tabs.push(['what', V('what'), `<p>${x.what}</p>`]);
   if (x?.how?.length && !hobby) tabs.push(['how', V('how'), `<ol class="how">${x.how.map(s => `<li>${s}</li>`).join('')}</ol>`]);
   if (x?.facts?.length && !hobby) tabs.push(['facts', V('facts'), `<dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`]);
