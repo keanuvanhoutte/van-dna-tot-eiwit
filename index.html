@@ -53,7 +53,7 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
   a.viewbtn { display: flex; align-items: center; gap: 12px; text-decoration: none; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--line); background: rgba(13,20,38,.9); color: var(--text); font-size: 14px; font-weight: 600; transition: .2s; }
   a.viewbtn svg { width: 18px; height: 18px; flex: none; color: #9b7bff; }
   a.viewbtn i { margin-left: auto; font-style: normal; font-weight: 500; font-size: 13px; color: var(--muted); }
-  a.viewbtn:hover { border-color: rgba(155,123,255,.6); background: rgba(155,123,255,.1); }
+  a.viewbtn:hover { border-color: #9b7bff; background: rgba(155,123,255,.2); box-shadow: 0 8px 24px rgba(155,123,255,.16); }
   a.viewbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .hsearch .sbx input { font-size: 14px; padding: 13px 16px 13px 40px; border-radius: 14px; }
   .hsearch .sbx .mg { left: 15px; }
@@ -69,9 +69,9 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
   .door { display: flex; flex-direction: column; border-radius: 24px; overflow: hidden; border: 1px solid var(--line); background: linear-gradient(rgba(20,30,56,.9), rgba(13,20,38,.9)); text-decoration: none; color: var(--text); min-height: 0; transition: .2s; }
   a.door:hover { border-color: var(--c); transform: translateY(-2px); }
   .door.human { grid-row: 1 / 3; }
-  .door.human:hover { border-color: #ff8a3d; box-shadow: 0 10px 30px rgba(255,138,61,.14); }
-  a.door.glow:hover { background: radial-gradient(320px 180px at 50% 40%, color-mix(in srgb, var(--c) 20%, transparent), transparent 70%), linear-gradient(rgba(28,32,54,.94), rgba(17,22,40,.94)); box-shadow: 0 10px 30px color-mix(in srgb, var(--c) 16%, transparent); }
-  a.door.glow:hover .arr { background: var(--c); color: #070b16; }
+  /* alles wat je kunt aanklikken op het startscherm licht bij hover op in zijn eigen kleur (--c) */
+  .door:hover, a.side:hover { border-color: var(--c); background: radial-gradient(320px 180px at 50% 40%, color-mix(in srgb, var(--c) 20%, transparent), transparent 70%), linear-gradient(rgba(28,32,54,.94), rgba(17,22,40,.94)); box-shadow: 0 10px 30px color-mix(in srgb, var(--c) 16%, transparent); }
+  a.door:hover .arr { background: var(--c); color: #070b16; }
   .door .arr { transition: .2s; }
   .door .pic { flex: 1; display: grid; place-items: center; min-height: 0; position: relative; }
   .door.human .pic { background: radial-gradient(360px 220px at 50% 55%, rgba(255,138,61,.18), transparent 70%); }
@@ -116,6 +116,8 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
   a.side .ic svg.real { width: 100%; height: 100%; padding: 8px 6px 0; box-sizing: border-box; transition: transform .4s; }
   a.side .ic svg.real text { display: none; }
   a.side:hover .ic svg.real { transform: scale(1.04); }
+  a.side:hover .ic { background: radial-gradient(180px 100px at 50% 55%, color-mix(in srgb, var(--c) 30%, transparent), transparent 70%); }
+  a.side:hover .fr { border-top-color: color-mix(in srgb, var(--c) 40%, transparent); }
   a.side .n { order: 1; font: 500 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--c); }
   a.side > b { order: 2; font-size: 20px; letter-spacing: -.02em; line-height: 1.2; margin: 4px 0 6px; }
   a.side small { order: 3; color: var(--muted); font-size: 13px; line-height: 1.45; }
@@ -187,11 +189,11 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
           <a class="story s2" href="app/index.html?scene=cel&amp;story=signaal"><b>▶</b><span><b id="st2t"></b><span id="st2p"></span></span></a>
         </div>
       </div>
-      <a class="door glow" href="app/index.html?scene=bcel&amp;story=bacterie" style="--c:#ff8f8f">
+      <a class="door" href="app/index.html?scene=bcel&amp;story=bacterie" style="--c:#ff8f8f">
         <div class="pic" id="picBac"><svg class="sm" viewBox="0 0 200 120"><rect x="22" y="30" width="156" height="60" rx="30" fill="rgba(214,90,90,.08)" stroke="#d65a5a" stroke-width="2"/><path d="M60 60c10-18 26 18 40 0s28-18 40 0" stroke="#4f8ff7" stroke-width="2" fill="none"/><circle cx="148" cy="48" r="8" fill="none" stroke="#f06bc0" stroke-width="1.6"/></svg></div>
         <div class="lbl"><div><small id="bacTag"></small><h2 id="bacT"></h2></div><span class="arr">→</span></div>
       </a>
-      <a class="door glow" href="atlas/index.html" style="--c:#7cc4ff">
+      <a class="door" href="atlas/index.html" style="--c:#7cc4ff">
         <div class="pic"><canvas id="helix" aria-hidden="true"></canvas></div>
         <div class="lbl"><div><small id="atlTag"></small><h2 id="atlT"></h2></div><span class="arr">→</span></div>
       </a>
