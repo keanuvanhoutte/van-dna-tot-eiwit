@@ -70,6 +70,9 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
   a.door:hover { border-color: var(--c); transform: translateY(-2px); }
   .door.human { grid-row: 1 / 3; }
   .door.human:hover { border-color: #ff8a3d; box-shadow: 0 10px 30px rgba(255,138,61,.14); }
+  a.door.glow:hover { background: radial-gradient(320px 180px at 50% 40%, color-mix(in srgb, var(--c) 20%, transparent), transparent 70%), linear-gradient(rgba(28,32,54,.94), rgba(17,22,40,.94)); box-shadow: 0 10px 30px color-mix(in srgb, var(--c) 16%, transparent); }
+  a.door.glow:hover .arr { background: var(--c); color: #070b16; }
+  .door .arr { transition: .2s; }
   .door .pic { flex: 1; display: grid; place-items: center; min-height: 0; position: relative; }
   .door.human .pic { background: radial-gradient(360px 220px at 50% 55%, rgba(255,138,61,.18), transparent 70%); }
   .door.human .pic svg { width: 82%; height: min(240px, 100%); }
@@ -184,11 +187,11 @@ if (/\.github\.io$/.test(location.hostname)) location.replace('https://dogma-bio
           <a class="story s2" href="app/index.html?scene=cel&amp;story=signaal"><b>▶</b><span><b id="st2t"></b><span id="st2p"></span></span></a>
         </div>
       </div>
-      <a class="door" href="app/index.html?scene=bcel&amp;story=bacterie" style="--c:#ff8f8f">
+      <a class="door glow" href="app/index.html?scene=bcel&amp;story=bacterie" style="--c:#ff8f8f">
         <div class="pic" id="picBac"><svg class="sm" viewBox="0 0 200 120"><rect x="22" y="30" width="156" height="60" rx="30" fill="rgba(214,90,90,.08)" stroke="#d65a5a" stroke-width="2"/><path d="M60 60c10-18 26 18 40 0s28-18 40 0" stroke="#4f8ff7" stroke-width="2" fill="none"/><circle cx="148" cy="48" r="8" fill="none" stroke="#f06bc0" stroke-width="1.6"/></svg></div>
         <div class="lbl"><div><small id="bacTag"></small><h2 id="bacT"></h2></div><span class="arr">→</span></div>
       </a>
-      <a class="door" href="atlas/index.html" style="--c:#7cc4ff">
+      <a class="door glow" href="atlas/index.html" style="--c:#7cc4ff">
         <div class="pic"><canvas id="helix" aria-hidden="true"></canvas></div>
         <div class="lbl"><div><small id="atlTag"></small><h2 id="atlT"></h2></div><span class="arr">→</span></div>
       </a>
