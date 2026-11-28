@@ -1134,8 +1134,11 @@ function partsHTML(parts) {
 }
 /* een woord in de figuur dat bij een onderdeel hoort: aanklikbaar → tabblad "Wat zie je?" op dat onderdeel */
 function partAt(target) {
-  const parts = partsOf(), tx = target?.closest?.('text, .lab3d > div'); if (!parts || !tx || !current.root.contains(tx) || tx.closest('[data-node]')) return -1;   // tekst in een link-groep: klik = naar die scène
+  const parts = partsOf(), tx = target?.closest?.('text, .lab3d > div'); if (!parts || !tx || !current.root.contains(tx)) return -1;
   const s = tx.textContent.replace(/\s+/g, ' ').trim(); if (!s || s.endsWith('›')) return -1;   // 3D-kaartje met › = link naar een andere scène
+  /* woord in een link-groep (data-node): de groep blijft een link via haar vormen en pil, het woord toont zijn uitleg —
+   * behalve als de groep enkel uit dat woord bestaat (een echte linkknop) */
+  const g = tx.closest('[data-node]'); if (g && g.textContent.replace(/\s+/g, ' ').trim() === s) return -1;
   return parts.findIndex(p => [L(p.t), ...(p.m ?? [])].some(m => m === s || easyLabel(m) === s));
 }
 function showPart(i) {
@@ -1145,7 +1148,7 @@ function showPart(i) {
   li.classList.remove('flash'); void li.offsetWidth; li.classList.add('flash');
 }
 stage.addEventListener('mouseover', e => { if (partAt(e.target) >= 0) e.target.closest('text, .lab3d > div').classList.add('partlab'); });
-stage.addEventListener('click', e => { const i = partAt(e.target); if (i >= 0) { e.stopPropagation(); showPart(i); } });
+stage.addEventListener('click', e => { const i = partAt(e.target); if (i >= 0) { e.stopPropagation(); showPart(i); } }, true);   // capture: vóór de klik van een link-groep
 function render() {
   const def = current.def, base = current.base, n = NODES[current.id];
   renderCrumbs();
