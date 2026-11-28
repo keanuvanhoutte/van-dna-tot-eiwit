@@ -433,18 +433,10 @@ function onStep(i) {
   $('railList').querySelectorAll('.rst').forEach((b, k) => { b.classList.toggle('cur', k === i); b.classList.toggle('done', k < i); });
   syncPlayBtn();
   // zwevend uitlegvenster: kort na het begin van de stap de rustigste hoek kiezen (en bij de grootte van de nieuwe tekst)
-  renderBridge(i);
   capPlace(); clearTimeout(onStep.h); onStep.h = setTimeout(() => capAuto(), 900);
 }
-/* Rode draad van het verhaal: bij de eerste stap van een hoofdstuk één zin (`intro` in story.js, per verhaallijn)
- * die zegt waar we in het verhaal zijn. De overgangszin naar het volgende hoofdstuk (`bridge`) komt niet in beeld:
- * die hoort bij de knop "Volgend: …" rechts in de speler. */
-function renderBridge(i) {
-  const el = $('capBridge'), ci = current ? STORY_IDS.indexOf(current.id) : -1, ch = ci >= 0 ? STORY[ci] : null;
-  const h = ch && i === 0 && ch.intro ? `<b>${L({ nl: 'In het verhaal', en: 'In the story' })}</b>${colourWords(esc(L(bridgeOf(ch.intro))))}` : '';
-  if (el.innerHTML === h) return;
-  el.innerHTML = h; el.hidden = !h; capPlace();
-}
+/* Geen extra verhaalregels in het uitlegvenster: waar we in de cel zijn staat in de verhaalbalk links,
+ * en hoe het verdergaat staat in de knop "Volgend: …" rechts in de speler. */
 function setPlaying(v) {
   playing = v; syncPlayBtn();
   if (current?.svg) current.svg[v ? 'unpauseAnimations' : 'pauseAnimations']();

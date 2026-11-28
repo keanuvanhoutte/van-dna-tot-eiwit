@@ -116,10 +116,6 @@ html, body { height: 100%; overflow: hidden; }
 .caption .cmeta { font: 500 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
 .caption .ct { font-weight: 600; font-size: 17px; color: var(--text); margin-top: 2px; }
 .caption .cx { font-size: 15px; color: #c3cde2; margin-top: 3px; line-height: 1.45; }
-/* rode draad: openingszin bij de eerste stap en de overgangszin aan het einde van een hoofdstuk */
-.caption .cbridge { margin: 8px auto 0; padding: 6px 12px; border-radius: 8px; background: rgba(255,209,102,.10); border-left: 3px solid #ffd166; color: #f3e6c4; font-size: 15px; line-height: 1.45; text-align: left; max-width: 720px; }
-.caption .cbridge b { color: #ffd166; font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; margin-right: 8px; }
-.caption.folded:not(.float) .cbridge { display: none; }
 .capbtn { all: unset; cursor: pointer; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 7px; font-size: 13px; color: var(--muted); }
 .capbtn:hover { background: rgba(124,196,255,.15); color: var(--text); }
 .capbtn:focus-visible { outline: 2px solid var(--accent); }
