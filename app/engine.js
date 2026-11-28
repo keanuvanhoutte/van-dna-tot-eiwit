@@ -25,7 +25,7 @@ import { LABELS, LEGEND } from '../shared/simple/labels.js';
 import { SEC_LABELS } from '../shared/simple/labels-sec.js';
 import { PRO_LABELS, PRO_STEPS, PRO_DETAILS, PRO_GLOSS, PRO_BRIDGE, PRO_META, PRO_PATTERNS } from '../shared/pro/index.js';   // hoger onderwijs: vaktaal-laag
 import { STEP_LEVEL } from '../shared/levels.js';
-import { keyBold } from '../shared/howkeys.js';   // 'Zo werkt het': kernwoord per lijstpunt in het vet
+import { keyBold, whyBold } from '../shared/howkeys.js';   // 'Zo werkt het' en 'Waarom belangrijk': kernwoorden in het vet
 
 /* ---------- verhaallijnen ---------- */
 const LINE_KEY = 'dna-app-story';
@@ -1121,7 +1121,7 @@ function detailsHTML(id, open = true) {
   if (x.what && !hobby) h += `<details class="sec" ${open ? 'open' : ''}><summary>${V('what')}</summary><p>${x.what}</p></details>`;
   if (x.how?.length && !hobby) h += `<details class="sec" ><summary>${V('how')}</summary><ol class="how">${x.how.map((s, i) => `<li>${keyBold(s, id, lang, i)}</li>`).join('')}</ol></details>`;
   if (x.facts?.length && !hobby) h += `<details class="sec" ><summary>${V('facts')}</summary><dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
-  if (x.why && !hobby) h += `<details class="sec"><summary>${V('why')}</summary><p>${x.why}</p></details>`;
+  if (x.why && !hobby) h += `<details class="sec"><summary>${V('why')}</summary><p class="why">${whyBold(x.why, id, lang)}</p></details>`;
   if (d.sources?.length) h += `<details class="sec"><summary>${V('sources')} (${d.sources.length})</summary><ol class="src">${d.sources.map(s => `<li>${s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${L(s.t)}</a>` : L(s.t)}</li>`).join('')}</ol></details>`;
   if (hobby) return h;                                              // enkel de (dichtgeklapte) bronnenlijst
   return h ? `<details class="more"><summary>${V('more')}</summary><div class="morebody">${h}</div></details>` : '';
@@ -1168,7 +1168,7 @@ function render() {
   if (x?.what && !hobby) tabs.push(['what', V('what'), `<p>${x.what}</p>`]);
   if (x?.how?.length && !hobby) tabs.push(['how', V('how'), `<ol class="how">${x.how.map((s, i) => `<li>${keyBold(s, current.id, lang, i)}</li>`).join('')}</ol>`]);
   if (x?.facts?.length && !hobby) tabs.push(['facts', V('facts'), `<dl class="facts">${x.facts.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl>`]);
-  if (x?.why && !hobby) tabs.push(['why', V('why'), `<p>${x.why}</p>`]);
+  if (x?.why && !hobby) tabs.push(['why', V('why'), `<p class="why">${whyBold(x.why, current.id, lang)}</p>`]);
   tabs.push(['more', V('tabMore'), `
     <details class="sec" open><summary>${V('stepsHere')}</summary><ol class="stepsList">${current.steps.map((s, i) => { const tg = stepTag(s, i); return `<li data-i="${i}">${tg ? `<span class="stag">${esc(tg)}</span>` : ''}${esc(stepTitle(s))}</li>`; }).join('')}</ol></details>
     ${level === 'hobby' ? '' : L(def.extra ?? base.extra) ?? ''}
