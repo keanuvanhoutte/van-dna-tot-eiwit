@@ -352,6 +352,34 @@ export const VERIF = {
    "checked": null,
    "corrections": null,
    "examples": []
+  },
+  {
+   "nr": "14",
+   "date": "2026-11-28",
+   "scope": {
+    "nl": "De nieuwe uitleg per onderdeel (tabblad ‘Wat zie je?’) in alle animaties: voor elk onderdeel van de figuur een eenvoudige zin en een zin in vaktaal, in het Nederlands en het Engels.",
+    "en": "The new per-part explanations (‘What you see’ tab) in all animations: for every part of the figure a simple sentence and a sentence in professional terminology, in Dutch and English."
+   },
+   "method": {
+    "nl": "Drie aparte controleurs, die de teksten niet schreven, legden elke zin naast de figuur (kleuren, vormen, labels), de uitleg en bronnen van de app en, waar nodig, een gelezen bron via PubMed, PubMed Central of RCSB. Feiten die de schrijvers zelf als handboekkennis meldden, werden afzonderlijk met een bron bevestigd. Wat niet klopte of te stellig was, werd herschreven.",
+    "en": "Three separate reviewers, who did not write the texts, compared every sentence with the figure (colours, shapes, labels), the app’s explanations and sources and, where needed, a source read via PubMed, PubMed Central or RCSB. Facts that the writers themselves flagged as textbook knowledge were confirmed separately with a source. Whatever was wrong or too absolute was rewritten."
+   },
+   "checked": null,
+   "corrections": null,
+   "examples": [
+    {
+     "nl": "CRISPR: Cas1–Cas2 ‘knipt’ geen stukje uit het faag-DNA maar bouwt een nieuw stukje (spacer) in de CRISPR-rij in (Nuñez et al. 2015).",
+     "en": "CRISPR: Cas1–Cas2 does not ‘cut out’ a piece of phage DNA but integrates a new piece (spacer) into the CRISPR array (Nuñez et al. 2015)."
+    },
+    {
+     "nl": "Fagen met een staart: de orde ‘Caudovirales’ is in 2022 afgeschaft; het is nu de klasse Caudoviricetes (Turner et al. 2023).",
+     "en": "Tailed phages: the order ‘Caudovirales’ was abolished in 2022; it is now the class Caudoviricetes (Turner et al. 2023)."
+    },
+    {
+     "nl": "p53: Ser15 wordt rechtstreeks door ATM/ATR gefosforyleerd, Ser20 vooral door CHK2/CHK1 (Chehab et al. 2000).",
+     "en": "p53: Ser15 is phosphorylated directly by ATM/ATR, Ser20 mainly by CHK2/CHK1 (Chehab et al. 2000)."
+    }
+   ]
   }
  ],
  "rejected": [
