@@ -186,7 +186,7 @@ const scene = {
           if (!(step === 7 && sealed) && step < 8) lag += endl(e3 - 22, NTOP - 16, "3′", NEW, 16, 1 - cov3);
         }
         // nick vóór ligatie
-        if (step === 7 && flapCut && !sealed) lag += `<circle cx="${PREV_A}" cy="${NTOP}" r="9" fill="none" stroke="#fff" stroke-width="2.5" opacity="${f1(.5 + .5 * Math.sin(t / 120))}"/>`;
+        if (step === 7 && flapCut && !sealed) lag += `<circle cx="${PREV_A}" cy="${NTOP}" r="9" fill="none" stroke="#fff" stroke-width="2.5" opacity="${f1(.5 + .5 * Math.sin(t / 260))}"/>`;
         if (step === 7 && sealed) lag += `<circle cx="${PREV_A}" cy="${NTOP}" r="14" fill="${C.ok}" opacity="${f1(.5 * (1 - sub(p, .8, 1)))}" filter="url(#glow)"/>`;
         $('rs-lag').innerHTML = lag;
 

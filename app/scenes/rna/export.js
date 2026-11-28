@@ -204,7 +204,7 @@ export default {
           note(PX + 130, 610, T2('transporteiwit → terug de kern in', 'transport protein → back into the nucleus'), '#e7a6ee', 20, 'start', sub(p, .2, .5));
         // DDX19 + Gle1 aan de filamenten
         const ddxOp = step >= 3 ? 1 : 0;
-        const pulse = step === 5 ? .5 + .5 * Math.sin(t / 160) : 0;
+        const pulse = step === 5 ? .5 + .5 * Math.sin(t / 320) : 0;
         pr += `<g opacity="${ddxOp}"><circle cx="${PX - 150}" cy="${Y_OUT - 86}" r="${f1(34 + 6 * pulse)}" fill="none" stroke="#ffd36b" stroke-width="2" opacity="${f1(pulse * .8)}"/></g>`;
         pr += prot(PX - 150, Y_OUT - 86, 108, 36, T2('losmaker', 'releaser'), '#b8862a', ddxOp, 18);
         pr += note(PX - 150, Y_OUT - 118, 'DDX19', '#e7c98a', 14, 'middle', ddxOp);
