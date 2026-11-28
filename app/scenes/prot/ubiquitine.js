@@ -181,7 +181,8 @@ export default {
         if (step >= 3 && step < 9 && step !== 5) {
           const start = detach > 0 ? null : (recK > 0 ? [lys[0], lys[1]] : lys);
           for (let i = 0; i < nUb; i++) {
-            const prev = i ? ubPos[i - 1] : start;
+            let prev = i ? ubPos[i - 1] : start;
+            if (prev && !i) { const dx = ubPos[0][0] - prev[0], dy = ubPos[0][1] - prev[1], L0 = Math.hypot(dx, dy) || 1; prev = [prev[0] + dx / L0 * 17, prev[1] + dy / L0 * 17]; }   // begint aan de rand van het K-bolletje
             if (prev) cs += `<line x1="${f1(prev[0])}" y1="${f1(prev[1])}" x2="${f1(ubPos[i][0])}" y2="${f1(ubPos[i][1])}" stroke="#fff" stroke-width="3"/>`;
             if (i && step === 4 && recK === 0) cs += T((prev[0] + ubPos[i][0]) / 2 + 26, (prev[1] + ubPos[i][1]) / 2 + 18, 'K48', { size: 15, col: UB });
           }
@@ -229,14 +230,14 @@ export default {
           const fx = lerp(ux, E1[0] + 70, th), fy = lerp(uy, E1[1] + 40 - 30, th);
           e1 += ub(fx, fy, 26);
           e1 += tag(E1[0] - 50, E1[1] + 32, ad < 1 ? 'ATP' : 'AMP', ATPC, { fs: 17, op: 1 - sub(p, .7, .9) });
-          if (ad > .5) e1 += T(E1[0] - 110, E1[1] - 90, 'PPᵢ', { size: 20, col: ATPC, op: 1 - sub(p, .6, .8) });
+          if (ad > .5) e1 += T(E1[0] + 14, E1[1] - 66, 'PPᵢ', { size: 20, col: ATPC, op: 1 - sub(p, .6, .8) });
           e1 += spark(E1[0] - 50, E1[1] + 32, ad);
           e1 += T(E1[0] + 20, E1[1] + 140, th < .5 ? (ad > .5 ? 'Ub–AMP' : '') : T2('E1~Ub (thio-ester)', 'E1~Ub (thioester)'), { size: 22, col: UB });
         }
         if (step === 2 && p < .35) e1 += ub(E1[0] + 70, E1[1] + 10, 26);
         $('ub-e1').innerHTML = step <= 2 ? e1 : '';
         // stap 2–3 (E1 → E2): het proteasoom zou rechts half in beeld hangen → even weg, keert terug bij E3
-        $('ub-prot').setAttribute('opacity', f1(step === 1 ? 1 - sub(p, 0, .25) : step === 2 ? 0 : step === 3 ? sub(p, 0, .25) : 1));
+        $('ub-prot').setAttribute('opacity', f1(step === 1 ? 1 - sub(p, 0, .25) : step === 2 ? 0 : step === 3 ? .3 * sub(p, 0, .25) : step === 4 ? .3 : 1));   // bij E1–E3 enkel als achtergrond (half buiten beeld)
 
         /* E2 */
         let e2 = '', e2x = E2DOCK[0], e2y = E2DOCK[1], e2ub = false;
@@ -263,7 +264,7 @@ export default {
             `<path d="${eiwitPad(E3[0] - 100, E3[1] + 8, 44, 38, 55, .08)}" fill="#0b1224"/><path d="${eiwitPad(E3[0] - 100, E3[1] + 8, 44, 38, 55, .08)}" fill="#7d66e0" fill-opacity=".5" stroke="#b39dff" stroke-width="3"/>` +
             `<circle cx="${E3[0] - 110}" cy="${E3[1] - 6}" r="6" fill="#9aa6bf" stroke="#0a1224" stroke-width="1.5"/><circle cx="${E3[0] - 90}" cy="${E3[1] + 22}" r="6" fill="#9aa6bf" stroke="#0a1224" stroke-width="1.5"/>` +
             T(E3[0] - 100, E3[1] + 66, T2('RING · 2 Zn²⁺', 'RING · 2 Zn²⁺'), { size: 17, col: '#d6ccff', w: 700 }) + T(E3[0] + 40, E3[1] + 4, 'E3', { size: 26, w: 800 });
-          e3 += `<rect x="${S0[0] - 20}" y="${S0[1] + 70}" width="40" height="18" rx="6" fill="${C.danger}"/>` + (step === 3 ? T(S0[0] + 120, S0[1] + 90, 'degron', { size: 20, col: C.danger, anchor: 'start' }) : '');
+          e3 += `<rect x="${S0[0] - 20}" y="${S0[1] + 70}" width="40" height="18" rx="6" fill="${C.danger}"/>` + (step === 3 ? T(S0[0] - 30, S0[1] + 86, 'degron', { size: 20, col: C.danger, anchor: 'end' }) : '');
           if (step === 3) e3 += T(610, 250, T2('isopeptidebinding: Gly76 (Ub) – Lys (substraat)', 'isopeptide bond: Gly76 (Ub) – Lys (substrate)'), { size: 19, col: '#c9d2e4', op: sub(p, .55, .7) });
         }
         $('ub-e3').innerHTML = e3;

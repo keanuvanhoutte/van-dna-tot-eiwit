@@ -156,7 +156,7 @@ export default {
         const lv = k => { const a = VIS[k], c = a[i] ?? 0, pr = i > 0 ? a[i - 1] : c; return lerp(pr, c, sub(p, 0, .2)); };
         const gl = (k, sv) => lv(k) > .01 ? `<g opacity="${f1(lv(k))}">${sv}</g>` : '';
         $('rs-enz').setAttribute('opacity', i === 4 ? '1' : i === 7 ? f1(1 - .5 * sub(p, .2, .6)) : '1');
-        $('rs-lab').innerHTML = gl('syn', txt(SYN[0] - 66, SYN[1] + 24, T2('laadplaats', 'loading site'), '#d6ccff', 24, 'end', 700)) +
+        $('rs-lab').innerHTML = gl('syn', `<path d="M${SYN[0] - 188},${SYN[1] + 16} L${SYN[0] - 58},${SYN[1] + 16}" stroke="#d6ccff" stroke-width="2.5"/>` + txt(SYN[0] - 196, SYN[1] + 24, T2('laadplaats', 'loading site'), '#d6ccff', 24, 'end', 700)) +
           gl('edit', `<path d="M${EDIT[0] + 40},${EDIT[1] - 200} L${EDIT[0] + 14},${EDIT[1] - 42}" stroke="#ff9a9a" stroke-width="2.5"/>` + txt(EDIT[0] + 60, EDIT[1] - 236, T2('naleesplaats', 'checking site'), '#ff9a9a', 26, 'middle', 800) + txt(EDIT[0] + 60, EDIT[1] - 212, T2('(editeerplaats, CP1)', '(editing site, CP1)'), '#c9d2e6', 16, 'middle', 600)) +
           gl('acd', txt(ACD[0] + 110, ACD[1] + 70, T2('anticodonbindend domein', 'anticodon-binding domain'), '#d6ccff', 22, 'start', 700)) +
           gl('name', txt(1060, 640, 'IleRS', C.prot, 34, 'middle', 800));

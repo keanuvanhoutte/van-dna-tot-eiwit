@@ -215,7 +215,7 @@ export default {
             T(pPos[0] + 36, pPos[1] - 10, '2−', { size: 20, col: PHOS, w: 800, op: step >= 3 || p > .55 ? 1 : 0 });
         }
         $('pt-lid').innerHTML = lidS;
-        $('pt-glow').innerHTML = glow > .01 ? `<circle cx="650" cy="408" r="30" fill="rgba(255,194,71,.3)" stroke="#ffc247" stroke-width="4" opacity="${f1(glow)}"/>` + T(560, 330, T2('actieve plaats vrij', 'active site exposed'), { size: 20, col: '#ffc247', op: glow }) : '';
+        $('pt-glow').innerHTML = glow > .01 ? `<circle cx="650" cy="408" r="30" fill="rgba(255,194,71,.12)" stroke="#ffd36b" stroke-width="4" stroke-dasharray="8 5" opacity="${f1(glow)}"/>` + T(560, 330, T2('actieve plaats vrij', 'active site exposed'), { size: 22, col: '#ffd36b', w: 800, op: Math.min(1, glow * 1.6) }) : '';
         // uitleg-labels bij paneel A
         let al = '';
         if (step === 0) al += T(650, 280, T2('Ser in een lus die de actieve plaats afdekt', 'Ser in a loop covering the active site'), { size: 22, col: CLASSCOL.p }) + T(LYS[0] - 40, LYS[1] + 56, T2('Lys (aan het oppervlak)', 'Lys (on the surface)'), { size: 20, col: CLASSCOL['+'] });
