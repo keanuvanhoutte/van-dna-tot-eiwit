@@ -54,7 +54,7 @@ const UI2 = {
   nextChapter: { nl: 'Volgend hoofdstuk', en: 'Next chapter' }, step: { nl: 'stap', en: 'step' },
   what: { nl: 'Wat', en: 'What' }, how: { nl: 'Zo werkt het', en: 'How it works' }, facts: { nl: 'Kerncijfers', en: 'Key numbers' },
   why: { nl: 'Waarom belangrijk', en: 'Why it matters' }, sources: { nl: 'Bronnen', en: 'Sources' }, stepsHere: { nl: 'Stappen in deze animatie', en: 'Steps in this animation' },
-  up: { nl: 'Uitzoomen naar', en: 'Zoom out to' }, zoomIn: { nl: 'Inzoomen', en: 'Zoom in' }, next: { nl: 'Volgende stap →', en: 'Next step →' }, side: { nl: 'Zijsprongen', en: 'Side paths' },
+  up: { nl: 'Uitzoomen naar', en: 'Zoom out to' }, zoomIn: { nl: 'Inzoomen', en: 'Zoom in' }, next: { nl: 'Volgende stap', en: 'Next step' }, side: { nl: 'Zijsprongen', en: 'Side paths' },
   legend: { nl: 'Legende', en: 'Legend' }, parts: { nl: 'Wat zie je?', en: 'What you see' },
   tabExplain: { nl: 'Uitleg', en: 'Explanation' }, tabFurther: { nl: 'Verder & bronnen', en: 'Further & sources' },
   whatQ: { nl: 'Wat is het?', en: 'What is it?' }, whyQ: { nl: 'Waarom belangrijk?', en: 'Why it matters' },
@@ -1167,7 +1167,7 @@ function render() {
   $('sideKind').textContent = `${V(n?.kind === 'process' || !n ? 'about' : 'aboutS')}${org ? ` · ${org}` : ''}`;
   $('sideKind').title = `${n ? U(n.kind === 'process' ? 'process' : 'structure') : ''}${org ? ` · ${org}` : ''}${st ? ` · ${stageTitle(st)}` : ''}`;
   $('sideTitle').innerHTML = `${n ? title(n) : L(sceneTitle(current.id) ?? def.title) ?? ''}${n ? `<span class="status ${n.status === 'nagekeken' ? 'ok' : ''}">${statusText(n.status)}</span>` : ''}`;
-  $('sideSub').textContent = n ? sub(n) : '';
+  $('sideSub').textContent = n && lang !== 'en' ? sub(n) : '';   // NL: Engelse vakterm als hulp; EN: geen Nederlandse regel (geen mengtaal)
   const d = DETAILS[current.id], x = detailOf(current.id), hobby = rank < 3;
   const legend = def.legend ?? base.legend;
   const tabs = [];
